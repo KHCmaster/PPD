@@ -1,0 +1,81 @@
+<Root>
+  <Sources>
+    <Source Name="FlowScriptEnginePPDEditor.FlowSourceObjects.Storage.GetValueFlowSourceObject" FullName="FlowScriptEnginePPDEditor.FlowSourceObjects.Storage.GetValueFlowSourceObject" ID="12" ShowAll="False" X="-365.5" Y="-609.5" />
+    <Source Name="FlowScriptEnginePPDEditor.FlowSourceObjects.Storage.GetValueFlowSourceObject" FullName="FlowScriptEnginePPDEditor.FlowSourceObjects.Storage.GetValueFlowSourceObject" ID="13" ShowAll="False" X="-362.333333333333" Y="-524.5" />
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Logic.AnyFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Logic.AnyFlowSourceObject" ID="16" ShowAll="False" X="168.5" Y="-597.5" />
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.String.ValueFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.String.ValueFlowSourceObject" ID="14" ShowAll="False" X="-737.666666666666" Y="-547.5">
+      <Value Name="Value" Value="OnlyForSelectedLayer" />
+    </Source>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.String.ValueFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.String.ValueFlowSourceObject" ID="15" ShowAll="False" X="-749.5" Y="-490.833333333333">
+      <Value Name="Value" Value="OnlyForSelectedMarks" />
+    </Source>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.String.ValueFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.String.ValueFlowSourceObject" ID="11" ShowAll="False" X="-804.928571428571" Y="-616.119047619047">
+      <Value Name="Value" Value="KHCMaster.ResetPosAndAngle" />
+    </Source>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Boolean.ParseFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Boolean.ParseFlowSourceObject" ID="19" ShowAll="False" X="-40.9444444444439" Y="-488.055555555555" />
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Object.NullFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Object.NullFlowSourceObject" ID="28" ShowAll="False" X="668.954545454546" Y="-221.045454545455" />
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Boolean.ParseFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Boolean.ParseFlowSourceObject" ID="18" ShowAll="False" X="-40.944444444445" Y="-588.873015873016" />
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Misc.EntryPointFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Misc.EntryPointFlowSourceObject" ID="1" ShowAll="False" X="-391.25" Y="-357.25" />
+    <Source Name="FlowScriptEngineSlimDX.FlowSourceObjects.Vector2.FromElementFlowSourceObject" FullName="FlowScriptEngineSlimDX.FlowSourceObjects.Vector2.FromElementFlowSourceObject" ID="10" ShowAll="False" X="-301.5" Y="154">
+      <Value Name="X" Value="400" />
+      <Value Name="Y" Value="225" />
+    </Source>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Logic.AnyFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Logic.AnyFlowSourceObject" ID="17" ShowAll="False" X="167.794871794872" Y="-431.944444444444" />
+    <Source Name="FlowScriptEnginePPDEditor.FlowSourceObjects.Mark.SetRotationFlowSourceObject" FullName="FlowScriptEnginePPDEditor.FlowSourceObjects.Mark.SetRotationFlowSourceObject" ID="6" ShowAll="False" X="66" Y="88">
+      <Value Name="Rotation" Value="0" />
+    </Source>
+    <Source Name="FlowScriptEnginePPDEditor.FlowSourceObjects.Mark.SetPositionFlowSourceObject" FullName="FlowScriptEnginePPDEditor.FlowSourceObjects.Mark.SetPositionFlowSourceObject" ID="8" ShowAll="False" X="67" Y="184" />
+    <Source Name="FlowScriptEnginePPDEditor.FlowSourceObjects.Layer.AllFlowSourceObject" FullName="FlowScriptEnginePPDEditor.FlowSourceObjects.Layer.AllFlowSourceObject" ID="2" ShowAll="False" X="-563.416666666667" Y="-178.666666666667" />
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Logic.IfTernaryFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Logic.IfTernaryFlowSourceObject" ID="30" ShowAll="False" X="-34.9848484848484" Y="-207.674242424242" />
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Enumerable.SelectManyFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Enumerable.SelectManyFlowSourceObject" ID="23" ShowAll="False" X="189.5" Y="-214.166666666667" />
+    <Source Name="FlowScriptEnginePPDEditor.FlowSourceObjects.Layer.ValueFlowSourceObject" FullName="FlowScriptEnginePPDEditor.FlowSourceObjects.Layer.ValueFlowSourceObject" ID="24" ShowAll="False" X="426.712121212121" Y="-232.863636363636" />
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Repeat.ForeachFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Repeat.ForeachFlowSourceObject" ID="33" ShowAll="False" X="442.931818181818" Y="126.909090909091" />
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Object.EqualFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Object.EqualFlowSourceObject" ID="27" ShowAll="False" X="828.954545454546" Y="-227.409090909091" />
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Logic.IfTernaryFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Logic.IfTernaryFlowSourceObject" ID="26" ShowAll="False" X="881.984848484849" Y="-131.409090909091" />
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Array.FromElementFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Array.FromElementFlowSourceObject" ID="29" ShowAll="False" X="671.681818181818" Y="-114.681818181818" />
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Logic.IfTernaryFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Logic.IfTernaryFlowSourceObject" ID="25" ShowAll="False" X="449.5" Y="-52.5" />
+    <Source Name="FlowScriptEnginePPDEditor.FlowSourceObjects.Layer.ValueFlowSourceObject" FullName="FlowScriptEnginePPDEditor.FlowSourceObjects.Layer.ValueFlowSourceObject" ID="32" ShowAll="False" X="-299.984848484848" Y="-204.340909090909" />
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Enumerable.WhereFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Enumerable.WhereFlowSourceObject" ID="31" ShowAll="False" X="-296.651515151515" Y="-142.257575757576" />
+  </Sources>
+  <Flows>
+    <Flow SrcID="12" SrcName="Value" DestID="18" DestName="Value" />
+    <Flow SrcID="13" SrcName="Value" DestID="19" DestName="Value" />
+    <Flow SrcID="16" SrcName="Out" DestID="19" DestName="In" />
+    <Flow SrcID="14" SrcName="Value" DestID="12" DestName="Key" />
+    <Flow SrcID="15" SrcName="Value" DestID="13" DestName="Key" />
+    <Flow SrcID="11" SrcName="Value" DestID="12" DestName="StorageKey" />
+    <Flow SrcID="11" SrcName="Value" DestID="13" DestName="StorageKey" />
+    <Flow SrcID="19" SrcName="Failed" DestID="17" DestName="In0" />
+    <Flow SrcID="19" SrcName="Success" DestID="17" DestName="In1" />
+    <Flow SrcID="19" SrcName="Result" DestID="25" DestName="Condition" />
+    <Flow SrcID="28" SrcName="Value" DestID="27" DestName="B" />
+    <Flow SrcID="18" SrcName="Failed" DestID="16" DestName="In0" />
+    <Flow SrcID="18" SrcName="Success" DestID="16" DestName="In1" />
+    <Flow SrcID="18" SrcName="Result" DestID="30" DestName="Condition" />
+    <Flow SrcID="1" SrcName="Start" DestID="18" DestName="In" />
+    <Flow SrcID="10" SrcName="Value" DestID="8" DestName="Position" />
+    <Flow SrcID="17" SrcName="Out" DestID="33" DestName="In" />
+    <Flow SrcID="2" SrcName="All" DestID="30" DestName="B" />
+    <Flow SrcID="2" SrcName="All" DestID="31" DestName="Enumerable" />
+    <Flow SrcID="30" SrcName="Value" DestID="23" DestName="Enumerable" />
+    <Flow SrcID="23" SrcName="Enumerable" DestID="33" DestName="Enumerable" />
+    <Flow SrcID="23" SrcName="Value" DestID="24" DestName="Layer" />
+    <Flow SrcID="24" SrcName="Marks" DestID="25" DestName="B" />
+    <Flow SrcID="24" SrcName="SelectedMark" DestID="27" DestName="A" />
+    <Flow SrcID="24" SrcName="SelectedMark" DestID="29" DestName="A" />
+    <Flow SrcID="24" SrcName="SelectedMarks" DestID="26" DestName="A" />
+    <Flow SrcID="33" SrcName="Loop" DestID="6" DestName="In" />
+    <Flow SrcID="33" SrcName="Loop" DestID="8" DestName="In" />
+    <Flow SrcID="33" SrcName="Value" DestID="6" DestName="Mark" />
+    <Flow SrcID="33" SrcName="Value" DestID="8" DestName="Mark" />
+    <Flow SrcID="27" SrcName="Value" DestID="26" DestName="Condition" />
+    <Flow SrcID="26" SrcName="Value" DestID="25" DestName="A" />
+    <Flow SrcID="29" SrcName="Value" DestID="26" DestName="B" />
+    <Flow SrcID="25" SrcName="Value" DestID="23" DestName="Result" />
+    <Flow SrcID="32" SrcName="IsSelected" DestID="31" DestName="Result" />
+    <Flow SrcID="31" SrcName="Enumerable" DestID="30" DestName="A" />
+    <Flow SrcID="31" SrcName="Value" DestID="32" DestName="Layer" />
+  </Flows>
+  <Comments />
+  <Scopes />
+</Root>

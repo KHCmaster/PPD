@@ -1,0 +1,324 @@
+﻿<UserControl x:Class="PPDExpansion.Control.SinglePlayControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:visualization="clr-namespace:System.Windows.Controls.DataVisualization;assembly=System.Windows.Controls.DataVisualization.Toolkit"
+             xmlns:toolkit="clr-namespace:System.Windows.Controls.DataVisualization.Charting;assembly=System.Windows.Controls.DataVisualization.Toolkit"
+             xmlns:converter="clr-namespace:PPDExpansion.Converter"
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"  
+             xmlns:cmd="clr-namespace:GalaSoft.MvvmLight.Command;assembly=GalaSoft.MvvmLight.Extras"
+             xmlns:expansion="clr-namespace:PPDExpansion"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <converter:VisibilityConverter x:Key="VisibilityConverter"/>
+        <converter:ScoreConverter x:Key="ScoreConverter"/>
+        <converter:Int32SignConverter x:Key="Int32SignConverter"/>
+        <Style x:Key="XAxisLabelStyle" TargetType="toolkit:DateTimeAxisLabel">
+            <Setter Property="Foreground" Value="White"/>
+        </Style>
+        <Style x:Key="YAxisLabelStyle" TargetType="toolkit:NumericAxisLabel">
+            <Setter Property="Foreground" Value="White"/>
+        </Style>
+        <Style x:Key="WebHighScoreStyle" TargetType="toolkit:LineDataPoint">
+            <Setter Property="Background" Value="#8eed64"/>
+            <Setter Property="BorderBrush" Value="#8eed64"/>
+            <Setter Property="Template" Value="{x:Null}"/>
+        </Style>
+        <Style x:Key="MyHighScoreStyle" TargetType="toolkit:LineDataPoint">
+            <Setter Property="Background" Value="#ed6464"/>
+            <Setter Property="BorderBrush" Value="#ed6464"/>
+            <Setter Property="Template" Value="{x:Null}"/>
+        </Style>
+        <Style x:Key="BestScoreStyle" TargetType="toolkit:LineDataPoint">
+            <Setter Property="Background" Value="#364f80"/>
+            <Setter Property="BorderBrush" Value="#364f80"/>
+            <Setter Property="Template" Value="{x:Null}"/>
+        </Style>
+        <Style x:Key="ScoreStyle" TargetType="toolkit:LineDataPoint">
+            <Setter Property="Background" Value="#6495ed"/>
+            <Setter Property="BorderBrush" Value="#6495ed"/>
+            <Setter Property="Template" Value="{x:Null}"/>
+        </Style>
+        <Style TargetType="TextBlock">
+            <Setter Property="Foreground" Value="White"/>
+        </Style>
+        <Style x:Key="PlotAreaStyle" TargetType="Grid">
+            <Setter Property="Background" Value="Transparent"/>
+        </Style>
+        <Style x:Key="LegendStyle" TargetType="Control">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="White"/>
+        </Style>
+        <Style x:Key="TitleStyle" TargetType="visualization:Title">
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+        </Style>
+        <Style x:Key="ScoreRectangleStyle" TargetType="Rectangle">
+            <Setter Property="Fill">
+                <Setter.Value>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                        <GradientStop Color="#297cff" Offset="0.0" />
+                        <GradientStop Color="#3e3efe" Offset="1.0" />
+                    </LinearGradientBrush>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="UserHighScoreRectangleStyle" TargetType="Rectangle">
+            <Setter Property="Fill">
+                <Setter.Value>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                        <GradientStop Color="#bfff50" Offset="0.0" />
+                        <GradientStop Color="#adff14" Offset="1.0" />
+                    </LinearGradientBrush>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="WebHighScoreRectangleStyle" TargetType="Rectangle">
+            <Setter Property="Fill">
+                <Setter.Value>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                        <GradientStop Color="#ff3d3d" Offset="0.0" />
+                        <GradientStop Color="#fd0100" Offset="1.0" />
+                    </LinearGradientBrush>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="{Binding ChartHeight, Mode=TwoWay}"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <toolkit:Chart PlotAreaStyle="{StaticResource PlotAreaStyle}" LegendStyle="{StaticResource LegendStyle}" TitleStyle="{StaticResource TitleStyle}"
+                           Visibility="{Binding MainWindowViewModel.ShowIIDXStyle, Converter={StaticResource VisibilityConverter}, ConverterParameter=Invert}">
+                <toolkit:Chart.Title>
+                    <MultiBinding Converter="{StaticResource ScoreConverter}">
+                        <MultiBinding.Bindings>
+                            <Binding Path="ScoreName"/>
+                            <Binding Path="Difficulty"/>
+                        </MultiBinding.Bindings>
+                    </MultiBinding>
+                </toolkit:Chart.Title>
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="MouseWheel">
+                        <cmd:EventToCommand Command="{Binding ZoomCommand}" PassEventArgsToCommand="True"/>
+                    </i:EventTrigger>
+                    <i:EventTrigger EventName="MouseUp">
+                        <cmd:EventToCommand Command="{Binding ResetZoomCommand}" PassEventArgsToCommand="True"/>
+                    </i:EventTrigger>
+                    <i:EventTrigger EventName="MouseDown">
+                        <cmd:EventToCommand Command="{Binding PanStartCommand}" PassEventArgsToCommand="True"/>
+                    </i:EventTrigger>
+                    <i:EventTrigger EventName="MouseMove">
+                        <cmd:EventToCommand Command="{Binding PanCommand}" PassEventArgsToCommand="True"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+                <toolkit:Chart.LegendTitle>
+                    <Grid Visibility="{Binding MainWindowViewModel.ShowCurrentStatus, Converter={StaticResource VisibilityConverter}}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="80"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Text="{expansion:Translate Score, StringFormat={}{0}:}" Padding="0,0,10,0"/>
+                        <TextBlock Grid.Row="1" Text="Cool:" Padding="0,0,10,0"/>
+                        <TextBlock Grid.Row="2" Text="Good:" Padding="0,0,10,0"/>
+                        <TextBlock Grid.Row="3" Text="Safe:" Padding="0,0,10,0"/>
+                        <TextBlock Grid.Row="4" Text="Sad:" Padding="0,0,10,0"/>
+                        <TextBlock Grid.Row="5" Text="Worst:" Padding="0,0,10,0"/>
+                        <TextBlock Grid.Column="1" Text="{Binding Score}"/>
+                        <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding CoolCount}"/>
+                        <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding GoodCount}"/>
+                        <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding SafeCount}"/>
+                        <TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding SadCount}"/>
+                        <TextBlock Grid.Row="5" Grid.Column="1" Text="{Binding WorstCount}"/>
+                    </Grid>
+                </toolkit:Chart.LegendTitle>
+                <toolkit:Chart.Axes>
+                    <toolkit:DateTimeAxis Orientation="X" IntervalType="Seconds" Minimum="{Binding XMinimum}" Maximum="{Binding XMaximum}"
+                                          AxisLabelStyle="{StaticResource XAxisLabelStyle}"/>
+                    <toolkit:LinearAxis Orientation="Y" ShowGridLines="{Binding MainWindowViewModel.ShowGridLines}" Minimum="{Binding YMinimum}" Maximum="{Binding YMaximum}"
+                                        AxisLabelStyle="{StaticResource YAxisLabelStyle}"/>
+                </toolkit:Chart.Axes>
+                <toolkit:LineSeries DependentValuePath="Value" IndependentValuePath="Key" ItemsSource="{Binding WebHighScores}" Title="{expansion:Translate HighScoreOnWeb}"
+                                    Visibility="{Binding MainWindowViewModel.ShowWebHighScore, Converter={StaticResource VisibilityConverter}}"
+                                    DataPointStyle="{StaticResource WebHighScoreStyle}"/>
+                <toolkit:LineSeries DependentValuePath="Value" IndependentValuePath="Key" ItemsSource="{Binding HighScores}" Title="{expansion:Translate MyHighScore}"
+                                    Visibility="{Binding MainWindowViewModel.ShowMyHighScore, Converter={StaticResource VisibilityConverter}}"
+                                    DataPointStyle="{StaticResource MyHighScoreStyle}"/>
+                <toolkit:LineSeries DependentValuePath="Value" IndependentValuePath="Key" ItemsSource="{Binding BestScores}" Title="{expansion:Translate BestScore}"
+                                    DataPointStyle="{StaticResource BestScoreStyle}"/>
+                <toolkit:LineSeries DependentValuePath="Value" IndependentValuePath="Key" ItemsSource="{Binding Scores}" Title="{expansion:Translate Score}"
+                                    DataPointStyle="{StaticResource ScoreStyle}"/>
+            </toolkit:Chart>
+            <Grid Margin="20" Visibility="{Binding MainWindowViewModel.ShowIIDXStyle, Converter={StaticResource VisibilityConverter}}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="20"/>
+                    <RowDefinition/>
+                    <RowDefinition Height="20"/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" FontWeight="Bold" HorizontalAlignment="Center">
+                    <TextBlock.Text>
+                        <MultiBinding Converter="{StaticResource ScoreConverter}">
+                            <MultiBinding.Bindings>
+                                <Binding Path="ScoreName"/>
+                                <Binding Path="Difficulty"/>
+                            </MultiBinding.Bindings>
+                        </MultiBinding>
+                    </TextBlock.Text>
+                </TextBlock>
+                <Grid Grid.Row="1" Grid.Column="0"  Margin="5">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="{Binding ScoreWhitePercent}" />
+                        <RowDefinition Height="{Binding ScorePercent}"/>
+                    </Grid.RowDefinitions>
+                    <Rectangle Grid.Row="1" Style="{StaticResource ScoreRectangleStyle}"/>
+                    <StackPanel Grid.Row="0" Visibility="{Binding MainWindowViewModel.ShowScoreDiff, Converter={StaticResource VisibilityConverter}}" HorizontalAlignment="Center" VerticalAlignment="Bottom" Orientation="Horizontal">
+                        <Grid>
+                            <TextBlock Text="{Binding HighScoreScoreDiff, Converter={StaticResource Int32SignConverter}}"
+                                   Visibility="{Binding IsHighScoreScoreDiffNegative, Converter={StaticResource VisibilityConverter}, ConverterParameter=Invert}"/>
+                            <TextBlock Text="{Binding HighScoreScoreDiff}" Foreground="Red"
+                                   Visibility="{Binding IsHighScoreScoreDiffNegative, Converter={StaticResource VisibilityConverter}}"/>
+                        </Grid>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="("/>
+                            <TextBlock Text="{Binding RealTimeScoreDiff, Converter={StaticResource Int32SignConverter}}"
+                                   Visibility="{Binding IsRealTimeScoreDiffNagative, Converter={StaticResource VisibilityConverter}, ConverterParameter=Invert}"/>
+                            <TextBlock Text="{Binding RealTimeScoreDiff}" Foreground="Red"
+                                   Visibility="{Binding IsRealTimeScoreDiffNagative, Converter={StaticResource VisibilityConverter}}"/>
+                            <TextBlock Text=")"/>
+                        </StackPanel>
+                    </StackPanel>
+                    <StackPanel Grid.Row="1" Visibility="{Binding MainWindowViewModel.ShowScoreDiff, Converter={StaticResource VisibilityConverter}}" HorizontalAlignment="Center" VerticalAlignment="Top" Orientation="Horizontal">
+                        <Grid>
+                            <TextBlock Text="{Binding HighScoreScoreDiff, Converter={StaticResource Int32SignConverter}}"
+                                   Visibility="{Binding IsHighScoreScoreDiffNegative, Converter={StaticResource VisibilityConverter}, ConverterParameter=Invert}"/>
+                            <TextBlock Text="{Binding HighScoreScoreDiff}" Foreground="Red"
+                                   Visibility="{Binding IsHighScoreScoreDiffNegative, Converter={StaticResource VisibilityConverter}}"/>
+                        </Grid>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="("/>
+                            <TextBlock Text="{Binding RealTimeScoreDiff, Converter={StaticResource Int32SignConverter}}"
+                                   Visibility="{Binding IsRealTimeScoreDiffNagative, Converter={StaticResource VisibilityConverter}, ConverterParameter=Invert}"/>
+                            <TextBlock Text="{Binding RealTimeScoreDiff}" Foreground="Red"
+                                   Visibility="{Binding IsRealTimeScoreDiffNagative, Converter={StaticResource VisibilityConverter}}"/>
+                            <TextBlock Text=")"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Grid>
+                <Grid Grid.Row="1" Grid.Column="1" Margin="5">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="{Binding UserHighScoreWhitePercent}"/>
+                            <RowDefinition Height="{Binding UserHighScorePercent}"/>
+                        </Grid.RowDefinitions>
+                        <Border Grid.Row="1" BorderBrush="White" BorderThickness="1">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="{Binding UserHighScoreRealTimeWhitePercent}" />
+                                    <RowDefinition Height="{Binding UserHighScoreRealTimePercent}" />
+                                </Grid.RowDefinitions>
+                                <Rectangle Grid.Row="1" Style="{StaticResource UserHighScoreRectangleStyle}"/>
+                            </Grid>
+                        </Border>
+                    </Grid>
+                </Grid>
+                <Grid Grid.Row="1" Grid.Column="2"  Margin="5">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="{Binding WebHighScoreWhitePercent}"/>
+                        <RowDefinition Height="{Binding WebHighScorePercent}"/>
+                    </Grid.RowDefinitions>
+                    <Rectangle Grid.Row="1" Style="{StaticResource WebHighScoreRectangleStyle}"/>
+                </Grid>
+                <TextBlock Grid.Row="2" Grid.Column="0" HorizontalAlignment="Center" Text="{expansion:Translate Score}"/>
+                <TextBlock Grid.Row="2" Grid.Column="1" HorizontalAlignment="Center" Text="{expansion:Translate MyHighScore}"/>
+                <TextBlock Grid.Row="2" Grid.Column="2" HorizontalAlignment="Center" Text="{expansion:Translate HighScoreOnWeb}"/>
+            </Grid>
+        </Grid>
+        <GridSplitter Grid.Row="1" Height="5" ShowsPreview="True" HorizontalAlignment="Stretch" VerticalAlignment="Center"/>
+        <ListView Grid.Row="2" ItemsSource="{Binding Results}">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="{expansion:Translate Score}" Width="80">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Score}" HorizontalAlignment="Right"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="COOL" Width="50">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding CoolCount}" HorizontalAlignment="Right"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="GOOD" Width="50">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding GoodCount}" HorizontalAlignment="Right"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="SAFE" Width="50">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding SafeCount}" HorizontalAlignment="Right"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="SAD" Width="50">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding SadCount}" HorizontalAlignment="Right"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="WORST" Width="70">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding WorstCount}" HorizontalAlignment="Right"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="MAXCOMBO" Width="100">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding MaxCombo}" HorizontalAlignment="Right"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="{expansion:Translate DateTime}" Width="200">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding DateTime, StringFormat={}{0:yyyy/MM/dd HH:mm:ss}}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                </Style>
+            </ListView.ItemContainerStyle>
+        </ListView>
+    </Grid>
+</UserControl>

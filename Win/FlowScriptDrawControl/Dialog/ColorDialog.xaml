@@ -1,0 +1,23 @@
+﻿<Window x:Class="FlowScriptDrawControl.Dialog.ColorDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:control="clr-namespace:FlowScriptDrawControl.Control"
+        xmlns:colorCanvas="clr-namespace:ColorCanvas;assembly=ColorCanvas"
+        Height="300" Width="300" 
+        WindowStyle="SingleBorderWindow" WindowStartupLocation="CenterOwner" ResizeMode="NoResize">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="235"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <colorCanvas:ColorCanvas x:Name="colorCanvas" Grid.Row="0" Background="Transparent" BorderBrush="{x:Null}" UsingAlphaChannel="False" UseLayoutRounding="False"/>
+        <StackPanel Grid.Row="1" Orientation="Horizontal">
+            <Button x:Name="okButton" Width="60" Margin="60,0,0,0" Click="okButton_Click">
+                OK
+            </Button>
+            <Button x:Name="cancelButton" Width="60" Margin="40,0,0,0" Click="cancelButton_Click">
+                Cancel
+            </Button>
+        </StackPanel>
+    </Grid>
+</Window>

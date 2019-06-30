@@ -1,0 +1,230 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x64</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{54520A52-7E3F-4E94-B4D9-D826FA0E59DB}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>PPDMulti</RootNamespace>
+    <AssemblyName>PPDMulti</AssemblyName>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <UpgradeBackupLocation />
+    <TargetFrameworkProfile />
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>..\PPD\PPD\bin\x64\Debug\skins\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>false</Prefer32Bit>
+    <CodeAnalysisRuleSet>..\PPDCommon.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
+    <OutputPath>..\release\x64\PPD\skins\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>false</Prefer32Bit>
+    <CodeAnalysisRuleSet>
+    </CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="GalaSoft.MvvmLight, Version=4.4.32.39728, Culture=neutral, PublicKeyToken=eabbf6a5f5af5004, processorArchitecture=MSIL">
+      <HintPath>..\packages\MvvmLightLibs.4.4.32.7\lib\net45\GalaSoft.MvvmLight.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="GalaSoft.MvvmLight.Extras, Version=4.4.32.39728, Culture=neutral, PublicKeyToken=0e27b6f8be9b2ef7, processorArchitecture=MSIL">
+      <HintPath>..\packages\MvvmLightLibs.4.4.32.7\lib\net45\GalaSoft.MvvmLight.Extras.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="MessagePack, Version=1.6.1.2, Culture=neutral, PublicKeyToken=b4a0369545f0a1be, processorArchitecture=MSIL">
+      <HintPath>..\packages\MessagePack.1.6.1.2\lib\net45\MessagePack.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\CommonServiceLocator.1.3\lib\portable-net4+sl5+netcore45+wpa81+wp8\Microsoft.Practices.ServiceLocation.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="SharpDX, Version=3.1.1.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpDX.3.1.1\lib\net45\SharpDX.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="SharpDX.Mathematics, Version=3.1.1.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpDX.Mathematics.3.1.1\lib\net45\SharpDX.Mathematics.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.1.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Threading.Tasks.Extensions.4.3.0\lib\portable-net45+win8+wp8+wpa81\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ValueTuple, Version=4.0.1.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.3.0\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\MvvmLightLibs.4.4.32.7\lib\net45\System.Windows.Interactivity.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AllowedModList.cs" />
+    <Compile Include="BackGroundDisplay.cs" />
+    <Compile Include="ChatComponent.cs" />
+    <Compile Include="Data\ChangableList.cs" />
+    <Compile Include="Data\PPDScoreManager.cs" />
+    <Compile Include="Data\RandomColorGenerator.cs" />
+    <Compile Include="EntrySceneManager.cs" />
+    <Compile Include="FogEffectComponent.cs" />
+    <Compile Include="GameRuleComponent.cs" />
+    <Compile Include="ItemManagerComponent.cs" />
+    <Compile Include="ItemOverrayComponent.cs" />
+    <Compile Include="ItemSettingComponent.cs" />
+    <Compile Include="ItemUseManager.cs" />
+    <Compile Include="Logger.cs" />
+    <Compile Include="MainGameConfig.cs" />
+    <Compile Include="GameInformation.cs" />
+    <Compile Include="GameResultComponent.cs" />
+    <Compile Include="IPSelectScene.cs" />
+    <Compile Include="LeftMenu.cs" />
+    <Compile Include="LoadingScene.cs" />
+    <Compile Include="MainGame.cs" />
+    <Compile Include="Menu.cs" />
+    <Compile Include="MenuUserIcon.cs" />
+    <Compile Include="Model\User.cs" />
+    <Compile Include="Model\UserResult.cs" />
+    <Compile Include="ModPanel.cs" />
+    <Compile Include="ModSettingPanel.cs" />
+    <Compile Include="MovieComponent.cs" />
+    <Compile Include="MovieManager.cs" />
+    <Compile Include="NetworkSceneBase.cs" />
+    <Compile Include="PasswordDialog.cs" />
+    <Compile Include="PauseMenu.cs" />
+    <Compile Include="PingPongEffectComponent.cs" />
+    <Compile Include="PlayUserIcon.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RoomListComponent.cs" />
+    <Compile Include="SkinSetting.cs" />
+    <Compile Include="SongInfoEx.cs" />
+    <Compile Include="SongSelectComponent.cs" />
+    <Compile Include="StripeEffectComponent.cs" />
+    <Compile Include="UserListComponent.cs" />
+    <Compile Include="UserScoreListComponent.cs" />
+    <Compile Include="UserSelectComponent.cs" />
+    <Compile Include="Utility.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Effect2D\Effect2D.csproj">
+      <Project>{21169B27-D6EE-47AF-88F3-171FDA7E7F0C}</Project>
+      <Name>Effect2D</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PPDConfiguration\PPDConfiguration.csproj">
+      <Project>{412E43FD-DA7A-4B7A-85F8-61A2501FCAF6}</Project>
+      <Name>PPDConfiguration</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PPDCoreModel\PPDCoreModel.csproj">
+      <Project>{DC448437-043D-4482-B5F2-DE04FF3BC5DD}</Project>
+      <Name>PPDCoreModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PPDCore\PPDCore.csproj">
+      <Project>{ECE1793E-FC37-45D4-9844-2CF16361F500}</Project>
+      <Name>PPDCore</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PPDExpansionCore\PPDExpansionCore.csproj">
+      <Project>{6C7F3F32-3C31-4431-B1CF-526CE4B61A9D}</Project>
+      <Name>PPDExpansionCore</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PPDFrameworkCore\PPDFrameworkCore.csproj">
+      <Project>{97909DE9-E25A-43C5-8116-B5393D752132}</Project>
+      <Name>PPDFrameworkCore</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PPDFramework\PPDFramework.csproj">
+      <Project>{FB4E8B02-D832-470D-968E-3AA046E4C164}</Project>
+      <Name>PPDFramework</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PPDModSettingUI\PPDModSettingUI.csproj">
+      <Project>{953D844F-3208-4ED4-9D65-C47E8B1CA82B}</Project>
+      <Name>PPDModSettingUI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PPDMultiCommon\PPDMultiCommon.csproj">
+      <Project>{D51828FC-C5C4-44E3-B8D9-C64EC73510CE}</Project>
+      <Name>PPDMultiCommon</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PPDMultiServer\PPDMultiServer.csproj">
+      <Project>{AA19D395-25AA-4DC7-B305-19051180E99E}</Project>
+      <Name>PPDMultiServer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PPDPack\PPDPack.csproj">
+      <Project>{1496449C-E132-43C2-9AC9-9FB8BF4AE6AE}</Project>
+      <Name>PPDPack</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PPDShareComponent\PPDShareComponent.csproj">
+      <Project>{5E085408-0C53-48BD-A6CF-A30D67339693}</Project>
+      <Name>PPDShareComponent</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows インストーラー 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

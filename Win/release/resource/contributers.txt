@@ -1,0 +1,9 @@
+--Language--
+Chinese_sc     gameclamp
+Chinese_tc     gameclamp
+Spanish        angel zeta
+Korean         BeforU
+--Wiki Edit Helper--
+English        Zero
+Chinese_sc     gameclamp
+Chinese_tc     gameclamp

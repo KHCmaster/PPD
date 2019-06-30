@@ -1,0 +1,61 @@
+﻿<UserControl x:Class="FlowScriptDrawControl.Control.SourceItemArrowControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:converter="clr-namespace:FlowScriptDrawControl.Converter"
+             >
+    <UserControl.Resources>
+        <converter:VisibilityConverter x:Key="VisibilityConverter"/>
+        <Storyboard x:Key="storyboard" Timeline.DesiredFrameRate="15">
+            <DoubleAnimation Storyboard.TargetName="starRotation" Storyboard.TargetProperty="Angle" From="0" To="360" Duration="0:0:2" RepeatBehavior="Forever" />
+        </Storyboard>
+    </UserControl.Resources>
+    <Grid>
+        <Polygon Stroke="Black" StrokeThickness="1">
+            <Polygon.Fill>
+                <LinearGradientBrush EndPoint="1,0.5" StartPoint="0,0.5">
+                    <GradientStop Color="Black" Offset="0" />
+                    <GradientStop Color="{Binding TypeColor}" Offset="0.5" />
+                    <GradientStop Color="{Binding TypeColor}" Offset="1" />
+                </LinearGradientBrush>
+            </Polygon.Fill>
+            <Polygon.Points>
+                <PointCollection>
+                    <Point X="2" Y="7"/>
+                    <Point X="10" Y="7"/>
+                    <Point X="10" Y="3"/>
+                    <Point X="17" Y="10"/>
+                    <Point X="10" Y="17"/>
+                    <Point X="10" Y="13"/>
+                    <Point X="2" Y="13"/>
+                </PointCollection>
+            </Polygon.Points>
+        </Polygon>
+        <Polygon Stroke="#660033" StrokeThickness="1" Visibility="{Binding IsConnectable, Converter={StaticResource VisibilityConverter}}">
+            <Polygon.RenderTransform>
+                <TransformGroup>
+                    <RotateTransform x:Name="starRotation"/>
+                    <TranslateTransform X="5" Y="5"/>
+                </TransformGroup>
+            </Polygon.RenderTransform>
+            <Polygon.Fill>
+                <SolidColorBrush Color="#FFFF00"/>
+            </Polygon.Fill>
+            <Polygon.Points>
+                <PointCollection>
+                    <Point X="6" Y="0"/>
+                    <Point X="2.4270509831248424" Y="1.7633557568774194"/>
+                    <Point X="1.8541019662496847" Y="5.706339097770921"/>
+                    <Point X="-0.927050983124842" Y="2.853169548885461"/>
+                    <Point X="-4.854101966249684" Y="3.5267115137548393"/>
+                    <Point X="-3" Y="3.6739403974420594e-16"/>
+                    <Point X="-4.854101966249686" Y="-3.5267115137548384"/>
+                    <Point X="-0.9270509831248427" Y="-2.8531695488854605"/>
+                    <Point X="1.8541019662496834" Y="-5.706339097770922"/>
+                    <Point X="2.427050983124842" Y="-1.76335575687742"/>
+                </PointCollection>
+            </Polygon.Points>
+        </Polygon>
+    </Grid>
+</UserControl>

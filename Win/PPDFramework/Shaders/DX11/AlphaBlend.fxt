@@ -1,0 +1,167 @@
+float2 WidthHeight;
+float4x4 Projection;
+
+struct DrawInformation
+{
+    float4x4 Matrix;
+    float4 OverlayColor;
+    float Alpha;
+};
+
+DrawInformation DrawInfo;
+
+struct FilterInformation
+{
+	float4 Arg1;
+	float4 Arg2;
+	float4 Arg3;
+};
+
+FilterInformation FilterInfo;
+
+Texture2D Texture;
+Texture2D LastRenderTargetTexture;
+Texture2D MaskTexture;
+SamplerState LinearSampler
+{
+    Filter = MIN_MAG_MIP_LINEAR;
+	AddressU = Clamp;
+	AddressV = Clamp;
+};
+
+struct VertexShaderInput
+{
+	float3 Position : POSITION;
+	float4 Color    : COLOR;
+	float2 TexCoord : TEXCOORD;
+};
+
+struct VertexShaderOutput
+{
+	float4 Position : SV_POSITION;
+	float4 Color    : COLOR0;
+	float2 TexCoord : TEXCOORD0;
+	float2 LastRenderTargetTexCoord : TEXCOORD1;
+};
+
+#include "Blend.fx"
+#include "Filter.fx"
+
+VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
+{
+	VertexShaderOutput output = (VertexShaderOutput)0;
+	float4 screen = float4(input.Position, 1.0);
+	output.Position = mul(screen, Projection);
+	output.TexCoord = input.TexCoord;
+	output.Color = input.Color;
+	output.LastRenderTargetTexCoord = float2((screen.x + 0.5) / WidthHeight.x, (screen.y + 0.5) / WidthHeight.y);
+	return output;
+}
+
+float GetMask(float2 texCoord) {
+    return MaskTexture.SampleLevel(LinearSampler, texCoord, 0).a;
+}
+
+float4 GetSrcColor(float2 texCoord, float2 screenTexCoord, uniform bool maskEnabled, uniform int filterType) {
+	float4 srcColor = Texture.SampleLevel(LinearSampler, texCoord, 0);
+	srcColor.a *= DrawInfo.Alpha;
+    if(maskEnabled){
+        srcColor.a *= GetMask(screenTexCoord);
+    }
+    srcColor.rgb = srcColor.rgb * (1 - DrawInfo.OverlayColor.a) + DrawInfo.OverlayColor.rgb * DrawInfo.OverlayColor.a;
+    if(filterType == 0){
+        return ColorFilter(srcColor, FilterInfo);
+	}
+	else if (filterType == 1) {
+		return MaxGrayScaleFilter(srcColor, FilterInfo);
+	}
+	else if (filterType == 2) {
+		return MiddleGrayScaleFilter(srcColor, FilterInfo);
+	}
+	else if (filterType == 3) {
+		return NTSCGrayScaleFilter(srcColor, FilterInfo);
+	}
+	else if (filterType  == 4) {
+		return HDTVGrayScaleFilter(srcColor, FilterInfo);
+	}
+	else if (filterType == 5) {
+		return AverageGrayScaleFilter(srcColor, FilterInfo);
+	}
+	else if (filterType == 6) {
+		return GreenGrayScaleFilter(srcColor, FilterInfo);
+	}
+	else if (filterType == 7) {
+		return MedianGrayScaleFilter(srcColor, FilterInfo);
+	}
+	else if (filterType == 8) {
+		return HueFilter(srcColor, FilterInfo);
+	}
+	else if (filterType == 9) {
+		return SaturationFilter(srcColor, FilterInfo);
+	}
+	else if (filterType == 10) {
+		return BrightnessFilter(srcColor, FilterInfo);
+	}
+	else if (filterType == 11) {
+		return InvertFilter(srcColor, FilterInfo);
+    }
+	return srcColor;
+}
+
+float GetSrcAlpha(float2 texCoord, float2 screenTexCoord, uniform bool maskEnabled) {
+  	float4 srcColor = Texture.SampleLevel(LinearSampler, texCoord, 0);
+	srcColor.a *= DrawInfo.Alpha;
+    if(maskEnabled){
+        return srcColor.a * GetMask(screenTexCoord);
+    }
+    return srcColor.a;
+}
+
+#params masks {MaskEnabled: true, MaskDisabled: false}
+
+float4 PixelShaderIncludeMaskFunction(VertexShaderOutput input, uniform bool maskEnabled) : SV_TARGET{
+    return float4(0, 0, 0, max(LastRenderTargetTexture.SampleLevel(LinearSampler, input.LastRenderTargetTexCoord, 0).a,
+        GetSrcAlpha(input.TexCoord, input.LastRenderTargetTexCoord, maskEnabled) * input.Color.a));
+}
+float4 PixelShaderExcludeMaskFunction(VertexShaderOutput input, uniform bool maskEnabled) : SV_TARGET{
+    return float4(0, 0, 0, min(LastRenderTargetTexture.SampleLevel(LinearSampler, input.LastRenderTargetTexCoord, 0).a,
+        1 - GetSrcAlpha(input.TexCoord, input.LastRenderTargetTexCoord, maskEnabled) * input.Color.a));
+}
+
+#foreach(masks, maskKey => maskEnabled)
+technique11 IncludeMask$(maskKey){
+	pass p0 {
+        SetGeometryShader( 0 );
+		SetVertexShader(CompileShader(vs_5_0, VertexShaderFunction()));
+		SetPixelShader(CompileShader(ps_5_0, PixelShaderIncludeMaskFunction($(maskEnabled))));
+	}
+}
+technique ExcludeMask$(maskKey){
+	pass p0 {
+        SetGeometryShader( 0 );
+		SetVertexShader(CompileShader(vs_5_0, VertexShaderFunction()));
+		SetPixelShader(CompileShader(ps_5_0, PixelShaderExcludeMaskFunction($(maskEnabled))));
+	}
+}
+#end
+
+#params blends [Normal, Multiply, Screen, Overlay, HardLight, ColorDodge, LinearDodge, Difference]
+#params filters {None: -1, Color: 0, MaxGrayScale: 1, MiddleGrayScale: 2, NTSCGrayScale: 3, HDTVGrayScale: 4, AverageGrayScale: 5, GreenGrayScale: 6, MedianGrayScale: 7, Hue: 8, Saturation: 9, Brightness: 10, Invert: 11}
+#foreach(blends, blend)
+float4 PixelShader$(blend)Function(VertexShaderOutput input, uniform bool maskEnabled, uniform int filterType) : SV_TARGET{
+	float4 destColor = LastRenderTargetTexture.SampleLevel(LinearSampler, input.LastRenderTargetTexCoord, 0);
+	float4 srcColor = GetSrcColor(input.TexCoord, input.LastRenderTargetTexCoord, maskEnabled, filterType) * input.Color;
+	return $(blend)(destColor, srcColor);
+}
+#foreach(masks, maskKey => maskEnabled)
+#foreach(filters, filterKey => filterType)
+technique $(blend)Blend$(maskKey)$(filterKey)Filter{
+	pass p0 {
+        SetGeometryShader( 0 );
+		SetVertexShader(CompileShader(vs_5_0, VertexShaderFunction()));
+        SetPixelShader(CompileShader(ps_5_0, PixelShader$(blend)Function($(maskEnabled), $(filterType))));
+	}
+}
+#end
+#end
+#end

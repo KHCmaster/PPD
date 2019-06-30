@@ -1,0 +1,52 @@
+<Root>
+  <Sources>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Object.EqualFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Object.EqualFlowSourceObject" ID="3" ShowAll="True" X="-458.928571428572" Y="-6.21428571428569">
+      <Comment Text="対象のマークの評価がCoolかどうか" />
+    </Source>
+    <Source Name="FlowScriptEnginePPD.FlowSourceObjects.Graphics.StageObjectFlowSourceObject" FullName="FlowScriptEnginePPD.FlowSourceObjects.Graphics.StageObjectFlowSourceObject" ID="10" ShowAll="True" X="-336.071428571429" Y="289.5">
+      <Comment Text="マークのエフェクトの上のステージを取得" />
+      <Value Name="Layer" Value="AfterMarkEffect" />
+    </Source>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Misc.EntryPointFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Misc.EntryPointFlowSourceObject" ID="1" ShowAll="True" X="-537" Y="-378" />
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Logic.IfFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Logic.IfFlowSourceObject" ID="4" ShowAll="True" X="88.2142857142856" Y="-47.6428571428572">
+      <Comment Text="Coolなら実行する" />
+    </Source>
+    <Source Name="FlowScriptEnginePPD.FlowSourceObjects.Mark.ProcessEvaluateAnyFlowSourceObject" FullName="FlowScriptEnginePPD.FlowSourceObjects.Mark.ProcessEvaluateAnyFlowSourceObject" ID="8" ShowAll="True" X="-267.5" Y="-60.5">
+      <Comment Text="Cool時のみハンドル(デフォルトのCoolエフェクトは生成されない）" />
+      <Value Name="Handled" Value="True" />
+    </Source>
+    <Source Name="FlowScriptEnginePPD.FlowSourceObjects.Mark.EffectType.ValueFlowSourceObject" FullName="FlowScriptEnginePPD.FlowSourceObjects.Mark.EffectType.ValueFlowSourceObject" ID="9" ShowAll="True" X="-742.928571428572" Y="-10.6428571428571">
+      <Comment Text="Coolの値を取得" />
+      <Value Name="Value" Value="Cool" />
+    </Source>
+    <Source Name="FlowScriptEnginePPD.FlowSourceObjects.Graphics.Effect.Pool.ValueFlowSourceObject" FullName="FlowScriptEnginePPD.FlowSourceObjects.Graphics.Effect.Pool.ValueFlowSourceObject" ID="2" ShowAll="True" X="-253.75" Y="-354.25">
+      <Comment Text="プールを作成しておく(重いエフェクトならCountを大きめしておくといい)" />
+      <Value Name="Count" Value="10" />
+      <Value Name="Path" Value="Hoge.etd" />
+    </Source>
+    <Source Name="FlowScriptEnginePPD.FlowSourceObjects.Graphics.Effect.Pool.UseFlowSourceObject" FullName="FlowScriptEnginePPD.FlowSourceObjects.Graphics.Effect.Pool.UseFlowSourceObject" ID="11" ShowAll="True" X="94.1428571428572" Y="86.1190476190477">
+      <Comment Text="プールからエフェクトを取り出す&#xA;マークの位置に設定する&#xA;取り出したときにPlayType=Onceで再生されるので再生する必要は無い" />
+    </Source>
+    <Source Name="FlowScriptEnginePPD.FlowSourceObjects.Graphics.AddChildFlowSourceObject" FullName="FlowScriptEnginePPD.FlowSourceObjects.Graphics.AddChildFlowSourceObject" ID="7" ShowAll="True" X="91.0714285714284" Y="233.428571428571">
+      <Comment Text="エフェクトをステージに追加" />
+    </Source>
+  </Sources>
+  <Flows>
+    <Flow SrcID="3" SrcName="Value" DestID="8" DestName="Handled" />
+    <Flow SrcID="3" SrcName="Value" DestID="4" DestName="Condition" />
+    <Flow SrcID="10" SrcName="Value" DestID="7" DestName="Parent" />
+    <Flow SrcID="1" SrcName="Start" DestID="2" DestName="In" />
+    <Flow SrcID="4" SrcName="OnTrue" DestID="11" DestName="In" />
+    <Flow SrcID="8" SrcName="Out" DestID="4" DestName="In" />
+    <Flow SrcID="8" SrcName="EffectType" DestID="3" DestName="B" />
+    <Flow SrcID="8" SrcName="Position" DestID="11" DestName="Position" />
+    <Flow SrcID="9" SrcName="Value" DestID="3" DestName="A" />
+    <Flow SrcID="2" SrcName="Pool" DestID="11" DestName="Pool" />
+    <Flow SrcID="11" SrcName="Success" DestID="7" DestName="In" />
+    <Flow SrcID="11" SrcName="Object" DestID="7" DestName="Child" />
+  </Flows>
+  <Comments>
+    <Comment X="-329.603174603174" Y="-512.651515151515" Text="仮定:Hoge.etdをリソースに追加&#xA;目的:マークのCool評価時のエフェクトの差し替え" />
+  </Comments>
+  <Scopes />
+</Root>

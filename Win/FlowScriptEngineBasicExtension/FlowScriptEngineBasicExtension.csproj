@@ -1,0 +1,117 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x64</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{F7005FCD-2A2B-4BE4-BB5D-903FA2D05CFB}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>FlowScriptEngineBasicExtension</RootNamespace>
+    <AssemblyName>FlowScriptEngineBasicExtension</AssemblyName>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>false</Prefer32Bit>
+    <CodeAnalysisRuleSet>..\PPDCommon.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+    <Prefer32Bit>false</Prefer32Bit>
+    <CodeAnalysisRuleSet>
+    </CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="FlowSourceObjects\Enumerable\RangeFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Enumerable\RangeFlowSourceObjectBase.cs" />
+    <Compile Include="FlowSourceObjects\Enumerable\RangeWithStartIndexFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Enumerable\RangeWithStepFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Hashtable\ParseBooleanValueFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Hashtable\ParseDoubleValueFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Hashtable\ParseFloatValueFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Hashtable\ParseInt32ValueFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Hashtable\ParseStringValueFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Hashtable\ParseValueFlowSourceObjectBase.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="ToolTipText.cs" />
+    <Compile Include="FlowSourceObjects\Hashtable\ParseBooleanValueFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ParseBooleanValueFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Hashtable\ParseDoubleValueFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ParseDoubleValueFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Hashtable\ParseFloatValueFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ParseFloatValueFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Hashtable\ParseInt32ValueFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ParseInt32ValueFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Hashtable\ParseStringValueFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ParseStringValueFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Enumerable\RangeFlowSourceObject.AutoFast.cs">
+      <DependentUpon>RangeFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Enumerable\RangeWithStartIndexFlowSourceObject.AutoFast.cs">
+      <DependentUpon>RangeWithStartIndexFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Enumerable\RangeWithStepFlowSourceObject.AutoFast.cs">
+      <DependentUpon>RangeWithStepFlowSourceObject.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\FlowScriptEngine\FlowScriptEngine.csproj">
+      <Project>{952271CD-8EAC-46BD-B32E-D5262D26B290}</Project>
+      <Name>FlowScriptEngine</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>copy "$(ProjectDir)\bin\x64\Debug\\FlowScriptEngineBasicExtension.dll" "$(SolutionDir)FlowScriptControlTest\bin\x64\Debug\dlls\FlowScriptEngineBasicExtension.dll"
+copy "$(ProjectDir)\bin\x64\Debug\\FlowScriptEngineBasicExtension.dll" "$(SolutionDir)PPD\PPD\bin\x64\Debug\dlls\FlowScriptEngineBasicExtension.dll"
+copy "$(ProjectDir)\bin\x64\Debug\\FlowScriptEngineBasicExtension.dll" "$(SolutionDir)PPDeditor\PPDeditor\bin\x64\Debug\dlls\FlowScriptEngineBasicExtension.dll"</PostBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

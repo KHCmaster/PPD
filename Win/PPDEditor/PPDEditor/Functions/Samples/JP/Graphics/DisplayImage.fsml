@@ -1,0 +1,27 @@
+<Root>
+  <Sources>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Misc.EntryPointFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Misc.EntryPointFlowSourceObject" ID="8" ShowAll="True" X="-200" Y="-130" />
+    <Source Name="FlowScriptEnginePPD.FlowSourceObjects.Graphics.Image.ValueFlowSourceObject" FullName="FlowScriptEnginePPD.FlowSourceObjects.Graphics.Image.ValueFlowSourceObject" ID="9" ShowAll="True" X="0" Y="-81.1111111111111">
+      <Comment Text="画像表示オブジェクトを作成" />
+      <Value Name="Path" Value="hoge.png" />
+      <Value Name="Position" Value="X:100 Y:100" />
+    </Source>
+    <Source Name="FlowScriptEnginePPD.FlowSourceObjects.Graphics.AddChildFlowSourceObject" FullName="FlowScriptEnginePPD.FlowSourceObjects.Graphics.AddChildFlowSourceObject" ID="6" ShowAll="True" X="27.7777777777778" Y="90">
+      <Comment Text="ステージに追加" />
+    </Source>
+    <Source Name="FlowScriptEnginePPD.FlowSourceObjects.Graphics.StageObjectFlowSourceObject" FullName="FlowScriptEnginePPD.FlowSourceObjects.Graphics.StageObjectFlowSourceObject" ID="5" ShowAll="True" X="-270" Y="110">
+      <Comment Text="マークの上のステージを取得" />
+      <Value Name="Layer" Value="AfterMark" />
+    </Source>
+  </Sources>
+  <Flows>
+    <Flow SrcID="8" SrcName="Start" DestID="9" DestName="In" />
+    <Flow SrcID="9" SrcName="Success" DestID="6" DestName="In" />
+    <Flow SrcID="9" SrcName="Object" DestID="6" DestName="Child" />
+    <Flow SrcID="5" SrcName="Value" DestID="6" DestName="Parent" />
+  </Flows>
+  <Comments>
+    <Comment X="-138.888888888889" Y="-217.777777777778" Text="目的:画像を表示します&#xA;仮定:リソースマネージャーのImageにhoge.pngを追加" />
+  </Comments>
+  <Scopes />
+</Root>

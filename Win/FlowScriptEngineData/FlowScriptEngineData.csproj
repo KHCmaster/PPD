@@ -1,0 +1,109 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x64</Platform>
+    <ProjectGuid>{B038AA36-D8BF-46A8-81C4-98C3B5B48821}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>FlowScriptEngineData</RootNamespace>
+    <AssemblyName>FlowScriptEngineData</AssemblyName>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>..\PPDCommon.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>
+    </CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="YamlDotNet, Version=3.8.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\YamlDotNet.3.8.0\lib\net35\YamlDotNet.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="FlowSourceObjects\ExecutableFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\ExecuteOnlyFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Json\DumpFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Json\ParseFlowSourceOjbect.cs" />
+    <Compile Include="FlowSourceObjects\Yaml\DumpFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Yaml\ParseFlowSourceObject.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="ToolTipText.cs" />
+    <Compile Include="FlowSourceObjects\Json\ParseFlowSourceOjbect.AutoFast.cs">
+      <DependentUpon>ParseFlowSourceOjbect.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Json\DumpFlowSourceObject.AutoFast.cs">
+      <DependentUpon>DumpFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Yaml\DumpFlowSourceObject.AutoFast.cs">
+      <DependentUpon>DumpFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Yaml\ParseFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ParseFlowSourceObject.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\FlowScriptEngine\FlowScriptEngine.csproj">
+      <Project>{952271cd-8eac-46bd-b32e-d5262d26b290}</Project>
+      <Name>FlowScriptEngine</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>copy "$(ProjectDir)\bin\x64\Debug\\FlowScriptEngineData.dll" "$(SolutionDir)FlowScriptControlTest\bin\x64\Debug\dlls\FlowScriptEngineData.dll"
+copy "$(ProjectDir)\bin\x64\Debug\\FlowScriptEngineData.dll" "$(SolutionDir)PPD\PPD\bin\x64\Debug\dlls\FlowScriptEngineData.dll"
+copy "$(ProjectDir)\bin\x64\Debug\\FlowScriptEngineData.dll" "$(SolutionDir)PPDeditor\PPDeditor\bin\x64\Debug\dlls\FlowScriptEngineData.dll"</PostBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

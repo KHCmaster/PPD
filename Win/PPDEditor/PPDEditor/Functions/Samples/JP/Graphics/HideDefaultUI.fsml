@@ -1,0 +1,20 @@
+<Root>
+  <Sources>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Misc.EntryPointFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Misc.EntryPointFlowSourceObject" ID="1" ShowAll="True" X="-242.222222222222" Y="-45.5555555555556" />
+    <Source Name="FlowScriptEnginePPD.FlowSourceObjects.Graphics.GameInterfaceFlowSourceObject" FullName="FlowScriptEnginePPD.FlowSourceObjects.Graphics.GameInterfaceFlowSourceObject" ID="2" ShowAll="True" X="-300" Y="60">
+      <Comment Text="標準UIを取得" />
+    </Source>
+    <Source Name="FlowScriptEnginePPD.FlowSourceObjects.Graphics.SetHiddenFlowSourceObject" FullName="FlowScriptEnginePPD.FlowSourceObjects.Graphics.SetHiddenFlowSourceObject" ID="3" ShowAll="True" X="22.2222222222222" Y="24.4444444444444">
+      <Comment Text="UIのHiddenをTrueにして非表示に" />
+      <Value Name="Hidden" Value="True" />
+    </Source>
+  </Sources>
+  <Flows>
+    <Flow SrcID="1" SrcName="Start" DestID="3" DestName="In" />
+    <Flow SrcID="2" SrcName="Value" DestID="3" DestName="Object" />
+  </Flows>
+  <Comments>
+    <Comment X="-110" Y="-160" Text="目的:標準のUIを隠します" />
+  </Comments>
+  <Scopes />
+</Root>

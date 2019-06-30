@@ -1,0 +1,29 @@
+<Root>
+  <Sources>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Misc.EntryPointFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Misc.EntryPointFlowSourceObject" ID="1" ShowAll="True" X="-374.285714285714" Y="-141.428571428571" />
+    <Source Name="FlowScriptEnginePPD.FlowSourceObjects.Graphics.Text.ValueFlowSourceObject" FullName="FlowScriptEnginePPD.FlowSourceObjects.Graphics.Text.ValueFlowSourceObject" ID="2" ShowAll="True" X="-100" Y="-110">
+      <Comment Text="テキスト表示オブジェクトを作成" />
+      <Value Name="Color" Value="#FFFFFF" />
+      <Value Name="Height" Value="40" />
+      <Value Name="Position" Value="X:200 Y:200" />
+      <Value Name="Text" Value="DisplayString" />
+    </Source>
+    <Source Name="FlowScriptEnginePPD.FlowSourceObjects.Graphics.AddChildFlowSourceObject" FullName="FlowScriptEnginePPD.FlowSourceObjects.Graphics.AddChildFlowSourceObject" ID="3" ShowAll="True" X="-85.5555555555556" Y="92.2222222222222">
+      <Comment Text="ステージに追加" />
+    </Source>
+    <Source Name="FlowScriptEnginePPD.FlowSourceObjects.Graphics.StageObjectFlowSourceObject" FullName="FlowScriptEnginePPD.FlowSourceObjects.Graphics.StageObjectFlowSourceObject" ID="4" ShowAll="True" X="-378.888888888889" Y="111.111111111111">
+      <Comment Text="マークの上のステージを取得" />
+      <Value Name="Layer" Value="AfterMark" />
+    </Source>
+  </Sources>
+  <Flows>
+    <Flow SrcID="1" SrcName="Start" DestID="2" DestName="In" />
+    <Flow SrcID="2" SrcName="Success" DestID="3" DestName="In" />
+    <Flow SrcID="2" SrcName="Object" DestID="3" DestName="Child" />
+    <Flow SrcID="4" SrcName="Value" DestID="3" DestName="Parent" />
+  </Flows>
+  <Comments>
+    <Comment X="-170" Y="-211.428571428571" Text="目的:文字列を表示します" />
+  </Comments>
+  <Scopes />
+</Root>

@@ -1,0 +1,103 @@
+﻿<html>
+<head>
+<meta content="text/html; charset=UTF-8" http-equiv="content-type">
+<link rel="stylesheet" href="./common.css">
+<script type="text/javascript" src="../jquery-1.6.1.min.js"></script>
+<script type="text/javascript" src="../menu.js"></script>
+<script>
+
+function caliculate(){
+   var width = Number($("#movie_width").val());
+   var height = Number($("#movie_height").val());
+   $("#black_height").val(1/2*(height-9/16*width))
+}
+</script>
+<title>
+コンテント
+</title>
+</head>
+<body>
+まず、対象の動画（の曲）のBPMを測定します。<br/>
+BPMとは１分間に何回ビーとするか、すなわち曲の速さを表します（大きければ大きいほどテンポの速い曲）<br/>
+PPDEditorには<a href="">BPM測定</a>という付属のBPM測定機能があります。<br/>
+うまくはかれない場合にはGoogleなどで「曲名 BPM」などで検索してみるといいでしょう。<br/>
+あるいはmp3音源を解析して自動でBPMを計算する「MixMeister BPM Analyer」といったサードパーティのフリーソフトウェアもあります。<br/>
+ですが、こういった数値の信憑性はいささか欠けているので、やはり一度は手動で測定し合っているか確認しましょう。<br/>
+<br/>
+BPMが測定できました。<br/>
+測定されたBPMをツールボックス一番左のテキストボックスに入力します。<br/>
+(マウスをホバリングするとBPMのツールチップが表示されるテキストボックスです）<br/>
+<img src="./img/assign_bpm.png"/><br/>
+<br/>
+<br/>
+動画のクリッピング設定を行います。<br/>
+現在の動画のサイズは<a href=""/>プロパティウィンドウ</a>の部分に書かれています。<br/>
+<img src="./img/check_movie_size.png"/><br/>
+<br/>
+PPDのウィンドウのサイズは16:9になっています(800*450px)<br/>
+ですので16:9の動画ソースに対してはクリッピングの設定は行う必要はないのですが、<br/>
+そうでない動画ソースに対してはアスペクト比を固定するために設定を行う必要があります。<br/>
+<br/>
+例えば、よくある例として512*384pxの動画(4:3のアスペクト比)の動画で上下に黒帯がついていることがあります。<br/>
+この場合黒帯の部分を除けば16:9の動画ソースになることが多いので黒帯を除く設定を行います。<br/>
+まず、動画→切り取りを選択します<br/>
+<img src="./img/clip_movie1.png"/><br/>
+<br/>
+以下のウィンドウが表示されます。<br/>
+<img src="./img/clip_movie2.png"/><br/>
+<br/>
+除くべき黒帯の幅を計算します。<br/>
+黒帯の高さをblack_height,動画の幅をmovie_width,高さをmovie_heightとします。<br/>
+すると以下の方程式が成り立たなければなりません。<br/>
+movie_width:movie_height-2*black_height=16:9<br/>
+⇔16*(movie_height-2*black_height)=9*movie_width<br/>
+⇔black_height=1/2(movie_height-9/16*movie_width)<br/>
+。。。<br/>
+というのを以下のフォームで計算可能にしました。<br/>
+<br/>
+<form>
+   動画の幅:<input type="text" style="width:100px;" id="movie_width" value="512"/><br/>
+   動画の高さ:<input type="text" style="width:100px;" id="movie_height" value="384"/><br/>
+   <input type="button" value="計算する" onclick="caliculate()"/><br/>
+   黒帯の高さ:<input type="text" style="width:100px;" id="black_height" value="0"/>
+</form>
+<br/>
+上記の黒帯の高さを先の切り取りウィンドウの上と下に入力しOKを押します。<br/>
+すると動画の切り取りが行われ、16:9の動画表示になります。<br/>
+<br/>
+別の例として、黒帯なしの512*384pxの動画ソース(4:3)に対して左右に黒帯を追加してアスペクト比を(4:3)にしたい場合もあります。<br/>
+その場合は、左と右に-100を入力してください。(上と下は0)<br/>
+<br/>
+<a href="">設定ファイルライター</a>を表示させて、情報を入力します。<br/>
+<img src="./img/initial_setting.png"/><br/>
+<br/>
+サムネの開始時間、サムネの終了時間、開始時間、終了時間は右の三角を押して「タイムラインから取得」を選択すると<br/>
+動画の現在の時間を入力することが出来ます。<br/>
+サムネの開始時間は、PPDでのメニュー画面で再生開始される時間です。サビの開始時間がいいと思います。<br/>
+サムネの終了時間は、PPDでのメニュー画面で再生終了される時間です。サビの終了時間などでいいと思います。<br/>
+開始時間は、ゲームでの動画の開始時間です。動画によって変わりますが、普通は０でいいです。<br/>
+動画の始まりが急である場合には、-1,-2などで動画の開始を遅らせることができます。<br/>
+終了時間は、ゲームでの動画の終了時間です。動画の最後でいいでしょう。<br/>
+各難易度ですが、好きに決めてください。自分が表示したいものを指定できます。一般には、★×○(丸には数字)が現状では多い気がします。<br/>
+配布前に決定しても構いません。<br/>
+BPMには測ったBPMを入れましょう。<br/>
+動画の各カットは、先ほど設定した動画の切り取り設定を入力します。0なら0を全てに入力してください。 <br/>
+<br/>
+ここで、一度プロジェクトを保存します。<br/>
+プロジェクトの新規作成を使ってプロジェクトを作った場合には既にプロジェクトが存在しているのでCtrl+Sあるいはファイル→プロジェクトを上書き保存を選択してください。<br/>
+以下は、プロジェクトの新規作成を使わずに設定を行った場合の保存の仕方です。<br/>
+<br/>
+ファイル→プロジェクトを保存を選択します。<br/>
+<img src="./img/save_project1.png"/><br/>
+<br/>
+ダイアログが表示されるので、ファイル名を「曲名.ppdproj」にして保存します。<br/>
+<img src="./img/save_project2.png"/><br/>
+<br/>
+次回からは「プロジェクトを上書き保存」を選択することで上書き保存されます。<br/>
+<br/>
+またプロジェクトを開く場合は、保存した「曲名.ppdproj」を選択してください。<br/>
+<br/>
+次は、マークの打ち込みを行います。
+<span onclick="ChangeContentFromID('workflow_beating_marks.html')"><a onclick="return false" href="">次へ</a></span>
+</body>
+</html>

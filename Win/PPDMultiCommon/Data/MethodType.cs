@@ -1,0 +1,35 @@
+﻿namespace PPDMultiCommon.Data
+{
+    public enum MethodType : ushort
+    {
+        None = 0,
+        AddUser,
+        SendServerInfo,
+        DeleteUser,
+        AddMessage,
+        AddPrivateMessage,
+        ChangeUserState,
+        CloseConnect,
+        ChangeSong,
+        GoToMenu,
+        GoToPlay,
+        HasSong,
+        MainGameLoaded,
+        PlayMainGame,
+        ChangeScore,
+        ChangeLife,
+        ChangeEvaluate,
+        SendResult,
+        JustGoToMenu,
+        AddEffect,
+        AddEffectToPlayer,
+        ChangeGameRule,
+        ChangeLeader,
+        Ping,
+        PingUser,
+        GoToPlayPrepare,
+        ForceStart,
+        SendScoreList,
+        KickUser,
+    }
+}

@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Root>
+   <Profiles>
+      <Profile DisplayText="" CoolPoint="5" GoodPoint="2" SafePoint="0" SadPoint="-20" WorstPoint="-51" GodMode="0" MuteSE="0" Connect="0"/>
+      <Profile DisplayText="GodMode" CoolPoint="5" GoodPoint="2" SafePoint="0" SadPoint="-20" WorstPoint="-51" GodMode="1" MuteSE="0" Connect="0"/>
+      <Profile DisplayText="EasyMode" CoolPoint="50" GoodPoint="20" SafePoint="0" SadPoint="-3" WorstPoint="-5" GodMode="0" MuteSE="0" Connect="0"/>
+      <Profile DisplayText="PerfectMode" CoolPoint="2" GoodPoint="1" SafePoint="-10240" SadPoint="-10240" WorstPoint="-10240" GodMode="0" MuteSE="0" Connect="0"/>
+      <Profile DisplayText="HellMode" CoolPoint="1" GoodPoint="-10240" SafePoint="-10240" SadPoint="-10240" WorstPoint="-10240" GodMode="0" MuteSE="0" Connect="0"/>
+   </Profiles>
+</Root>

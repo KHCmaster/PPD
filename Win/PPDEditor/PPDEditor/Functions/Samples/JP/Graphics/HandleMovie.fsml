@@ -1,0 +1,26 @@
+<Root>
+  <Sources>
+    <Source Name="FlowScriptEnginePPD.FlowSourceObjects.InputFlowSourceObject" FullName="FlowScriptEnginePPD.FlowSourceObjects.InputFlowSourceObject" ID="1" ShowAll="True" X="-312.222222222222" Y="-116.666666666667">
+      <Comment Text="○ボタンが押されたときのイベント" />
+      <Value Name="Button" Value="Circle" />
+    </Source>
+    <Source Name="FlowScriptEnginePPD.FlowSourceObjects.Graphics.Movie.PlayFlowSourceObject" FullName="FlowScriptEnginePPD.FlowSourceObjects.Graphics.Movie.PlayFlowSourceObject" ID="2" ShowAll="True" X="-14.5" Y="-95">
+      <Comment Text="動画を再生" />
+    </Source>
+    <Source Name="FlowScriptEnginePPD.FlowSourceObjects.Graphics.Movie.PauseFlowSourceObject" FullName="FlowScriptEnginePPD.FlowSourceObjects.Graphics.Movie.PauseFlowSourceObject" ID="3" ShowAll="True" X="-12.2222222222222" Y="30">
+      <Comment Text="動画を一時停止" />
+    </Source>
+    <Source Name="FlowScriptEnginePPD.FlowSourceObjects.InputFlowSourceObject" FullName="FlowScriptEnginePPD.FlowSourceObjects.InputFlowSourceObject" ID="4" ShowAll="True" X="-310" Y="37.7777777777778">
+      <Comment Text="×ボタンが押されたときのイベント" />
+      <Value Name="Button" Value="Cross" />
+    </Source>
+  </Sources>
+  <Flows>
+    <Flow SrcID="1" SrcName="Out" DestID="2" DestName="In" />
+    <Flow SrcID="4" SrcName="Out" DestID="3" DestName="In" />
+  </Flows>
+  <Comments>
+    <Comment X="-170" Y="-210" Text="目的:動画の再生、一時停止をします" />
+  </Comments>
+  <Scopes />
+</Root>

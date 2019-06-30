@@ -1,0 +1,313 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Effects FPS="60">
+   <Effect FilePath="great1.png" StartFrame="0" FrameLength="30">
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="0" EndFrame="27">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="1" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="27" EndFrame="30">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+   </Effect>
+   <Effect FilePath="great2.png" StartFrame="0" FrameLength="30">
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="0" EndFrame="24">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="1" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="24" EndFrame="27">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="27" EndFrame="30">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+   </Effect>
+   <Effect FilePath="great3.png" StartFrame="0" FrameLength="30">
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="0" EndFrame="21">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="1" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="21" EndFrame="24">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="24" EndFrame="30">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+   </Effect>
+   <Effect FilePath="great4.png" StartFrame="0" FrameLength="30">
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="0" EndFrame="18">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="1" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="18" EndFrame="21">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="21" EndFrame="30">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+   </Effect>
+   <Effect FilePath="great5.png" StartFrame="0" FrameLength="30">
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="0" EndFrame="15">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="1" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="15" EndFrame="18">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="18" EndFrame="30">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+   </Effect>
+   <Effect FilePath="great6.png" StartFrame="0" FrameLength="30">
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="0" EndFrame="12">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="1" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="12" EndFrame="15">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="15" EndFrame="30">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+   </Effect>
+   <Effect FilePath="great7.png" StartFrame="0" FrameLength="30">
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="0" EndFrame="9">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="1" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="9" EndFrame="12">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="12" EndFrame="30">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+   </Effect>
+   <Effect FilePath="great8.png" StartFrame="0" FrameLength="30">
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="0" EndFrame="6">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="1" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="6" EndFrame="9">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="9" EndFrame="30">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+   </Effect>
+   <Effect FilePath="great9.png" StartFrame="0" FrameLength="30">
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="0" EndFrame="3">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="1" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="3" EndFrame="6">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="6" EndFrame="30">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+   </Effect>
+   <Effect FilePath="great10.png" StartFrame="0" FrameLength="30">
+      <State X="0" Y="0" Alpha="1" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="0" EndFrame="3">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="3" EndFrame="30">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+   </Effect>
+</Effects>

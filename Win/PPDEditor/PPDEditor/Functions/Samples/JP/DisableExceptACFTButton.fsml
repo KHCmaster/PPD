@@ -1,0 +1,96 @@
+<Root>
+  <Sources>
+    <Source Name="FlowScriptEnginePPD.FlowSourceObjects.DisableInputFlowSourceObject" FullName="FlowScriptEnginePPD.FlowSourceObjects.DisableInputFlowSourceObject" ID="1" ShowAll="True" X="-9.5" Y="-367">
+      <Value Name="Button" Value="Left" />
+      <Value Name="IsDisabled" Value="True" />
+    </Source>
+    <Source Name="FlowScriptEnginePPD.FlowSourceObjects.DisableInputFlowSourceObject" FullName="FlowScriptEnginePPD.FlowSourceObjects.DisableInputFlowSourceObject" ID="3" ShowAll="True" X="-9.5" Y="-266">
+      <Value Name="Button" Value="Down" />
+      <Value Name="IsDisabled" Value="True" />
+    </Source>
+    <Source Name="FlowScriptEnginePPD.FlowSourceObjects.DisableInputFlowSourceObject" FullName="FlowScriptEnginePPD.FlowSourceObjects.DisableInputFlowSourceObject" ID="4" ShowAll="True" X="-9.5" Y="-166">
+      <Value Name="Button" Value="Right" />
+      <Value Name="IsDisabled" Value="True" />
+    </Source>
+    <Source Name="FlowScriptEnginePPD.FlowSourceObjects.DisableInputFlowSourceObject" FullName="FlowScriptEnginePPD.FlowSourceObjects.DisableInputFlowSourceObject" ID="5" ShowAll="True" X="-8.5" Y="-66">
+      <Value Name="Button" Value="Up" />
+      <Value Name="IsDisabled" Value="True" />
+    </Source>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Misc.EntryPointFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Misc.EntryPointFlowSourceObject" ID="2" ShowAll="True" X="-455.5" Y="-394" />
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Scope.SetValueFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Scope.SetValueFlowSourceObject" ID="9" ShowAll="True" X="-11.5" Y="-468">
+      <Value Name="ValueName" Value="TargetMarkTypes" />
+    </Source>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Scope.SetValueFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Scope.SetValueFlowSourceObject" ID="15" ShowAll="True" X="247.5" Y="-469">
+      <Value Name="ValueName" Value="DisableMissPressButtons" />
+    </Source>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Logic.AndFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Logic.AndFlowSourceObject" ID="7" ShowAll="True" X="151.5" Y="228" />
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Logic.AndFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Logic.AndFlowSourceObject" ID="25" ShowAll="True" X="151.357142857143" Y="309.428571428571" />
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Logic.NotFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Logic.NotFlowSourceObject" ID="8" ShowAll="True" X="-69.3571428571429" Y="204.857142857143" />
+    <Source Name="FlowScriptEnginePPD.FlowSourceObjects.MarkType.ValueFlowSourceObject" FullName="FlowScriptEnginePPD.FlowSourceObjects.MarkType.ValueFlowSourceObject" ID="11" ShowAll="True" X="-245.5" Y="-809">
+      <Value Name="Value" Value="Square" />
+    </Source>
+    <Source Name="FlowScriptEnginePPD.FlowSourceObjects.MarkType.ValueFlowSourceObject" FullName="FlowScriptEnginePPD.FlowSourceObjects.MarkType.ValueFlowSourceObject" ID="12" ShowAll="True" X="-244.5" Y="-754">
+      <Value Name="Value" Value="Cross" />
+    </Source>
+    <Source Name="FlowScriptEnginePPD.FlowSourceObjects.MarkType.ValueFlowSourceObject" FullName="FlowScriptEnginePPD.FlowSourceObjects.MarkType.ValueFlowSourceObject" ID="13" ShowAll="True" X="-243.5" Y="-698">
+      <Value Name="Value" Value="Circle" />
+    </Source>
+    <Source Name="FlowScriptEnginePPD.FlowSourceObjects.MarkType.ValueFlowSourceObject" FullName="FlowScriptEnginePPD.FlowSourceObjects.MarkType.ValueFlowSourceObject" ID="14" ShowAll="True" X="-243.5" Y="-642">
+      <Value Name="Value" Value="Triangle" />
+    </Source>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.HashSet.FromElementFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.HashSet.FromElementFlowSourceObject" ID="26" ShowAll="False" X="28.2499999999999" Y="-765.75" />
+    <Source Name="FlowScriptEnginePPD.FlowSourceObjects.MarkType.ValueFlowSourceObject" FullName="FlowScriptEnginePPD.FlowSourceObjects.MarkType.ValueFlowSourceObject" ID="17" ShowAll="True" X="94.5" Y="-888">
+      <Value Name="Value" Value="R" />
+    </Source>
+    <Source Name="FlowScriptEnginePPD.FlowSourceObjects.MarkType.ValueFlowSourceObject" FullName="FlowScriptEnginePPD.FlowSourceObjects.MarkType.ValueFlowSourceObject" ID="18" ShowAll="True" X="94.5" Y="-830">
+      <Value Name="Value" Value="L" />
+    </Source>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.HashSet.FromElementFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.HashSet.FromElementFlowSourceObject" ID="27" ShowAll="False" X="403.25" Y="-889.5" />
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Scope.GetValueFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Scope.GetValueFlowSourceObject" ID="19" ShowAll="True" X="297.928571428571" Y="-62.8571428571426">
+      <Value Name="ValueName" Value="TargetMarkTypes" />
+    </Source>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Scope.GetValueFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Scope.GetValueFlowSourceObject" ID="22" ShowAll="True" X="300.071428571429" Y="-3.42857142857156">
+      <Value Name="ValueName" Value="DisableMissPressButtons" />
+    </Source>
+    <Source Name="FlowScriptEnginePPD.FlowSourceObjects.Mark.ProcessMissPressAnyFlowSourceObject" FullName="FlowScriptEnginePPD.FlowSourceObjects.Mark.ProcessMissPressAnyFlowSourceObject" ID="6" ShowAll="True" X="-470.785714285714" Y="110">
+      <Value Name="IsMissPress" Value="False" />
+    </Source>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.HashSet.ContainsFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.HashSet.ContainsFlowSourceObject" ID="28" ShowAll="True" X="338.25" Y="75.4999999999998" />
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.HashSet.ContainsFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.HashSet.ContainsFlowSourceObject" ID="29" ShowAll="True" X="339.5" Y="174.25" />
+  </Sources>
+  <Flows>
+    <Flow SrcID="2" SrcName="Start" DestID="1" DestName="In" />
+    <Flow SrcID="2" SrcName="Start" DestID="3" DestName="In" />
+    <Flow SrcID="2" SrcName="Start" DestID="4" DestName="In" />
+    <Flow SrcID="2" SrcName="Start" DestID="5" DestName="In" />
+    <Flow SrcID="2" SrcName="Start" DestID="9" DestName="In" />
+    <Flow SrcID="2" SrcName="Start" DestID="15" DestName="In" />
+    <Flow SrcID="7" SrcName="Value" DestID="25" DestName="A" />
+    <Flow SrcID="25" SrcName="Value" DestID="6" DestName="Handled" />
+    <Flow SrcID="8" SrcName="Value" DestID="7" DestName="A" />
+    <Flow SrcID="11" SrcName="Value" DestID="26" DestName="A" />
+    <Flow SrcID="12" SrcName="Value" DestID="26" DestName="B" />
+    <Flow SrcID="13" SrcName="Value" DestID="26" DestName="C" />
+    <Flow SrcID="14" SrcName="Value" DestID="26" DestName="D" />
+    <Flow SrcID="26" SrcName="Value" DestID="9" DestName="Value" />
+    <Flow SrcID="17" SrcName="Value" DestID="27" DestName="A" />
+    <Flow SrcID="18" SrcName="Value" DestID="27" DestName="B" />
+    <Flow SrcID="27" SrcName="Value" DestID="15" DestName="Value" />
+    <Flow SrcID="19" SrcName="Value" DestID="29" DestName="HashSet" />
+    <Flow SrcID="22" SrcName="Value" DestID="28" DestName="HashSet" />
+    <Flow SrcID="6" SrcName="Out" DestID="28" DestName="In" />
+    <Flow SrcID="6" SrcName="Out" DestID="29" DestName="In" />
+    <Flow SrcID="6" SrcName="IsScratch" DestID="8" DestName="Value" />
+    <Flow SrcID="6" SrcName="PressedButton" DestID="28" DestName="Item" />
+    <Flow SrcID="6" SrcName="Type" DestID="29" DestName="Item" />
+    <Flow SrcID="28" SrcName="Result" DestID="7" DestName="B" />
+    <Flow SrcID="29" SrcName="Result" DestID="25" DestName="B" />
+  </Flows>
+  <Comments>
+    <Comment X="-296.5" Y="-480" Text="方向キー無効化" />
+    <Comment X="-460.642857142857" Y="56.7142857142857" Text="LRで△□×○のミス押しができるのをできないようにする" />
+    <Comment X="-134.357142857143" Y="170.785714285714" Text="スクラッチのマークはデフォルト動作" />
+    <Comment X="282.785714285714" Y="-112.071428571429" Text="LかRが押されてかつ△□×○かどうか" />
+  </Comments>
+  <Scopes />
+</Root>

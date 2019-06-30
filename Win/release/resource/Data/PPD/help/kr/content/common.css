@@ -1,0 +1,16 @@
+﻿body, input, select, textarea {
+	font-family: "맑은 고딕";
+	font-size: 14px;
+}
+
+#logTable {
+   border-collapse: collapse;
+}
+
+#logTable, #logTable th, table#logTable td {
+   border: 1px solid #C0C0C0;
+}
+
+#logTable th {
+   background-color: #DEEFFF;
+}

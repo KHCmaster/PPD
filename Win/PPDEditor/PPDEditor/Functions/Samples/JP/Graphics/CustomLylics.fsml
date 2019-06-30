@@ -1,0 +1,47 @@
+<Root>
+  <Sources>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Misc.EntryPointFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Misc.EntryPointFlowSourceObject" ID="1" ShowAll="True" X="-387" Y="-176" />
+    <Source Name="FlowScriptEnginePPD.FlowSourceObjects.Graphics.GameInterfaceFlowSourceObject" FullName="FlowScriptEnginePPD.FlowSourceObjects.Graphics.GameInterfaceFlowSourceObject" ID="3" ShowAll="True" X="-486" Y="-116" />
+    <Source Name="FlowScriptEnginePPD.FlowSourceObjects.Graphics.SetHiddenFlowSourceObject" FullName="FlowScriptEnginePPD.FlowSourceObjects.Graphics.SetHiddenFlowSourceObject" ID="2" ShowAll="True" X="-166" Y="-162">
+      <Comment Text="デフォルトのUIを非表示に" />
+      <Value Name="Hidden" Value="True" />
+    </Source>
+    <Source Name="FlowScriptEnginePPD.FlowSourceObjects.Graphics.Text.ValueFlowSourceObject" FullName="FlowScriptEnginePPD.FlowSourceObjects.Graphics.Text.ValueFlowSourceObject" ID="5" ShowAll="True" X="99" Y="-172">
+      <Comment Text="テキスト表示オブジェクトの作成" />
+      <Value Name="Color" Value="#FFFFFF" />
+      <Value Name="Height" Value="40" />
+      <Value Name="Position" Value="X:100 Y:100" />
+    </Source>
+    <Source Name="FlowScriptEnginePPD.FlowSourceObjects.Graphics.AddChildFlowSourceObject" FullName="FlowScriptEnginePPD.FlowSourceObjects.Graphics.AddChildFlowSourceObject" ID="6" ShowAll="True" X="137" Y="-10">
+      <Comment Text="作成したテキスト表示オブジェクトをステージに追加" />
+    </Source>
+    <Source Name="FlowScriptEnginePPD.FlowSourceObjects.Graphics.StageObjectFlowSourceObject" FullName="FlowScriptEnginePPD.FlowSourceObjects.Graphics.StageObjectFlowSourceObject" ID="7" ShowAll="True" X="-187" Y="24">
+      <Comment Text="標準UIの上にあるステージを取得" />
+      <Value Name="Layer" Value="AfterInterface" />
+    </Source>
+    <Source Name="FlowScriptEnginePPD.FlowSourceObjects.EveryFrameFlowSourceObject" FullName="FlowScriptEnginePPD.FlowSourceObjects.EveryFrameFlowSourceObject" ID="4" ShowAll="True" X="-290" Y="156">
+      <Comment Text="毎フレーム実行される" />
+    </Source>
+    <Source Name="FlowScriptEnginePPD.FlowSourceObjects.Song.LyricsFlowSourceObject" FullName="FlowScriptEnginePPD.FlowSourceObjects.Song.LyricsFlowSourceObject" ID="9" ShowAll="True" X="-257" Y="251">
+      <Comment Text="現在の歌詞を取得" />
+    </Source>
+    <Source Name="FlowScriptEnginePPD.FlowSourceObjects.Graphics.Text.SetTextFlowSourceObject" FullName="FlowScriptEnginePPD.FlowSourceObjects.Graphics.Text.SetTextFlowSourceObject" ID="8" ShowAll="True" X="38" Y="186">
+      <Comment Text="テキストを設定して更新" />
+    </Source>
+  </Sources>
+  <Flows>
+    <Flow SrcID="1" SrcName="Start" DestID="2" DestName="In" />
+    <Flow SrcID="3" SrcName="Value" DestID="2" DestName="Object" />
+    <Flow SrcID="2" SrcName="Success" DestID="5" DestName="In" />
+    <Flow SrcID="5" SrcName="Success" DestID="6" DestName="In" />
+    <Flow SrcID="5" SrcName="Object" DestID="6" DestName="Child" />
+    <Flow SrcID="5" SrcName="Object" DestID="8" DestName="Object" />
+    <Flow SrcID="7" SrcName="Value" DestID="6" DestName="Parent" />
+    <Flow SrcID="4" SrcName="Out" DestID="8" DestName="In" />
+    <Flow SrcID="9" SrcName="Value" DestID="8" DestName="Text" />
+  </Flows>
+  <Comments>
+    <Comment X="-120" Y="-260" Text="目的:歌詞を違うところに表示する&#xA;仮定:歌詞エディターで歌詞を入力している" />
+  </Comments>
+  <Scopes />
+</Root>

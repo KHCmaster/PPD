@@ -1,0 +1,28 @@
+<Root>
+  <Sources>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Logic.IfFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Logic.IfFlowSourceObject" ID="6" ShowAll="True" X="-20" Y="50" />
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Misc.EntryPointFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Misc.EntryPointFlowSourceObject" ID="1" ShowAll="True" X="-280" Y="-130" />
+    <Source Name="FlowScriptEnginePPD.FlowSourceObjects.Audio.Sound.ValueFlowSourceObject" FullName="FlowScriptEnginePPD.FlowSourceObjects.Audio.Sound.ValueFlowSourceObject" ID="2" ShowAll="True" X="-40" Y="-100">
+      <Comment Text="サウンドオブジェクトの作成" />
+      <Value Name="Path" Value="hoge.wav" />
+    </Source>
+    <Source Name="FlowScriptEnginePPD.FlowSourceObjects.Audio.Sound.PlayFlowSourceObject" FullName="FlowScriptEnginePPD.FlowSourceObjects.Audio.Sound.PlayFlowSourceObject" ID="5" ShowAll="True" X="210" Y="-10">
+      <Comment Text="サウンドの再生" />
+    </Source>
+    <Source Name="FlowScriptEnginePPD.FlowSourceObjects.InputFlowSourceObject" FullName="FlowScriptEnginePPD.FlowSourceObjects.InputFlowSourceObject" ID="3" ShowAll="True" X="-316" Y="42">
+      <Comment Text="四角ボタンが離された時のイベント" />
+      <Value Name="Button" Value="Square" />
+    </Source>
+  </Sources>
+  <Flows>
+    <Flow SrcID="6" SrcName="OnTrue" DestID="5" DestName="In" />
+    <Flow SrcID="1" SrcName="Start" DestID="2" DestName="In" />
+    <Flow SrcID="2" SrcName="Object" DestID="5" DestName="Object" />
+    <Flow SrcID="3" SrcName="Out" DestID="6" DestName="In" />
+    <Flow SrcID="3" SrcName="Released" DestID="6" DestName="Condition" />
+  </Flows>
+  <Comments>
+    <Comment X="-116" Y="-217" Text="目的:サウンドの再生&#xA;仮定:リソースマネージャーのSoundにhoge.wavを追加" />
+  </Comments>
+  <Scopes />
+</Root>

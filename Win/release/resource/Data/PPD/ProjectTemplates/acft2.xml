@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<Root Type="PPD\{lang:ACFTScore}" Name="{lang:ACFTScoreWithScript}" Description="{lang:ACFTScoreDescriptionWithScript}" IconPath="ProjectTemplates\ACFT.png">
+   <SoundManager>
+      <Sounds>
+         <Sound>sound.wav</Sound>
+      </Sounds>
+      <Changes>
+         <Change>
+            <Time>$(Epsilon)</Time>
+            <Data>1,1,1,1,1,1,1,1,1,1</Data>
+         </Change>
+      </Changes>
+   </SoundManager>
+   <EventManager>
+      <Events>
+         <Event>
+            <Time>0</Time>
+            <NoteType>ACFT</NoteType>
+            <BPM>-1</BPM>
+            <InitializeOrders>3,0,1,2,9,8,7,4,5,6</InitializeOrders>
+         </Event>
+      </Events>
+   </EventManager>
+   <TimeLine>
+      <RowOrders>3,0,1,2,9,8,7,4,5,6</RowOrders>
+      <RowVisibilities>1,1,1,1,0,0,0,0,1,1</RowVisibilities>
+      <RowLimited>1</RowLimited>
+   </TimeLine>
+   <ScriptManager>
+      <Scripts>
+         <Script>
+            <Src>Functions\Samples\JP\DisableExceptACFTButton.fsml</Src>
+            <Dest>DisableExceptACFTButton.fsml</Dest>
+         </Script>
+      </Scripts>
+   </ScriptManager>
+</Root>

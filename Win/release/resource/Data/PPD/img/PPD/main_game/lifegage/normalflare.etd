@@ -1,0 +1,1006 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Effects FPS="60">
+   <Effect FilePath="lifegagenormalflare31.png" StartFrame="0" FrameLength="62">
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="0" EndFrame="60">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="1" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="60" EndFrame="62">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+   </Effect>
+   <Effect FilePath="lifegagenormalflare30.png" StartFrame="0" FrameLength="62">
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="0" EndFrame="58">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="1" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="58" EndFrame="60">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="60" EndFrame="62">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+   </Effect>
+   <Effect FilePath="lifegagenormalflare29.png" StartFrame="0" FrameLength="62">
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="0" EndFrame="56">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="1" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="56" EndFrame="58">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="58" EndFrame="62">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+   </Effect>
+   <Effect FilePath="lifegagenormalflare28.png" StartFrame="0" FrameLength="62">
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="0" EndFrame="54">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="1" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="54" EndFrame="56">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="56" EndFrame="62">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+   </Effect>
+   <Effect FilePath="lifegagenormalflare27.png" StartFrame="0" FrameLength="62">
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="0" EndFrame="52">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="1" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="52" EndFrame="54">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="54" EndFrame="62">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+   </Effect>
+   <Effect FilePath="lifegagenormalflare26.png" StartFrame="0" FrameLength="62">
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="0" EndFrame="50">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="1" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="50" EndFrame="52">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="52" EndFrame="62">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+   </Effect>
+   <Effect FilePath="lifegagenormalflare25.png" StartFrame="0" FrameLength="62">
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="0" EndFrame="48">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="1" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="48" EndFrame="50">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="50" EndFrame="62">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+   </Effect>
+   <Effect FilePath="lifegagenormalflare24.png" StartFrame="0" FrameLength="62">
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="0" EndFrame="46">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="1" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="46" EndFrame="48">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="48" EndFrame="62">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+   </Effect>
+   <Effect FilePath="lifegagenormalflare23.png" StartFrame="0" FrameLength="62">
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="0" EndFrame="44">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="1" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="44" EndFrame="46">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="46" EndFrame="62">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+   </Effect>
+   <Effect FilePath="lifegagenormalflare22.png" StartFrame="0" FrameLength="62">
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="0" EndFrame="42">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="1" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="42" EndFrame="44">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="44" EndFrame="62">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+   </Effect>
+   <Effect FilePath="lifegagenormalflare21.png" StartFrame="0" FrameLength="62">
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="0" EndFrame="40">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="1" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="40" EndFrame="42">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="42" EndFrame="62">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+   </Effect>
+   <Effect FilePath="lifegagenormalflare20.png" StartFrame="0" FrameLength="62">
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="0" EndFrame="38">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="1" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="38" EndFrame="40">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="40" EndFrame="62">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+   </Effect>
+   <Effect FilePath="lifegagenormalflare19.png" StartFrame="0" FrameLength="62">
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="0" EndFrame="36">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="1" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="36" EndFrame="38">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="38" EndFrame="62">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+   </Effect>
+   <Effect FilePath="lifegagenormalflare18.png" StartFrame="0" FrameLength="62">
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="0" EndFrame="34">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="1" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="34" EndFrame="36">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="36" EndFrame="62">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+   </Effect>
+   <Effect FilePath="lifegagenormalflare17.png" StartFrame="0" FrameLength="62">
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="0" EndFrame="32">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="1" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="32" EndFrame="34">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="34" EndFrame="62">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+   </Effect>
+   <Effect FilePath="lifegagenormalflare16.png" StartFrame="0" FrameLength="62">
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="0" EndFrame="30">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="1" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="30" EndFrame="32">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="32" EndFrame="62">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+   </Effect>
+   <Effect FilePath="lifegagenormalflare15.png" StartFrame="0" FrameLength="62">
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="0" EndFrame="28">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="1" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="28" EndFrame="30">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="30" EndFrame="62">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+   </Effect>
+   <Effect FilePath="lifegagenormalflare14.png" StartFrame="0" FrameLength="62">
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="0" EndFrame="26">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="1" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="26" EndFrame="28">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="28" EndFrame="62">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+   </Effect>
+   <Effect FilePath="lifegagenormalflare13.png" StartFrame="0" FrameLength="62">
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="0" EndFrame="24">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="1" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="24" EndFrame="26">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="26" EndFrame="62">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+   </Effect>
+   <Effect FilePath="lifegagenormalflare12.png" StartFrame="0" FrameLength="62">
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="0" EndFrame="22">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="1" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="22" EndFrame="24">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="24" EndFrame="62">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+   </Effect>
+   <Effect FilePath="lifegagenormalflare11.png" StartFrame="0" FrameLength="62">
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="0" EndFrame="20">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="1" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="20" EndFrame="22">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="22" EndFrame="62">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+   </Effect>
+   <Effect FilePath="lifegagenormalflare10.png" StartFrame="0" FrameLength="62">
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="0" EndFrame="18">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="1" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="18" EndFrame="20">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="20" EndFrame="62">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+   </Effect>
+   <Effect FilePath="lifegagenormalflare09.png" StartFrame="0" FrameLength="62">
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="0" EndFrame="16">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="1" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="16" EndFrame="18">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="18" EndFrame="62">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+   </Effect>
+   <Effect FilePath="lifegagenormalflare08.png" StartFrame="0" FrameLength="62">
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="0" EndFrame="14">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="1" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="14" EndFrame="16">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="16" EndFrame="62">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+   </Effect>
+   <Effect FilePath="lifegagenormalflare07.png" StartFrame="0" FrameLength="62">
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="0" EndFrame="12">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="1" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="12" EndFrame="14">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="14" EndFrame="62">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+   </Effect>
+   <Effect FilePath="lifegagenormalflare06.png" StartFrame="0" FrameLength="62">
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="0" EndFrame="10">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="1" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="10" EndFrame="12">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="12" EndFrame="62">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+   </Effect>
+   <Effect FilePath="lifegagenormalflare05.png" StartFrame="0" FrameLength="62">
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="0" EndFrame="8">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="1" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="8" EndFrame="10">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="10" EndFrame="62">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+   </Effect>
+   <Effect FilePath="lifegagenormalflare04.png" StartFrame="0" FrameLength="62">
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="0" EndFrame="6">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="1" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="6" EndFrame="8">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="8" EndFrame="62">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+   </Effect>
+   <Effect FilePath="lifegagenormalflare03.png" StartFrame="0" FrameLength="62">
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="0" EndFrame="4">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="1" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="4" EndFrame="6">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="6" EndFrame="62">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+   </Effect>
+   <Effect FilePath="lifegagenormalflare02.png" StartFrame="0" FrameLength="62">
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="0" EndFrame="2">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="1" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="2" EndFrame="4">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="4" EndFrame="62">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+   </Effect>
+   <Effect FilePath="lifegagenormalflare01.png" StartFrame="0" FrameLength="62">
+      <State X="0" Y="0" Alpha="1" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="0" EndFrame="2">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="2" EndFrame="62">
+         <RatioMaker Type="X" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Y" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="ConstantRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="ConstantRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+   </Effect>
+</Effects>

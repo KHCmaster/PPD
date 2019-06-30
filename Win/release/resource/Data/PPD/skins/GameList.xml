@@ -1,0 +1,7 @@
+﻿<?xml version="1.0"?>
+<root>
+   <GameList>
+      <Game Name="PPDSingle.dll"/>
+      <Game Name="PPDMulti.dll"/>
+   </GameList>
+</root>

@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Effects FPS="60">
+   <Effect FilePath="max_slide.png" StartFrame="0" FrameLength="30">
+      <State X="0" Y="0" Alpha="1" Rotation="0" ScaleX="0" ScaleY="0" BezierPosition="0" Blend="None" />
+      <RatioMakers StartFrame="0" EndFrame="11">
+         <RatioMaker Type="X" MakerType="LinearRatioMaker" />
+         <RatioMaker Type="Y" MakerType="LinearRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="LinearRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="LinearRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="LinearRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="LinearRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="LinearRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="-10" Alpha="1" Rotation="0" ScaleX="1.5" ScaleY="1.5" BezierPosition="0" Blend="None" />
+      <RatioMakers StartFrame="11" EndFrame="30">
+         <RatioMaker Type="X" MakerType="LinearRatioMaker" />
+         <RatioMaker Type="Y" MakerType="LinearRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="LinearRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="LinearRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="LinearRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="LinearRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="LinearRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="-20" Alpha="0" Rotation="0" ScaleX="1.5" ScaleY="1.5" BezierPosition="0" Blend="None" />
+   </Effect>
+   <Effect FilePath="max_slide_effect.png" StartFrame="0" FrameLength="16">
+      <State X="0" Y="0" Alpha="1" Rotation="45" ScaleX="0.2" ScaleY="0.2" BezierPosition="0" Blend="LinearDodge" />
+      <RatioMakers StartFrame="0" EndFrame="11">
+         <RatioMaker Type="X" MakerType="LinearRatioMaker" />
+         <RatioMaker Type="Y" MakerType="LinearRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="LinearRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="LinearRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="LinearRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="LinearRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="LinearRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="1" Rotation="75.9375" ScaleX="1" ScaleY="1" BezierPosition="0" Blend="LinearDodge" />
+      <RatioMakers StartFrame="11" EndFrame="16">
+         <RatioMaker Type="X" MakerType="LinearRatioMaker" />
+         <RatioMaker Type="Y" MakerType="LinearRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="LinearRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="LinearRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="LinearRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="LinearRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="LinearRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="0" Rotation="120" ScaleX="1.2" ScaleY="1.2" BezierPosition="0" Blend="LinearDodge" />
+   </Effect>
+</Effects>

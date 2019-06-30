@@ -1,0 +1,75 @@
+<Root>
+  <Sources>
+    <Source Name="FlowScriptEnginePPD.FlowSourceObjects.MovieTimeFlowSourceObject" FullName="FlowScriptEnginePPD.FlowSourceObjects.MovieTimeFlowSourceObject" ID="3" ShowAll="True" X="-521.25" Y="-117.5">
+      <Comment Text="現在の動画の時間を取得" />
+    </Source>
+    <Source Name="FlowScriptEnginePPD.FlowSourceObjects.BPMFlowSourceObject" FullName="FlowScriptEnginePPD.FlowSourceObjects.BPMFlowSourceObject" ID="14" ShowAll="True" X="-576.25" Y="-276.25">
+      <Comment Text="現在のBPMを取得" />
+    </Source>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Float.DevideFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Float.DevideFlowSourceObject" ID="13" ShowAll="True" X="-288.75" Y="-230">
+      <Comment Text="BPM/130" />
+      <Value Name="B" Value="130" />
+    </Source>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Float.MultiplyFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Float.MultiplyFlowSourceObject" ID="5" ShowAll="True" X="-116.25" Y="-227.5">
+      <Comment Text="BPM/130*時間差" />
+      <Value Name="A" Value="400" />
+    </Source>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Float.MultiplyFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Float.MultiplyFlowSourceObject" ID="15" ShowAll="True" X="61.25" Y="-225">
+      <Comment Text="BPM/130*時間差*300" />
+      <Value Name="A" Value="300" />
+    </Source>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Float.MultiplyFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Float.MultiplyFlowSourceObject" ID="17" ShowAll="True" X="251.25" Y="-223.75">
+      <Comment Text="BPM/130*時間差*300*スピードの倍率" />
+      <Value Name="A" Value="300" />
+    </Source>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Float.SubtractFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Float.SubtractFlowSourceObject" ID="4" ShowAll="True" X="-296.25" Y="-135">
+      <Comment Text="時間差" />
+    </Source>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Logic.NotFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Logic.NotFlowSourceObject" ID="2" ShowAll="True" X="-111.25" Y="232.5">
+      <Comment Text="長押しでなければハンドル" />
+    </Source>
+    <Source Name="FlowScriptEngineSlimDX.FlowSourceObjects.Vector2.FromElementFlowSourceObject" FullName="FlowScriptEngineSlimDX.FlowSourceObjects.Vector2.FromElementFlowSourceObject" ID="9" ShowAll="True" X="-237.5" Y="-18.75">
+      <Comment Text="Y軸からXだけ離れていることにする" />
+      <Value Name="Y" Value="0" />
+    </Source>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Float.MultiplyFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Float.MultiplyFlowSourceObject" ID="12" ShowAll="True" X="150" Y="-100">
+      <Comment Text="-1倍でY軸反転" />
+      <Value Name="A" Value="-1" />
+    </Source>
+    <Source Name="FlowScriptEngineSlimDX.FlowSourceObjects.Matrix.AffineTransformation2DFlowSourceObject" FullName="FlowScriptEngineSlimDX.FlowSourceObjects.Matrix.AffineTransformation2DFlowSourceObject" ID="6" ShowAll="True" X="143.75" Y="0">
+      <Comment Text="回転行列の作成" />
+      <Value Name="Scale" Value="1" />
+    </Source>
+    <Source Name="FlowScriptEnginePPD.FlowSourceObjects.Mark.CalculatePosAnyFlowSourceObject" FullName="FlowScriptEnginePPD.FlowSourceObjects.Mark.CalculatePosAnyFlowSourceObject" ID="1" ShowAll="True" X="126.25" Y="152.5">
+      <Comment Text="マークの情報を取得&#xA;ColorPositionに設定" />
+    </Source>
+    <Source Name="FlowScriptEngineSlimDX.FlowSourceObjects.Vector2.TransformCoordinateFlowSourceObject" FullName="FlowScriptEngineSlimDX.FlowSourceObjects.Vector2.TransformCoordinateFlowSourceObject" ID="8" ShowAll="True" X="-270" Y="111.25">
+      <Comment Text="行列を掛け合わせて回転" />
+    </Source>
+    <Source Name="FlowScriptEnginePPD.FlowSourceObjects.Song.InfoFlowSourceObject" FullName="FlowScriptEnginePPD.FlowSourceObjects.Song.InfoFlowSourceObject" ID="16" ShowAll="False" X="288.75" Y="-327.5">
+      <Comment Text="スピードの倍率を取得" />
+    </Source>
+  </Sources>
+  <Flows>
+    <Flow SrcID="3" SrcName="Time" DestID="4" DestName="B" />
+    <Flow SrcID="14" SrcName="CurrentBPM" DestID="13" DestName="A" />
+    <Flow SrcID="13" SrcName="Value" DestID="5" DestName="A" />
+    <Flow SrcID="5" SrcName="Value" DestID="15" DestName="B" />
+    <Flow SrcID="15" SrcName="Value" DestID="17" DestName="B" />
+    <Flow SrcID="17" SrcName="Value" DestID="9" DestName="X" />
+    <Flow SrcID="4" SrcName="Value" DestID="5" DestName="B" />
+    <Flow SrcID="2" SrcName="Value" DestID="1" DestName="Handled" />
+    <Flow SrcID="9" SrcName="Value" DestID="8" DestName="A" />
+    <Flow SrcID="12" SrcName="Value" DestID="6" DestName="Rotation" />
+    <Flow SrcID="6" SrcName="Value" DestID="8" DestName="B" />
+    <Flow SrcID="1" SrcName="IsLong" DestID="2" DestName="Value" />
+    <Flow SrcID="1" SrcName="Rotation" DestID="12" DestName="B" />
+    <Flow SrcID="1" SrcName="Time" DestID="4" DestName="A" />
+    <Flow SrcID="8" SrcName="Value" DestID="1" DestName="ColorPosition" />
+    <Flow SrcID="16" SrcName="SpeedScale" DestID="17" DestName="A" />
+  </Flows>
+  <Comments>
+    <Comment X="-163.75" Y="-353.75" Text="目的:全ての単押しマークを直線的に移動させる" />
+  </Comments>
+  <Scopes />
+</Root>

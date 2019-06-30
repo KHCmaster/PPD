@@ -1,0 +1,42 @@
+<Root>
+  <Sources>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.String.ValueFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.String.ValueFlowSourceObject" ID="7" ShowAll="True" X="-1226.5" Y="-82.5">
+      <Value Name="Value" Value="マークの位置、角度を追加時の初期値に設定します。" />
+    </Source>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.String.ValueFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.String.ValueFlowSourceObject" ID="10" ShowAll="True" X="-1022.5" Y="108.5">
+      <Value Name="Value" Value="By KHCmaster 2014/05/18" />
+    </Source>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.String.NewLineFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.String.NewLineFlowSourceObject" ID="12" ShowAll="True" X="-326.5" Y="99.5" />
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.String.AddFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.String.AddFlowSourceObject" ID="11" ShowAll="True" X="-139.5" Y="1.5" />
+    <Source Name="FlowScriptEnginePPDEditor.FlowSourceObjects.MessageBox.ShowWithCaptionFlowSourceObject" FullName="FlowScriptEnginePPDEditor.FlowSourceObjects.MessageBox.ShowWithCaptionFlowSourceObject" ID="4" ShowAll="True" X="-95.5" Y="-183.5">
+      <Value Name="Caption" Value="使い方" />
+      <Value Name="Text" Value="Hello PPDEditor Command World!!" />
+    </Source>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Enumerable.AggregateWithSeedFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Enumerable.AggregateWithSeedFlowSourceObject" ID="14" ShowAll="True" X="-426.5" Y="-78.5" />
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Array.FromElementFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Array.FromElementFlowSourceObject" ID="6" ShowAll="True" X="-643.5" Y="-78.5" />
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.String.EmptyFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.String.EmptyFlowSourceObject" ID="15" ShowAll="True" X="-600.5" Y="113.5" />
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.String.AddFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.String.AddFlowSourceObject" ID="13" ShowAll="True" X="-134.5" Y="88.5" />
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Misc.EntryPointFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Misc.EntryPointFlowSourceObject" ID="1" ShowAll="True" X="-429.277777777778" Y="-183.611111111111" />
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.String.EmptyFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.String.EmptyFlowSourceObject" ID="16" ShowAll="True" X="-834.5" Y="42.5" />
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.String.ValueFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.String.ValueFlowSourceObject" ID="8" ShowAll="True" X="-1466.5" Y="-17.5">
+      <Value Name="Value" Value="設定で選択中のレイヤーのみか、選択中のマーク内だけかのオプションを設定できます。" />
+    </Source>
+  </Sources>
+  <Flows>
+    <Flow SrcID="7" SrcName="Value" DestID="6" DestName="A" />
+    <Flow SrcID="10" SrcName="Value" DestID="6" DestName="D" />
+    <Flow SrcID="12" SrcName="Value" DestID="11" DestName="B" />
+    <Flow SrcID="11" SrcName="Value" DestID="13" DestName="A" />
+    <Flow SrcID="14" SrcName="Aggregate" DestID="4" DestName="Text" />
+    <Flow SrcID="14" SrcName="Obj1" DestID="11" DestName="A" />
+    <Flow SrcID="14" SrcName="Obj2" DestID="13" DestName="B" />
+    <Flow SrcID="6" SrcName="Value" DestID="14" DestName="Enumerable" />
+    <Flow SrcID="15" SrcName="Value" DestID="14" DestName="Seed" />
+    <Flow SrcID="13" SrcName="Value" DestID="14" DestName="Result" />
+    <Flow SrcID="1" SrcName="Start" DestID="4" DestName="In" />
+    <Flow SrcID="16" SrcName="Value" DestID="6" DestName="C" />
+    <Flow SrcID="8" SrcName="Value" DestID="6" DestName="B" />
+  </Flows>
+  <Comments />
+  <Scopes />
+</Root>

@@ -1,0 +1,98 @@
+﻿<UserControl x:Class="FlowScriptDrawControl.Control.SourceHeaderControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:control="clr-namespace:FlowScriptDrawControl.Control" 
+             xmlns:converter="clr-namespace:FlowScriptDrawControl.Converter"
+             FontSize="18" BorderBrush="White" BorderThickness="0,0,0,1" Margin="0,0,0,2">
+    <UserControl.Resources>
+        <converter:VisibilityConverter x:Key="VisibilityConverter"/>
+    </UserControl.Resources>
+    <UserControl.Style>
+        <Style TargetType="{x:Type UserControl}">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsSelected}" Value="False">
+                    <Setter Property="Background">
+                        <Setter.Value>
+                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                <GradientStop Color="#BBDCDCDC" Offset="0" />
+                                <GradientStop Color="#BBA0A0A0" Offset="1" />
+                            </LinearGradientBrush>
+                        </Setter.Value>
+                    </Setter>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding IsSelected}" Value="True">
+                    <Setter Property="Background">
+                        <Setter.Value>
+                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                <GradientStop Color="#BBFFFFFF" Offset="0" />
+                                <GradientStop Color="#BBD2E6FA" Offset="1" />
+                            </LinearGradientBrush>
+                        </Setter.Value>
+                    </Setter>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Style>
+    <StackPanel Orientation="Vertical">
+        <Rectangle Height="3" Fill="{Binding Scope.Brush}"/>
+        <DockPanel Margin="2,2,2,0">
+            <UserControl DockPanel.Dock="Left" MouseDoubleClick="UserControl_MouseDoubleClick">
+                <StackPanel Orientation="Horizontal">
+                    <Grid Margin="2,0,2,2" Visibility="{Binding IsBreakPointSet, Converter={StaticResource VisibilityConverter}}">
+                        <Ellipse Fill="#C7453F" Height="16" Width="16" StrokeThickness="0"/>
+                        <Ellipse Height="16" Width="16" StrokeThickness="0">
+                            <Ellipse.Fill>
+                                <RadialGradientBrush GradientOrigin="1,1" RadiusX="0.5" RadiusY="0.5">
+                                    <RadialGradientBrush.GradientStops>
+                                        <GradientStop Color="#22000000" Offset="0"/>
+                                        <GradientStop Color="#00000000" Offset="1"/>
+                                    </RadialGradientBrush.GradientStops>
+                                </RadialGradientBrush>
+                            </Ellipse.Fill>
+                        </Ellipse>
+                        <Ellipse Height="16" Width="16" StrokeThickness="0">
+                            <Ellipse.Fill>
+                                <RadialGradientBrush GradientOrigin="0.25,0.25" RadiusX="0.5" RadiusY="0.5">
+                                    <RadialGradientBrush.GradientStops>
+                                        <GradientStop Color="#FFFFFFFF" Offset="0"/>
+                                        <GradientStop Color="#11FFFFFF" Offset="1"/>
+                                    </RadialGradientBrush.GradientStops>
+                                </RadialGradientBrush>
+                            </Ellipse.Fill>
+                        </Ellipse>
+                    </Grid>
+                    <Grid Margin="2,2,2,2" ToolTip="{Binding Warning}" Visibility="{Binding Warning, Converter={StaticResource VisibilityConverter}}">
+                        <Polygon  Stroke="Black" Fill="Yellow" StrokeLineJoin="Round">
+                            <Polygon.Points>
+                                <Point X="7.5" Y="0"/>
+                                <Point X="15" Y="13"/>
+                                <Point X="0" Y="13"/>
+                            </Polygon.Points>
+                        </Polygon>
+                        <Polygon Fill="Black" Stroke="Black" StrokeLineJoin="Round">
+                            <Polygon.Points>
+                                <Point X="7" Y="4"/>
+                                <Point X="8" Y="4"/>
+                                <Point X="8" Y="9"/>
+                                <Point X="7" Y="9"/>
+                            </Polygon.Points>
+                        </Polygon>
+                        <Polygon Fill="Black" Stroke="Black" StrokeLineJoin="Round">
+                            <Polygon.Points>
+                                <Point X="7" Y="10.5"/>
+                                <Point X="8" Y="10.5"/>
+                                <Point X="8" Y="11.5"/>
+                                <Point X="7" Y="11.5"/>
+                            </Polygon.Points>
+                        </Polygon>
+                    </Grid>
+                    <control:CustomTextBlock  CustomText="{Binding Name}" CustomMaxWidth="200" IsCollapsed="{Binding IsCollapsed}"/>
+                </StackPanel>
+            </UserControl>
+            <control:SourceHeaderDeltaControl x:Name="delta" DockPanel.Dock="Right"/>
+            <control:CustomTextBlock/>
+        </DockPanel>
+    </StackPanel>
+</UserControl>

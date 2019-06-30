@@ -1,0 +1,33 @@
+<Root>
+  <Sources>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Misc.EntryPointFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Misc.EntryPointFlowSourceObject" ID="1" ShowAll="True" X="-252.222222222222" Y="-141.111111111111" />
+    <Source Name="FlowScriptEnginePPD.FlowSourceObjects.Graphics.Effect.ValueFlowSourceObject" FullName="FlowScriptEnginePPD.FlowSourceObjects.Graphics.Effect.ValueFlowSourceObject" ID="5" ShowAll="True" X="2.22222222222222" Y="-134.444444444444">
+      <Comment Text="エフェクト表示オブジェクトを作成" />
+      <Value Name="Path" Value="hoge.etd" />
+      <Value Name="Position" Value="X:200 Y:200" />
+    </Source>
+    <Source Name="FlowScriptEnginePPD.FlowSourceObjects.Graphics.StageObjectFlowSourceObject" FullName="FlowScriptEnginePPD.FlowSourceObjects.Graphics.StageObjectFlowSourceObject" ID="4" ShowAll="True" X="-334.444444444444" Y="66.6666666666667">
+      <Comment Text="マークの上にあるステージを取得" />
+      <Value Name="Layer" Value="AfterMark" />
+    </Source>
+    <Source Name="FlowScriptEnginePPD.FlowSourceObjects.Graphics.AddChildFlowSourceObject" FullName="FlowScriptEnginePPD.FlowSourceObjects.Graphics.AddChildFlowSourceObject" ID="3" ShowAll="True" X="-5.55555555555556" Y="30">
+      <Comment Text="ステージに追加" />
+    </Source>
+    <Source Name="FlowScriptEnginePPD.FlowSourceObjects.Graphics.Effect.PlayFlowSourceObject" FullName="FlowScriptEnginePPD.FlowSourceObjects.Graphics.Effect.PlayFlowSourceObject" ID="6" ShowAll="True" X="-10" Y="190">
+      <Comment Text="エフェクトをループで再生" />
+      <Value Name="PlayType" Value="Loop" />
+    </Source>
+  </Sources>
+  <Flows>
+    <Flow SrcID="1" SrcName="Start" DestID="5" DestName="In" />
+    <Flow SrcID="5" SrcName="Success" DestID="3" DestName="In" />
+    <Flow SrcID="5" SrcName="Object" DestID="3" DestName="Child" />
+    <Flow SrcID="5" SrcName="Object" DestID="6" DestName="Object" />
+    <Flow SrcID="4" SrcName="Value" DestID="3" DestName="Parent" />
+    <Flow SrcID="3" SrcName="Success" DestID="6" DestName="In" />
+  </Flows>
+  <Comments>
+    <Comment X="-130" Y="-240" Text="目的:エフェクトを表示します&#xA;仮定:リソースマネージャーのEffectにhoge.etdを追加" />
+  </Comments>
+  <Scopes />
+</Root>

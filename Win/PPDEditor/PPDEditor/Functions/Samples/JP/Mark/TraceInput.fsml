@@ -1,0 +1,381 @@
+<Root>
+  <Sources>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Int32.LessFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Int32.LessFlowSourceObject" ID="121" ShowAll="True" X="-987.9287109375" Y="890.047485351563" ScopeID="214" />
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Scope.GetValueFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Scope.GetValueFlowSourceObject" ID="122" ShowAll="True" X="-997.9287109375" Y="1000.04748535156" ScopeID="214" />
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Scope.SetValueFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Scope.SetValueFlowSourceObject" ID="123" ShowAll="True" X="-537.9287109375" Y="1050.04748535156" ScopeID="214" />
+    <Source Name="FlowScriptEnginePPD.FlowSourceObjects.Graphics.Text.SetTextFlowSourceObject" FullName="FlowScriptEnginePPD.FlowSourceObjects.Graphics.Text.SetTextFlowSourceObject" ID="125" ShowAll="True" X="-347.9287109375" Y="850.047485351563" ScopeID="214" />
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.ArrayList.AtFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.ArrayList.AtFlowSourceObject" ID="126" ShowAll="True" X="-557.9287109375" Y="960.047485351563" ScopeID="214" />
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.ArrayList.AtFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.ArrayList.AtFlowSourceObject" ID="127" ShowAll="True" X="-567.9287109375" Y="870.047485351563" ScopeID="214" />
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Scope.SetValueFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Scope.SetValueFlowSourceObject" ID="128" ShowAll="True" X="-507.9287109375" Y="760.047485351563" ScopeID="214" />
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Math.AbsFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Math.AbsFlowSourceObject" ID="129" ShowAll="True" X="-87.9287109375" Y="760.047485351563" ScopeID="214" />
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Float.SubtractFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Float.SubtractFlowSourceObject" ID="130" ShowAll="True" X="-277.9287109375" Y="760.047485351563" ScopeID="214" />
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.String.ValueFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.String.ValueFlowSourceObject" ID="131" ShowAll="True" X="-297.9287109375" Y="640.047485351563" ScopeID="214">
+      <Value Name="Value" Value="+" />
+    </Source>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.String.ValueFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.String.ValueFlowSourceObject" ID="132" ShowAll="True" X="-297.9287109375" Y="690.047485351563" ScopeID="214">
+      <Value Name="Value" Value="-" />
+    </Source>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Double.DevideFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Double.DevideFlowSourceObject" ID="133" ShowAll="True" X="-237.9287109375" Y="980.047485351563" ScopeID="214">
+      <Value Name="B" Value="0.0166666667" />
+    </Source>
+    <Source Name="FlowScriptEnginePPD.FlowSourceObjects.MarkType.ValueFlowSourceObject" FullName="FlowScriptEnginePPD.FlowSourceObjects.MarkType.ValueFlowSourceObject" ID="134" ShowAll="True" X="-1157.9287109375" Y="-1239.95251464844" ScopeID="212">
+      <Value Name="Value" Value="Square" />
+    </Source>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.String.ValueFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.String.ValueFlowSourceObject" ID="135" ShowAll="True" X="-1157.9287109375" Y="-1189.95251464844" ScopeID="212">
+      <Value Name="Value" Value="□" />
+    </Source>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.String.ValueFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.String.ValueFlowSourceObject" ID="136" ShowAll="True" X="-1157.97875976563" Y="-1069.95251464844" ScopeID="212">
+      <Value Name="Value" Value="×" />
+    </Source>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Hashtable.AddFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Hashtable.AddFlowSourceObject" ID="137" ShowAll="True" X="-907.9287109375" Y="-1149.95251464844" ScopeID="212" />
+    <Source Name="FlowScriptEnginePPD.FlowSourceObjects.MarkType.ValueFlowSourceObject" FullName="FlowScriptEnginePPD.FlowSourceObjects.MarkType.ValueFlowSourceObject" ID="138" ShowAll="True" X="-1157.97875976563" Y="-999.952514648438" ScopeID="212">
+      <Value Name="Value" Value="Circle" />
+    </Source>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Hashtable.AddFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Hashtable.AddFlowSourceObject" ID="139" ShowAll="True" X="-907.9287109375" Y="-1029.95251464844" ScopeID="212" />
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.String.ValueFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.String.ValueFlowSourceObject" ID="140" ShowAll="True" X="-707.9287109375" Y="-1069.95251464844" ScopeID="212">
+      <Value Name="Value" Value="←" />
+    </Source>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Hashtable.AddFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Hashtable.AddFlowSourceObject" ID="141" ShowAll="True" X="-457.9287109375" Y="-1149.95251464844" ScopeID="212" />
+    <Source Name="FlowScriptEnginePPD.FlowSourceObjects.MarkType.ValueFlowSourceObject" FullName="FlowScriptEnginePPD.FlowSourceObjects.MarkType.ValueFlowSourceObject" ID="142" ShowAll="True" X="-707.9287109375" Y="-1119.95251464844" ScopeID="212">
+      <Value Name="Value" Value="Left" />
+    </Source>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.String.ValueFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.String.ValueFlowSourceObject" ID="143" ShowAll="True" X="-707.9287109375" Y="-949.952514648438" ScopeID="212">
+      <Value Name="Value" Value="↓" />
+    </Source>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Hashtable.AddFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Hashtable.AddFlowSourceObject" ID="144" ShowAll="True" X="-457.9287109375" Y="-1029.95251464844" ScopeID="212" />
+    <Source Name="FlowScriptEnginePPD.FlowSourceObjects.MarkType.ValueFlowSourceObject" FullName="FlowScriptEnginePPD.FlowSourceObjects.MarkType.ValueFlowSourceObject" ID="145" ShowAll="True" X="-227.9287109375" Y="-1239.95251464844" ScopeID="212">
+      <Value Name="Value" Value="Right" />
+    </Source>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.String.ValueFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.String.ValueFlowSourceObject" ID="146" ShowAll="True" X="-227.9287109375" Y="-1189.95251464844" ScopeID="212">
+      <Value Name="Value" Value="→" />
+    </Source>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Hashtable.AddFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Hashtable.AddFlowSourceObject" ID="147" ShowAll="True" X="22.0712890625" Y="-1269.95251464844" ScopeID="212" />
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.String.ValueFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.String.ValueFlowSourceObject" ID="148" ShowAll="True" X="-227.9287109375" Y="-1069.95251464844" ScopeID="212">
+      <Value Name="Value" Value="↑" />
+    </Source>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Hashtable.AddFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Hashtable.AddFlowSourceObject" ID="149" ShowAll="True" X="22.0712890625" Y="-1149.95251464844" ScopeID="212" />
+    <Source Name="FlowScriptEnginePPD.FlowSourceObjects.MarkType.ValueFlowSourceObject" FullName="FlowScriptEnginePPD.FlowSourceObjects.MarkType.ValueFlowSourceObject" ID="150" ShowAll="True" X="-227.9287109375" Y="-999.952514648438" ScopeID="212">
+      <Value Name="Value" Value="R" />
+    </Source>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Hashtable.AddFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Hashtable.AddFlowSourceObject" ID="151" ShowAll="True" X="22.0712890625" Y="-1029.95251464844" ScopeID="212" />
+    <Source Name="FlowScriptEnginePPD.FlowSourceObjects.MarkType.ValueFlowSourceObject" FullName="FlowScriptEnginePPD.FlowSourceObjects.MarkType.ValueFlowSourceObject" ID="152" ShowAll="True" X="222.0712890625" Y="-1239.95251464844" ScopeID="212">
+      <Value Name="Value" Value="L" />
+    </Source>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Hashtable.AddFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Hashtable.AddFlowSourceObject" ID="153" ShowAll="True" X="472.0712890625" Y="-1269.95251464844" ScopeID="212" />
+    <Source Name="FlowScriptEnginePPD.FlowSourceObjects.MarkType.ValueFlowSourceObject" FullName="FlowScriptEnginePPD.FlowSourceObjects.MarkType.ValueFlowSourceObject" ID="154" ShowAll="True" X="-1157.97875976563" Y="-1119.95251464844" ScopeID="212">
+      <Value Name="Value" Value="Cross" />
+    </Source>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.String.ValueFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.String.ValueFlowSourceObject" ID="155" ShowAll="True" X="-1157.97875976563" Y="-949.952514648438" ScopeID="212">
+      <Value Name="Value" Value="○" />
+    </Source>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.String.ValueFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.String.ValueFlowSourceObject" ID="157" ShowAll="True" X="-697.9287109375" Y="-1189.95251464844" ScopeID="212">
+      <Value Name="Value" Value="△" />
+    </Source>
+    <Source Name="FlowScriptEnginePPD.FlowSourceObjects.MarkType.ValueFlowSourceObject" FullName="FlowScriptEnginePPD.FlowSourceObjects.MarkType.ValueFlowSourceObject" ID="158" ShowAll="True" X="-707.9287109375" Y="-999.952514648438" ScopeID="212">
+      <Value Name="Value" Value="Down" />
+    </Source>
+    <Source Name="FlowScriptEnginePPD.FlowSourceObjects.MarkType.ValueFlowSourceObject" FullName="FlowScriptEnginePPD.FlowSourceObjects.MarkType.ValueFlowSourceObject" ID="159" ShowAll="True" X="-227.9287109375" Y="-1119.95251464844" ScopeID="212">
+      <Value Name="Value" Value="Up" />
+    </Source>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.String.ValueFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.String.ValueFlowSourceObject" ID="160" ShowAll="True" X="-227.9287109375" Y="-949.952514648438" ScopeID="212">
+      <Value Name="Value" Value="Ｒ" />
+    </Source>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.String.ValueFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.String.ValueFlowSourceObject" ID="161" ShowAll="True" X="222.0712890625" Y="-1189.95251464844" ScopeID="212">
+      <Value Name="Value" Value="Ｌ" />
+    </Source>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Logic.SequentialFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Logic.SequentialFlowSourceObject" ID="162" ShowAll="True" X="-1391.9287109375" Y="-1247.95251464844" ScopeID="212">
+      <Comment Text="Hashtableを作成してから&#xA;マークの種類に対応する文字列を追加する" />
+    </Source>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Hashtable.ValueFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Hashtable.ValueFlowSourceObject" ID="163" ShowAll="True" X="-1154.9287109375" Y="-1297.95251464844" ScopeID="212" />
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Misc.EntryPointFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Misc.EntryPointFlowSourceObject" ID="164" ShowAll="True" X="-2234.1787109375" Y="-658.702514648438" />
+    <Source Name="FlowScriptEnginePPD.FlowSourceObjects.Graphics.StageObjectFlowSourceObject" FullName="FlowScriptEnginePPD.FlowSourceObjects.Graphics.StageObjectFlowSourceObject" ID="165" ShowAll="True" X="-1717.4287109375" Y="-524.202514648438" ScopeID="213">
+      <Comment Text="動画の上のステージを取得" />
+      <Value Name="Layer" Value="AfterMovie" />
+    </Source>
+    <Source Name="FlowScriptEnginePPD.FlowSourceObjects.Graphics.AddChildFlowSourceObject" FullName="FlowScriptEnginePPD.FlowSourceObjects.Graphics.AddChildFlowSourceObject" ID="166" ShowAll="True" X="-1418.6787109375" Y="-521.702514648438" ScopeID="213">
+      <Comment Text="ステージに追加" />
+    </Source>
+    <Source Name="FlowScriptEnginePPD.FlowSourceObjects.Graphics.SetPositionFlowSourceObject" FullName="FlowScriptEnginePPD.FlowSourceObjects.Graphics.SetPositionFlowSourceObject" ID="167" ShowAll="True" X="-1109.9287109375" Y="-637.952514648438" ScopeID="213">
+      <Comment Text="表示位置を設定" />
+      <Value Name="Position" Value="X:20 Y:50" />
+    </Source>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.String.ValueFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.String.ValueFlowSourceObject" ID="168" ShowAll="True" X="-1066.1787109375" Y="-494.202514648438" ScopeID="213">
+      <Value Name="Value" Value="i" />
+    </Source>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Int32.ValueFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Int32.ValueFlowSourceObject" ID="169" ShowAll="True" X="-1643.6787109375" Y="-287.952514648438" ScopeID="213">
+      <Value Name="Value" Value="10" />
+    </Source>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Int32.ValueFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Int32.ValueFlowSourceObject" ID="170" ShowAll="True" X="-1198.6787109375" Y="-407.952514648438" ScopeID="213">
+      <Value Name="Value" Value="0" />
+    </Source>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Repeat.ForFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Repeat.ForFlowSourceObject" ID="171" ShowAll="True" X="-1262.4287109375" Y="-317.952514648438" ScopeID="213">
+      <Comment Text="10個のテキスト表示オブジェクトを反復で作成" />
+    </Source>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Scope.SetValueFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Scope.SetValueFlowSourceObject" ID="172" ShowAll="True" X="-988.6787109375" Y="-390.452514648438" ScopeID="213">
+      <Comment Text="初期化処理(i=0)" />
+    </Source>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Int32.LessFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Int32.LessFlowSourceObject" ID="173" ShowAll="True" X="-1436.1787109375" Y="-345.452514648438" ScopeID="213">
+      <Comment Text="i&lt;10なら継続" />
+    </Source>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Scope.GetValueFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Scope.GetValueFlowSourceObject" ID="174" ShowAll="True" X="-1479.9287109375" Y="-207.952514648438" ScopeID="213" />
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Int32.AddFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Int32.AddFlowSourceObject" ID="175" ShowAll="True" X="-1241.1787109375" Y="-179.202514648438" ScopeID="213">
+      <Value Name="B" Value="1" />
+    </Source>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Scope.SetValueFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Scope.SetValueFlowSourceObject" ID="176" ShowAll="True" X="-1087.4287109375" Y="-139.202514648438" ScopeID="213">
+      <Comment Text="処理が終わればiに1加える" />
+    </Source>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Int32.MultiplyFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Int32.MultiplyFlowSourceObject" ID="177" ShowAll="True" X="-1099.9287109375" Y="12.0474853515625" ScopeID="213">
+      <Comment Text="i*25&#xA;テキストのHeightを変えたら&#xA;ここも変える必要がある" />
+      <Value Name="B" Value="25" />
+    </Source>
+    <Source Name="FlowScriptEngineSlimDX.FlowSourceObjects.Vector2.FromElementFlowSourceObject" FullName="FlowScriptEngineSlimDX.FlowSourceObjects.Vector2.FromElementFlowSourceObject" ID="178" ShowAll="True" X="-899.9287109375" Y="-7.9525146484375" ScopeID="213">
+      <Comment Text="i*25をY座標にする" />
+    </Source>
+    <Source Name="FlowScriptEnginePPD.FlowSourceObjects.Graphics.AddChildFlowSourceObject" FullName="FlowScriptEnginePPD.FlowSourceObjects.Graphics.AddChildFlowSourceObject" ID="180" ShowAll="True" X="-593.6787109375" Y="-215.452514648438" ScopeID="213">
+      <Comment Text="親要素に追加" />
+    </Source>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.ArrayList.ValueFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.ArrayList.ValueFlowSourceObject" ID="181" ShowAll="True" X="-1041.1787109375" Y="-714.202514648438" ScopeID="213">
+      <Comment Text="テキスト表示オブジェクト管理のリストを作成" />
+    </Source>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Logic.NotFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Logic.NotFlowSourceObject" ID="183" ShowAll="True" X="-1144.1787109375" Y="412.547485351563" ScopeID="214" />
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Int32.EqualFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Int32.EqualFlowSourceObject" ID="184" ShowAll="True" X="-1296.6787109375" Y="443.797485351563" ScopeID="214" />
+    <Source Name="FlowScriptEnginePPD.FlowSourceObjects.Mark.EffectType.ValueFlowSourceObject" FullName="FlowScriptEnginePPD.FlowSourceObjects.Mark.EffectType.ValueFlowSourceObject" ID="185" ShowAll="True" X="-1625.32873535156" Y="623.997436523438" ScopeID="214">
+      <Value Name="Value" Value="Appear" />
+    </Source>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Logic.IfFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Logic.IfFlowSourceObject" ID="186" ShowAll="True" X="-989.1787109375" Y="330.047485351563" ScopeID="214">
+      <Comment Text="表示されたとき以外なら実行" />
+    </Source>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Logic.SequentialFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Logic.SequentialFlowSourceObject" ID="187" ShowAll="True" X="-1091.97875976563" Y="648.997436523438" ScopeID="214">
+      <Comment Text="順番に実行" />
+    </Source>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.ArrayList.AddFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.ArrayList.AddFlowSourceObject" ID="188" ShowAll="True" X="-582.4287109375" Y="-376.702514648438" ScopeID="213">
+      <Comment Text="リストに追加" />
+    </Source>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.ArrayList.AddFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.ArrayList.AddFlowSourceObject" ID="189" ShowAll="True" X="-572.4287109375" Y="-499.202514648438" ScopeID="213">
+      <Comment Text="文字列リストにとりあえず追加しておく" />
+    </Source>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.ArrayList.RemoveAtFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.ArrayList.RemoveAtFlowSourceObject" ID="190" ShowAll="True" X="-748.72412109375" Y="433.797485351563" ScopeID="214">
+      <Comment Text="文字列リストの0番目を削除" />
+      <Value Name="Value" Value="0" />
+    </Source>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Hashtable.GetValueFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Hashtable.GetValueFlowSourceObject" ID="191" ShowAll="True" X="-192.214477539063" Y="1088.61901855469" ScopeID="214">
+      <Comment Text="マークに対応する文字列を取得" />
+    </Source>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Logic.SequentialFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Logic.SequentialFlowSourceObject" ID="192" ShowAll="False" X="-820.785888671875" Y="615.76171875" ScopeID="214">
+      <Comment Text="順に実行" />
+    </Source>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Float.GreaterOrEqualFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Float.GreaterOrEqualFlowSourceObject" ID="193" ShowAll="True" X="-65.071533203125" Y="485.76171875" ScopeID="214" />
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.ArrayList.ValueFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.ArrayList.ValueFlowSourceObject" ID="194" ShowAll="True" X="-633.643005371094" Y="565.76171875" ScopeID="214">
+      <Comment Text="文字列フォーマット用のリストを作成" />
+    </Source>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.ArrayList.AddFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.ArrayList.AddFlowSourceObject" ID="195" ShowAll="True" X="134.928466796875" Y="575.76171875" ScopeID="214">
+      <Comment Text="マークに対応する文字列を追加" />
+    </Source>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.ArrayList.AddFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.ArrayList.AddFlowSourceObject" ID="196" ShowAll="True" X="134.928466796875" Y="702.904663085938" ScopeID="214">
+      <Comment Text="動画の現在の時間を追加" />
+    </Source>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.ArrayList.AddFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.ArrayList.AddFlowSourceObject" ID="197" ShowAll="True" X="137.785522460938" Y="830.047485351563" ScopeID="214">
+      <Comment Text="マークの時間と動画の時間を比較して+か-を追加" />
+    </Source>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Logic.IfTernaryFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Logic.IfTernaryFlowSourceObject" ID="198" ShowAll="True" X="-77.9287109375" Y="644.333251953125" ScopeID="214" />
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.ArrayList.AddFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.ArrayList.AddFlowSourceObject" ID="199" ShowAll="True" X="142.0712890625" Y="950.047485351563" ScopeID="214">
+      <Comment Text="時間差のフレームを追加" />
+    </Source>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.ArrayList.AddFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.ArrayList.AddFlowSourceObject" ID="200" ShowAll="True" X="139.785522460938" Y="1086.83312988281" ScopeID="214">
+      <Comment Text="評価の種類を追加" />
+    </Source>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.ArrayList.AddFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.ArrayList.AddFlowSourceObject" ID="201" ShowAll="True" X="-192.214477539063" Y="370.047485351563" ScopeID="214">
+      <Comment Text="フォーマット文字列を元に表示文字列を末尾に追加" />
+    </Source>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Repeat.ForFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Repeat.ForFlowSourceObject" ID="202" ShowAll="True" X="-799.357299804688" Y="850.047485351563" ScopeID="214">
+      <Comment Text="文字列リストの内容とテキスト表示オブジェクトリスト内の&#xA;文字列表示オブジェクトのテキストを同期させる" />
+    </Source>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.String.FormatFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.String.FormatFlowSourceObject" ID="203" ShowAll="True" X="-426.500122070313" Y="561.634765625" ScopeID="214">
+      <Comment Text="リストの１つ目と{0}を置換&#xA;リストの２つ目の小数第2位までの文字列と{1:F2}を置換&#xA;リストの３つ目と{2}を置換&#xA;リストの４つ目の小数第2位までの文字列と{3:F2}を置換&#xA;リストの５つ目と{4}を置換した文字列を取得" />
+      <Value Name="A" Value="{0} {1:F2} {2}{3:F2}Frame {4}" />
+    </Source>
+    <Source Name="FlowScriptEnginePPD.FlowSourceObjects.MovieTimeFlowSourceObject" FullName="FlowScriptEnginePPD.FlowSourceObjects.MovieTimeFlowSourceObject" ID="204" ShowAll="True" X="-480.15087890625" Y="412.269653320313" ScopeID="214" />
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Int32.AddFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Int32.AddFlowSourceObject" ID="205" ShowAll="True" X="-770.785888671875" Y="990.940307617188" ScopeID="214">
+      <Value Name="B" Value="1" />
+    </Source>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.String.ValueFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.String.ValueFlowSourceObject" ID="206" ShowAll="True" X="-652.9287109375" Y="676.297485351563" ScopeID="214">
+      <Value Name="Value" Value="i" />
+    </Source>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.ArrayList.ValueFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.ArrayList.ValueFlowSourceObject" ID="208" ShowAll="True" X="-1032.4287109375" Y="-796.702514648438" ScopeID="213">
+      <Comment Text="文字列シフト用のリストを作成" />
+    </Source>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Hashtable.AddFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Hashtable.AddFlowSourceObject" ID="210" ShowAll="True" X="-457.9287109375" Y="-1269.95251464844" ScopeID="212" />
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Hashtable.AddFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Hashtable.AddFlowSourceObject" ID="211" ShowAll="True" X="-907.9287109375" Y="-1269.95251464844" ScopeID="212">
+      <Comment Text="キーをマークの種類に&#xA;値を文字列として追加" />
+    </Source>
+    <Source Name="FlowScriptEnginePPD.FlowSourceObjects.MarkType.ValueFlowSourceObject" FullName="FlowScriptEnginePPD.FlowSourceObjects.MarkType.ValueFlowSourceObject" ID="156" ShowAll="True" X="-697.9287109375" Y="-1239.95251464844" ScopeID="212">
+      <Value Name="Value" Value="Triangle" />
+    </Source>
+    <Source Name="FlowScriptEnginePPD.FlowSourceObjects.Graphics.Sprite.ValueFlowSourceObject" FullName="FlowScriptEnginePPD.FlowSourceObjects.Graphics.Sprite.ValueFlowSourceObject" ID="207" ShowAll="True" X="-1442.4287109375" Y="-656.702514648438" ScopeID="213">
+      <Comment Text="簡単に表示位置を調整できるように空の親要素を作っておく" />
+    </Source>
+    <Source Name="FlowScriptEnginePPD.FlowSourceObjects.Mark.ProcessEvaluateAnyFlowSourceObject" FullName="FlowScriptEnginePPD.FlowSourceObjects.Mark.ProcessEvaluateAnyFlowSourceObject" ID="209" ShowAll="True" X="-1629.1787109375" Y="338.797485351563" ScopeID="214">
+      <Comment Text="マークが処理されたときのイベント" />
+    </Source>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.String.ValueFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.String.ValueFlowSourceObject" ID="182" ShowAll="True" X="-770.728698730469" Y="-102.802490234375" ScopeID="213">
+      <Value Name="Value" Value=" " />
+    </Source>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Int32.ValueFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Int32.ValueFlowSourceObject" ID="124" ShowAll="True" X="-799.595397949219" Y="738.380798339844" ScopeID="214">
+      <Value Name="Value" Value="0" />
+    </Source>
+    <Source Name="FlowScriptEnginePPD.FlowSourceObjects.Graphics.Text.ValueFlowSourceObject" FullName="FlowScriptEnginePPD.FlowSourceObjects.Graphics.Text.ValueFlowSourceObject" ID="179" ShowAll="True" X="-919.9287109375" Y="-257.952514648438" ScopeID="213">
+      <Comment Text="テキストオブジェクトの作成" />
+      <Value Name="Color" Value="#00FF00" />
+      <Value Name="Height" Value="20" />
+    </Source>
+  </Sources>
+  <Flows>
+    <Flow SrcID="121" SrcName="Value" DestID="202" DestName="Condition" />
+    <Flow SrcID="122" SrcName="Value" DestID="121" DestName="A" />
+    <Flow SrcID="122" SrcName="Value" DestID="205" DestName="A" />
+    <Flow SrcID="122" SrcName="Value" DestID="126" DestName="Index" />
+    <Flow SrcID="122" SrcName="Value" DestID="127" DestName="Index" />
+    <Flow SrcID="126" SrcName="Value" DestID="125" DestName="Object" />
+    <Flow SrcID="127" SrcName="Value" DestID="125" DestName="Text" />
+    <Flow SrcID="129" SrcName="Value" DestID="133" DestName="A" />
+    <Flow SrcID="130" SrcName="Value" DestID="129" DestName="A" />
+    <Flow SrcID="131" SrcName="Value" DestID="198" DestName="A" />
+    <Flow SrcID="132" SrcName="Value" DestID="198" DestName="B" />
+    <Flow SrcID="133" SrcName="Value" DestID="199" DestName="Value" />
+    <Flow SrcID="134" SrcName="Value" DestID="211" DestName="Key" />
+    <Flow SrcID="135" SrcName="Value" DestID="211" DestName="Value" />
+    <Flow SrcID="136" SrcName="Value" DestID="137" DestName="Value" />
+    <Flow SrcID="137" SrcName="Success" DestID="139" DestName="In" />
+    <Flow SrcID="138" SrcName="Value" DestID="139" DestName="Key" />
+    <Flow SrcID="139" SrcName="Success" DestID="210" DestName="In" />
+    <Flow SrcID="140" SrcName="Value" DestID="141" DestName="Value" />
+    <Flow SrcID="141" SrcName="Success" DestID="144" DestName="In" />
+    <Flow SrcID="142" SrcName="Value" DestID="141" DestName="Key" />
+    <Flow SrcID="143" SrcName="Value" DestID="144" DestName="Value" />
+    <Flow SrcID="144" SrcName="Success" DestID="147" DestName="In" />
+    <Flow SrcID="145" SrcName="Value" DestID="147" DestName="Key" />
+    <Flow SrcID="146" SrcName="Value" DestID="147" DestName="Value" />
+    <Flow SrcID="147" SrcName="Success" DestID="149" DestName="In" />
+    <Flow SrcID="148" SrcName="Value" DestID="149" DestName="Value" />
+    <Flow SrcID="149" SrcName="Success" DestID="151" DestName="In" />
+    <Flow SrcID="150" SrcName="Value" DestID="151" DestName="Key" />
+    <Flow SrcID="151" SrcName="Success" DestID="153" DestName="In" />
+    <Flow SrcID="152" SrcName="Value" DestID="153" DestName="Key" />
+    <Flow SrcID="154" SrcName="Value" DestID="137" DestName="Key" />
+    <Flow SrcID="155" SrcName="Value" DestID="139" DestName="Value" />
+    <Flow SrcID="157" SrcName="Value" DestID="210" DestName="Value" />
+    <Flow SrcID="158" SrcName="Value" DestID="144" DestName="Key" />
+    <Flow SrcID="159" SrcName="Value" DestID="149" DestName="Key" />
+    <Flow SrcID="160" SrcName="Value" DestID="151" DestName="Value" />
+    <Flow SrcID="161" SrcName="Value" DestID="153" DestName="Value" />
+    <Flow SrcID="162" SrcName="Out0" DestID="163" DestName="In" />
+    <Flow SrcID="162" SrcName="Out1" DestID="211" DestName="In" />
+    <Flow SrcID="163" SrcName="Value" DestID="211" DestName="Hashtable" />
+    <Flow SrcID="163" SrcName="Value" DestID="137" DestName="Hashtable" />
+    <Flow SrcID="163" SrcName="Value" DestID="139" DestName="Hashtable" />
+    <Flow SrcID="163" SrcName="Value" DestID="210" DestName="Hashtable" />
+    <Flow SrcID="163" SrcName="Value" DestID="141" DestName="Hashtable" />
+    <Flow SrcID="163" SrcName="Value" DestID="144" DestName="Hashtable" />
+    <Flow SrcID="163" SrcName="Value" DestID="147" DestName="Hashtable" />
+    <Flow SrcID="163" SrcName="Value" DestID="149" DestName="Hashtable" />
+    <Flow SrcID="163" SrcName="Value" DestID="151" DestName="Hashtable" />
+    <Flow SrcID="163" SrcName="Value" DestID="153" DestName="Hashtable" />
+    <Flow SrcID="163" SrcName="Value" DestID="191" DestName="Hashtable" />
+    <Flow SrcID="164" SrcName="Start" DestID="208" DestName="In" />
+    <Flow SrcID="164" SrcName="Start" DestID="181" DestName="In" />
+    <Flow SrcID="164" SrcName="Start" DestID="207" DestName="In" />
+    <Flow SrcID="164" SrcName="Start" DestID="162" DestName="In" />
+    <Flow SrcID="165" SrcName="Value" DestID="166" DestName="Parent" />
+    <Flow SrcID="166" SrcName="Success" DestID="171" DestName="In" />
+    <Flow SrcID="168" SrcName="Value" DestID="172" DestName="ValueName" />
+    <Flow SrcID="168" SrcName="Value" DestID="176" DestName="ValueName" />
+    <Flow SrcID="168" SrcName="Value" DestID="174" DestName="ValueName" />
+    <Flow SrcID="169" SrcName="Value" DestID="173" DestName="B" />
+    <Flow SrcID="169" SrcName="Value" DestID="121" DestName="B" />
+    <Flow SrcID="170" SrcName="Value" DestID="172" DestName="Value" />
+    <Flow SrcID="171" SrcName="Init" DestID="172" DestName="In" />
+    <Flow SrcID="171" SrcName="Loop" DestID="179" DestName="In" />
+    <Flow SrcID="171" SrcName="LoopEnd" DestID="176" DestName="In" />
+    <Flow SrcID="173" SrcName="Value" DestID="171" DestName="Condition" />
+    <Flow SrcID="174" SrcName="Value" DestID="175" DestName="A" />
+    <Flow SrcID="174" SrcName="Value" DestID="173" DestName="A" />
+    <Flow SrcID="174" SrcName="Value" DestID="177" DestName="A" />
+    <Flow SrcID="175" SrcName="Value" DestID="176" DestName="Value" />
+    <Flow SrcID="177" SrcName="Value" DestID="178" DestName="Y" />
+    <Flow SrcID="178" SrcName="Value" DestID="179" DestName="Position" />
+    <Flow SrcID="181" SrcName="Value" DestID="188" DestName="ArrayList" />
+    <Flow SrcID="181" SrcName="Value" DestID="126" DestName="ArrayList" />
+    <Flow SrcID="183" SrcName="Value" DestID="186" DestName="Condition" />
+    <Flow SrcID="184" SrcName="Value" DestID="183" DestName="Value" />
+    <Flow SrcID="185" SrcName="Value" DestID="184" DestName="A" />
+    <Flow SrcID="186" SrcName="OnTrue" DestID="187" DestName="In" />
+    <Flow SrcID="187" SrcName="Out0" DestID="190" DestName="In" />
+    <Flow SrcID="187" SrcName="Out0" DestID="191" DestName="In" />
+    <Flow SrcID="187" SrcName="Out1" DestID="192" DestName="In" />
+    <Flow SrcID="187" SrcName="Out2" DestID="201" DestName="In" />
+    <Flow SrcID="187" SrcName="Out3" DestID="202" DestName="In" />
+    <Flow SrcID="191" SrcName="Value" DestID="195" DestName="Value" />
+    <Flow SrcID="192" SrcName="Out0" DestID="194" DestName="In" />
+    <Flow SrcID="192" SrcName="Out1" DestID="195" DestName="In" />
+    <Flow SrcID="193" SrcName="Value" DestID="198" DestName="Condition" />
+    <Flow SrcID="194" SrcName="Value" DestID="203" DestName="Args" />
+    <Flow SrcID="194" SrcName="Value" DestID="195" DestName="ArrayList" />
+    <Flow SrcID="194" SrcName="Value" DestID="196" DestName="ArrayList" />
+    <Flow SrcID="194" SrcName="Value" DestID="197" DestName="ArrayList" />
+    <Flow SrcID="194" SrcName="Value" DestID="199" DestName="ArrayList" />
+    <Flow SrcID="194" SrcName="Value" DestID="200" DestName="ArrayList" />
+    <Flow SrcID="195" SrcName="Success" DestID="196" DestName="In" />
+    <Flow SrcID="196" SrcName="Success" DestID="197" DestName="In" />
+    <Flow SrcID="197" SrcName="Success" DestID="199" DestName="In" />
+    <Flow SrcID="198" SrcName="Value" DestID="197" DestName="Value" />
+    <Flow SrcID="199" SrcName="Success" DestID="200" DestName="In" />
+    <Flow SrcID="202" SrcName="Init" DestID="128" DestName="In" />
+    <Flow SrcID="202" SrcName="Loop" DestID="125" DestName="In" />
+    <Flow SrcID="202" SrcName="LoopEnd" DestID="123" DestName="In" />
+    <Flow SrcID="203" SrcName="Value" DestID="201" DestName="Value" />
+    <Flow SrcID="204" SrcName="Time" DestID="193" DestName="A" />
+    <Flow SrcID="204" SrcName="Time" DestID="130" DestName="A" />
+    <Flow SrcID="204" SrcName="Time" DestID="196" DestName="Value" />
+    <Flow SrcID="205" SrcName="Value" DestID="123" DestName="Value" />
+    <Flow SrcID="206" SrcName="Value" DestID="128" DestName="ValueName" />
+    <Flow SrcID="206" SrcName="Value" DestID="122" DestName="ValueName" />
+    <Flow SrcID="206" SrcName="Value" DestID="123" DestName="ValueName" />
+    <Flow SrcID="208" SrcName="Value" DestID="189" DestName="ArrayList" />
+    <Flow SrcID="208" SrcName="Value" DestID="190" DestName="ArrayList" />
+    <Flow SrcID="208" SrcName="Value" DestID="201" DestName="ArrayList" />
+    <Flow SrcID="208" SrcName="Value" DestID="127" DestName="ArrayList" />
+    <Flow SrcID="210" SrcName="Success" DestID="141" DestName="In" />
+    <Flow SrcID="211" SrcName="Success" DestID="137" DestName="In" />
+    <Flow SrcID="156" SrcName="Value" DestID="210" DestName="Key" />
+    <Flow SrcID="207" SrcName="Success" DestID="166" DestName="In" />
+    <Flow SrcID="207" SrcName="Success" DestID="167" DestName="In" />
+    <Flow SrcID="207" SrcName="Object" DestID="166" DestName="Child" />
+    <Flow SrcID="207" SrcName="Object" DestID="180" DestName="Parent" />
+    <Flow SrcID="207" SrcName="Object" DestID="167" DestName="Object" />
+    <Flow SrcID="209" SrcName="Out" DestID="186" DestName="In" />
+    <Flow SrcID="209" SrcName="EffectType" DestID="184" DestName="B" />
+    <Flow SrcID="209" SrcName="EffectType" DestID="200" DestName="Value" />
+    <Flow SrcID="209" SrcName="Time" DestID="193" DestName="B" />
+    <Flow SrcID="209" SrcName="Time" DestID="130" DestName="B" />
+    <Flow SrcID="209" SrcName="Type" DestID="191" DestName="Key" />
+    <Flow SrcID="182" SrcName="Value" DestID="189" DestName="Value" />
+    <Flow SrcID="124" SrcName="Value" DestID="128" DestName="Value" />
+    <Flow SrcID="179" SrcName="Success" DestID="180" DestName="In" />
+    <Flow SrcID="179" SrcName="Success" DestID="188" DestName="In" />
+    <Flow SrcID="179" SrcName="Success" DestID="189" DestName="In" />
+    <Flow SrcID="179" SrcName="Object" DestID="180" DestName="Child" />
+    <Flow SrcID="179" SrcName="Object" DestID="188" DestName="Value" />
+  </Flows>
+  <Comments>
+    <Comment X="-1507.9287109375" Y="-1439.95251464844" Text="目的:マークの押された時間（フレーム）を知る" ScopeID="212" />
+    <Comment X="-1679.9287109375" Y="-337.952514648438" Text="１０個まで情報を保持" ScopeID="213" />
+    <Comment X="-1632.41394042969" Y="-783.952514648438" Text="初期化処理" ScopeID="213" />
+    <Comment X="-1612.16394042969" Y="274.547485351563" Text="マークが押されたときの処理" ScopeID="214" />
+    <Comment X="-1427.9287109375" Y="-1329.95251464844" Text="マークの種類に対応する文字列の辞書を作成しておく" ScopeID="212" />
+  </Comments>
+  <Scopes>
+    <Scope ID="212" X="-1527.9287109375" Y="-1459.95251464844" Color="#1D2088" />
+    <Scope ID="213" X="-1737.4287109375" Y="-816.702514648438" Color="#8FC31F" />
+    <Scope ID="214" X="-1649.1787109375" Y="254.547485351563" Color="#E60012" />
+  </Scopes>
+</Root>

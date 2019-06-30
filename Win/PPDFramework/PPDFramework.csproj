@@ -1,0 +1,505 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x64</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{FB4E8B02-D832-470D-968E-3AA046E4C164}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>PPDFramework</RootNamespace>
+    <AssemblyName>PPDFramework</AssemblyName>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <UpgradeBackupLocation />
+    <TargetFrameworkProfile />
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;BENCHMARK</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>false</Prefer32Bit>
+    <CodeAnalysisRuleSet>..\PPDCommon.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <DocumentationFile>bin\x64\Release\PPDFramework.XML</DocumentationFile>
+    <Prefer32Bit>false</Prefer32Bit>
+    <CodeAnalysisRuleSet>
+    </CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="MoreLinq, Version=1.4.18916.0, Culture=neutral, PublicKeyToken=384d532d7e88985d, processorArchitecture=MSIL">
+      <HintPath>..\packages\morelinq.1.4.0\lib\net35\MoreLinq.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX, Version=3.1.1.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpDX.3.1.1\lib\net45\SharpDX.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="SharpDX.D3DCompiler, Version=3.1.1.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpDX.D3DCompiler.3.1.1\lib\net45\SharpDX.D3DCompiler.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="SharpDX.Desktop, Version=3.1.1.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpDX.Desktop.3.1.1\lib\net45\SharpDX.Desktop.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="SharpDX.Direct2D1, Version=3.1.1.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpDX.Direct2D1.3.1.1\lib\net45\SharpDX.Direct2D1.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="SharpDX.Direct3D11, Version=3.1.1.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpDX.Direct3D11.3.1.1\lib\net45\SharpDX.Direct3D11.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="SharpDX.Direct3D11.Effects, Version=3.1.1.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpDX.Direct3D11.Effects.3.1.1\lib\net45\SharpDX.Direct3D11.Effects.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="SharpDX.Direct3D9, Version=3.1.1.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpDX.Direct3D9.3.1.1\lib\net45\SharpDX.Direct3D9.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="SharpDX.DXGI, Version=3.1.1.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpDX.DXGI.3.1.1\lib\net45\SharpDX.DXGI.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="SharpDX.Mathematics, Version=3.1.1.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpDX.Mathematics.3.1.1\lib\net45\SharpDX.Mathematics.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.SQLite, Version=1.0.100.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Data.SQLite.Core.1.0.100.0\lib\net46\System.Data.SQLite.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Data.SQLite.EF6, Version=1.0.100.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Data.SQLite.EF6.1.0.100.0\lib\net46\System.Data.SQLite.EF6.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Data.SQLite.Linq, Version=1.0.100.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Data.SQLite.Linq.1.0.100.0\lib\net46\System.Data.SQLite.Linq.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Alignment.cs" />
+    <Compile Include="AlphaBlendContextCache.cs" />
+    <Compile Include="ArrayTree.cs" />
+    <Compile Include="AutoMode.cs" />
+    <Compile Include="Benchmark.cs" />
+    <Compile Include="BindableGameComponent.cs" />
+    <Compile Include="BorderType.cs" />
+    <Compile Include="Chars\AvailableSpace.cs" />
+    <Compile Include="Chars\CharCacheInfo.cs" />
+    <Compile Include="Chars\CharCacheManager.cs" />
+    <Compile Include="Chars\SizeTexture.cs" />
+    <Compile Include="Chars\SizeTextureManager.cs" />
+    <Compile Include="ClipInfo.cs" />
+    <Compile Include="DataBaseReader.cs" />
+    <Compile Include="DataBaseTransaction.cs" />
+    <Compile Include="DatabaseUtility.cs" />
+    <Compile Include="Chars\Direct2DImageEncoder.cs" />
+    <Compile Include="Disposable.cs" />
+    <Compile Include="DisposableComponent.cs" />
+    <Compile Include="DrawInfo.cs" />
+    <Compile Include="DX11\PPDDevice.cs" />
+    <Compile Include="DX9\PPDDevice.cs" />
+    <Compile Include="Effect\DX11\Effect.cs" />
+    <Compile Include="Effect\DX11\EffectFactory.cs" />
+    <Compile Include="Effect\DX11\EffectHandle.cs" />
+    <Compile Include="Effect\DX9\Effect.cs" />
+    <Compile Include="Effect\DX9\EffectFactory.cs" />
+    <Compile Include="Effect\DX9\EffectHandle.cs" />
+    <Compile Include="Effect\EffectBase.cs" />
+    <Compile Include="Effect\EffectFactoryManager.cs" />
+    <Compile Include="Effect\EffectHandleBase.cs" />
+    <Compile Include="Effect\IEffectFactory.cs" />
+    <Compile Include="EmptyInputInfo.cs" />
+    <Compile Include="ErrorHandlerPPD.cs" />
+    <Compile Include="ExLanguageReader.cs" />
+    <Compile Include="Factory\FactoryManagerBase.cs" />
+    <Compile Include="FormExtention.cs" />
+    <Compile Include="GameCore.cs" />
+    <Compile Include="GameCoreBase.cs" />
+    <Compile Include="GameForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="IGameForm.cs" />
+    <Compile Include="MoviePlayType.cs" />
+    <Compile Include="PathManager.cs" />
+    <Compile Include="PathObject.cs" />
+    <Compile Include="PolygonObject.cs" />
+    <Compile Include="PrimitiveType.cs" />
+    <Compile Include="RenderMask\MosaicMask.cs" />
+    <Compile Include="ResettableComponent.cs" />
+    <Compile Include="Resource\ColorTextureResourceBase.cs" />
+    <Compile Include="Resource\DX11\ImageResourceFactory.cs" />
+    <Compile Include="Resource\DX11\ImageResource.cs" />
+    <Compile Include="Resource\DX9\ImageResourceFactory.cs" />
+    <Compile Include="Resource\ImageResourceFactoryManager.cs" />
+    <Compile Include="Resource\IImageResourceFactory.cs" />
+    <Compile Include="Resource\SpriteImageResource.cs" />
+    <Compile Include="Resource\SpriteResourceManager.cs" />
+    <Compile Include="Shaders\ColorFilterType.cs" />
+    <Compile Include="Shaders\MaskType.cs" />
+    <Compile Include="Shaders\MosaicFilter.cs" />
+    <Compile Include="Sprites\ImageInfo.cs" />
+    <Compile Include="Sprites\ImageScale.cs" />
+    <Compile Include="Sprites\PackInfo.cs" />
+    <Compile Include="Sprites\PPDPackSpriteManagerBase.cs" />
+    <Compile Include="Sprites\SpriteBatch.cs" />
+    <Compile Include="Sprites\SpriteDictionary.cs" />
+    <Compile Include="Sprites\SpriteInfo.cs" />
+    <Compile Include="Sprites\DirSpriteManager.cs" />
+    <Compile Include="Sprites\SpriteManagerBase.cs" />
+    <Compile Include="TextureCharMode.cs" />
+    <Compile Include="Texture\DX11\Surface.cs" />
+    <Compile Include="Texture\DX11\Texture.cs" />
+    <Compile Include="Texture\DX11\TextureData.cs" />
+    <Compile Include="Texture\DX11\TextureFactory.cs" />
+    <Compile Include="Texture\DX9\Surface.cs" />
+    <Compile Include="Texture\DX9\TextureData.cs" />
+    <Compile Include="Texture\SurfaceBase.cs" />
+    <Compile Include="Texture\DX9\Texture.cs" />
+    <Compile Include="Texture\DX9\TextureFactory.cs" />
+    <Compile Include="Texture\TextureBase.cs" />
+    <Compile Include="PostDrawManager.cs" />
+    <Compile Include="PPDColors.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="RenderMaskBase.cs" />
+    <Compile Include="RenderMask\BorderMask.cs" />
+    <Compile Include="Resource\ImageResourceBase.cs" />
+    <Compile Include="ReturnableComponent.cs" />
+    <Compile Include="ScreenFilters\ColorScreenFilter.cs" />
+    <Compile Include="ScreenFilters\GaussianFilter.cs" />
+    <Compile Include="ScreenFilters\Impl\ColorScreenFilter.cs" />
+    <Compile Include="ScreenFilters\Impl\GaussianFilter.cs" />
+    <Compile Include="InputActionBase.cs" />
+    <Compile Include="InputInfoBase.cs" />
+    <Compile Include="IReviewManager.cs" />
+    <Compile Include="ISound.cs" />
+    <Compile Include="LatencyType.cs" />
+    <Compile Include="Logger\Logger.cs" />
+    <Compile Include="Logger\LogInfo.cs" />
+    <Compile Include="Logger\LogLevel.cs" />
+    <Compile Include="Logger\LogManager.cs" />
+    <Compile Include="NoteType.cs" />
+    <Compile Include="MenuInputInfo.cs" />
+    <Compile Include="ModifyDataAttribute.cs" />
+    <Compile Include="Mod\BooleanModSetting.cs" />
+    <Compile Include="Mod\DirModInfo.cs" />
+    <Compile Include="Mod\ModInfoBase.cs" />
+    <Compile Include="Mod\ModSetting.cs" />
+    <Compile Include="Mod\Color4ModSetting.cs" />
+    <Compile Include="Mod\DoubleModSetting.cs" />
+    <Compile Include="Mod\FloatModSetting.cs" />
+    <Compile Include="Mod\Int32ModSetting.cs" />
+    <Compile Include="Mod\ModSettingDatabase.cs" />
+    <Compile Include="Mod\ModSettingManager.cs" />
+    <Compile Include="Mod\NumberModSetting.cs" />
+    <Compile Include="Mod\StringModSetting.cs" />
+    <Compile Include="Mod\TemplateModSetting.cs" />
+    <Compile Include="PPDDevice.cs" />
+    <Compile Include="PPDExecuteArg.cs" />
+    <Compile Include="PPDFrameworkSetting.cs" />
+    <Compile Include="PPDStructure\EVDData\ChangeSlideScaleEvent.cs" />
+    <Compile Include="RectangleComponent.cs" />
+    <Compile Include="Resource\ColorTextureResource.cs" />
+    <Compile Include="ReviewManager.cs" />
+    <Compile Include="ScoreDifficultyMeasure.cs" />
+    <Compile Include="ScoreDifficultyMeasureResult.cs" />
+    <Compile Include="ScoreStorage.cs" />
+    <Compile Include="ScreenFilters\ScreenFilterBase.cs" />
+    <Compile Include="ShaderCommon.cs" />
+    <Compile Include="Shaders\AlphaBlend.cs" />
+    <Compile Include="Shaders\AlphaBlendContext.cs" />
+    <Compile Include="Shaders\AverageGrayScaleColorFilter.cs" />
+    <Compile Include="Shaders\BorderFilter.cs" />
+    <Compile Include="Shaders\BrightnessColorFilter.cs" />
+    <Compile Include="Shaders\ColorFilter.cs" />
+    <Compile Include="Shaders\ColorFilterBase.cs" />
+    <Compile Include="Shaders\GlassFilter.cs" />
+    <Compile Include="Shaders\FilterInfo.cs" />
+    <Compile Include="Shaders\GreenGrayScaleColorFilter.cs" />
+    <Compile Include="Shaders\HDTVGrayScaleColorFilter.cs" />
+    <Compile Include="Shaders\HueColorFilter.cs" />
+    <Compile Include="Shaders\InvertColorFilter.cs" />
+    <Compile Include="Shaders\MaxGrayScaleColorFilter.cs" />
+    <Compile Include="Shaders\MedianGrayScaleColorFilter.cs" />
+    <Compile Include="Shaders\MiddleGrayScaleColorFilter.cs" />
+    <Compile Include="Shaders\NTSCGrayScaleColorFilter.cs" />
+    <Compile Include="Shaders\SaturationColorFilter.cs" />
+    <Compile Include="SoundType.cs" />
+    <Compile Include="SpaceObject.cs" />
+    <Compile Include="StackObject.cs" />
+    <Compile Include="Texture\ITextureFactory.cs" />
+    <Compile Include="Texture\TextureDataBase.cs" />
+    <Compile Include="Texture\TextureFactoryManager.cs" />
+    <Compile Include="Utility.cs" />
+    <Compile Include="Vertex\DX11\IndexBuffer.cs" />
+    <Compile Include="Vertex\DX11\IndexBufferFactory.cs" />
+    <Compile Include="Vertex\DX11\VertexBuffer.cs" />
+    <Compile Include="Vertex\DX11\VertexBufferFactory.cs" />
+    <Compile Include="Vertex\DX11\VertexDeclaration.cs" />
+    <Compile Include="Vertex\DX11\VertexDeclarationFactory.cs" />
+    <Compile Include="Vertex\DX9\IndexBuffer.cs" />
+    <Compile Include="Vertex\DX9\IndexBufferFactory.cs" />
+    <Compile Include="Vertex\ManagedVertexBuffer.cs" />
+    <Compile Include="Vertex\DX9\VertexBufferFactory.cs" />
+    <Compile Include="Vertex\DX9\VertexDeclaration.cs" />
+    <Compile Include="Vertex\DX9\VertexDeclarationFactory.cs" />
+    <Compile Include="Vertex\IIndexBufferFactory.cs" />
+    <Compile Include="Vertex\IndexBufferBase.cs" />
+    <Compile Include="Vertex\IndexBufferFactoryManager.cs" />
+    <Compile Include="Vertex\IVertexBufferFactory.cs" />
+    <Compile Include="Vertex\IVertexDeclarationFactory.cs" />
+    <Compile Include="Vertex\VertexBucket.cs" />
+    <Compile Include="Vertex\DX9\VertexBuffer.cs" />
+    <Compile Include="Vertex\VertexBufferBase.cs" />
+    <Compile Include="Vertex\VertexBufferFactoryManager.cs" />
+    <Compile Include="Vertex\VertexDeclarationBase.cs" />
+    <Compile Include="Vertex\VertexDeclarationFactoryManager.cs" />
+    <Compile Include="Vertex\VertexInfo.cs" />
+    <Compile Include="Vertex\VertexManager.cs" />
+    <Compile Include="Web\ContestInfo.cs" />
+    <Compile Include="Web\GhostInfo.cs" />
+    <Compile Include="Web\ItemInfo.cs" />
+    <Compile Include="Web\ItemType.cs" />
+    <Compile Include="Web\ListInfo.cs" />
+    <Compile Include="Web\ListScoreInfo.cs" />
+    <Compile Include="Web\PerfectTrialInfo.cs" />
+    <Compile Include="Web\ReplayInfo.cs" />
+    <Compile Include="Web\WebModInfo.cs" />
+    <Compile Include="Web\WebModInfoDetail.cs" />
+    <Compile Include="Web\WebSongInformation.cs" />
+    <Compile Include="Web\AccountInfo.cs" />
+    <Compile Include="IGameHost.cs" />
+    <Compile Include="IMovie.cs" />
+    <Compile Include="Mod\ModInfo.cs" />
+    <Compile Include="Mod\ModManager.cs" />
+    <Compile Include="MovieTrimmingData.cs" />
+    <Compile Include="PPDGameUtility.cs" />
+    <Compile Include="SongInformation.cs" />
+    <Compile Include="GameComponent.cs" />
+    <Compile Include="IDrawable.cs" />
+    <Compile Include="IGameComponent.cs" />
+    <Compile Include="Scene\ISceneBase.cs" />
+    <Compile Include="IUpdatable.cs" />
+    <Compile Include="Resource\DX9\ImageResource.cs" />
+    <Compile Include="NumberPictureObject.cs" />
+    <Compile Include="PictureObject.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SceneManager.cs" />
+    <Compile Include="ColoredTexturedVertex.cs" />
+    <Compile Include="Workspace.cs" />
+    <Compile Include="WorkspaceTexture.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Border.cs" />
+    <Compile Include="ButtonType.cs" />
+    <Compile Include="EntrySceneManagerBase.cs" />
+    <Compile Include="GameInformationBase.cs" />
+    <Compile Include="LoadingBase.cs" />
+    <Compile Include="ColorTextureAllcator.cs" />
+    <Compile Include="DataBase.cs" />
+    <Compile Include="DrawableGameComponent.cs" />
+    <Compile Include="FocusableGameComponent.cs" />
+    <Compile Include="FocusManager.cs" />
+    <Compile Include="IFocusable.cs" />
+    <Compile Include="MouseInfo.cs" />
+    <Compile Include="MouseManager.cs" />
+    <Compile Include="PPDStructure\EVDData\ChangeInitializeOrderEvent.cs" />
+    <Compile Include="PPDStructure\EVDWriter.cs" />
+    <Compile Include="PPDStructure\PPDWriter.cs" />
+    <Compile Include="PPDStructure\SCDWriter.cs" />
+    <Compile Include="ScoreReaderWriter.cs" />
+    <Compile Include="SettingDataBase.cs" />
+    <Compile Include="SpriteObject.cs" />
+    <Compile Include="TextEditableControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ITweetManager.cs" />
+    <Compile Include="LogicFolderInfomation.cs" />
+    <Compile Include="PPDStructure\EVDData\ChangeNoteTypeEvent.cs" />
+    <Compile Include="Resource\ResourceBase.cs" />
+    <Compile Include="Resource\ResourceManager.cs" />
+    <Compile Include="ResultInfo.cs" />
+    <Compile Include="Scene\SceneBase.cs" />
+    <Compile Include="TextureChar.cs" />
+    <Compile Include="EffectObject.cs" />
+    <Compile Include="MarkEvaluateType.cs" />
+    <Compile Include="MovieFadeState.cs" />
+    <Compile Include="PauseType.cs" />
+    <Compile Include="PPDDatabase.cs" />
+    <Compile Include="PPDStructure\EVDData\ChangeBPMEvent.cs" />
+    <Compile Include="PPDStructure\EVDData\ChangeDisplayStateEvent.cs" />
+    <Compile Include="PPDStructure\EVDData\ChangeMoveStateEvent.cs" />
+    <Compile Include="PPDStructure\EVDData\ChangeReleaseSoundEvent.cs" />
+    <Compile Include="PPDStructure\EVDData\ChangeSoundPlayModeEvent.cs" />
+    <Compile Include="PPDStructure\EVDData\ChangeVolumeEvent.cs" />
+    <Compile Include="PPDStructure\EVDData\EventType.cs" />
+    <Compile Include="PPDStructure\EVDData\IEVDData.cs" />
+    <Compile Include="PPDStructure\EVDData\RapidChangeBPMEvent.cs" />
+    <Compile Include="PPDStructure\EVDReader.cs" />
+    <Compile Include="PPDStructure\PPDData\ExMarkData.cs" />
+    <Compile Include="PPDStructure\PPDData\MarkDataBase.cs" />
+    <Compile Include="PPDStructure\PPDData\MarkData.cs" />
+    <Compile Include="PPDStructure\PPDReader.cs" />
+    <Compile Include="PPDStructure\SCDData.cs" />
+    <Compile Include="PPDStructure\SCDReader.cs" />
+    <Compile Include="PPDStructure\SoundSetReader.cs" />
+    <Compile Include="PPDException.cs" />
+    <Compile Include="PPDExceptionContentProvider.cs" />
+    <Compile Include="PPDSetting.cs" />
+    <Compile Include="Profile.cs" />
+    <Compile Include="ProfileManager.cs" />
+    <Compile Include="ResultEvaluateType.cs" />
+    <Compile Include="SoundMasterControl.cs" />
+    <Compile Include="TextureString.cs" />
+    <Compile Include="UpdatableGameComponent.cs" />
+    <Compile Include="Web\ErrorReason.cs" />
+    <Compile Include="Web\Ranking.cs" />
+    <Compile Include="Web\RankingCache.cs" />
+    <Compile Include="Web\RankingInfo.cs" />
+    <Compile Include="Web\WebManager.cs" />
+    <Compile Include="Web\WebSongInformationDetail.cs" />
+    <Compile Include="Web\WebSongInformationDifficulty.cs" />
+    <Compile Include="WinAPI.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BezierCaliculator\BezierCaliculator.csproj">
+      <Project>{8E6F013A-FBBD-4F3E-94F2-0EFA2CE09872}</Project>
+      <Name>BezierCaliculator</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Effect2D\Effect2D.csproj">
+      <Project>{21169b27-d6ee-47af-88f3-171fda7e7f0c}</Project>
+      <Name>Effect2D</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ErrorHandler\ErrorHandle.csproj">
+      <Project>{7BF2846D-6813-4E83-8B26-42C5B98B2099}</Project>
+      <Name>ErrorHandle</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\FlowScriptEngine\FlowScriptEngine.csproj">
+      <Project>{952271CD-8EAC-46BD-B32E-D5262D26B290}</Project>
+      <Name>FlowScriptEngine</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PPDConfiguration\PPDConfiguration.csproj">
+      <Project>{412E43FD-DA7A-4B7A-85F8-61A2501FCAF6}</Project>
+      <Name>PPDConfiguration</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PPDFrameworkCore\PPDFrameworkCore.csproj">
+      <Project>{97909DE9-E25A-43C5-8116-B5393D752132}</Project>
+      <Name>PPDFrameworkCore</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PPDPack\PPDPack.csproj">
+      <Project>{1496449C-E132-43C2-9AC9-9FB8BF4AE6AE}</Project>
+      <Name>PPDPack</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows インストーラー 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+    <None Include="Shaders\DX11\d3d11_AlphaBlend.fxc" />
+    <None Include="Shaders\DX11\d3d11_BasicEffect.fxc" />
+    <None Include="Shaders\DX11\d3d11_Border.fxc" />
+    <None Include="Shaders\DX11\d3d11_GaussianFilter.fxc" />
+    <None Include="Shaders\DX11\d3d11_Glass.fxc" />
+    <None Include="Shaders\DX11\d3d11_Mosaic.fxc" />
+    <None Include="Shaders\DX9\d3d9_AlphaBlend.fxc" />
+    <None Include="Shaders\DX9\d3d9_BasicEffect.fxc" />
+    <None Include="Shaders\DX9\d3d9_Border.fxc" />
+    <None Include="Shaders\DX9\d3d9_GaussianFilter.fxc" />
+    <None Include="Shaders\DX9\d3d9_Glass.fxc" />
+    <None Include="Shaders\DX9\d3d9_Mosaic.fxc" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="sharpdx_direct3d11_1_effects_x64.dll" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <Import Project="..\packages\System.Data.SQLite.Core.1.0.100.0\build\net46\System.Data.SQLite.Core.targets" Condition="Exists('..\packages\System.Data.SQLite.Core.1.0.100.0\build\net46\System.Data.SQLite.Core.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>このプロジェクトは、このコンピューター上にない NuGet パッケージを参照しています。それらのパッケージをダウンロードするには、[NuGet パッケージの復元] を使用します。詳細については、http://go.microsoft.com/fwlink/?LinkID=322105 を参照してください。見つからないファイルは {0} です。</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\System.Data.SQLite.Core.1.0.100.0\build\net46\System.Data.SQLite.Core.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\System.Data.SQLite.Core.1.0.100.0\build\net46\System.Data.SQLite.Core.targets'))" />
+  </Target>
+</Project>

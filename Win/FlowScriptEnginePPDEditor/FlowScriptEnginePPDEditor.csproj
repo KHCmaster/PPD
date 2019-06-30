@@ -1,0 +1,421 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x64</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{5CFCE4B2-0586-48AB-8B5C-F8D921E1151E}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>FlowScriptEnginePPDEditor</RootNamespace>
+    <AssemblyName>FlowScriptEnginePPDEditor</AssemblyName>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+    <Prefer32Bit>false</Prefer32Bit>
+    <CodeAnalysisRuleSet>..\PPDCommon.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+    <Prefer32Bit>false</Prefer32Bit>
+    <CodeAnalysisRuleSet>
+    </CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="GalaSoft.MvvmLight, Version=4.4.32.39728, Culture=neutral, PublicKeyToken=eabbf6a5f5af5004, processorArchitecture=MSIL">
+      <HintPath>..\packages\MvvmLightLibs.4.4.32.7\lib\net45\GalaSoft.MvvmLight.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="GalaSoft.MvvmLight.Extras, Version=4.4.32.39728, Culture=neutral, PublicKeyToken=0e27b6f8be9b2ef7, processorArchitecture=MSIL">
+      <HintPath>..\packages\MvvmLightLibs.4.4.32.7\lib\net45\GalaSoft.MvvmLight.Extras.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\CommonServiceLocator.1.3\lib\portable-net4+sl5+netcore45+wpa81+wp8\Microsoft.Practices.ServiceLocation.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="SharpDX, Version=3.1.1.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpDX.3.1.1\lib\net45\SharpDX.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="SharpDX.Mathematics, Version=3.1.1.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpDX.Mathematics.3.1.1\lib\net45\SharpDX.Mathematics.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\MvvmLightLibs.4.4.32.7\lib\net45\System.Windows.Interactivity.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="FlowSourceObjects\Dialog\Setting\AddBoolFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Dialog\Setting\AddDoubleFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Dialog\Setting\AddDoubleWithLimitFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Dialog\Setting\AddEnumerableFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Dialog\Setting\AddFloatFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Dialog\Setting\AddFloatWithLimitFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Dialog\Setting\AddIntFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Dialog\Setting\AddIntWithLimitFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Dialog\Setting\AddStringFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Dialog\Setting\AddStringWithLimitFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Dialog\Setting\GetValueFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Dialog\Setting\IsTypeFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Dialog\Setting\SettingFlowSourceObjectBase.cs" />
+    <Compile Include="FlowSourceObjects\Dialog\Setting\ValueFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Dialog\ShowFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Event\DisplayState\IsTypeFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Event\DisplayState\ValueFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Event\IsTypeFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Event\MoveState\IsTypeFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Event\MoveState\ValueFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Event\NoteType\IsTypeFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Event\NoteType\ValueFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Event\ValueFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Event\ValuesFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\ExecutableFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Layer\AllFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Layer\IsTypeFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Layer\ValueFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Layer\AddMarkFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Layer\AddLongMarkFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Mark\AssignIdFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Mark\IsTypeFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Mark\ParameterPreset\AllFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Mark\ParameterPreset\ValueFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Mark\PosAndRotation\IsTypeFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Mark\PosAndRotation\LoadFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Mark\PosAndRotation\ValueFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Mark\RemoveFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Mark\RemoveParameterFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Mark\SetParameterFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Mark\SetTimeFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Mark\SetTypeFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Mark\SetPositionFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Mark\SetRotationFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Mark\UnassignIdFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Mark\ValueFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\MessageBox\ButtonType\IsTypeFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\MessageBox\ButtonType\ValueFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\MessageBox\IconType\IsTypeFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\MessageBox\IconType\ValueFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\MessageBox\ResultType\IsTypeFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\MessageBox\ResultType\ValueFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\MessageBox\ShowFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\MessageBox\ShowWithButtonFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\MessageBox\ShowWithCaptionFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\MessageBox\ShowWithIconFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Movie\LengthFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Movie\ExecutableMovieFlowSourceObjectBase.cs" />
+    <Compile Include="FlowSourceObjects\Movie\ExecutableMovieManagerFlowSourceObjectBase.cs" />
+    <Compile Include="FlowSourceObjects\Movie\MovieFlowSourceObjectBase.cs" />
+    <Compile Include="FlowSourceObjects\Movie\MovieManagerFlowSourceObjectBase.cs" />
+    <Compile Include="FlowSourceObjects\Movie\PauseFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Movie\PlayFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Movie\PositionFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Movie\SeekFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Movie\SetTrimmingFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Movie\SizeFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Movie\StopFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Movie\TrimmingFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Song\InfoFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Storage\GetValueFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Storage\SetValueFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\TemplateIsTypeFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\TemplateStructValueFlowSourceObject.cs" />
+    <Compile Include="ModifyDataWarning.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="ToolTipText.cs" />
+    <Compile Include="TypeAlias.cs" />
+    <Compile Include="TypeColors.cs" />
+    <Compile Include="TypeFormatters\DialogResultTypeFormatter.cs" />
+    <Compile Include="TypeFormatters\DisplayStateTypeFormatter.cs" />
+    <Compile Include="TypeFormatters\MessageBoxButtonsTypeFormatter.cs" />
+    <Compile Include="TypeFormatters\MessageBoxIconTypeFormatter.cs" />
+    <Compile Include="TypeFormatters\MoveStateTypeFormatter.cs" />
+    <Compile Include="TypeSerializers\EventDataTypeSerializer.cs" />
+    <Compile Include="TypeSerializers\LayerTypeSerializer.cs" />
+    <Compile Include="TypeSerializers\MarkTypeSerializer.cs" />
+    <Compile Include="TypeSerializers\ParameterPresetTypeSerializer.cs" />
+    <Compile Include="TypeSerializers\PosAndRotationTypeSerializer.cs" />
+    <Compile Include="TypeSerializers\SettingTypeSerializer.cs" />
+    <Compile Include="Warning.cs" />
+    <Compile Include="FlowSourceObjects\MessageBox\ShowFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ShowFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\MessageBox\ShowWithButtonFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ShowWithButtonFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\MessageBox\ShowWithCaptionFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ShowWithCaptionFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\MessageBox\ShowWithIconFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ShowWithIconFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\MessageBox\ButtonType\ValueFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ValueFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\MessageBox\IconType\ValueFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ValueFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\MessageBox\ResultType\ValueFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ValueFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Mark\SetPositionFlowSourceObject.AutoFast.cs">
+      <DependentUpon>SetPositionFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Mark\SetRotationFlowSourceObject.AutoFast.cs">
+      <DependentUpon>SetRotationFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Mark\ValueFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ValueFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Layer\AllFlowSourceObject.AutoFast.cs">
+      <DependentUpon>AllFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Layer\ValueFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ValueFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Storage\GetValueFlowSourceObject.AutoFast.cs">
+      <DependentUpon>GetValueFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Storage\SetValueFlowSourceObject.AutoFast.cs">
+      <DependentUpon>SetValueFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Dialog\ShowFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ShowFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Dialog\Setting\AddBoolFlowSourceObject.AutoFast.cs">
+      <DependentUpon>AddBoolFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Dialog\Setting\AddDoubleFlowSourceObject.AutoFast.cs">
+      <DependentUpon>AddDoubleFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Dialog\Setting\AddDoubleWithLimitFlowSourceObject.AutoFast.cs">
+      <DependentUpon>AddDoubleWithLimitFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Dialog\Setting\AddEnumerableFlowSourceObject.AutoFast.cs">
+      <DependentUpon>AddEnumerableFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Dialog\Setting\AddFloatFlowSourceObject.AutoFast.cs">
+      <DependentUpon>AddFloatFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Dialog\Setting\AddFloatWithLimitFlowSourceObject.AutoFast.cs">
+      <DependentUpon>AddFloatWithLimitFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Dialog\Setting\AddIntFlowSourceObject.AutoFast.cs">
+      <DependentUpon>AddIntFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Dialog\Setting\AddIntWithLimitFlowSourceObject.AutoFast.cs">
+      <DependentUpon>AddIntWithLimitFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Dialog\Setting\AddStringFlowSourceObject.AutoFast.cs">
+      <DependentUpon>AddStringFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Dialog\Setting\AddStringWithLimitFlowSourceObject.AutoFast.cs">
+      <DependentUpon>AddStringWithLimitFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Dialog\Setting\ValueFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ValueFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Dialog\Setting\GetValueFlowSourceObject.AutoFast.cs">
+      <DependentUpon>GetValueFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Mark\AssignIdFlowSourceObject.AutoFast.cs">
+      <DependentUpon>AssignIdFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Mark\RemoveParameterFlowSourceObject.AutoFast.cs">
+      <DependentUpon>RemoveParameterFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Mark\SetParameterFlowSourceObject.AutoFast.cs">
+      <DependentUpon>SetParameterFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Mark\SetTimeFlowSourceObject.AutoFast.cs">
+      <DependentUpon>SetTimeFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Mark\SetTypeFlowSourceObject.AutoFast.cs">
+      <DependentUpon>SetTypeFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Mark\UnassignIdFlowSourceObject.AutoFast.cs">
+      <DependentUpon>UnassignIdFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Layer\AddLongMarkFlowSourceObject.AutoFast.cs">
+      <DependentUpon>AddLongMarkFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Layer\AddMarkFlowSourceObject.AutoFast.cs">
+      <DependentUpon>AddMarkFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Mark\PosAndRotation\LoadFlowSourceObject.AutoFast.cs">
+      <DependentUpon>LoadFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Mark\PosAndRotation\ValueFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ValueFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Layer\IsTypeFlowSourceObject.AutoFast.cs">
+      <DependentUpon>IsTypeFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Mark\IsTypeFlowSourceObject.AutoFast.cs">
+      <DependentUpon>IsTypeFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Dialog\Setting\IsTypeFlowSourceObject.AutoFast.cs">
+      <DependentUpon>IsTypeFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Mark\PosAndRotation\IsTypeFlowSourceObject.AutoFast.cs">
+      <DependentUpon>IsTypeFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\MessageBox\ButtonType\IsTypeFlowSourceObject.AutoFast.cs">
+      <DependentUpon>IsTypeFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\MessageBox\IconType\IsTypeFlowSourceObject.AutoFast.cs">
+      <DependentUpon>IsTypeFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\MessageBox\ResultType\IsTypeFlowSourceObject.AutoFast.cs">
+      <DependentUpon>IsTypeFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Mark\RemoveFlowSourceObject.AutoFast.cs">
+      <DependentUpon>RemoveFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Event\IsTypeFlowSourceObject.AutoFast.cs">
+      <DependentUpon>IsTypeFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Event\ValueFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ValueFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Event\ValuesFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ValuesFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Movie\PauseFlowSourceObject.AutoFast.cs">
+      <DependentUpon>PauseFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Movie\PlayFlowSourceObject.AutoFast.cs">
+      <DependentUpon>PlayFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Movie\SeekFlowSourceObject.AutoFast.cs">
+      <DependentUpon>SeekFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Movie\SetTrimmingFlowSourceObject.AutoFast.cs">
+      <DependentUpon>SetTrimmingFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Movie\StopFlowSourceObject.AutoFast.cs">
+      <DependentUpon>StopFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Movie\TrimmingFlowSourceObject.AutoFast.cs">
+      <DependentUpon>TrimmingFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Song\InfoFlowSourceObject.AutoFast.cs">
+      <DependentUpon>InfoFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Event\DisplayState\IsTypeFlowSourceObject.AutoFast.cs">
+      <DependentUpon>IsTypeFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Event\DisplayState\ValueFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ValueFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Event\MoveState\IsTypeFlowSourceObject.AutoFast.cs">
+      <DependentUpon>IsTypeFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Event\MoveState\ValueFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ValueFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Event\NoteType\IsTypeFlowSourceObject.AutoFast.cs">
+      <DependentUpon>IsTypeFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Event\NoteType\ValueFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ValueFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Movie\SizeFlowSourceObject.AutoFast.cs">
+      <DependentUpon>SizeFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Movie\LengthFlowSourceObject.AutoFast.cs">
+      <DependentUpon>LengthFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Movie\PositionFlowSourceObject.AutoFast.cs">
+      <DependentUpon>PositionFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Mark\ParameterPreset\AllFlowSourceObject.AutoFast.cs">
+      <DependentUpon>AllFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Mark\ParameterPreset\ValueFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ValueFlowSourceObject.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\FlowScriptEngine\FlowScriptEngine.csproj">
+      <Project>{952271CD-8EAC-46BD-B32E-D5262D26B290}</Project>
+      <Name>FlowScriptEngine</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PPDCoreModel\PPDCoreModel.csproj">
+      <Project>{DC448437-043D-4482-B5F2-DE04FF3BC5DD}</Project>
+      <Name>PPDCoreModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PPDEditorCommon\PPDEditorCommon.csproj">
+      <Project>{78C79BE9-C5F1-4F7F-A522-B390778983D5}</Project>
+      <Name>PPDEditorCommon</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PPDFramework\PPDFramework.csproj">
+      <Project>{FB4E8B02-D832-470D-968E-3AA046E4C164}</Project>
+      <Name>PPDFramework</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>copy "$(ProjectDir)\bin\x64\Debug\\FlowScriptEnginePPDEditor.dll" "$(SolutionDir)FlowScriptControlTest\bin\x64\Debug\dlls\FlowScriptEnginePPDEditor.dll"
+copy "$(ProjectDir)\bin\x64\Debug\\FlowScriptEnginePPDEditor.dll" "$(SolutionDir)PPD\PPD\bin\x64\Debug\dlls\FlowScriptEnginePPDEditor.dll"
+copy "$(ProjectDir)\bin\x64\Debug\\FlowScriptEnginePPDEditor.dll" "$(SolutionDir)PPDeditor\PPDeditor\bin\x64\Debug\dlls\FlowScriptEnginePPDEditor.dll"</PostBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

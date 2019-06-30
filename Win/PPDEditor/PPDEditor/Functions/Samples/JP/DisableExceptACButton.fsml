@@ -1,0 +1,41 @@
+<Root>
+  <Sources>
+    <Source Name="FlowScriptEnginePPD.FlowSourceObjects.DisableInputFlowSourceObject" FullName="FlowScriptEnginePPD.FlowSourceObjects.DisableInputFlowSourceObject" ID="2" ShowAll="True" X="-48.5" Y="-364.5">
+      <Value Name="Button" Value="Left" />
+      <Value Name="IsDisabled" Value="True" />
+    </Source>
+    <Source Name="FlowScriptEnginePPD.FlowSourceObjects.DisableInputFlowSourceObject" FullName="FlowScriptEnginePPD.FlowSourceObjects.DisableInputFlowSourceObject" ID="3" ShowAll="True" X="-49.5" Y="-266.5">
+      <Value Name="Button" Value="Down" />
+      <Value Name="IsDisabled" Value="True" />
+    </Source>
+    <Source Name="FlowScriptEnginePPD.FlowSourceObjects.DisableInputFlowSourceObject" FullName="FlowScriptEnginePPD.FlowSourceObjects.DisableInputFlowSourceObject" ID="4" ShowAll="True" X="-49.5" Y="-169.5">
+      <Value Name="Button" Value="Right" />
+      <Value Name="IsDisabled" Value="True" />
+    </Source>
+    <Source Name="FlowScriptEnginePPD.FlowSourceObjects.DisableInputFlowSourceObject" FullName="FlowScriptEnginePPD.FlowSourceObjects.DisableInputFlowSourceObject" ID="5" ShowAll="True" X="-49.5" Y="-72.5">
+      <Value Name="Button" Value="Up" />
+      <Value Name="IsDisabled" Value="True" />
+    </Source>
+    <Source Name="FlowScriptEnginePPD.FlowSourceObjects.DisableInputFlowSourceObject" FullName="FlowScriptEnginePPD.FlowSourceObjects.DisableInputFlowSourceObject" ID="6" ShowAll="True" X="-49.5" Y="26.5">
+      <Value Name="Button" Value="R" />
+      <Value Name="IsDisabled" Value="True" />
+    </Source>
+    <Source Name="FlowScriptEnginePPD.FlowSourceObjects.DisableInputFlowSourceObject" FullName="FlowScriptEnginePPD.FlowSourceObjects.DisableInputFlowSourceObject" ID="7" ShowAll="True" X="-50.5" Y="124.5">
+      <Value Name="Button" Value="L" />
+      <Value Name="IsDisabled" Value="True" />
+    </Source>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Misc.EntryPointFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Misc.EntryPointFlowSourceObject" ID="1" ShowAll="True" X="-363.5" Y="-134.5" />
+  </Sources>
+  <Flows>
+    <Flow SrcID="1" SrcName="Start" DestID="2" DestName="In" />
+    <Flow SrcID="1" SrcName="Start" DestID="5" DestName="In" />
+    <Flow SrcID="1" SrcName="Start" DestID="6" DestName="In" />
+    <Flow SrcID="1" SrcName="Start" DestID="3" DestName="In" />
+    <Flow SrcID="1" SrcName="Start" DestID="4" DestName="In" />
+    <Flow SrcID="1" SrcName="Start" DestID="7" DestName="In" />
+  </Flows>
+  <Comments>
+    <Comment X="-253.5" Y="-437.5" Text="目的: ACで一般に使われるボタン以外を無効化します" />
+  </Comments>
+  <Scopes />
+</Root>

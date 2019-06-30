@@ -1,0 +1,43 @@
+﻿<html>
+<head>
+<meta content="text/html; charset=UTF-8" http-equiv="content-type">
+<link rel="stylesheet" href="./common.css">
+<script type="text/javascript" src="../jquery-1.6.1.min.js"></script>
+<script type="text/javascript" src="../menu.js"></script>
+<title>
+コンテント
+</title>
+</head>
+<body>
+マークの打ち込みはタイムラインウィンドウ上で行います。<br/>
+<img src="./img/beat_map1.png"><br/>
+<br/>
+均等に並んだ黒い縦線の上でダブルクリックすると、マークが打ち込まれます。<br/>
+垂直位置は、マークの種類になります。とりあえず、四角の水平位置で縦線の上でダブルクリックをしていきます。</br>
+<img src="./img/beat_map2.png"><br/>
+<br/>
+上記のようになったら、動画を再生してみます。</br>
+タンバリンの音が鳴ると思いますが、リズムがずれていると思います（リズムがずれているか分からない場合は更にマークを追加しましょう)。そこで、リズムと縦線の位置をそろえます。</br>
+タイムラインウィンドウ左上の「TimeLine」とかかれている部分（見切れているかもしれません)の上にマウスを持っていきます。<br/>
+そこで左右にドラッグするとマーク全体がシフトします。<br/>
+適当にシフトして、再生を繰り返してマークの位置とリズムがマッチさせます。<br/>
+マッチしたら、今度は縦線がマークを通過するように調整します。<br/>
+BPM入力欄右のBPMOffsetのテキストボックスに適当な値を入れて縦線がマークを通過するようにします。<br/>
+最小で0、最大でBPMの数値がBPMOffsetには入ります。</br>
+<img src="./img/change_bpmoffset2.png"><br/>
+<br/>
+環境にもよりますが、PPDEditorとPPDでは打鍵の時間が異なるように聞こえることがあります。<br/>
+そのためにPPDEditorから簡単にPPD上でのテストを行えるようにしてあります。<br/>
+ゲームから適当なメニューを選ぶとPPDのウィンドウが立ち上がりPPDでのプレイが可能になります。<br/>
+PPDで正しく聞こえるように調整しましょう。<br/>
+<img src="./img/game_execute.png"><br/>
+<br/>
+
+これでマークの打ち込みが簡単になりました。<br/>
+後は、動画を再生しつつボーカルのリズムに合うようにマークの打ち込みを行ってください。<br/>
+マークの種類は１種類固定でやるといいでしょう（後で簡単に変更できます)<br/>
+マークの削除はマークを選択後（青くなったら選択状態です）にDeleteキーを押してください。<br/>
+範囲選択をすれば一度にマークを消すこともできます。
+<span onclick="ChangeContentFromID('workflow_setting_marks.html')"><a onclick="return false" href="">次へ</a></span>
+</body>
+</html>

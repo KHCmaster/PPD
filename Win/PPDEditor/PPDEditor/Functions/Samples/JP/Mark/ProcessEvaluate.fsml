@@ -1,0 +1,52 @@
+<Root>
+  <Sources>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Object.EqualFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Object.EqualFlowSourceObject" ID="7" ShowAll="True" X="-508.571428571429" Y="-27.1428571428571">
+      <Comment Text="対象のマークの評価がWORSTかどうか" />
+    </Source>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Logic.IfFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Logic.IfFlowSourceObject" ID="8" ShowAll="True" X="38.5714285714286" Y="-68.5714285714286">
+      <Comment Text="WORSTなら実行する" />
+    </Source>
+    <Source Name="FlowScriptEnginePPD.FlowSourceObjects.Graphics.Effect.ValueFlowSourceObject" FullName="FlowScriptEnginePPD.FlowSourceObjects.Graphics.Effect.ValueFlowSourceObject" ID="2" ShowAll="True" X="37.1428571428571" Y="34.2857142857143">
+      <Comment Text="エフェクトを作成" />
+      <Value Name="Path" Value="hoge.etd" />
+      <Value Name="Position" Value="X:200 Y:200" />
+    </Source>
+    <Source Name="FlowScriptEnginePPD.FlowSourceObjects.Graphics.Effect.PlayFlowSourceObject" FullName="FlowScriptEnginePPD.FlowSourceObjects.Graphics.Effect.PlayFlowSourceObject" ID="3" ShowAll="True" X="35.7142857142857" Y="155.714285714286">
+      <Comment Text="エフェクトの再生" />
+      <Value Name="PlayType" Value="Loop" />
+    </Source>
+    <Source Name="FlowScriptEnginePPD.FlowSourceObjects.Graphics.AddChildFlowSourceObject" FullName="FlowScriptEnginePPD.FlowSourceObjects.Graphics.AddChildFlowSourceObject" ID="4" ShowAll="True" X="41.4285714285714" Y="280">
+      <Comment Text="エフェクトをステージに追加" />
+    </Source>
+    <Source Name="FlowScriptEnginePPD.FlowSourceObjects.Graphics.StageObjectFlowSourceObject" FullName="FlowScriptEnginePPD.FlowSourceObjects.Graphics.StageObjectFlowSourceObject" ID="5" ShowAll="True" X="-385.714285714286" Y="268.571428571429">
+      <Comment Text="マークのエフェクトの上のステージを取得" />
+      <Value Name="Layer" Value="AfterMarkEffect" />
+    </Source>
+    <Source Name="FlowScriptEnginePPD.FlowSourceObjects.Mark.ProcessEvaluateAnyFlowSourceObject" FullName="FlowScriptEnginePPD.FlowSourceObjects.Mark.ProcessEvaluateAnyFlowSourceObject" ID="1" ShowAll="True" X="-317.142857142857" Y="-81.4285714285714">
+      <Comment Text="WORST時のみハンドル(他の評価ではエフェクトが自動でつく）" />
+      <Value Name="Handled" Value="True" />
+    </Source>
+    <Source Name="FlowScriptEnginePPD.FlowSourceObjects.Mark.EffectType.ValueFlowSourceObject" FullName="FlowScriptEnginePPD.FlowSourceObjects.Mark.EffectType.ValueFlowSourceObject" ID="10" ShowAll="True" X="-792.571428571429" Y="-31.5714285714285">
+      <Comment Text="Worstの値を取得" />
+      <Value Name="Value" Value="Worst" />
+    </Source>
+  </Sources>
+  <Flows>
+    <Flow SrcID="7" SrcName="Value" DestID="1" DestName="Handled" />
+    <Flow SrcID="7" SrcName="Value" DestID="8" DestName="Condition" />
+    <Flow SrcID="8" SrcName="OnTrue" DestID="2" DestName="In" />
+    <Flow SrcID="2" SrcName="Success" DestID="3" DestName="In" />
+    <Flow SrcID="2" SrcName="Object" DestID="3" DestName="Object" />
+    <Flow SrcID="2" SrcName="Object" DestID="4" DestName="Child" />
+    <Flow SrcID="3" SrcName="Success" DestID="4" DestName="In" />
+    <Flow SrcID="5" SrcName="Value" DestID="4" DestName="Parent" />
+    <Flow SrcID="1" SrcName="Out" DestID="8" DestName="In" />
+    <Flow SrcID="1" SrcName="EffectType" DestID="7" DestName="B" />
+    <Flow SrcID="1" SrcName="Position" DestID="2" DestName="Position" />
+    <Flow SrcID="10" SrcName="Value" DestID="7" DestName="A" />
+  </Flows>
+  <Comments>
+    <Comment X="-221.428571428571" Y="-205.714285714286" Text="目的:マークのWORST評価時のエフェクトの追加&#xA;仮定:リソースマネージャーのEffectにhoge.etdを追加" />
+  </Comments>
+  <Scopes />
+</Root>

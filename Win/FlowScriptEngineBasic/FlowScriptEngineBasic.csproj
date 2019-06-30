@@ -1,0 +1,1925 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x64</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{B0C2F685-552B-4D65-B4DC-666088802067}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>FlowScriptEngineBasic</RootNamespace>
+    <AssemblyName>FlowScriptEngineBasic</AssemblyName>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <UpgradeBackupLocation />
+    <TargetFrameworkProfile />
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>false</Prefer32Bit>
+    <CodeAnalysisRuleSet>..\PPDCommon.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>false</Prefer32Bit>
+    <CodeAnalysisRuleSet>
+    </CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CallbackComparer.cs" />
+    <Compile Include="FlowSourceObjects\ArrayList\AddFlowSourceObject.AutoFast.cs">
+      <DependentUpon>AddFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\ArrayList\AddFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\ArrayList\AddRangeFlowSourceObject.AutoFast.cs">
+      <DependentUpon>AddRangeFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\ArrayList\AddRangeFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\ArrayList\ArrayListFlowSourceObjectBase.cs" />
+    <Compile Include="FlowSourceObjects\ArrayList\AtFlowSourceObject.AutoFast.cs">
+      <DependentUpon>AtFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\ArrayList\AtFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\ArrayList\BinarySearchFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\ArrayList\BinarySearchWithLimitFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\ArrayList\ClearFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ClearFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\ArrayList\ClearFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\ArrayList\ContainsFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ContainsFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\ArrayList\ContainsFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\ArrayList\CountFlowSourceObject.AutoFast.cs">
+      <DependentUpon>CountFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\ArrayList\CountFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\ArrayList\FindIndexFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\ArrayList\FindIndexWithLimitFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\ArrayList\FindLastIndexFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\ArrayList\FindLastIndexWithLimitFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\ArrayList\FromElementFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\ArrayList\GetRangeFlowSourceObject.AutoFast.cs">
+      <DependentUpon>GetRangeFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\ArrayList\GetRangeFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\ArrayList\IndexOfFlowSourceObject.AutoFast.cs">
+      <DependentUpon>IndexOfFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\ArrayList\IndexOfFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\ArrayList\IndexOfWithLimitFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\ArrayList\InsertFlowSourceObject.AutoFast.cs">
+      <DependentUpon>InsertFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\ArrayList\InsertFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\ArrayList\InsertRangeFlowSourceObject.AutoFast.cs">
+      <DependentUpon>InsertRangeFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\ArrayList\InsertRangeFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\ArrayList\IsTypeFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\ArrayList\LastIndexOfFlowSourceObject.AutoFast.cs">
+      <DependentUpon>LastIndexOfFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\ArrayList\LastIndexOfFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\ArrayList\LastIndexOfWithLimitFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\ArrayList\RemoveAllFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\ArrayList\RemoveAtFlowSourceObject.AutoFast.cs">
+      <DependentUpon>RemoveAtFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\ArrayList\RemoveAtFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\ArrayList\RemoveFlowSourceObject.AutoFast.cs">
+      <DependentUpon>RemoveFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\ArrayList\RemoveFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\ArrayList\RemoveRangeFlowSourceObject.AutoFast.cs">
+      <DependentUpon>RemoveRangeFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\ArrayList\RemoveRangeFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\ArrayList\RepeatFlowSourceObject.AutoFast.cs">
+      <DependentUpon>RepeatFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\ArrayList\RepeatFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\ArrayList\ReverseFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ReverseFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\ArrayList\ReverseFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\ArrayList\ReverseWithLimitFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\ArrayList\SetAtFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\ArrayList\SetRangeFlowSourceObject.AutoFast.cs">
+      <DependentUpon>SetRangeFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\ArrayList\SetRangeFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\ArrayList\SortFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\ArrayList\SortWithLimitFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\ArrayList\ValueFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ValueFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\ArrayList\ValueFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Array\ArrayFlowSourceObjectBase.cs" />
+    <Compile Include="FlowSourceObjects\Array\BinarySearchFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Array\BinarySearchWithLimitFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Array\ClearFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Array\ClearWithLimitFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Array\ConstrainedCopyFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Array\CopyFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Array\CopyWithLimitFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Array\FindIndexFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Array\FindIndexWithLimitFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Array\FindLastIndexFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Array\FindLastIndexWithLimitFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Array\FromElementFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Array\IndexOfFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Array\IndexOfWithLimitFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Array\IsTypeFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Array\AtFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Array\LastIndexOfFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Array\LastIndexOfWithLimitFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Array\LengthFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Array\ReverseFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Array\ReverseWithLimitFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Array\SetAtFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Array\SortFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Array\SortWithItemsFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Array\SortWithItemsWithLimitFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Array\SortWithLimitFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Array\ValueFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Bit\AndFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Bit\ReadableStringFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Bit\BitUtility.cs" />
+    <Compile Include="FlowSourceObjects\Bit\ComplementFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Bit\IsPowerOfTwoFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Bit\LeadingZerosCountFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Bit\LeastSignificantFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Bit\LeftShiftFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Bit\MostSignificantFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Bit\NextLargestPowerOfTwoFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Bit\OnesCountFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Bit\OrFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Bit\PreviousLargestPowerOfTwoFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Bit\ReverseFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Bit\RightShiftFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Bit\TrailingZerosCountFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Bit\XorFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Bit\ZerosCountFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Boolean\FalseStringFlowSourceObject.AutoFast.cs">
+      <DependentUpon>FalseStringFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Boolean\FalseStringFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Boolean\IsTypeFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Boolean\ParseFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ParseFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Boolean\ParseFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Boolean\TrueStringFlowSourceObject.AutoFast.cs">
+      <DependentUpon>TrueStringFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Boolean\TrueStringFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Boolean\ValueFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ValueFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Boolean\ValueFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\ContextScope\GetValueFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\ContextScope\HandleEventFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\ContextScope\InvokeEventFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\ContextScope\IsDefinedFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\ContextScope\PreviewHandleEventFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\ContextScope\SetValueFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\DateTime\AddDaysFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\DateTime\AddFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\DateTime\AddHoursFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\DateTime\AddMillisecondsFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\DateTime\AddMinutesFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\DateTime\AddMonthsFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\DateTime\AddSecondsFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\DateTime\AddYearsFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\DateTime\CompareFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\DateTime\DayOfWeek\IsTypeFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\DateTime\DayOfWeek\ValueFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\DateTime\EqualFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\DateTime\FromWithMillisecondFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\DateTime\FromWithSecondFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\DateTime\FromFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\DateTime\IsLeapYearFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\DateTime\IsTypeFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\DateTime\MaxFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\DateTime\MinFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\DateTime\NowFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\DateTime\ParseFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\DateTime\SubtractDateTimeFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\DateTime\SubtractTimeSpanFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\DateTime\TodayFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\DateTime\ToLocalTimeFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\DateTime\ToStringFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\DateTime\ToUniversalTimeFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\DateTime\UtcNowFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\DateTime\ValueFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Double\AddFlowSourceObject.AutoFast.cs">
+      <DependentUpon>AddFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Double\AddFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Double\DevideFlowSourceObject.AutoFast.cs">
+      <DependentUpon>DevideFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Double\DevideFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Double\EpsilonFlowSourceObject.AutoFast.cs">
+      <DependentUpon>EpsilonFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Double\EpsilonFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Double\EqualFlowSourceObject.AutoFast.cs">
+      <DependentUpon>EqualFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Double\EqualFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Double\GreaterFlowSourceObject.AutoFast.cs">
+      <DependentUpon>GreaterFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Double\GreaterFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Double\GreaterOrEqualFlowSourceObject.AutoFast.cs">
+      <DependentUpon>GreaterOrEqualFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Double\GreaterOrEqualFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Double\IsInfinityFlowSourceObject.AutoFast.cs">
+      <DependentUpon>IsInfinityFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Double\IsInfinityFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Double\IsNaNFlowSourceObject.AutoFast.cs">
+      <DependentUpon>IsNaNFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Double\IsNaNFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Double\IsNegativeInfinityFlowSourceObject.AutoFast.cs">
+      <DependentUpon>IsNegativeInfinityFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Double\IsNegativeInfinityFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Double\IsPositiveInfinityFlowSourceObject.AutoFast.cs">
+      <DependentUpon>IsPositiveInfinityFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Double\IsPositiveInfinityFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Double\IsTypeFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Double\LessFlowSourceObject.AutoFast.cs">
+      <DependentUpon>LessFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Double\LessFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Double\LessOrEqualFlowSourceObject.AutoFast.cs">
+      <DependentUpon>LessOrEqualFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Double\LessOrEqualFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Double\MaxFlowSourceObject.AutoFast.cs">
+      <DependentUpon>MaxFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Double\MaxFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Double\MinFlowSourceObject.AutoFast.cs">
+      <DependentUpon>MinFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Double\MinFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Double\MultiplyFlowSourceObject.AutoFast.cs">
+      <DependentUpon>MultiplyFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Double\MultiplyFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Double\NaNFlowSourceObject.AutoFast.cs">
+      <DependentUpon>NaNFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Double\NaNFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Double\NegativeInfinityFlowSourceObject.AutoFast.cs">
+      <DependentUpon>NegativeInfinityFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Double\NegativeInfinityFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Double\ParseFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ParseFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Double\ParseFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Double\PositiveInfinityFlowSourceObject.AutoFast.cs">
+      <DependentUpon>PositiveInfinityFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Double\PositiveInfinityFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Double\RemainderFlowSourceObject.AutoFast.cs">
+      <DependentUpon>RemainderFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Double\RemainderFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Double\SubtractFlowSourceObject.AutoFast.cs">
+      <DependentUpon>SubtractFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Double\SubtractFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Double\ValueFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ValueFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Double\ValueFlowSourceObject.cs" />
+    <Compile Include="EncodingType.cs" />
+    <Compile Include="FlowSourceObjects\Encoding\IsTypeFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Encoding\ValueFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Enumerable\AggregateFlowSourceObjectBase.cs" />
+    <Compile Include="FlowSourceObjects\Enumerable\AggregateWithSeedAndResultSelectFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Enumerable\AggregateWithSeedFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Enumerable\AverageDoubleFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Enumerable\AverageFloatFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Enumerable\AverageFlowSourceObjectBase.cs" />
+    <Compile Include="FlowSourceObjects\Enumerable\AverageInt32FlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Enumerable\GroupByFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Enumerable\GroupByWithElementSelectAndResultSelectFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Enumerable\GroupByWithElementSelectFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Enumerable\Grouping\IsTypeFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Enumerable\Grouping\ValueFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Enumerable\GroupJoinFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Enumerable\IsTypeFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Enumerable\Lookup\ContainsFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Enumerable\Lookup\IsTypeFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Enumerable\Lookup\ValueFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Enumerable\MaxDoubleFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Enumerable\MaxFloatFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Enumerable\MaxFlowSourceObjectBase.cs" />
+    <Compile Include="FlowSourceObjects\Enumerable\MaxInt32FlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Enumerable\MinDoubleFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Enumerable\MinFloatFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Enumerable\MinFlowSourceObjectBase.cs" />
+    <Compile Include="FlowSourceObjects\Enumerable\MinInt32FlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Enumerable\Ordered\IsTypeFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Enumerable\Ordered\ThenByDescendingFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Enumerable\Ordered\ThenByFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Enumerable\ReverseFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Enumerable\SelectManyFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Enumerable\SelectWithIndexFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Enumerable\SequentialEqualFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Enumerable\SingleFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Enumerable\SingleOrDefaultFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Enumerable\SingleOrDefaultWithPredicateFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Enumerable\SingleWithPredicateFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Enumerable\SkipFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Enumerable\SkipWhileFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Enumerable\SkipWhileWithIndexFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Enumerable\SumDoubleFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Enumerable\SumFloatFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Enumerable\SumFlowSourceObjectBase.cs" />
+    <Compile Include="FlowSourceObjects\Enumerable\SumInt32FlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Enumerable\TakeFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Enumerable\TakeWhileFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Enumerable\TakeWhileWithIndexFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Enumerable\ToArrayFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Enumerable\ToArrayListFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Enumerable\ToHashtableWithElementSelectFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Enumerable\ToHashtableFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Enumerable\ToLookupFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Enumerable\UnionFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Enumerable\ZipFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\ExecutableFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\ExecuteOnlyFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Float\AddFlowSourceObject.AutoFast.cs">
+      <DependentUpon>AddFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Float\AddFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Float\CastFlowSourceObject.AutoFast.cs">
+      <DependentUpon>CastFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Float\CastFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Float\DevideFlowSourceObject.AutoFast.cs">
+      <DependentUpon>DevideFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Float\DevideFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Float\EpsilonFlowSourceObject.AutoFast.cs">
+      <DependentUpon>EpsilonFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Float\EpsilonFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Float\EqualFlowSourceObject.AutoFast.cs">
+      <DependentUpon>EqualFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Float\EqualFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Float\GreaterFlowSourceObject.AutoFast.cs">
+      <DependentUpon>GreaterFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Float\GreaterFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Float\GreaterOrEqualFlowSourceObject.AutoFast.cs">
+      <DependentUpon>GreaterOrEqualFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Float\GreaterOrEqualFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Float\IsInfinityFlowSourceObject.AutoFast.cs">
+      <DependentUpon>IsInfinityFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Float\IsInfinityFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Float\IsNaNFlowSourceObject.AutoFast.cs">
+      <DependentUpon>IsNaNFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Float\IsNaNFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Float\IsNegativeInfinityFlowSourceObject.AutoFast.cs">
+      <DependentUpon>IsNegativeInfinityFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Float\IsNegativeInfinityFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Float\IsPositiveInfinityFlowSourceObject.AutoFast.cs">
+      <DependentUpon>IsPositiveInfinityFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Float\IsPositiveInfinityFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Float\IsTypeFlowSoruceObject.cs" />
+    <Compile Include="FlowSourceObjects\Float\LessFlowSourceObject.AutoFast.cs">
+      <DependentUpon>LessFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Float\LessFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Float\LessOrEqualFlowSourceObject.AutoFast.cs">
+      <DependentUpon>LessOrEqualFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Float\LessOrEqualFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Float\MaxFlowSourceObject.AutoFast.cs">
+      <DependentUpon>MaxFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Float\MaxFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Float\MinFlowSourceObject.AutoFast.cs">
+      <DependentUpon>MinFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Float\MinFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Float\MultiplyFlowSourceObject.AutoFast.cs">
+      <DependentUpon>MultiplyFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Float\MultiplyFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Float\NaNFlowSourceObject.AutoFast.cs">
+      <DependentUpon>NaNFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Float\NaNFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Float\NegativeInfinityFlowSourceObject.AutoFast.cs">
+      <DependentUpon>NegativeInfinityFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Float\NegativeInfinityFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Float\ParseFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ParseFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Float\ParseFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Float\PositiveInfinityFlowSourceObject.AutoFast.cs">
+      <DependentUpon>PositiveInfinityFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Float\PositiveInfinityFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Float\RemainderFlowSourceObject.AutoFast.cs">
+      <DependentUpon>RemainderFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Float\RemainderFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Float\SubtractFlowSourceObject.AutoFast.cs">
+      <DependentUpon>SubtractFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Float\SubtractFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Float\ValueFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ValueFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Float\ValueFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\GlobalScope\GetValueFlowSourceObject.AutoFast.cs">
+      <DependentUpon>GetValueFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\GlobalScope\GetValueFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\GlobalScope\HandleEventFlowSourceObject.AutoFast.cs">
+      <DependentUpon>HandleEventFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\GlobalScope\HandleEventFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\GlobalScope\InvokeEventFlowSourceObject.AutoFast.cs">
+      <DependentUpon>InvokeEventFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\GlobalScope\InvokeEventFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\GlobalScope\IsDefinedFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\GlobalScope\SetValueFlowSourceObject.AutoFast.cs">
+      <DependentUpon>SetValueFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\GlobalScope\SetValueFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\HashSet\AddFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\HashSet\ClearFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\HashSet\ContainsFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\HashSet\CountFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\HashSet\ExceptWithFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\HashSet\FromElementFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\HashSet\HashSetFlowSourceObjectBase.cs" />
+    <Compile Include="FlowSourceObjects\HashSet\IntersectWithFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\HashSet\IsProperSubsetOfFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\HashSet\IsProperSupersetOfFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\HashSet\IsSubsetOfFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\HashSet\IsSupersetOfFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\HashSet\IsTypeFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\HashSet\OverlapsFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\HashSet\RemoveFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\HashSet\SetEqualsFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\HashSet\SymmetricExceptWithFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\HashSet\UnionWithFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\HashSet\ValueFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Hashtable\AddFlowSourceObject.AutoFast.cs">
+      <DependentUpon>AddFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Hashtable\AddFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Hashtable\ClearFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ClearFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Hashtable\ClearFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Hashtable\ContainsKeyFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ContainsKeyFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Hashtable\ContainsKeyFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Hashtable\ContainsValueFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ContainsValueFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Hashtable\ContainsValueFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Hashtable\CountFlowSourceObject.AutoFast.cs">
+      <DependentUpon>CountFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Hashtable\CountFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Hashtable\FromPairFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Hashtable\GetValueFlowSourceObject.AutoFast.cs">
+      <DependentUpon>GetValueFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Hashtable\GetValueFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Hashtable\HashtableFlowSourceBase.cs" />
+    <Compile Include="FlowSourceObjects\Hashtable\IsTypeFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Hashtable\KeysFlowSourceObject.AutoFast.cs">
+      <DependentUpon>KeysFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Hashtable\KeysFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Hashtable\PairsFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Hashtable\RemoveFlowSourceObject.AutoFast.cs">
+      <DependentUpon>RemoveFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Hashtable\RemoveFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Hashtable\ValueFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ValueFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Hashtable\ValueFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Hashtable\ValuesFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ValuesFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Hashtable\ValuesFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Enumerable\AllFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Enumerable\AnyFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Enumerable\ConcatFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Enumerable\ContainsFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Enumerable\CountFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Enumerable\CountWithPredicateFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Enumerable\DefaultIfEmptyFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Enumerable\DistinctFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Enumerable\ElementAtFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Enumerable\ElementAtOrDefaultFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Enumerable\ExceptFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Enumerable\FirstFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Enumerable\FirstOrDefaultFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Enumerable\FirstOrDefaultWithPredicateFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Enumerable\FirstWithPredicateFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Enumerable\IntersectFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Enumerable\LastFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Enumerable\LastOrDefaultFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Enumerable\LastOrDefaultWithPredicateFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Enumerable\LastWithPredicateFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Enumerable\OrderByDescendingFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Enumerable\OrderByFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Enumerable\SelectFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Enumerable\WhereFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Int32\AddFlowSourceObject.AutoFast.cs">
+      <DependentUpon>AddFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Int32\AddFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Int32\CastFlowSourceObject.AutoFast.cs">
+      <DependentUpon>CastFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Int32\CastFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Int32\DevideFlowSourceObject.AutoFast.cs">
+      <DependentUpon>DevideFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Int32\DevideFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Int32\EqualFlowSourceObject.AutoFast.cs">
+      <DependentUpon>EqualFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Int32\EqualFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Int32\GreaterFlowSourceObject.AutoFast.cs">
+      <DependentUpon>GreaterFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Int32\GreaterFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Int32\GreaterOrEqualFlowSourceObject.AutoFast.cs">
+      <DependentUpon>GreaterOrEqualFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Int32\GreaterOrEqualFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Int32\IsTypeFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Int32\LessFlowSourceObject.AutoFast.cs">
+      <DependentUpon>LessFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Int32\LessFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Int32\LessOrEqualFlowSourceObject.AutoFast.cs">
+      <DependentUpon>LessOrEqualFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Int32\LessOrEqualFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Int32\MaxFlowSourceObject.AutoFast.cs">
+      <DependentUpon>MaxFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Int32\MaxFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Int32\MinFlowSourceObject.AutoFast.cs">
+      <DependentUpon>MinFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Int32\MinFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Int32\MultiplyFlowSourceObject.AutoFast.cs">
+      <DependentUpon>MultiplyFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Int32\MultiplyFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Int32\ParseFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ParseFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Int32\ParseFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Int32\RemainderFlowSourceObject.AutoFast.cs">
+      <DependentUpon>RemainderFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Int32\RemainderFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Int32\SubtractFlowSourceObject.AutoFast.cs">
+      <DependentUpon>SubtractFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Int32\SubtractFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Int32\ValueFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ValueFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Int32\ValueFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Logic\AllFlowSourceObject.AutoFast.cs">
+      <DependentUpon>AllFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Logic\AllFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Logic\AndFlowSourceObject.AutoFast.cs">
+      <DependentUpon>AndFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Logic\AndFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Logic\AnyFlowSourceObject.AutoFast.cs">
+      <DependentUpon>AnyFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Logic\AnyFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Logic\IfFlowSourceObject.AutoFast.cs">
+      <DependentUpon>IfFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Logic\IfFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Logic\IfTernaryFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Logic\NotFlowSourceObject.AutoFast.cs">
+      <DependentUpon>NotFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Logic\NotFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Logic\OnceGateFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Logic\OrFlowSourceObject.AutoFast.cs">
+      <DependentUpon>OrFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Logic\OrFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Logic\SequentialFlowSourceObject.AutoFast.cs">
+      <DependentUpon>SequentialFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Logic\SequentialFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Logic\SwitchFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Logic\XorFlowSourceObject.AutoFast.cs">
+      <DependentUpon>XorFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Logic\XorFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Math\AbsFloatFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Math\AbsFlowSourceObject.AutoFast.cs">
+      <DependentUpon>AbsFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Math\AbsFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Math\AbsInt32FlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Math\AcosFlowSouceObject.AutoFast.cs">
+      <DependentUpon>AcosFlowSouceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Math\AcosFlowSouceObject.cs" />
+    <Compile Include="FlowSourceObjects\Math\AsinFlowSourceObject.AutoFast.cs">
+      <DependentUpon>AsinFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Math\AsinFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Math\Atan2FlowSourceObject.AutoFast.cs">
+      <DependentUpon>Atan2FlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Math\Atan2FlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Math\AtanFlowSourceObject.AutoFast.cs">
+      <DependentUpon>AtanFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Math\AtanFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Math\CeilingFlowSourceObject.AutoFast.cs">
+      <DependentUpon>CeilingFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Math\CeilingFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Math\CosFlowSourceObject.AutoFast.cs">
+      <DependentUpon>CosFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Math\CosFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Math\CoshFlowSourceObject.AutoFast.cs">
+      <DependentUpon>CoshFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Math\CoshFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Math\DivRemFlowSourceObject.AutoFast.cs">
+      <DependentUpon>DivRemFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Math\DivRemFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Math\EFlowSourceObject.AutoFast.cs">
+      <DependentUpon>EFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Math\EFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Math\ExpFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ExpFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Math\ExpFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Math\FloorFlowSourceObject.AutoFast.cs">
+      <DependentUpon>FloorFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Math\FloorFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Math\IEEERemainderFlowSourceObject.AutoFast.cs">
+      <DependentUpon>IEEERemainderFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Math\IEEERemainderFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Math\Log10FlowSourceObject.AutoFast.cs">
+      <DependentUpon>Log10FlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Math\Log10FlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Math\LogFlowSourceObject.AutoFast.cs">
+      <DependentUpon>LogFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Math\LogFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Math\MaxFloatFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Math\MaxFlowSourceObject.AutoFast.cs">
+      <DependentUpon>MaxFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Math\MaxFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Math\MaxInt32FlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Math\MinFloatFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Math\MinFlowSourceObject.AutoFast.cs">
+      <DependentUpon>MinFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Math\MinFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Math\MinInt32FlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Math\PiFlowSourceObject.AutoFast.cs">
+      <DependentUpon>PiFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Math\PiFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Math\PowFlowSourceObject.AutoFast.cs">
+      <DependentUpon>PowFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Math\PowFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Math\RoundFlowSourceObject.AutoFast.cs">
+      <DependentUpon>RoundFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Math\RoundFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Math\SignFloatFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Math\SignFlowSourceObject.AutoFast.cs">
+      <DependentUpon>SignFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Math\SignFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Math\SignInt32FlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Math\SinFlowSourceObject.AutoFast.cs">
+      <DependentUpon>SinFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Math\SinFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Math\SinhFlowSourceObject.AutoFast.cs">
+      <DependentUpon>SinhFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Math\SinhFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Math\SqrtFlowSourceObject.AutoFast.cs">
+      <DependentUpon>SqrtFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Math\SqrtFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Math\TanFlowSourceObject.AutoFast.cs">
+      <DependentUpon>TanFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Math\TanFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Math\TanhFlowSourceObject.AutoFast.cs">
+      <DependentUpon>TanhFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Math\TanhFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Math\TruncateFlowSourceObject.AutoFast.cs">
+      <DependentUpon>TruncateFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Math\TruncateFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Misc\EntryPointFlowSourceObject.AutoFast.cs">
+      <DependentUpon>EntryPointFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Misc\EntryPointFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Object\EqualFlowSourceObject.AutoFast.cs">
+      <DependentUpon>EqualFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Object\EqualFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Object\IsTypeFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Object\NullFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Pair\FromKeyValueFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Pair\IsTypeFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Pair\ValueFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Random\NextDoubleFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Random\NextFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Random\RandomUtility.cs" />
+    <Compile Include="FlowSourceObjects\Random\TriggerFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Repeat\BreakFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Repeat\ContinueFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Repeat\DoWhileFlowSourceObject.AutoFast.cs">
+      <DependentUpon>DoWhileFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Repeat\DoWhileFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Repeat\ForeachFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ForeachFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Repeat\ForeachFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Repeat\ForFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ForFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Repeat\ForFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Repeat\WhileFlowSourceObject.AutoFast.cs">
+      <DependentUpon>WhileFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Repeat\WhileFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Scope\GetValueFlowSourceObject.AutoFast.cs">
+      <DependentUpon>GetValueFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Scope\GetValueFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Scope\HandleEventFlowSourceObject.AutoFast.cs">
+      <DependentUpon>HandleEventFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Scope\HandleEventFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Scope\InvokeEventFlowSourceObject.AutoFast.cs">
+      <DependentUpon>InvokeEventFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Scope\InvokeEventFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\GlobalScope\PreviewHandleEventFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Scope\IsDefinedFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Scope\PreviewHandleEventFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Scope\SetValueFlowSourceObject.AutoFast.cs">
+      <DependentUpon>SetValueFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Scope\SetValueFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Stopwatch\ElapsedFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Stopwatch\IsTypeFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Stopwatch\ResetFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Stopwatch\StartFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Stopwatch\StopFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Stopwatch\StopwatchFlowSourceObjectBase.cs" />
+    <Compile Include="FlowSourceObjects\Stopwatch\ValueFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Stream\IsTypeFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Stream\LengthFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Stream\PositionFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Stream\ReadAllLinesFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Stream\ReadAllTextFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Stream\ReadByteFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Stream\ReadDoubleFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Stream\ReadFloatFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Stream\ReadInt16FlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Stream\ReadInt32FlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Stream\ReadUInt16FlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Stream\SeekFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Stream\SeekOrigin\IsTypeFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Stream\SeekOrigin\ValueFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Stream\StreamFlowSourceObjectBase.cs" />
+    <Compile Include="FlowSourceObjects\String\AddFlowSourceObject.AutoFast.cs">
+      <DependentUpon>AddFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\String\AddFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\String\AtFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\String\CompareToFlowSourceObject.AutoFast.cs">
+      <DependentUpon>CompareToFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\String\CompareToFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\String\ContainsFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ContainsFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\String\ContainsFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\String\EmptyFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\String\EndsWithFlowSourceObject.AutoFast.cs">
+      <DependentUpon>EndsWithFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\String\EndsWithFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\String\EqualFlowSourceObject.AutoFast.cs">
+      <DependentUpon>EqualFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\String\EqualFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\String\FormatFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\String\IndexOfFlowSourceObject.AutoFast.cs">
+      <DependentUpon>IndexOfFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\String\IndexOfFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\String\IndexOfWithLimitFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\String\InsertFlowSourceObject.AutoFast.cs">
+      <DependentUpon>InsertFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\String\InsertFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\String\IsNullOrEmptyFlowSourceObject.AutoFast.cs">
+      <DependentUpon>IsNullOrEmptyFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\String\IsNullOrEmptyFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\String\IsTypeFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\String\LastIndexOfFlowSourceObject.AutoFast.cs">
+      <DependentUpon>LastIndexOfFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\String\LastIndexOfFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\String\LastIndexOfWithLimitFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\String\LengthFlowSourceObject.AutoFast.cs">
+      <DependentUpon>LengthFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\String\LengthFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\String\NewLineFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\String\PadLeftFlowSourceObject.AutoFast.cs">
+      <DependentUpon>PadLeftFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\String\PadLeftFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\String\PadRightFlowSourceObject.AutoFast.cs">
+      <DependentUpon>PadRightFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\String\PadRightFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\String\RemoveCountFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\String\RemoveFlowSourceObject.AutoFast.cs">
+      <DependentUpon>RemoveFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\String\RemoveFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\String\ReplaceFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ReplaceFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\String\ReplaceFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\String\SplitFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\String\StartsWithFlowSourceObject.AutoFast.cs">
+      <DependentUpon>StartsWithFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\String\StartsWithFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\String\SubstringFlowSourceObject.AutoFast.cs">
+      <DependentUpon>SubstringFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\String\SubstringFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\String\ToLowerFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ToLowerFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\String\ToLowerFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\String\ToUpperFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ToUpperFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\String\ToUpperFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\String\TrimEndFlowSourceObject.AutoFast.cs">
+      <DependentUpon>TrimEndFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\String\TrimEndFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\String\TrimFlowSourceObject.AutoFast.cs">
+      <DependentUpon>TrimFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\String\TrimFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\String\TrimStartFlowSourceObject.AutoFast.cs">
+      <DependentUpon>TrimStartFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\String\TrimStartFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\String\ValueFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ValueFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\String\ValueFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\TemplateCastValueFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\TemplateClassValueFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\TemplateIsTypeFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\TemplateStructValueFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\TimeSpan\AddFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\TimeSpan\CompareFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\TimeSpan\DurationFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\TimeSpan\EqualFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\TimeSpan\FromDaysFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\TimeSpan\FromHoursFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\TimeSpan\FromMillisecondsFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\TimeSpan\FromMinutesFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\TimeSpan\FromSecondsFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\TimeSpan\GreaterFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\TimeSpan\GreaterOrEqualFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\TimeSpan\IsTypeFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\TimeSpan\LessFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\TimeSpan\LessOrEqualFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\TimeSpan\MaxFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\TimeSpan\MinFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\TimeSpan\NegateFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\TimeSpan\ParseFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\TimeSpan\SubtractFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\TimeSpan\ToStringFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\TimeSpan\ValueFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\TimeSpan\ZeroFlowSourceObject.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <DependentUpon>Resources.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="ToolTipText.cs" />
+    <Compile Include="TypeAlias.cs" />
+    <Compile Include="TypeColors.cs" />
+    <Compile Include="TypeConverters\ArrayIEnumerableConverter.cs" />
+    <Compile Include="TypeConverters\ArrayListIEnumerableConverter.cs" />
+    <Compile Include="TypeConverters\BooleanStringConverter.cs" />
+    <Compile Include="TypeConverters\DateTimeStringConverter.cs" />
+    <Compile Include="TypeConverters\DoubleStringConverter.cs" />
+    <Compile Include="TypeConverters\EnumIntConverter.cs" />
+    <Compile Include="TypeConverters\EnumStringConverter.cs" />
+    <Compile Include="TypeConverters\FloatDoubleConverter.cs" />
+    <Compile Include="TypeConverters\FloatStringConverter.cs" />
+    <Compile Include="TypeConverters\HashSetArrayListConverter.cs" />
+    <Compile Include="TypeConverters\HashSetIEnumerableConverter.cs" />
+    <Compile Include="TypeConverters\HashtableIEnumerableConverter.cs" />
+    <Compile Include="TypeConverters\IGroupingIEnumerableConverter.cs" />
+    <Compile Include="TypeConverters\IntDoubleConverter.cs" />
+    <Compile Include="TypeConverters\IntEnumConverter.cs" />
+    <Compile Include="TypeConverters\IntFloatConverter.cs" />
+    <Compile Include="TypeConverters\IntStringConverter.cs" />
+    <Compile Include="TypeConverters\IOrderedEnumerableIEnumerableConverter.cs" />
+    <Compile Include="TypeConverters\ObjectBooleanConverter.cs" />
+    <Compile Include="TypeConverters\ObjectDoubleConverter.cs" />
+    <Compile Include="TypeConverters\ObjectFloatConverter.cs" />
+    <Compile Include="TypeConverters\ObjectFromConverter.cs" />
+    <Compile Include="TypeConverters\ObjectIntConverter.cs" />
+    <Compile Include="TypeConverters\ObjectStringConverter.cs" />
+    <Compile Include="TypeConverters\ObjectToConverter.cs" />
+    <Compile Include="TypeConverters\StringEnumConverter.cs" />
+    <Compile Include="TypeConverters\TimeSpanStringConverter.cs" />
+    <Compile Include="TypeFormatters\BooleanFormatter.cs" />
+    <Compile Include="TypeFormatters\DayOfWeekTypeFormatter.cs" />
+    <Compile Include="TypeFormatters\DoubleTypeFormatter.cs" />
+    <Compile Include="TypeFormatters\EncodingTypeFormatter.cs" />
+    <Compile Include="TypeFormatters\FloatFormatter.cs" />
+    <Compile Include="TypeFormatters\IntFormatter.cs" />
+    <Compile Include="TypeFormatters\SeekOriginTypeFormatter.cs" />
+    <Compile Include="TypeFormatters\StringFormatter.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="FlowSourceObjects\Logic\IfTernaryFlowSourceObject.AutoFast.cs">
+      <DependentUpon>IfTernaryFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Stream\LengthFlowSourceObject.AutoFast.cs">
+      <DependentUpon>LengthFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Stream\PositionFlowSourceObject.AutoFast.cs">
+      <DependentUpon>PositionFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Stream\ReadAllLinesFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ReadAllLinesFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Stream\ReadByteFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ReadByteFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Stream\ReadDoubleFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ReadDoubleFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Stream\ReadFloatFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ReadFloatFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Stream\ReadInt16FlowSourceObject.AutoFast.cs">
+      <DependentUpon>ReadInt16FlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Stream\ReadInt32FlowSourceObject.AutoFast.cs">
+      <DependentUpon>ReadInt32FlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Stream\ReadUInt16FlowSourceObject.AutoFast.cs">
+      <DependentUpon>ReadUInt16FlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Stream\SeekFlowSourceObject.AutoFast.cs">
+      <DependentUpon>SeekFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Random\NextDoubleFlowSourceObject.AutoFast.cs">
+      <DependentUpon>NextDoubleFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Random\NextFlowSourceObject.AutoFast.cs">
+      <DependentUpon>NextFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Random\TriggerFlowSourceObject.AutoFast.cs">
+      <DependentUpon>TriggerFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Encoding\ValueFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ValueFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Stream\SeekOrigin\ValueFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ValueFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\String\FormatFlowSourceObject.AutoFast.cs">
+      <DependentUpon>FormatFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\ArrayList\IsTypeFlowSourceObject.AutoFast.cs">
+      <DependentUpon>IsTypeFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Boolean\IsTypeFlowSourceObject.AutoFast.cs">
+      <DependentUpon>IsTypeFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Double\IsTypeFlowSourceObject.AutoFast.cs">
+      <DependentUpon>IsTypeFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Float\IsTypeFlowSoruceObject.AutoFast.cs">
+      <DependentUpon>IsTypeFlowSoruceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Hashtable\IsTypeFlowSourceObject.AutoFast.cs">
+      <DependentUpon>IsTypeFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Int32\IsTypeFlowSourceObject.AutoFast.cs">
+      <DependentUpon>IsTypeFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Object\IsTypeFlowSourceObject.AutoFast.cs">
+      <DependentUpon>IsTypeFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Stream\IsTypeFlowSourceObject.AutoFast.cs">
+      <DependentUpon>IsTypeFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\String\IsTypeFlowSourceObject.AutoFast.cs">
+      <DependentUpon>IsTypeFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Object\NullFlowSourceObject.AutoFast.cs">
+      <DependentUpon>NullFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\GlobalScope\PreviewHandleEventFlowSourceObject.AutoFast.cs">
+      <DependentUpon>PreviewHandleEventFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Scope\PreviewHandleEventFlowSourceObject.AutoFast.cs">
+      <DependentUpon>PreviewHandleEventFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\ArrayList\FromElementFlowSourceObject.AutoFast.cs">
+      <DependentUpon>FromElementFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\String\AtFlowSourceObject.AutoFast.cs">
+      <DependentUpon>AtFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Stopwatch\ElapsedFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ElapsedFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Stopwatch\ResetFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ResetFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Stopwatch\StartFlowSourceObject.AutoFast.cs">
+      <DependentUpon>StartFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Stopwatch\StopFlowSourceObject.AutoFast.cs">
+      <DependentUpon>StopFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Stopwatch\ValueFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ValueFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Repeat\BreakFlowSourceObject.AutoFast.cs">
+      <DependentUpon>BreakFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Repeat\ContinueFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ContinueFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Math\MaxFloatFlowSourceObject.AutoFast.cs">
+      <DependentUpon>MaxFloatFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Math\MaxInt32FlowSourceObject.AutoFast.cs">
+      <DependentUpon>MaxInt32FlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\ArrayList\IndexOfWithLimitFlowSourceObject.AutoFast.cs">
+      <DependentUpon>IndexOfWithLimitFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\ArrayList\LastIndexOfWithLimitFlowSourceObject.AutoFast.cs">
+      <DependentUpon>LastIndexOfWithLimitFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Math\AbsFloatFlowSourceObject.AutoFast.cs">
+      <DependentUpon>AbsFloatFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Math\AbsInt32FlowSourceObject.AutoFast.cs">
+      <DependentUpon>AbsInt32FlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Math\MinFloatFlowSourceObject.AutoFast.cs">
+      <DependentUpon>MinFloatFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Math\MinInt32FlowSourceObject.AutoFast.cs">
+      <DependentUpon>MinInt32FlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Math\SignFloatFlowSourceObject.AutoFast.cs">
+      <DependentUpon>SignFloatFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Math\SignInt32FlowSourceObject.AutoFast.cs">
+      <DependentUpon>SignInt32FlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\String\IndexOfWithLimitFlowSourceObject.AutoFast.cs">
+      <DependentUpon>IndexOfWithLimitFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\String\LastIndexOfWithLimitFlowSourceObject.AutoFast.cs">
+      <DependentUpon>LastIndexOfWithLimitFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\String\RemoveCountFlowSourceObject.AutoFast.cs">
+      <DependentUpon>RemoveCountFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\String\EmptyFlowSourceObject.AutoFast.cs">
+      <DependentUpon>EmptyFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TypeSerializers\ArrayListTypeSerializer.cs" />
+    <Compile Include="TypeSerializers\ArrayTypeSerializer.cs" />
+    <Compile Include="TypeSerializers\BooleanTypeSerializer.cs" />
+    <Compile Include="TypeSerializers\DateTimeTypeSerializer.cs" />
+    <Compile Include="TypeSerializers\DictionaryEntryTypeSerializer.cs" />
+    <Compile Include="TypeSerializers\DoubleSerializer.cs" />
+    <Compile Include="TypeSerializers\FloatSerializer.cs" />
+    <Compile Include="TypeSerializers\IGroupingTypeSerializer.cs" />
+    <Compile Include="TypeSerializers\HashSetTypeSerializer.cs" />
+    <Compile Include="TypeSerializers\HashtableTypeSerializer.cs" />
+    <Compile Include="TypeSerializers\IEnumerableTypeSerializer.cs" />
+    <Compile Include="TypeSerializers\ILookupTypeSerializer.cs" />
+    <Compile Include="TypeSerializers\IntSerializer.cs" />
+    <Compile Include="TypeSerializers\ObjectTypeSerializer.cs" />
+    <Compile Include="TypeSerializers\IOrderedEnumerableTypeSerializer.cs" />
+    <Compile Include="TypeSerializers\StopwatchTypeSerializer.cs" />
+    <Compile Include="TypeSerializers\StreamTypeSerializer.cs" />
+    <Compile Include="TypeSerializers\StringTypeSerializer.cs" />
+    <Compile Include="FlowSourceObjects\Hashtable\FromPairFlowSourceObject.AutoFast.cs">
+      <DependentUpon>FromPairFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Hashtable\PairsFlowSourceObject.AutoFast.cs">
+      <DependentUpon>PairsFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Pair\FromKeyValueFlowSourceObject.AutoFast.cs">
+      <DependentUpon>FromKeyValueFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Pair\ValueFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ValueFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\ContextScope\GetValueFlowSourceObject.AutoFast.cs">
+      <DependentUpon>GetValueFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\ContextScope\HandleEventFlowSourceObject.AutoFast.cs">
+      <DependentUpon>HandleEventFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\ContextScope\InvokeEventFlowSourceObject.AutoFast.cs">
+      <DependentUpon>InvokeEventFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\ContextScope\PreviewHandleEventFlowSourceObject.AutoFast.cs">
+      <DependentUpon>PreviewHandleEventFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\ContextScope\SetValueFlowSourceObject.AutoFast.cs">
+      <DependentUpon>SetValueFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\ContextScope\IsDefinedFlowSourceObject.AutoFast.cs">
+      <DependentUpon>IsDefinedFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\GlobalScope\IsDefinedFlowSourceObject.AutoFast.cs">
+      <DependentUpon>IsDefinedFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Scope\IsDefinedFlowSourceObject.AutoFast.cs">
+      <DependentUpon>IsDefinedFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\HashSet\ValueFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ValueFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\HashSet\AddFlowSourceObject.AutoFast.cs">
+      <DependentUpon>AddFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\HashSet\ClearFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ClearFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\HashSet\ContainsFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ContainsFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\HashSet\ExceptWithFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ExceptWithFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\HashSet\IntersectWithFlowSourceObject.AutoFast.cs">
+      <DependentUpon>IntersectWithFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\HashSet\IsProperSubsetOfFlowSourceObject.AutoFast.cs">
+      <DependentUpon>IsProperSubsetOfFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\HashSet\IsProperSupersetOfFlowSourceObject.AutoFast.cs">
+      <DependentUpon>IsProperSupersetOfFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\HashSet\IsSubsetOfFlowSourceObject.AutoFast.cs">
+      <DependentUpon>IsSubsetOfFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\HashSet\IsSupersetOfFlowSourceObject.AutoFast.cs">
+      <DependentUpon>IsSupersetOfFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\HashSet\OverlapsFlowSourceObject.AutoFast.cs">
+      <DependentUpon>OverlapsFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\HashSet\RemoveFlowSourceObject.AutoFast.cs">
+      <DependentUpon>RemoveFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\HashSet\SetEqualsFlowSourceObject.AutoFast.cs">
+      <DependentUpon>SetEqualsFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\HashSet\SymmetricExceptWithFlowSourceObject.AutoFast.cs">
+      <DependentUpon>SymmetricExceptWithFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\HashSet\UnionWithFlowSourceObject.AutoFast.cs">
+      <DependentUpon>UnionWithFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\HashSet\FromElementFlowSourceObject.AutoFast.cs">
+      <DependentUpon>FromElementFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\ArrayList\SetAtFlowSourceObject.AutoFast.cs">
+      <DependentUpon>SetAtFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Array\AtFlowSourceObject.AutoFast.cs">
+      <DependentUpon>AtFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Array\ClearFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ClearFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Array\ClearWithLimitFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ClearWithLimitFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Array\ConstrainedCopyFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ConstrainedCopyFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Array\CopyFlowSourceObject.AutoFast.cs">
+      <DependentUpon>CopyFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Array\CopyWithLimitFlowSourceObject.AutoFast.cs">
+      <DependentUpon>CopyWithLimitFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Array\IndexOfFlowSourceObject.AutoFast.cs">
+      <DependentUpon>IndexOfFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Array\IndexOfWithLimitFlowSourceObject.AutoFast.cs">
+      <DependentUpon>IndexOfWithLimitFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Array\IsTypeFlowSourceObject.AutoFast.cs">
+      <DependentUpon>IsTypeFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Array\LastIndexOfFlowSourceObject.AutoFast.cs">
+      <DependentUpon>LastIndexOfFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Array\LastIndexOfWithLimitFlowSourceObject.AutoFast.cs">
+      <DependentUpon>LastIndexOfWithLimitFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Array\LengthFlowSourceObject.AutoFast.cs">
+      <DependentUpon>LengthFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Array\ReverseFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ReverseFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Array\ReverseWithLimitFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ReverseWithLimitFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Array\SetAtFlowSourceObject.AutoFast.cs">
+      <DependentUpon>SetAtFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Array\ValueFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ValueFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\HashSet\IsTypeFlowSourceObject.AutoFast.cs">
+      <DependentUpon>IsTypeFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Pair\IsTypeFlowSourceObject.AutoFast.cs">
+      <DependentUpon>IsTypeFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Array\FindIndexFlowSourceObject.AutoFast.cs">
+      <DependentUpon>FindIndexFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Array\BinarySearchFlowSourceObject.AutoFast.cs">
+      <DependentUpon>BinarySearchFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Array\FindIndexWithLimitFlowSourceObject.AutoFast.cs">
+      <DependentUpon>FindIndexWithLimitFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Array\FindLastIndexFlowSourceObject.AutoFast.cs">
+      <DependentUpon>FindLastIndexFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Array\FindLastIndexWithLimitFlowSourceObject.AutoFast.cs">
+      <DependentUpon>FindLastIndexWithLimitFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Array\BinarySearchWithLimitFlowSourceObject.AutoFast.cs">
+      <DependentUpon>BinarySearchWithLimitFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Array\FromElementFlowSourceObject.AutoFast.cs">
+      <DependentUpon>FromElementFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Array\SortFlowSourceObject.AutoFast.cs">
+      <DependentUpon>SortFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Array\SortWithItemsFlowSourceObject.AutoFast.cs">
+      <DependentUpon>SortWithItemsFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Array\SortWithItemsWithLimitFlowSourceObject.AutoFast.cs">
+      <DependentUpon>SortWithItemsWithLimitFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Array\SortWithLimitFlowSourceObject.AutoFast.cs">
+      <DependentUpon>SortWithLimitFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\ArrayList\BinarySearchFlowSourceObject.AutoFast.cs">
+      <DependentUpon>BinarySearchFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\ArrayList\BinarySearchWithLimitFlowSourceObject.AutoFast.cs">
+      <DependentUpon>BinarySearchWithLimitFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\ArrayList\FindIndexFlowSourceObject.AutoFast.cs">
+      <DependentUpon>FindIndexFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\ArrayList\FindIndexWithLimitFlowSourceObject.AutoFast.cs">
+      <DependentUpon>FindIndexWithLimitFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\ArrayList\FindLastIndexFlowSourceObject.AutoFast.cs">
+      <DependentUpon>FindLastIndexFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\ArrayList\FindLastIndexWithLimitFlowSourceObject.AutoFast.cs">
+      <DependentUpon>FindLastIndexWithLimitFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\ArrayList\RemoveAllFlowSourceObject.AutoFast.cs">
+      <DependentUpon>RemoveAllFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\ArrayList\ReverseWithLimitFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ReverseWithLimitFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\ArrayList\SortFlowSourceObject.AutoFast.cs">
+      <DependentUpon>SortFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\ArrayList\SortWithLimitFlowSourceObject.AutoFast.cs">
+      <DependentUpon>SortWithLimitFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Enumerable\AggregateFlowSourceObjectBase.AutoFast.cs">
+      <DependentUpon>AggregateFlowSourceObjectBase.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Enumerable\AggregateWithSeedAndResultSelectFlowSourceObject.AutoFast.cs">
+      <DependentUpon>AggregateWithSeedAndResultSelectFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Enumerable\AggregateWithSeedFlowSourceObject.AutoFast.cs">
+      <DependentUpon>AggregateWithSeedFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Enumerable\AllFlowSourceObject.AutoFast.cs">
+      <DependentUpon>AllFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Enumerable\AnyFlowSourceObject.AutoFast.cs">
+      <DependentUpon>AnyFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Enumerable\AverageDoubleFlowSourceObject.AutoFast.cs">
+      <DependentUpon>AverageDoubleFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Enumerable\AverageFloatFlowSourceObject.AutoFast.cs">
+      <DependentUpon>AverageFloatFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Enumerable\AverageInt32FlowSourceObject.AutoFast.cs">
+      <DependentUpon>AverageInt32FlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Enumerable\ConcatFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ConcatFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Enumerable\ContainsFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ContainsFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Enumerable\CountFlowSourceObject.AutoFast.cs">
+      <DependentUpon>CountFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Enumerable\CountWithPredicateFlowSourceObject.AutoFast.cs">
+      <DependentUpon>CountWithPredicateFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Enumerable\DefaultIfEmptyFlowSourceObject.AutoFast.cs">
+      <DependentUpon>DefaultIfEmptyFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Enumerable\DistinctFlowSourceObject.AutoFast.cs">
+      <DependentUpon>DistinctFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Enumerable\ElementAtFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ElementAtFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Enumerable\ElementAtOrDefaultFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ElementAtOrDefaultFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Enumerable\ExceptFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ExceptFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Enumerable\FirstFlowSourceObject.AutoFast.cs">
+      <DependentUpon>FirstFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Enumerable\FirstOrDefaultFlowSourceObject.AutoFast.cs">
+      <DependentUpon>FirstOrDefaultFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Enumerable\FirstOrDefaultWithPredicateFlowSourceObject.AutoFast.cs">
+      <DependentUpon>FirstOrDefaultWithPredicateFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Enumerable\FirstWithPredicateFlowSourceObject.AutoFast.cs">
+      <DependentUpon>FirstWithPredicateFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Enumerable\GroupByFlowSourceObject.AutoFast.cs">
+      <DependentUpon>GroupByFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Enumerable\GroupByWithElementSelectAndResultSelectFlowSourceObject.AutoFast.cs">
+      <DependentUpon>GroupByWithElementSelectAndResultSelectFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Enumerable\GroupByWithElementSelectFlowSourceObject.AutoFast.cs">
+      <DependentUpon>GroupByWithElementSelectFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Enumerable\GroupJoinFlowSourceObject.AutoFast.cs">
+      <DependentUpon>GroupJoinFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Enumerable\IntersectFlowSourceObject.AutoFast.cs">
+      <DependentUpon>IntersectFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Enumerable\IsTypeFlowSourceObject.AutoFast.cs">
+      <DependentUpon>IsTypeFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Enumerable\LastFlowSourceObject.AutoFast.cs">
+      <DependentUpon>LastFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Enumerable\LastOrDefaultFlowSourceObject.AutoFast.cs">
+      <DependentUpon>LastOrDefaultFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Enumerable\LastOrDefaultWithPredicateFlowSourceObject.AutoFast.cs">
+      <DependentUpon>LastOrDefaultWithPredicateFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Enumerable\LastWithPredicateFlowSourceObject.AutoFast.cs">
+      <DependentUpon>LastWithPredicateFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Enumerable\MaxDoubleFlowSourceObject.AutoFast.cs">
+      <DependentUpon>MaxDoubleFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Enumerable\MaxFloatFlowSourceObject.AutoFast.cs">
+      <DependentUpon>MaxFloatFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Enumerable\MaxInt32FlowSourceObject.AutoFast.cs">
+      <DependentUpon>MaxInt32FlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Enumerable\MinDoubleFlowSourceObject.AutoFast.cs">
+      <DependentUpon>MinDoubleFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Enumerable\MinFloatFlowSourceObject.AutoFast.cs">
+      <DependentUpon>MinFloatFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Enumerable\MinInt32FlowSourceObject.AutoFast.cs">
+      <DependentUpon>MinInt32FlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Enumerable\OrderByDescendingFlowSourceObject.AutoFast.cs">
+      <DependentUpon>OrderByDescendingFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Enumerable\OrderByFlowSourceObject.AutoFast.cs">
+      <DependentUpon>OrderByFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Enumerable\ReverseFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ReverseFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Enumerable\SelectFlowSourceObject.AutoFast.cs">
+      <DependentUpon>SelectFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Enumerable\SelectManyFlowSourceObject.AutoFast.cs">
+      <DependentUpon>SelectManyFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Enumerable\SelectWithIndexFlowSourceObject.AutoFast.cs">
+      <DependentUpon>SelectWithIndexFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Enumerable\SequentialEqualFlowSourceObject.AutoFast.cs">
+      <DependentUpon>SequentialEqualFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Enumerable\SingleFlowSourceObject.AutoFast.cs">
+      <DependentUpon>SingleFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Enumerable\SingleOrDefaultFlowSourceObject.AutoFast.cs">
+      <DependentUpon>SingleOrDefaultFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Enumerable\SingleOrDefaultWithPredicateFlowSourceObject.AutoFast.cs">
+      <DependentUpon>SingleOrDefaultWithPredicateFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Enumerable\SingleWithPredicateFlowSourceObject.AutoFast.cs">
+      <DependentUpon>SingleWithPredicateFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Enumerable\SkipFlowSourceObject.AutoFast.cs">
+      <DependentUpon>SkipFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Enumerable\SkipWhileFlowSourceObject.AutoFast.cs">
+      <DependentUpon>SkipWhileFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Enumerable\SkipWhileWithIndexFlowSourceObject.AutoFast.cs">
+      <DependentUpon>SkipWhileWithIndexFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Enumerable\SumDoubleFlowSourceObject.AutoFast.cs">
+      <DependentUpon>SumDoubleFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Enumerable\SumFloatFlowSourceObject.AutoFast.cs">
+      <DependentUpon>SumFloatFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Enumerable\SumInt32FlowSourceObject.AutoFast.cs">
+      <DependentUpon>SumInt32FlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Enumerable\TakeFlowSourceObject.AutoFast.cs">
+      <DependentUpon>TakeFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Enumerable\TakeWhileFlowSourceObject.AutoFast.cs">
+      <DependentUpon>TakeWhileFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Enumerable\TakeWhileWithIndexFlowSourceObject.AutoFast.cs">
+      <DependentUpon>TakeWhileWithIndexFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Enumerable\ToArrayFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ToArrayFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Enumerable\ToArrayListFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ToArrayListFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Enumerable\ToHashtableFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ToHashtableFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Enumerable\ToHashtableWithElementSelectFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ToHashtableWithElementSelectFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Enumerable\ToLookupFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ToLookupFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Enumerable\UnionFlowSourceObject.AutoFast.cs">
+      <DependentUpon>UnionFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Enumerable\WhereFlowSourceObject.AutoFast.cs">
+      <DependentUpon>WhereFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Enumerable\ZipFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ZipFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Enumerable\Grouping\IsTypeFlowSourceObject.AutoFast.cs">
+      <DependentUpon>IsTypeFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Enumerable\Grouping\ValueFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ValueFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Enumerable\Lookup\ContainsFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ContainsFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Enumerable\Lookup\IsTypeFlowSourceObject.AutoFast.cs">
+      <DependentUpon>IsTypeFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Enumerable\Lookup\ValueFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ValueFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Enumerable\Ordered\IsTypeFlowSourceObject.AutoFast.cs">
+      <DependentUpon>IsTypeFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Enumerable\Ordered\ThenByDescendingFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ThenByDescendingFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Enumerable\Ordered\ThenByFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ThenByFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\String\NewLineFlowSourceObject.AutoFast.cs">
+      <DependentUpon>NewLineFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Logic\SwitchFlowSourceObject.AutoFast.cs">
+      <DependentUpon>SwitchFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Logic\OnceGateFlowSourceObject.AutoFast.cs">
+      <DependentUpon>OnceGateFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Bit\AndFlowSourceObject.AutoFast.cs">
+      <DependentUpon>AndFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Bit\ComplementFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ComplementFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Bit\IsPowerOfTwoFlowSourceObject.AutoFast.cs">
+      <DependentUpon>IsPowerOfTwoFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Bit\LeadingZerosCountFlowSourceObject.AutoFast.cs">
+      <DependentUpon>LeadingZerosCountFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Bit\LeastSignificantFlowSourceObject.AutoFast.cs">
+      <DependentUpon>LeastSignificantFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Bit\LeftShiftFlowSourceObject.AutoFast.cs">
+      <DependentUpon>LeftShiftFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Bit\MostSignificantFlowSourceObject.AutoFast.cs">
+      <DependentUpon>MostSignificantFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Bit\NextLargestPowerOfTwoFlowSourceObject.AutoFast.cs">
+      <DependentUpon>NextLargestPowerOfTwoFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Bit\OnesCountFlowSourceObject.AutoFast.cs">
+      <DependentUpon>OnesCountFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Bit\OrFlowSourceObject.AutoFast.cs">
+      <DependentUpon>OrFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Bit\PreviousLargestPowerOfTwoFlowSourceObject.AutoFast.cs">
+      <DependentUpon>PreviousLargestPowerOfTwoFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Bit\ReadableStringFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ReadableStringFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Bit\ReverseFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ReverseFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Bit\RightShiftFlowSourceObject.AutoFast.cs">
+      <DependentUpon>RightShiftFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Bit\TrailingZerosCountFlowSourceObject.AutoFast.cs">
+      <DependentUpon>TrailingZerosCountFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Bit\XorFlowSourceObject.AutoFast.cs">
+      <DependentUpon>XorFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Bit\ZerosCountFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ZerosCountFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\DateTime\AddDaysFlowSourceObject.AutoFast.cs">
+      <DependentUpon>AddDaysFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\DateTime\AddFlowSourceObject.AutoFast.cs">
+      <DependentUpon>AddFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\DateTime\AddHoursFlowSourceObject.AutoFast.cs">
+      <DependentUpon>AddHoursFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\DateTime\AddMillisecondsFlowSourceObject.AutoFast.cs">
+      <DependentUpon>AddMillisecondsFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\DateTime\AddMinutesFlowSourceObject.AutoFast.cs">
+      <DependentUpon>AddMinutesFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\DateTime\AddMonthsFlowSourceObject.AutoFast.cs">
+      <DependentUpon>AddMonthsFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\DateTime\AddSecondsFlowSourceObject.AutoFast.cs">
+      <DependentUpon>AddSecondsFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\DateTime\AddYearsFlowSourceObject.AutoFast.cs">
+      <DependentUpon>AddYearsFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\DateTime\CompareFlowSourceObject.AutoFast.cs">
+      <DependentUpon>CompareFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\DateTime\IsLeapYearFlowSourceObject.AutoFast.cs">
+      <DependentUpon>IsLeapYearFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\DateTime\NowFlowSourceObject.AutoFast.cs">
+      <DependentUpon>NowFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\DateTime\SubtractDateTimeFlowSourceObject.AutoFast.cs">
+      <DependentUpon>SubtractDateTimeFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\DateTime\SubtractTimeSpanFlowSourceObject.AutoFast.cs">
+      <DependentUpon>SubtractTimeSpanFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\DateTime\TodayFlowSourceObject.AutoFast.cs">
+      <DependentUpon>TodayFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\DateTime\ToStringFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ToStringFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\DateTime\UtcNowFlowSourceObject.AutoFast.cs">
+      <DependentUpon>UtcNowFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\DateTime\ValueFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ValueFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\DateTime\EqualFlowSourceObject.AutoFast.cs">
+      <DependentUpon>EqualFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\DateTime\FromFlowSourceObject.AutoFast.cs">
+      <DependentUpon>FromFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\DateTime\FromWithMillisecondFlowSourceObject.AutoFast.cs">
+      <DependentUpon>FromWithMillisecondFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\DateTime\FromWithSecondFlowSourceObject.AutoFast.cs">
+      <DependentUpon>FromWithSecondFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\DateTime\MaxFlowSourceObject.AutoFast.cs">
+      <DependentUpon>MaxFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\DateTime\MinFlowSourceObject.AutoFast.cs">
+      <DependentUpon>MinFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\DateTime\ParseFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ParseFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\DateTime\ToLocalTimeFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ToLocalTimeFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\DateTime\ToUniversalTimeFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ToUniversalTimeFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\TimeSpan\AddFlowSourceObject.AutoFast.cs">
+      <DependentUpon>AddFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\TimeSpan\CompareFlowSourceObject.AutoFast.cs">
+      <DependentUpon>CompareFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\TimeSpan\DurationFlowSourceObject.AutoFast.cs">
+      <DependentUpon>DurationFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\TimeSpan\EqualFlowSourceObject.AutoFast.cs">
+      <DependentUpon>EqualFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\TimeSpan\FromDaysFlowSourceObject.AutoFast.cs">
+      <DependentUpon>FromDaysFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\TimeSpan\FromHoursFlowSourceObject.AutoFast.cs">
+      <DependentUpon>FromHoursFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\TimeSpan\FromMillisecondsFlowSourceObject.AutoFast.cs">
+      <DependentUpon>FromMillisecondsFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\TimeSpan\FromMinutesFlowSourceObject.AutoFast.cs">
+      <DependentUpon>FromMinutesFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\TimeSpan\FromSecondsFlowSourceObject.AutoFast.cs">
+      <DependentUpon>FromSecondsFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\TimeSpan\GreaterFlowSourceObject.AutoFast.cs">
+      <DependentUpon>GreaterFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\TimeSpan\GreaterOrEqualFlowSourceObject.AutoFast.cs">
+      <DependentUpon>GreaterOrEqualFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\TimeSpan\LessFlowSourceObject.AutoFast.cs">
+      <DependentUpon>LessFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\TimeSpan\LessOrEqualFlowSourceObject.AutoFast.cs">
+      <DependentUpon>LessOrEqualFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\TimeSpan\MaxFlowSourceObject.AutoFast.cs">
+      <DependentUpon>MaxFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\TimeSpan\MinFlowSourceObject.AutoFast.cs">
+      <DependentUpon>MinFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\TimeSpan\NegateFlowSourceObject.AutoFast.cs">
+      <DependentUpon>NegateFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\TimeSpan\ParseFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ParseFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\TimeSpan\SubtractFlowSourceObject.AutoFast.cs">
+      <DependentUpon>SubtractFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\TimeSpan\ToStringFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ToStringFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\TimeSpan\ValueFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ValueFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\TimeSpan\ZeroFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ZeroFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TypeSerializers\TimeSpanTypeSerializer.cs" />
+    <Compile Include="FlowSourceObjects\DateTime\DayOfWeek\ValueFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ValueFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\DateTime\IsTypeFlowSourceObject.AutoFast.cs">
+      <DependentUpon>IsTypeFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Encoding\IsTypeFlowSourceObject.AutoFast.cs">
+      <DependentUpon>IsTypeFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Stopwatch\IsTypeFlowSourceObject.AutoFast.cs">
+      <DependentUpon>IsTypeFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\TimeSpan\IsTypeFlowSourceObject.AutoFast.cs">
+      <DependentUpon>IsTypeFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\DateTime\DayOfWeek\IsTypeFlowSourceObject.AutoFast.cs">
+      <DependentUpon>IsTypeFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Stream\SeekOrigin\IsTypeFlowSourceObject.AutoFast.cs">
+      <DependentUpon>IsTypeFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\String\SplitFlowSourceObject.AutoFast.cs">
+      <DependentUpon>SplitFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\HashSet\CountFlowSourceObject.AutoFast.cs">
+      <DependentUpon>CountFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Stream\ReadAllTextFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ReadAllTextFlowSourceObject.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\FlowScriptEngine\FlowScriptEngine.csproj">
+      <Project>{952271CD-8EAC-46BD-B32E-D5262D26B290}</Project>
+      <Name>FlowScriptEngine</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows インストーラー 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <PropertyGroup>
+    <PostBuildEvent>copy "$(ProjectDir)\bin\x64\Debug\\FlowScriptEngineBasic.dll" "$(SolutionDir)FlowScriptControlTest\bin\x64\Debug\dlls\FlowScriptEngineBasic.dll"
+copy "$(ProjectDir)\bin\x64\Debug\\FlowScriptEngineBasic.dll" "$(SolutionDir)PPD\PPD\bin\x64\Debug\dlls\FlowScriptEngineBasic.dll"
+copy "$(ProjectDir)\bin\x64\Debug\\FlowScriptEngineBasic.dll" "$(SolutionDir)PPDeditor\PPDeditor\bin\x64\Debug\dlls\FlowScriptEngineBasic.dll"</PostBuildEvent>
+    <PreBuildEvent>
+    </PreBuildEvent>
+  </PropertyGroup>
+</Project>

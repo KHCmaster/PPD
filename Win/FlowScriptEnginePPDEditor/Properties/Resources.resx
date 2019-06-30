@@ -1,0 +1,564 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Dialog_Setting_Add_Description" xml:space="preserve">
+    <value>説明です</value>
+  </data>
+  <data name="Dialog_Setting_Add_Key" xml:space="preserve">
+    <value>キーです</value>
+  </data>
+  <data name="Dialog_Setting_Add_MaxLength" xml:space="preserve">
+    <value>最大長です</value>
+  </data>
+  <data name="Dialog_Setting_Add_MaxValue" xml:space="preserve">
+    <value>最大値です</value>
+  </data>
+  <data name="Dialog_Setting_Add_MinValue" xml:space="preserve">
+    <value>最小値です</value>
+  </data>
+  <data name="Dialog_Setting_Add_Setting" xml:space="preserve">
+    <value>対象の設定です</value>
+  </data>
+  <data name="Dialog_Setting_Add_Summary" xml:space="preserve">
+    <value>設定に項目を追加します</value>
+  </data>
+  <data name="Dialog_Setting_Add_Value" xml:space="preserve">
+    <value>値です</value>
+  </data>
+  <data name="Dialog_Setting_Add_Values" xml:space="preserve">
+    <value>選択可能な値の一覧です</value>
+  </data>
+  <data name="Dialog_Setting_GetValue_Key" xml:space="preserve">
+    <value>キーです</value>
+  </data>
+  <data name="Dialog_Setting_GetValue_Setting" xml:space="preserve">
+    <value>対象の設定です</value>
+  </data>
+  <data name="Dialog_Setting_GetValue_Summary" xml:space="preserve">
+    <value>設定から値を取得します</value>
+  </data>
+  <data name="Dialog_Setting_GetValue_Value" xml:space="preserve">
+    <value>値です</value>
+  </data>
+  <data name="Dialog_Setting_Value_Summary" xml:space="preserve">
+    <value>設定のためのデータセットを初期化します</value>
+  </data>
+  <data name="Dialog_Setting_Value_Title" xml:space="preserve">
+    <value>設定時に表示されるタイトルです</value>
+  </data>
+  <data name="Dialog_Setting_Value_Value" xml:space="preserve">
+    <value>設定のデータセットです</value>
+  </data>
+  <data name="Dialog_Show_Result" xml:space="preserve">
+    <value>結果です</value>
+  </data>
+  <data name="Dialog_Show_Setting" xml:space="preserve">
+    <value>設定です</value>
+  </data>
+  <data name="Dialog_Show_Summary" xml:space="preserve">
+    <value>ダイアログを設定に基づき表示します</value>
+  </data>
+  <data name="Event_Values_Summary" xml:space="preserve">
+    <value>イベント一覧を取得します</value>
+  </data>
+  <data name="Event_Values_Values" xml:space="preserve">
+    <value>イベント一覧を取得します</value>
+  </data>
+  <data name="Event_Value_BPM" xml:space="preserve">
+    <value>BPMを取得します</value>
+  </data>
+  <data name="Event_Value_BPMRapidChange" xml:space="preserve">
+    <value>BPMを即時に変更するかどうかを取得します</value>
+  </data>
+  <data name="Event_Value_DisplayState" xml:space="preserve">
+    <value>表示の仕方を取得します</value>
+  </data>
+  <data name="Event_Value_Event" xml:space="preserve">
+    <value>対象のイベントを設定します</value>
+  </data>
+  <data name="Event_Value_InitializeOrder" xml:space="preserve">
+    <value>初期化順序を取得します</value>
+  </data>
+  <data name="Event_Value_KeepPlayings" xml:space="preserve">
+    <value>押している間だけサウンドを流すかどうかを取得します</value>
+  </data>
+  <data name="Event_Value_MoveState" xml:space="preserve">
+    <value>動き方を取得します</value>
+  </data>
+  <data name="Event_Value_NoteType" xml:space="preserve">
+    <value>ノーツの種類を取得します</value>
+  </data>
+  <data name="Event_Value_ReleaseSounds" xml:space="preserve">
+    <value>離したときにサウンドを流すかどうかを取得します</value>
+  </data>
+  <data name="Event_Value_Summary" xml:space="preserve">
+    <value>イベントの情報を取得します</value>
+  </data>
+  <data name="Event_Value_VolumePercents" xml:space="preserve">
+    <value>ボリュームを取得します</value>
+  </data>
+  <data name="Execute_Failed" xml:space="preserve">
+    <value>失敗したときに呼ばれるイベントです</value>
+  </data>
+  <data name="Execute_In" xml:space="preserve">
+    <value>実行します</value>
+  </data>
+  <data name="Execute_Success" xml:space="preserve">
+    <value>成功したときに呼ばれるイベントです</value>
+  </data>
+  <data name="Layer_AddMark_Layer" xml:space="preserve">
+    <value>レイヤーにマークを追加します</value>
+  </data>
+  <data name="Layer_AddMark_Position" xml:space="preserve">
+    <value>マークの位置です</value>
+  </data>
+  <data name="Layer_AddMark_ReleaseTime" xml:space="preserve">
+    <value>マークの離す時間です</value>
+  </data>
+  <data name="Layer_AddMark_Rotation" xml:space="preserve">
+    <value>マークの角度です</value>
+  </data>
+  <data name="Layer_AddMark_Summary" xml:space="preserve">
+    <value>レイヤーにマークを追加します</value>
+  </data>
+  <data name="Layer_AddMark_Time" xml:space="preserve">
+    <value>マークの時間です</value>
+  </data>
+  <data name="Layer_AddMark_Type" xml:space="preserve">
+    <value>マークの種類です</value>
+  </data>
+  <data name="Layer_All_All" xml:space="preserve">
+    <value>全てのレイヤーを取得します</value>
+  </data>
+  <data name="Layer_All_Summary" xml:space="preserve">
+    <value>全てのレイヤーを取得します</value>
+  </data>
+  <data name="Layer_Value_IsSelected" xml:space="preserve">
+    <value>選択されたレイヤーかどうかを取得します</value>
+  </data>
+  <data name="Layer_Value_Layer" xml:space="preserve">
+    <value>対象のレイヤーです</value>
+  </data>
+  <data name="Layer_Value_Marks" xml:space="preserve">
+    <value>マークを取得します</value>
+  </data>
+  <data name="Layer_Value_SelectedMark" xml:space="preserve">
+    <value>選択されたマークを取得します</value>
+  </data>
+  <data name="Layer_Value_SelectedMarks" xml:space="preserve">
+    <value>選択されたマークを取得します</value>
+  </data>
+  <data name="Layer_Value_Summary" xml:space="preserve">
+    <value>レイヤーの情報を取得します</value>
+  </data>
+  <data name="Mark_AssignId_Mark" xml:space="preserve">
+    <value>対象のマークです</value>
+  </data>
+  <data name="Mark_AssignId_Summary" xml:space="preserve">
+    <value>マークにIDを付与します</value>
+  </data>
+  <data name="Mark_PosAndRotation_Load_FileName" xml:space="preserve">
+    <value>対象のファイル名です</value>
+  </data>
+  <data name="Mark_PosAndRotation_Load_Summary" xml:space="preserve">
+    <value>位置角度の情報を読み取ります</value>
+  </data>
+  <data name="Mark_PosAndRotation_Load_Values" xml:space="preserve">
+    <value>読み取った情報です</value>
+  </data>
+  <data name="Mark_PosAndRotation_Value_HasPosition" xml:space="preserve">
+    <value>位置情報を含むかどうかを取得します</value>
+  </data>
+  <data name="Mark_PosAndRotation_Value_HasRotation" xml:space="preserve">
+    <value>角度情報を含むかどうかを取得します</value>
+  </data>
+  <data name="Mark_PosAndRotation_Value_Position" xml:space="preserve">
+    <value>位置を取得します</value>
+  </data>
+  <data name="Mark_PosAndRotation_Value_Rotation" xml:space="preserve">
+    <value>角度を取得します</value>
+  </data>
+  <data name="Mark_PosAndRotation_Value_Summary" xml:space="preserve">
+    <value>位置角度の情報を取得します</value>
+  </data>
+  <data name="Mark_PosAndRotation_Value_Value" xml:space="preserve">
+    <value>対象の位置角度の情報です</value>
+  </data>
+  <data name="Mark_RemoveParameter_Key" xml:space="preserve">
+    <value>パラメーターのキーです</value>
+  </data>
+  <data name="Mark_RemoveParameter_Mark" xml:space="preserve">
+    <value>対象のマークです</value>
+  </data>
+  <data name="Mark_RemoveParameter_Summary" xml:space="preserve">
+    <value>マークのパラメーターを削除します</value>
+  </data>
+  <data name="Mark_Remove_Mark" xml:space="preserve">
+    <value>対象のマークです</value>
+  </data>
+  <data name="Mark_Remove_Summary" xml:space="preserve">
+    <value>マークを削除します</value>
+  </data>
+  <data name="Mark_SetParameter_Key" xml:space="preserve">
+    <value>パラメーターのキーです</value>
+  </data>
+  <data name="Mark_SetParameter_Mark" xml:space="preserve">
+    <value>対象のマークです</value>
+  </data>
+  <data name="Mark_SetParameter_Summary" xml:space="preserve">
+    <value>マークにパラメーターを付与します</value>
+  </data>
+  <data name="Mark_SetParameter_Value" xml:space="preserve">
+    <value>パラメーターの値です</value>
+  </data>
+  <data name="Mark_SetPosition_Mark" xml:space="preserve">
+    <value>対象のマークです</value>
+  </data>
+  <data name="Mark_SetPosition_Position" xml:space="preserve">
+    <value>位置を設定します</value>
+  </data>
+  <data name="Mark_SetPosition_Summary" xml:space="preserve">
+    <value>マークの位置を設定します</value>
+  </data>
+  <data name="Mark_SetRotation_Mark" xml:space="preserve">
+    <value>対象のマークです</value>
+  </data>
+  <data name="Mark_SetRotation_Rotation" xml:space="preserve">
+    <value>角度を設定します</value>
+  </data>
+  <data name="Mark_SetRotation_Summary" xml:space="preserve">
+    <value>マークの角度を設定します</value>
+  </data>
+  <data name="Mark_SetTime_Mark" xml:space="preserve">
+    <value>対象のマークです</value>
+  </data>
+  <data name="Mark_SetTime_Summary" xml:space="preserve">
+    <value>マークの時間を設定します</value>
+  </data>
+  <data name="Mark_SetTime_Time" xml:space="preserve">
+    <value>時間です</value>
+  </data>
+  <data name="Mark_SetType_Mark" xml:space="preserve">
+    <value>対象のマークです</value>
+  </data>
+  <data name="Mark_SetType_Summary" xml:space="preserve">
+    <value>マークのタイプを変更します</value>
+  </data>
+  <data name="Mark_SetType_Type" xml:space="preserve">
+    <value>タイプです</value>
+  </data>
+  <data name="Mark_UnassignId_Mark" xml:space="preserve">
+    <value>対象のマークです</value>
+  </data>
+  <data name="Mark_UnassignId_Summary" xml:space="preserve">
+    <value>マークのID割り当てを解除します</value>
+  </data>
+  <data name="Mark_Value_ID" xml:space="preserve">
+    <value>IDを取得します</value>
+  </data>
+  <data name="Mark_Value_IsLong" xml:space="preserve">
+    <value>長押しかどうかを取得します</value>
+  </data>
+  <data name="Mark_Value_Mark" xml:space="preserve">
+    <value>対象のマークを設定します</value>
+  </data>
+  <data name="Mark_Value_Parameters" xml:space="preserve">
+    <value>パラメーターを取得します</value>
+  </data>
+  <data name="Mark_Value_Position" xml:space="preserve">
+    <value>位置を取得します</value>
+  </data>
+  <data name="Mark_Value_ReleaseTime" xml:space="preserve">
+    <value>リリースの時間を取得します</value>
+  </data>
+  <data name="Mark_Value_Rotation" xml:space="preserve">
+    <value>角度を取得します</value>
+  </data>
+  <data name="Mark_Value_Summary" xml:space="preserve">
+    <value>マークの情報を取得します</value>
+  </data>
+  <data name="Mark_Value_Time" xml:space="preserve">
+    <value>時間を取得します</value>
+  </data>
+  <data name="Mark_Value_Type" xml:space="preserve">
+    <value>タイプを取得します</value>
+  </data>
+  <data name="MessageBox_Show_Button" xml:space="preserve">
+    <value>表示するボタンを設定します</value>
+  </data>
+  <data name="MessageBox_Show_Caption" xml:space="preserve">
+    <value>表示するキャプションを設定します</value>
+  </data>
+  <data name="MessageBox_Show_Icon" xml:space="preserve">
+    <value>表示するアイコンを設定します</value>
+  </data>
+  <data name="MessageBox_Show_Result" xml:space="preserve">
+    <value>結果を取得します</value>
+  </data>
+  <data name="MessageBox_Show_Summary" xml:space="preserve">
+    <value>メッセージボックスを表示します</value>
+  </data>
+  <data name="MessageBox_Show_Text" xml:space="preserve">
+    <value>表示するテキストを設定します</value>
+  </data>
+  <data name="Movie_Length_Summary" xml:space="preserve">
+    <value>動画の長さを取得します</value>
+  </data>
+  <data name="Movie_Length_Value" xml:space="preserve">
+    <value>動画の長さを取得します</value>
+  </data>
+  <data name="Movie_Pause_Summary" xml:space="preserve">
+    <value>動画を一時停止します</value>
+  </data>
+  <data name="Movie_Play_Summary" xml:space="preserve">
+    <value>動画を再生します</value>
+  </data>
+  <data name="Movie_Position_Summary" xml:space="preserve">
+    <value>動画の位置を取得します</value>
+  </data>
+  <data name="Movie_Position_Value" xml:space="preserve">
+    <value>動画の位置を取得します</value>
+  </data>
+  <data name="Movie_Seek_Summary" xml:space="preserve">
+    <value>動画をシークします</value>
+  </data>
+  <data name="Movie_Seek_Time" xml:space="preserve">
+    <value>シーク位置を設定します</value>
+  </data>
+  <data name="Movie_SetTrimming_ApplyToIniFileWriter" xml:space="preserve">
+    <value>設定ファイルライターに反映させるかどうかを設定します</value>
+  </data>
+  <data name="Movie_SetTrimming_Bottom" xml:space="preserve">
+    <value>下のトリミングを設定します</value>
+  </data>
+  <data name="Movie_SetTrimming_Left" xml:space="preserve">
+    <value>左のトリミングを設定します</value>
+  </data>
+  <data name="Movie_SetTrimming_Right" xml:space="preserve">
+    <value>右のトリミングを設定します</value>
+  </data>
+  <data name="Movie_SetTrimming_Summary" xml:space="preserve">
+    <value>動画のトリミングを設定します</value>
+  </data>
+  <data name="Movie_SetTrimming_Top" xml:space="preserve">
+    <value>上のトリミングを設定します</value>
+  </data>
+  <data name="Movie_Size_Height" xml:space="preserve">
+    <value>高さを取得します</value>
+  </data>
+  <data name="Movie_Size_Summary" xml:space="preserve">
+    <value>動画のサイズを取得します</value>
+  </data>
+  <data name="Movie_Size_Width" xml:space="preserve">
+    <value>幅を取得します</value>
+  </data>
+  <data name="Movie_Stop_Summary" xml:space="preserve">
+    <value>動画を停止します</value>
+  </data>
+  <data name="Movie_Trimming_Bottom" xml:space="preserve">
+    <value>下のトリミングを取得します</value>
+  </data>
+  <data name="Movie_Trimming_Left" xml:space="preserve">
+    <value>左のトリミングを取得します</value>
+  </data>
+  <data name="Movie_Trimming_Right" xml:space="preserve">
+    <value>右のトリミングを取得します</value>
+  </data>
+  <data name="Movie_Trimming_Summary" xml:space="preserve">
+    <value>動画のトリミングを取得します</value>
+  </data>
+  <data name="Movie_Trimming_Top" xml:space="preserve">
+    <value>上のトリミングを取得します</value>
+  </data>
+  <data name="Song_Info_BPM" xml:space="preserve">
+    <value>BPMを取得します</value>
+  </data>
+  <data name="Song_Info_BPMOffset" xml:space="preserve">
+    <value>BPM Offsetを取得します</value>
+  </data>
+  <data name="Song_Info_ProjectName" xml:space="preserve">
+    <value>プロジェクト名を取得します</value>
+  </data>
+  <data name="Song_Info_ProjectPath" xml:space="preserve">
+    <value>プロジェクトのパスを取得します</value>
+  </data>
+  <data name="Song_Info_Summary" xml:space="preserve">
+    <value>譜面の情報を取得します</value>
+  </data>
+  <data name="Storage_GetValue_Key" xml:space="preserve">
+    <value>キーです</value>
+  </data>
+  <data name="Storage_GetValue_StorageKey" xml:space="preserve">
+    <value>ストレージのキーです</value>
+  </data>
+  <data name="Storage_GetValue_Summary" xml:space="preserve">
+    <value>ストレージから値を取得します</value>
+  </data>
+  <data name="Storage_GetValue_Value" xml:space="preserve">
+    <value>値です</value>
+  </data>
+  <data name="Storage_SetValue_Key" xml:space="preserve">
+    <value>キーです</value>
+  </data>
+  <data name="Storage_SetValue_StorageKey" xml:space="preserve">
+    <value>ストレージのキーです</value>
+  </data>
+  <data name="Storage_SetValue_Summary" xml:space="preserve">
+    <value>ストレージに値を設定します</value>
+  </data>
+  <data name="Storage_SetValue_Value" xml:space="preserve">
+    <value>値です</value>
+  </data>
+  <data name="TemplateIsType_Summary" xml:space="preserve">
+    <value>ターゲットのタイプを調べます</value>
+  </data>
+  <data name="TemplateIsType_Target" xml:space="preserve">
+    <value>ターゲットです</value>
+  </data>
+  <data name="TemplateIsType_Value" xml:space="preserve">
+    <value>ターゲットがタイプであったかどうかです</value>
+  </data>
+  <data name="TemplateStruct_Summary" xml:space="preserve">
+    <value>値を作成します</value>
+  </data>
+  <data name="TemplateStruct_Value" xml:space="preserve">
+    <value>値です</value>
+  </data>
+  <data name="Event_Value_SlideScale" xml:space="preserve">
+    <value>スライドスケールを取得します</value>
+  </data>
+  <data name="Mark_ParameterPreset_All_All" xml:space="preserve">
+    <value>全てのパラメータープリセットです</value>
+  </data>
+  <data name="Mark_ParameterPreset_All_Summary" xml:space="preserve">
+    <value>全てのパラメータープリセットを取得します</value>
+  </data>
+  <data name="Mark_ParameterPreset_Value_Parameters" xml:space="preserve">
+    <value>プリセットのパラメーター一覧です</value>
+  </data>
+  <data name="Mark_ParameterPreset_Value_PresetName" xml:space="preserve">
+    <value>プリセットの名前です</value>
+  </data>
+  <data name="Mark_ParameterPreset_Value_Summary" xml:space="preserve">
+    <value>パラメータープリセットの情報を取得します</value>
+  </data>
+  <data name="Mark_ParameterPreset_Value_Value" xml:space="preserve">
+    <value>対象のパラメータープリセットです</value>
+  </data>
+</root>

@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Root>
+   <!--
+      Pictureでは静止画を表示することができます。
+         Path:画像のファイルパス,img\PPD\singleからの相対パス
+         X:X座標の位置(ウィンドウ左上基準,標準0)
+         Y:Y座標の位置(ウィンドウ左上基準,標準0)
+         ScaleX:X軸方向の大きさ(標準1)
+         ScaleY:Y軸方向の大きさ(標準1)
+         Alpha:透明度(標準1,最小0,最大1)
+         Rotation:回転角(標準0,ラジアン)
+         Center:1なら有効,画像の中心が座標位置にくるようになります
+         Hidden:ThumbModeならサムネ表示時のみ表示、!ThumbModeなら動画表示時のみ表示
+         
+      <Picture Path="" X="" Y="" ScaleX="" ScaleY="" Alpha="" Rotation="" Center=""/>
+      
+      Effectではエフェクトを表示することが出来ます
+         Path:画像のファイルパス,img\PPD\singleからの相対パス
+         X:X座標の位置(ウィンドウ左上基準,標準0)
+         Y:Y座標の位置(ウィンドウ左上基準,標準0)
+         ScaleX:X軸方向の大きさ(標準1)
+         ScaleY:Y軸方向の大きさ(標準1)
+         Alpha:透明度(標準1,最小0,最大1)
+         Rotation:回転角(標準0,ラジアン)
+         Center:1なら有効,画像の中心が座標位置にくるようになります
+         Hidden:ThumbModeならサムネ表示時のみ表示、!ThumbModeなら動画表示時のみ表示
+         PlayType:再生方法,Onceなら１回,ReverseOnceなら逆再生１回,Loopならループ,ReverseLoopなら折り返してループ(標準Loop)
+         
+      <Effect Path="" X="" Y="" ScaleX="" ScaleY="" Alpha="" Rotation="" Center="" PlayType="" />
+   -->
+   <!-- Menuの中に書くとMenuの背景に使用されます。上に書くと上に描画されます -->
+   <Menu>
+      <!--<Effect Path="img\default\wave.etd" X="340" Y="400" Center="1" Hidden="ThumbMode"/>-->
+      <Picture Path="back.png" X="0" Y="0"/>
+   </Menu>
+   <!-- Resultの中に書くとResultの背景に使用されます。上に書くと上に描画されます -->
+   <Result>
+      <Picture Path="back.png" X="0" Y="0"/>
+   </Result>
+</Root>

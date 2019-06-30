@@ -1,0 +1,84 @@
+﻿body, input, select, textarea {
+    font-family: 'メイリオ',Meiryo,'ＭＳ Ｐゴシック','ヒラギノ角ゴ Pro W3','Hiragino Kaku Gothic Pro','Osaka',sans-serif;
+    font-size: 14px;
+}
+
+body {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 99%;
+}
+
+#dirlist {
+  top: 0; left: 0; bottom: 0; width: 100%;
+  overflow: auto;
+  padding: 0;
+  background: #fff;
+  margin: 0px;
+}
+
+#dirlist td {
+  padding: 0.5em 0;
+}
+
+#dirlist a {
+  color: #00f;
+  cursor: pointer;
+}
+
+#dirlist li li {
+  padding-left: 10px;
+  margin-left: 0.5em;
+}
+
+#dirlist li a {
+  padding-left: 14px;
+  text-decoration: none;
+}
+
+#dirlist li a:hover {
+  text-decoration: underline;
+}
+
+#dirlist li.opened a {
+  background: transparent url("./downarrow.gif") no-repeat scroll 4px top;
+}
+
+#dirlist li.closed a {
+  background: transparent url("./triangle.gif") no-repeat scroll 4px top;
+}
+
+#dirlist li.leaf a {
+  background: none;
+}
+#dirlist li ul {
+  border-top: 1px solid white; /* IE work-around */
+}
+
+.selected {
+  background-color: #e5ecf9;
+}
+
+#dirlist ul {
+  list-style-image: none;
+  list-style-position: outside;
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+#dirlist li span {
+  display: block;
+  width: 100%;
+}
+
+#dirlist .partialdirs {
+  margin-left: 0.4em;
+  font-size: 85%;
+}
+
+.closed .ifOpened {
+    display: none;
+}

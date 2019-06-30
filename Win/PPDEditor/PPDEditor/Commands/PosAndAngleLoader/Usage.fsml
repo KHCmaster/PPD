@@ -1,0 +1,42 @@
+<Root>
+  <Sources>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.String.NewLineFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.String.NewLineFlowSourceObject" ID="4" ShowAll="True" X="-190.722222222222" Y="-40.388888888889" />
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.String.AddFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.String.AddFlowSourceObject" ID="5" ShowAll="True" X="-3.722222222222" Y="-138.388888888889" />
+    <Source Name="FlowScriptEnginePPDEditor.FlowSourceObjects.MessageBox.ShowWithCaptionFlowSourceObject" FullName="FlowScriptEnginePPDEditor.FlowSourceObjects.MessageBox.ShowWithCaptionFlowSourceObject" ID="6" ShowAll="True" X="40.277777777778" Y="-323.388888888889">
+      <Value Name="Caption" Value="使い方" />
+      <Value Name="Text" Value="Hello PPDEditor Command World!!" />
+    </Source>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Enumerable.AggregateWithSeedFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Enumerable.AggregateWithSeedFlowSourceObject" ID="7" ShowAll="True" X="-290.722222222222" Y="-218.388888888889" />
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Array.FromElementFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Array.FromElementFlowSourceObject" ID="8" ShowAll="True" X="-507.722222222222" Y="-218.388888888889" />
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.String.EmptyFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.String.EmptyFlowSourceObject" ID="9" ShowAll="True" X="-464.722222222222" Y="-26.388888888889" />
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.String.AddFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.String.AddFlowSourceObject" ID="10" ShowAll="True" X="1.277777777778" Y="-51.388888888889" />
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Misc.EntryPointFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Misc.EntryPointFlowSourceObject" ID="11" ShowAll="True" X="-293.5" Y="-323.5" />
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.String.EmptyFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.String.EmptyFlowSourceObject" ID="12" ShowAll="True" X="-698.722222222222" Y="-97.388888888889" />
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.String.ValueFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.String.ValueFlowSourceObject" ID="3" ShowAll="True" X="-886.722222222222" Y="-31.388888888889">
+      <Value Name="Value" Value="By KHCmaster 2014/05/24" />
+    </Source>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.String.ValueFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.String.ValueFlowSourceObject" ID="1" ShowAll="True" X="-1364.47222222222" Y="-226.138888888889">
+      <Value Name="Value" Value="位置角度ローダーセーバーの設定ファイルを読み取って範囲選択されたマークに適用します。" />
+    </Source>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.String.ValueFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.String.ValueFlowSourceObject" ID="2" ShowAll="True" X="-1179.47222222222" Y="-159.888888888889">
+      <Value Name="Value" Value="quad1の箇所を変えると他の設定を呼んで設定するようになります。" />
+    </Source>
+  </Sources>
+  <Flows>
+    <Flow SrcID="4" SrcName="Value" DestID="5" DestName="B" />
+    <Flow SrcID="5" SrcName="Value" DestID="10" DestName="A" />
+    <Flow SrcID="7" SrcName="Aggregate" DestID="6" DestName="Text" />
+    <Flow SrcID="7" SrcName="Obj1" DestID="5" DestName="A" />
+    <Flow SrcID="7" SrcName="Obj2" DestID="10" DestName="B" />
+    <Flow SrcID="8" SrcName="Value" DestID="7" DestName="Enumerable" />
+    <Flow SrcID="9" SrcName="Value" DestID="7" DestName="Seed" />
+    <Flow SrcID="10" SrcName="Value" DestID="7" DestName="Result" />
+    <Flow SrcID="11" SrcName="Start" DestID="6" DestName="In" />
+    <Flow SrcID="12" SrcName="Value" DestID="8" DestName="C" />
+    <Flow SrcID="3" SrcName="Value" DestID="8" DestName="D" />
+    <Flow SrcID="1" SrcName="Value" DestID="8" DestName="A" />
+    <Flow SrcID="2" SrcName="Value" DestID="8" DestName="B" />
+  </Flows>
+  <Comments />
+  <Scopes />
+</Root>

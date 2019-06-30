@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Effects FPS="60">
+   <Effect FilePath="cross.png" StartFrame="0" FrameLength="25">
+      <State X="0" Y="0" Alpha="0.35" Rotation="0" ScaleX="0.2" ScaleY="0.2" BezierPosition="0" />
+      <RatioMakers StartFrame="0" EndFrame="12">
+         <RatioMaker Type="X" MakerType="LinearRatioMaker" />
+         <RatioMaker Type="Y" MakerType="LinearRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="BezierRatioMaker" P1="VF=0 VS=1 VT=1 FDX=1 FDY=0 SX=0 SY=128 TDX=0.3721596 TDY=-0.9281688 FL=0 TL=63.28941" P2="VF=1 VS=1 VT=0 FDX=-0.9091961 FDY=0.4163683 SX=128 SY=0 TDX=0.8245563 TDY=-0.5657798 FL=67.75868 TL=21.20023" />
+         <RatioMaker Type="Rotation" MakerType="LinearRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="BezierRatioMaker" P1="VF=0 VS=1 VT=1 FDX=1 FDY=0 SX=0 SY=128 TDX=0.3721596 TDY=-0.9281688 FL=0 TL=63.28941" P2="VF=1 VS=1 VT=0 FDX=-0.9091961 FDY=0.4163683 SX=128 SY=0 TDX=0.8245563 TDY=-0.5657798 FL=67.75868 TL=21.20023" />
+         <RatioMaker Type="ScaleY" MakerType="BezierRatioMaker" P1="VF=0 VS=1 VT=1 FDX=1 FDY=0 SX=0 SY=128 TDX=0.3721596 TDY=-0.9281688 FL=0 TL=63.28941" P2="VF=1 VS=1 VT=0 FDX=-0.9091961 FDY=0.4163683 SX=128 SY=0 TDX=0.8245563 TDY=-0.5657798 FL=67.75868 TL=21.20023" />
+         <RatioMaker Type="BezierPosition" MakerType="LinearRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="0.1943184" Rotation="104" ScaleX="0.1" ScaleY="0.1" BezierPosition="0" />
+      <RatioMakers StartFrame="12" EndFrame="25">
+         <RatioMaker Type="X" MakerType="LinearRatioMaker" />
+         <RatioMaker Type="Y" MakerType="LinearRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="BezierRatioMaker" P1="VF=0 VS=1 VT=1 FDX=-0.8245563 FDY=0.5657799 SX=0 SY=128 TDX=0.5516346 TDY=-0.8340859 FL=39.06898 TL=66.42205" P2="VF=1 VS=1 VT=0 FDX=-0.8444237 FDY=0.5356758 SX=128 SY=0 TDX=1 TDY=0 FL=57.62774 TL=0" />
+         <RatioMaker Type="Rotation" MakerType="LinearRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="BezierRatioMaker" P1="VF=0 VS=1 VT=1 FDX=-0.8245563 FDY=0.5657799 SX=0 SY=128 TDX=0.5516346 TDY=-0.8340859 FL=39.06898 TL=66.42205" P2="VF=1 VS=1 VT=0 FDX=-0.8444237 FDY=0.5356758 SX=128 SY=0 TDX=1 TDY=0 FL=57.62774 TL=0" />
+         <RatioMaker Type="ScaleY" MakerType="BezierRatioMaker" P1="VF=0 VS=1 VT=1 FDX=-0.8245563 FDY=0.5657799 SX=0 SY=128 TDX=0.5516346 TDY=-0.8340859 FL=39.06898 TL=66.42205" P2="VF=1 VS=1 VT=0 FDX=-0.8444237 FDY=0.5356758 SX=128 SY=0 TDX=1 TDY=0 FL=57.62774 TL=0" />
+         <RatioMaker Type="BezierPosition" MakerType="LinearRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="0.1" Rotation="200" ScaleX="0" ScaleY="0" BezierPosition="0" />
+   </Effect>
+   <Effect FilePath="onpu.png" StartFrame="0" FrameLength="25">
+      <State X="0" Y="0" Alpha="0.5" Rotation="0" ScaleX="0.2" ScaleY="0.2" BezierPosition="0" />
+      <RatioMakers StartFrame="0" EndFrame="25">
+         <RatioMaker Type="X" MakerType="LinearRatioMaker" />
+         <RatioMaker Type="Y" MakerType="LinearRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="BezierRatioMaker" P1="VF=0 VS=1 VT=1 FDX=1 FDY=0 SX=0 SY=128 TDX=0.2585094 TDY=-0.9660088 FL=0 TL=73.4983" P2="VF=1 VS=1 VT=0 FDX=-0.9609725 FDY=0.2766436 SX=128 SY=0 TDX=1 TDY=0 FL=68.68042 TL=0" />
+         <RatioMaker Type="Rotation" MakerType="LinearRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="BezierRatioMaker" P1="VF=0 VS=1 VT=1 FDX=1 FDY=0 SX=0 SY=128 TDX=0.2585094 TDY=-0.9660088 FL=0 TL=73.4983" P2="VF=1 VS=1 VT=0 FDX=-0.9609725 FDY=0.2766436 SX=128 SY=0 TDX=1 TDY=0 FL=68.68042 TL=0" />
+         <RatioMaker Type="ScaleY" MakerType="BezierRatioMaker" P1="VF=0 VS=1 VT=1 FDX=1 FDY=0 SX=0 SY=128 TDX=0.2585094 TDY=-0.9660088 FL=0 TL=73.4983" P2="VF=1 VS=1 VT=0 FDX=-0.9609725 FDY=0.2766436 SX=128 SY=0 TDX=1 TDY=0 FL=68.68042 TL=0" />
+         <RatioMaker Type="BezierPosition" MakerType="LinearRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="0" Rotation="0" ScaleX="0.69" ScaleY="0.69" BezierPosition="0" />
+   </Effect>
+</Effects>

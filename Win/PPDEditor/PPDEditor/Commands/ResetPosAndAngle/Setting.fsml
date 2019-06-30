@@ -1,0 +1,82 @@
+<Root>
+  <Sources>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Misc.EntryPointFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Misc.EntryPointFlowSourceObject" ID="1" ShowAll="False" X="-434.5" Y="-419.5" />
+    <Source Name="FlowScriptEnginePPDEditor.FlowSourceObjects.Dialog.Setting.AddBoolFlowSourceObject" FullName="FlowScriptEnginePPDEditor.FlowSourceObjects.Dialog.Setting.AddBoolFlowSourceObject" ID="15" ShowAll="False" X="-162.5" Y="-157.5">
+      <Value Name="Description" Value="選択中のマークのみ" />
+    </Source>
+    <Source Name="FlowScriptEnginePPDEditor.FlowSourceObjects.Dialog.Setting.AddBoolFlowSourceObject" FullName="FlowScriptEnginePPDEditor.FlowSourceObjects.Dialog.Setting.AddBoolFlowSourceObject" ID="12" ShowAll="False" X="-163.5" Y="-305.5">
+      <Value Name="Description" Value="選択中のレイヤーのみ" />
+    </Source>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Logic.AnyFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Logic.AnyFlowSourceObject" ID="21" ShowAll="False" X="683.111111111111" Y="-490.79365079365" />
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Logic.AnyFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Logic.AnyFlowSourceObject" ID="23" ShowAll="False" X="682.405982905983" Y="-325.238095238094" />
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Object.EqualFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Object.EqualFlowSourceObject" ID="25" ShowAll="False" X="-10.9273504273507" Y="119.761904761906" />
+    <Source Name="FlowScriptEnginePPDEditor.FlowSourceObjects.Dialog.ShowFlowSourceObject" FullName="FlowScriptEnginePPDEditor.FlowSourceObjects.Dialog.ShowFlowSourceObject" ID="7" ShowAll="False" X="-161.5" Y="-6.5" />
+    <Source Name="FlowScriptEnginePPDEditor.FlowSourceObjects.MessageBox.ResultType.ValueFlowSourceObject" FullName="FlowScriptEnginePPDEditor.FlowSourceObjects.MessageBox.ResultType.ValueFlowSourceObject" ID="26" ShowAll="False" X="-395.094017094017" Y="142.261904761906">
+      <Value Name="Value" Value="OK" />
+    </Source>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.String.ValueFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.String.ValueFlowSourceObject" ID="13" ShowAll="False" X="-529.5" Y="-296.5">
+      <Value Name="Value" Value="OnlyForSelectedLayer" />
+    </Source>
+    <Source Name="FlowScriptEnginePPDEditor.FlowSourceObjects.Dialog.Setting.ValueFlowSourceObject" FullName="FlowScriptEnginePPDEditor.FlowSourceObjects.Dialog.Setting.ValueFlowSourceObject" ID="8" ShowAll="False" X="-164.5" Y="-419.5">
+      <Value Name="Title" Value="設定" />
+    </Source>
+    <Source Name="FlowScriptEnginePPDEditor.FlowSourceObjects.Storage.SetValueFlowSourceObject" FullName="FlowScriptEnginePPDEditor.FlowSourceObjects.Storage.SetValueFlowSourceObject" ID="28" ShowAll="False" X="573.166666666667" Y="-75.1666666666667" />
+    <Source Name="FlowScriptEnginePPDEditor.FlowSourceObjects.Storage.SetValueFlowSourceObject" FullName="FlowScriptEnginePPDEditor.FlowSourceObjects.Storage.SetValueFlowSourceObject" ID="30" ShowAll="False" X="577.166666666667" Y="63.5" />
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Logic.IfFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Logic.IfFlowSourceObject" ID="24" ShowAll="False" X="173.239316239316" Y="22.2619047619057" />
+    <Source Name="FlowScriptEnginePPDEditor.FlowSourceObjects.Dialog.Setting.GetValueFlowSourceObject" FullName="FlowScriptEnginePPDEditor.FlowSourceObjects.Dialog.Setting.GetValueFlowSourceObject" ID="27" ShowAll="False" X="176.166666666667" Y="107.833333333333" />
+    <Source Name="FlowScriptEnginePPDEditor.FlowSourceObjects.Dialog.Setting.GetValueFlowSourceObject" FullName="FlowScriptEnginePPDEditor.FlowSourceObjects.Dialog.Setting.GetValueFlowSourceObject" ID="29" ShowAll="False" X="177.166666666667" Y="186.833333333333" />
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Boolean.ParseFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Boolean.ParseFlowSourceObject" ID="20" ShowAll="False" X="473.666666666666" Y="-482.166666666666" />
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.String.ValueFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.String.ValueFlowSourceObject" ID="16" ShowAll="False" X="-527.333333333334" Y="-144.833333333333">
+      <Value Name="Value" Value="OnlyForSelectedMarks" />
+    </Source>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.String.ValueFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.String.ValueFlowSourceObject" ID="19" ShowAll="False" X="-602.761904761905" Y="-562.119047619047">
+      <Value Name="Value" Value="KHCMaster.ResetPosAndAngle" />
+    </Source>
+    <Source Name="FlowScriptEnginePPDEditor.FlowSourceObjects.Storage.GetValueFlowSourceObject" FullName="FlowScriptEnginePPDEditor.FlowSourceObjects.Storage.GetValueFlowSourceObject" ID="17" ShowAll="False" X="138.666666666666" Y="-587.5" />
+    <Source Name="FlowScriptEnginePPDEditor.FlowSourceObjects.Storage.GetValueFlowSourceObject" FullName="FlowScriptEnginePPDEditor.FlowSourceObjects.Storage.GetValueFlowSourceObject" ID="31" ShowAll="False" X="141.833333333333" Y="-502.5" />
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Boolean.ParseFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Boolean.ParseFlowSourceObject" ID="22" ShowAll="False" X="473.666666666667" Y="-381.349206349205" />
+  </Sources>
+  <Flows>
+    <Flow SrcID="1" SrcName="Start" DestID="8" DestName="In" />
+    <Flow SrcID="15" SrcName="Success" DestID="7" DestName="In" />
+    <Flow SrcID="12" SrcName="Success" DestID="22" DestName="In" />
+    <Flow SrcID="21" SrcName="Out" DestID="12" DestName="In" />
+    <Flow SrcID="23" SrcName="Out" DestID="15" DestName="In" />
+    <Flow SrcID="25" SrcName="Value" DestID="24" DestName="Condition" />
+    <Flow SrcID="7" SrcName="Success" DestID="24" DestName="In" />
+    <Flow SrcID="7" SrcName="Result" DestID="25" DestName="A" />
+    <Flow SrcID="26" SrcName="Value" DestID="25" DestName="B" />
+    <Flow SrcID="13" SrcName="Value" DestID="12" DestName="Key" />
+    <Flow SrcID="13" SrcName="Value" DestID="17" DestName="Key" />
+    <Flow SrcID="13" SrcName="Value" DestID="28" DestName="Key" />
+    <Flow SrcID="13" SrcName="Value" DestID="27" DestName="Key" />
+    <Flow SrcID="8" SrcName="Success" DestID="20" DestName="In" />
+    <Flow SrcID="8" SrcName="Value" DestID="12" DestName="Setting" />
+    <Flow SrcID="8" SrcName="Value" DestID="15" DestName="Setting" />
+    <Flow SrcID="8" SrcName="Value" DestID="7" DestName="Setting" />
+    <Flow SrcID="8" SrcName="Value" DestID="27" DestName="Setting" />
+    <Flow SrcID="8" SrcName="Value" DestID="29" DestName="Setting" />
+    <Flow SrcID="24" SrcName="OnTrue" DestID="28" DestName="In" />
+    <Flow SrcID="24" SrcName="OnTrue" DestID="30" DestName="In" />
+    <Flow SrcID="27" SrcName="Value" DestID="28" DestName="Value" />
+    <Flow SrcID="29" SrcName="Value" DestID="30" DestName="Value" />
+    <Flow SrcID="20" SrcName="Failed" DestID="21" DestName="In0" />
+    <Flow SrcID="20" SrcName="Success" DestID="21" DestName="In1" />
+    <Flow SrcID="20" SrcName="Result" DestID="12" DestName="Value" />
+    <Flow SrcID="16" SrcName="Value" DestID="15" DestName="Key" />
+    <Flow SrcID="16" SrcName="Value" DestID="29" DestName="Key" />
+    <Flow SrcID="16" SrcName="Value" DestID="30" DestName="Key" />
+    <Flow SrcID="16" SrcName="Value" DestID="31" DestName="Key" />
+    <Flow SrcID="19" SrcName="Value" DestID="17" DestName="StorageKey" />
+    <Flow SrcID="19" SrcName="Value" DestID="28" DestName="StorageKey" />
+    <Flow SrcID="19" SrcName="Value" DestID="30" DestName="StorageKey" />
+    <Flow SrcID="19" SrcName="Value" DestID="31" DestName="StorageKey" />
+    <Flow SrcID="17" SrcName="Value" DestID="20" DestName="Value" />
+    <Flow SrcID="31" SrcName="Value" DestID="22" DestName="Value" />
+    <Flow SrcID="22" SrcName="Failed" DestID="23" DestName="In0" />
+    <Flow SrcID="22" SrcName="Success" DestID="23" DestName="In1" />
+    <Flow SrcID="22" SrcName="Result" DestID="15" DestName="Value" />
+  </Flows>
+  <Comments />
+  <Scopes />
+</Root>

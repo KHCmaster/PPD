@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<Root Type="PPD\{lang:NormalScore}" Name="{lang:NormalScore}" Description="{lang:NormalScoreDescription}" IconPath="ProjectTemplates\Normal.png">
+   <SoundManager>
+      <Sounds>
+         <Sound>sound.wav</Sound>
+      </Sounds>
+      <Changes>
+         <Change>
+            <Time>$(Epsilon)</Time>
+            <Data>1,1,1,1,1,1,1,1,1,1</Data>
+         </Change>
+      </Changes>
+   </SoundManager>
+</Root>

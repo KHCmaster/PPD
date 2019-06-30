@@ -1,0 +1,6 @@
+﻿# You can set preset of review for each row.
+# The line starts with # or ; is ignored as comment.
+Very good score
+Enjoyable score
+Some part is hard to see
+Awful score

@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Rooms>
+  <!-- Room１つにつき１つの部屋が作成されます。 -->
+  <Room>
+    <!-- 使用するポート番号を指定します。同じポート番号は使えません。 -->
+    <Port>54321</Port>
+    <!-- サーバー（部屋）の情報をPPDサーバーに登録するか設定します。(True or False) -->
+    <RegisterToPPD>True</RegisterToPPD>
+    <!-- PPDサーバーに登録するときのユーザー名を設定します。 -->
+    <UserName>hogehoge</UserName>
+    <!-- PPDサーバーに登録するときのパスワードを設定します。（空ならパスワードなし） -->
+    <Password>password</Password>
+    <!-- PPDサーバーに登録するときの部屋名を設定します。 -->
+    <RoomName>テストルーム</RoomName>
+    <AllowedMods>
+      <!-- 許可されたModのIDを入力します。サーバーランキング非対応Modでもここに指定することで使用可能になります。 -->
+      <Mod>
+        <ID></ID>
+      </Mod>
+    </AllowedMods>
+  </Room>
+</Rooms>

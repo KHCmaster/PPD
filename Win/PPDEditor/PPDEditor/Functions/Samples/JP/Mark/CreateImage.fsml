@@ -1,0 +1,30 @@
+<Root>
+  <Sources>
+    <Source Name="FlowScriptEnginePPD.FlowSourceObjects.Mark.CreateImageAnyFlowSourceObject" FullName="FlowScriptEnginePPD.FlowSourceObjects.Mark.CreateImageAnyFlowSourceObject" ID="1" ShowAll="True" X="-417.5" Y="-76.25">
+      <Comment Text="マークの画像を作成、設定&#xA;Handled=Trueなので全てのマークの画像を設定する" />
+      <Value Name="Handled" Value="True" />
+    </Source>
+    <Source Name="FlowScriptEnginePPD.FlowSourceObjects.Graphics.Image.ValueFlowSourceObject" FullName="FlowScriptEnginePPD.FlowSourceObjects.Graphics.Image.ValueFlowSourceObject" ID="2" ShowAll="True" X="-5.25" Y="-96.5">
+      <Comment Text="画像を作成&#xA;センタリングが必要" />
+      <Value Name="IsCenter" Value="True" />
+      <Value Name="Path" Value="hoge.png" />
+      <Value Name="Position" Value="X:100 Y:100" />
+    </Source>
+    <Source Name="FlowScriptEnginePPD.FlowSourceObjects.Graphics.Image.ValueFlowSourceObject" FullName="FlowScriptEnginePPD.FlowSourceObjects.Graphics.Image.ValueFlowSourceObject" ID="3" ShowAll="True" X="0" Y="75">
+      <Comment Text="画像を作成&#xA;センタリングが必要" />
+      <Value Name="IsCenter" Value="True" />
+      <Value Name="Path" Value="hoge.png" />
+      <Value Name="Position" Value="X:100 Y:100" />
+    </Source>
+  </Sources>
+  <Flows>
+    <Flow SrcID="1" SrcName="Out" DestID="2" DestName="In" />
+    <Flow SrcID="1" SrcName="Out" DestID="3" DestName="In" />
+    <Flow SrcID="2" SrcName="Object" DestID="1" DestName="ColorMarkImage" />
+    <Flow SrcID="3" SrcName="Object" DestID="1" DestName="MarkImage" />
+  </Flows>
+  <Comments>
+    <Comment X="-190" Y="-210" Text="目的:マークの画像を差し替えます&#xA;仮定:リソースマネージャーのImageにhoge.pngを追加" />
+  </Comments>
+  <Scopes />
+</Root>

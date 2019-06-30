@@ -1,0 +1,168 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x64</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{D51828FC-C5C4-44E3-B8D9-C64EC73510CE}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>PPDMultiCommon</RootNamespace>
+    <AssemblyName>PPDMultiCommon</AssemblyName>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+    <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
+    <Prefer32Bit>false</Prefer32Bit>
+    <CodeAnalysisRuleSet>..\PPDCommon.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+    <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
+    <Prefer32Bit>false</Prefer32Bit>
+    <CodeAnalysisRuleSet>
+    </CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="MessagePack, Version=1.6.1.2, Culture=neutral, PublicKeyToken=b4a0369545f0a1be, processorArchitecture=MSIL">
+      <HintPath>..\packages\MessagePack.1.6.1.2\lib\net45\MessagePack.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.1.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Threading.Tasks.Extensions.4.3.0\lib\portable-net45+win8+wp8+wpa81\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ValueTuple, Version=4.0.1.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.3.0\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Data\CloseConnectReason.cs" />
+    <Compile Include="Data\ItemType.cs" />
+    <Compile Include="Data\MarkEvaluateTypeEx.cs" />
+    <Compile Include="Data\MethodType.cs" />
+    <Compile Include="Data\UserState.cs" />
+    <Compile Include="Model\AddEffectNetworkData.cs" />
+    <Compile Include="Model\AddEffectToPlayerNetworkData.cs" />
+    <Compile Include="Model\AddMessageNetworkData.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Model\AddPrivateMessageNetworkData.cs" />
+    <Compile Include="Model\AddUserNetworkData.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Model\ChangeEvaluateNetworkData.cs" />
+    <Compile Include="Model\ChangeLeaderNetworkData.cs" />
+    <Compile Include="Model\ChangeLifeNetworkData.cs" />
+    <Compile Include="Model\ChangeGameRuleNetworkData.cs" />
+    <Compile Include="Model\ChangeScoreNetworkData.cs" />
+    <Compile Include="Model\ChangeSongNetworkData.cs" />
+    <Compile Include="Model\ChangeUserStateNetworkData.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Model\CloseConnectNetworkData.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Model\CloseNetworkData.cs" />
+    <Compile Include="Model\DeleteUserNetworkData.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Model\FailedToCreateRoomNetworkData.cs" />
+    <Compile Include="Model\ForceStartNetworkData.cs" />
+    <Compile Include="Model\GameRule.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Model\GoToMenuNetworkData.cs" />
+    <Compile Include="Model\GoToPlayNetworkData.cs" />
+    <Compile Include="Model\GoToPlayPrepareNetworkData.cs" />
+    <Compile Include="Model\HasSongNetworkData.cs" />
+    <Compile Include="Data\ItemSupplyType.cs" />
+    <Compile Include="Model\JustGoToMenuNetworkData.cs" />
+    <Compile Include="Model\KickUserNetworkData.cs" />
+    <Compile Include="Model\MainGameLoadedNetworkData.cs" />
+    <Compile Include="Model\Message.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Model\NetworkData.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Model\OldProtocolNetworkData.cs" />
+    <Compile Include="Model\PingNetworkData.cs" />
+    <Compile Include="Model\PingUserNetworkData.cs" />
+    <Compile Include="Model\PlayMainGameNetworkData.cs" />
+    <Compile Include="Model\Result.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Model\SendResultNetworkData.cs" />
+    <Compile Include="Data\ResultSortType.cs" />
+    <Compile Include="Model\SendServerInfoNetworkData.cs" />
+    <Compile Include="Model\SendScoreListNetworkData.cs" />
+    <Compile Include="Model\SongInfo.cs" />
+    <Compile Include="Model\UserInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Model\UserPlayState.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Tcp\Client.cs" />
+    <Compile Include="Tcp\ConnectionBase.cs" />
+    <Compile Include="Tcp\Host.cs" />
+    <Compile Include="Tcp\Parser.cs" />
+    <Compile Include="Tcp\ReadInfo.cs" />
+    <Compile Include="Tcp\TcpByteReader.cs" />
+    <Compile Include="Web\CreateRoomExecutor.cs" />
+    <Compile Include="Web\DeleteRoomExecutor.cs" />
+    <Compile Include="Web\ExecutorBase.cs" />
+    <Compile Include="Web\GetRoomListExecutor.cs" />
+    <Compile Include="Web\HostExecutorBase.cs" />
+    <Compile Include="Web\PPDScoreInfo.cs" />
+    <Compile Include="Web\RoomInfo.cs" />
+    <Compile Include="Web\UpdateRoomInfoExecutor.cs" />
+    <Compile Include="Web\WebManager.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\PPDFrameworkCore\PPDFrameworkCore.csproj">
+      <Project>{97909DE9-E25A-43C5-8116-B5393D752132}</Project>
+      <Name>PPDFrameworkCore</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Analyzer Include="..\packages\MessagePackAnalyzer.1.6.0\analyzers\dotnet\cs\MessagePackAnalyzer.dll" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

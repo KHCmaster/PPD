@@ -1,0 +1,93 @@
+<Root>
+  <Sources>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Logic.AnyFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Logic.AnyFlowSourceObject" ID="16" ShowAll="True" X="-126.5" Y="-171" />
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Logic.AndFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Logic.AndFlowSourceObject" ID="31" ShowAll="True" X="-230" Y="60" />
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Logic.IfFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Logic.IfFlowSourceObject" ID="34" ShowAll="True" X="-40" Y="140" />
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Logic.NotFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Logic.NotFlowSourceObject" ID="19" ShowAll="True" X="240" Y="-140" />
+    <Source Name="FlowScriptEnginePPD.FlowSourceObjects.MovieTimeFlowSourceObject" FullName="FlowScriptEnginePPD.FlowSourceObjects.MovieTimeFlowSourceObject" ID="20" ShowAll="True" X="-560" Y="340" />
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Float.SubtractFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Float.SubtractFlowSourceObject" ID="21" ShowAll="True" X="-390" Y="320" />
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Float.LessFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Float.LessFlowSourceObject" ID="22" ShowAll="True" X="-230" Y="320">
+      <Value Name="B" Value="10" />
+    </Source>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Logic.AndFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Logic.AndFlowSourceObject" ID="23" ShowAll="True" X="-80" Y="320" />
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Logic.NotFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Logic.NotFlowSourceObject" ID="6" ShowAll="True" X="-90" Y="250" />
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Logic.AnyFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Logic.AnyFlowSourceObject" ID="35" ShowAll="False" X="0" Y="-70" />
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Scope.SetValueFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Scope.SetValueFlowSourceObject" ID="36" ShowAll="True" X="160" Y="240">
+      <Value Name="ValueName" Value="CreateLast" />
+    </Source>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Scope.GetValueFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Scope.GetValueFlowSourceObject" ID="32" ShowAll="True" X="-280" Y="400">
+      <Value Name="ValueName" Value="CreateLast" />
+    </Source>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Logic.NotFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Logic.NotFlowSourceObject" ID="33" ShowAll="True" X="0" Y="400" />
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Repeat.DoWhileFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Repeat.DoWhileFlowSourceObject" ID="25" ShowAll="True" X="-500" Y="-140" />
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Logic.SequentialFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Logic.SequentialFlowSourceObject" ID="7" ShowAll="True" X="-320" Y="-140" />
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Misc.EntryPointFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Misc.EntryPointFlowSourceObject" ID="4" ShowAll="True" X="-531.25" Y="-395" />
+    <Source Name="FlowScriptEnginePPD.FlowSourceObjects.Resource.ValueFlowSourceObject" FullName="FlowScriptEnginePPD.FlowSourceObjects.Resource.ValueFlowSourceObject" ID="3" ShowAll="True" X="-308.75" Y="-391.25">
+      <Comment Text="リソースを取得" />
+      <Value Name="Path" Value="layer.ppd" />
+    </Source>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Boolean.ValueFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Boolean.ValueFlowSourceObject" ID="27" ShowAll="True" X="-532.5" Y="-247.5" />
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Scope.SetValueFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Scope.SetValueFlowSourceObject" ID="26" ShowAll="True" X="-313.75" Y="-258.75">
+      <Comment Text="最後のマークを読み取ったかをfalseに" />
+      <Value Name="ValueName" Value="CreateLast" />
+    </Source>
+    <Source Name="FlowScriptEnginePPD.FlowSourceObjects.Mark.ReaderFlowSourceObject" FullName="FlowScriptEnginePPD.FlowSourceObjects.Mark.ReaderFlowSourceObject" ID="2" ShowAll="True" X="-10" Y="-330">
+      <Comment Text="読み取らせる" />
+    </Source>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Logic.IfFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Logic.IfFlowSourceObject" ID="18" ShowAll="True" X="230" Y="-290">
+      <Comment Text="成功したら次のマークを読んでおく" />
+    </Source>
+    <Source Name="FlowScriptEnginePPD.FlowSourceObjects.Mark.DynamicCreateFlowSourceObject" FullName="FlowScriptEnginePPD.FlowSourceObjects.Mark.DynamicCreateFlowSourceObject" ID="1" ShowAll="True" X="275" Y="-2.5">
+      <Comment Text="マークを作成" />
+    </Source>
+    <Source Name="FlowScriptEnginePPD.FlowSourceObjects.EveryFrameFlowSourceObject" FullName="FlowScriptEnginePPD.FlowSourceObjects.EveryFrameFlowSourceObject" ID="17" ShowAll="True" X="-620" Y="118.75">
+      <Comment Text="毎フレーム実行" />
+    </Source>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Logic.IfFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Logic.IfFlowSourceObject" ID="24" ShowAll="True" X="-362.5" Y="168.75" />
+  </Sources>
+  <Flows>
+    <Flow SrcID="16" SrcName="Out" DestID="2" DestName="Next" />
+    <Flow SrcID="31" SrcName="Value" DestID="34" DestName="Condition" />
+    <Flow SrcID="34" SrcName="OnTrue" DestID="35" DestName="In1" />
+    <Flow SrcID="34" SrcName="OnTrue" DestID="36" DestName="In" />
+    <Flow SrcID="19" SrcName="Value" DestID="18" DestName="Condition" />
+    <Flow SrcID="20" SrcName="Time" DestID="21" DestName="B" />
+    <Flow SrcID="21" SrcName="Value" DestID="22" DestName="A" />
+    <Flow SrcID="22" SrcName="Value" DestID="23" DestName="B" />
+    <Flow SrcID="22" SrcName="Value" DestID="25" DestName="Condition" />
+    <Flow SrcID="23" SrcName="Value" DestID="24" DestName="Condition" />
+    <Flow SrcID="6" SrcName="Value" DestID="23" DestName="A" />
+    <Flow SrcID="35" SrcName="Out" DestID="1" DestName="In" />
+    <Flow SrcID="32" SrcName="Value" DestID="33" DestName="Value" />
+    <Flow SrcID="33" SrcName="Value" DestID="31" DestName="B" />
+    <Flow SrcID="33" SrcName="Value" DestID="36" DestName="Value" />
+    <Flow SrcID="25" SrcName="Loop" DestID="7" DestName="In" />
+    <Flow SrcID="7" SrcName="Out0" DestID="35" DestName="In0" />
+    <Flow SrcID="7" SrcName="Out1" DestID="16" DestName="In1" />
+    <Flow SrcID="4" SrcName="Start" DestID="3" DestName="In" />
+    <Flow SrcID="4" SrcName="Start" DestID="26" DestName="In" />
+    <Flow SrcID="3" SrcName="Success" DestID="2" DestName="In" />
+    <Flow SrcID="3" SrcName="Value" DestID="2" DestName="Stream" />
+    <Flow SrcID="27" SrcName="Value" DestID="26" DestName="Value" />
+    <Flow SrcID="2" SrcName="Success" DestID="18" DestName="In" />
+    <Flow SrcID="2" SrcName="Angle" DestID="1" DestName="Angle" />
+    <Flow SrcID="2" SrcName="EndOfStream" DestID="6" DestName="Value" />
+    <Flow SrcID="2" SrcName="EndOfStream" DestID="19" DestName="Value" />
+    <Flow SrcID="2" SrcName="EndOfStream" DestID="31" DestName="A" />
+    <Flow SrcID="2" SrcName="EndTime" DestID="1" DestName="EndTime" />
+    <Flow SrcID="2" SrcName="IsLong" DestID="1" DestName="IsLong" />
+    <Flow SrcID="2" SrcName="MarkID" DestID="1" DestName="MarkID" />
+    <Flow SrcID="2" SrcName="MarkType" DestID="1" DestName="MarkType" />
+    <Flow SrcID="2" SrcName="Position" DestID="1" DestName="Position" />
+    <Flow SrcID="2" SrcName="Time" DestID="1" DestName="Time" />
+    <Flow SrcID="2" SrcName="Time" DestID="21" DestName="A" />
+    <Flow SrcID="18" SrcName="OnTrue" DestID="16" DestName="In0" />
+    <Flow SrcID="17" SrcName="Out" DestID="24" DestName="In" />
+    <Flow SrcID="17" SrcName="Out" DestID="34" DestName="In" />
+    <Flow SrcID="24" SrcName="OnTrue" DestID="25" DestName="In" />
+  </Flows>
+  <Comments>
+    <Comment X="-170" Y="-500" Text="目的:リソースのPPDファイルから動的にマークを追加します&#xA;仮定:リソースマネージャーのOthersにlayer.ppdを追加&#xA;ただし、layer.ppdはBase_Layersフォルダの中から持ってきたものに限る" />
+  </Comments>
+  <Scopes />
+</Root>

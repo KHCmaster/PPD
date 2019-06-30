@@ -1,0 +1,46 @@
+﻿<Window x:Class="PPDExpansion.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"  
+        xmlns:cmd="clr-namespace:GalaSoft.MvvmLight.Command;assembly=GalaSoft.MvvmLight.Extras"
+        xmlns:control="clr-namespace:PPDExpansion.Control"
+        xmlns:vm="clr-namespace:PPDExpansion.ViewModel"
+        xmlns:converter="clr-namespace:PPDExpansion.Converter"
+        xmlns:expansion="clr-namespace:PPDExpansion"
+        Title="{Binding Title}" Height="{Binding Height, Mode=TwoWay}" Width="{Binding Width, Mode= TwoWay}"
+        mc:Ignorable="d" d:DesignHeight="450" d:DesignWidth="800">
+    <Window.Resources>
+        <converter:VisibilityConverter x:Key="VisibilityConverter"/>
+        <Style x:Key="DockPanelStyle" TargetType="DockPanel">
+            <Setter Property="Background" Value="#03041a"/>
+        </Style>
+    </Window.Resources>
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Closed">
+            <cmd:EventToCommand Command="{Binding ClosedCommand}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+    <DockPanel Style="{StaticResource DockPanelStyle}">
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="{expansion:Translate File}">
+                <MenuItem Header="{expansion:Translate Exit}" Command="{Binding CloseCommand}"/>
+            </MenuItem>
+            <MenuItem Header="{expansion:Translate View}">
+                <MenuItem Header="{expansion:Translate ShowMyHighScore}" IsCheckable="True" IsChecked="{Binding ShowMyHighScore, Mode=TwoWay}"/>
+                <MenuItem Header="{expansion:Translate ShowWebHighScore}" IsCheckable="True" IsChecked="{Binding ShowWebHighScore, Mode=TwoWay}"/>
+                <MenuItem Header="{expansion:Translate ShowCurrentStatus}" IsCheckable="True" IsChecked="{Binding ShowCurrentStatus, Mode=TwoWay}"/>
+                <MenuItem Header="{expansion:Translate ShowGridLines}" IsCheckable="True" IsChecked="{Binding ShowGridLines, Mode=TwoWay}"/>
+                <MenuItem Header="{expansion:Translate ShowIIDXStyle}">
+                    <MenuItem Header="{expansion:Translate ShowIIDXStyle}" IsCheckable="True" IsChecked="{Binding ShowIIDXStyle, Mode=TwoWay}"/>
+                    <MenuItem Header="{expansion:Translate ShowScoreDiff}" IsCheckable="True" IsChecked="{Binding ShowScoreDiff, Mode=TwoWay}"/>
+                </MenuItem>
+            </MenuItem>
+        </Menu>
+        <Grid>
+            <control:SinglePlayControl DataContext="{Binding SinglePlayViewModel}" Visibility="{Binding MainWindowViewModel.IsMulti, Converter={StaticResource VisibilityConverter}, ConverterParameter=Invert}"/>
+            <control:MultiPlayControl DataContext="{Binding MultiPlayViewModel}" Visibility="{Binding MainWindowViewModel.IsMulti, Converter={StaticResource VisibilityConverter}}"/>
+        </Grid>
+    </DockPanel>
+</Window>

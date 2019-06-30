@@ -1,0 +1,283 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x64</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{E98B8449-A3D9-4420-A8BD-FA7553BE9938}</ProjectGuid>
+    <OutputType>library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>FlowScriptDrawControl</RootNamespace>
+    <AssemblyName>FlowScriptDrawControl</AssemblyName>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+    <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
+    <Prefer32Bit>false</Prefer32Bit>
+    <CodeAnalysisRuleSet>..\PPDCommon.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+    <Prefer32Bit>false</Prefer32Bit>
+    <CodeAnalysisRuleSet>
+    </CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="GalaSoft.MvvmLight, Version=4.4.32.39728, Culture=neutral, PublicKeyToken=eabbf6a5f5af5004, processorArchitecture=MSIL">
+      <HintPath>..\packages\MvvmLightLibs.4.4.32.7\lib\net45\GalaSoft.MvvmLight.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="GalaSoft.MvvmLight.Extras, Version=4.4.32.39728, Culture=neutral, PublicKeyToken=0e27b6f8be9b2ef7, processorArchitecture=MSIL">
+      <HintPath>..\packages\MvvmLightLibs.4.4.32.7\lib\net45\GalaSoft.MvvmLight.Extras.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\CommonServiceLocator.1.3\lib\portable-net4+sl5+netcore45+wpa81+wp8\Microsoft.Practices.ServiceLocation.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\MvvmLightLibs.4.4.32.7\lib\net45\System.Windows.Interactivity.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Command\AddBoundCommentBommand.cs" />
+    <Compile Include="Command\AddScopeCommand.cs" />
+    <Compile Include="Command\AddSelectableToScopeCommand.cs" />
+    <Compile Include="Command\BoundCommentCommandBase.cs" />
+    <Compile Include="Command\FlowCommand.cs" />
+    <Compile Include="Command\RemoveBoundCommentCommand.cs" />
+    <Compile Include="Command\RemoveScopeAndSelectablesCommand.cs" />
+    <Compile Include="Command\RemoveSelectableFromScopeCommand.cs" />
+    <Compile Include="Command\EditScopeCommandBase.cs" />
+    <Compile Include="Command\ScopeCommandBase.cs" />
+    <Compile Include="Control\ArrowControl.xaml.cs">
+      <DependentUpon>ArrowControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Command\AddCommentCommand.cs" />
+    <Compile Include="Command\AddFlowCommand.cs" />
+    <Compile Include="Command\AddSourceCommand.cs" />
+    <Compile Include="Command\ChangeValueCommand.cs" />
+    <Compile Include="Command\CommandBase.cs" />
+    <Compile Include="Command\CommandManager.cs" />
+    <Compile Include="Command\CommandSet.cs" />
+    <Compile Include="Command\MovePositionablesCommand.cs" />
+    <Compile Include="Command\RemoveFlowCommand.cs" />
+    <Compile Include="Command\RemoveSelectablesCommand.cs" />
+    <Compile Include="Control\BindedCommentControl.xaml.cs">
+      <DependentUpon>BindedCommentControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Control\ChangeSourceEventArgs.cs" />
+    <Compile Include="Control\CommentControl.xaml.cs">
+      <DependentUpon>CommentControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Control\CustomTextBlock.cs" />
+    <Compile Include="Control\CustomTextBox.cs" />
+    <Compile Include="Control\ErrorCommentControl.xaml.cs">
+      <DependentUpon>ErrorCommentControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Control\FlowAreaControl.IO.cs" />
+    <Compile Include="Control\PositionableControl.cs" />
+    <Compile Include="Control\ScopeControl.xaml.cs">
+      <DependentUpon>ScopeControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Control\SourceChangeLeftArrowControl.xaml.cs">
+      <DependentUpon>SourceChangeLeftArrowControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Control\SourceChangeRightArrowControl.xaml.cs">
+      <DependentUpon>SourceChangeRightArrowControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Converter\VisibilityConverter.cs" />
+    <Compile Include="Converter\ColorAlphaConverter.cs" />
+    <Compile Include="Dialog\ColorDialog.xaml.cs">
+      <DependentUpon>ColorDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Arrow.cs" />
+    <Compile Include="Model\Comment.cs" />
+    <Compile Include="Model\Connection.cs" />
+    <Compile Include="Model\ConnectionInfo.cs" />
+    <Compile Include="Model\CopyData.cs" />
+    <Compile Include="Model\IdManager.cs" />
+    <Compile Include="Model\Item.cs" />
+    <Compile Include="Model\ItemPositionManager.cs" />
+    <Compile Include="Model\MoveManager.cs" />
+    <Compile Include="Model\Positionable.cs" />
+    <Compile Include="Model\PositionAdjuster.cs" />
+    <Compile Include="Model\Scope.cs" />
+    <Compile Include="Model\ScopeChild.cs" />
+    <Compile Include="Model\ScopeJoinManager.cs" />
+    <Compile Include="Model\SearchResult.cs" />
+    <Compile Include="Model\Selectable.cs" />
+    <Compile Include="Model\Selection.cs" />
+    <Compile Include="Model\SelectionSerializer.cs" />
+    <Compile Include="Model\Source.cs" />
+    <Compile Include="Model\SelectableManager.cs" />
+    <Compile Include="Control\SelectableControl.cs" />
+    <Compile Include="Control\RegionSelectionControl.xaml.cs">
+      <DependentUpon>RegionSelectionControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Control\SourceHeaderDeltaControl.xaml.cs">
+      <DependentUpon>SourceHeaderDeltaControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Model\TextEditManager.cs" />
+    <Compile Include="Command\RemoveScopeCommand.cs" />
+    <Compile Include="Utility.cs" />
+    <Compile Include="Win32.cs" />
+    <Page Include="Control\ArrowControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Control\BindedCommentControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Control\CommentControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Control\ErrorCommentControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Control\RegionSelectionControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Control\ScopeControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Control\SourceChangeLeftArrowControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Control\SourceChangeRightArrowControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Control\SourceControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Control\SourceHeaderControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Control\SourceItemArrowControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Control\SourceItemControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Control\FlowAreaControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Control\SourceControl.xaml.cs">
+      <DependentUpon>SourceControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Control\SourceHeaderControl.xaml.cs">
+      <DependentUpon>SourceHeaderControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Control\SourceItemArrowControl.xaml.cs">
+      <DependentUpon>SourceItemArrowControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Control\SourceItemControl.xaml.cs">
+      <DependentUpon>SourceItemControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Control\FlowAreaControl.xaml.cs">
+      <DependentUpon>FlowAreaControl.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Page Include="Control\SourceHeaderDeltaControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialog\ColorDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <AppDesigner Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ColorCanvas\ColorCanvas.csproj">
+      <Project>{1DF4C1DD-25EF-4030-9B62-532F565F5722}</Project>
+      <Name>ColorCanvas</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\FlowScriptEngine\FlowScriptEngine.csproj">
+      <Project>{952271CD-8EAC-46BD-B32E-D5262D26B290}</Project>
+      <Name>FlowScriptEngine</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

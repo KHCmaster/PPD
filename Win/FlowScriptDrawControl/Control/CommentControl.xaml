@@ -1,0 +1,30 @@
+﻿<control:SelectableControl x:Class="FlowScriptDrawControl.Control.CommentControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:control="clr-namespace:FlowScriptDrawControl.Control"
+             FontSize="18" BorderThickness="1" BorderBrush="White" MinWidth="20" RenderTransform="{Binding Transform}">
+    <control:SelectableControl.Resources>
+        <Style x:Key="background" TargetType="{x:Type Grid}">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsSelected}" Value="False">
+                    <Setter Property="Background" Value="#FFFFFFDE"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding IsSelected}" Value="True">
+                    <Setter Property="Background" Value="#FFD2E6FA"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </control:SelectableControl.Resources>
+    <Grid Style="{StaticResource background}">
+        <StackPanel Orientation="Vertical">
+            <Rectangle Height="3" Fill="{Binding Scope.Brush}"/>
+            <Grid>
+                <control:CustomTextBlock x:Name="textBlock" MinWidth="20" CustomText="{Binding Text}"/>
+                <control:CustomTextBox MinWidth="20" x:Name="textBox" CustomText="{Binding Text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                               Padding="0" BorderThickness="0" AcceptsReturn="False" Foreground="Black"/>
+            </Grid>
+        </StackPanel>
+    </Grid>
+</control:SelectableControl>

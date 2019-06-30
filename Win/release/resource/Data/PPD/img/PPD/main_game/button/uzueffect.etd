@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Effects FPS="60">
+   <Effect FilePath="uzu.png" StartFrame="0" FrameLength="25">
+      <State X="0" Y="0" Alpha="1" Rotation="0" ScaleX="0" ScaleY="0" BezierPosition="0" />
+      <RatioMakers StartFrame="0" EndFrame="25">
+         <RatioMaker Type="X" MakerType="LinearRatioMaker" />
+         <RatioMaker Type="Y" MakerType="LinearRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="LinearRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="LinearRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="BezierRatioMaker" P1="VF=0 VS=1 VT=1 FDX=1 FDY=0 SX=0 SY=128 TDX=0.4374657 TDY=-0.8992351 FL=0 TL=82.29216" P2="VF=1 VS=1 VT=0 FDX=-0.8834621 FDY=0.4685026 SX=128 SY=0 TDX=1 TDY=0 FL=74.70609 TL=0" />
+         <RatioMaker Type="ScaleY" MakerType="BezierRatioMaker" P1="VF=0 VS=1 VT=1 FDX=1 FDY=0 SX=0 SY=128 TDX=0.4374657 TDY=-0.8992351 FL=0 TL=82.29216" P2="VF=1 VS=1 VT=0 FDX=-0.8834621 FDY=0.4685026 SX=128 SY=0 TDX=1 TDY=0 FL=74.70609 TL=0" />
+         <RatioMaker Type="BezierPosition" MakerType="LinearRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="1" Rotation="0" ScaleX="0.3" ScaleY="0.3" BezierPosition="0" />
+   </Effect>
+</Effects>

@@ -1,0 +1,112 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Effects FPS="60">
+   <EffectReference FilePath="greenflare.etd" StartFrame="0" FrameLength="118">
+      <State X="-48.61727" Y="34.08393" Alpha="1" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="0" EndFrame="57">
+         <RatioMaker Type="X" MakerType="LinearRatioMaker" />
+         <RatioMaker Type="Y" MakerType="LinearRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="LinearRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="LinearRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="LinearRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="LinearRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="BezierRatioMaker" P1="VF=0 VS=1 VT=1 FDX=1 FDY=0 SX=0 SY=128 TDX=0.9692105 TDY=-0.2462336 FL=0 TL=81.92501" P2="VF=1 VS=1 VT=0 FDX=-0.3343479 FDY=0.9424497 SX=128 SY=0 TDX=0.3434034 TDY=-0.939188 FL=59.84395 TL=2.067892" />
+      </RatioMakers>
+      <BezierPositions>
+         <BezierPosition Position="VF=1 VS=1 VT=1 FDX=0.8187463 FDY=-0.5741554 SX=-48.61727 SY=34.08393 TDX=-0.8187463 TDY=0.5741554 FL=44.93767 TL=44.93767" />
+         <BezierPosition Position="VF=1 VS=1 VT=1 FDX=0.5799831 FDY=0.8146285 SX=-110.4099 SY=27.37073 TDX=-0.5799829 TDY=-0.8146287 FL=11.28544 TL=6.905148" />
+         <BezierPosition Position="VF=1 VS=1 VT=1 FDX=-0.3346499 FDY=0.9423425 SX=-114.7564 SY=-4.673666 TDX=0.334649 TDY=-0.9423429 FL=15.19553 TL=2.185641" />
+      </BezierPositions>
+      <State X="-112.5153" Y="-9.79447" Alpha="1" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="57" EndFrame="58">
+         <RatioMaker Type="X" MakerType="LinearRatioMaker" />
+         <RatioMaker Type="Y" MakerType="LinearRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="LinearRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="LinearRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="LinearRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="LinearRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="BezierRatioMaker" P1="VF=0 VS=1 VT=1 FDX=-0.3434039 FDY=0.9391878 SX=0 SY=128 TDX=0.7133152 TDY=-0.7008433 FL=57.31017 TL=60.69823" P2="VF=1 VS=1 VT=0 FDX=-0.7011755 FDY=0.7129888 SX=128 SY=0 TDX=0.3813457 TDY=-0.9244325 FL=60.00766 TL=32.2476" />
+      </RatioMakers>
+      <BezierPositions>
+         <BezierPosition Position="VF=1 VS=1 VT=1 FDX=-0.3346499 FDY=0.9423425 SX=-114.7564 SY=-4.673666 TDX=0.334649 TDY=-0.9423429 FL=15.19553 TL=2.185641" />
+         <BezierPosition Position="VF=1 VS=1 VT=1 FDX=-0.4898944 FDY=0.8717818 SX=-111.8742 SY=-10.97763 TDX=0.489895 TDY=-0.8717814 FL=2.453364 TL=8.366677" />
+      </BezierPositions>
+      <State X="-21.01646" Y="-16.69407" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="58" EndFrame="118">
+         <RatioMaker Type="X" MakerType="LinearRatioMaker" />
+         <RatioMaker Type="Y" MakerType="LinearRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="LinearRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="LinearRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="LinearRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="LinearRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="BezierRatioMaker" P1="VF=0 VS=1 VT=1 FDX=-0.3813458 FDY=0.9244324 SX=0 SY=128 TDX=0.4252083 TDY=-0.9050955 FL=25.5468 TL=56.89082" P2="VF=1 VS=1 VT=0 FDX=-0.9761987 FDY=0.2168781 SX=128 SY=0 TDX=1 TDY=0 FL=93.32096 TL=0" />
+      </RatioMakers>
+      <BezierPositions>
+         <BezierPosition Position="VF=1 VS=1 VT=1 FDX=-0.4898948 FDY=0.8717815 SX=-111.8742 SY=-10.97763 TDX=0.489895 TDY=-0.8717814 FL=19.51021 TL=8.366677" />
+         <BezierPosition Position="VF=1 VS=1 VT=1 FDX=-0.8330377 FDY=0.5532162 SX=-89.34251 SY=-33.51747 TDX=0.8330379 TDY=-0.553216 FL=13.67502 TL=45.56375" />
+         <BezierPosition Position="VF=1 VS=1 VT=1 FDX=-0.5484219 FDY=-0.8362018 SX=-24.51351 SY=-23.05942 TDX=0.5484218 TDY=0.8362018 FL=15.78034 TL=15.78034" />
+         <BezierPosition Position="VF=1 VS=1 VT=1 FDX=0.8187463 FDY=-0.5741554 SX=-48.61727 SY=34.08393 TDX=-0.8187463 TDY=0.5741554 FL=44.93767 TL=44.93767" />
+      </BezierPositions>
+      <State X="-48.61727" Y="34.08393" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+   </EffectReference>
+   <Effect FilePath="loading.png" StartFrame="0" FrameLength="118">
+      <State X="0" Y="0" Alpha="1" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="0" EndFrame="118">
+         <RatioMaker Type="X" MakerType="LinearRatioMaker" />
+         <RatioMaker Type="Y" MakerType="LinearRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="LinearRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="LinearRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="LinearRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="LinearRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="LinearRatioMaker" />
+      </RatioMakers>
+      <State X="0" Y="0" Alpha="1" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+   </Effect>
+   <EffectReference FilePath="greenflare.etd" StartFrame="0" FrameLength="118">
+      <State X="-48.61727" Y="34.08393" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="0" EndFrame="57">
+         <RatioMaker Type="X" MakerType="LinearRatioMaker" />
+         <RatioMaker Type="Y" MakerType="LinearRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="LinearRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="LinearRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="LinearRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="LinearRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="BezierRatioMaker" P1="VF=0 VS=1 VT=1 FDX=1 FDY=0 SX=0 SY=128 TDX=0.9692105 TDY=-0.2462336 FL=0 TL=81.92501" P2="VF=1 VS=1 VT=0 FDX=-0.3343479 FDY=0.9424497 SX=128 SY=0 TDX=0.3434034 TDY=-0.939188 FL=59.84395 TL=2.067892" />
+      </RatioMakers>
+      <BezierPositions>
+         <BezierPosition Position="VF=1 VS=1 VT=1 FDX=0.8187463 FDY=-0.5741554 SX=-48.61727 SY=34.08393 TDX=-0.8187463 TDY=0.5741554 FL=44.93767 TL=44.93767" />
+         <BezierPosition Position="VF=1 VS=1 VT=1 FDX=0.5799831 FDY=0.8146285 SX=-110.4099 SY=27.37073 TDX=-0.5799829 TDY=-0.8146287 FL=11.28544 TL=6.905148" />
+         <BezierPosition Position="VF=1 VS=1 VT=1 FDX=-0.3346499 FDY=0.9423425 SX=-114.7564 SY=-4.673666 TDX=0.334649 TDY=-0.9423429 FL=15.19553 TL=2.185641" />
+      </BezierPositions>
+      <State X="-112.5153" Y="-9.79447" Alpha="0" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="57" EndFrame="58">
+         <RatioMaker Type="X" MakerType="LinearRatioMaker" />
+         <RatioMaker Type="Y" MakerType="LinearRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="LinearRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="LinearRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="LinearRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="LinearRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="BezierRatioMaker" P1="VF=0 VS=1 VT=1 FDX=-0.3434039 FDY=0.9391878 SX=0 SY=128 TDX=0.7133152 TDY=-0.7008433 FL=57.31017 TL=60.69823" P2="VF=1 VS=1 VT=0 FDX=-0.7011755 FDY=0.7129888 SX=128 SY=0 TDX=0.3813457 TDY=-0.9244325 FL=60.00766 TL=32.2476" />
+      </RatioMakers>
+      <BezierPositions>
+         <BezierPosition Position="VF=1 VS=1 VT=1 FDX=-0.3346499 FDY=0.9423425 SX=-114.7564 SY=-4.673666 TDX=0.334649 TDY=-0.9423429 FL=15.19553 TL=2.185641" />
+         <BezierPosition Position="VF=1 VS=1 VT=1 FDX=-0.4898944 FDY=0.8717818 SX=-111.8742 SY=-10.97763 TDX=0.489895 TDY=-0.8717814 FL=2.453364 TL=8.366677" />
+      </BezierPositions>
+      <State X="-21.01646" Y="-16.69407" Alpha="1" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+      <RatioMakers StartFrame="58" EndFrame="118">
+         <RatioMaker Type="X" MakerType="LinearRatioMaker" />
+         <RatioMaker Type="Y" MakerType="LinearRatioMaker" />
+         <RatioMaker Type="Alpha" MakerType="LinearRatioMaker" />
+         <RatioMaker Type="Rotation" MakerType="LinearRatioMaker" />
+         <RatioMaker Type="ScaleX" MakerType="LinearRatioMaker" />
+         <RatioMaker Type="ScaleY" MakerType="LinearRatioMaker" />
+         <RatioMaker Type="BezierPosition" MakerType="BezierRatioMaker" P1="VF=0 VS=1 VT=1 FDX=-0.3813458 FDY=0.9244324 SX=0 SY=128 TDX=0.4252083 TDY=-0.9050955 FL=25.5468 TL=56.89082" P2="VF=1 VS=1 VT=0 FDX=-0.9761987 FDY=0.2168781 SX=128 SY=0 TDX=1 TDY=0 FL=93.32096 TL=0" />
+      </RatioMakers>
+      <BezierPositions>
+         <BezierPosition Position="VF=1 VS=1 VT=1 FDX=-0.4898948 FDY=0.8717815 SX=-111.8742 SY=-10.97763 TDX=0.489895 TDY=-0.8717814 FL=19.51021 TL=8.366677" />
+         <BezierPosition Position="VF=1 VS=1 VT=1 FDX=-0.8330377 FDY=0.5532162 SX=-89.34251 SY=-33.51747 TDX=0.8330379 TDY=-0.553216 FL=13.67502 TL=45.56375" />
+         <BezierPosition Position="VF=1 VS=1 VT=1 FDX=-0.5484219 FDY=-0.8362018 SX=-24.51351 SY=-23.05942 TDX=0.5484218 TDY=0.8362018 FL=15.78034 TL=15.78034" />
+         <BezierPosition Position="VF=1 VS=1 VT=1 FDX=0.8187463 FDY=-0.5741554 SX=-48.61727 SY=34.08393 TDX=-0.8187463 TDY=0.5741554 FL=44.93767 TL=44.93767" />
+      </BezierPositions>
+      <State X="-48.61727" Y="34.08393" Alpha="1" Rotation="0" ScaleX="1" ScaleY="1" BezierPosition="0" />
+   </EffectReference>
+</Effects>

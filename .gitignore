@@ -1,0 +1,15 @@
+bin/
+obj/
+*.ncb
+*.user
+*.suo
+*.sdf
+*.opensdf
+/Win/release/releases
+/Win/release/x64
+Thumbs.db
+/Mono/*.userprefs
+/Win/.vs
+/Win/packages
+/Mono/packages
+/Mono/.vs

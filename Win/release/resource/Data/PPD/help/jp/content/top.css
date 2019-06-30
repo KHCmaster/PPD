@@ -1,0 +1,16 @@
+﻿body, input, select, textarea {
+    font-family: 'メイリオ',Meiryo,'ＭＳ Ｐゴシック','ヒラギノ角ゴ Pro W3','Hiragino Kaku Gothic Pro','Osaka',sans-serif;
+    font-size: 14px;
+}
+
+#logTable {
+   border-collapse: collapse;
+}
+
+#logTable, #logTable th, table#logTable td {
+   border: 1px solid #C0C0C0;
+}
+
+#logTable th {
+   background-color: #DEEFFF;
+}

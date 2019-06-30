@@ -1,0 +1,33 @@
+﻿<UserControl x:Class="FlowScriptDrawControl.Control.SourceItemControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:converter="clr-namespace:FlowScriptDrawControl.Converter"
+             xmlns:control="clr-namespace:FlowScriptDrawControl.Control" 
+             FontSize="16" 
+             MouseEnter="UserControl_MouseEnter" MouseLeave="UserControl_MouseLeave" 
+             MouseDown="UserControl_MouseDown" MouseUp="UserControl_MouseUp">
+    <UserControl.Resources>
+        <converter:VisibilityConverter x:Key="VisibilityConverter"/>
+    </UserControl.Resources>
+    <UserControl.ToolTip>
+        <StackPanel Orientation="Vertical">
+            <control:CustomTextBlock HorizontalAlignment="Left" CustomText="{Binding TypeText, StringFormat=[{0}]}"/>
+            <control:CustomTextBlock HorizontalAlignment="Left" CustomText="{Binding ToolTip}"/>
+        </StackPanel>
+    </UserControl.ToolTip>
+    <Grid Margin="2,0,2,2" Visibility="{Binding IsCollapsed, Converter={StaticResource VisibilityConverter}, ConverterParameter=Invert}">
+        <StackPanel x:Name="mainStack" Orientation="Horizontal">
+            <control:SourceItemArrowControl Visibility="{Binding IsOut, Converter={StaticResource VisibilityConverter}, ConverterParameter=Invert}"/>
+            <StackPanel Margin="0,2,0,0" Orientation="Horizontal" >
+                <control:CustomTextBlock VerticalAlignment="Center" CustomText="{Binding Name}"/>
+                <StackPanel Orientation="Horizontal" Visibility="{Binding IsPropertyValueShown, Converter={StaticResource VisibilityConverter}}">
+                    <control:CustomTextBlock CustomText="="/>
+                    <control:CustomTextBlock CustomText="{Binding Value}"/>
+                </StackPanel>
+            </StackPanel>
+            <control:SourceItemArrowControl Visibility="{Binding IsOut, Converter={StaticResource VisibilityConverter}}"/>
+        </StackPanel>
+    </Grid>
+</UserControl>

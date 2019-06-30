@@ -1,0 +1,99 @@
+﻿<Window x:Class="PPDEditorCommon.Dialog.NewProjectWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+        xmlns:cmd="clr-namespace:GalaSoft.MvvmLight.Command;assembly=GalaSoft.MvvmLight.Extras"
+        xmlns:PPDEditorCommon="clr-namespace:PPDEditorCommon"
+        Title="{PPDEditorCommon:Translate CPF}" MinHeight="300" MinWidth="500" Height="450" Width="740">
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <cmd:EventToCommand Command="{Binding LoadedCommand}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="160"/>
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Margin="10,5" Text="{PPDEditorCommon:Translate Template}"/>
+                <TreeView Grid.Row="1" Width="200" VerticalContentAlignment="Stretch" ItemsSource="{Binding Root.Children}">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="SelectedItemChanged">
+                            <cmd:EventToCommand Command="{Binding SelectedItemChangedCommand}" PassEventArgsToCommand="True" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                    <TreeView.ItemTemplate>
+                        <HierarchicalDataTemplate ItemsSource="{Binding Children}">
+                            <TextBlock Text="{Binding Text}"/>
+                        </HierarchicalDataTemplate>
+                    </TreeView.ItemTemplate>
+                    <TreeView.ItemContainerStyle>
+                        <Style TargetType="TreeViewItem">
+                            <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}"/>
+                            <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}"/>
+                        </Style>
+                    </TreeView.ItemContainerStyle>
+                </TreeView>
+            </Grid>
+            <ListView Grid.Column="1" ItemsSource="{Binding Templates}" SelectedItem="{Binding SelectedItem, Mode=TwoWay}" SelectionMode="Single">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <Image Width="32" Height="32" Source="{Binding Value.Image}"/>
+                            <TextBlock Margin="10,0,0,0" VerticalAlignment="Center" Text="{Binding Value.Name}"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}"/>
+                    </Style>
+                </ListView.ItemContainerStyle>
+            </ListView>
+            <TextBlock Margin="5" Grid.Column="2" Text="{Binding SelectedItem.Value.Description}" TextWrapping="Wrap" />
+        </Grid>
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Margin="10,0" Grid.Row="0" VerticalAlignment="Center" Grid.Column="0" Text="{PPDEditorCommon:Translate Name, StringFormat={}{0}:}"/>
+                <TextBlock Margin="10,0" Grid.Row="1" VerticalAlignment="Center" Grid.Column="0" Text="{PPDEditorCommon:Translate Location, StringFormat={}{0}:}"/>
+                <TextBlock Margin="10,0" Grid.Row="2" VerticalAlignment="Center" Grid.Column="0" Text="{PPDEditorCommon:Translate Movie, StringFormat={}{0}:}"/>
+                <TextBox x:Name="nameTextBox" Margin="0,2" Grid.Row="0" Grid.Column="1" Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBox Margin="0,2" Grid.Row="1" Grid.Column="1" Text="{Binding FolderPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBox Margin="0,2" Grid.Row="2" Grid.Column="1" Text="{Binding MoviePath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <Button Margin="10,0" Width="70" Height="24" Grid.Row="1" Grid.Column="2" Content="{PPDEditorCommon:Translate Refer}" Command="{Binding ReferLocationCommand}"/>
+                <Button Margin="10,0" Width="70" Height="24" Grid.Row="2" Grid.Column="2" Content="{PPDEditorCommon:Translate Refer}" Command="{Binding ReferMovieCommand}"/>
+            </Grid>
+            <StackPanel HorizontalAlignment="Right" Margin="0,5" Grid.Row="1" Orientation="Horizontal">
+                <TextBlock Foreground="Red" VerticalAlignment="Center" Text="{Binding ValidateResultMessage}"/>
+                <Button IsDefault="True" Width="70" Height="24" Margin="10,0" Content="OK" Command="{Binding OkCommand}" IsEnabled="{Binding IsOkEnabled}"/>
+                <Button IsCancel="True" Width="70" Height="24" Margin="10,0" Content="Cancel" Command="{Binding CancelCommand}"/>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Window>

@@ -1,0 +1,88 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29020.237
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlowScriptExec", "FlowScriptExec\FlowScriptExec.csproj", "{615EBAD6-C648-48F0-AD97-6FB77A5665CD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlowScriptEngine", "..\Win\FlowScriptEngine\FlowScriptEngine.csproj", "{952271CD-8EAC-46BD-B32E-D5262D26B290}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ErrorHandle", "..\Win\ErrorHandler\ErrorHandle.csproj", "{7BF2846D-6813-4E83-8B26-42C5B98B2099}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PPDFrameworkCore", "..\Win\PPDFrameworkCore\PPDFrameworkCore.csproj", "{97909DE9-E25A-43C5-8116-B5393D752132}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PPDMultiCommon", "..\Win\PPDMultiCommon\PPDMultiCommon.csproj", "{D51828FC-C5C4-44E3-B8D9-C64EC73510CE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PPDMultiServer", "..\Win\PPDMultiServer\PPDMultiServer.csproj", "{AA19D395-25AA-4DC7-B305-19051180E99E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PPDMultiServerService", "..\Win\PPDMultiServerService\PPDMultiServerService.csproj", "{AE6B8D3A-0174-484A-9AE1-838F708D66BB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlowScriptEngineBasic", "..\Win\FlowScriptEngineBasic\FlowScriptEngineBasic.csproj", "{B0C2F685-552B-4D65-B4DC-666088802067}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlowScriptEngineBasicExtension", "..\Win\FlowScriptEngineBasicExtension\FlowScriptEngineBasicExtension.csproj", "{F7005FCD-2A2B-4BE4-BB5D-903FA2D05CFB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlowScriptEngineConsole", "..\Win\FlowScriptEngineConsole\FlowScriptEngineConsole.csproj", "{102AEDF0-D202-44BD-A865-B5B66E3A25E3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlowScriptEngineData", "..\Win\FlowScriptEngineData\FlowScriptEngineData.csproj", "{B038AA36-D8BF-46A8-81C4-98C3B5B48821}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{615EBAD6-C648-48F0-AD97-6FB77A5665CD}.Debug|x64.ActiveCfg = Debug|x64
+		{615EBAD6-C648-48F0-AD97-6FB77A5665CD}.Debug|x64.Build.0 = Debug|x64
+		{615EBAD6-C648-48F0-AD97-6FB77A5665CD}.Release|x64.ActiveCfg = Release|x64
+		{615EBAD6-C648-48F0-AD97-6FB77A5665CD}.Release|x64.Build.0 = Release|x64
+		{952271CD-8EAC-46BD-B32E-D5262D26B290}.Debug|x64.ActiveCfg = Debug|x64
+		{952271CD-8EAC-46BD-B32E-D5262D26B290}.Debug|x64.Build.0 = Debug|x64
+		{952271CD-8EAC-46BD-B32E-D5262D26B290}.Release|x64.ActiveCfg = Release|x64
+		{952271CD-8EAC-46BD-B32E-D5262D26B290}.Release|x64.Build.0 = Release|x64
+		{7BF2846D-6813-4E83-8B26-42C5B98B2099}.Debug|x64.ActiveCfg = Debug|x64
+		{7BF2846D-6813-4E83-8B26-42C5B98B2099}.Debug|x64.Build.0 = Debug|x64
+		{7BF2846D-6813-4E83-8B26-42C5B98B2099}.Release|x64.ActiveCfg = Release|x64
+		{7BF2846D-6813-4E83-8B26-42C5B98B2099}.Release|x64.Build.0 = Release|x64
+		{97909DE9-E25A-43C5-8116-B5393D752132}.Debug|x64.ActiveCfg = Debug|x64
+		{97909DE9-E25A-43C5-8116-B5393D752132}.Debug|x64.Build.0 = Debug|x64
+		{97909DE9-E25A-43C5-8116-B5393D752132}.Release|x64.ActiveCfg = Release|x64
+		{97909DE9-E25A-43C5-8116-B5393D752132}.Release|x64.Build.0 = Release|x64
+		{D51828FC-C5C4-44E3-B8D9-C64EC73510CE}.Debug|x64.ActiveCfg = Debug|x64
+		{D51828FC-C5C4-44E3-B8D9-C64EC73510CE}.Debug|x64.Build.0 = Debug|x64
+		{D51828FC-C5C4-44E3-B8D9-C64EC73510CE}.Release|x64.ActiveCfg = Release|x64
+		{D51828FC-C5C4-44E3-B8D9-C64EC73510CE}.Release|x64.Build.0 = Release|x64
+		{AA19D395-25AA-4DC7-B305-19051180E99E}.Debug|x64.ActiveCfg = Debug|x64
+		{AA19D395-25AA-4DC7-B305-19051180E99E}.Debug|x64.Build.0 = Debug|x64
+		{AA19D395-25AA-4DC7-B305-19051180E99E}.Release|x64.ActiveCfg = Release|x64
+		{AA19D395-25AA-4DC7-B305-19051180E99E}.Release|x64.Build.0 = Release|x64
+		{AE6B8D3A-0174-484A-9AE1-838F708D66BB}.Debug|x64.ActiveCfg = Debug|x64
+		{AE6B8D3A-0174-484A-9AE1-838F708D66BB}.Debug|x64.Build.0 = Debug|x64
+		{AE6B8D3A-0174-484A-9AE1-838F708D66BB}.Release|x64.ActiveCfg = Release|x64
+		{AE6B8D3A-0174-484A-9AE1-838F708D66BB}.Release|x64.Build.0 = Release|x64
+		{B0C2F685-552B-4D65-B4DC-666088802067}.Debug|x64.ActiveCfg = Debug|x64
+		{B0C2F685-552B-4D65-B4DC-666088802067}.Debug|x64.Build.0 = Debug|x64
+		{B0C2F685-552B-4D65-B4DC-666088802067}.Release|x64.ActiveCfg = Release|x64
+		{B0C2F685-552B-4D65-B4DC-666088802067}.Release|x64.Build.0 = Release|x64
+		{F7005FCD-2A2B-4BE4-BB5D-903FA2D05CFB}.Debug|x64.ActiveCfg = Debug|x64
+		{F7005FCD-2A2B-4BE4-BB5D-903FA2D05CFB}.Debug|x64.Build.0 = Debug|x64
+		{F7005FCD-2A2B-4BE4-BB5D-903FA2D05CFB}.Release|x64.ActiveCfg = Release|x64
+		{F7005FCD-2A2B-4BE4-BB5D-903FA2D05CFB}.Release|x64.Build.0 = Release|x64
+		{102AEDF0-D202-44BD-A865-B5B66E3A25E3}.Debug|x64.ActiveCfg = Debug|x64
+		{102AEDF0-D202-44BD-A865-B5B66E3A25E3}.Debug|x64.Build.0 = Debug|x64
+		{102AEDF0-D202-44BD-A865-B5B66E3A25E3}.Release|x64.ActiveCfg = Release|x64
+		{102AEDF0-D202-44BD-A865-B5B66E3A25E3}.Release|x64.Build.0 = Release|x64
+		{B038AA36-D8BF-46A8-81C4-98C3B5B48821}.Debug|x64.ActiveCfg = Debug|x64
+		{B038AA36-D8BF-46A8-81C4-98C3B5B48821}.Debug|x64.Build.0 = Debug|x64
+		{B038AA36-D8BF-46A8-81C4-98C3B5B48821}.Release|x64.ActiveCfg = Release|x64
+		{B038AA36-D8BF-46A8-81C4-98C3B5B48821}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {712D626A-C03E-4C3E-A256-9878EF6342EA}
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = FlowScriptExec\FlowScriptExec.csproj
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,2196 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="BPM_CurrentBPM" xml:space="preserve">
+    <value>現在のBPMを取得、設定します。TargetBPMにも設定されます。</value>
+  </data>
+  <data name="BPM_SetCurrentBPM" xml:space="preserve">
+    <value>現在のBPMを設定します</value>
+  </data>
+  <data name="BPM_SetTargetBPM" xml:space="preserve">
+    <value>最終的なBPMを設定します</value>
+  </data>
+  <data name="BPM_Summary" xml:space="preserve">
+    <value>BPMを変更します。CurrentBPMとTargetBPMが異なる場合毎フレーム1ずつ差がなくなります</value>
+  </data>
+  <data name="BPM_TargetBPM" xml:space="preserve">
+    <value>最終的なBPMを取得、設定します。</value>
+  </data>
+  <data name="ChildAt_Index" xml:space="preserve">
+    <value>インデックスを指定します</value>
+  </data>
+  <data name="ChildAt_Parent" xml:space="preserve">
+    <value>親要素を指定します</value>
+  </data>
+  <data name="ChildAt_Summary" xml:space="preserve">
+    <value>ParentのIndexにある子要素を取得します</value>
+  </data>
+  <data name="ChildAt_Value" xml:space="preserve">
+    <value>子要素を取得します</value>
+  </data>
+  <data name="ContainsChild_Child" xml:space="preserve">
+    <value>子要素です</value>
+  </data>
+  <data name="ContainsChild_Parent" xml:space="preserve">
+    <value>親要素です</value>
+  </data>
+  <data name="ContainsChild_Summary" xml:space="preserve">
+    <value>ParentがChildを子要素として含むかどうかを返します</value>
+  </data>
+  <data name="ContainsChild_Value" xml:space="preserve">
+    <value>含むかどうかを取得します</value>
+  </data>
+  <data name="DisableInput_Button" xml:space="preserve">
+    <value>対象のボタンです</value>
+  </data>
+  <data name="DisableInput_IsDisabled" xml:space="preserve">
+    <value>無効にするかどうかです</value>
+  </data>
+  <data name="DisableInput_Summary" xml:space="preserve">
+    <value>特定の入力ボタンを無効化します</value>
+  </data>
+  <data name="Effect_Object" xml:space="preserve">
+    <value>エフェクトを指定します</value>
+  </data>
+  <data name="Effect_Pause_Summary" xml:space="preserve">
+    <value>エフェクトを一時停止します</value>
+  </data>
+  <data name="Effect_Play_PlayType" xml:space="preserve">
+    <value>再生タイプを指定します</value>
+  </data>
+  <data name="Effect_Play_Summary" xml:space="preserve">
+    <value>エフェクトを再生します</value>
+  </data>
+  <data name="Effect_Stop_Summary" xml:space="preserve">
+    <value>エフェクトを停止します</value>
+  </data>
+  <data name="Effect_Value_In" xml:space="preserve">
+    <value>オブジェクトを生成します</value>
+  </data>
+  <data name="Effect_Value_Object" xml:space="preserve">
+    <value>生成されたオブジェクトです</value>
+  </data>
+  <data name="Effect_Value_Path" xml:space="preserve">
+    <value>エフェクトのパスを指定します</value>
+  </data>
+  <data name="Effect_Value_Position" xml:space="preserve">
+    <value>初期位置を指定します</value>
+  </data>
+  <data name="Effect_Value_Summary" xml:space="preserve">
+    <value>エフェクト表示オブジェクトを生成します</value>
+  </data>
+  <data name="Environment_Value_AccountId" xml:space="preserve">
+    <value>ログインしている場合にユーザーのアカウントIDを取得します</value>
+  </data>
+  <data name="Environment_Value_DrawSameColorAtSameTimingDisabled" xml:space="preserve">
+    <value>同時押しのマークを同じ色にする機能を無効化するかどうかを取得します</value>
+  </data>
+  <data name="Environment_Value_FontSize" xml:space="preserve">
+    <value>フォントサイズを取得します</value>
+  </data>
+  <data name="Environment_Value_IsLogined" xml:space="preserve">
+    <value>ログインしているかどうかを取得します</value>
+  </data>
+  <data name="Environment_Value_MonitorLatency" xml:space="preserve">
+    <value>モニタ遅延の設定値を取得します</value>
+  </data>
+  <data name="Environment_Value_MovieLatency" xml:space="preserve">
+    <value>動画遅延の設定値を取得します</value>
+  </data>
+  <data name="Environment_Value_Summary" xml:space="preserve">
+    <value>環境の変数の値を取得します</value>
+  </data>
+  <data name="Environment_Value_UserName" xml:space="preserve">
+    <value>ログインしている場合にユーザー名を取得します</value>
+  </data>
+  <data name="Environment_Value_WindowHeight" xml:space="preserve">
+    <value>現在のウィンドウの高さを取得します</value>
+  </data>
+  <data name="Environment_Value_WindowWidth" xml:space="preserve">
+    <value>現在のウィンドウの幅を取得します</value>
+  </data>
+  <data name="EvaluateType_Value_Summary" xml:space="preserve">
+    <value>マークの評価を取得、設定します</value>
+  </data>
+  <data name="EvaluateType_Value_Value" xml:space="preserve">
+    <value>マークの評価を取得、設定します</value>
+  </data>
+  <data name="EveryFrame_Out" xml:space="preserve">
+    <value>毎フレーム実行されるイベントです</value>
+  </data>
+  <data name="EveryFrame_Summary" xml:space="preserve">
+    <value>毎フレーム実行されます</value>
+  </data>
+  <data name="Execute_Failed" xml:space="preserve">
+    <value>失敗したときに呼ばれるイベントです</value>
+  </data>
+  <data name="Execute_In" xml:space="preserve">
+    <value>実行します</value>
+  </data>
+  <data name="Execute_Success" xml:space="preserve">
+    <value>成功したときに呼ばれるイベントです</value>
+  </data>
+  <data name="GameResult_GainCurrentCombo_Gain" xml:space="preserve">
+    <value>増やす数です</value>
+  </data>
+  <data name="GameResult_GainCurrentCombo_Summary" xml:space="preserve">
+    <value>現在のコンボを増やします</value>
+  </data>
+  <data name="GameResult_GainCurrentLife_Gain" xml:space="preserve">
+    <value>増やす数です</value>
+  </data>
+  <data name="GameResult_GainCurrentLife_Summary" xml:space="preserve">
+    <value>現在のライフを増やします</value>
+  </data>
+  <data name="GameResult_GainCurrentScore_Gain" xml:space="preserve">
+    <value>増やす数です</value>
+  </data>
+  <data name="GameResult_GainCurrentScore_Summary" xml:space="preserve">
+    <value>現在のスコアを増やします</value>
+  </data>
+  <data name="GameResult_GainEvaluateCount_Evaluate" xml:space="preserve">
+    <value>増やす評価です</value>
+  </data>
+  <data name="GameResult_GainEvaluateCount_Gain" xml:space="preserve">
+    <value>増やす数です</value>
+  </data>
+  <data name="GameResult_GainEvaluateCount_Summary" xml:space="preserve">
+    <value>評価の数を増やします</value>
+  </data>
+  <data name="GameResult_SetSuspendFinish_Summary" xml:space="preserve">
+    <value>ライフが0になって終了する処理を一時的に保留します</value>
+  </data>
+  <data name="GameResult_SetSuspendFinish_Value" xml:space="preserve">
+    <value>保留するかどうかです</value>
+  </data>
+  <data name="GameResult_Value_CoolCount" xml:space="preserve">
+    <value>COOLのカウントを取得します</value>
+  </data>
+  <data name="GameResult_Value_CurrentCombo" xml:space="preserve">
+    <value>現在のコンボ数を取得します</value>
+  </data>
+  <data name="GameResult_Value_CurrentLife" xml:space="preserve">
+    <value>現在のライフを取得します</value>
+  </data>
+  <data name="GameResult_Value_CurrentScore" xml:space="preserve">
+    <value>現在のスコアを取得します</value>
+  </data>
+  <data name="GameResult_Value_Died" xml:space="preserve">
+    <value>死んだときのイベントです</value>
+  </data>
+  <data name="GameResult_Value_GoodCount" xml:space="preserve">
+    <value>GOODのカウントを取得します</value>
+  </data>
+  <data name="GameResult_Value_HoldBonus" xml:space="preserve">
+    <value>ホールドボーナスの合計を取得します</value>
+  </data>
+  <data name="GameResult_Value_MaxCombo" xml:space="preserve">
+    <value>最大のコンボ数を取得します</value>
+  </data>
+  <data name="GameResult_Value_MaxLife" xml:space="preserve">
+    <value>ライフの最大値を取得します</value>
+  </data>
+  <data name="GameResult_Value_MinLife" xml:space="preserve">
+    <value>ライフの最小値を取得します</value>
+  </data>
+  <data name="GameResult_Value_SadCount" xml:space="preserve">
+    <value>SADのカウントを取得します</value>
+  </data>
+  <data name="GameResult_Value_SafeCount" xml:space="preserve">
+    <value>SAFEのカウントを取得します</value>
+  </data>
+  <data name="GameResult_Value_Summary" xml:space="preserve">
+    <value>ゲームの状態を取得します</value>
+  </data>
+  <data name="GameResult_Value_WorstCount" xml:space="preserve">
+    <value>WORSTをカウントを取得します</value>
+  </data>
+  <data name="Graphics_AddChild_Child" xml:space="preserve">
+    <value>子要素です</value>
+  </data>
+  <data name="Graphics_AddChild_Parent" xml:space="preserve">
+    <value>親要素です</value>
+  </data>
+  <data name="Graphics_AddChild_Summary" xml:space="preserve">
+    <value>ParentにChildを追加します</value>
+  </data>
+  <data name="Graphics_ChildrenCount_Object" xml:space="preserve">
+    <value>取得する描画オブジェクトを指定します</value>
+  </data>
+  <data name="Graphics_ChildrenCount_Summary" xml:space="preserve">
+    <value>子要素の数を取得します</value>
+  </data>
+  <data name="Graphics_ChildrenCount_Value" xml:space="preserve">
+    <value>子要素子の数です</value>
+  </data>
+  <data name="Graphics_ClearChildren_Object" xml:space="preserve">
+    <value>対象の描画オブジェクトを指定します</value>
+  </data>
+  <data name="Graphics_ClearChildren_Summary" xml:space="preserve">
+    <value>子要素を全て取り除きます</value>
+  </data>
+  <data name="Graphics_GameInterface_ComboLayer" xml:space="preserve">
+    <value>コンボのレイヤーを取得します</value>
+  </data>
+  <data name="Graphics_GameInterface_ConnectLayer" xml:space="preserve">
+    <value>マークのコネクトのレイヤーを取得します</value>
+  </data>
+  <data name="Graphics_GameInterface_HoldLayer" xml:space="preserve">
+    <value>ホールドのレイヤーを取得します</value>
+  </data>
+  <data name="Graphics_GameInterface_MarkEffectLayer" xml:space="preserve">
+    <value>マークのエフェクトのレイヤーを取得します</value>
+  </data>
+  <data name="Graphics_GameInterface_MarkLayer" xml:space="preserve">
+    <value>マークのレイヤーを取得します</value>
+  </data>
+  <data name="Graphics_GameInterface_Summary" xml:space="preserve">
+    <value>ゲームのインターフェースを取得します</value>
+  </data>
+  <data name="Graphics_GameInterface_Value" xml:space="preserve">
+    <value>インターフェースの描画オブジェクトです</value>
+  </data>
+  <data name="Graphics_Movie_Length_Summary" xml:space="preserve">
+    <value>動画の長さを取得します</value>
+  </data>
+  <data name="Graphics_Movie_Length_Value" xml:space="preserve">
+    <value>動画の長さです</value>
+  </data>
+  <data name="Graphics_Movie_Pause_Summary" xml:space="preserve">
+    <value>動画を一時停止します</value>
+  </data>
+  <data name="Graphics_Movie_Play_Summary" xml:space="preserve">
+    <value>動画を再生します</value>
+  </data>
+  <data name="Graphics_Movie_Position_Summary" xml:space="preserve">
+    <value>動画の位置を取得します</value>
+  </data>
+  <data name="Graphics_Movie_Position_Value" xml:space="preserve">
+    <value>動画の位置です</value>
+  </data>
+  <data name="Graphics_Movie_Seek_Summary" xml:space="preserve">
+    <value>動画をシークします</value>
+  </data>
+  <data name="Graphics_Movie_Seek_Time" xml:space="preserve">
+    <value>シーク後の時間です</value>
+  </data>
+  <data name="Graphics_Movie_Stop_Summary" xml:space="preserve">
+    <value>動作を停止します</value>
+  </data>
+  <data name="Graphics_Object" xml:space="preserve">
+    <value>対象の描画オブジェクトを指定します</value>
+  </data>
+  <data name="Graphics_Rectangle_SetColor_Color" xml:space="preserve">
+    <value>色を指定します</value>
+  </data>
+  <data name="Graphics_Rectangle_SetColor_Object" xml:space="preserve">
+    <value>設定対象の矩形オブジェクトを指定します</value>
+  </data>
+  <data name="Graphics_Rectangle_SetColor_Summary" xml:space="preserve">
+    <value>矩形の色を設定します</value>
+  </data>
+  <data name="Graphics_Rectangle_SetHeight_Height" xml:space="preserve">
+    <value>高さを指定します</value>
+  </data>
+  <data name="Graphics_Rectangle_SetHeight_Object" xml:space="preserve">
+    <value>設定対象の矩形オブジェクトを指定します</value>
+  </data>
+  <data name="Graphics_Rectangle_SetHeight_Summary" xml:space="preserve">
+    <value>矩形の高さを設定します</value>
+  </data>
+  <data name="Graphics_Rectangle_SetWidth_Object" xml:space="preserve">
+    <value>設定対象の矩形オブジェクトを指定します</value>
+  </data>
+  <data name="Graphics_Rectangle_SetWidth_Summary" xml:space="preserve">
+    <value>矩形の幅を設定します</value>
+  </data>
+  <data name="Graphics_Rectangle_SetWidth_Width" xml:space="preserve">
+    <value>幅を指定します</value>
+  </data>
+  <data name="Graphics_Rectangle_Value_Color" xml:space="preserve">
+    <value>色を指定します</value>
+  </data>
+  <data name="Graphics_Rectangle_Value_Height" xml:space="preserve">
+    <value>高さを指定します</value>
+  </data>
+  <data name="Graphics_Rectangle_Value_Object" xml:space="preserve">
+    <value>生成された矩形オブジェクトです</value>
+  </data>
+  <data name="Graphics_Rectangle_Value_Summary" xml:space="preserve">
+    <value>矩形オブジェクトを生成します</value>
+  </data>
+  <data name="Graphics_Rectangle_Value_Width" xml:space="preserve">
+    <value>幅を指定します</value>
+  </data>
+  <data name="Graphics_RemoveChild_Child" xml:space="preserve">
+    <value>子要素です</value>
+  </data>
+  <data name="Graphics_RemoveChild_Parent" xml:space="preserve">
+    <value>親要素です</value>
+  </data>
+  <data name="Graphics_RemoveChild_Summary" xml:space="preserve">
+    <value>ParentからChildを取り除きます</value>
+  </data>
+  <data name="Graphics_RemoveFromParent_Child" xml:space="preserve">
+    <value>対象の描画オブジェクトを指定します</value>
+  </data>
+  <data name="Graphics_RemoveFromParent_In" xml:space="preserve">
+    <value>取り除きます</value>
+  </data>
+  <data name="Graphics_RemoveFromParent_Summary" xml:space="preserve">
+    <value>Childをその親要素から取り除きます</value>
+  </data>
+  <data name="Graphics_SetAlpha_Alpha" xml:space="preserve">
+    <value>透過度です</value>
+  </data>
+  <data name="Graphics_SetAlpha_Summary" xml:space="preserve">
+    <value>透過度を設定します</value>
+  </data>
+  <data name="Graphics_SetHidden_Hidden" xml:space="preserve">
+    <value>非表示かどうかを指定します</value>
+  </data>
+  <data name="Graphics_SetHidden_Summary" xml:space="preserve">
+    <value>非表示を設定します</value>
+  </data>
+  <data name="Graphics_SetPosition_Position" xml:space="preserve">
+    <value>表示位置を指定します</value>
+  </data>
+  <data name="Graphics_SetPosition_Summary" xml:space="preserve">
+    <value>表示位置を設定します</value>
+  </data>
+  <data name="Graphics_SetRotationCenter_RotationCenter" xml:space="preserve">
+    <value>回転の中心です</value>
+  </data>
+  <data name="Graphics_SetRotationCenter_Summary" xml:space="preserve">
+    <value>回転の中心を設定します</value>
+  </data>
+  <data name="Graphics_SetRotation_Rotation" xml:space="preserve">
+    <value>回転角です</value>
+  </data>
+  <data name="Graphics_SetRotation_Summary" xml:space="preserve">
+    <value>回転角を設定します</value>
+  </data>
+  <data name="Graphics_SetScaleCenter_ScaleCenter" xml:space="preserve">
+    <value>拡大の中心です</value>
+  </data>
+  <data name="Graphics_SetScaleCenter_Summary" xml:space="preserve">
+    <value>拡大の中心を設定します</value>
+  </data>
+  <data name="Graphics_SetScale_Scale" xml:space="preserve">
+    <value>拡大率を指定します</value>
+  </data>
+  <data name="Graphics_SetScale_Summary" xml:space="preserve">
+    <value>拡大率を設定します</value>
+  </data>
+  <data name="Graphics_Value_Alpha" xml:space="preserve">
+    <value>透過度を取得します</value>
+  </data>
+  <data name="Graphics_Value_Hidden" xml:space="preserve">
+    <value>非表示かどうかを取得します</value>
+  </data>
+  <data name="Graphics_Value_Position" xml:space="preserve">
+    <value>表示位置を取得します</value>
+  </data>
+  <data name="Graphics_Value_Rotation" xml:space="preserve">
+    <value>回転角を取得します</value>
+  </data>
+  <data name="Graphics_Value_RotationCenter" xml:space="preserve">
+    <value>回転の中心位置を取得します</value>
+  </data>
+  <data name="Graphics_Value_Scale" xml:space="preserve">
+    <value>拡大率を取得します</value>
+  </data>
+  <data name="Graphics_Value_ScaleCenter" xml:space="preserve">
+    <value>拡大の中心位置を取得します</value>
+  </data>
+  <data name="Graphics_Value_Summary" xml:space="preserve">
+    <value>画像描画オブジェクトの状態を取得します</value>
+  </data>
+  <data name="Graphics_Value_Value" xml:space="preserve">
+    <value>画像描画オブジェクトを取得、設定します</value>
+  </data>
+  <data name="Hold_Change" xml:space="preserve">
+    <value>ホールドの状態が変化したときのイベントです</value>
+  </data>
+  <data name="Hold_CurrentHoldScore" xml:space="preserve">
+    <value>現在のホールドのスコアを取得します</value>
+  </data>
+  <data name="Hold_End" xml:space="preserve">
+    <value>ホールドが終了したときのイベントです</value>
+  </data>
+  <data name="Hold_HoldMarks" xml:space="preserve">
+    <value>ホールドされているマークの種類を取得します</value>
+  </data>
+  <data name="Hold_MaxHold" xml:space="preserve">
+    <value>最大ホールドが達成されたときのイベントです</value>
+  </data>
+  <data name="Hold_MaxHoldBonus" xml:space="preserve">
+    <value>最大ホールドのスコアを取得します</value>
+  </data>
+  <data name="Hold_Start" xml:space="preserve">
+    <value>ホールドが開始されたときのイベントです</value>
+  </data>
+  <data name="Hold_Summary" xml:space="preserve">
+    <value>ホールドの情報を扱います</value>
+  </data>
+  <data name="Image_SetRect" xml:space="preserve">
+    <value>画像の表示する矩形を設定します</value>
+  </data>
+  <data name="Image_SetRect_Height" xml:space="preserve">
+    <value>高さを指定します</value>
+  </data>
+  <data name="Image_SetRect_Object" xml:space="preserve">
+    <value>対象の画像描画オブジェクトを指定します</value>
+  </data>
+  <data name="Image_SetRect_Width" xml:space="preserve">
+    <value>幅を指定します</value>
+  </data>
+  <data name="Image_SetRect_X" xml:space="preserve">
+    <value>X方向の位置を指定します</value>
+  </data>
+  <data name="Image_SetRect_Y" xml:space="preserve">
+    <value>Y方向の位置を指定します</value>
+  </data>
+  <data name="Image_Value_In" xml:space="preserve">
+    <value>オブジェクトを生成します</value>
+  </data>
+  <data name="Image_Value_IsCenter" xml:space="preserve">
+    <value>画像の中心を座標の中心にするかどうかを設定します</value>
+  </data>
+  <data name="Image_Value_Object" xml:space="preserve">
+    <value>生成されたオブジェクトです</value>
+  </data>
+  <data name="Image_Value_Path" xml:space="preserve">
+    <value>画像のパスです</value>
+  </data>
+  <data name="Image_Value_Position" xml:space="preserve">
+    <value>初期位置を指定します</value>
+  </data>
+  <data name="Image_Value_Summary" xml:space="preserve">
+    <value>画像オブジェクトを生成します</value>
+  </data>
+  <data name="Input_Button" xml:space="preserve">
+    <value>ボタンの種類です</value>
+  </data>
+  <data name="Input_HandleAny" xml:space="preserve">
+    <value>いかなる入力も扱うかどうかです</value>
+  </data>
+  <data name="Input_Out" xml:space="preserve">
+    <value>入力があったときのイベントです</value>
+  </data>
+  <data name="Input_PressCount" xml:space="preserve">
+    <value>押されているフレームカウントです</value>
+  </data>
+  <data name="Input_Released" xml:space="preserve">
+    <value>ボタンが離されたかどうかです</value>
+  </data>
+  <data name="Input_Summary" xml:space="preserve">
+    <value>入力を扱います</value>
+  </data>
+  <data name="MarkType_Value_Summary" xml:space="preserve">
+    <value>マークの種類を取得します</value>
+  </data>
+  <data name="MarkType_Value_Value" xml:space="preserve">
+    <value>マークの種類を取得、設定します</value>
+  </data>
+  <data name="Mark_CalculatePosAny_Summary" xml:space="preserve">
+    <value>いかなるマークの色つきマークの位置を計算します</value>
+  </data>
+  <data name="Mark_CalculatePosByID_Summary" xml:space="preserve">
+    <value>特定のIDのマークの色つきマークの位置を計算します</value>
+  </data>
+  <data name="Mark_CalculatePosByID_TargetID" xml:space="preserve">
+    <value>対象のIDです</value>
+  </data>
+  <data name="Mark_CalculatePosWithinTime_EndTime" xml:space="preserve">
+    <value>終了の時間です</value>
+  </data>
+  <data name="Mark_CalculatePosWithinTime_StartTime" xml:space="preserve">
+    <value>開始の時間です</value>
+  </data>
+  <data name="Mark_CalculatePosWithinTime_Summary" xml:space="preserve">
+    <value>特定の時間の間のマークの色つきマークの位置を計算します</value>
+  </data>
+  <data name="Mark_CalculatePos_BPM" xml:space="preserve">
+    <value>BPMを取得します</value>
+  </data>
+  <data name="Mark_CalculatePos_ColorPosition" xml:space="preserve">
+    <value>カラーのマークの位置を設定します</value>
+  </data>
+  <data name="Mark_CalculatePos_CurrentTime" xml:space="preserve">
+    <value>現在の時間を取得します</value>
+  </data>
+  <data name="Mark_CalculatePos_Handled" xml:space="preserve">
+    <value>カラーマークの位置決定をハンドルするか設定します</value>
+  </data>
+  <data name="Mark_CalculatePos_HasSameTimingMark" xml:space="preserve">
+    <value>同時押しかどうかを取得します</value>
+  </data>
+  <data name="Mark_CalculatePos_IsAC" xml:space="preserve">
+    <value>マークがACかどうかを取得します</value>
+  </data>
+  <data name="Mark_CalculatePos_IsLong" xml:space="preserve">
+    <value>マークが長押しかどうかを取得します</value>
+  </data>
+  <data name="Mark_CalculatePos_MarkID" xml:space="preserve">
+    <value>マークのIDを取得します</value>
+  </data>
+  <data name="Mark_CalculatePos_Out" xml:space="preserve">
+    <value>カラーマークの位置を決める時のイベントです</value>
+  </data>
+  <data name="Mark_CalculatePos_Position" xml:space="preserve">
+    <value>マークの位置を取得します</value>
+  </data>
+  <data name="Mark_CalculatePos_Position_Out" xml:space="preserve">
+    <value>計算が必要になったときに実行されるイベントです</value>
+  </data>
+  <data name="Mark_CalculatePos_Rotation" xml:space="preserve">
+    <value>マークの回転角を取得します</value>
+  </data>
+  <data name="Mark_CalculatePos_Time" xml:space="preserve">
+    <value>マークの時間を取得します</value>
+  </data>
+  <data name="Mark_CalculatePos_Type" xml:space="preserve">
+    <value>マークのタイプを取得します</value>
+  </data>
+  <data name="Mark_CreateImageAny_Summary" xml:space="preserve">
+    <value>いかなるマークの画像作成をします</value>
+  </data>
+  <data name="Mark_CreateImageByID_Summary" xml:space="preserve">
+    <value>特定のIDのマークの画像作成をします</value>
+  </data>
+  <data name="Mark_CreateImageByID_TargetID" xml:space="preserve">
+    <value>対象のIDです</value>
+  </data>
+  <data name="Mark_CreateImageWithinTime_EndTime" xml:space="preserve">
+    <value>終了の時間です</value>
+  </data>
+  <data name="Mark_CreateImageWithinTime_StartTime" xml:space="preserve">
+    <value>開始の時間です</value>
+  </data>
+  <data name="Mark_CreateImageWithinTime_Summary" xml:space="preserve">
+    <value>特定の時間の間のマークの画像作成をします</value>
+  </data>
+  <data name="Mark_CreateImage_AxisImage" xml:space="preserve">
+    <value>軸の画像を設定します</value>
+  </data>
+  <data name="Mark_CreateImage_ColorMarkImage" xml:space="preserve">
+    <value>色つきマークの画像を設定します</value>
+  </data>
+  <data name="Mark_CreateImage_Handled" xml:space="preserve">
+    <value>マークの画像作成をハンドルするか設定します</value>
+  </data>
+  <data name="Mark_CreateImage_HasSameTimingMark" xml:space="preserve">
+    <value>同時押しかどうかを取得します</value>
+  </data>
+  <data name="Mark_CreateImage_IsAC" xml:space="preserve">
+    <value>マークがACかどうかを取得します</value>
+  </data>
+  <data name="Mark_CreateImage_IsLong" xml:space="preserve">
+    <value>マークが長押しかどうかを取得します</value>
+  </data>
+  <data name="Mark_CreateImage_MarkID" xml:space="preserve">
+    <value>マークのIDを取得します</value>
+  </data>
+  <data name="Mark_CreateImage_MarkImage" xml:space="preserve">
+    <value>マークの画像を設定します</value>
+  </data>
+  <data name="Mark_CreateImage_Out" xml:space="preserve">
+    <value>マークの画像作成時のイベントです</value>
+  </data>
+  <data name="Mark_CreateImage_Position" xml:space="preserve">
+    <value>マークの位置を取得します</value>
+  </data>
+  <data name="Mark_CreateImage_Rotation" xml:space="preserve">
+    <value>マークの回転角を取得します</value>
+  </data>
+  <data name="Mark_CreateImage_Time" xml:space="preserve">
+    <value>マークの時間を取得します</value>
+  </data>
+  <data name="Mark_CreateImage_Type" xml:space="preserve">
+    <value>マークのタイプを取得します</value>
+  </data>
+  <data name="Mark_DynamicCreate_Angle" xml:space="preserve">
+    <value>マークの角度を設定します</value>
+  </data>
+  <data name="Mark_DynamicCreate_EndTime" xml:space="preserve">
+    <value>マークの終了時間を設定します</value>
+  </data>
+  <data name="Mark_DynamicCreate_IsLong" xml:space="preserve">
+    <value>マークが長押しかどうかを設定します</value>
+  </data>
+  <data name="Mark_DynamicCreate_MarkID" xml:space="preserve">
+    <value>マークのIDを設定します</value>
+  </data>
+  <data name="Mark_DynamicCreate_MarkType" xml:space="preserve">
+    <value>マークの種類を設定します</value>
+  </data>
+  <data name="Mark_DynamicCreate_Position" xml:space="preserve">
+    <value>マークの位置を設定します</value>
+  </data>
+  <data name="Mark_DynamicCreate_Summary" xml:space="preserve">
+    <value>マークを動的に生成します</value>
+  </data>
+  <data name="Mark_DynamicCreate_Time" xml:space="preserve">
+    <value>マークの時間を設定します</value>
+  </data>
+  <data name="Mark_ProcessEvaluateAny_Summary" xml:space="preserve">
+    <value>いかなる種類のマークの評価も処理します</value>
+  </data>
+  <data name="Mark_ProcessEvaluateByID_Summary" xml:space="preserve">
+    <value>特定のIDのマークの評価を処理します</value>
+  </data>
+  <data name="Mark_ProcessEvaluateByID_TargetID" xml:space="preserve">
+    <value>対象のIDです</value>
+  </data>
+  <data name="Mark_ProcessEvaluateWithinTime_EndTime" xml:space="preserve">
+    <value>終了の時間です</value>
+  </data>
+  <data name="Mark_ProcessEvaluateWithinTime_StartTime" xml:space="preserve">
+    <value>開始の時間です</value>
+  </data>
+  <data name="Mark_ProcessEvaluateWithinTime_Summary" xml:space="preserve">
+    <value>特定の時間の間のマークの色つきマークの評価を処理します</value>
+  </data>
+  <data name="Mark_ProcessEvalute_Evaluate" xml:space="preserve">
+    <value>マークの評価を取得します</value>
+  </data>
+  <data name="Mark_ProcessEvalute_Handled" xml:space="preserve">
+    <value>マークの評価をハンドルするかどうかを設定します</value>
+  </data>
+  <data name="Mark_ProcessEvalute_HasSameTimingMark" xml:space="preserve">
+    <value>同時押しかどうかを取得します</value>
+  </data>
+  <data name="Mark_ProcessEvalute_IsAC" xml:space="preserve">
+    <value>マークがACかどうかを取得します</value>
+  </data>
+  <data name="Mark_ProcessEvalute_IsLong" xml:space="preserve">
+    <value>マークが長押しかどうかを取得します</value>
+  </data>
+  <data name="Mark_ProcessEvalute_IsMissPress" xml:space="preserve">
+    <value>間違って押したかどうかを取得します</value>
+  </data>
+  <data name="Mark_ProcessEvalute_IsRelease" xml:space="preserve">
+    <value>長押しのリリースかどうかを取得します</value>
+  </data>
+  <data name="Mark_ProcessEvalute_MarkID" xml:space="preserve">
+    <value>マークのIDを取得します</value>
+  </data>
+  <data name="Mark_ProcessEvalute_Out" xml:space="preserve">
+    <value>マークが評価されたときのイベントです</value>
+  </data>
+  <data name="Mark_ProcessEvalute_Position" xml:space="preserve">
+    <value>位置を取得します</value>
+  </data>
+  <data name="Mark_ProcessEvalute_Rotation" xml:space="preserve">
+    <value>マークの角度を取得します</value>
+  </data>
+  <data name="Mark_ProcessEvalute_Time" xml:space="preserve">
+    <value>マークの時間を取得します</value>
+  </data>
+  <data name="Mark_ProcessEvalute_Type" xml:space="preserve">
+    <value>マークの種類を取得します</value>
+  </data>
+  <data name="Mark_ProcessMarkBPMAny_Summary" xml:space="preserve">
+    <value>いかなる種類のマークのBPMも処理します</value>
+  </data>
+  <data name="Mark_ProcessMarkBPMByID_Summary" xml:space="preserve">
+    <value>特定のIDのマークのBPMを処理します</value>
+  </data>
+  <data name="Mark_ProcessMarkBPMByID_TargetID" xml:space="preserve">
+    <value>対象のIDです</value>
+  </data>
+  <data name="Mark_ProcessMarkBPMWithinTime_EndTime" xml:space="preserve">
+    <value>終了の時間です</value>
+  </data>
+  <data name="Mark_ProcessMarkBPMWithinTime_StartTime" xml:space="preserve">
+    <value>開始の時間です</value>
+  </data>
+  <data name="Mark_ProcessMarkBPMWithinTime_Summary" xml:space="preserve">
+    <value>特定の時間の間のマークのBPMを処理します</value>
+  </data>
+  <data name="Mark_ProcessMarkBPM_BPM" xml:space="preserve">
+    <value>BPMを設定します</value>
+  </data>
+  <data name="Mark_ProcessMarkBPM_Handled" xml:space="preserve">
+    <value>BPMをハンドルするかどうかを設定します</value>
+  </data>
+  <data name="Mark_ProcessMarkBPM_HasSameTimingMark" xml:space="preserve">
+    <value>同時押しかどうかを取得します</value>
+  </data>
+  <data name="Mark_ProcessMarkBPM_IsAC" xml:space="preserve">
+    <value>マークがACかどうかを取得します</value>
+  </data>
+  <data name="Mark_ProcessMarkBPM_IsLong" xml:space="preserve">
+    <value>マークが長押しかどうかを取得します</value>
+  </data>
+  <data name="Mark_ProcessMarkBPM_MarkID" xml:space="preserve">
+    <value>マークのIDを取得します</value>
+  </data>
+  <data name="Mark_ProcessMarkBPM_Out" xml:space="preserve">
+    <value>マークのBPMが評価されたときのイベントです</value>
+  </data>
+  <data name="Mark_ProcessMarkBPM_Position" xml:space="preserve">
+    <value>位置を取得します</value>
+  </data>
+  <data name="Mark_ProcessMarkBPM_Rotation" xml:space="preserve">
+    <value>マークの角度を取得します</value>
+  </data>
+  <data name="Mark_ProcessMarkBPM_Time" xml:space="preserve">
+    <value>マークの時間を取得します</value>
+  </data>
+  <data name="Mark_ProcessMarkBPM_Type" xml:space="preserve">
+    <value>マークの種類を取得します</value>
+  </data>
+  <data name="Mark_Reader_Angle" xml:space="preserve">
+    <value>マークの角度を取得します</value>
+  </data>
+  <data name="Mark_Reader_EndOfStream" xml:space="preserve">
+    <value>ストリームを全て読み取ったかどうかを取得します</value>
+  </data>
+  <data name="Mark_Reader_EndTime" xml:space="preserve">
+    <value>マークの終了時間を取得します</value>
+  </data>
+  <data name="Mark_Reader_IsLong" xml:space="preserve">
+    <value>マークが長押しかどうかを取得します</value>
+  </data>
+  <data name="Mark_Reader_MarkID" xml:space="preserve">
+    <value>マークのIDを取得します</value>
+  </data>
+  <data name="Mark_Reader_MarkType" xml:space="preserve">
+    <value>マークの種類を取得します</value>
+  </data>
+  <data name="Mark_Reader_Next" xml:space="preserve">
+    <value>次のマークの情報を読み取ります</value>
+  </data>
+  <data name="Mark_Reader_Position" xml:space="preserve">
+    <value>マークの位置を取得します</value>
+  </data>
+  <data name="Mark_Reader_Stream" xml:space="preserve">
+    <value>読み取り先のストリームを設定します</value>
+  </data>
+  <data name="Mark_Reader_Summary" xml:space="preserve">
+    <value>PPDのマークデータをストリームから読み取ります</value>
+  </data>
+  <data name="Mark_Reader_Time" xml:space="preserve">
+    <value>マークの時間を取得します</value>
+  </data>
+  <data name="Mod_AddSetting_Default" xml:space="preserve">
+    <value>デフォルト値を設定します</value>
+  </data>
+  <data name="Mod_AddSetting_Description" xml:space="preserve">
+    <value>説明を設定します</value>
+  </data>
+  <data name="Mod_AddSetting_DisplayName" xml:space="preserve">
+    <value>表示名を設定します</value>
+  </data>
+  <data name="Mod_AddSetting_In" xml:space="preserve">
+    <value>設定を追加します</value>
+  </data>
+  <data name="Mod_AddSetting_Key" xml:space="preserve">
+    <value>キーを設定します</value>
+  </data>
+  <data name="Mod_AddSetting_Max" xml:space="preserve">
+    <value>最大値を設定します</value>
+  </data>
+  <data name="Mod_AddSetting_MaxLength" xml:space="preserve">
+    <value>最大長を設定します</value>
+  </data>
+  <data name="Mod_AddSetting_Min" xml:space="preserve">
+    <value>最小値を設定します</value>
+  </data>
+  <data name="Mod_AddSetting_Summary" xml:space="preserve">
+    <value>ユーザーが設定可能なデータを追加します</value>
+  </data>
+  <data name="Mod_EntryPoint_Start" xml:space="preserve">
+    <value>Modの設定の初期化を行うイベントです</value>
+  </data>
+  <data name="Mod_EntryPoint_Summary" xml:space="preserve">
+    <value>Modの設定のエントリーポイントです</value>
+  </data>
+  <data name="Mod_GetSetting_Key" xml:space="preserve">
+    <value>取得する設定のキーを設定します</value>
+  </data>
+  <data name="Mod_GetSetting_Summary" xml:space="preserve">
+    <value>Modの設定を取得します</value>
+  </data>
+  <data name="Mod_GetSetting_Value" xml:space="preserve">
+    <value>設定を取得します</value>
+  </data>
+  <data name="MovieTime_Summary" xml:space="preserve">
+    <value>現在の動画の時間を取得します</value>
+  </data>
+  <data name="MovieTime_Time" xml:space="preserve">
+    <value>現在の動画の時間を取得します</value>
+  </data>
+  <data name="Number_SetNumber_Number" xml:space="preserve">
+    <value>設定する数値を指定します</value>
+  </data>
+  <data name="Number_SetNumber_Object" xml:space="preserve">
+    <value>対象のオブジェクトを指定します</value>
+  </data>
+  <data name="Number_SetNumber_Summary" xml:space="preserve">
+    <value>表示する数値を設定します</value>
+  </data>
+  <data name="Number_Value_Alignment" xml:space="preserve">
+    <value>配置方法を指定します</value>
+  </data>
+  <data name="Number_Value_In" xml:space="preserve">
+    <value>オブジェクトを生成します</value>
+  </data>
+  <data name="Number_Value_MaxDigit" xml:space="preserve">
+    <value>表示する最大の桁数を指定します</value>
+  </data>
+  <data name="Number_Value_Object" xml:space="preserve">
+    <value>生成されたオブジェクトです</value>
+  </data>
+  <data name="Number_Value_Path" xml:space="preserve">
+    <value>画像のパスです</value>
+  </data>
+  <data name="Number_Value_Position" xml:space="preserve">
+    <value>初期位置を指定します</value>
+  </data>
+  <data name="Number_Value_Summary" xml:space="preserve">
+    <value>0-9までの均一に並んだ画像を元に数字を描画するオブジェクトを生成します</value>
+  </data>
+  <data name="Pause_Paused_Summary" xml:space="preserve">
+    <value>ポーズされたときのイベントです</value>
+  </data>
+  <data name="Pause_Resumed_Summary" xml:space="preserve">
+    <value>再開されたときのイベントです</value>
+  </data>
+  <data name="Pause_Summary" xml:space="preserve">
+    <value>ポーズ処理を扱います</value>
+  </data>
+  <data name="PPD_Debug_Trace" xml:space="preserve">
+    <value>トレースログを吐きます</value>
+  </data>
+  <data name="PPD_Debug_Trace_Text" xml:space="preserve">
+    <value>トレースのテキストを指定します</value>
+  </data>
+  <data name="Resource_Value" xml:space="preserve">
+    <value>リソースを取得します</value>
+  </data>
+  <data name="Resource_Value_Path" xml:space="preserve">
+    <value>リソース名を設定します</value>
+  </data>
+  <data name="Resource_Value_Value" xml:space="preserve">
+    <value>取得したリソースです</value>
+  </data>
+  <data name="Song_InfoEx_AllClearCount" xml:space="preserve">
+    <value>全ての難易度のクリアの回数を取得します</value>
+  </data>
+  <data name="Song_InfoEx_AllPlayCount" xml:space="preserve">
+    <value>全ての難易度のプレイ回数を取得します</value>
+  </data>
+  <data name="Song_InfoEx_BestPerformance" xml:space="preserve">
+    <value>現在の難易度の最高の精度（0~1)を取得します</value>
+  </data>
+  <data name="Song_InfoEx_BestPerformanceCoolCount" xml:space="preserve">
+    <value>現在の難易度の最高の精度を記録したときのCOOLの回数を取得します</value>
+  </data>
+  <data name="Song_InfoEx_BestPerformanceGoodCount" xml:space="preserve">
+    <value>現在の難易度の最高の精度を記録したときのGOODの回数を取得します</value>
+  </data>
+  <data name="Song_InfoEx_BestPerformanceSadCount" xml:space="preserve">
+    <value>現在の難易度の最高の精度を記録したときのSADの回数を取得します</value>
+  </data>
+  <data name="Song_InfoEx_BestPerformanceSafeCount" xml:space="preserve">
+    <value>現在の難易度の最高の精度を記録したときのSAFEの回数を取得します</value>
+  </data>
+  <data name="Song_InfoEx_BestPerformanceScore" xml:space="preserve">
+    <value>現在の難易度の最高の精度を記録したときのスコアを取得します</value>
+  </data>
+  <data name="Song_InfoEx_BestPerformanceWorstCount" xml:space="preserve">
+    <value>現在の難易度の最高の精度を記録したときのWORSTの回数を取得します</value>
+  </data>
+  <data name="Song_InfoEx_BestScore" xml:space="preserve">
+    <value>現在の難易度の最高のスコアを取得します</value>
+  </data>
+  <data name="Song_InfoEx_ClearCount" xml:space="preserve">
+    <value>現在の難易度のクリアの回数を取得します</value>
+  </data>
+  <data name="Song_InfoEx_IsAllFirstPlay" xml:space="preserve">
+    <value>全ての難易度で初回プレイかどうかを取得します</value>
+  </data>
+  <data name="Song_InfoEx_IsFirstPlay" xml:space="preserve">
+    <value>現在の難易度で初回プレイかどうかを取得します</value>
+  </data>
+  <data name="Song_InfoEx_PlayCount" xml:space="preserve">
+    <value>現在の難易度のプレイ回数を取得します</value>
+  </data>
+  <data name="Song_InfoEx_Summary" xml:space="preserve">
+    <value>譜面のプレイ状況を取得します</value>
+  </data>
+  <data name="Song_Info_AllMarkCount" xml:space="preserve">
+    <value>全てのマークの数を取得します</value>
+  </data>
+  <data name="Song_Info_AuthorName" xml:space="preserve">
+    <value>譜面作者名を取得します</value>
+  </data>
+  <data name="Song_Info_BPM" xml:space="preserve">
+    <value>BPMを取得します</value>
+  </data>
+  <data name="Song_Info_Difficulty" xml:space="preserve">
+    <value>難易度を取得します</value>
+  </data>
+  <data name="Song_Info_DifficultyString" xml:space="preserve">
+    <value>難易度の文字列を取得します</value>
+  </data>
+  <data name="Song_Info_EndTime" xml:space="preserve">
+    <value>終了時間を取得します</value>
+  </data>
+  <data name="Song_Info_FiveMarkCount" xml:space="preserve">
+    <value>五つ同時押しのマークの数を取得します</value>
+  </data>
+  <data name="Song_Info_FourMarkCount" xml:space="preserve">
+    <value>四つ同時押しのマークの数を取得します</value>
+  </data>
+  <data name="Song_Info_IsAuto" xml:space="preserve">
+    <value>オートかどうかを取得します</value>
+  </data>
+  <data name="Song_Info_IsConnect" xml:space="preserve">
+    <value>コネクトかどうかを取得します</value>
+  </data>
+  <data name="Song_Info_IsDebug" xml:space="preserve">
+    <value>デバッグモードかどうかを取得します</value>
+  </data>
+  <data name="Song_Info_IsGodMode" xml:space="preserve">
+    <value>ゴッドモードかどうかを取得します</value>
+  </data>
+  <data name="Song_Info_IsMuteSE" xml:space="preserve">
+    <value>効果音なしかどうかを取得します</value>
+  </data>
+  <data name="Song_Info_IsRandom" xml:space="preserve">
+    <value>ランダムかどうかを取得します</value>
+  </data>
+  <data name="Song_Info_IsRegular" xml:space="preserve">
+    <value>標準モード（記録が残るモード）かどうかを取得します</value>
+  </data>
+  <data name="Song_Info_OneMarkCount" xml:space="preserve">
+    <value>単押しのマークの数を取得します</value>
+  </data>
+  <data name="Song_Info_SixMarkCount" xml:space="preserve">
+    <value>六つ同時押しのマークの数を取得します</value>
+  </data>
+  <data name="Song_Info_SongName" xml:space="preserve">
+    <value>譜面名を取得します</value>
+  </data>
+  <data name="Song_Info_SpeedScale" xml:space="preserve">
+    <value>スピードの倍率を取得します</value>
+  </data>
+  <data name="Song_Info_StartTime" xml:space="preserve">
+    <value>開始時間を取得します</value>
+  </data>
+  <data name="Song_Info_Summary" xml:space="preserve">
+    <value>譜面の情報、プレイ環境を取得します</value>
+  </data>
+  <data name="Song_Info_ThreeMarkCount" xml:space="preserve">
+    <value>三つ同時押しのマークの数を取得します</value>
+  </data>
+  <data name="Song_Info_TwoMarkCount" xml:space="preserve">
+    <value>二つ同時押しのマークの数を取得します</value>
+  </data>
+  <data name="Song_Lyrics_Summary" xml:space="preserve">
+    <value>歌詞を取得します</value>
+  </data>
+  <data name="Song_Lyrics_Value" xml:space="preserve">
+    <value>歌詞です</value>
+  </data>
+  <data name="Sound_Object" xml:space="preserve">
+    <value>サウンドを指定します</value>
+  </data>
+  <data name="Sound_PlayWithVolume_Object" xml:space="preserve">
+    <value>再生するサウンドを指定します</value>
+  </data>
+  <data name="Sound_PlayWithVolume_Summary" xml:space="preserve">
+    <value>音量を指定してサウンドを再生します</value>
+  </data>
+  <data name="Sound_PlayWithVolume_Volume" xml:space="preserve">
+    <value>音量を指定します(最大0, 最小-10000)</value>
+  </data>
+  <data name="Sound_Play_Summary" xml:space="preserve">
+    <value>サウンドを再生します</value>
+  </data>
+  <data name="Sound_Stop_Summary" xml:space="preserve">
+    <value>サウンドを停止します</value>
+  </data>
+  <data name="Sound_Value_In" xml:space="preserve">
+    <value>オブジェクトを生成します</value>
+  </data>
+  <data name="Sound_Value_Object" xml:space="preserve">
+    <value>生成されたオブジェクトです</value>
+  </data>
+  <data name="Sound_Value_Path" xml:space="preserve">
+    <value>サウンドのパスです</value>
+  </data>
+  <data name="Sound_Value_Summary" xml:space="preserve">
+    <value>サウンドオブジェクトを生成します</value>
+  </data>
+  <data name="Sprite_Value_In" xml:space="preserve">
+    <value>オブジェクトを生成します</value>
+  </data>
+  <data name="Sprite_Value_Object" xml:space="preserve">
+    <value>生成されたオブジェクトです</value>
+  </data>
+  <data name="Sprite_Value_Summary" xml:space="preserve">
+    <value>自身は何も表示しない描画オブジェクトを生成します</value>
+  </data>
+  <data name="StageObject_Layer" xml:space="preserve">
+    <value>レイヤーの種類を指定します</value>
+  </data>
+  <data name="StageObject_Summary" xml:space="preserve">
+    <value>ステージのオブジェクトを取得します</value>
+  </data>
+  <data name="StageObject_Value" xml:space="preserve">
+    <value>オブジェクトを取得します</value>
+  </data>
+  <data name="TemplateIsType_Summary" xml:space="preserve">
+    <value>ターゲットのタイプを調べます</value>
+  </data>
+  <data name="TemplateIsType_Target" xml:space="preserve">
+    <value>ターゲットです</value>
+  </data>
+  <data name="TemplateIsType_Value" xml:space="preserve">
+    <value>ターゲットがタイプであったかどうかです</value>
+  </data>
+  <data name="TemplateStruct_Summary" xml:space="preserve">
+    <value>値を作成します</value>
+  </data>
+  <data name="TemplateStruct_Value" xml:space="preserve">
+    <value>値です</value>
+  </data>
+  <data name="Text_SetText_Object" xml:space="preserve">
+    <value>テキストオブジェクトを指定します</value>
+  </data>
+  <data name="Text_SetText_Summary" xml:space="preserve">
+    <value>テキストを設定します</value>
+  </data>
+  <data name="Text_SetText_Text" xml:space="preserve">
+    <value>テキストを指定します</value>
+  </data>
+  <data name="Text_Value_Color" xml:space="preserve">
+    <value>色を指定します</value>
+  </data>
+  <data name="Text_Value_Height" xml:space="preserve">
+    <value>文字列の高さを指定します</value>
+  </data>
+  <data name="Text_Value_In" xml:space="preserve">
+    <value>オブジェクトを生成します</value>
+  </data>
+  <data name="Text_Value_Object" xml:space="preserve">
+    <value>生成されたオブジェクトです</value>
+  </data>
+  <data name="Text_Value_Position" xml:space="preserve">
+    <value>初期位置を指定します</value>
+  </data>
+  <data name="Text_Value_Summary" xml:space="preserve">
+    <value>文字列表示オブジェクトを生成します</value>
+  </data>
+  <data name="Text_Value_Text" xml:space="preserve">
+    <value>文字列を指定します</value>
+  </data>
+  <data name="Mark_CalculatePos_ReleaseTime" xml:space="preserve">
+    <value>マークの離す時間を取得します</value>
+  </data>
+  <data name="Mark_CreateImage_ReleaseTime" xml:space="preserve">
+    <value>マークの離す時間を取得します</value>
+  </data>
+  <data name="Mark_ProcessEvaluate_ReleaseTime" xml:space="preserve">
+    <value>マークの離す時間を取得します</value>
+  </data>
+  <data name="Mark_ProcessMarkBPM_ReleaseTime" xml:space="preserve">
+    <value>マークの離す時間を取得します</value>
+  </data>
+  <data name="EventManager_SetKeepPlaying_Button" xml:space="preserve">
+    <value>対象のボタンを設定します</value>
+  </data>
+  <data name="EventManager_SetKeepPlaying_KeepPlaying" xml:space="preserve">
+    <value>押している間のみサウンドを再生するかどうかを設定します</value>
+  </data>
+  <data name="EventManager_SetKeepPlaying_Summary" xml:space="preserve">
+    <value>押している間のみサウンドを再生するかどうかを設定します</value>
+  </data>
+  <data name="EventManager_SetReleaseSound_Button" xml:space="preserve">
+    <value>対象のボタンを設定します</value>
+  </data>
+  <data name="EventManager_SetReleaseSound_ReleaseSound" xml:space="preserve">
+    <value>長押しリリース時にサウンドを再生するかどうかを設定します</value>
+  </data>
+  <data name="EventManager_SetReleaseSound_Summary" xml:space="preserve">
+    <value>長押しリリース時にサウンドを再生するかどうかを設定します</value>
+  </data>
+  <data name="EventManager_SetVolumePercent_Button" xml:space="preserve">
+    <value>対象のボタンを設定します</value>
+  </data>
+  <data name="EventManager_SetVolumePercent_Summary" xml:space="preserve">
+    <value>ボタンを押したときのサウンドの音量を設定します</value>
+  </data>
+  <data name="EventManager_SetVolumePercent_VolumePercent" xml:space="preserve">
+    <value>音量をパーセントで設定します</value>
+  </data>
+  <data name="EventManager_Value_KeepPlayings" xml:space="preserve">
+    <value>ボタンを押している間のみサウンドを再生するかどうかの一覧を取得します</value>
+  </data>
+  <data name="EventManager_Value_ReleaseSounds" xml:space="preserve">
+    <value>長押しリリース時にサウンドを再生するかどうかの一覧を取得します</value>
+  </data>
+  <data name="EventManager_Value_Summary" xml:space="preserve">
+    <value>イベントマネージャーの現在の設定を取得します</value>
+  </data>
+  <data name="EventManager_Value_VolumePercents" xml:space="preserve">
+    <value>音量の一覧(パーセント)を取得します</value>
+  </data>
+  <data name="Graphics_Movie_SetVolume_Summary" xml:space="preserve">
+    <value>動画の音量を設定します</value>
+  </data>
+  <data name="Graphics_Movie_SetVolume_Volume" xml:space="preserve">
+    <value>音量を設定します(最大0, 最小-10000)</value>
+  </data>
+  <data name="SoundManager_Play_Button" xml:space="preserve">
+    <value>対象のボタンを設定します</value>
+  </data>
+  <data name="SoundManager_Play_Index" xml:space="preserve">
+    <value>対象のサウンドのインデックスを設定します</value>
+  </data>
+  <data name="SoundManager_Play_Summary" xml:space="preserve">
+    <value>サウンドマネージャーに設定されたサウンドを再生します</value>
+  </data>
+  <data name="SoundManager_Play_Volume" xml:space="preserve">
+    <value>再生時の音量を設定します(最大0, 最小-10000)</value>
+  </data>
+  <data name="SoundManager_Stop_Button" xml:space="preserve">
+    <value>対象のボタンを設定します</value>
+  </data>
+  <data name="SoundManager_Stop_Index" xml:space="preserve">
+    <value>対象のサウンドのインデックスを設定します</value>
+  </data>
+  <data name="SoundManager_Stop_Summary" xml:space="preserve">
+    <value>サウンドマネージャーに設定されたサウンドを停止します</value>
+  </data>
+  <data name="Multi_Item_SetPosition_Position" xml:space="preserve">
+    <value>表示位置を指定します</value>
+  </data>
+  <data name="Multi_Item_SetPosition_Summary" xml:space="preserve">
+    <value>アイテムの表示位置を設定します</value>
+  </data>
+  <data name="Mod_Current_Summary" xml:space="preserve">
+    <value>自身のMod情報を取得します</value>
+  </data>
+  <data name="Mod_Current_Value" xml:space="preserve">
+    <value>自身のMod情報を取得します</value>
+  </data>
+  <data name="Mod_ModInfo_Value_AuthorName" xml:space="preserve">
+    <value>Modの作者名を取得します</value>
+  </data>
+  <data name="Mod_ModInfo_Value_DisplayName" xml:space="preserve">
+    <value>Modの表示名を取得します</value>
+  </data>
+  <data name="Mod_ModInfo_Value_FileName" xml:space="preserve">
+    <value>Modのファイル名を取得します</value>
+  </data>
+  <data name="Mod_ModInfo_Value_Summary" xml:space="preserve">
+    <value>Mod情報の詳細を取得します</value>
+  </data>
+  <data name="Mod_ModInfo_Value_Value" xml:space="preserve">
+    <value>詳細を取得するModを指定します</value>
+  </data>
+  <data name="Mod_UsingMods_Mods" xml:space="preserve">
+    <value>使用しているModの一覧を取得します</value>
+  </data>
+  <data name="Mod_UsingMods_Summary" xml:space="preserve">
+    <value>使用しているModの一覧を取得します</value>
+  </data>
+  <data name="Effect_Pool_Use_Object" xml:space="preserve">
+    <value>プールから取り出したエフェクトを取得します</value>
+  </data>
+  <data name="Effect_Pool_Use_Pool" xml:space="preserve">
+    <value>プールを指定します</value>
+  </data>
+  <data name="Effect_Pool_Use_Position" xml:space="preserve">
+    <value>位置を指定します</value>
+  </data>
+  <data name="Effect_Pool_Use_Summary" xml:space="preserve">
+    <value>プールからエフェクトを取り出します</value>
+  </data>
+  <data name="Effect_Pool_Value_Count" xml:space="preserve">
+    <value>プールの初期エフェクト数を指定します</value>
+  </data>
+  <data name="Effect_Pool_Value_Path" xml:space="preserve">
+    <value>プールが扱うエフェクトのパスを指定します</value>
+  </data>
+  <data name="Effect_Pool_Value_Pool" xml:space="preserve">
+    <value>作成したプールを取得します</value>
+  </data>
+  <data name="Effect_Pool_Value_Summary" xml:space="preserve">
+    <value>プールを作成します</value>
+  </data>
+  <data name="Effect_Value_PlayState" xml:space="preserve">
+    <value>エフェクトの再生状態を取得します</value>
+  </data>
+  <data name="ModifyDataWarning" xml:space="preserve">
+    <value>リザルトに影響を及ぼすノードのためModの場合サーバーランキング非対応になります</value>
+  </data>
+  <data name="Mark_CalculatePos_EvaluateRequired" xml:space="preserve">
+    <value>優先度の高いノードでHandledがTrueのときにも評価を行うかどうかを設定します</value>
+  </data>
+  <data name="Mark_CreateImage_EvaluateRequired" xml:space="preserve">
+    <value>優先度の高いノードでHandledがTrueのときにも評価を行うかどうかを設定します</value>
+  </data>
+  <data name="Mark_ProcessEvalute_EvaluateRequired" xml:space="preserve">
+    <value>優先度の高いノードでHandledがTrueのときにも評価を行うかどうかを設定します</value>
+  </data>
+  <data name="Mark_ProcessMarkBPM_EvaluateRequired" xml:space="preserve">
+    <value>優先度の高いノードでHandledがTrueのときにも評価を行うかどうかを設定します</value>
+  </data>
+  <data name="Graphics_InsertChild_Child" xml:space="preserve">
+    <value>子です</value>
+  </data>
+  <data name="Graphics_InsertChild_Index" xml:space="preserve">
+    <value>インデックスです</value>
+  </data>
+  <data name="Graphics_InsertChild_Parent" xml:space="preserve">
+    <value>親です</value>
+  </data>
+  <data name="Graphics_InsertChild_Summary" xml:space="preserve">
+    <value>Parentの指定したIndexにChildを追加します</value>
+  </data>
+  <data name="Mark_CalculatePos_IsACFT" xml:space="preserve">
+    <value>ACFTかどうかを取得します</value>
+  </data>
+  <data name="Mark_CalculatePos_IsRight" xml:space="preserve">
+    <value>右スクラッチかどうかを取得します</value>
+  </data>
+  <data name="Mark_CalculatePos_IsScratch" xml:space="preserve">
+    <value>スクラッチかどうかを取得します</value>
+  </data>
+  <data name="Mark_CreateImage_IsACFT" xml:space="preserve">
+    <value>ACFTかどうかを取得します</value>
+  </data>
+  <data name="Mark_CreateImage_IsRight" xml:space="preserve">
+    <value>右スクラッチかどうかを取得します</value>
+  </data>
+  <data name="Mark_CreateImage_IsScratch" xml:space="preserve">
+    <value>スクラッチかどうかを取得します</value>
+  </data>
+  <data name="Mark_CreateImage_SlideColorMarkImage" xml:space="preserve">
+    <value>スライドの色つき画像を設定します</value>
+  </data>
+  <data name="Mark_CreateImage_SlideMarkImage" xml:space="preserve">
+    <value>スライドの色なし画像を設定します</value>
+  </data>
+  <data name="Mark_ProcessEvalute_IsACFT" xml:space="preserve">
+    <value>ACFTかどうかを取得します</value>
+  </data>
+  <data name="Mark_ProcessEvalute_IsRight" xml:space="preserve">
+    <value>右スクラッチかどうかを取得します</value>
+  </data>
+  <data name="Mark_ProcessEvalute_IsScratch" xml:space="preserve">
+    <value>スクラッチかどうかを取得します</value>
+  </data>
+  <data name="Mark_ProcessMarkBPM_IsACFT" xml:space="preserve">
+    <value>ACFTかどうかを取得します</value>
+  </data>
+  <data name="Mark_ProcessMarkBPM_IsRight" xml:space="preserve">
+    <value>右スクラッチかどうかを取得します</value>
+  </data>
+  <data name="Mark_ProcessMarkBPM_IsScratch" xml:space="preserve">
+    <value>スクラッチかどうかを取得します</value>
+  </data>
+  <data name="GameResult_Value_SlideBonus" xml:space="preserve">
+    <value>スライドボーナスを取得します</value>
+  </data>
+  <data name="Graphics_GameInterface_SlideLayer" xml:space="preserve">
+    <value>スライドレイヤーを取得します</value>
+  </data>
+  <data name="Mark_ProcessMissPressAny_Summary" xml:space="preserve">
+    <value>いかなるマークの色つきマークのミス押しかどうかを決定します</value>
+  </data>
+  <data name="Mark_ProcessMissPressByID_Summary" xml:space="preserve">
+    <value>特定のIDのマークの色つきマークのミス押しかどうかを決定します</value>
+  </data>
+  <data name="Mark_ProcessMissPressByID_TargetID" xml:space="preserve">
+    <value>対象のIDです</value>
+  </data>
+  <data name="Mark_ProcessMissPressWithinTime_EndTime" xml:space="preserve">
+    <value>終了の時間です</value>
+  </data>
+  <data name="Mark_ProcessMissPressWithinTime_StartTime" xml:space="preserve">
+    <value>開始の時間です</value>
+  </data>
+  <data name="Mark_ProcessMissPressWithinTime_Summary" xml:space="preserve">
+    <value>特定の時間の間のマークの色つきマークのミス押しかどうかを決定します</value>
+  </data>
+  <data name="Mark_ProcessMissPress_EvaluateRequired" xml:space="preserve">
+    <value>優先度の高いノードでHandledがTrueのときにも評価を行うかどうかを設定します</value>
+  </data>
+  <data name="Mark_ProcessMissPress_Handled" xml:space="preserve">
+    <value>ミス押しかどうかの決定をハンドルするか設定します</value>
+  </data>
+  <data name="Mark_ProcessMissPress_HasSameTimingMark" xml:space="preserve">
+    <value>同時押しかどうかを取得します</value>
+  </data>
+  <data name="Mark_ProcessMissPress_IsAC" xml:space="preserve">
+    <value>マークがACかどうかを取得します</value>
+  </data>
+  <data name="Mark_ProcessMissPress_IsACFT" xml:space="preserve">
+    <value>ACFTかどうかを取得します</value>
+  </data>
+  <data name="Mark_ProcessMissPress_IsLong" xml:space="preserve">
+    <value>マークが長押しかどうかを取得します</value>
+  </data>
+  <data name="Mark_ProcessMissPress_IsMissPress" xml:space="preserve">
+    <value>ミス押しかどうかを設定します</value>
+  </data>
+  <data name="Mark_ProcessMissPress_IsRight" xml:space="preserve">
+    <value>右スクラッチかどうかを取得します</value>
+  </data>
+  <data name="Mark_ProcessMissPress_IsScratch" xml:space="preserve">
+    <value>スクラッチかどうかを取得します</value>
+  </data>
+  <data name="Mark_ProcessMissPress_MarkID" xml:space="preserve">
+    <value>マークのIDを取得します</value>
+  </data>
+  <data name="Mark_ProcessMissPress_Out" xml:space="preserve">
+    <value>ミス押しかどうかを決める時のイベントです</value>
+  </data>
+  <data name="Mark_ProcessMissPress_Position" xml:space="preserve">
+    <value>マークの位置を取得します</value>
+  </data>
+  <data name="Mark_ProcessMissPress_PressedButton" xml:space="preserve">
+    <value>押されたボタンを取得します</value>
+  </data>
+  <data name="Mark_ProcessMissPress_ReleaseTime" xml:space="preserve">
+    <value>マークの離す時間を取得します</value>
+  </data>
+  <data name="Mark_ProcessMissPress_Rotation" xml:space="preserve">
+    <value>マークの回転角を取得します</value>
+  </data>
+  <data name="Mark_ProcessMissPress_Time" xml:space="preserve">
+    <value>マークの時間を取得します</value>
+  </data>
+  <data name="Mark_ProcessMissPress_Type" xml:space="preserve">
+    <value>マークのタイプを取得します</value>
+  </data>
+  <data name="Environment_Value_FPS" xml:space="preserve">
+    <value>現在のFPSを取得します</value>
+  </data>
+  <data name="Environment_Value_LastDrawTime" xml:space="preserve">
+    <value>最後の描画でかかった時間を取得します</value>
+  </data>
+  <data name="Environment_Value_LastUpdateTime" xml:space="preserve">
+    <value>最後の更新でかかった時間を取得します</value>
+  </data>
+  <data name="Mark_CalculatePos_Parameters" xml:space="preserve">
+    <value>パラメーター一覧を取得します</value>
+  </data>
+  <data name="Mark_CreateImage_Parameters" xml:space="preserve">
+    <value>パラメーター一覧を取得します</value>
+  </data>
+  <data name="Mark_ProcessEvalute_Parameters" xml:space="preserve">
+    <value>パラメーター一覧を取得します</value>
+  </data>
+  <data name="Mark_ProcessMarkBPM_Parameters" xml:space="preserve">
+    <value>パラメーター一覧を取得します</value>
+  </data>
+  <data name="Mark_ProcessMissPress_Parameters" xml:space="preserve">
+    <value>パラメーター一覧を取得します</value>
+  </data>
+  <data name="Song_InfoEx_Results" xml:space="preserve">
+    <value>リザルト一覧を取得します</value>
+  </data>
+  <data name="Song_Result_Value_CoolCount" xml:space="preserve">
+    <value>COOLの数です</value>
+  </data>
+  <data name="Song_Result_Value_Difficulty" xml:space="preserve">
+    <value>難易度です</value>
+  </data>
+  <data name="Song_Result_Value_FinishTime" xml:space="preserve">
+    <value>終了時間です</value>
+  </data>
+  <data name="Song_Result_Value_GoodCount" xml:space="preserve">
+    <value>GOODの数です</value>
+  </data>
+  <data name="Song_Result_Value_ID" xml:space="preserve">
+    <value>リザルトのIDです</value>
+  </data>
+  <data name="Song_Result_Value_MaxCombo" xml:space="preserve">
+    <value>最大コンボ数です</value>
+  </data>
+  <data name="Song_Result_Value_PlayDateTime" xml:space="preserve">
+    <value>プレイ日時です</value>
+  </data>
+  <data name="Song_Result_Value_ResultType" xml:space="preserve">
+    <value>結果です</value>
+  </data>
+  <data name="Song_Result_Value_SadCount" xml:space="preserve">
+    <value>SADの数です</value>
+  </data>
+  <data name="Song_Result_Value_SafeCount" xml:space="preserve">
+    <value>SAFEの数です</value>
+  </data>
+  <data name="Song_Result_Value_Score" xml:space="preserve">
+    <value>スコアです</value>
+  </data>
+  <data name="Song_Result_Value_Summary" xml:space="preserve">
+    <value>リザルトの情報を取得します</value>
+  </data>
+  <data name="Song_Result_Value_Value" xml:space="preserve">
+    <value>対象のリザルトです</value>
+  </data>
+  <data name="Song_Result_Value_WorstCount" xml:space="preserve">
+    <value>WORSTの数です</value>
+  </data>
+  <data name="GameResult_Value_ExpectedTotalSlideBonus" xml:space="preserve">
+    <value>スライドボーナスの合計値の予測値を取得します</value>
+  </data>
+  <data name="GameResult_Value_IsReplaying" xml:space="preserve">
+    <value>リプレイしているかどうかを取得します</value>
+  </data>
+  <data name="GameResult_Value_IsRetrying" xml:space="preserve">
+    <value>リトライしているかどうかを取得します</value>
+  </data>
+  <data name="Input_Pressed" xml:space="preserve">
+    <value>ボタンが押されたかどうかです</value>
+  </data>
+  <data name="Mark_CalculatePos_SlideScale" xml:space="preserve">
+    <value>スライドスケールを取得します</value>
+  </data>
+  <data name="Mark_CreateImage_SlideScale" xml:space="preserve">
+    <value>スライドスケールを取得します</value>
+  </data>
+  <data name="Mark_ProcessEvalute_SlideScale" xml:space="preserve">
+    <value>スライドスケールを取得します</value>
+  </data>
+  <data name="Mark_ProcessMarkBPM_SlideScale" xml:space="preserve">
+    <value>スライドスケールを取得します</value>
+  </data>
+  <data name="Mark_ProcessMissPress_SlideScale" xml:space="preserve">
+    <value>スライドスケールを取得します</value>
+  </data>
+  <data name="Graphics_Movie_Volume_Summary" xml:space="preserve">
+    <value>ボリュームを取得します</value>
+  </data>
+  <data name="Graphics_Movie_Volume_Value" xml:space="preserve">
+    <value>ボリュームです</value>
+  </data>
+  <data name="Song_Info_AllLongMarkCount" xml:space="preserve">
+    <value>全ての長押しマークの数を取得します</value>
+  </data>
+  <data name="Song_Info_DifficultyPointAverage" xml:space="preserve">
+    <value>難易度ptの平均値を取得します</value>
+  </data>
+  <data name="Song_Info_DifficultyPointPeak" xml:space="preserve">
+    <value>難易度ptのピーク値を取得します</value>
+  </data>
+  <data name="ScoreStorage_Contains_Key" xml:space="preserve">
+    <value>キーです</value>
+  </data>
+  <data name="ScoreStorage_Contains_Summary" xml:space="preserve">
+    <value>譜面ストレージにキーが含まれるかどうかを取得します</value>
+  </data>
+  <data name="ScoreStorage_Contains_Value" xml:space="preserve">
+    <value>キーが含まれるかどうかです</value>
+  </data>
+  <data name="ScoreStorage_Get_Key" xml:space="preserve">
+    <value>キーです</value>
+  </data>
+  <data name="ScoreStorage_Get_Summary" xml:space="preserve">
+    <value>譜面ストレージから値を取得します</value>
+  </data>
+  <data name="ScoreStorage_Get_Value" xml:space="preserve">
+    <value>値です</value>
+  </data>
+  <data name="ScoreStorage_Set_Key" xml:space="preserve">
+    <value>キーです</value>
+  </data>
+  <data name="ScoreStorage_Set_Summary" xml:space="preserve">
+    <value>譜面ストレージに値を設定します</value>
+  </data>
+  <data name="ScoreStorage_Set_Value" xml:space="preserve">
+    <value>値です</value>
+  </data>
+  <data name="Song_Info_NoteType" xml:space="preserve">
+    <value>譜面のノーツの種類を取得します</value>
+  </data>
+  <data name="Song_Info_NoteType_Remark" xml:space="preserve">
+    <value>優先度はACFT&gt;AC&gt;Normalの順です</value>
+  </data>
+  <data name="Mark_Value_ID" xml:space="preserve">
+    <value>IDを取得します</value>
+  </data>
+  <data name="Mark_Value_IsLong" xml:space="preserve">
+    <value>長押しかどうかを取得します</value>
+  </data>
+  <data name="Mark_Value_Parameters" xml:space="preserve">
+    <value>パラメーターを取得します</value>
+  </data>
+  <data name="Mark_Value_Position" xml:space="preserve">
+    <value>位置を取得します</value>
+  </data>
+  <data name="Mark_Value_ReleaseTime" xml:space="preserve">
+    <value>離す時間を取得します</value>
+  </data>
+  <data name="Mark_Value_Rotation" xml:space="preserve">
+    <value>角度を取得します</value>
+  </data>
+  <data name="Mark_Value_Summary" xml:space="preserve">
+    <value>マークの情報を取得します</value>
+  </data>
+  <data name="Mark_Value_Time" xml:space="preserve">
+    <value>時間を取得します</value>
+  </data>
+  <data name="Mark_Value_Type" xml:space="preserve">
+    <value>マークのタイプを取得します</value>
+  </data>
+  <data name="Mark_Value_Value" xml:space="preserve">
+    <value>対象のマークを設定します</value>
+  </data>
+  <data name="Song_Info_Marks" xml:space="preserve">
+    <value>生のマーク情報です</value>
+  </data>
+  <data name="Mark_CalculatePos_SameTimingMarks" xml:space="preserve">
+    <value>同時押しのマークの種類を取得します</value>
+  </data>
+  <data name="Mark_CreateImage_SameTimingMarks" xml:space="preserve">
+    <value>同時押しのマークの種類を取得します</value>
+  </data>
+  <data name="Mark_ProcessEvalute_SameTimingMarks" xml:space="preserve">
+    <value>同時押しのマークの種類を取得します</value>
+  </data>
+  <data name="Mark_ProcessMarkBPM_SameTimingMarks" xml:space="preserve">
+    <value>同時押しのマークの種類を取得します</value>
+  </data>
+  <data name="Mark_ProcessMissPress_SameTimingMarks" xml:space="preserve">
+    <value>同時押しのマークの種類を取得します</value>
+  </data>
+  <data name="ColorFilter_AverageGrayScale_Value_Filter" xml:space="preserve">
+    <value>フィルターを取得します</value>
+  </data>
+  <data name="ColorFilter_AverageGrayScale_Value_Summary" xml:space="preserve">
+    <value>平均グレースケールフィルターです</value>
+  </data>
+  <data name="ColorFilter_AverageGrayScale_Value_Weight" xml:space="preserve">
+    <value>ウェイトを設定します</value>
+  </data>
+  <data name="ColorFilter_Brightness_SetScale_Filter" xml:space="preserve">
+    <value>対象のフィルターを設定します</value>
+  </data>
+  <data name="ColorFilter_Brightness_SetScale_Scale" xml:space="preserve">
+    <value>スケールを設定します</value>
+  </data>
+  <data name="ColorFilter_Brightness_SetScale_Summary" xml:space="preserve">
+    <value>スケールを変更します</value>
+  </data>
+  <data name="ColorFilter_Brightness_Value_Filter" xml:space="preserve">
+    <value>フィルターを取得します</value>
+  </data>
+  <data name="ColorFilter_Brightness_Value_Scale" xml:space="preserve">
+    <value>スケールを設定します</value>
+  </data>
+  <data name="ColorFilter_Brightness_Value_Summary" xml:space="preserve">
+    <value>輝度フィルターです</value>
+  </data>
+  <data name="ColorFilter_Brightness_Value_Weight" xml:space="preserve">
+    <value>ウェイトを設定します</value>
+  </data>
+  <data name="ColorFilter_Color_SetColor_Color" xml:space="preserve">
+    <value>カラーを設定します</value>
+  </data>
+  <data name="ColorFilter_Color_SetColor_Filter" xml:space="preserve">
+    <value>対象のフィルターを設定します</value>
+  </data>
+  <data name="ColorFilter_Color_SetColor_Summary" xml:space="preserve">
+    <value>カラーを変更します</value>
+  </data>
+  <data name="ColorFilter_Color_Value_Color" xml:space="preserve">
+    <value>カラーを設定します</value>
+  </data>
+  <data name="ColorFilter_Color_Value_Filter" xml:space="preserve">
+    <value>フィルターを取得します</value>
+  </data>
+  <data name="ColorFilter_Color_Value_Summary" xml:space="preserve">
+    <value>カラーフィルターです</value>
+  </data>
+  <data name="ColorFilter_Color_Value_Weight" xml:space="preserve">
+    <value>ウェイトを設定します</value>
+  </data>
+  <data name="ColorFilter_GreenGrayScale_Value_Filter" xml:space="preserve">
+    <value>フィルターを取得します</value>
+  </data>
+  <data name="ColorFilter_GreenGrayScale_Value_Summary" xml:space="preserve">
+    <value>グリーングレースケールフィルターです</value>
+  </data>
+  <data name="ColorFilter_GreenGrayScale_Value_Weight" xml:space="preserve">
+    <value>ウェイトを設定します</value>
+  </data>
+  <data name="ColorFilter_HDTVGrayScale_SetGammaCorrection_Filter" xml:space="preserve">
+    <value>対象のフィルターを設定します</value>
+  </data>
+  <data name="ColorFilter_HDTVGrayScale_SetGammaCorrection_GammaCorrection" xml:space="preserve">
+    <value>ガンマ補正を設定します</value>
+  </data>
+  <data name="ColorFilter_HDTVGrayScale_SetGammaCorrection_Summary" xml:space="preserve">
+    <value>ガンマ補正を変更します</value>
+  </data>
+  <data name="ColorFilter_HDTVGrayScale_Value_Filter" xml:space="preserve">
+    <value>フィルターを取得します</value>
+  </data>
+  <data name="ColorFilter_HDTVGrayScale_Value_GammaCorrection" xml:space="preserve">
+    <value>ガンマ補正を設定します</value>
+  </data>
+  <data name="ColorFilter_HDTVGrayScale_Value_Summary" xml:space="preserve">
+    <value>HDTVグレースケールフィルターです</value>
+  </data>
+  <data name="ColorFilter_HDTVGrayScale_Value_Weight" xml:space="preserve">
+    <value>ウェイトを設定します</value>
+  </data>
+  <data name="ColorFilter_Hue_SetRotation_Filter" xml:space="preserve">
+    <value>対象のフィルターを設定します</value>
+  </data>
+  <data name="ColorFilter_Hue_SetRotation_Rotation" xml:space="preserve">
+    <value>回転を設定します</value>
+  </data>
+  <data name="ColorFilter_Hue_SetRotation_Summary" xml:space="preserve">
+    <value>回転を変更します</value>
+  </data>
+  <data name="ColorFilter_Hue_Value_Filter" xml:space="preserve">
+    <value>フィルターを取得します</value>
+  </data>
+  <data name="ColorFilter_Hue_Value_Rotation" xml:space="preserve">
+    <value>回転を設定します</value>
+  </data>
+  <data name="ColorFilter_Hue_Value_Summary" xml:space="preserve">
+    <value>色相フィルターです</value>
+  </data>
+  <data name="ColorFilter_Hue_Value_Weight" xml:space="preserve">
+    <value>ウェイトを設定します</value>
+  </data>
+  <data name="ColorFilter_Invert_Value_Filter" xml:space="preserve">
+    <value>フィルターを取得します</value>
+  </data>
+  <data name="ColorFilter_Invert_Value_Summary" xml:space="preserve">
+    <value>反転フィルターです</value>
+  </data>
+  <data name="ColorFilter_Invert_Value_Weight" xml:space="preserve">
+    <value>ウェイトを設定します</value>
+  </data>
+  <data name="ColorFilter_MaxGrayScale_Value_Filter" xml:space="preserve">
+    <value>フィルターを取得します</value>
+  </data>
+  <data name="ColorFilter_MaxGrayScale_Value_Summary" xml:space="preserve">
+    <value>最大グレースケールフィルターです</value>
+  </data>
+  <data name="ColorFilter_MaxGrayScale_Value_Weight" xml:space="preserve">
+    <value>ウェイトを設定します</value>
+  </data>
+  <data name="ColorFilter_MedianGrayScale_Value_Filter" xml:space="preserve">
+    <value>フィルターを取得します</value>
+  </data>
+  <data name="ColorFilter_MedianGrayScale_Value_Summary" xml:space="preserve">
+    <value>中央値グレースケールフィルターです</value>
+  </data>
+  <data name="ColorFilter_MedianGrayScale_Value_Weight" xml:space="preserve">
+    <value>ウェイトを設定します</value>
+  </data>
+  <data name="ColorFilter_MiddleGrayScale_Value_Filter" xml:space="preserve">
+    <value>フィルターを取得します</value>
+  </data>
+  <data name="ColorFilter_MiddleGrayScale_Value_Summary" xml:space="preserve">
+    <value>中間値グレースケールフィルターです</value>
+  </data>
+  <data name="ColorFilter_MiddleGrayScale_Value_Weight" xml:space="preserve">
+    <value>ウェイトを設定します</value>
+  </data>
+  <data name="ColorFilter_NTSCGrayScale_Value_Filter" xml:space="preserve">
+    <value>フィルターを取得します</value>
+  </data>
+  <data name="ColorFilter_NTSCGrayScale_Value_Summary" xml:space="preserve">
+    <value>NTSCグレースケールフィルターです</value>
+  </data>
+  <data name="ColorFilter_NTSCGrayScale_Value_Weight" xml:space="preserve">
+    <value>ウェイトを設定します</value>
+  </data>
+  <data name="ColorFilter_Saturation_SetScale_Filter" xml:space="preserve">
+    <value>対象のフィルターを設定します</value>
+  </data>
+  <data name="ColorFilter_Saturation_SetScale_Scale" xml:space="preserve">
+    <value>スケールを設定します</value>
+  </data>
+  <data name="ColorFilter_Saturation_SetScale_Summary" xml:space="preserve">
+    <value>スケールを変更します</value>
+  </data>
+  <data name="ColorFilter_Saturation_Value_Filter" xml:space="preserve">
+    <value>フィルターを取得します</value>
+  </data>
+  <data name="ColorFilter_Saturation_Value_Scale" xml:space="preserve">
+    <value>スケールを設定します</value>
+  </data>
+  <data name="ColorFilter_Saturation_Value_Summary" xml:space="preserve">
+    <value>彩度フィルターです</value>
+  </data>
+  <data name="ColorFilter_Saturation_Value_Weight" xml:space="preserve">
+    <value>ウェイトを設定します</value>
+  </data>
+  <data name="ColorFilter_SetWeight_ColorFilter" xml:space="preserve">
+    <value>対象のフィルターを設定します</value>
+  </data>
+  <data name="ColorFilter_SetWeight_Summary" xml:space="preserve">
+    <value>ウェイトを変更します</value>
+  </data>
+  <data name="ColorFilter_SetWeight_Weight" xml:space="preserve">
+    <value>ウェイトを設定します</value>
+  </data>
+  <data name="Graphics_AddColorFilter_ColorFilter" xml:space="preserve">
+    <value>カラーフィルターを設定します</value>
+  </data>
+  <data name="Graphics_AddColorFilter_Summary" xml:space="preserve">
+    <value>カラーフィルターを追加します</value>
+  </data>
+  <data name="Graphics_AddPostScreenFilter_ScreenFilter" xml:space="preserve">
+    <value>スクリーンフィルターを設定します</value>
+  </data>
+  <data name="Graphics_AddPostScreenFilter_Summary" xml:space="preserve">
+    <value>ポストスクリーンフィルターを追加します</value>
+  </data>
+  <data name="Graphics_AddPreScreenFilter_ScreenFilter" xml:space="preserve">
+    <value>スクリーンフィルターを設定します</value>
+  </data>
+  <data name="Graphics_AddPreScreenFilter_Summary" xml:space="preserve">
+    <value>プレスクリーンフィルターを追加します</value>
+  </data>
+  <data name="Graphics_InsertColorFilter_ColorFilter" xml:space="preserve">
+    <value>カラーフィルターを設定します</value>
+  </data>
+  <data name="Graphics_InsertColorFilter_Index" xml:space="preserve">
+    <value>挿入するインデックスを設定します</value>
+  </data>
+  <data name="Graphics_InsertColorFilter_Summary" xml:space="preserve">
+    <value>カラーフィルターを挿入します</value>
+  </data>
+  <data name="Graphics_InsertPostScreenFilter_Index" xml:space="preserve">
+    <value>挿入するインデックスを設定します</value>
+  </data>
+  <data name="Graphics_InsertPostScreenFilter_ScreenFilter" xml:space="preserve">
+    <value>スクリーンフィルターを設定します</value>
+  </data>
+  <data name="Graphics_InsertPostScreenFilter_Summary" xml:space="preserve">
+    <value>ポストスクリーンフィルターを挿入します</value>
+  </data>
+  <data name="Graphics_InsertPreScreenFilter_Index" xml:space="preserve">
+    <value>挿入するインデックスを設定します</value>
+  </data>
+  <data name="Graphics_InsertPreScreenFilter_ScreenFilter" xml:space="preserve">
+    <value>スクリーンフィルターを設定します</value>
+  </data>
+  <data name="Graphics_InsertPreScreenFilter_Summary" xml:space="preserve">
+    <value>プレスクリーンフィルターを挿入します</value>
+  </data>
+  <data name="Graphics_RemoveColorFilter_ColorFilter" xml:space="preserve">
+    <value>カラーフィルターを設定します</value>
+  </data>
+  <data name="Graphics_RemoveColorFilter_Summary" xml:space="preserve">
+    <value>カラーフィルターを削除します</value>
+  </data>
+  <data name="Graphics_RemovePostScreenFilter_ScreenFilter" xml:space="preserve">
+    <value>スクリーンフィルターを設定します</value>
+  </data>
+  <data name="Graphics_RemovePostScreenFilter_Summary" xml:space="preserve">
+    <value>ポストスクリーンフィルターを削除します</value>
+  </data>
+  <data name="Graphics_RemovePreScreenFilter_ScreenFilter" xml:space="preserve">
+    <value>スクリーンフィルターを設定します</value>
+  </data>
+  <data name="Graphics_RemovePreScreenFilter_Summary" xml:space="preserve">
+    <value>プレスクリーンフィルターを削除します</value>
+  </data>
+  <data name="Graphics_SetBlend_Blend" xml:space="preserve">
+    <value>ブレンドを設定します</value>
+  </data>
+  <data name="Graphics_SetBlend_Summary" xml:space="preserve">
+    <value>ブレンドを変更します</value>
+  </data>
+  <data name="Graphics_SetMaskType_MaskType" xml:space="preserve">
+    <value>マスクタイプを設定します</value>
+  </data>
+  <data name="Graphics_SetMaskType_Summary" xml:space="preserve">
+    <value>マスクタイプを変更します</value>
+  </data>
+  <data name="Graphics_SetMask_Mask" xml:space="preserve">
+    <value>マスクを設定します</value>
+  </data>
+  <data name="Graphics_SetMask_Summary" xml:space="preserve">
+    <value>マスクを変更します</value>
+  </data>
+  <data name="ScreenFilter_Color_Add_ColorFilter" xml:space="preserve">
+    <value>対象のカラーフィルターを設定します</value>
+  </data>
+  <data name="ScreenFilter_Color_Add_Summary" xml:space="preserve">
+    <value>カラーフィルターを追加します</value>
+  </data>
+  <data name="ScreenFilter_Color_Insert_ColorFilter" xml:space="preserve">
+    <value>対象のカラーフィルターを設定します</value>
+  </data>
+  <data name="ScreenFilter_Color_Insert_Index" xml:space="preserve">
+    <value>挿入するインデックスを設定します</value>
+  </data>
+  <data name="ScreenFilter_Color_Insert_Summary" xml:space="preserve">
+    <value>カラーフィルターを挿入します</value>
+  </data>
+  <data name="ScreenFilter_Color_Remove_ColorFilter" xml:space="preserve">
+    <value>対象のカラーフィルターを設定します</value>
+  </data>
+  <data name="ScreenFilter_Color_Remove_Filter" xml:space="preserve">
+    <value>対象のフィルターを設定します</value>
+  </data>
+  <data name="ScreenFilter_Color_Remove_Summary" xml:space="preserve">
+    <value>カラーフィルターを削除します</value>
+  </data>
+  <data name="ScreenFilter_Color_Value_Filter" xml:space="preserve">
+    <value>フィルターを取得します</value>
+  </data>
+  <data name="ScreenFilter_Color_Value_Summary" xml:space="preserve">
+    <value>スクリーンカラーフィルターです</value>
+  </data>
+  <data name="ScreenFilter_Gaussian_SetDisperson_Disperson" xml:space="preserve">
+    <value>分散を設定します</value>
+  </data>
+  <data name="ScreenFilter_Gaussian_SetDisperson_Filter" xml:space="preserve">
+    <value>対象のフィルターを設定します</value>
+  </data>
+  <data name="ScreenFilter_Gaussian_SetDisperson_Summary" xml:space="preserve">
+    <value>分散を変更します</value>
+  </data>
+  <data name="ScreenFilter_Gaussian_Value_Disperson" xml:space="preserve">
+    <value>分散を設定します</value>
+  </data>
+  <data name="ScreenFilter_Gaussian_Value_Filter" xml:space="preserve">
+    <value>フィルターを取得します</value>
+  </data>
+  <data name="ScreenFilter_Gaussian_Value_Summary" xml:space="preserve">
+    <value>ガウシアンフィルターです</value>
+  </data>
+  <data name="Mark_ProcessAllowedButtonsAny_Summary" xml:space="preserve">
+    <value>いかなるマークの許可されたボタンの一覧を決定します</value>
+  </data>
+  <data name="Mark_ProcessAllowedButtonsByID_Summary" xml:space="preserve">
+    <value>特定のIDのマークの許可されたボタンの一覧を決定します</value>
+  </data>
+  <data name="Mark_ProcessAllowedButtonsByID_TargetID" xml:space="preserve">
+    <value>対象のIDです</value>
+  </data>
+  <data name="Mark_ProcessAllowedButtonsWithinTime_EndTime" xml:space="preserve">
+    <value>終了の時間です</value>
+  </data>
+  <data name="Mark_ProcessAllowedButtonsWithinTime_StartTime" xml:space="preserve">
+    <value>開始の時間です</value>
+  </data>
+  <data name="Mark_ProcessAllowedButtonsWithinTime_Summary" xml:space="preserve">
+    <value>特定の時間の間のマークの許可されたボタンの一覧を決定します</value>
+  </data>
+  <data name="Mark_ProcessAllowedButtons_EvaluateRequired" xml:space="preserve">
+    <value>優先度の高いノードでHandledがTrueのときにも評価を行うかどうかを設定します</value>
+  </data>
+  <data name="Mark_ProcessAllowedButtons_Handled" xml:space="preserve">
+    <value>許可されたボタンの一覧の決定をハンドルするか設定します</value>
+  </data>
+  <data name="Mark_ProcessAllowedButtons_HasSameTimingMark" xml:space="preserve">
+    <value>同時押しかどうかを取得します</value>
+  </data>
+  <data name="Mark_ProcessAllowedButtons_IsAC" xml:space="preserve">
+    <value>マークがACかどうかを取得します</value>
+  </data>
+  <data name="Mark_ProcessAllowedButtons_IsACFT" xml:space="preserve">
+    <value>ACFTかどうかを取得します</value>
+  </data>
+  <data name="Mark_ProcessAllowedButtons_IsLong" xml:space="preserve">
+    <value>マークが長押しかどうかを取得します</value>
+  </data>
+  <data name="Mark_ProcessAllowedButtons_IsMissPress" xml:space="preserve">
+    <value>ミス押しかどうかを設定します</value>
+  </data>
+  <data name="Mark_ProcessAllowedButtons_IsRight" xml:space="preserve">
+    <value>右スクラッチかどうかを取得します</value>
+  </data>
+  <data name="Mark_ProcessAllowedButtons_IsScratch" xml:space="preserve">
+    <value>スクラッチかどうかを取得します</value>
+  </data>
+  <data name="Mark_ProcessAllowedButtons_MarkID" xml:space="preserve">
+    <value>マークのIDを取得します</value>
+  </data>
+  <data name="Mark_ProcessAllowedButtons_Out" xml:space="preserve">
+    <value>許可されたボタンを決定するかどうかを決める時のイベントです</value>
+  </data>
+  <data name="Mark_ProcessAllowedButtons_Parameters" xml:space="preserve">
+    <value>パラメーター一覧を取得します</value>
+  </data>
+  <data name="Mark_ProcessAllowedButtons_Position" xml:space="preserve">
+    <value>マークの位置を取得します</value>
+  </data>
+  <data name="Mark_ProcessAllowedButtons_PressedButton" xml:space="preserve">
+    <value>押されたボタンを取得します</value>
+  </data>
+  <data name="Mark_ProcessAllowedButtons_ReleaseTime" xml:space="preserve">
+    <value>マークの離す時間を取得します</value>
+  </data>
+  <data name="Mark_ProcessAllowedButtons_Rotation" xml:space="preserve">
+    <value>マークの回転角を取得します</value>
+  </data>
+  <data name="Mark_ProcessAllowedButtons_SameTimingMarks" xml:space="preserve">
+    <value>同時押しのマークの種類を取得します</value>
+  </data>
+  <data name="Mark_ProcessAllowedButtons_SlideScale" xml:space="preserve">
+    <value>スライドスケールを取得します</value>
+  </data>
+  <data name="Mark_ProcessAllowedButtons_Time" xml:space="preserve">
+    <value>マークの時間を取得します</value>
+  </data>
+  <data name="Mark_ProcessAllowedButtons_Type" xml:space="preserve">
+    <value>マークのタイプを取得します</value>
+  </data>
+  <data name="Mark_ProcessAllowedButtons_AllowedButtons" xml:space="preserve">
+    <value>許可されたボタンの一覧を設定します</value>
+  </data>
+  <data name="ForceEnableInput_Summary" xml:space="preserve">
+    <value>DisableInputの制限を無視して有効化します</value>
+  </data>
+  <data name="Polygon_ActualTextureCoordinates_Object" xml:space="preserve">
+    <value>ポリゴン表示オブジェクトです</value>
+  </data>
+  <data name="Polygon_ActualTextureCoordinates_Summary" xml:space="preserve">
+    <value>パッキングされたテクスチャ座標を取得します</value>
+  </data>
+  <data name="Polygon_ActualTextureCoordinates_TextureCoordinates" xml:space="preserve">
+    <value>テクスチャ座標です。</value>
+  </data>
+  <data name="Polygon_ActualTextureCoordinates_Value" xml:space="preserve">
+    <value>変換したテクスチャ座標です。</value>
+  </data>
+  <data name="Polygon_SetPrimitiveCount_Object" xml:space="preserve">
+    <value>ポリゴン表示オブジェクトです</value>
+  </data>
+  <data name="Polygon_SetPrimitiveCount_PrimitiveCount" xml:space="preserve">
+    <value>プリミティブの数です</value>
+  </data>
+  <data name="Polygon_SetPrimitiveCount_Summary" xml:space="preserve">
+    <value>プリミティブ数を設定します</value>
+  </data>
+  <data name="Polygon_SetPrimitiveType_Object" xml:space="preserve">
+    <value>ポリゴン表示オブジェクトです</value>
+  </data>
+  <data name="Polygon_SetPrimitiveType_PrimitiveType" xml:space="preserve">
+    <value>プリミティブタイプです</value>
+  </data>
+  <data name="Polygon_SetPrimitiveType_Summary" xml:space="preserve">
+    <value>プリミティブタイプを設定します</value>
+  </data>
+  <data name="Polygon_SetStartIndex_Object" xml:space="preserve">
+    <value>ポリゴン表示オブジェクトです</value>
+  </data>
+  <data name="Polygon_SetStartIndex_StartIndex" xml:space="preserve">
+    <value>頂点バッファーのオフセットです</value>
+  </data>
+  <data name="Polygon_SetStartIndex_Summary" xml:space="preserve">
+    <value>頂点バッファーのオフセットを設定します</value>
+  </data>
+  <data name="Polygon_SetVertexCount_Object" xml:space="preserve">
+    <value>ポリゴン表示オブジェクトです</value>
+  </data>
+  <data name="Polygon_SetVertexCount_Summary" xml:space="preserve">
+    <value>表示に使う頂点数を設定します</value>
+  </data>
+  <data name="Polygon_SetVertexCount_VertexCount" xml:space="preserve">
+    <value>表示に使う頂点数です</value>
+  </data>
+  <data name="Polygon_Value_Object" xml:space="preserve">
+    <value>生成されたオブジェクトです</value>
+  </data>
+  <data name="Polygon_Value_Path" xml:space="preserve">
+    <value>画像のパスです</value>
+  </data>
+  <data name="Polygon_Value_PrimitiveCount" xml:space="preserve">
+    <value>プリミティブ数です</value>
+  </data>
+  <data name="Polygon_Value_PrimitiveType" xml:space="preserve">
+    <value>プリミティブタイプです</value>
+  </data>
+  <data name="Polygon_Value_StartIndex" xml:space="preserve">
+    <value>頂点バッファーのオフセットです</value>
+  </data>
+  <data name="Polygon_Value_Summary" xml:space="preserve">
+    <value>ポリゴン表示オブジェクトを生成します</value>
+  </data>
+  <data name="Polygon_Value_VertexBuffer" xml:space="preserve">
+    <value>頂点バッファーです</value>
+  </data>
+  <data name="Polygon_Value_VertexCount" xml:space="preserve">
+    <value>表示に使う頂点数です</value>
+  </data>
+  <data name="VertexBuffer_Value_Object" xml:space="preserve">
+    <value>頂点バッファーです</value>
+  </data>
+  <data name="VertexBuffer_Value_Summary" xml:space="preserve">
+    <value>頂点バッファーを生成します</value>
+  </data>
+  <data name="VertexBuffer_Value_VertexCount" xml:space="preserve">
+    <value>頂点数です</value>
+  </data>
+  <data name="VertexBuffer_Write_Object" xml:space="preserve">
+    <value>頂点バッファーです</value>
+  </data>
+  <data name="VertexBuffer_Write_Offset" xml:space="preserve">
+    <value>書き込みのオフセットです</value>
+  </data>
+  <data name="VertexBuffer_Write_Summary" xml:space="preserve">
+    <value>頂点バッファーに頂点情報を書き込みます</value>
+  </data>
+  <data name="VertexBuffer_Write_Vertices" xml:space="preserve">
+    <value>頂点情報のシーケンスです</value>
+  </data>
+  <data name="Vertex_FromElement_Color" xml:space="preserve">
+    <value>頂点色です</value>
+  </data>
+  <data name="Vertex_FromElement_Position" xml:space="preserve">
+    <value>頂点の位置です</value>
+  </data>
+  <data name="Vertex_FromElement_Summary" xml:space="preserve">
+    <value>頂点情報を生成します</value>
+  </data>
+  <data name="Vertex_FromElement_TextureCoordinates" xml:space="preserve">
+    <value>テクスチャ座標です</value>
+  </data>
+  <data name="Vertex_FromElement_Value" xml:space="preserve">
+    <value>頂点情報です</value>
+  </data>
+  <data name="Vertex_Value_Color" xml:space="preserve">
+    <value>頂点色です</value>
+  </data>
+  <data name="Vertex_Value_Position" xml:space="preserve">
+    <value>頂点の位置です</value>
+  </data>
+  <data name="Vertex_Value_Summary" xml:space="preserve">
+    <value>頂点情報です</value>
+  </data>
+  <data name="Vertex_Value_TextureCoordinates" xml:space="preserve">
+    <value>テクスチャ座標です</value>
+  </data>
+  <data name="Mark_CreateImage_TraceImage" xml:space="preserve">
+    <value>マークの軌跡の画像を設定します</value>
+  </data>
+</root>

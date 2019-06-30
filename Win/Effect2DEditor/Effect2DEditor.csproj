@@ -1,0 +1,383 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x64</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{3114CC83-7765-4F13-BE17-80CF9066E013}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Effect2DEditor</RootNamespace>
+    <AssemblyName>Effect2DEditor</AssemblyName>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <StartupObject>
+    </StartupObject>
+    <ApplicationIcon>e2dmid.ico</ApplicationIcon>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <UpgradeBackupLocation />
+    <TargetFrameworkProfile />
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>false</Prefer32Bit>
+    <CodeAnalysisRuleSet>..\PPDCommon.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
+    <OutputPath>..\release\x64\PPD\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>false</Prefer32Bit>
+    <CodeAnalysisRuleSet>
+    </CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="SharpDX, Version=3.1.1.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpDX.3.1.1\lib\net45\SharpDX.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="SharpDX.Mathematics, Version=3.1.1.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpDX.Mathematics.3.1.1\lib\net45\SharpDX.Mathematics.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AskFrameCount.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AskFrameCount.Designer.cs">
+      <DependentUpon>AskFrameCount.cs</DependentUpon>
+    </Compile>
+    <Compile Include="BezierRatioDrawer.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="BezierRatioDrawer.Designer.cs">
+      <DependentUpon>BezierRatioDrawer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CanvasSizeForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CanvasSizeForm.Designer.cs">
+      <DependentUpon>CanvasSizeForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ChangeBackGroundForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ChangeBackGroundForm.Designer.cs">
+      <DependentUpon>ChangeBackGroundForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ChangeValueLabel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Command\AddEffectCommand.cs" />
+    <Compile Include="Command\AddStateCommand.cs" />
+    <Compile Include="Command\BezierPositionChangeCommand.cs" />
+    <Compile Include="Command\ChangeIndexCommand.cs" />
+    <Compile Include="Command\ClearEffectCommand.cs" />
+    <Compile Include="Command\CommandManager.cs" />
+    <Compile Include="Command\CopyEffectCommand.cs" />
+    <Compile Include="Command\DeleteEffectCommand.cs" />
+    <Compile Include="Command\DeleteStateCommand.cs" />
+    <Compile Include="Command\LoadEffectCommand.cs" />
+    <Compile Include="Command\ResetPathCommand.cs" />
+    <Compile Include="Command\ReverseEffectsCommand.cs" />
+    <Compile Include="Command\SelectStateCommand.cs" />
+    <Compile Include="Command\MoveStateCommand.cs" />
+    <Compile Include="Command\StateBlendModeChangeCommand.cs" />
+    <Compile Include="Command\StateParameterChangeCommand.cs" />
+    <Compile Include="Command\SetRatioMakerChangeCommand.cs" />
+    <Compile Include="CustomToolStripRenderer.cs" />
+    <Compile Include="CustomUserControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Command\CommandBase.cs" />
+    <Compile Include="DockForm\CanvasDock.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DockForm\CanvasDock.Designer.cs">
+      <DependentUpon>CanvasDock.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DockForm\HistoryDock.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DockForm\HistoryDock.Designer.cs">
+      <DependentUpon>HistoryDock.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DockForm\PropertyDock.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DockForm\PropertyDock.Designer.cs">
+      <DependentUpon>PropertyDock.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DockForm\TimeLineDock.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DockForm\TimeLineDock.Designer.cs">
+      <DependentUpon>TimeLineDock.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ExToolStripSplitButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="HistoryPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="HistoryPanel.Designer.cs">
+      <DependentUpon>HistoryPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utility.cs" />
+    <EmbeddedResource Include="AskFrameCount.resx">
+      <DependentUpon>AskFrameCount.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="BezierRatioDrawer.resx">
+      <DependentUpon>BezierRatioDrawer.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CanvasSizeForm.resx">
+      <DependentUpon>CanvasSizeForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ChangeBackGroundForm.resx">
+      <DependentUpon>ChangeBackGroundForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DockForm\CanvasDock.resx">
+      <DependentUpon>CanvasDock.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DockForm\HistoryDock.resx">
+      <DependentUpon>HistoryDock.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DockForm\PropertyDock.resx">
+      <DependentUpon>PropertyDock.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DockForm\TimeLineDock.resx">
+      <DependentUpon>TimeLineDock.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="HistoryPanel.resx">
+      <DependentUpon>HistoryPanel.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RatioChangeForm.resx">
+      <DependentUpon>RatioChangeForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TimeLine.resx">
+      <DependentUpon>TimeLine.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TimeLineItem.resx">
+      <DependentUpon>TimeLineItem.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TransParentForm.resx">
+      <DependentUpon>TransParentForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <None Include="app.config" />
+    <None Include="Lang\lang_Effect2DEditor_en.ini">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Lang\lang_Effect2DEditor_es.ini">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Lang\lang_Effect2DEditor_jp.ini">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Lang\lang_Effect2DEditor_kr.ini">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Lang\lang_Effect2DEditor_zh1.ini">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Lang\lang_Effect2DEditor_zh2.ini">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="RatioChangeForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="RatioChangeForm.Designer.cs">
+      <DependentUpon>RatioChangeForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SelectedManager.cs" />
+    <Compile Include="TimeLine.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="TimeLine.Designer.cs">
+      <DependentUpon>TimeLine.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TimeLineItem.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="TimeLineItem.Designer.cs">
+      <DependentUpon>TimeLineItem.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TransParentForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TransParentForm.Designer.cs">
+      <DependentUpon>TransParentForm.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BezierCaliculator\BezierCaliculator.csproj">
+      <Project>{8E6F013A-FBBD-4F3E-94F2-0EFA2CE09872}</Project>
+      <Name>BezierCaliculator</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BezierDrawControl\BezierDrawControl\BezierDrawControl.csproj">
+      <Project>{9DCF287B-B89D-41C7-9E91-A1122798261C}</Project>
+      <Name>BezierDrawControl</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Effect2D\Effect2D.csproj">
+      <Project>{21169B27-D6EE-47AF-88F3-171FDA7E7F0C}</Project>
+      <Name>Effect2D</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ErrorHandler\ErrorHandle.csproj">
+      <Project>{7BF2846D-6813-4E83-8B26-42C5B98B2099}</Project>
+      <Name>ErrorHandle</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PPDConfiguration\PPDConfiguration.csproj">
+      <Project>{412E43FD-DA7A-4B7A-85F8-61A2501FCAF6}</Project>
+      <Name>PPDConfiguration</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PPDFramework\PPDFramework.csproj">
+      <Project>{fb4e8b02-d832-470d-968e-3aa046e4c164}</Project>
+      <Name>PPDFramework</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WinFormsUI\WinFormsUI.csproj">
+      <Project>{C75532C4-765B-418E-B09B-46D36B2ABDB1}</Project>
+      <Name>WinFormsUI</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="img\add.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="img\pause.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="img\playloop.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="img\playonce.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="img\playreverse.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="img\playreverseloop.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="img\remove.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="img\stop.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="img\copy.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="img\delete.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="img\swapreverse.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="img\check.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="e2dmid.ico" />
+    <Content Include="e2dsmall.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows インストーラー 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

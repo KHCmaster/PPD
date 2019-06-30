@@ -1,0 +1,22 @@
+﻿<UserControl x:Class="FlowScriptDrawControl.Control.BoundCommentControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:control="clr-namespace:FlowScriptDrawControl.Control"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d">
+    <Grid>
+        <Polygon x:Name="frame" Stroke="White" StrokeThickness="1">
+            <Polygon.Fill>
+                <SolidColorBrush Color="#FFFFFFDE"/>
+            </Polygon.Fill>
+        </Polygon>
+        <Grid x:Name="mainGrid" Margin="2">
+            <control:CustomTextBlock VerticalAlignment="Top" Background="#FFFFFFDE" x:Name="textBlock" MinWidth="20" CustomText="{Binding Text}"/>
+            <StackPanel>
+                <control:CustomTextBox Background="#FFFFFFDE" MinWidth="20" x:Name="textBox" CustomText="{Binding Text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                 Padding="0" BorderThickness="0" AcceptsReturn="False" Foreground="Black" />
+            </StackPanel>
+        </Grid>
+    </Grid>
+</UserControl>

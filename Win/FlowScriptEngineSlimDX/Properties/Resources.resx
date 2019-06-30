@@ -1,0 +1,759 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Add_Summary" xml:space="preserve">
+    <value>加算します</value>
+  </data>
+  <data name="Add_Value" xml:space="preserve">
+    <value>加算した数値です</value>
+  </data>
+  <data name="Color4_FromElement_Alpha" xml:space="preserve">
+    <value>アルファ値を設定します</value>
+  </data>
+  <data name="Color4_FromElement_Blue" xml:space="preserve">
+    <value>B値を設定します</value>
+  </data>
+  <data name="Color4_FromElement_Green" xml:space="preserve">
+    <value>G値を設定します</value>
+  </data>
+  <data name="Color4_FromElement_Red" xml:space="preserve">
+    <value>R値を設定します</value>
+  </data>
+  <data name="Color4_FromElement_Summary" xml:space="preserve">
+    <value>要素を指定して色を生成します</value>
+  </data>
+  <data name="Color4_FromElement_Value" xml:space="preserve">
+    <value>色を取得します</value>
+  </data>
+  <data name="Color4_Summary" xml:space="preserve">
+    <value>色を表します</value>
+  </data>
+  <data name="Color4_Value_Alpha" xml:space="preserve">
+    <value>色のアルファ値を取得します</value>
+  </data>
+  <data name="Color4_Value_Blue" xml:space="preserve">
+    <value>色のB値を取得します</value>
+  </data>
+  <data name="Color4_Value_Green" xml:space="preserve">
+    <value>色のG値を取得します</value>
+  </data>
+  <data name="Color4_Value_Red" xml:space="preserve">
+    <value>色のR値を取得します</value>
+  </data>
+  <data name="Color4_Value_Summary" xml:space="preserve">
+    <value>色を取得、設定します</value>
+  </data>
+  <data name="Devide_Summary" xml:space="preserve">
+    <value>割算します</value>
+  </data>
+  <data name="Devide_Value" xml:space="preserve">
+    <value>割算した数値です</value>
+  </data>
+  <data name="Equal_Summary" xml:space="preserve">
+    <value>等しいかどうかを調べます</value>
+  </data>
+  <data name="Equal_Value" xml:space="preserve">
+    <value>等しいかどうかです</value>
+  </data>
+  <data name="FirstArgument" xml:space="preserve">
+    <value>一つ目の引数です</value>
+  </data>
+  <data name="Matrix_AffineTransformation2D_RotationCenter_Summary" xml:space="preserve">
+    <value>回転の中心を設定します</value>
+  </data>
+  <data name="Matrix_AffineTransformation2D_Rotation_Summary" xml:space="preserve">
+    <value>回転量を設定します</value>
+  </data>
+  <data name="Matrix_AffineTransformation2D_Scale_Summary" xml:space="preserve">
+    <value>拡大率を設定します</value>
+  </data>
+  <data name="Matrix_AffineTransformation2D_Summary" xml:space="preserve">
+    <value>2次元のアフィン変換マトリックスを生成します</value>
+  </data>
+  <data name="Matrix_AffineTransformation2D_Translation_Summary" xml:space="preserve">
+    <value>移動量を設定します</value>
+  </data>
+  <data name="Matrix_AffineTransformation2D_Value_Summary" xml:space="preserve">
+    <value>変換行列を取得します</value>
+  </data>
+  <data name="Matrix_AffineTransformation_RotationCenter_Summary" xml:space="preserve">
+    <value>回転の中心を設定します</value>
+  </data>
+  <data name="Matrix_AffineTransformation_Rotation_Summary" xml:space="preserve">
+    <value>回転量を設定します</value>
+  </data>
+  <data name="Matrix_AffineTransformation_Scale_Summary" xml:space="preserve">
+    <value>拡大率を設定します</value>
+  </data>
+  <data name="Matrix_AffineTransformation_Summary" xml:space="preserve">
+    <value>3次元のアフィン変換マトリックスを生成します</value>
+  </data>
+  <data name="Matrix_AffineTransformation_Translation_Summary" xml:space="preserve">
+    <value>移動量を設定します</value>
+  </data>
+  <data name="Matrix_AffineTransformation_Value_Summary" xml:space="preserve">
+    <value>変換行列を取得します</value>
+  </data>
+  <data name="Matrix_Determinant_Matrix_Summary" xml:space="preserve">
+    <value>対象の行列を設定します</value>
+  </data>
+  <data name="Matrix_Determinant_Summary" xml:space="preserve">
+    <value>行列の行列式を計算します</value>
+  </data>
+  <data name="Matrix_Determinant_Value_Summary" xml:space="preserve">
+    <value>行列式を取得します</value>
+  </data>
+  <data name="Matrix_GetColumn_A_Summary" xml:space="preserve">
+    <value>対象の行列を設定します</value>
+  </data>
+  <data name="Matrix_GetColumn_Index_Summary" xml:space="preserve">
+    <value>対象の列インデックスを設定します</value>
+  </data>
+  <data name="Matrix_GetColumn_Summary" xml:space="preserve">
+    <value>行列の列ベクトルを取得します</value>
+  </data>
+  <data name="Matrix_GetColumn_Value_Summary" xml:space="preserve">
+    <value>列ベクトルを取得します</value>
+  </data>
+  <data name="Matrix_GetRow_A_Summary" xml:space="preserve">
+    <value>対象の行列を設定します</value>
+  </data>
+  <data name="Matrix_GetRow_Index_Summary" xml:space="preserve">
+    <value>対象の行インデックスを設定します</value>
+  </data>
+  <data name="Matrix_GetRow_Summary" xml:space="preserve">
+    <value>行列の行ベクトルを取得します</value>
+  </data>
+  <data name="Matrix_GetRow_Value_Summary" xml:space="preserve">
+    <value>行ベクトルを取得します</value>
+  </data>
+  <data name="Matrix_Identity_Summary" xml:space="preserve">
+    <value>単位行列を取得します</value>
+  </data>
+  <data name="Matrix_Identity_Value_Summary" xml:space="preserve">
+    <value>単位行列を取得します</value>
+  </data>
+  <data name="Matrix_RotationAxis_Angle_Summary" xml:space="preserve">
+    <value>回転量を設定します</value>
+  </data>
+  <data name="Matrix_RotationAxis_Axis_Summary" xml:space="preserve">
+    <value>軸を設定します</value>
+  </data>
+  <data name="Matrix_RotationAxis_Summary" xml:space="preserve">
+    <value>軸の周りの回転行列を計算します</value>
+  </data>
+  <data name="Matrix_RotationAxis_Value_Summary" xml:space="preserve">
+    <value>変換行列を取得します</value>
+  </data>
+  <data name="Matrix_RotationQuaternion_Quaternion_Summary" xml:space="preserve">
+    <value>対象のクォータニオンを設定します</value>
+  </data>
+  <data name="Matrix_RotationQuaternion_Summary" xml:space="preserve">
+    <value>クォータニオンによる回転行列を計算します</value>
+  </data>
+  <data name="Matrix_RotationQuaternion_Value_Summary" xml:space="preserve">
+    <value>変換行列を取得します</value>
+  </data>
+  <data name="Matrix_RotationX_Angle_Summary" xml:space="preserve">
+    <value>回転量を設定します</value>
+  </data>
+  <data name="Matrix_RotationX_Summary" xml:space="preserve">
+    <value>X軸での回転行列を計算します</value>
+  </data>
+  <data name="Matrix_RotationX_Value_Summary" xml:space="preserve">
+    <value>変換行列を取得します</value>
+  </data>
+  <data name="Matrix_RotationY_Angle_Summary" xml:space="preserve">
+    <value>回転量を設定します</value>
+  </data>
+  <data name="Matrix_RotationY_Summary" xml:space="preserve">
+    <value>Y軸での回転行列を計算します</value>
+  </data>
+  <data name="Matrix_RotationY_Value_Summary" xml:space="preserve">
+    <value>変換行列を取得します</value>
+  </data>
+  <data name="Matrix_RotationZ_Angle_Summary" xml:space="preserve">
+    <value>回転量を設定します</value>
+  </data>
+  <data name="Matrix_RotationZ_Summary" xml:space="preserve">
+    <value>Z軸での回転行列を計算します</value>
+  </data>
+  <data name="Matrix_RotationZ_Value_Summary" xml:space="preserve">
+    <value>変換行列を取得します</value>
+  </data>
+  <data name="Matrix_Scaling_Scale_Summary" xml:space="preserve">
+    <value>拡大率を設定します</value>
+  </data>
+  <data name="Matrix_Scaling_Summary" xml:space="preserve">
+    <value>拡大行列を計算します</value>
+  </data>
+  <data name="Matrix_Scaling_Value_Summary" xml:space="preserve">
+    <value>変換行列を取得します</value>
+  </data>
+  <data name="Matrix_Transformation2D_RotationCenter_Summary" xml:space="preserve">
+    <value>回転の中心を設定します</value>
+  </data>
+  <data name="Matrix_Transformation2D_Rotation_Summary" xml:space="preserve">
+    <value>回転量を設定します</value>
+  </data>
+  <data name="Matrix_Transformation2D_ScalingCenter_Summary" xml:space="preserve">
+    <value>拡大の中心位置を設定します</value>
+  </data>
+  <data name="Matrix_Transformation2D_ScalingRotation_Summary" xml:space="preserve">
+    <value>拡大回転を設定します</value>
+  </data>
+  <data name="Matrix_Transformation2D_Scaling_Summary" xml:space="preserve">
+    <value>拡大率を設定します</value>
+  </data>
+  <data name="Matrix_Transformation2D_Summary" xml:space="preserve">
+    <value>２次元変換行列を計算します</value>
+  </data>
+  <data name="Matrix_Transformation2D_Translation_Summary" xml:space="preserve">
+    <value>移動量を設定します</value>
+  </data>
+  <data name="Matrix_Transformation2D_Value_Summary" xml:space="preserve">
+    <value>変換行列を取得します</value>
+  </data>
+  <data name="Matrix_Transformation_RotationCenter_Summary" xml:space="preserve">
+    <value>回転の中心を設定します</value>
+  </data>
+  <data name="Matrix_Transformation_Rotation_Summary" xml:space="preserve">
+    <value>回転量を設定します</value>
+  </data>
+  <data name="Matrix_Transformation_ScalingCenter_Summary" xml:space="preserve">
+    <value>拡大の中心位置を設定します</value>
+  </data>
+  <data name="Matrix_Transformation_ScalingRotation_Summary" xml:space="preserve">
+    <value>拡大回転を設定します</value>
+  </data>
+  <data name="Matrix_Transformation_Scaling_Summary" xml:space="preserve">
+    <value>拡大率を設定します</value>
+  </data>
+  <data name="Matrix_Transformation_Summary" xml:space="preserve">
+    <value>３次元変換行列を計算します</value>
+  </data>
+  <data name="Matrix_Transformation_Translation_Summary" xml:space="preserve">
+    <value>移動量を設定します</value>
+  </data>
+  <data name="Matrix_Transformation_Value_Summary" xml:space="preserve">
+    <value>変換行列を取得します</value>
+  </data>
+  <data name="Matrix_Translation_Summary" xml:space="preserve">
+    <value>移動行列を計算します</value>
+  </data>
+  <data name="Matrix_Translation_Translation_Summary" xml:space="preserve">
+    <value>移動量を設定します</value>
+  </data>
+  <data name="Matrix_Translation_Value_Summary" xml:space="preserve">
+    <value>変換行列を取得します</value>
+  </data>
+  <data name="Matrix_Transpose_Matrix_Summary" xml:space="preserve">
+    <value>対象の行列を設定します</value>
+  </data>
+  <data name="Matrix_Transpose_Summary" xml:space="preserve">
+    <value>転置行列を計算します</value>
+  </data>
+  <data name="Matrix_Transpose_Value_Summary" xml:space="preserve">
+    <value>転置行列を取得します</value>
+  </data>
+  <data name="Matrix_Value_M11_Summary" xml:space="preserve">
+    <value>M11要素の値を取得します</value>
+  </data>
+  <data name="Matrix_Value_M12_Summary" xml:space="preserve">
+    <value>M12要素の値を取得します</value>
+  </data>
+  <data name="Matrix_Value_M13_Summary" xml:space="preserve">
+    <value>M13要素の値を取得します</value>
+  </data>
+  <data name="Matrix_Value_M14_Summary" xml:space="preserve">
+    <value>M14要素の値を取得します</value>
+  </data>
+  <data name="Matrix_Value_M21_Summary" xml:space="preserve">
+    <value>M21要素の値を取得します</value>
+  </data>
+  <data name="Matrix_Value_M22_Summary" xml:space="preserve">
+    <value>M22要素の値を取得します</value>
+  </data>
+  <data name="Matrix_Value_M23_Summary" xml:space="preserve">
+    <value>M23要素の値を取得します</value>
+  </data>
+  <data name="Matrix_Value_M24_Summary" xml:space="preserve">
+    <value>M24要素の値を取得します</value>
+  </data>
+  <data name="Matrix_Value_M31_Summary" xml:space="preserve">
+    <value>M31要素の値を取得します</value>
+  </data>
+  <data name="Matrix_Value_M32_Summary" xml:space="preserve">
+    <value>M32要素の値を取得します</value>
+  </data>
+  <data name="Matrix_Value_M33_Summary" xml:space="preserve">
+    <value>M33要素の値を取得します</value>
+  </data>
+  <data name="Matrix_Value_M34_Summary" xml:space="preserve">
+    <value>M34要素の値を取得します</value>
+  </data>
+  <data name="Matrix_Value_M41_Summary" xml:space="preserve">
+    <value>M41要素の値を取得します</value>
+  </data>
+  <data name="Matrix_Value_M42_Summary" xml:space="preserve">
+    <value>M42要素の値を取得します</value>
+  </data>
+  <data name="Matrix_Value_M43_Summary" xml:space="preserve">
+    <value>M43要素の値を取得します</value>
+  </data>
+  <data name="Matrix_Value_M44_Summary" xml:space="preserve">
+    <value>M44要素の値を取得します</value>
+  </data>
+  <data name="Matrix_Value_Summary" xml:space="preserve">
+    <value>行列を分解します</value>
+  </data>
+  <data name="Matrix_Value_Value_Summary" xml:space="preserve">
+    <value>対象の行列を取得、設定します</value>
+  </data>
+  <data name="Multiply_Summary" xml:space="preserve">
+    <value>乗算します</value>
+  </data>
+  <data name="Multiply_Value" xml:space="preserve">
+    <value>乗算した結果です</value>
+  </data>
+  <data name="Quaternion_Angle_Quaternion_Summary" xml:space="preserve">
+    <value>対象のクォータニオンを設定します</value>
+  </data>
+  <data name="Quaternion_Angle_Summary" xml:space="preserve">
+    <value>クォータニオンの角度を計算します</value>
+  </data>
+  <data name="Quaternion_Angle_Value_Summary" xml:space="preserve">
+    <value>クォータニオンの角度を取得します</value>
+  </data>
+  <data name="Quaternion_Axis_Quaternion_Summary" xml:space="preserve">
+    <value>対象のクォータニオンを設定します</value>
+  </data>
+  <data name="Quaternion_Axis_Summary" xml:space="preserve">
+    <value>クォータニオンの軸を計算します</value>
+  </data>
+  <data name="Quaternion_Axis_Value_Summary" xml:space="preserve">
+    <value>クォータニオンの軸を取得します</value>
+  </data>
+  <data name="Quaternion_Dot_A_Summary" xml:space="preserve">
+    <value>一つ目のクォータニオンを設定します</value>
+  </data>
+  <data name="Quaternion_Dot_B_Summary" xml:space="preserve">
+    <value>二つ目のクォータニオンを設定します</value>
+  </data>
+  <data name="Quaternion_Dot_Summary" xml:space="preserve">
+    <value>二つのクォータニオンの内積を計算します</value>
+  </data>
+  <data name="Quaternion_Dot_Value_Summary" xml:space="preserve">
+    <value>クォータニオンの内積を取得します</value>
+  </data>
+  <data name="Quaternion_Exponential_Quaternion_Summary" xml:space="preserve">
+    <value>対象のクォータニオンを設定します</value>
+  </data>
+  <data name="Quaternion_Exponential_Summary" xml:space="preserve">
+    <value>クォータニオンの指数を計算します</value>
+  </data>
+  <data name="Quaternion_Exponential_Value_Summary" xml:space="preserve">
+    <value>クォータニオンの指数を取得します</value>
+  </data>
+  <data name="Quaternion_LengthSquared_Quaternion_Summary" xml:space="preserve">
+    <value>対象のクォータニオンです</value>
+  </data>
+  <data name="Quaternion_LengthSquared_Summary" xml:space="preserve">
+    <value>クォータニオンの長さの２乗を計算します</value>
+  </data>
+  <data name="Quaternion_LengthSquared_Value_Summary" xml:space="preserve">
+    <value>クォータニオンの長さの２乗を取得します</value>
+  </data>
+  <data name="Quaternion_Length_Quaternion_Summary" xml:space="preserve">
+    <value>対象のクォータニオンです</value>
+  </data>
+  <data name="Quaternion_Length_Summary" xml:space="preserve">
+    <value>クォータニオンの長さを計算します</value>
+  </data>
+  <data name="Quaternion_Length_Value_Summary" xml:space="preserve">
+    <value>クォータニオンの長さを取得します</value>
+  </data>
+  <data name="Quaternion_Logarithm_Quaternion_Summary" xml:space="preserve">
+    <value>対象のクォータニオンを設定します</value>
+  </data>
+  <data name="Quaternion_Logarithm_Summary" xml:space="preserve">
+    <value>クォータニオンのログを計算します</value>
+  </data>
+  <data name="Quaternion_Logarithm_Value_Summary" xml:space="preserve">
+    <value>クォータニオンのログを取得します</value>
+  </data>
+  <data name="Quaternion_Normalize_Quaternion_Summary" xml:space="preserve">
+    <value>対象のクォータニオンです</value>
+  </data>
+  <data name="Quaternion_Normalize_Summary" xml:space="preserve">
+    <value>正規化したクォータニオンを計算します</value>
+  </data>
+  <data name="Quaternion_Normalize_Value_Summary" xml:space="preserve">
+    <value>正規化したクォータニオンを取得します</value>
+  </data>
+  <data name="Quaternion_RotationAxis_Angle_Summary" xml:space="preserve">
+    <value>角度を設定します</value>
+  </data>
+  <data name="Quaternion_RotationAxis_Axis_Summary" xml:space="preserve">
+    <value>軸を設定します</value>
+  </data>
+  <data name="Quaternion_RotationAxis_Summary" xml:space="preserve">
+    <value>指定した軸周りの回転したクォータニオンを計算します</value>
+  </data>
+  <data name="Quaternion_RotationAxis_Value_Summary" xml:space="preserve">
+    <value>回転したクォータニオンを取得します</value>
+  </data>
+  <data name="Quaternion_RotationMatrix_Matrix_Summary" xml:space="preserve">
+    <value>回転行列を設定します</value>
+  </data>
+  <data name="Quaternion_RotationMatrix_Summary" xml:space="preserve">
+    <value>回転行列からクォータニオンを計算します</value>
+  </data>
+  <data name="Quaternion_RotationMatrix_Value_Summary" xml:space="preserve">
+    <value>クォータニオンを取得します</value>
+  </data>
+  <data name="Quaternion_Value_Summary" xml:space="preserve">
+    <value>クォータニオンを分解します</value>
+  </data>
+  <data name="Quaternion_Value_Value_Summary" xml:space="preserve">
+    <value>対象のクォータニオンを取得、設定します</value>
+  </data>
+  <data name="Quaternion_Value_W_Summary" xml:space="preserve">
+    <value>クォータニオンのW成分を取得します</value>
+  </data>
+  <data name="Quaternion_Value_X_Summary" xml:space="preserve">
+    <value>クォータニオンのX成分を取得します</value>
+  </data>
+  <data name="Quaternion_Value_Y_Summary" xml:space="preserve">
+    <value>クォータニオンのY成分を取得します</value>
+  </data>
+  <data name="Quaternion_Value_Z_Summary" xml:space="preserve">
+    <value>クォータニオンのZ成分を取得します</value>
+  </data>
+  <data name="SecondArgument" xml:space="preserve">
+    <value>二つ目の引数です</value>
+  </data>
+  <data name="Substract_Summary" xml:space="preserve">
+    <value>減算します</value>
+  </data>
+  <data name="Substract_Value" xml:space="preserve">
+    <value>減算した結果です</value>
+  </data>
+  <data name="TemplateIsType_Summary" xml:space="preserve">
+    <value>ターゲットのタイプを調べます</value>
+  </data>
+  <data name="TemplateIsType_Target" xml:space="preserve">
+    <value>ターゲットです</value>
+  </data>
+  <data name="TemplateIsType_Value" xml:space="preserve">
+    <value>ターゲットがタイプであったかどうかです</value>
+  </data>
+  <data name="Vector2_Value_Value_Summary" xml:space="preserve">
+    <value>文字列の場合は X:0 Y:0のようなフォーマットで可能です</value>
+  </data>
+  <data name="Vector3_Value_Value_Summary" xml:space="preserve">
+    <value>文字列の場合は X:0 Y:0 Z:0のようなフォーマットで可能です</value>
+  </data>
+  <data name="Vector4_Value_Value_Summary" xml:space="preserve">
+    <value>文字列の場合は X:0 Y:0 Z:0 W:0のようなフォーマットで可能です</value>
+  </data>
+  <data name="Vector_Clamp_Max_Summary" xml:space="preserve">
+    <value>最大のベクトルを設定します</value>
+  </data>
+  <data name="Vector_Clamp_Min_Summary" xml:space="preserve">
+    <value>最小のベクトルを設定します</value>
+  </data>
+  <data name="Vector_Clamp_Summary" xml:space="preserve">
+    <value>ベクトルを最大、最小以内に制限します</value>
+  </data>
+  <data name="Vector_Clamp_Value_Summary" xml:space="preserve">
+    <value>制限されたベクトルを取得します</value>
+  </data>
+  <data name="Vector_Clamp_Vector_Summary" xml:space="preserve">
+    <value>対象のベクトルを設定します</value>
+  </data>
+  <data name="Vector_Cross_Summary" xml:space="preserve">
+    <value>二つのベクトルから外積を計算します</value>
+  </data>
+  <data name="Vector_Cross_Value_Summary" xml:space="preserve">
+    <value>ベクトルの外積を取得します</value>
+  </data>
+  <data name="Vector_DistanceSquared_Summary" xml:space="preserve">
+    <value>二つのベクトルの距離の2乗を計算します</value>
+  </data>
+  <data name="Vector_DistanceSquared_Value_Summary" xml:space="preserve">
+    <value>ベクトルの距離の2乗を取得します</value>
+  </data>
+  <data name="Vector_Distance_Summary" xml:space="preserve">
+    <value>二つのベクトルの距離を計算します</value>
+  </data>
+  <data name="Vector_Distance_Value_Summary" xml:space="preserve">
+    <value>ベクトルの距離を取得します</value>
+  </data>
+  <data name="Vector_Dot_Summary" xml:space="preserve">
+    <value>ベクトルの内積を計算します</value>
+  </data>
+  <data name="Vector_Dot_Value_Summary" xml:space="preserve">
+    <value>ベクトルの内積を取得します</value>
+  </data>
+  <data name="Vector_FromElement_Summary" xml:space="preserve">
+    <value>要素を指定してベクトルを生成します</value>
+  </data>
+  <data name="Vector_FromElement_Value_Summary" xml:space="preserve">
+    <value>ベクトルを取得します</value>
+  </data>
+  <data name="Vector_FromElement_W_Summary" xml:space="preserve">
+    <value>W成分を設定します</value>
+  </data>
+  <data name="Vector_FromElement_X_Summary" xml:space="preserve">
+    <value>X成分を設定します</value>
+  </data>
+  <data name="Vector_FromElement_Y_Summary" xml:space="preserve">
+    <value>Y成分を設定します</value>
+  </data>
+  <data name="Vector_FromElement_Z_Summary" xml:space="preserve">
+    <value>Z成分を設定します</value>
+  </data>
+  <data name="Vector_LengthSquared_Summary" xml:space="preserve">
+    <value>ベクトルの長さの2乗を計算します</value>
+  </data>
+  <data name="Vector_LengthSquared_Value_Summary" xml:space="preserve">
+    <value>ベクトルの長さの2乗を取得します</value>
+  </data>
+  <data name="Vector_LengthSquared_Vector_Summary" xml:space="preserve">
+    <value>対象のベクトルを設定します</value>
+  </data>
+  <data name="Vector_Length_Summary" xml:space="preserve">
+    <value>ベクトルの長さを計算します</value>
+  </data>
+  <data name="Vector_Length_Value_Summary" xml:space="preserve">
+    <value>ベクトルの長さを取得します</value>
+  </data>
+  <data name="Vector_Length_Vector_Summary" xml:space="preserve">
+    <value>対象のベクトルを設定します</value>
+  </data>
+  <data name="Vector_Max_Summary" xml:space="preserve">
+    <value>二つのベクトルの最大の要素からなるベクトルを計算します</value>
+  </data>
+  <data name="Vector_Max_Value_Summary" xml:space="preserve">
+    <value>最大の要素を持つベクトルを取得します</value>
+  </data>
+  <data name="Vector_Min_Summary" xml:space="preserve">
+    <value>二つのベクトルの最小の要素からなるベクトルを計算します</value>
+  </data>
+  <data name="Vector_Min_Value_Summary" xml:space="preserve">
+    <value>最小の要素を持つベクトルを取得します</value>
+  </data>
+  <data name="Vector_Modulate_Summary" xml:space="preserve">
+    <value>成分をそれぞれ掛け合わせたベクトルを計算します</value>
+  </data>
+  <data name="Vector_Modulate_Value_Summary" xml:space="preserve">
+    <value>成分を掛け合わせたベクトルを取得します</value>
+  </data>
+  <data name="Vector_Normalize_Summary" xml:space="preserve">
+    <value>正規化したベクトルを計算します</value>
+  </data>
+  <data name="Vector_Normalize_Value_Summary" xml:space="preserve">
+    <value>正規化したベクトルを取得します</value>
+  </data>
+  <data name="Vector_Normalize_Vector_Summary" xml:space="preserve">
+    <value>対象のベクトルを設定します</value>
+  </data>
+  <data name="Vector_TransformCoordinate_A_Summary" xml:space="preserve">
+    <value>ベクトルを設定します</value>
+  </data>
+  <data name="Vector_TransformCoordinate_B_Summary" xml:space="preserve">
+    <value>行列を設定します</value>
+  </data>
+  <data name="Vector_TransformCoordinate_Summary" xml:space="preserve">
+    <value>ベクトルを指定の行列で変形しW=1に投影します</value>
+  </data>
+  <data name="Vector_TransformCoordinate_Value_Summary" xml:space="preserve">
+    <value>変形したベクトルを取得します</value>
+  </data>
+  <data name="Vector_TransformNormal_A_Summary" xml:space="preserve">
+    <value>法線ベクトルを設定します</value>
+  </data>
+  <data name="Vector_TransformNormal_B_Summary" xml:space="preserve">
+    <value>行列を設定します</value>
+  </data>
+  <data name="Vector_TransformNormal_Summary" xml:space="preserve">
+    <value>法線ベクトルを指定の行列で変形します</value>
+  </data>
+  <data name="Vector_TransformNormal_Value_Summary" xml:space="preserve">
+    <value>変形したベクトルを取得します</value>
+  </data>
+  <data name="Vector_Transform_A_Summary" xml:space="preserve">
+    <value>対象のベクトルを設定します</value>
+  </data>
+  <data name="Vector_Transform_B_Summary" xml:space="preserve">
+    <value>対象の行列を設定します</value>
+  </data>
+  <data name="Vector_Transform_Summary" xml:space="preserve">
+    <value>ベクトルを行列で変形します</value>
+  </data>
+  <data name="Vector_Transform_Value_Summary" xml:space="preserve">
+    <value>変形されたベクトルを取得します</value>
+  </data>
+  <data name="Vector_UnitW_Summary" xml:space="preserve">
+    <value>W方向の単位ベクトルを取得します</value>
+  </data>
+  <data name="Vector_UnitW_Value_Summary" xml:space="preserve">
+    <value>単位ベクトルを取得します</value>
+  </data>
+  <data name="Vector_UnitX_Summary" xml:space="preserve">
+    <value>X方向の単位ベクトルを取得します</value>
+  </data>
+  <data name="Vector_UnitX_Value_Summary" xml:space="preserve">
+    <value>単位ベクトルを取得します</value>
+  </data>
+  <data name="Vector_UnitY_Summary" xml:space="preserve">
+    <value>Y方向の単位ベクトルを取得します</value>
+  </data>
+  <data name="Vector_UnitY_Value_Summary" xml:space="preserve">
+    <value>単位ベクトルを取得します</value>
+  </data>
+  <data name="Vector_UnitZ_Summary" xml:space="preserve">
+    <value>Z方向の単位ベクトルを取得します</value>
+  </data>
+  <data name="Vector_UnitZ_Value_Summary" xml:space="preserve">
+    <value>単位ベクトルを取得します</value>
+  </data>
+  <data name="Vector_Value_Summary" xml:space="preserve">
+    <value>ベクトルを分解します</value>
+  </data>
+  <data name="Vector_Value_W_Summary" xml:space="preserve">
+    <value>W成分を取得します</value>
+  </data>
+  <data name="Vector_Value_X_Summary" xml:space="preserve">
+    <value>X成分を取得します</value>
+  </data>
+  <data name="Vector_Value_Y_Summary" xml:space="preserve">
+    <value>Y成分を取得します</value>
+  </data>
+  <data name="Vector_Value_Z_Summary" xml:space="preserve">
+    <value>Z成分を取得します</value>
+  </data>
+  <data name="Vector_Zero_Summary" xml:space="preserve">
+    <value>ゼロベクトルを取得します</value>
+  </data>
+  <data name="Vector_Zero_Value_Summary" xml:space="preserve">
+    <value>ゼロベクトルを取得します</value>
+  </data>
+</root>

@@ -1,0 +1,617 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x64</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{D4EBF7E3-AF74-4F9B-8A2A-DF1EEF918DE1}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>FlowScriptEngineSlimDX</RootNamespace>
+    <AssemblyName>FlowScriptEngineSlimDX</AssemblyName>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <UpgradeBackupLocation />
+    <TargetFrameworkProfile />
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>false</Prefer32Bit>
+    <CodeAnalysisRuleSet>..\PPDCommon.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>false</Prefer32Bit>
+    <CodeAnalysisRuleSet>
+    </CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="SharpDX, Version=3.1.1.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpDX.3.1.1\lib\net45\SharpDX.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="SharpDX.Mathematics, Version=3.1.1.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpDX.Mathematics.3.1.1\lib\net45\SharpDX.Mathematics.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="FlowSourceObjects\Color4\FromElementFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Color4\IsTypeFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Color4\ValueFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ValueFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Color4\ValueFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Matrix\AddFlowSourceObject.AutoFast.cs">
+      <DependentUpon>AddFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Matrix\AddFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Matrix\AffineTransformation2DFlowSourceObject.AutoFast.cs">
+      <DependentUpon>AffineTransformation2DFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Matrix\AffineTransformation2DFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Matrix\AffineTransformationFlowSourceObject.AutoFast.cs">
+      <DependentUpon>AffineTransformationFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Matrix\AffineTransformationFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Matrix\DeterminantFlowSourceObject.AutoFast.cs">
+      <DependentUpon>DeterminantFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Matrix\DeterminantFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Matrix\DevideFlowSourceObject.AutoFast.cs">
+      <DependentUpon>DevideFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Matrix\DevideFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Matrix\EqualFlowSourceObject.AutoFast.cs">
+      <DependentUpon>EqualFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Matrix\EqualFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Matrix\GetColumnFlowSourceObject.AutoFast.cs">
+      <DependentUpon>GetColumnFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Matrix\GetColumnFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Matrix\GetRowFlowSourceObject.AutoFast.cs">
+      <DependentUpon>GetRowFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Matrix\IdentityFlowSourceObject.AutoFast.cs">
+      <DependentUpon>IdentityFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Matrix\IdentityFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Matrix\IsTypeFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Matrix\MultiplyFlowSourceObject.AutoFast.cs">
+      <DependentUpon>MultiplyFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Matrix\MultiplyFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Matrix\RotationAxisFlowSourceObject.AutoFast.cs">
+      <DependentUpon>RotationAxisFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Matrix\RotationAxisFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Matrix\RotationQuaternionFlowSourceObject.AutoFast.cs">
+      <DependentUpon>RotationQuaternionFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Matrix\RotationQuaternionFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Matrix\RotationXFlowSourceObject.AutoFast.cs">
+      <DependentUpon>RotationXFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Matrix\RotationXFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Matrix\RotationYFlowSourceObject.AutoFast.cs">
+      <DependentUpon>RotationYFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Matrix\RotationZFlowSourceObject.AutoFast.cs">
+      <DependentUpon>RotationZFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Matrix\ScalingFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ScalingFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Matrix\ScalingFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Matrix\SubtractFlowSourceObject.AutoFast.cs">
+      <DependentUpon>SubtractFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Matrix\SubtractFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Matrix\Transformation2DFlowSourceObject.AutoFast.cs">
+      <DependentUpon>Transformation2DFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Matrix\Transformation2DFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Matrix\TransformationFlowSourceObject.AutoFast.cs">
+      <DependentUpon>TransformationFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Matrix\TransformationFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Matrix\TranslationFlowSourceObject.AutoFast.cs">
+      <DependentUpon>TranslationFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Matrix\TranslationFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Matrix\TransposeFlowSourceObject.AutoFast.cs">
+      <DependentUpon>TransposeFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Matrix\TransposeFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Matrix\ValueFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ValueFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Matrix\ValueFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Matrix\GetRowFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Matrix\RotationYFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Matrix\RotationZFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Quaternion\AddFlowSourceObject.AutoFast.cs">
+      <DependentUpon>AddFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Quaternion\AddFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Quaternion\AngleFlowSourceObject.AutoFast.cs">
+      <DependentUpon>AngleFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Quaternion\AngleFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Quaternion\AxisFlowSourceObject.AutoFast.cs">
+      <DependentUpon>AxisFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Quaternion\DevideFlowSourceObject.AutoFast.cs">
+      <DependentUpon>DevideFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Quaternion\DevideFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Quaternion\DotFlowSourceObject.AutoFast.cs">
+      <DependentUpon>DotFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Quaternion\DotFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Quaternion\EqualFlowSourceObject.AutoFast.cs">
+      <DependentUpon>EqualFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Quaternion\EqualFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Quaternion\ExponentialFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ExponentialFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Quaternion\IsTypeFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Quaternion\LengthFlowSourceObject.AutoFast.cs">
+      <DependentUpon>LengthFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Quaternion\LengthSquaredFlowSourceObject.AutoFast.cs">
+      <DependentUpon>LengthSquaredFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Quaternion\LogarithmFlowSourceObject.AutoFast.cs">
+      <DependentUpon>LogarithmFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Quaternion\MultiplyFlowSourceObject.AutoFast.cs">
+      <DependentUpon>MultiplyFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Quaternion\MultiplyFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Quaternion\NormalizeFlowSourceObject.AutoFast.cs">
+      <DependentUpon>NormalizeFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Quaternion\RotationAxisFlowSourceObject.AutoFast.cs">
+      <DependentUpon>RotationAxisFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Quaternion\RotationAxisFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Quaternion\RotationMatrixFlowSourceObject.AutoFast.cs">
+      <DependentUpon>RotationMatrixFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Quaternion\SubtractFlowSourceObject.AutoFast.cs">
+      <DependentUpon>SubtractFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Quaternion\SubtractFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Quaternion\ValueFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ValueFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Quaternion\ValueFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Quaternion\AxisFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Quaternion\LengthFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Quaternion\LengthSquaredFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Quaternion\NormalizeFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Quaternion\ExponentialFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Quaternion\LogarithmFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Quaternion\RotationMatrixFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\TemplateIsTypeFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\TemplateStructValueFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Vector2\AddFlowSourceObject.AutoFast.cs">
+      <DependentUpon>AddFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Vector2\AddFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Vector2\ClampFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ClampFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Vector2\ClampFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Vector2\DevideFlowSourceObject.AutoFast.cs">
+      <DependentUpon>DevideFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Vector2\DevideFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Vector2\DistanceFlowSourceObject.AutoFast.cs">
+      <DependentUpon>DistanceFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Vector2\DistanceSquaredFlowSourceObject.AutoFast.cs">
+      <DependentUpon>DistanceSquaredFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Vector2\DistanceSquaredFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Vector2\DotFlowSourceObject.AutoFast.cs">
+      <DependentUpon>DotFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Vector2\EqualFlowSourceObject.AutoFast.cs">
+      <DependentUpon>EqualFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Vector2\EqualFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Vector2\FromElementFlowSourceObject.AutoFast.cs">
+      <DependentUpon>FromElementFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Vector2\FromElementFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Vector2\IsTypeFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Vector2\LengthFlowSourceObject.AutoFast.cs">
+      <DependentUpon>LengthFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Vector2\LengthFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Vector2\LengthSquaredFlowSourceObject.AutoFast.cs">
+      <DependentUpon>LengthSquaredFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Vector2\MaxFlowSourceObject.AutoFast.cs">
+      <DependentUpon>MaxFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Vector2\MaxFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Vector2\MinFlowSourceObject.AutoFast.cs">
+      <DependentUpon>MinFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Vector2\ModulateFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ModulateFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Vector2\MultiplyFlowSourceObject.AutoFast.cs">
+      <DependentUpon>MultiplyFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Vector2\MultiplyFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Vector2\NormalizeFlowSourceObject.AutoFast.cs">
+      <DependentUpon>NormalizeFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Vector2\NormalizeFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Vector2\SubtractFlowSourceObject.AutoFast.cs">
+      <DependentUpon>SubtractFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Vector2\SubtractFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Vector2\TransformCoordinateFlowSourceObject.AutoFast.cs">
+      <DependentUpon>TransformCoordinateFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Vector2\TransformFlowSourceObject.AutoFast.cs">
+      <DependentUpon>TransformFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Vector2\TransformFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Vector2\TransformNormalFlowSourceObject.AutoFast.cs">
+      <DependentUpon>TransformNormalFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Vector2\UnitXFlowSourceObject.AutoFast.cs">
+      <DependentUpon>UnitXFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Vector2\UnitYFlowSourceObject.AutoFast.cs">
+      <DependentUpon>UnitYFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Vector2\ValueFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ValueFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Vector2\ValueFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Vector2\LengthSquaredFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Vector2\DotFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Vector2\DistanceFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Vector2\MinFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Vector2\ModulateFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Vector2\ZeroFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ZeroFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Vector2\ZeroFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Vector2\UnitXFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Vector2\UnitYFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Vector2\TransformCoordinateFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Vector2\TransformNormalFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Vector3\AddFlowSourceObject.AutoFast.cs">
+      <DependentUpon>AddFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Vector3\AddFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Vector3\ClampFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ClampFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Vector3\ClampFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Vector3\CrossFlowSourceObject.AutoFast.cs">
+      <DependentUpon>CrossFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Vector3\CrossFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Vector3\DevideFlowSourceObject.AutoFast.cs">
+      <DependentUpon>DevideFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Vector3\DevideFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Vector3\DistanceFlowSourceObject.AutoFast.cs">
+      <DependentUpon>DistanceFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Vector3\DistanceSquaredFlowSourceObject.AutoFast.cs">
+      <DependentUpon>DistanceSquaredFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Vector3\DistanceSquaredFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Vector3\DistanceFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Vector3\DotFlowSourceObject.AutoFast.cs">
+      <DependentUpon>DotFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Vector3\DotFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Vector3\EqualFlowSourceObject.AutoFast.cs">
+      <DependentUpon>EqualFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Vector3\EqualFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Vector3\FromElementFlowSourceObject.AutoFast.cs">
+      <DependentUpon>FromElementFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Vector3\FromElementFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Vector3\IsTypeFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Vector3\LengthFlowSourceObject.AutoFast.cs">
+      <DependentUpon>LengthFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Vector3\LengthFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Vector3\LengthSquaredFlowSourceObject.AutoFast.cs">
+      <DependentUpon>LengthSquaredFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Vector3\LengthSquaredFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Vector3\MaxFlowSourceObject.AutoFast.cs">
+      <DependentUpon>MaxFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Vector3\MaxFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Vector3\MinFlowSourceObject.AutoFast.cs">
+      <DependentUpon>MinFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Vector3\MinFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Vector3\ModulateFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ModulateFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Vector3\ModulateFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Vector3\MultiplyFlowSourceObject.AutoFast.cs">
+      <DependentUpon>MultiplyFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Vector3\MultiplyFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Vector3\NormalizeFlowSourceObject.AutoFast.cs">
+      <DependentUpon>NormalizeFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Vector3\NormalizeFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Vector3\SubtractFlowSourceObject.AutoFast.cs">
+      <DependentUpon>SubtractFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Vector3\SubtractFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Vector3\TransformCoordinateFlowSourceObject.AutoFast.cs">
+      <DependentUpon>TransformCoordinateFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Vector3\TransformCoordinateFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Vector3\TransformFlowSourceObject.AutoFast.cs">
+      <DependentUpon>TransformFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Vector3\TransformFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Vector3\TransformNormalFlowSourceObject.AutoFast.cs">
+      <DependentUpon>TransformNormalFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Vector3\TransformNormalFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Vector3\UnitXFlowSourceObject.AutoFast.cs">
+      <DependentUpon>UnitXFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Vector3\UnitXFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Vector3\UnitYFlowSourceObject.AutoFast.cs">
+      <DependentUpon>UnitYFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Vector3\UnitYFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Vector3\UnitZFlowSourceObject.AutoFast.cs">
+      <DependentUpon>UnitZFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Vector3\ValueFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ValueFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Vector3\ValueFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Vector3\ZeroFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ZeroFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Vector3\ZeroFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Vector3\UnitZFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Vector4\AddFlowSourceObject.AutoFast.cs">
+      <DependentUpon>AddFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Vector4\AddFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Vector4\ClampFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ClampFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Vector4\ClampFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Vector4\DevideFlowSourceObject.AutoFast.cs">
+      <DependentUpon>DevideFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Vector4\DevideFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Vector4\DistanceFlowSourceObject.AutoFast.cs">
+      <DependentUpon>DistanceFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Vector4\DistanceSquaredFlowSourceObject.AutoFast.cs">
+      <DependentUpon>DistanceSquaredFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Vector4\DistanceSquaredFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Vector4\DistanceFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Vector4\DotFlowSourceObject.AutoFast.cs">
+      <DependentUpon>DotFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Vector4\DotFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Vector4\EqualFlowSourceObject.AutoFast.cs">
+      <DependentUpon>EqualFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Vector4\EqualFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Vector4\FromElementFlowSourceObject.AutoFast.cs">
+      <DependentUpon>FromElementFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Vector4\FromElementFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Vector4\IsTypeFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Vector4\LengthFlowSourceObject.AutoFast.cs">
+      <DependentUpon>LengthFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Vector4\LengthFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Vector4\LengthSquaredFlowSourceObject.AutoFast.cs">
+      <DependentUpon>LengthSquaredFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Vector4\LengthSquaredFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Vector4\MaxFlowSourceObject.AutoFast.cs">
+      <DependentUpon>MaxFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Vector4\MaxFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Vector4\MinFlowSourceObject.AutoFast.cs">
+      <DependentUpon>MinFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Vector4\MinFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Vector4\ModulateFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ModulateFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Vector4\ModulateFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Vector4\MultiplyFlowSourceObject.AutoFast.cs">
+      <DependentUpon>MultiplyFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Vector4\MultiplyFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Vector4\NormalizeFlowSourceObject.AutoFast.cs">
+      <DependentUpon>NormalizeFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Vector4\NormalizeFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Vector4\SubtractFlowSourceObject.AutoFast.cs">
+      <DependentUpon>SubtractFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Vector4\SubtractFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Vector4\TransformFlowSourceObject.AutoFast.cs">
+      <DependentUpon>TransformFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Vector4\TransformFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Vector4\UnitWFlowSourceObject.AutoFast.cs">
+      <DependentUpon>UnitWFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Vector4\UnitXFlowSourceObject.AutoFast.cs">
+      <DependentUpon>UnitXFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Vector4\UnitXFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Vector4\UnitYFlowSourceObject.AutoFast.cs">
+      <DependentUpon>UnitYFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Vector4\UnitYFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Vector4\UnitZFlowSourceObject.AutoFast.cs">
+      <DependentUpon>UnitZFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Vector4\UnitZFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Vector4\ValueFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ValueFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Vector4\ValueFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Vector4\ZeroFlowSourceObject.AutoFast.cs">
+      <DependentUpon>ZeroFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Vector4\ZeroFlowSourceObject.cs" />
+    <Compile Include="FlowSourceObjects\Vector4\UnitWFlowSourceObject.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="ToolTipText.cs" />
+    <Compile Include="TypeAlias.cs" />
+    <Compile Include="TypeColors.cs" />
+    <Compile Include="TypeConverters\Vector2StringTypeConverter.cs" />
+    <Compile Include="TypeConverters\Vector3StringTypeConverter.cs" />
+    <Compile Include="TypeConverters\Vector4StringTypeConverter.cs" />
+    <Compile Include="TypeFormatters\Color4Formatter.cs" />
+    <Compile Include="TypeFormatters\Vector2Formatter.cs" />
+    <Compile Include="TypeFormatters\Vector3Formatter.cs" />
+    <Compile Include="TypeFormatters\Vector4Formatter.cs" />
+    <Compile Include="FlowSourceObjects\Color4\IsTypeFlowSourceObject.AutoFast.cs">
+      <DependentUpon>IsTypeFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Matrix\IsTypeFlowSourceObject.AutoFast.cs">
+      <DependentUpon>IsTypeFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Quaternion\IsTypeFlowSourceObject.AutoFast.cs">
+      <DependentUpon>IsTypeFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Vector2\IsTypeFlowSourceObject.AutoFast.cs">
+      <DependentUpon>IsTypeFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Vector3\IsTypeFlowSourceObject.AutoFast.cs">
+      <DependentUpon>IsTypeFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowSourceObjects\Vector4\IsTypeFlowSourceObject.AutoFast.cs">
+      <DependentUpon>IsTypeFlowSourceObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TypeSerializers\Color4TypeSerializer.cs" />
+    <Compile Include="TypeSerializers\MatrixTypeSerializer.cs" />
+    <Compile Include="TypeSerializers\QuaternionTypeSerializer.cs" />
+    <Compile Include="TypeSerializers\Vector2TypeSerializer.cs" />
+    <Compile Include="TypeSerializers\Vector3TypeSerializer.cs" />
+    <Compile Include="TypeSerializers\Vector4TypeSerializer.cs" />
+    <Compile Include="FlowSourceObjects\Color4\FromElementFlowSourceObject.AutoFast.cs">
+      <DependentUpon>FromElementFlowSourceObject.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\FlowScriptEngine\FlowScriptEngine.csproj">
+      <Project>{952271CD-8EAC-46BD-B32E-D5262D26B290}</Project>
+      <Name>FlowScriptEngine</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows インストーラー 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <PropertyGroup>
+    <PostBuildEvent>mkdir "$(SolutionDir)FlowScriptControlTest\bin\x64\Debug\dlls"
+mkdir "$(SolutionDir)PPD\PPD\bin\x64\Debug\dlls"
+mkdir "$(SolutionDir)PPDeditor\PPDeditor\bin\x64\Debug\dlls"
+copy "$(ProjectDir)\bin\x64\Debug\\FlowScriptEngineSlimDX.dll" "$(SolutionDir)FlowScriptControlTest\bin\x64\Debug\dlls\FlowScriptEngineSlimDX.dll"
+copy "$(ProjectDir)\bin\x64\Debug\\FlowScriptEngineSlimDX.dll" "$(SolutionDir)PPD\PPD\bin\x64\Debug\dlls\FlowScriptEngineSlimDX.dll"
+copy "$(ProjectDir)\bin\x64\Debug\\FlowScriptEngineSlimDX.dll" "$(SolutionDir)PPDeditor\PPDeditor\bin\x64\Debug\dlls\FlowScriptEngineSlimDX.dll"</PostBuildEvent>
+  </PropertyGroup>
+</Project>

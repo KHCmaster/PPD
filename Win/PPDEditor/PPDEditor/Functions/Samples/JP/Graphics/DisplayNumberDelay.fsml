@@ -1,0 +1,98 @@
+<Root>
+  <Sources>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Misc.EntryPointFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Misc.EntryPointFlowSourceObject" ID="1" ShowAll="True" X="-637.777777777778" Y="-377.777777777778" />
+    <Source Name="FlowScriptEnginePPD.FlowSourceObjects.Graphics.Number.ValueFlowSourceObject" FullName="FlowScriptEnginePPD.FlowSourceObjects.Graphics.Number.ValueFlowSourceObject" ID="2" ShowAll="True" X="-424.444444444444" Y="-342.222222222222">
+      <Comment Text="数値表示オブジェクトを作成" />
+      <Value Name="Alignment" Value="Left" />
+      <Value Name="MaxDigit" Value="7" />
+      <Value Name="Path" Value="num.png" />
+      <Value Name="Position" Value="X:100 Y:100" />
+    </Source>
+    <Source Name="FlowScriptEnginePPD.FlowSourceObjects.Graphics.AddChildFlowSourceObject" FullName="FlowScriptEnginePPD.FlowSourceObjects.Graphics.AddChildFlowSourceObject" ID="4" ShowAll="True" X="-72.2222222222222" Y="-313.333333333333">
+      <Comment Text="ステージに追加" />
+    </Source>
+    <Source Name="FlowScriptEnginePPD.FlowSourceObjects.Graphics.StageObjectFlowSourceObject" FullName="FlowScriptEnginePPD.FlowSourceObjects.Graphics.StageObjectFlowSourceObject" ID="3" ShowAll="True" X="-558.888888888889" Y="-172.222222222222">
+      <Comment Text="標準UIの上のステージを取得" />
+      <Value Name="Layer" Value="AfterInterface" />
+    </Source>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Scope.SetValueFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Scope.SetValueFlowSourceObject" ID="5" ShowAll="True" X="-45.5555555555556" Y="-160">
+      <Comment Text="表示中のスコアの値を作成しておく(0で初期化)" />
+      <Value Name="ValueName" Value="DisplayScore" />
+    </Source>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Int32.ValueFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Int32.ValueFlowSourceObject" ID="6" ShowAll="True" X="-285.555555555556" Y="-137.777777777778">
+      <Value Name="Value" Value="0" />
+    </Source>
+    <Source Name="FlowScriptEnginePPD.FlowSourceObjects.EveryFrameFlowSourceObject" FullName="FlowScriptEnginePPD.FlowSourceObjects.EveryFrameFlowSourceObject" ID="7" ShowAll="True" X="-575.555555555556" Y="-66.6666666666667">
+      <Comment Text="毎フレーム実行" />
+    </Source>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Logic.SequentialFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Logic.SequentialFlowSourceObject" ID="21" ShowAll="False" X="-381.111111111111" Y="-45.5555555555556">
+      <Comment Text="順番に実行(Out0, Out1の順)" />
+    </Source>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Scope.SetValueFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Scope.SetValueFlowSourceObject" ID="16" ShowAll="True" X="-66.3888888888889" Y="-10.8333333333333">
+      <Comment Text="表示中のスコアの値の記録を更新" />
+      <Value Name="ValueName" Value="DisplayScore" />
+    </Source>
+    <Source Name="FlowScriptEnginePPD.FlowSourceObjects.Graphics.Number.SetNumberFlowSourceObject" FullName="FlowScriptEnginePPD.FlowSourceObjects.Graphics.Number.SetNumberFlowSourceObject" ID="13" ShowAll="True" X="-2.5" Y="137.5">
+      <Comment Text="数値表示オブジェクトにスコアを反映" />
+      <Value Name="Number" Value="1000" />
+    </Source>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Scope.GetValueFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Scope.GetValueFlowSourceObject" ID="11" ShowAll="True" X="-964.583333333333" Y="248.75">
+      <Comment Text="現在表示中のスコアを取得" />
+      <Value Name="ValueName" Value="DisplayScore" />
+    </Source>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Logic.IfTernaryFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Logic.IfTernaryFlowSourceObject" ID="14" ShowAll="True" X="-394.444444444444" Y="93.3333333333333">
+      <Comment Text="(現在のスコア)-(表示しているスコア) &lt; 99 なら 現在のスコア&#xA;そうでないなら (表示しているスコア) + Max(99, 差分を60で割った数)" />
+    </Source>
+    <Source Name="FlowScriptEnginePPD.FlowSourceObjects.GameResult.ValueFlowSourceObject" FullName="FlowScriptEnginePPD.FlowSourceObjects.GameResult.ValueFlowSourceObject" ID="10" ShowAll="False" X="-940.833333333333" Y="128.75">
+      <Comment Text="現在のスコアを取得" />
+    </Source>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Int32.SubtractFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Int32.SubtractFlowSourceObject" ID="9" ShowAll="True" X="-561.468253968254" Y="327.281746031746">
+      <Comment Text="(現在のスコア)-(表示しているスコア)" />
+    </Source>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Int32.DevideFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Int32.DevideFlowSourceObject" ID="17" ShowAll="True" X="-343.174603174603" Y="345.079365079365">
+      <Comment Text="差分を60で割った数" />
+      <Value Name="B" Value="60" />
+    </Source>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Math.MaxFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Math.MaxFlowSourceObject" ID="19" ShowAll="True" X="-175.714285714286" Y="341.428571428571">
+      <Comment Text="Max(99, 差分を60で割った数)" />
+      <Value Name="B" Value="99" />
+    </Source>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Int32.CastFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Int32.CastFlowSourceObject" ID="20" ShowAll="True" X="-17.1428571428571" Y="307.142857142857">
+      <Comment Text="DoubleからInt32につなぐためにキャスト" />
+    </Source>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Int32.AddFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Int32.AddFlowSourceObject" ID="22" ShowAll="True" X="-548.888888888889" Y="164.444444444444" />
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Int32.LessFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Int32.LessFlowSourceObject" ID="12" ShowAll="True" X="-330.793650793651" Y="236.746031746032">
+      <Comment Text="(現在のスコア)-(表示しているスコア) &lt; 99 かどうか" />
+      <Value Name="B" Value="99" />
+    </Source>
+  </Sources>
+  <Flows>
+    <Flow SrcID="1" SrcName="Start" DestID="2" DestName="In" />
+    <Flow SrcID="2" SrcName="Success" DestID="4" DestName="In" />
+    <Flow SrcID="2" SrcName="Success" DestID="5" DestName="In" />
+    <Flow SrcID="2" SrcName="Object" DestID="4" DestName="Child" />
+    <Flow SrcID="2" SrcName="Object" DestID="13" DestName="Object" />
+    <Flow SrcID="3" SrcName="Value" DestID="4" DestName="Parent" />
+    <Flow SrcID="6" SrcName="Value" DestID="5" DestName="Value" />
+    <Flow SrcID="7" SrcName="Out" DestID="21" DestName="In" />
+    <Flow SrcID="21" SrcName="Out0" DestID="16" DestName="In" />
+    <Flow SrcID="21" SrcName="Out1" DestID="13" DestName="In" />
+    <Flow SrcID="11" SrcName="Value" DestID="9" DestName="B" />
+    <Flow SrcID="11" SrcName="Value" DestID="22" DestName="A" />
+    <Flow SrcID="11" SrcName="Value" DestID="13" DestName="Number" />
+    <Flow SrcID="14" SrcName="Value" DestID="16" DestName="Value" />
+    <Flow SrcID="10" SrcName="CurrentScore" DestID="9" DestName="A" />
+    <Flow SrcID="10" SrcName="CurrentScore" DestID="14" DestName="A" />
+    <Flow SrcID="9" SrcName="Value" DestID="12" DestName="A" />
+    <Flow SrcID="9" SrcName="Value" DestID="17" DestName="A" />
+    <Flow SrcID="17" SrcName="Value" DestID="19" DestName="A" />
+    <Flow SrcID="19" SrcName="Value" DestID="20" DestName="CastValue" />
+    <Flow SrcID="20" SrcName="Value" DestID="22" DestName="B" />
+    <Flow SrcID="22" SrcName="Value" DestID="14" DestName="B" />
+    <Flow SrcID="12" SrcName="Value" DestID="14" DestName="Condition" />
+  </Flows>
+  <Comments>
+    <Comment X="-300" Y="-460" Text="目的:スコアをディレイつきで表示&#xA;仮定:リソースマネージャーのImageにnum.pngを追加" />
+  </Comments>
+  <Scopes />
+</Root>

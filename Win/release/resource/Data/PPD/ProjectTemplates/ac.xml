@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<Root Type="PPD\{lang:ACScore}" Name="{lang:ACScore}" Description="{lang:ACScoreDescription}" IconPath="ProjectTemplates\AC.png">
+   <SoundManager>
+      <Sounds>
+         <Sound>sound.wav</Sound>
+      </Sounds>
+      <Changes>
+         <Change>
+            <Time>$(Epsilon)</Time>
+            <Data>1,1,1,1,1,1,1,1,1,1</Data>
+         </Change>
+      </Changes>
+   </SoundManager>
+   <EventManager>
+      <Events>
+         <Event>
+            <Time>0</Time>
+            <NoteType>AC</NoteType>
+            <BPM>-1</BPM>
+            <InitializeOrders>3,0,1,2,7,4,5,6,8,9</InitializeOrders>
+         </Event>
+      </Events>
+   </EventManager>
+   <TimeLine>
+      <RowOrders>3,0,1,2,7,4,5,6,8,9</RowOrders>
+      <RowVisibilities>1,1,1,1,0,0,0,0,0,0,0</RowVisibilities>
+      <RowLimited>1</RowLimited>
+   </TimeLine>
+</Root>

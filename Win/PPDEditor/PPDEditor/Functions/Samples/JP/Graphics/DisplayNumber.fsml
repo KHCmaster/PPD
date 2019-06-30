@@ -1,0 +1,42 @@
+<Root>
+  <Sources>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Misc.EntryPointFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Misc.EntryPointFlowSourceObject" ID="1" ShowAll="True" X="-441.111111111111" Y="-174.444444444444" />
+    <Source Name="FlowScriptEnginePPD.FlowSourceObjects.Graphics.Number.ValueFlowSourceObject" FullName="FlowScriptEnginePPD.FlowSourceObjects.Graphics.Number.ValueFlowSourceObject" ID="2" ShowAll="True" X="-230" Y="-160">
+      <Comment Text="数値表示オブジェクトを作成&#xA;7桁まで0埋めかつ左寄せ" />
+      <Value Name="Alignment" Value="Left" />
+      <Value Name="MaxDigit" Value="7" />
+      <Value Name="Path" Value="num.png" />
+      <Value Name="Position" Value="X:100 Y:100" />
+    </Source>
+    <Source Name="FlowScriptEnginePPD.FlowSourceObjects.Graphics.AddChildFlowSourceObject" FullName="FlowScriptEnginePPD.FlowSourceObjects.Graphics.AddChildFlowSourceObject" ID="3" ShowAll="True" X="140" Y="-120">
+      <Comment Text="ステージに追加" />
+    </Source>
+    <Source Name="FlowScriptEnginePPD.FlowSourceObjects.EveryFrameFlowSourceObject" FullName="FlowScriptEnginePPD.FlowSourceObjects.EveryFrameFlowSourceObject" ID="6" ShowAll="True" X="-217.777777777778" Y="81.1111111111111">
+      <Comment Text="毎フレーム更新" />
+    </Source>
+    <Source Name="FlowScriptEnginePPD.FlowSourceObjects.GameResult.ValueFlowSourceObject" FullName="FlowScriptEnginePPD.FlowSourceObjects.GameResult.ValueFlowSourceObject" ID="7" ShowAll="False" X="-242.222222222222" Y="172.222222222222">
+      <Comment Text="現在のスコアを取得" />
+    </Source>
+    <Source Name="FlowScriptEnginePPD.FlowSourceObjects.Graphics.Number.SetNumberFlowSourceObject" FullName="FlowScriptEnginePPD.FlowSourceObjects.Graphics.Number.SetNumberFlowSourceObject" ID="5" ShowAll="True" X="93.3333333333333" Y="93.3333333333333">
+      <Comment Text="数値の表示を更新" />
+      <Value Name="Number" Value="1000" />
+    </Source>
+    <Source Name="FlowScriptEnginePPD.FlowSourceObjects.Graphics.StageObjectFlowSourceObject" FullName="FlowScriptEnginePPD.FlowSourceObjects.Graphics.StageObjectFlowSourceObject" ID="4" ShowAll="True" X="-236.666666666667" Y="4.44444444444444">
+      <Comment Text="標準UIの上のステージを取得" />
+      <Value Name="Layer" Value="AfterInterface" />
+    </Source>
+  </Sources>
+  <Flows>
+    <Flow SrcID="1" SrcName="Start" DestID="2" DestName="In" />
+    <Flow SrcID="2" SrcName="Success" DestID="3" DestName="In" />
+    <Flow SrcID="2" SrcName="Object" DestID="3" DestName="Child" />
+    <Flow SrcID="2" SrcName="Object" DestID="5" DestName="Object" />
+    <Flow SrcID="6" SrcName="Out" DestID="5" DestName="In" />
+    <Flow SrcID="7" SrcName="CurrentScore" DestID="5" DestName="Number" />
+    <Flow SrcID="4" SrcName="Value" DestID="3" DestName="Parent" />
+  </Flows>
+  <Comments>
+    <Comment X="-119.388888888889" Y="-269.222222222222" Text="目的:スコアの表示&#xA;仮定:リソースマネージャーのImageにnum.pngを追加" />
+  </Comments>
+  <Scopes />
+</Root>
