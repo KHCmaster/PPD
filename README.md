@@ -31,6 +31,10 @@ When running the programs not PPD.exe, it may requires copy `Win\release\resourc
 
 ### FAQ
 
+Q. I want to implement/fix/redesign xxxxx, where is the document?
+
+A. Sorry, there is no document about implementation because this project was maintained by only KHCmaster. If you have any questions, join [Slack(PPDDev Workspace)](https://join.slack.com/t/ppddev/shared_invite/enQtNjg0Mzg4NTY1MjcxLWFkOGUzYmFiYjY1NjA2Yjk1ZWUyOTY2OGJkZTI0NmY0NDNiZGRiODVmMTQ0NThjNjkxMTlmYzIzNTkzZGRhZjg) and ask them.
+
 Q. I want to use songs dir which is in Program Files.
 
 A. You can specify songs dir in `PPD.ini` like below.
@@ -39,7 +43,7 @@ A. You can specify songs dir in `PPD.ini` like below.
 [songdir]D:\KHC\PPD\songs
 ```
 
-Q. I want to run PPDSingle.dll without select.
+Q. I want to run PPDSingle.dll without selecting game.
 
 A. Open `PPD(csproj)`, select `Debug` and edit `Command Line Arguments`
 
