@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("KHC")]
 [assembly: AssemblyProduct("PPDMultiCommon")]
-[assembly: AssemblyCopyright("Copyright © KHC/KHCmaster 2009-2018")]
+[assembly: AssemblyCopyright("Copyright © KHC/KHCmaster 2009-2019")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 // ComVisible を false に設定すると、その型はこのアセンブリ内で COM コンポーネントから 
@@ -30,5 +30,5 @@ using System.Runtime.InteropServices;
 // すべての値を指定するか、下のように '*' を使ってビルドおよびリビジョン番号を 
 // 既定値にすることができます:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("0.9.0.7")]
-[assembly: AssemblyFileVersion("0.9.0.7")]
+[assembly: AssemblyVersion("1.0.0.0")]
+[assembly: AssemblyFileVersion("1.0.0.0")]
