@@ -67,7 +67,10 @@ namespace PPDMultiServerService
                     servers.Add(server);
                     server.Start();
                     Thread.Sleep(1000);
-                    logger.AddLog($"Room {room.Port} Started");
+                    if (logger != null)
+                    {
+                        logger.AddLog($"Room {room.Port} Started");
+                    }
                 }
                 this.servers = servers.ToArray();
                 updateThread.Start();
