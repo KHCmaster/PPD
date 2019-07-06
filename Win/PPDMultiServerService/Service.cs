@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.ServiceProcess;
 using System.Threading;
 
@@ -41,6 +42,11 @@ namespace PPDMultiServerService
             try
             {
                 var roomInfoPath = ConfigurationManager.AppSettings["roomInfoPath"];
+                var assemblyDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                if (roomInfoPath.StartsWith("./") || roomInfoPath.StartsWith(@".\"))
+                {
+                    roomInfoPath = Path.Combine(assemblyDir, roomInfoPath);
+                }
                 if (!File.Exists(roomInfoPath))
                 {
                     throw new Exception($"roomInfoPath ${roomInfoPath} does not exist.");
