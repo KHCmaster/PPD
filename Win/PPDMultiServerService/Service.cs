@@ -37,6 +37,7 @@ namespace PPDMultiServerService
             gameTimer = new GameTimer();
             timerManager = new TimerManager(gameTimer);
             updateThread = ThreadManager.Instance.GetThread(UpdateImpl);
+            Logger logger = null;
             try
             {
                 var roomInfoPath = ConfigurationManager.AppSettings["roomInfoPath"];
@@ -49,6 +50,7 @@ namespace PPDMultiServerService
                 if (!String.IsNullOrEmpty(logDir) && !Directory.Exists(logDir))
                 {
                     Directory.CreateDirectory(logDir);
+                    logger = new Logger(logDir, "service.log");
                 }
                 var servers = new List<PPDServer>();
                 foreach (var room in rooms)
@@ -59,12 +61,19 @@ namespace PPDMultiServerService
                     servers.Add(server);
                     server.Start();
                     Thread.Sleep(1000);
+                    logger.AddLog($"Room {room.Port} Started");
                 }
                 this.servers = servers.ToArray();
                 updateThread.Start();
             }
             catch (Exception e)
             {
+                if (logger != null)
+                {
+                    logger.AddLog(e.Message);
+                    logger.AddLog(e.StackTrace);
+                }
+
                 Console.WriteLine(e.Message);
                 Console.WriteLine(e.StackTrace);
             }
