@@ -56,3 +56,7 @@ A. Open `PPD(csproj)`, select `Debug` and edit `Command Line Arguments`
 # Launch PPDSingle with login
 -game PPDSingle -login
 ```
+
+Q. Cannot launch PPD by "Failed to check assembly. Please re-install PPD by latest PPDInstaller."
+
+A. `install.info` file must be located besides PPD.exe. You can get it from directory you installed PPD by installer. Or just passing any arguments when launch PPD to disable version checks.
