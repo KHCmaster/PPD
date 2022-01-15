@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("KHC")]
 [assembly: AssemblyProduct("Effect2DEditor")]
-[assembly: AssemblyCopyright("Copyright © KHC/KHCmaster 2009-2017")]
+[assembly: AssemblyCopyright("Copyright © KHC/KHCmaster 2009-2022")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -31,5 +31,5 @@ using System.Runtime.InteropServices;
 // すべての値を指定するか、下のように '*' を使ってビルドおよびリビジョン番号を 
 // 既定値にすることができます:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.6.4.0")]
-[assembly: AssemblyFileVersion("1.6.4.0")]
+[assembly: AssemblyVersion("1.7.0.0")]
+[assembly: AssemblyFileVersion("1.7.0.0")]
