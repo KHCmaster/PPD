@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>PPDInstaller</RootNamespace>
     <AssemblyName>PPDInstaller</AssemblyName>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ApplicationIcon>ppdinst.ico</ApplicationIcon>
     <ApplicationManifest>app.manifest</ApplicationManifest>

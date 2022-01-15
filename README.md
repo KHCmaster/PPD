@@ -13,7 +13,7 @@ Please download installer from https://projectdxxx.me/download and execute it.
 ### Prerequisites
 
 * Windows 10 x64
-* Visual Studio Community 2019
+* Visual Studio Community 2022
   * Workload
     * .NET Desktop Development
   * Individual Component
