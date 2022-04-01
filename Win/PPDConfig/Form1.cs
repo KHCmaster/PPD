@@ -145,6 +145,7 @@ namespace PPDConfig
             this.button4.Text = Utility.Language["Reset"];
             this.checkBox13.Text = Utility.Language["DisableFontScale"];
             this.checkBox14.Text = Utility.Language["DisableHighResolutionImage"];
+            this.checkBox15.Text = Utility.Language["DisableFixedFPS"];
         }
 
         private void ReadPPDIni()
@@ -185,7 +186,7 @@ namespace PPDConfig
                 ShaderDisabled = setting.ReadBoolean("shaderdisabled");
                 FontScaleDisabled = setting.ReadBoolean("fontscaledisabled");
                 HighResolutionImageDisabled = setting.ReadBoolean("highresolutionimagedisabled");
-
+                FixedFPSDisabled = setting.ReadBoolean("fixedfpsdisabled");
             }
             catch (Exception e)
             {
@@ -238,6 +239,7 @@ namespace PPDConfig
             setting.ReplaceOrAdd("shaderdisabled", ShaderDisabled);
             setting.ReplaceOrAdd("fontscaledisabled", FontScaleDisabled);
             setting.ReplaceOrAdd("highresolutionimagedisabled", HighResolutionImageDisabled);
+            setting.ReplaceOrAdd("fixedfpsdisabled", FixedFPSDisabled);
             var sw = new SettingWriter(ppdini, false);
             foreach (KeyValuePair<string, string> kvp in setting.Dictionary)
             {
@@ -301,6 +303,11 @@ namespace PPDConfig
             AccurateInputSleepTime = 0;
             RunExpansion = false;
             ExpansionWaitPort = defaultExpansionPort;
+            AutoAdjustLatencyDisabled = false;
+            ShaderDisabled = false;
+            FontScaleDisabled = false;
+            HighResolutionImageDisabled = false;
+            FixedFPSDisabled = false;
 
             ResetTwitterSetting();
         }
@@ -629,6 +636,18 @@ namespace PPDConfig
             set
             {
                 checkBox14.Checked = value;
+            }
+        }
+
+        private bool FixedFPSDisabled
+        {
+            get
+            {
+                return checkBox15.Checked;
+            }
+            set
+            {
+                checkBox15.Checked = value;
             }
         }
 

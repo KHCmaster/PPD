@@ -25,7 +25,7 @@ namespace PPDFramework
         protected PPDDevice device;
 
         double nextframe;
-        float wait = 100 / 6f;
+        float wait = 1000 / 60f;
         double lastPresentEndTime;
         double presentStartTime;
         int presentCount;
@@ -191,7 +191,7 @@ namespace PPDFramework
                 {
                     //更新
                     var diff = (int)(lastPresentEndTime + wait - gameTimer.ElapsedTickTime - 1);
-                    if (diff > 0)
+                    if (diff > 0 && !PPDSetting.Setting.FixedFPSDisabled)
                     {
                         Thread.Sleep(diff);
                     }

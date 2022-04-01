@@ -69,6 +69,7 @@ namespace PPDFramework
                 FontScaleDisabled = setting.ReadBoolean("fontscaledisabled");
                 HighResolutionImageDisabled = setting.ReadBoolean("highresolutionimagedisabled");
                 TextureCharMode = setting.ReadEnum<TextureCharMode>("texturecharmode", TextureCharMode.D2D);
+                FixedFPSDisabled = setting.ReadString("fixedfpsdisabled") == "1";
             }
             else
             {
@@ -453,6 +454,15 @@ namespace PPDFramework
         /// 高解像度画像が無効化されているかどうかを取得します。
         /// </summary>
         public bool HighResolutionImageDisabled
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// 60FPS固定が無効化されているかどうかをしゅとくします。
+        /// </summary>
+        public bool FixedFPSDisabled
         {
             get;
             private set;
