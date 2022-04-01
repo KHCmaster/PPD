@@ -82,6 +82,7 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.言語ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.checkBox15 = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.toolStripContainer1.ContentPanel.SuspendLayout();
@@ -466,6 +467,7 @@
             // tabPage3
             // 
             this.tabPage3.BackColor = System.Drawing.Color.Transparent;
+            this.tabPage3.Controls.Add(this.checkBox15);
             this.tabPage3.Controls.Add(this.checkBox14);
             this.tabPage3.Controls.Add(this.checkBox13);
             this.tabPage3.Controls.Add(this.checkBox4);
@@ -654,6 +656,16 @@
             // 
             this.openFileDialog1.RestoreDirectory = true;
             // 
+            // checkBox15
+            // 
+            this.checkBox15.AutoSize = true;
+            this.checkBox15.Location = new System.Drawing.Point(6, 251);
+            this.checkBox15.Name = "checkBox15";
+            this.checkBox15.Size = new System.Drawing.Size(133, 21);
+            this.checkBox15.TabIndex = 12;
+            this.checkBox15.Text = "60FPS固定を無効化";
+            this.checkBox15.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -746,6 +758,7 @@
         private System.Windows.Forms.CheckBox checkBox4;
         private System.Windows.Forms.CheckBox checkBox13;
         private System.Windows.Forms.CheckBox checkBox14;
+        private System.Windows.Forms.CheckBox checkBox15;
     }
 }
 
