@@ -139,6 +139,7 @@ namespace PPDReleaser
                 "WeifenLuo.WinFormsUI.Docking.dll",
                 "WPFToolkit.dll",
                 "YamlDotNet.dll",
+                "BlueSky.dll",
                 "x64\\SQLite.Interop.dll",
                 "skins\\GalaSoft.MvvmLight.dll",
                 "skins\\GalaSoft.MvvmLight.Extras.dll",
