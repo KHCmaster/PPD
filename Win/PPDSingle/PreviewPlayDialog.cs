@@ -74,7 +74,7 @@ namespace PPDSingle
         {
             this.Sound = sound;
             sprite = new SpriteObject(device);
-            back = new EffectObject(device, resourceManager, Utility.Path.Combine("tweetconfirm.etd"))
+            back = new EffectObject(device, resourceManager, Utility.Path.Combine("postconfirm.etd"))
             {
                 Position = new Vector2(400, 225)
             };

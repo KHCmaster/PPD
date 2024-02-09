@@ -367,7 +367,7 @@
     <Compile Include="TextEditableControl.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="ITweetManager.cs" />
+    <Compile Include="IBlueSkyManager.cs" />
     <Compile Include="LogicFolderInfomation.cs" />
     <Compile Include="PPDStructure\EVDData\ChangeNoteTypeEvent.cs" />
     <Compile Include="Resource\ResourceBase.cs" />

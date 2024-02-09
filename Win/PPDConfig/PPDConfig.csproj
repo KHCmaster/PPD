@@ -131,10 +131,6 @@
       <Project>{F1D4FCE7-2E9A-472D-A601-D06EC5E0E9E1}</Project>
       <Name>PPDInput</Name>
     </ProjectReference>
-    <ProjectReference Include="..\PPDTwitter\PPDTwitter.csproj">
-      <Project>{E739E95A-333A-489E-A815-B446A78736B7}</Project>
-      <Name>PPDTwitter</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

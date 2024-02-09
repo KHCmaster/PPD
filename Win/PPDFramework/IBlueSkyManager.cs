@@ -8,33 +8,33 @@ namespace PPDFramework
     /// <param name="ok"></param>
     public delegate void BoolEventHandler(bool ok);
     /// <summary>
-    /// 結果をツイートするマネージャークラスです。
+    /// 結果を投稿するマネージャークラスです。
     /// </summary>
-    public interface ITweetManager
+    public interface IBlueSkyManager
     {
         /// <summary>
-        /// ツイートできるかどうか
+        /// 投稿できるかどうか
         /// </summary>
-        bool CanTweet { get; }
+        bool CanPost { get; }
         /// <summary>
-        /// ツイートできる場合のツイートするテキスト
+        /// 投稿できる場合のツイートするテキスト
         /// </summary>
-        string TweetText { get; }
+        string PostText { get; }
         /// <summary>
         /// 終了した日時
         /// </summary>
         DateTime FinishDate { get; }
         /// <summary>
-        /// ツイートする場合の追加の画像のパス
+        /// 投稿する場合の追加の画像のパス
         /// </summary>
-        string TweetFilePath { get; set; }
+        string PostFilePath { get; set; }
         /// <summary>
-        /// ツイートが完了した
+        /// 投稿が完了した
         /// </summary>
-        event BoolEventHandler TweetFinished;
+        event BoolEventHandler PostFinished;
         /// <summary>
-        /// ツイートする
+        /// 投稿する
         /// </summary>
-        void Tweet();
+        void Post();
     }
 }

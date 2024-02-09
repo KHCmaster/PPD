@@ -127,7 +127,7 @@ namespace PPDCore
         /// <summary>
         /// ツイートマネージャー
         /// </summary>
-        public ITweetManager TweetManager { get; set; }
+        public IBlueSkyManager BlueSkyManager { get; set; }
 
         public IReviewManager ReviewManager { get; set; }
 

@@ -10,7 +10,7 @@ using System.Collections.Generic;
 
 namespace PPDCore
 {
-    public class MainGame : SceneBase, IDisposable, ITweetManager, IReviewManager
+    public class MainGame : SceneBase, IDisposable, IBlueSkyManager, IReviewManager
     {
         enum FadeOutAction
         {
@@ -21,7 +21,7 @@ namespace PPDCore
         }
 
         const float defaultbpm = 130;
-        public event BoolEventHandler TweetFinished;
+        public event BoolEventHandler PostFinished;
         public event BoolEventHandler ReviewFinished;
         public event Action CannotStartPerfectTrial;
         public event Action<ErrorReason> PerfectTrialError;
@@ -37,9 +37,9 @@ namespace PPDCore
         protected float startTime;
         protected float mmStartTime;
 
-        bool TweetFinish;
-        bool TweetSuccess;
-        const string TweetHashTag = "#PPDGame";
+        bool PostFinish;
+        bool PostSuccess;
+        const string PostHashTag = "#PPDGame";
 
         bool reviewFinish;
         bool reviewSuccess;
@@ -109,7 +109,7 @@ namespace PPDCore
                 gr.Sound = Sound;
                 gr.PPDGameUtility = gameUtility;
                 gr.ResourceManager = ResourceManager;
-                gr.TweetManager = this;
+                gr.BlueSkyManager = this;
                 gr.ReviewManager = this;
                 gr.Load();
             }
@@ -228,7 +228,7 @@ namespace PPDCore
         void gr_Retryed(object sender, EventArgs e)
         {
             isResult = false;
-            TweetFinish = TweetSuccess = false;
+            PostFinish = PostSuccess = false;
             reviewFinish = reviewSuccess = false;
             if (client != null)
             {
@@ -348,27 +348,27 @@ namespace PPDCore
             }
             isResult = true;
             mainGameComponent.ShowResult();
-            TweetFinish = false;
-            TweetSuccess = false;
-            if (CanTweet)
+            PostFinish = false;
+            PostSuccess = false;
+            if (CanPost)
             {
-                TweetText = CreateTweetText(mainGameComponent.GameResultManager.CurrentScore, gr.Result, mainGameComponent.GameResultManager);
+                PostText = CreatePostText(mainGameComponent.GameResultManager.CurrentScore, gr.Result, mainGameComponent.GameResultManager);
             }
             else
             {
-                TweetText = "";
+                PostText = "";
             }
         }
 
-        public bool CanTweet
+        public bool CanPost
         {
             get
             {
-                return TwitterManager.Manager.IsAvailable && gameUtility.IsRegular && !mainGameComponent.Mistake && !TweetSuccess && !mainGameComponent.Replaying;
+                return BlueSkyManager.Manager.IsAvailable && gameUtility.IsRegular && !mainGameComponent.Mistake && !PostSuccess && !mainGameComponent.Replaying;
             }
         }
 
-        public string TweetText
+        public string PostText
         {
             get;
             private set;
@@ -380,13 +380,13 @@ namespace PPDCore
             private set;
         }
 
-        public string TweetFilePath
+        public string PostFilePath
         {
             get;
             set;
         }
 
-        private string CreateTweetText(int score, ResultEvaluateType result, GameResultManager gameResultManager)
+        private string CreatePostText(int score, ResultEvaluateType result, GameResultManager gameResultManager)
         {
             FinishDate = DateTime.Now;
             var text = string.Format("譜面:{0} 難易度:{1} スコア:{2} 評価:{3} C{4} G{5} SF{6} SD{7} W{8} MC{9} {10} ",
@@ -405,18 +405,18 @@ namespace PPDCore
             return text;
         }
 
-        public void Tweet()
+        public void Post()
         {
-            if (CanTweet)
+            if (CanPost)
             {
-                TwitterManager.Manager.PostStatus(TweetText, TweetHashTag, TweetFilePath, EndTweetCallback);
+                BlueSkyManager.Manager.PostStatus(PostText, PostHashTag, PostFilePath, EndPostCallback);
             }
         }
 
-        private void EndTweetCallback(bool success)
+        private void EndPostCallback(bool success)
         {
-            TweetFinish = true;
-            TweetSuccess = success;
+            PostFinish = true;
+            PostSuccess = success;
         }
 
         public void Return(object sender, EventArgs e)
@@ -459,10 +459,10 @@ namespace PPDCore
                 }
             }
 
-            if (TweetFinish)
+            if (PostFinish)
             {
-                TweetFinish = false;
-                OnTweetFinish();
+                PostFinish = false;
+                OnPostFinish();
             }
             if (reviewFinish)
             {
@@ -490,11 +490,11 @@ namespace PPDCore
             }
         }
 
-        protected void OnTweetFinish()
+        protected void OnPostFinish()
         {
-            if (TweetFinished != null)
+            if (PostFinished != null)
             {
-                TweetFinished.Invoke(TweetSuccess);
+                PostFinished.Invoke(PostSuccess);
             }
         }
 

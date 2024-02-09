@@ -137,11 +137,15 @@
     <Compile Include="TcpDebugControllerBase.cs" />
     <Compile Include="TcpDebugControllerHost.cs" />
     <Compile Include="TemporaryEvaluate.cs" />
-    <Compile Include="TwitterManager.cs" />
+    <Compile Include="BlueSkyManager.cs" />
     <Compile Include="Utility.cs" />
     <Compile Include="Win32API.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BlueSky\BlueSky.csproj">
+      <Project>{a195631e-98ec-4f51-a3f6-c591f054117a}</Project>
+      <Name>BlueSky</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Effect2D\Effect2D.csproj">
       <Project>{21169B27-D6EE-47AF-88F3-171FDA7E7F0C}</Project>
       <Name>Effect2D</Name>
@@ -173,10 +177,6 @@
     <ProjectReference Include="..\PPDPack\PPDPack.csproj">
       <Project>{1496449C-E132-43C2-9AC9-9FB8BF4AE6AE}</Project>
       <Name>PPDPack</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\PPDTwitter\PPDTwitter.csproj">
-      <Project>{E739E95A-333A-489E-A815-B446A78736B7}</Project>
-      <Name>PPDTwitter</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -1,27 +1,26 @@
 ﻿using PPDConfiguration;
 using PPDFrameworkCore;
-using PPDTwitter;
+using BlueSky;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
+using System.Diagnostics;
 
 namespace PPDCore
 {
-    class TwitterManager
+    class BlueSkyManager
     {
-        const string ConsumerKey = "";
-        const string ConsumerSecret = "";
         const int RetryCount = 5;
 
-        private string Token
+        private string ID
         {
             get;
             set;
         }
 
-        private string TokenSecret
+        private string Password
         {
             get;
             set;
@@ -35,21 +34,21 @@ namespace PPDCore
 
         private List<Thread> threads = new List<Thread>();
 
-        private static TwitterManager manager = new TwitterManager();
-        private TwitterManager()
+        private static BlueSkyManager manager = new BlueSkyManager();
+        private BlueSkyManager()
         {
             if (File.Exists("PPD.ini"))
             {
                 var sr = new StreamReader("PPD.ini");
                 var setting = new SettingReader(sr.ReadToEnd());
                 sr.Close();
-                Token = setting.ReadString("token");
-                TokenSecret = setting.ReadString("tokensecret");
-                IsAvailable |= (Token != "" && TokenSecret != "");
+                ID = setting.ReadString("blueskyid");
+                Password = setting.ReadString("blueskypassword");
+                IsAvailable |= (ID != "" && Password != "");
             }
         }
 
-        public static TwitterManager Manager
+        public static BlueSkyManager Manager
         {
             get
             {
@@ -61,7 +60,7 @@ namespace PPDCore
         {
             for (int i = threads.Count - 1; i >= 0; i--)
             {
-                if (threads[i].ThreadState == ThreadState.Stopped)
+                if (threads[i].ThreadState == System.Threading.ThreadState.Stopped)
                 {
                     threads[i].Interrupt();
                     threads[i].Join();
@@ -105,17 +104,31 @@ namespace PPDCore
             try
             {
                 var result = false;
-                var twitterManager = new PPDTwitterManager(Token, TokenSecret, ConsumerKey, ConsumerSecret);
+                var client = new Client($"{ID}.bsky.social", Password);
                 if (File.Exists(filePath))
                 {
-                    using (FileStream fs = File.Open(filePath, FileMode.Open))
+                    try
                     {
-                        result = twitterManager.TweetWithMedia(status, fs);
+                        var bytes = File.ReadAllBytes(filePath);
+                        client.PostImage(status, bytes, "image/png").Wait();
+                        result = true;
+                    }
+                    catch (Exception e)
+                    {
+                        Debug.WriteLine(e.Message);
                     }
                 }
                 else
                 {
-                    result = twitterManager.Tweet(status);
+                    try
+                    {
+                        client.Post(status).Wait();
+                        result = true;
+                    }
+                    catch (Exception e)
+                    {
+                        Debug.WriteLine(e.Message);
+                    }
                 }
                 return result;
             }

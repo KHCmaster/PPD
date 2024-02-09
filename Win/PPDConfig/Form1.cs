@@ -1,7 +1,7 @@
 ﻿using PPDConfiguration;
-using PPDTwitter;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Diagnostics;
 using System.IO;
 using System.Text.RegularExpressions;
@@ -18,7 +18,6 @@ namespace PPDConfig
         const string iniFileName = "PPDConfig.ini";
         const int defaultExpansionPort = 54320;
         string userIconFilter = "JPEG,GIF,PNGファイル(*.jpg;*.jpeg;*.gif;*.png)|*.jpg;*.jpeg;*.gif;*.png|すべてのファイル(*.*)|*.*";
-        PPDTwitterManager twitterManager;
 
         private string langFileISO = "jp";
 
@@ -118,11 +117,8 @@ namespace PPDConfig
             this.comboBox1.SelectedIndex = lastSelection;
 
             this.label16.Text = Utility.Language["Label16"];
-            this.label17.Text = Utility.Language["Label17"];
             this.label18.Text = Utility.Language["Label18"];
             this.label19.Text = Utility.Language["Label19"];
-            this.button1.Text = Utility.Language["Button1"];
-            this.button2.Text = Utility.Language["Button2"];
             this.tabPage1.Text = Utility.Language["TabPage1"];
             this.tabPage2.Text = Utility.Language["TabPage2"];
             this.tabPage3.Text = Utility.Language["TabPage3"];
@@ -142,7 +138,6 @@ namespace PPDConfig
 
             this.checkBox11.Text = Utility.Language["DisableAutoAdjustLatency"];
             this.checkBox4.Text = Utility.Language["DisableShader"];
-            this.button4.Text = Utility.Language["Reset"];
             this.checkBox13.Text = Utility.Language["DisableFontScale"];
             this.checkBox14.Text = Utility.Language["DisableHighResolutionImage"];
             this.checkBox15.Text = Utility.Language["DisableFixedFPS"];
@@ -163,15 +158,8 @@ namespace PPDConfig
                 FormWidth = setting.ReadInt("width", 800);
                 FormHeight = setting.ReadInt("height", 450);
                 MovieLatency = setting.ReadFloat("movielatency", 0);
-
-                this.Token = setting.ReadString("token");
-                this.TokenSecret = setting.ReadString("tokensecret");
                 this.MovieExtensions = setting.ReadString("movieextensions");
                 this.MusicExtensions = setting.ReadString("musicextensions");
-                if (this.Token != "" && this.TokenSecret != "")
-                {
-                    this.TokenAvailable = true;
-                }
                 TextBoxDisabled = setting.ReadString("textboxdisabled") == "1";
                 DrawSameColorAtSameTimingDisabled = setting.ReadString("drawsamecoloratsametimingdisabled") == "1";
                 FullScreen = setting.ReadString("fullscreen") == "1";
@@ -187,6 +175,8 @@ namespace PPDConfig
                 FontScaleDisabled = setting.ReadBoolean("fontscaledisabled");
                 HighResolutionImageDisabled = setting.ReadBoolean("highresolutionimagedisabled");
                 FixedFPSDisabled = setting.ReadBoolean("fixedfpsdisabled");
+                BlueSkyId = setting.ReadString("blueskyid");
+                BlueSkyPassword = setting.ReadString("blueskypassword");
             }
             catch (Exception e)
             {
@@ -220,8 +210,6 @@ namespace PPDConfig
             setting.ReplaceOrAdd("width", width);
             setting.ReplaceOrAdd("height", height);
             setting.ReplaceOrAdd("movielatency", MovieLatency);
-            setting.ReplaceOrAdd("token", this.Token);
-            setting.ReplaceOrAdd("tokensecret", this.TokenSecret);
             setting.ReplaceOrAdd("movieextensions", this.MovieExtensions);
             setting.ReplaceOrAdd("musicextensions", this.MusicExtensions);
             setting.ReplaceOrAdd("Language", langFileISO);
@@ -240,6 +228,8 @@ namespace PPDConfig
             setting.ReplaceOrAdd("fontscaledisabled", FontScaleDisabled);
             setting.ReplaceOrAdd("highresolutionimagedisabled", HighResolutionImageDisabled);
             setting.ReplaceOrAdd("fixedfpsdisabled", FixedFPSDisabled);
+            setting.ReplaceOrAdd("blueskyid", BlueSkyId);
+            setting.ReplaceOrAdd("blueskypassword", BlueSkyPassword);
             var sw = new SettingWriter(ppdini, false);
             foreach (KeyValuePair<string, string> kvp in setting.Dictionary)
             {
@@ -308,59 +298,7 @@ namespace PPDConfig
             FontScaleDisabled = false;
             HighResolutionImageDisabled = false;
             FixedFPSDisabled = false;
-
-            ResetTwitterSetting();
         }
-
-        private void ResetTwitterSetting()
-        {
-            TokenAvailable = false;
-            Token = "";
-            TokenSecret = "";
-        }
-
-        #region Twitter
-
-        const string ConsumerKey = "";
-        const string ConsumerSecret = "";
-
-        private bool tokenavailable;
-
-        private bool TokenAvailable
-        {
-            get
-            {
-                return tokenavailable;
-            }
-            set
-            {
-                tokenavailable = value;
-                if (tokenavailable)
-                {
-                    this.button1.Enabled = this.button2.Enabled = this.textBox11.Enabled = false;
-                    this.pictureBox1.Visible = this.label18.Visible = true;
-                }
-                else
-                {
-                    this.button1.Enabled = this.button2.Enabled = this.textBox11.Enabled = true;
-                    this.pictureBox1.Visible = this.label18.Visible = false;
-                }
-            }
-        }
-
-        private string Token
-        {
-            get;
-            set;
-        }
-
-        private string TokenSecret
-        {
-            get;
-            set;
-        }
-
-        #endregion
 
         public int FormWidth
         {
@@ -688,53 +626,27 @@ namespace PPDConfig
             }
         }
 
-        public PPDTwitterManager TwitterManager
+        public string BlueSkyId
         {
             get
             {
-                if (twitterManager == null)
-                {
-                    twitterManager = new PPDTwitterManager(ConsumerKey, ConsumerSecret);
-                }
-                return twitterManager;
+                return this.textBox5.Text;
+            }
+            set
+            {
+                this.textBox5.Text = value;
             }
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        public string BlueSkyPassword
         {
-            try
+            get
             {
-                var uri = TwitterManager.GetAuthorizationUri();
-                Process.Start(uri.AbsoluteUri);
+                return this.textBox7.Text;
             }
-            catch (Exception ex)
+            set
             {
-                MessageBox.Show(ex.Message);
-                Program.ErrorHandler.ProcessError(ex);
-            }
-        }
-
-
-        private void button2_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                var pin = this.textBox11.Text.Trim();
-                if (TwitterManager.GetTokens(pin, out string accessToken, out string accessTokenSecret))
-                {
-                    Token = accessToken;
-                    TokenSecret = accessTokenSecret;
-                    TokenAvailable = true;
-                }
-                else
-                {
-                    throw new Exception("Wrong Code!!");
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-                Program.ErrorHandler.ProcessError(ex);
+                this.textBox7.Text = value;
             }
         }
 
@@ -754,11 +666,6 @@ namespace PPDConfig
                 {
                 }
             }).Start();
-        }
-
-        private void button4_Click(object sender, EventArgs e)
-        {
-            ResetTwitterSetting();
         }
     }
 }
