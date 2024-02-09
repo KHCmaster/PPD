@@ -149,7 +149,7 @@
     <Compile Include="TestMenu.cs" />
     <Compile Include="TreeView.cs" />
     <Compile Include="TreeViewItem.cs" />
-    <Compile Include="TweetDialog.cs" />
+    <Compile Include="PostDialog.cs" />
     <Compile Include="UpdateScoreControl.cs" />
     <Compile Include="UserInfo.cs" />
     <Compile Include="UserPlayState.cs" />

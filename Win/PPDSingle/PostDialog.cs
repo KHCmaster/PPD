@@ -5,7 +5,7 @@ using System;
 
 namespace PPDSingle
 {
-    class TweetDialog : FocusableGameComponent
+    class PostDialog : FocusableGameComponent
     {
         EffectObject back;
         int selection;
@@ -22,20 +22,20 @@ namespace PPDSingle
         Button[] buttons;
 
         ISound Sound;
-        ITweetManager TweetManager;
-        bool tweetWaiting;
+        IBlueSkyManager BlueSkyManager;
+        bool postWaiting;
         bool opening;
 
-        public TweetDialog(PPDDevice device, PPDFramework.Resource.ResourceManager resourceManager, ISound sound, ITweetManager tweetManager) : base(device)
+        public PostDialog(PPDDevice device, PPDFramework.Resource.ResourceManager resourceManager, ISound sound, IBlueSkyManager blueSkyManager) : base(device)
         {
-            this.TweetManager = tweetManager;
-            tweetManager.TweetFinished += tweetManager_TweetFinished;
+            this.BlueSkyManager = blueSkyManager;
+            blueSkyManager.PostFinished += blueSkyMangager_PostFinished;
             this.Sound = sound;
-            back = new EffectObject(device, resourceManager, Utility.Path.Combine("tweetconfirm.etd"))
+            back = new EffectObject(device, resourceManager, Utility.Path.Combine("postconfirm.etd"))
             {
                 Position = new Vector2(400, 225)
             };
-            message = new TextureString(device, Utility.Language["TweetBlowContent"], 16, true, PPDColors.White)
+            message = new TextureString(device, Utility.Language["PostBelowContent"], 16, true, PPDColors.White)
             {
                 Position = new Vector2(400, 120)
             };
@@ -43,7 +43,7 @@ namespace PPDSingle
             {
                 Position = new Vector2(400, 300)
             };
-            failedString = new TextureString(device, Utility.Language["TweetFailed"], 16, true, PPDColors.White)
+            failedString = new TextureString(device, Utility.Language["PostFailed"], 16, true, PPDColors.White)
             {
                 Position = new Vector2(400, 300)
             };
@@ -86,9 +86,9 @@ namespace PPDSingle
             back.Hidden = true;
             message.Hidden = content.Hidden = processing.Hidden = failedString.Hidden = buttons[0].Hidden = buttons[1].Hidden = true;
 
-            GotFocused += TweetDialog_GotFocused;
-            LostFocused += TweetDialog_LostFocused;
-            Inputed += TweetDialog_Inputed;
+            GotFocused += PostDialog_GotFocused;
+            LostFocused += PostDialog_LostFocused;
+            Inputed += PostDialog_Inputed;
 
             this.AddChild(failedString);
             this.AddChild(processing);
@@ -98,18 +98,18 @@ namespace PPDSingle
             this.AddChild(black);
         }
 
-        public bool Tweeted
+        public bool Posted
         {
             get;
             private set;
         }
 
-        void tweetManager_TweetFinished(bool ok)
+        void blueSkyMangager_PostFinished(bool ok)
         {
             if (ok)
             {
                 processing.Hidden = true;
-                tweetWaiting = false;
+                postWaiting = false;
                 FocusManager.RemoveFocus();
             }
             else
@@ -120,9 +120,9 @@ namespace PPDSingle
             }
         }
 
-        void TweetDialog_Inputed(IFocusable sender, InputEventArgs args)
+        void PostDialog_Inputed(IFocusable sender, InputEventArgs args)
         {
-            if (tweetWaiting) return;
+            if (postWaiting) return;
             if (opening)
             {
                 if (args.AnyPressed)
@@ -138,10 +138,10 @@ namespace PPDSingle
                 {
                     case 0:
                         Sound.Play(PPDSetting.DefaultSounds[1], -1000);
-                        tweetWaiting = true;
+                        postWaiting = true;
                         processing.Hidden = false;
                         buttons[0].Hidden = buttons[1].Hidden = true;
-                        TweetManager.Tweet();
+                        BlueSkyManager.Post();
                         break;
                     case 1:
                         Sound.Play(PPDSetting.DefaultSounds[2], -1000);
@@ -178,7 +178,7 @@ namespace PPDSingle
             }
         }
 
-        void TweetDialog_LostFocused(IFocusable sender, FocusEventArgs args)
+        void PostDialog_LostFocused(IFocusable sender, FocusEventArgs args)
         {
             message.Hidden = content.Hidden = buttons[0].Hidden = buttons[1].Hidden = true;
             back.Stop();
@@ -193,11 +193,11 @@ namespace PPDSingle
             back.Finish -= back_ReverseFinish;
         }
 
-        void TweetDialog_GotFocused(IFocusable sender, FocusEventArgs args)
+        void PostDialog_GotFocused(IFocusable sender, FocusEventArgs args)
         {
             opening = true;
-            Tweeted = false;
-            TweetString = TweetManager.TweetText;
+            Posted = false;
+            PostString = BlueSkyManager.PostText;
             back.Stop();
             back.PlayType = Effect2D.EffectManager.PlayType.Once;
             back.Finish += back_NormalFinish;
@@ -212,7 +212,7 @@ namespace PPDSingle
             opening = false;
         }
 
-        public string TweetString
+        public string PostString
         {
             get
             {
@@ -241,7 +241,7 @@ namespace PPDSingle
                     {
                         processing.Hidden = failedString.Hidden = true;
                         buttons[0].Hidden = buttons[1].Hidden = false;
-                        tweetWaiting = false;
+                        postWaiting = false;
                     }
                 }
             }

@@ -54,17 +54,17 @@ namespace PPDSingle
         ISound Sound;
         IGameHost gameHost;
 
-        TweetDialog td;
+        PostDialog td;
         ReviewDialog rd;
-        ITweetManager TweetManager;
+        IBlueSkyManager BlueSkyManager;
         IReviewManager ReviewManager;
         PPDGameUtility ppdGameUtility;
 
         public GameResultScore(PPDDevice device, PPDFramework.Resource.ResourceManager resourceManager,
-            PPDGameUtility ppdGameUtility, ISound sound, ITweetManager tweetManager, IReviewManager reviewManager, IGameHost gameHost) : base(device)
+            PPDGameUtility ppdGameUtility, ISound sound, IBlueSkyManager blueSkyManager, IReviewManager reviewManager, IGameHost gameHost) : base(device)
         {
             this.ppdGameUtility = ppdGameUtility;
-            this.TweetManager = tweetManager;
+            this.BlueSkyManager = blueSkyManager;
             this.ReviewManager = reviewManager;
             this.Sound = sound;
             this.gameHost = gameHost;
@@ -72,7 +72,7 @@ namespace PPDSingle
             {
                 Position = new Vector2(455, 100)
             };
-            td = new TweetDialog(device, resourceManager, sound, tweetManager);
+            td = new PostDialog(device, resourceManager, sound, blueSkyManager);
             rd = new ReviewDialog(device, resourceManager, sound, reviewManager);
             this.AddChild(td);
             this.AddChild(rd);
@@ -198,7 +198,7 @@ namespace PPDSingle
                 switch (i)
                 {
                     case 0:
-                        text = "TWEET";
+                        text = "BSKY";
                         break;
                     case 1:
                         text = "REVIEW";
@@ -274,7 +274,7 @@ namespace PPDSingle
         {
             if (args.FocusObject == td)
             {
-                if (!TweetManager.CanTweet)
+                if (!BlueSkyManager.CanPost)
                 {
                     gridSelection.SetAt(buttons[2].Position);
                     buttons[0].Selected = false;
@@ -304,7 +304,7 @@ namespace PPDSingle
             buttons[gridSelection.Current].Selected = false;
             gridSelection.SetAt(buttons[2].Position);
             buttons[2].Selected = true;
-            buttons[0].Enabled = TweetManager.CanTweet;
+            buttons[0].Enabled = BlueSkyManager.CanPost;
             buttons[1].Enabled = ReviewManager.CanReview;
             buttons[3].Enabled = canReplay;
             foreach (NumberPictureObject picture in scoresmalls)
@@ -472,16 +472,16 @@ namespace PPDSingle
 
         private void SaveScreenShot()
         {
-            if (TweetManager.CanTweet)
+            if (BlueSkyManager.CanPost)
             {
-                TweetManager.TweetFilePath = "result.png";
-                gameHost.SaveScreenShot(TweetManager.TweetFilePath, s =>
+                BlueSkyManager.PostFilePath = "result.png";
+                gameHost.SaveScreenShot(BlueSkyManager.PostFilePath, s =>
                 {
                     using (Bitmap bitmap = new Bitmap(s))
                     using (Graphics g = Graphics.FromImage(bitmap))
                     using (System.Drawing.Font font = new System.Drawing.Font(PPDSetting.Setting.FontName, 20))
                     {
-                        var text = TweetManager.FinishDate.ToString();
+                        var text = BlueSkyManager.FinishDate.ToString();
                         var size = g.MeasureString(text, font);
                         var p = new PointF(0, 450 - size.Height);
                         g.DrawString(text, font, Brushes.Black, new PointF(p.X - 1, p.Y - 1));

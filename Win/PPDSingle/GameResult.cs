@@ -34,7 +34,7 @@ namespace PPDSingle
             ResultSet += GameResult_ResultSet;
             ScoreSent += GameResult_ScoreSent;
             ScoreSending += GameResult_ScoreSending;
-            grs = new GameResultScore(device, ResourceManager, PPDGameUtility, Sound, TweetManager, ReviewManager, GameHost);
+            grs = new GameResultScore(device, ResourceManager, PPDGameUtility, Sound, BlueSkyManager, ReviewManager, GameHost);
             grs.Retryed += grs_Retryed;
             grs.Returned += grs_Returned;
             grs.Replayed += grs_Replayed;

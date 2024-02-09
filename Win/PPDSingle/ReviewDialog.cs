@@ -36,7 +36,7 @@ namespace PPDSingle
             this.ReviewManager = reviewManager;
             reviewManager.ReviewFinished += reviewManager_ReviewFinished;
             this.Sound = sound;
-            back = new EffectObject(device, resourceManager, Utility.Path.Combine("tweetconfirm.etd"))
+            back = new EffectObject(device, resourceManager, Utility.Path.Combine("postconfirm.etd"))
             {
                 Position = new Vector2(400, 225)
             };

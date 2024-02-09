@@ -23,7 +23,7 @@ namespace PPDSingle
         {
             this.sound = sound;
 
-            confirm = new EffectObject(device, resourceManager, Utility.Path.Combine("tweetconfirm.etd"))
+            confirm = new EffectObject(device, resourceManager, Utility.Path.Combine("postconfirm.etd"))
             {
                 Position = new Vector2(400, 225)
             };

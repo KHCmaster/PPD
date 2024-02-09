@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29020.237
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34330.188
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PPD", "PPD\PPD\PPD.csproj", "{6A90947D-34C9-4329-A27C-20B60FEFD682}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -107,8 +107,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ColorCanvas", "ColorCanvas\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ErrorHandle", "ErrorHandler\ErrorHandle.csproj", "{7BF2846D-6813-4E83-8B26-42C5B98B2099}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PPDTwitter", "PPDTwitter\PPDTwitter.csproj", "{E739E95A-333A-489E-A815-B446A78736B7}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PPDModSettingUI", "PPDModSettingUI\PPDModSettingUI.csproj", "{953D844F-3208-4ED4-9D65-C47E8B1CA82B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinFormsUI", "WinFormsUI\WinFormsUI.csproj", "{C75532C4-765B-418E-B09B-46D36B2ABDB1}"
@@ -138,6 +136,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PPDTest", "PPDTest\PPDTest.csproj", "{0089AAF1-52B5-417C-A34E-E2E18527F669}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShaderCompiler", "ShaderCompiler\ShaderCompiler.csproj", "{554A975C-C675-416B-9830-B58B69D5A3A0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlueSky", "BlueSky\BlueSky.csproj", "{A195631E-98EC-4F51-A3F6-C591F054117A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlueSkyTest", "BlueSkyTest\BlueSkyTest.csproj", "{335F1AA2-8BFA-4725-B0D1-C196A99CADE1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -293,10 +295,6 @@ Global
 		{7BF2846D-6813-4E83-8B26-42C5B98B2099}.Debug|x64.Build.0 = Debug|x64
 		{7BF2846D-6813-4E83-8B26-42C5B98B2099}.Release|x64.ActiveCfg = Release|x64
 		{7BF2846D-6813-4E83-8B26-42C5B98B2099}.Release|x64.Build.0 = Release|x64
-		{E739E95A-333A-489E-A815-B446A78736B7}.Debug|x64.ActiveCfg = Debug|x64
-		{E739E95A-333A-489E-A815-B446A78736B7}.Debug|x64.Build.0 = Debug|x64
-		{E739E95A-333A-489E-A815-B446A78736B7}.Release|x64.ActiveCfg = Release|x64
-		{E739E95A-333A-489E-A815-B446A78736B7}.Release|x64.Build.0 = Release|x64
 		{953D844F-3208-4ED4-9D65-C47E8B1CA82B}.Debug|x64.ActiveCfg = Debug|x64
 		{953D844F-3208-4ED4-9D65-C47E8B1CA82B}.Debug|x64.Build.0 = Debug|x64
 		{953D844F-3208-4ED4-9D65-C47E8B1CA82B}.Release|x64.ActiveCfg = Release|x64
@@ -357,6 +355,12 @@ Global
 		{554A975C-C675-416B-9830-B58B69D5A3A0}.Debug|x64.Build.0 = Debug|x64
 		{554A975C-C675-416B-9830-B58B69D5A3A0}.Release|x64.ActiveCfg = Release|x64
 		{554A975C-C675-416B-9830-B58B69D5A3A0}.Release|x64.Build.0 = Release|x64
+		{A195631E-98EC-4F51-A3F6-C591F054117A}.Debug|x64.ActiveCfg = Debug|x64
+		{A195631E-98EC-4F51-A3F6-C591F054117A}.Debug|x64.Build.0 = Debug|x64
+		{A195631E-98EC-4F51-A3F6-C591F054117A}.Release|x64.ActiveCfg = Release|x64
+		{335F1AA2-8BFA-4725-B0D1-C196A99CADE1}.Debug|x64.ActiveCfg = Debug|x64
+		{335F1AA2-8BFA-4725-B0D1-C196A99CADE1}.Debug|x64.Build.0 = Debug|x64
+		{335F1AA2-8BFA-4725-B0D1-C196A99CADE1}.Release|x64.ActiveCfg = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
