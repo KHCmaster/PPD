@@ -40,7 +40,7 @@ namespace testgame
             if (data.Count <= 1) return;
             long tempdata = (long)data[data.Count - 1] - (long)data[0];
             this.label3.Text = ((long)data[data.Count - 1] - (long)data[data.Count - 2]).ToString();
-            this.label4.Text = (60f / (tempdata / 1000f) * data.Count).ToString();
+            this.label4.Text = (60f / (tempdata / 1000f) * (data.Count - 1)).ToString();
         }
 
         private void button2_Click(object sender, EventArgs e)
