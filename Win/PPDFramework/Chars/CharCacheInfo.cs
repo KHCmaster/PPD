@@ -190,7 +190,7 @@ namespace PPDFramework.Chars
                         var tempStream = new MemoryStream();
                         bitmap.Save(tempStream, System.Drawing.Imaging.ImageFormat.Png);
                         tempStream.Seek(0, SeekOrigin.Begin);
-                        var texture = ((PPDFramework.Texture.DX9.TextureFactory)TextureFactoryManager.Factory).FromStream(device, tempStream, width, height, SharpDX.Direct3D9.Pool.SystemMemory, true);
+                        var texture = CreateTemporaryTexture(device, tempStream, width, height);
                         this.width = width;
                         this.height = height;
                         this.t_width = Utility.UpperPowerOfTwo(width);
@@ -239,7 +239,7 @@ namespace PPDFramework.Chars
                         height = tmetrics.height;
                         t_width = Utility.UpperPowerOfTwo(Math.Max(width, iBmp_w + iOfs_x));
                         t_height = Utility.UpperPowerOfTwo(height);
-                        texture = ((PPDFramework.Texture.DX9.TextureFactory)TextureFactoryManager.Factory).Create(device, t_width, t_height, 1, SharpDX.Direct3D9.Pool.SystemMemory, true);
+                        texture = CreateTemporaryTexture(device, t_width, t_height);
 
                         using (var textureData = texture.GetTextureData())
                         {
@@ -290,6 +290,24 @@ namespace PPDFramework.Chars
                 }
             }
             return texture;
+        }
+
+        private static TextureBase CreateTemporaryTexture(PPDDevice device, Stream stream, int width, int height)
+        {
+            if (TextureFactoryManager.Factory is PPDFramework.Texture.DX9.TextureFactory dx9Factory)
+            {
+                return dx9Factory.FromStream(device, stream, width, height, SharpDX.Direct3D9.Pool.SystemMemory, true);
+            }
+            return ((PPDFramework.Texture.DX11.TextureFactory)TextureFactoryManager.Factory).FromStream(device, stream, width, height, true, true);
+        }
+
+        private static TextureBase CreateTemporaryTexture(PPDDevice device, int width, int height)
+        {
+            if (TextureFactoryManager.Factory is PPDFramework.Texture.DX9.TextureFactory dx9Factory)
+            {
+                return dx9Factory.Create(device, width, height, 1, SharpDX.Direct3D9.Pool.SystemMemory, true);
+            }
+            return TextureFactoryManager.Factory.Create(device, width, height, 1, true);
         }
 
         public void Increment()

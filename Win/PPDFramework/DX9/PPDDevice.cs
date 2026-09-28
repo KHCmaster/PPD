@@ -48,12 +48,6 @@ namespace PPDFramework.DX9
             private set;
         }
 
-        internal SpriteBatch SpriteBatch
-        {
-            get;
-            private set;
-        }
-
         /// <summary>
         /// VertexDeclarationを取得、設定します。
         /// </summary>
@@ -76,6 +70,22 @@ namespace PPDFramework.DX9
         internal override string ShaderNamePrefix
         {
             get { return "d3d9_"; }
+        }
+
+        /// <summary>
+        /// スクリーン全体を描画する際のテクセルのオフセットを取得します。
+        /// </summary>
+        internal override float ScreenTexelOffset
+        {
+            get { return 0.5f; }
+        }
+
+        /// <summary>
+        /// 使用しているDirectXのバージョン名を取得します。
+        /// </summary>
+        public override string DirectXVersion
+        {
+            get { return "DirectX 9"; }
         }
 
         /// <summary>
@@ -376,6 +386,28 @@ namespace PPDFramework.DX9
         {
             device.ScissorRect = currentScissorRectangle;
             device.SetRenderState(RenderState.ScissorTestEnable, scissorRectEnabled);
+        }
+
+        /// <summary>
+        /// 切り取りをすぐにデバイスに反映します。
+        /// </summary>
+        /// <param name="rectangle"></param>
+        /// <param name="enabled"></param>
+        internal override void ApplyScissorRect(Rectangle rectangle, bool enabled)
+        {
+            device.ScissorRect = rectangle;
+            device.SetRenderState(RenderState.ScissorTestEnable, enabled);
+        }
+
+        /// <summary>
+        /// スプライト描画用のアルファブレンドの状態を設定します。
+        /// </summary>
+        /// <param name="pa"></param>
+        internal override void SetSpriteAlphaBlend(bool pa)
+        {
+            device.SetRenderState(RenderState.AlphaBlendEnable, true);
+            device.SetRenderState(RenderState.SourceBlend, pa ? Blend.One : Blend.SourceAlpha);
+            device.SetRenderState(RenderState.DestinationBlend, Blend.InverseSourceAlpha);
         }
 
         /// <summary>

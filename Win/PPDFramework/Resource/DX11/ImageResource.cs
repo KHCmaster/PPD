@@ -1,7 +1,6 @@
 ﻿using PPDFramework.Texture;
 using PPDFramework.Vertex;
 using SharpDX;
-using SharpDX.Direct3D9;
 using System.IO;
 using System.Windows.Forms;
 
@@ -30,11 +29,10 @@ namespace PPDFramework.Resource.DX11
             try
             {
                 this.filename = filename;
-                var ii = ImageInformation.FromFile(filename);
-                this.width = ii.Width;
-                this.height = ii.Height;
+                this.texture = (Texture.DX11.Texture)TextureFactoryManager.Factory.FromFile(device, filename, 0, 0, pa);
+                this.width = texture.Width;
+                this.height = texture.Height;
                 this.halfPixel = new Vector2(0.5f / this.width, 0.5f / this.height);
-                this.texture = (Texture.DX11.Texture)TextureFactoryManager.Factory.FromFile(device, filename, this.width, this.height, pa);
                 CreateVertexBuffer(device);
             }
             catch
@@ -53,25 +51,11 @@ namespace PPDFramework.Resource.DX11
         {
             try
             {
-                using (var memoryStream = new MemoryStream())
-                {
-                    byte[] bytes = new byte[1024 * 1024];
-                    while (stream.Position < stream.Length)
-                    {
-                        var bytesRead = stream.Read(bytes, 0, bytes.Length);
-                        if (bytesRead == 0)
-                        {
-                            break;
-                        }
-                    }
-                    memoryStream.Seek(0, SeekOrigin.Begin);
-                    var ii = ImageInformation.FromMemory(memoryStream.ToArray());
-                    this.width = ii.Width;
-                    this.height = ii.Height;
-                    this.halfPixel = new Vector2(0.5f / this.width, 0.5f / this.height);
-                    this.texture = (Texture.DX11.Texture)TextureFactoryManager.Factory.FromStream(device, stream, this.width, this.height, pa);
-                    CreateVertexBuffer(device);
-                }
+                this.texture = (Texture.DX11.Texture)TextureFactoryManager.Factory.FromStream(device, stream, 0, 0, pa);
+                this.width = texture.Width;
+                this.height = texture.Height;
+                this.halfPixel = new Vector2(0.5f / this.width, 0.5f / this.height);
+                CreateVertexBuffer(device);
             }
             catch
             {

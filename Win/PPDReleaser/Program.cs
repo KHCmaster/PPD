@@ -128,6 +128,7 @@ namespace PPDReleaser
                 "SharpDX.Direct3D11.Effects.dll",
                 "SharpDX.Direct3D11.dll",
                 "SharpDX.D3DCompiler.dll",
+                "sharpdx_direct3d11_1_effects_x64.dll",
                 "System.Data.SQLite.dll",
                 "System.Data.SQLite.EF6.dll",
                 "System.Data.SQLite.Linq.dll",

@@ -1,6 +1,6 @@
 ﻿using Effect2D;
 using PPDFramework.Effect;
-using PPDFramework.Vertex.DX9;
+using PPDFramework.Vertex;
 using SharpDX;
 using System;
 using System.Collections.Generic;
@@ -201,7 +201,7 @@ namespace PPDFramework.Shaders
                         _device.SetTextureStageState(2, SharpDX.Direct3D9.TextureStage.ColorOperation, SharpDX.Direct3D9.TextureOperation.Disable);
                         _device.SetTextureStageState(2, SharpDX.Direct3D9.TextureStage.AlphaOperation, SharpDX.Direct3D9.TextureOperation.Disable);
                     }
-                    if (context?.Vertex?.VertexBucket?.VertexBuffer is VertexBuffer vertexBuffer)
+                    if (context?.Vertex?.VertexBucket?.VertexBuffer is VertexBufferBase vertexBuffer)
                     {
                         device.DrawUserPrimitives(primitiveType, context.Vertex.Offset + startIndex, primitiveCount, vertexBuffer.Vertices);
                     }
@@ -346,7 +346,7 @@ namespace PPDFramework.Shaders
 
             public override void Flush()
             {
-                ((DX9.PPDDevice)device).SpriteBatch.Flush();
+                device.SpriteBatch.Flush();
             }
 
             private void DrawMask(PPDDevice device, AlphaBlendContext context, Matrix m, PrimitiveType primitiveType, int primitiveCount, int startIndex, int vertexCount)
@@ -437,10 +437,10 @@ namespace PPDFramework.Shaders
                 {
 
 #endif
-                    if (context?.Vertex?.VertexBucket?.VertexBuffer is VertexBuffer vertexBuffer)
+                    if (context?.Vertex?.VertexBucket?.VertexBuffer is VertexBufferBase vertexBuffer)
                     {
                         device.VertexDeclaration = effect.VertexDeclaration;
-                        ((DX9.PPDDevice)device).SpriteBatch.Draw(context.Texture, m, context.Alpha, context.Overlay, primitiveType,
+                        device.SpriteBatch.Draw(context.Texture, m, context.Alpha, context.Overlay, primitiveType,
                             vertexBuffer.Vertices, context.Vertex.Offset + startIndex, vertexCount);
                     }
 #if BENCHMARK

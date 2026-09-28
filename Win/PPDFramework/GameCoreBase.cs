@@ -203,7 +203,7 @@ namespace PPDFramework
                         FPS = (float)(1000 / (lastPresentEndTime - presentStartTime) * 60);
                         if (ShowFPS)
                         {
-                            CurrentFPS = String.Format("PPD FPS:{0}", FPS);
+                            CurrentFPS = String.Format("PPD [{0}] FPS:{1}", device.DirectXVersion, FPS);
                         }
                         presentCount = 0;
                         presentStartTime = lastPresentEndTime;
@@ -238,7 +238,7 @@ namespace PPDFramework
                 Control.Size = new System.Drawing.Size(width.Value, height.Value);
                 InitializeUI();
 
-                device = PPDDevice.Initialize(Control.Handle, width.Value, height.Value, expectedWidth.Value, expectedHeight.Value, expectedAspectRatio.Value);
+                device = PPDDevice.Initialize(Control.Handle, width.Value, height.Value, expectedWidth.Value, expectedHeight.Value, expectedAspectRatio.Value, PPDSetting.Setting.DirectX11Enabled);
                 device.RegisterModule(new AlphaBlendContextCache(1024));
                 device.RegisterModule(new ShaderCommon(device));
                 device.RegisterModule(new ColorTextureAllcator(device));

@@ -1,17 +1,13 @@
+#include "Common.fx"
+
 float4 OverlayColor;
 float4x4 Projection;
 
 Texture2D Texture;
-SamplerState LinearSampler
-{
-    Filter = MIN_MAG_MIP_LINEAR;
-	AddressU = Clamp;
-	AddressV = Clamp;
-};
 
 struct VertexShaderInput
 {
-	float3 Position : POSITION;
+	float4 Position : POSITION;
 	float4 Color    : COLOR;
 	float2 TexCoord : TEXCOORD;
 };
@@ -19,33 +15,51 @@ struct VertexShaderInput
 struct VertexShaderOutput
 {
 	float4 Position : SV_POSITION;
-	float4 Color    : COLOR;
-	float2 TexCoord : TEXCOORD;
+	float4 Color    : COLOR0;
+	float2 TexCoord : TEXCOORD0;
 };
 
 VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
 {
 	VertexShaderOutput output = (VertexShaderOutput)0;
-    output.Position = mul(float4(input.Position, 1.0), Projection);
+    output.Position = mul(input.Position, Projection);
 	output.TexCoord = input.TexCoord;
 	output.Color = input.Color;
 	return output;
 }
 
-float4 GetSrcColor(float2 texCoord) {
+float4 GetSrcColor(float2 texCoord, uniform bool paEnabled) {
 	float4 srcColor = Texture.SampleLevel(LinearSampler, texCoord, 0);
-    srcColor.rgb = srcColor.rgb * (1 - OverlayColor.a) + OverlayColor.rgb * OverlayColor.a;
+    if(paEnabled){
+        srcColor.rgb = srcColor.rgb * (1 - OverlayColor.a) + OverlayColor.rgb * OverlayColor.a * srcColor.a;
+    }else{
+        srcColor.rgb = srcColor.rgb * (1 - OverlayColor.a) + OverlayColor.rgb * OverlayColor.a;
+    }
 	return srcColor;
 }
 
-float4 PixelShaderFunction(VertexShaderOutput input) : SV_Target{
-    return GetSrcColor(input.TexCoord) * input.Color;
+float4 PixelShaderFunction(VertexShaderOutput input, uniform bool paEnabled) : SV_TARGET{
+    float4 srcColor = GetSrcColor(input.TexCoord, paEnabled);
+    if(paEnabled){
+        srcColor.rgb *= input.Color.a;
+    }
+    return srcColor * input.Color;
 }
 
-technique BasicEffect{
+technique11 BasicEffectPAEnabled{
 	pass p0 {
-		SetGeometryShader( 0 );
-		SetVertexShader(CompileShader(vs_5_0, VertexShaderFunction()));
-		SetPixelShader(CompileShader(ps_5_0, PixelShaderFunction()));
+		SetBlendState(PremultipliedAlphaBlending, float4(0, 0, 0, 0), 0xFFFFFFFF);
+		SetGeometryShader(NULL);
+		SetVertexShader(CompileShader(vs_4_0, VertexShaderFunction()));
+		SetPixelShader(CompileShader(ps_4_0, PixelShaderFunction(true)));
+	}
+}
+
+technique11 BasicEffectPADisabled{
+	pass p0 {
+		SetBlendState(AlphaBlending, float4(0, 0, 0, 0), 0xFFFFFFFF);
+		SetGeometryShader(NULL);
+		SetVertexShader(CompileShader(vs_4_0, VertexShaderFunction()));
+		SetPixelShader(CompileShader(ps_4_0, PixelShaderFunction(false)));
 	}
 }

@@ -141,6 +141,7 @@ namespace PPDConfig
             this.checkBox13.Text = Utility.Language["DisableFontScale"];
             this.checkBox14.Text = Utility.Language["DisableHighResolutionImage"];
             this.checkBox15.Text = Utility.Language["DisableFixedFPS"];
+            this.checkBox16.Text = Utility.Language["EnableDirectX11"];
         }
 
         private void ReadPPDIni()
@@ -175,6 +176,7 @@ namespace PPDConfig
                 FontScaleDisabled = setting.ReadBoolean("fontscaledisabled");
                 HighResolutionImageDisabled = setting.ReadBoolean("highresolutionimagedisabled");
                 FixedFPSDisabled = setting.ReadBoolean("fixedfpsdisabled");
+                DirectX11Enabled = setting.ReadBoolean("directx11");
                 BlueSkyId = setting.ReadString("blueskyid");
                 BlueSkyPassword = setting.ReadString("blueskypassword");
             }
@@ -228,6 +230,7 @@ namespace PPDConfig
             setting.ReplaceOrAdd("fontscaledisabled", FontScaleDisabled);
             setting.ReplaceOrAdd("highresolutionimagedisabled", HighResolutionImageDisabled);
             setting.ReplaceOrAdd("fixedfpsdisabled", FixedFPSDisabled);
+            setting.ReplaceOrAdd("directx11", DirectX11Enabled);
             setting.ReplaceOrAdd("blueskyid", BlueSkyId);
             setting.ReplaceOrAdd("blueskypassword", BlueSkyPassword);
             var sw = new SettingWriter(ppdini, false);
@@ -298,6 +301,7 @@ namespace PPDConfig
             FontScaleDisabled = false;
             HighResolutionImageDisabled = false;
             FixedFPSDisabled = false;
+            DirectX11Enabled = false;
         }
 
         public int FormWidth
@@ -586,6 +590,18 @@ namespace PPDConfig
             set
             {
                 checkBox15.Checked = value;
+            }
+        }
+
+        private bool DirectX11Enabled
+        {
+            get
+            {
+                return checkBox16.Checked;
+            }
+            set
+            {
+                checkBox16.Checked = value;
             }
         }
 

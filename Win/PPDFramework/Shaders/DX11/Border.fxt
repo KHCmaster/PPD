@@ -1,3 +1,5 @@
+#include "Common.fx"
+
 float2 WidthHeight;
 float4x4 Projection;
 float4 Color;
@@ -7,16 +9,10 @@ float ActualThickness;
 
 Texture2D LastRenderTargetTexture;
 Texture2D FilterTexture;
-SamplerState LinearSampler
-{
-    Filter = MIN_MAG_MIP_LINEAR;
-	AddressU = Clamp;
-	AddressV = Clamp;
-};
 
 struct VertexShaderInput
 {
-	float3 Position : POSITION;
+	float4 Position : POSITION;
 	float4 Color    : COLOR;
 	float2 TexCoord : TEXCOORD;
 };
@@ -24,8 +20,8 @@ struct VertexShaderInput
 struct VertexShaderOutput
 {
 	float4 Position : SV_POSITION;
-	float4 Color    : COLOR;
-	float2 TexCoord : TEXCOORD;
+	float4 Color    : COLOR0;
+	float2 TexCoord : TEXCOORD0;
 };
 
 #include "Blend.fx"
@@ -33,7 +29,7 @@ struct VertexShaderOutput
 VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
 {
 	VertexShaderOutput output = (VertexShaderOutput)0;
-	output.Position = mul(float4(input.Position, 1.0), Projection);
+	output.Position = mul(input.Position, Projection);
 	output.TexCoord = input.TexCoord;
 	output.Color = input.Color;
 	return output;
@@ -41,7 +37,7 @@ VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
 
 float Outside(VertexShaderOutput input) {
 	float maxAlpha = 0;
-	float start = Thickness / 2.0;
+	float start = Thickness / 2;
 	for (int i = 0; i < Thickness2; i++) {
 		float x = -start + i % Thickness;
 		float y = -start + i / Thickness;
@@ -60,7 +56,7 @@ float Outside(VertexShaderOutput input) {
 
 float Inside(VertexShaderOutput input) {
 	float maxAlpha = 0;
-	float start = Thickness / 2.0;
+	float start = Thickness / 2;
 	for (int i = 0; i < Thickness2; i++) {
 		float x = -start + i % Thickness;
 		float y = -start + i / Thickness;
@@ -79,13 +75,13 @@ float Inside(VertexShaderOutput input) {
 
 #params blends [Normal, Multiply, Screen, Overlay, HardLight, ColorDodge, LinearDodge, Difference]
 #foreach(blends, blend)
-float4 PixelShader$(blend)OutsideFunction(VertexShaderOutput input) : SV_Target{
+float4 PixelShader$(blend)OutsideFunction(VertexShaderOutput input) : SV_TARGET{
 	float maxAlpha = Outside(input);
 	return $(blend)(LastRenderTargetTexture.SampleLevel(LinearSampler, input.TexCoord, 0),
 		float4(Color.rgb, Color.a * maxAlpha * (1 - FilterTexture.SampleLevel(LinearSampler, input.TexCoord, 0).a)));
 }
 
-float4 PixelShader$(blend)InsideFunction(VertexShaderOutput input) : SV_Target{
+float4 PixelShader$(blend)InsideFunction(VertexShaderOutput input) : SV_TARGET{
 	float maxAlpha = Inside(input);
 	return $(blend)(LastRenderTargetTexture.SampleLevel(LinearSampler, input.TexCoord, 0),
 		float4(Color.rgb, Color.a * maxAlpha *  FilterTexture.SampleLevel(LinearSampler, input.TexCoord, 0).a));
@@ -93,17 +89,19 @@ float4 PixelShader$(blend)InsideFunction(VertexShaderOutput input) : SV_Target{
 
 technique11 Outside$(blend)Border {
 	pass p0 {
-		SetGeometryShader( 0 );
-		SetVertexShader(CompileShader(vs_5_0, VertexShaderFunction()));
-		SetPixelShader(CompileShader(ps_5_0, PixelShader$(blend)OutsideFunction()));
+		SetBlendState(NoBlend, float4(0, 0, 0, 0), 0xFFFFFFFF);
+		SetGeometryShader(NULL);
+		SetVertexShader(CompileShader(vs_4_0, VertexShaderFunction()));
+		SetPixelShader(CompileShader(ps_4_0, PixelShader$(blend)OutsideFunction()));
 	}
 }
 
 technique11 Inside$(blend)Border {
 	pass p0 {
-		SetGeometryShader( 0 );
-		SetVertexShader(CompileShader(vs_5_0, VertexShaderFunction()));
-		SetPixelShader(CompileShader(ps_5_0, PixelShader$(blend)OutsideFunction()));
+		SetBlendState(NoBlend, float4(0, 0, 0, 0), 0xFFFFFFFF);
+		SetGeometryShader(NULL);
+		SetVertexShader(CompileShader(vs_4_0, VertexShaderFunction()));
+		SetPixelShader(CompileShader(ps_4_0, PixelShader$(blend)InsideFunction()));
 	}
 }
 #end

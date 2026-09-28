@@ -1,7 +1,6 @@
 ﻿using PPDFramework.Effect;
 using PPDFramework.Vertex;
 using SharpDX;
-using SharpDX.Direct3D9;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -131,19 +130,14 @@ namespace PPDFramework.Sprites
 
         private void SetScissorImpl(int scissorRectIndex)
         {
-            var _device = (SharpDX.Direct3D9.Device)((DX9.PPDDevice)device).Device;
-            _device.ScissorRect = scissorRectStates[scissorRectIndex].Rectangle;
-            _device.SetRenderState(RenderState.ScissorTestEnable, scissorRectStates[scissorRectIndex].Enabled);
+            device.ApplyScissorRect(scissorRectStates[scissorRectIndex].Rectangle, scissorRectStates[scissorRectIndex].Enabled);
         }
 
         private void PrepareBatchDraw(int vertexPos, int indexPos, bool pa)
         {
             vertices.Write(_vertices, vertexPos, 0);
             indices.Write(_indices, indexPos, 0);
-            var _device = (device.Device as SharpDX.Direct3D9.Device);
-            _device.SetRenderState(SharpDX.Direct3D9.RenderState.AlphaBlendEnable, true);
             ChangePAMode(pa);
-            _device.SetRenderState(SharpDX.Direct3D9.RenderState.DestinationBlend, SharpDX.Direct3D9.Blend.InverseSourceAlpha);
             device.SetStreamSource(vertices);
             device.SetIndices(indices);
             device.VertexDeclaration = effect.VertexDeclaration;
@@ -151,8 +145,7 @@ namespace PPDFramework.Sprites
 
         private void ChangePAMode(bool pa)
         {
-            var _device = (device.Device as SharpDX.Direct3D9.Device);
-            _device.SetRenderState(SharpDX.Direct3D9.RenderState.SourceBlend, pa ? SharpDX.Direct3D9.Blend.One : SharpDX.Direct3D9.Blend.SourceAlpha);
+            device.SetSpriteAlphaBlend(pa);
             effect.Technique = techniques[pa];
         }
 
@@ -229,6 +222,16 @@ namespace PPDFramework.Sprites
             {
                 effect.Dispose();
                 effect = null;
+            }
+            if (vertices != null)
+            {
+                vertices.Dispose();
+                vertices = null;
+            }
+            if (indices != null)
+            {
+                indices.Dispose();
+                indices = null;
             }
         }
 

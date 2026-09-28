@@ -79,6 +79,7 @@ namespace PPD
         protected override void OnSuccessInitializeDirectX()
         {
             MovieUtility.Window = Form.RenderForm.Handle;
+            Form.MainForm.Text = String.Format("PPD [{0}]", device.DirectXVersion);
         }
     }
 }

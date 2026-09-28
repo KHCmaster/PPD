@@ -1,4 +1,5 @@
-﻿using PPDFramework.Texture;
+﻿using PPDFramework.Sprites;
+using PPDFramework.Texture;
 using PPDFramework.Vertex;
 using SharpDX;
 using SharpDX.Mathematics.Interop;
@@ -36,6 +37,25 @@ namespace PPDFramework
         /// シェーダー名のプレフィックスを取得します。
         /// </summary>
         internal abstract string ShaderNamePrefix { get; }
+
+        /// <summary>
+        /// スクリーン全体を描画する際のテクセルのオフセットを取得します。
+        /// </summary>
+        internal abstract float ScreenTexelOffset { get; }
+
+        /// <summary>
+        /// 使用しているDirectXのバージョン名を取得します。
+        /// </summary>
+        public abstract string DirectXVersion { get; }
+
+        /// <summary>
+        /// SpriteBatchを取得、設定します。
+        /// </summary>
+        internal SpriteBatch SpriteBatch
+        {
+            get;
+            set;
+        }
 
         /// <summary>
         /// ワークスペースを取得します
@@ -338,10 +358,28 @@ namespace PPDFramework
         public abstract void SetScissorRect(Rectangle rectangle, bool enabled);
 
         /// <summary>
+        /// 切り取りをすぐにデバイスに反映します。
+        /// </summary>
+        /// <param name="rectangle"></param>
+        /// <param name="enabled"></param>
+        internal abstract void ApplyScissorRect(Rectangle rectangle, bool enabled);
+
+        /// <summary>
+        /// スプライト描画用のアルファブレンドの状態を設定します。
+        /// </summary>
+        /// <param name="pa"></param>
+        internal abstract void SetSpriteAlphaBlend(bool pa);
+
+        /// <summary>
         /// 破棄します。
         /// </summary>
         protected override void DisposeResource()
         {
+            if (SpriteBatch != null)
+            {
+                SpriteBatch.Dispose();
+                SpriteBatch = null;
+            }
             if (Workspace != null)
             {
                 Workspace.Dispose();
@@ -390,19 +428,29 @@ namespace PPDFramework
         /// <param name="isDX11"></param>
         public static PPDDevice Initialize(IntPtr handle, int width, int height, int expectedWidth, int expectedHeight, float expectedAspectRatio, bool isDX11 = false)
         {
-            PPDDevice ppdDevice;
+            PPDDevice ppdDevice = null;
             if (isDX11)
             {
-                PPDSetting.Setting.ShaderDisabled = false;
                 Effect.EffectFactoryManager.Initialize(new Effect.DX11.EffectFactory());
                 Resource.ImageResourceFactoryManager.Initialize(new Resource.DX11.ImageResourceFactory());
                 PPDFramework.Texture.TextureFactoryManager.Initialize(new Texture.DX11.TextureFactory());
                 Vertex.VertexBufferFactoryManager.Initialize(new Vertex.DX11.VertexBufferFactory());
                 Vertex.VertexDeclarationFactoryManager.Initialize(new Vertex.DX11.VertexDeclarationFactory());
                 Vertex.IndexBufferFactoryManager.Initialize(new Vertex.DX11.IndexBufferFactory());
-                ppdDevice = new DX11.PPDDevice(handle, width, height, expectedWidth, expectedHeight, expectedAspectRatio);
+                try
+                {
+                    ppdDevice = new DX11.PPDDevice(handle, width, height, expectedWidth, expectedHeight, expectedAspectRatio);
+                    // DirectX11では固定機能パイプラインがないため、シェーダーは常に有効です
+                    PPDSetting.Setting.ShaderDisabled = false;
+                }
+                catch (Exception e)
+                {
+                    // DirectX11が使えない環境ではDirectX9で動作させます
+                    System.Diagnostics.Debug.WriteLine(e);
+                    ppdDevice = null;
+                }
             }
-            else
+            if (ppdDevice == null)
             {
                 Effect.EffectFactoryManager.Initialize(new Effect.DX9.EffectFactory());
                 Resource.ImageResourceFactoryManager.Initialize(new Resource.DX9.ImageResourceFactory());

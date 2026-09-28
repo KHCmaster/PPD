@@ -25,7 +25,14 @@ namespace PPDFramework.Chars
         public SizeTexture(PPDDevice device)
         {
             this.device = device;
-            Texture = ((Texture.DX9.TextureFactory)TextureFactoryManager.Factory).Create(device, Size, Size, 1, SharpDX.Direct3D9.Pool.Default, true);
+            if (TextureFactoryManager.Factory is Texture.DX9.TextureFactory dx9Factory)
+            {
+                Texture = dx9Factory.Create(device, Size, Size, 1, SharpDX.Direct3D9.Pool.Default, true);
+            }
+            else
+            {
+                Texture = TextureFactoryManager.Factory.Create(device, Size, Size, 1, true);
+            }
             availableSpaces = new List<AvailableSpace>
             {
                 new AvailableSpace(this, Point.Zero, new Size2(Size, Size))

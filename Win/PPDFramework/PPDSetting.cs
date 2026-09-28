@@ -66,6 +66,7 @@ namespace PPDFramework
                 ExpansionWaitPort = setting.ReadInt("expansionwaitport", 54320);
                 AutoAdjustLatencyDisabled = setting.ReadBoolean("autoadjustlatencydisabled");
                 ShaderDisabled = setting.ReadBoolean("shaderdisabled");
+                DirectX11Enabled = setting.ReadBoolean("directx11");
                 FontScaleDisabled = setting.ReadBoolean("fontscaledisabled");
                 HighResolutionImageDisabled = setting.ReadBoolean("highresolutionimagedisabled");
                 TextureCharMode = setting.ReadEnum<TextureCharMode>("texturecharmode", TextureCharMode.D2D);
@@ -448,6 +449,15 @@ namespace PPDFramework
         {
             get;
             set;
+        }
+
+        /// <summary>
+        /// DirectX11で描画するかどうかを取得します。
+        /// </summary>
+        public bool DirectX11Enabled
+        {
+            get;
+            private set;
         }
 
         /// <summary>

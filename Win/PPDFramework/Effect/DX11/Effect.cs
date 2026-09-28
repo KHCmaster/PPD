@@ -1,9 +1,8 @@
-﻿using PPDFramework.Texture;
+using PPDFramework.Texture;
 using PPDFramework.Vertex;
 using SharpDX;
 using SharpDX.D3DCompiler;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
 
 namespace PPDFramework.Effect.DX11
 {
@@ -11,10 +10,11 @@ namespace PPDFramework.Effect.DX11
     {
         SharpDX.Direct3D11.Effect effect;
         string technique;
-        SharpDX.Direct3D11.EffectTechnique currentTechnique;
+        SharpDX.Direct3D11.EffectPass[] currentPasses;
         SharpDX.Direct3D11.EffectPass currentPass;
-        Vertex.VertexDeclarationBase vertexDeclaration;
-        HashSet<EffectHandleBase> textureSetHandles;
+        Dictionary<string, SharpDX.Direct3D11.EffectPass[]> techniquePasses;
+        VertexDeclarationBase vertexDeclaration;
+        HashSet<EffectHandle> textureSetHandles;
 
         public override string Technique
         {
@@ -24,7 +24,11 @@ namespace PPDFramework.Effect.DX11
 
         public ShaderBytecode ShaderBytecode
         {
-            get { return effect.GetTechniqueByIndex(0).GetPassByIndex(0).Description.Signature; }
+            get
+            {
+                var tech = SuppressRelease(effect.GetTechniqueByIndex(0));
+                return SuppressRelease(tech.GetPassByIndex(0)).Description.Signature;
+            }
         }
 
         public override VertexDeclarationBase VertexDeclaration
@@ -32,12 +36,31 @@ namespace PPDFramework.Effect.DX11
             get { return vertexDeclaration; }
         }
 
+        private SharpDX.Direct3D11.DeviceContext Context
+        {
+            get { return ((PPDFramework.DX11.PPDDevice)device).Context; }
+        }
+
         public Effect(PPDDevice device, byte[] bytes) : base(device)
         {
-            textureSetHandles = new HashSet<EffectHandleBase>();
-            effect = new SharpDX.Direct3D11.Effect((SharpDX.Direct3D11.Device)((PPDFramework.DX11.PPDDevice)device).Device, bytes);
-            var tech = effect.GetTechniqueByIndex(0);
-            vertexDeclaration = Vertex.VertexDeclarationFactoryManager.Factory.Create(device, this);
+            textureSetHandles = new HashSet<EffectHandle>();
+            techniquePasses = new Dictionary<string, SharpDX.Direct3D11.EffectPass[]>();
+            effect = new SharpDX.Direct3D11.Effect((SharpDX.Direct3D11.Device)device.Device, bytes);
+            vertexDeclaration = VertexDeclarationFactoryManager.Factory.Create(device, this);
+        }
+
+        /// <summary>
+        /// Effects11のテクニック、パス、変数はCOMの参照カウントを持たないため、
+        /// SharpDXのファイナライザーからReleaseが呼ばれるとアクセス違反になります。
+        /// これらはエフェクトが所有しているので、ファイナライザーを抑制します。
+        /// </summary>
+        internal static T SuppressRelease<T>(T obj) where T : class
+        {
+            if (obj != null)
+            {
+                System.GC.SuppressFinalize(obj);
+            }
+            return obj;
         }
 
         public override EffectHandleBase GetParameter(string name)
@@ -47,6 +70,12 @@ namespace PPDFramework.Effect.DX11
 
         protected override void DisposeResource()
         {
+            base.DisposeResource();
+            if (vertexDeclaration != null)
+            {
+                vertexDeclaration.Dispose();
+                vertexDeclaration = null;
+            }
             if (effect != null)
             {
                 effect.Dispose();
@@ -56,99 +85,125 @@ namespace PPDFramework.Effect.DX11
 
         public override int Begin()
         {
-            currentTechnique = effect.GetTechniqueByName(technique);
-            return currentTechnique.Description.PassCount;
+            if (!techniquePasses.TryGetValue(technique, out currentPasses))
+            {
+                var tech = SuppressRelease(effect.GetTechniqueByName(technique));
+                currentPasses = new SharpDX.Direct3D11.EffectPass[tech.Description.PassCount];
+                for (var i = 0; i < currentPasses.Length; i++)
+                {
+                    currentPasses[i] = SuppressRelease(tech.GetPassByIndex(i));
+                }
+                techniquePasses.Add(technique, currentPasses);
+            }
+            return currentPasses.Length;
         }
 
         public override void BeginPass(int pass)
         {
-            currentPass = currentTechnique.GetPassByIndex(pass);
-            currentPass.Apply(((PPDFramework.DX11.PPDDevice)device).Context);
+            currentPass = currentPasses[pass];
+            currentPass.Apply(Context);
         }
 
         public override void End()
         {
+            currentPasses = null;
         }
 
         public override void EndPass()
         {
-            foreach (var handle in textureSetHandles)
+            if (textureSetHandles.Count > 0)
             {
-                ((DX11.EffectHandle)handle)._EffectVariable.AsShaderResource().SetResource(null);
-                textureSetHandles.Add(handle);
+                foreach (var handle in textureSetHandles)
+                {
+                    handle.ShaderResource.SetResource(null);
+                }
+                textureSetHandles.Clear();
+                currentPass.Apply(Context);
             }
-            textureSetHandles.Clear();
-            currentPass.Apply(((PPDFramework.DX11.PPDDevice)device).Context);
+            currentPass = null;
         }
 
         public override void SetTexture(EffectHandleBase handle, TextureBase texture)
         {
-            ((DX11.EffectHandle)handle)._EffectVariable.AsShaderResource().SetResource(((Texture.DX11.Texture)texture)._ShaderResourceView);
-            textureSetHandles.Add(handle);
+            var effectHandle = (EffectHandle)handle;
+            if (texture is Texture.DX11.Texture dx11Texture)
+            {
+                dx11Texture.Flush(Context);
+                effectHandle.ShaderResource.SetResource(dx11Texture._ShaderResourceView);
+                textureSetHandles.Add(effectHandle);
+            }
+            else
+            {
+                effectHandle.ShaderResource.SetResource(null);
+            }
         }
 
         public override void SetValue(EffectHandleBase handle, float value)
         {
-            ((DX11.EffectHandle)handle)._EffectVariable.AsScalar().Set(value);
+            ((EffectHandle)handle).Scalar.Set(value);
         }
 
         public override void SetValue(EffectHandleBase handle, float[] values)
         {
-            ((DX11.EffectHandle)handle)._EffectVariable.AsScalar().Set(values);
+            ((EffectHandle)handle).Scalar.Set(values);
         }
 
         public override void SetValue(EffectHandleBase handle, Matrix matrix)
         {
-            ((DX11.EffectHandle)handle)._EffectVariable.AsMatrix().SetMatrix(matrix);
+            ((EffectHandle)handle).Matrix.SetMatrix(matrix);
         }
 
         public override void SetValue(EffectHandleBase handle, Matrix[] matrices)
         {
-            ((DX11.EffectHandle)handle)._EffectVariable.AsMatrix().SetMatrix(matrices);
+            ((EffectHandle)handle).Matrix.SetMatrix(matrices);
         }
 
         public override void SetValue(EffectHandleBase handle, Vector2 vector)
         {
-            ((DX11.EffectHandle)handle)._EffectVariable.AsVector().Set(vector);
+            ((EffectHandle)handle).Vector.Set(vector);
         }
 
         public override void SetValue(EffectHandleBase handle, Vector3 vector)
         {
-            ((DX11.EffectHandle)handle)._EffectVariable.AsVector().Set(vector);
+            ((EffectHandle)handle).Vector.Set(vector);
         }
 
         public override void SetValue(EffectHandleBase handle, Vector4 vector)
         {
-            ((DX11.EffectHandle)handle)._EffectVariable.AsVector().Set(vector);
+            ((EffectHandle)handle).Vector.Set(vector);
         }
 
         public override void SetValue(EffectHandleBase handle, Color4 color)
         {
-            ((DX11.EffectHandle)handle)._EffectVariable.AsVector().Set(color);
+            ((EffectHandle)handle).Vector.Set(color);
         }
 
         public override void SetValue<T>(EffectHandleBase handle, T value)
         {
-            using (var dataStream = new DataStream(Marshal.SizeOf(typeof(T)), true, true))
+            var size = Utilities.SizeOf<T>();
+            using (var dataStream = new DataStream(size, true, true))
             {
                 dataStream.Write(value);
-                dataStream.Seek(0, System.IO.SeekOrigin.Begin);
-                ((DX11.EffectHandle)handle)._EffectVariable.SetRawValue(dataStream, 1);
+                ((EffectHandle)handle)._EffectVariable.SetRawValue(dataStream.DataPointer, 0, size);
             }
         }
 
         public override void SetValue<T>(EffectHandleBase handle, T[] values)
         {
-            using (var dataStream = new DataStream(Marshal.SizeOf(typeof(T)) * values.Length, true, true))
+            var size = Utilities.SizeOf<T>() * values.Length;
+            using (var dataStream = new DataStream(size, true, true))
             {
                 dataStream.WriteRange(values, 0, values.Length);
-                dataStream.Seek(0, System.IO.SeekOrigin.Begin);
-                ((DX11.EffectHandle)handle)._EffectVariable.SetRawValue(dataStream, values.Length);
+                ((EffectHandle)handle)._EffectVariable.SetRawValue(dataStream.DataPointer, 0, size);
             }
         }
 
         public override void CommitChanges()
         {
+            if (currentPass != null)
+            {
+                currentPass.Apply(Context);
+            }
         }
     }
 }

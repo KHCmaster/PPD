@@ -38,8 +38,9 @@ namespace PPDFramework
             var height = device.Height;
             float textureWidth = width;
             float textureHeight = height;
-            float x1 = 0.5f / textureWidth, y1 = 0.5f / textureHeight;
-            float x2 = (width + 0.5f) / textureWidth, y2 = (height + 0.5f) / textureHeight;
+            var offset = device.ScreenTexelOffset;
+            float x1 = offset / textureWidth, y1 = offset / textureHeight;
+            float x2 = (width + offset) / textureWidth, y2 = (height + offset) / textureHeight;
             vertices.Write(new[] {
                 new ColoredTexturedVertex(new Vector3(0, 0, 0.5f), new Vector2(x1, y1)),
                 new ColoredTexturedVertex(new Vector3(width, 0, 0.5f), new Vector2(x2, y1)),

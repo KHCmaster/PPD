@@ -1,10 +1,12 @@
-﻿using SharpDX;
+using SharpDX;
+using System.Runtime.InteropServices;
 
 namespace PPDFramework.Texture.DX11
 {
     class TextureData : TextureDataBase
     {
-        SharpDX.Direct3D11.Texture2D texture;
+        Texture texture;
+        GCHandle handle;
         DataStream dataStream;
 
         public override DataStream DataStream
@@ -12,17 +14,20 @@ namespace PPDFramework.Texture.DX11
             get { return dataStream; }
         }
 
-        public TextureData(SharpDX.Direct3D11.Texture2D texture)
+        public TextureData(Texture texture)
         {
             this.texture = texture;
-            // TODO lock
-            dataStream = new DataStream(null);
+            var data = texture.BeginCpuAccess();
+            handle = GCHandle.Alloc(data, GCHandleType.Pinned);
+            dataStream = new DataStream(handle.AddrOfPinnedObject(), data.Length, true, true);
         }
 
         protected override void DisposeResource()
         {
             base.DisposeResource();
-            // TODO unlock
+            dataStream.Dispose();
+            handle.Free();
+            texture.EndCpuAccess();
         }
     }
 }

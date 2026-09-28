@@ -1,38 +1,66 @@
-﻿using PPDFramework.Texture;
+using PPDFramework.Sprites;
+using PPDFramework.Texture;
 using PPDFramework.Vertex;
 using SharpDX;
+using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;
 using SharpDX.Mathematics.Interop;
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 
 namespace PPDFramework.DX11
 {
+    /// <summary>
+    /// DirectX11のPPDデバイスです。
+    /// </summary>
     class PPDDevice : PPDFramework.PPDDevice
     {
+        const int MaxFanPrimitiveCount = 4096;
+        const int InitialUserVertexBufferSize = 1024 * 64;
+
         SharpDX.Direct3D11.Device device;
         SwapChain swapChain;
-        SwapChainDescription swapChainDescription;
-        RenderTargetView originalRenderTargetView;
         Texture2D backBuffer;
         VertexDeclarationBase vertexDeclaration;
-        Dictionary<PrimitiveType, SharpDX.Direct3D.PrimitiveTopology> primitiveTypeMap = new Dictionary<PrimitiveType, SharpDX.Direct3D.PrimitiveTopology>
-        {
-            { PrimitiveType.LineList, SharpDX.Direct3D.PrimitiveTopology.LineList },            { PrimitiveType.LineStrip, SharpDX.Direct3D.PrimitiveTopology.LineStrip },            { PrimitiveType.PointList, SharpDX.Direct3D.PrimitiveTopology.PointList },            { PrimitiveType.TriangleFan, SharpDX.Direct3D.PrimitiveTopology.TriangleStrip },            { PrimitiveType.TriangleList, SharpDX.Direct3D.PrimitiveTopology.TriangleList },            { PrimitiveType.TriangleStrip, SharpDX.Direct3D.PrimitiveTopology.TriangleStrip }        };
         VertexBufferBase currentBuffer;
+        IndexBufferBase currentIndex;
+        RasterizerState scissorEnabledState;
+        RasterizerState scissorDisabledState;
+        SharpDX.Direct3D11.Buffer fanIndexBuffer;
+        SharpDX.Direct3D11.Buffer userVertexBuffer;
+        int userVertexBufferSize;
+        Dictionary<PrimitiveType, PrimitiveTopology> primitiveTypeMap = new Dictionary<PrimitiveType, PrimitiveTopology>
+        {
+            { PrimitiveType.PointList, PrimitiveTopology.PointList },
+            { PrimitiveType.LineList, PrimitiveTopology.LineList },
+            { PrimitiveType.LineStrip, PrimitiveTopology.LineStrip },
+            { PrimitiveType.TriangleList, PrimitiveTopology.TriangleList },
+            { PrimitiveType.TriangleStrip, PrimitiveTopology.TriangleStrip },
+            { PrimitiveType.TriangleFan, PrimitiveTopology.TriangleList }
+        };
 
+        /// <summary>
+        /// デバイスを取得します。
+        /// </summary>
         public override ComObject Device
         {
             get { return device; }
         }
 
+        /// <summary>
+        /// デバイスコンテキストを取得します。
+        /// </summary>
         public DeviceContext Context
         {
             get;
             private set;
         }
 
+        /// <summary>
+        /// VertexDeclarationを取得、設定します。
+        /// </summary>
         internal override VertexDeclarationBase VertexDeclaration
         {
             get { return vertexDeclaration; }
@@ -46,9 +74,29 @@ namespace PPDFramework.DX11
             }
         }
 
+        /// <summary>
+        /// シェーダープリフィックスを取得します。
+        /// </summary>
         internal override string ShaderNamePrefix
         {
             get { return "d3d11_"; }
+        }
+
+        /// <summary>
+        /// スクリーン全体を描画する際のテクセルのオフセットを取得します。
+        /// DirectX11ではピクセルの中心とテクセルの中心が一致するので不要です。
+        /// </summary>
+        internal override float ScreenTexelOffset
+        {
+            get { return 0; }
+        }
+
+        /// <summary>
+        /// 使用しているDirectXのバージョン名を取得します。
+        /// </summary>
+        public override string DirectXVersion
+        {
+            get { return "DirectX 11"; }
         }
 
         /// <summary>
@@ -63,48 +111,63 @@ namespace PPDFramework.DX11
         public PPDDevice(IntPtr handle, int width, int height, float expectedWidth, float expectedHeight, float expectedRatio) :
             base(width, height, expectedWidth, expectedHeight, expectedRatio)
         {
-            swapChainDescription = new SwapChainDescription
+            var swapChainDescription = new SwapChainDescription
             {
                 BufferCount = 1,
-                ModeDescription = new ModeDescription(width, height, new Rational(60, 1), Format.R8G8B8A8_UNorm),
+                ModeDescription = new ModeDescription(width, height, new Rational(60, 1), Texture.DX11.TextureFactory.TextureFormat),
                 IsWindowed = true,
                 OutputHandle = handle,
                 SampleDescription = new SampleDescription(1, 0),
+                SwapEffect = SwapEffect.Discard,
                 Usage = Usage.RenderTargetOutput
             };
-
-            var flag = DeviceCreationFlags.Debug;
+            var featureLevels = new[] { FeatureLevel.Level_11_0, FeatureLevel.Level_10_1, FeatureLevel.Level_10_0 };
+            var flag = DeviceCreationFlags.BgraSupport;
             try
             {
-                SharpDX.Direct3D11.Device.CreateWithSwapChain(SharpDX.Direct3D.DriverType.Hardware, flag, swapChainDescription, out device, out swapChain);
+                SharpDX.Direct3D11.Device.CreateWithSwapChain(DriverType.Hardware, flag, featureLevels, swapChainDescription, out device, out swapChain);
             }
             catch (SharpDXException)
             {
-                try
-                {
-                    SharpDX.Direct3D11.Device.CreateWithSwapChain(SharpDX.Direct3D.DriverType.Software, flag, swapChainDescription, out device, out swapChain);
-                }
-                catch (SharpDXException)
-                {
-                    try
-                    {
-                        SharpDX.Direct3D11.Device.CreateWithSwapChain(SharpDX.Direct3D.DriverType.Reference, flag, swapChainDescription, out device, out swapChain);
-                    }
-                    catch (SharpDXException)
-                    {
-                        throw;
-                    }
-                }
+                SharpDX.Direct3D11.Device.CreateWithSwapChain(DriverType.Warp, flag, featureLevels, swapChainDescription, out device, out swapChain);
+            }
+            // フルスクリーンの切り替えはアプリケーション側で行うので、Alt+Enterを無効にします
+            using (var factory = swapChain.GetParent<SharpDX.DXGI.Factory>())
+            {
+                factory.MakeWindowAssociation(handle, WindowAssociationFlags.IgnoreAll);
             }
             Context = device.ImmediateContext;
             backBuffer = Texture2D.FromSwapChain<Texture2D>(swapChain, 0);
-            originalRenderTargetView = new RenderTargetView(device, backBuffer);
             Context.Rasterizer.SetViewport(new Viewport(0, 0, width, height, 0.0f, 1.0f));
-            Context.Rasterizer.State = new RasterizerState(device, new RasterizerStateDescription
+            scissorDisabledState = new RasterizerState(device, new RasterizerStateDescription
             {
                 CullMode = CullMode.None,
-                FillMode = FillMode.Solid
+                FillMode = FillMode.Solid,
+                IsDepthClipEnabled = true,
+                IsScissorEnabled = false
             });
+            scissorEnabledState = new RasterizerState(device, new RasterizerStateDescription
+            {
+                CullMode = CullMode.None,
+                FillMode = FillMode.Solid,
+                IsDepthClipEnabled = true,
+                IsScissorEnabled = true
+            });
+            Context.Rasterizer.State = scissorDisabledState;
+            CreateFanIndexBuffer();
+            SpriteBatch = new SpriteBatch(this);
+        }
+
+        private void CreateFanIndexBuffer()
+        {
+            var indices = new int[MaxFanPrimitiveCount * 3];
+            for (var i = 0; i < MaxFanPrimitiveCount; i++)
+            {
+                indices[i * 3] = 0;
+                indices[i * 3 + 1] = i + 1;
+                indices[i * 3 + 2] = i + 2;
+            }
+            fanIndexBuffer = SharpDX.Direct3D11.Buffer.Create(device, BindFlags.IndexBuffer, indices, 0, ResourceUsage.Immutable);
         }
 
         /// <summary>
@@ -136,80 +199,235 @@ namespace PPDFramework.DX11
         /// <param name="destPoint"></param>
         internal override void StretchRectangle(TextureBase src, RawRectangle? sourceRect, TextureBase dest, RawPoint? destPoint)
         {
-            throw new NotImplementedException();
+            ((Texture.DX11.Texture)dest).CopyFrom((Texture.DX11.Texture)src, sourceRect, destPoint);
         }
 
+        /// <summary>
+        /// クリアします。
+        /// </summary>
+        /// <param name="color"></param>
         internal override void Clear(Color4 color)
         {
-            var currentRenderTargets = Context.OutputMerger.GetRenderTargets(1, out DepthStencilView currentView);
-            Context.ClearRenderTargetView(currentRenderTargets[0], color);
+            Context.ClearRenderTargetView(((Texture.DX11.Texture)GetRenderTarget().Texture)._RenderTargetView, color);
         }
 
+        /// <summary>
+        /// デバイスをリセットします。
+        /// </summary>
         internal override void ResetDevice()
         {
         }
 
+        /// <summary>
+        /// 描画を開始します。
+        /// </summary>
         internal override void DrawStart()
         {
+            currentBuffer = null;
+            currentIndex = null;
             Reset();
-            SetRenderTarget(Workspace.Primal);
-            Context.ClearRenderTargetView(((Texture.DX11.Texture)Workspace.Primal.Texture)._RenderTargetView, PPDColors.Black);
+            var newRenderTarget = GetRenderTarget();
+            SetRenderTarget(newRenderTarget);
+            Context.Rasterizer.SetViewport(new Viewport(0, 0, Width, Height, 0.0f, 1.0f));
+            Context.ClearRenderTargetView(((Texture.DX11.Texture)newRenderTarget.Texture)._RenderTargetView, new Color4(0f, 0f, 0f, 1f));
+            SetScissorRect(new Rectangle(0, 0, Width, Height), false);
         }
 
+        /// <summary>
+        /// 描画を終了します。
+        /// </summary>
         internal override void DrawEnd()
         {
-            Context.CopyResource(((Texture.DX11.Texture)Workspace.Primal.Texture)._Texture, backBuffer);
+            SpriteBatch.Flush();
+            SpriteBatch.End();
+            Context.OutputMerger.SetTargets((RenderTargetView)null);
+            Context.CopyResource(((Texture.DX11.Texture)GetRenderTarget().Texture)._Texture, backBuffer);
         }
 
+        /// <summary>
+        /// 表示します。
+        /// </summary>
         internal override void Present()
         {
             swapChain.Present(1, PresentFlags.None);
         }
 
+        /// <summary>
+        /// プリミティブを描画します。
+        /// </summary>
+        /// <param name="primitiveType"></param>
+        /// <param name="offset"></param>
+        /// <param name="primitiveCount"></param>
         internal override void DrawPrimitives(PrimitiveType primitiveType, int offset, int primitiveCount)
         {
             Context.InputAssembler.PrimitiveTopology = primitiveTypeMap[primitiveType];
-            Context.Draw(primitiveCount + 2, offset);
+            if (primitiveType == PrimitiveType.TriangleFan)
+            {
+                DrawFan(offset, primitiveCount);
+                return;
+            }
+            Context.Draw(GetVertexCount(primitiveType, primitiveCount), offset);
         }
 
+        /// <summary>
+        /// プリミティブを描画します。
+        /// </summary>
+        /// <param name="primitiveType"></param>
+        /// <param name="baseVertexIndex"></param>
+        /// <param name="minVertexIndex"></param>
+        /// <param name="numVertices"></param>
+        /// <param name="startIndex"></param>
+        /// <param name="primCount"></param>
         internal override void DrawIndexedPrimitives(PrimitiveType primitiveType, int baseVertexIndex, int minVertexIndex, int numVertices, int startIndex, int primCount)
         {
-            throw new NotImplementedException();
+            if (primitiveType == PrimitiveType.TriangleFan)
+            {
+                throw new NotSupportedException("TriangleFan is not supported for indexed drawing in DirectX11");
+            }
+            Context.InputAssembler.PrimitiveTopology = primitiveTypeMap[primitiveType];
+            Context.DrawIndexed(GetVertexCount(primitiveType, primCount), startIndex, baseVertexIndex);
         }
 
+        /// <summary>
+        /// ユーザープリミティブを描画します。
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="primitiveType"></param>
+        /// <param name="offset"></param>
+        /// <param name="primitiveCount"></param>
+        /// <param name="data"></param>
         internal override void DrawUserPrimitives<T>(PrimitiveType primitiveType, int offset, int primitiveCount, T[] data)
         {
-            throw new NotImplementedException();
+            var vertexSize = Utilities.SizeOf<T>();
+            var sizeInBytes = vertexSize * data.Length;
+            if (userVertexBuffer == null || userVertexBufferSize < sizeInBytes)
+            {
+                if (userVertexBuffer != null)
+                {
+                    userVertexBuffer.Dispose();
+                }
+                userVertexBufferSize = Math.Max(InitialUserVertexBufferSize, sizeInBytes);
+                userVertexBuffer = new SharpDX.Direct3D11.Buffer(device, new BufferDescription
+                {
+                    SizeInBytes = userVertexBufferSize,
+                    Usage = ResourceUsage.Dynamic,
+                    BindFlags = BindFlags.VertexBuffer,
+                    CpuAccessFlags = CpuAccessFlags.Write
+                });
+            }
+            var dataBox = Context.MapSubresource(userVertexBuffer, 0, MapMode.WriteDiscard, SharpDX.Direct3D11.MapFlags.None);
+            try
+            {
+                Utilities.Write(dataBox.DataPointer, data, 0, data.Length);
+            }
+            finally
+            {
+                Context.UnmapSubresource(userVertexBuffer, 0);
+            }
+            Context.InputAssembler.SetVertexBuffers(0, new VertexBufferBinding(userVertexBuffer, vertexSize, 0));
+            currentBuffer = null;
+            DrawPrimitives(primitiveType, offset, primitiveCount);
         }
 
+        private void DrawFan(int offset, int primitiveCount)
+        {
+            if (primitiveCount > MaxFanPrimitiveCount)
+            {
+                throw new NotSupportedException("Too many primitives for TriangleFan");
+            }
+            Context.InputAssembler.SetIndexBuffer(fanIndexBuffer, Format.R32_UInt, 0);
+            currentIndex = null;
+            Context.DrawIndexed(primitiveCount * 3, 0, offset);
+        }
+
+        private static int GetVertexCount(PrimitiveType primitiveType, int primitiveCount)
+        {
+            switch (primitiveType)
+            {
+                case PrimitiveType.PointList:
+                    return primitiveCount;
+                case PrimitiveType.LineList:
+                    return primitiveCount * 2;
+                case PrimitiveType.LineStrip:
+                    return primitiveCount + 1;
+                case PrimitiveType.TriangleList:
+                    return primitiveCount * 3;
+                default:
+                    return primitiveCount + 2;
+            }
+        }
+
+        /// <summary>
+        /// ストリームソースを設定します。
+        /// </summary>
+        /// <param name="buffer"></param>
         internal override void SetStreamSource(VertexBufferBase buffer)
         {
+            var dx11Buffer = (Vertex.DX11.VertexBuffer)buffer;
+            dx11Buffer.Flush(Context);
             if (currentBuffer == buffer)
             {
                 return;
             }
             currentBuffer = buffer;
-            Context.InputAssembler.SetVertexBuffers(0, new VertexBufferBinding(((Vertex.DX11.VertexBuffer)buffer)._Buffer, ColoredTexturedVertex.Size, 0));
+            Context.InputAssembler.SetVertexBuffers(0, new VertexBufferBinding(dx11Buffer._Buffer, ColoredTexturedVertex.Size, 0));
         }
 
+        /// <summary>
+        /// インデックスを設定します。
+        /// </summary>
+        /// <param name="index"></param>
         internal override void SetIndices(IndexBufferBase index)
         {
-            throw new NotImplementedException();
+            if (currentIndex == index)
+            {
+                return;
+            }
+            currentIndex = index;
+            Context.InputAssembler.SetIndexBuffer(((Vertex.DX11.IndexBuffer)index)._Buffer, Format.R32_UInt, 0);
         }
 
+        /// <summary>
+        /// バックバッファーをファイルに書き込みます。
+        /// </summary>
+        /// <param name="filepath"></param>
         public override void BackBufferToFile(string filepath)
         {
-            /* TODO
-            Texture2D.ToFile(Context, backBuffer, ImageFileFormat.Png, filepath);
-            */
+            var pixels = Texture.DX11.Texture.ReadPixels(Context, backBuffer);
+            using (var bitmap = Texture.DX11.Texture.ToBitmap(pixels, backBuffer.Description.Width, backBuffer.Description.Height))
+            {
+                bitmap.Save(filepath, System.Drawing.Imaging.ImageFormat.Png);
+            }
         }
 
+        /// <summary>
+        /// シザーレクトを設定します。
+        /// </summary>
+        /// <param name="rectangle"></param>
+        /// <param name="enabled"></param>
         public override void SetScissorRect(Rectangle rectangle, bool enabled)
         {
+            SpriteBatch.SetScissorRect(rectangle, enabled);
+        }
+
+        /// <summary>
+        /// 切り取りをすぐにデバイスに反映します。
+        /// </summary>
+        /// <param name="rectangle"></param>
+        /// <param name="enabled"></param>
+        internal override void ApplyScissorRect(Rectangle rectangle, bool enabled)
+        {
             Context.Rasterizer.SetScissorRectangle(rectangle.Left, rectangle.Top, rectangle.Right, rectangle.Bottom);
-            var desc = Context.Rasterizer.State.Description;
-            desc.IsScissorEnabled = enabled;
-            Context.Rasterizer.State = new RasterizerState(device, desc);
+            Context.Rasterizer.State = enabled ? scissorEnabledState : scissorDisabledState;
+        }
+
+        /// <summary>
+        /// スプライト描画用のアルファブレンドの状態を設定します。
+        /// DirectX11ではエフェクトのパスで設定されるので何もしません。
+        /// </summary>
+        /// <param name="pa"></param>
+        internal override void SetSpriteAlphaBlend(bool pa)
+        {
         }
 
         /// <summary>
@@ -218,6 +436,51 @@ namespace PPDFramework.DX11
         protected override void DisposeResource()
         {
             base.DisposeResource();
+            if (Context != null)
+            {
+                Context.ClearState();
+                Context.Flush();
+            }
+            if (fanIndexBuffer != null)
+            {
+                fanIndexBuffer.Dispose();
+                fanIndexBuffer = null;
+            }
+            if (userVertexBuffer != null)
+            {
+                userVertexBuffer.Dispose();
+                userVertexBuffer = null;
+            }
+            if (scissorEnabledState != null)
+            {
+                scissorEnabledState.Dispose();
+                scissorEnabledState = null;
+            }
+            if (scissorDisabledState != null)
+            {
+                scissorDisabledState.Dispose();
+                scissorDisabledState = null;
+            }
+            if (backBuffer != null)
+            {
+                backBuffer.Dispose();
+                backBuffer = null;
+            }
+            if (swapChain != null)
+            {
+                swapChain.Dispose();
+                swapChain = null;
+            }
+            if (Context != null)
+            {
+                Context.Dispose();
+                Context = null;
+            }
+            if (device != null)
+            {
+                device.Dispose();
+                device = null;
+            }
         }
     }
 }

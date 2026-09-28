@@ -1,4 +1,4 @@
-float4 ColorFilter(float4 color, FilterInformation filterInfo)
+float4 ColorFilter(float4 color, FilterInformation filterInfo, uniform bool paEnabled)
 {
 	return float4(
 		color.r * filterInfo.Arg2.g + color.r * filterInfo.Arg1.r * filterInfo.Arg2.r,
@@ -7,7 +7,7 @@ float4 ColorFilter(float4 color, FilterInformation filterInfo)
 		color.a * filterInfo.Arg2.g + color.a * filterInfo.Arg1.a * filterInfo.Arg2.r);
 }
 
-float4 MaxGrayScaleFilter(float4 color, FilterInformation filterInfo)
+float4 MaxGrayScaleFilter(float4 color, FilterInformation filterInfo, uniform bool paEnabled)
 {
 	float c = max(max(color.r, color.g), color.b) * filterInfo.Arg1.r;
 	return float4(
@@ -17,7 +17,7 @@ float4 MaxGrayScaleFilter(float4 color, FilterInformation filterInfo)
 		color.a);
 }
 
-float4 MiddleGrayScaleFilter(float4 color, FilterInformation filterInfo)
+float4 MiddleGrayScaleFilter(float4 color, FilterInformation filterInfo, uniform bool paEnabled)
 {
 	float c = (max(max(color.r, color.g), color.b) + min(min(color.r, color.g), color.b)) / 2 * filterInfo.Arg1.r;
 	return float4(
@@ -27,7 +27,7 @@ float4 MiddleGrayScaleFilter(float4 color, FilterInformation filterInfo)
 		color.a);
 }
 
-float4 NTSCGrayScaleFilter(float4 color, FilterInformation filterInfo)
+float4 NTSCGrayScaleFilter(float4 color, FilterInformation filterInfo, uniform bool paEnabled)
 {
 	float c = (0.298912 * color.r + 0.586611 * color.g + 0.114478 * color.b) * filterInfo.Arg1.r;
 	return float4(
@@ -37,7 +37,7 @@ float4 NTSCGrayScaleFilter(float4 color, FilterInformation filterInfo)
 		color.a);
 }
 
-float4 HDTVGrayScaleFilter(float4 color, FilterInformation filterInfo) {
+float4 HDTVGrayScaleFilter(float4 color, FilterInformation filterInfo, uniform bool paEnabled) {
 	float c = pow((pow(color.r, filterInfo.Arg1.b) * 0.222015 + pow(color.g, filterInfo.Arg1.b) * 0.706655 + pow(color.b, filterInfo.Arg1.b) * 0.071330), 1 / filterInfo.Arg1.b);
 	return float4(
 		color.r * filterInfo.Arg1.g + c,
@@ -46,7 +46,7 @@ float4 HDTVGrayScaleFilter(float4 color, FilterInformation filterInfo) {
 		color.a);
 }
 
-float4 AverageGrayScaleFilter(float4 color, FilterInformation filterInfo) {
+float4 AverageGrayScaleFilter(float4 color, FilterInformation filterInfo, uniform bool paEnabled) {
 	float c = (color.r + color.g + color.b) / 3 * filterInfo.Arg1.r;
 	return float4(
 		color.r * filterInfo.Arg1.g + c,
@@ -55,7 +55,7 @@ float4 AverageGrayScaleFilter(float4 color, FilterInformation filterInfo) {
 		color.a);
 }
 
-float4 GreenGrayScaleFilter(float4 color, FilterInformation filterInfo) {
+float4 GreenGrayScaleFilter(float4 color, FilterInformation filterInfo, uniform bool paEnabled) {
 	float c = color.g * filterInfo.Arg1.r;
 	return float4(
 		color.r * filterInfo.Arg1.g + c,
@@ -64,7 +64,7 @@ float4 GreenGrayScaleFilter(float4 color, FilterInformation filterInfo) {
 		color.a);
 }
 
-float4 MedianGrayScaleFilter(float4 color, FilterInformation filterInfo) {
+float4 MedianGrayScaleFilter(float4 color, FilterInformation filterInfo, uniform bool paEnabled) {
 	float c = clamp(color.r, color.g, color.b) * filterInfo.Arg1.r;
 	return float4(
 		color.r * filterInfo.Arg1.g + c,
@@ -138,43 +138,101 @@ float4 GetRGB(float4 hsv) {
 	return float4(r, g, b, hsv.a);
 }
 
-float4 HueFilter(float4 color, FilterInformation filterInfo) {
-	float4 hsv = GetHSV(color);
-	hsv.r = fmod(hsv.r + filterInfo.Arg1.b, 1);
-	float4 new_color = GetRGB(hsv);
-	return float4(
-		color.r * filterInfo.Arg1.g + new_color.r * filterInfo.Arg1.r,
-		color.g * filterInfo.Arg1.g + new_color.g * filterInfo.Arg1.r,
-		color.b * filterInfo.Arg1.g + new_color.b * filterInfo.Arg1.r,
-		color.a);
+float4 HueFilter(float4 color, FilterInformation filterInfo, uniform bool paEnabled) {
+	if (paEnabled) {
+		if (color.a == 0) {
+			return color;
+		}
+		float4 hsv = GetHSV(float4(color.rgb / color.a, color.a));
+		hsv.r = fmod(hsv.r + filterInfo.Arg1.b, 1);
+		float4 newColor = GetRGB(hsv);
+		return float4(
+			(color.r * filterInfo.Arg1.g + newColor.r * filterInfo.Arg1.r) * color.a,
+			(color.g * filterInfo.Arg1.g + newColor.g * filterInfo.Arg1.r) * color.a,
+			(color.b * filterInfo.Arg1.g + newColor.b * filterInfo.Arg1.r) * color.a,
+			color.a);
+	}
+	else {
+		float4 hsv = GetHSV(color);
+		hsv.r = fmod(hsv.r + filterInfo.Arg1.b, 1);
+		float4 newColor = GetRGB(hsv);
+		return float4(
+			color.r * filterInfo.Arg1.g + newColor.r * filterInfo.Arg1.r,
+			color.g * filterInfo.Arg1.g + newColor.g * filterInfo.Arg1.r,
+			color.b * filterInfo.Arg1.g + newColor.b * filterInfo.Arg1.r,
+			color.a);
+	}
 }
 
-float4 SaturationFilter(float4 color, FilterInformation filterInfo) {
-	float4 hsv = GetHSV(color);
-	hsv.g = min(1, hsv.g * filterInfo.Arg1.b);
-	float4 new_color = GetRGB(hsv);
-	return float4(
-		color.r * filterInfo.Arg1.g + new_color.r * filterInfo.Arg1.r,
-		color.g * filterInfo.Arg1.g + new_color.g * filterInfo.Arg1.r,
-		color.b * filterInfo.Arg1.g + new_color.b * filterInfo.Arg1.r,
-		color.a);
+float4 SaturationFilter(float4 color, FilterInformation filterInfo, uniform bool paEnabled) {
+	if (paEnabled) {
+		if (color.a == 0) {
+			return color;
+		}
+		float4 hsv = GetHSV(float4(color.rgb / color.a, color.a));
+		hsv.g = min(1, hsv.g * filterInfo.Arg1.b);
+		float4 newColor = GetRGB(hsv);
+		return float4(
+			(color.r * filterInfo.Arg1.g + newColor.r * filterInfo.Arg1.r) * color.a,
+			(color.g * filterInfo.Arg1.g + newColor.g * filterInfo.Arg1.r) * color.a,
+			(color.b * filterInfo.Arg1.g + newColor.b * filterInfo.Arg1.r) * color.a,
+			color.a);
+	}
+	else {
+		float4 hsv = GetHSV(color);
+		hsv.g = min(1, hsv.g * filterInfo.Arg1.b);
+		float4 newColor = GetRGB(hsv);
+		return float4(
+			color.r * filterInfo.Arg1.g + newColor.r * filterInfo.Arg1.r,
+			color.g * filterInfo.Arg1.g + newColor.g * filterInfo.Arg1.r,
+			color.b * filterInfo.Arg1.g + newColor.b * filterInfo.Arg1.r,
+			color.a);
+	}
 }
 
-float4 BrightnessFilter(float4 color, FilterInformation filterInfo) {
-	float4 hsv = GetHSV(color);
-	hsv.b = min(1, hsv.b * filterInfo.Arg1.b);
-	float4 new_color = GetRGB(hsv);
-	return float4(
-		color.r * filterInfo.Arg1.g + new_color.r * filterInfo.Arg1.r,
-		color.g * filterInfo.Arg1.g + new_color.g * filterInfo.Arg1.r,
-		color.b * filterInfo.Arg1.g + new_color.b * filterInfo.Arg1.r,
-		color.a);
+float4 BrightnessFilter(float4 color, FilterInformation filterInfo, uniform bool paEnabled) {
+	if (paEnabled) {
+		if (color.a == 0) {
+			return color;
+		}
+		float4 hsv = GetHSV(float4(color.rgb / color.a, color.a));
+		hsv.b = min(1, hsv.b * filterInfo.Arg1.b);
+		float4 newColor = GetRGB(hsv);
+		return float4(
+			(color.r * filterInfo.Arg1.g + newColor.r * filterInfo.Arg1.r) * color.a,
+			(color.g * filterInfo.Arg1.g + newColor.g * filterInfo.Arg1.r) * color.a,
+			(color.b * filterInfo.Arg1.g + newColor.b * filterInfo.Arg1.r) * color.a,
+			color.a);
+	}
+	else {
+		float4 hsv = GetHSV(color);
+		hsv.b = min(1, hsv.b * filterInfo.Arg1.b);
+		float4 newColor = GetRGB(hsv);
+		return float4(
+			color.r * filterInfo.Arg1.g + newColor.r * filterInfo.Arg1.r,
+			color.g * filterInfo.Arg1.g + newColor.g * filterInfo.Arg1.r,
+			color.b * filterInfo.Arg1.g + newColor.b * filterInfo.Arg1.r,
+			color.a);
+	}
 }
 
-float4 InvertFilter(float4 color, FilterInformation filterInfo) {
-	return float4(
-		color.r * filterInfo.Arg1.g + (1 - color.r) * filterInfo.Arg1.r,
-		color.g * filterInfo.Arg1.g + (1 - color.g) * filterInfo.Arg1.r,
-		color.b * filterInfo.Arg1.g + (1 - color.b) * filterInfo.Arg1.r,
-		color.a);
+float4 InvertFilter(float4 color, FilterInformation filterInfo, uniform bool paEnabled) {
+	if (paEnabled) {
+		if (color.a == 0) {
+			return color;
+		}
+		float4 tempColor = float4(color.rgb / color.a, color.a);
+		return float4(
+			(tempColor.r * filterInfo.Arg1.g + (1 - tempColor.r) * filterInfo.Arg1.r) * color.a,
+			(tempColor.g * filterInfo.Arg1.g + (1 - tempColor.g) * filterInfo.Arg1.r) * color.a,
+			(tempColor.b * filterInfo.Arg1.g + (1 - tempColor.b) * filterInfo.Arg1.r) * color.a,
+			color.a);
+	}
+	else {
+		return float4(
+			color.r * filterInfo.Arg1.g + (1 - color.r) * filterInfo.Arg1.r,
+			color.g * filterInfo.Arg1.g + (1 - color.g) * filterInfo.Arg1.r,
+			color.b * filterInfo.Arg1.g + (1 - color.b) * filterInfo.Arg1.r,
+			color.a);
+	}
 }
