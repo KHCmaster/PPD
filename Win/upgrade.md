@@ -284,7 +284,7 @@ Phase 7  配布・更新の仕組みの対応、リリース
   - [x] morelinq は `MinBy` / `MaxBy` の 2 か所だけだったので、`OrderBy(...).First()`（安定ソートなので同じ要素を返す）に置き換えて削除した。新しい morelinq は戻り値の型が変わっているうえ、.NET 10 の `Enumerable.MinBy` と名前がぶつかるため
   - [ ] MessagePack（1.9.11）→ **Phase 4 で行う**。
     - 2.x / 3.x は net48 では依存 DLL が多い（System.Memory、Unsafe 6.x、Collections.Immutable など）。PPDMulti は skins から読み込まれるため、PPD.exe でバインディングリダイレクトの問題が起きやすい。.NET 10 ではこれらが標準に含まれるので、移行後に行う
-    - 通信互換の確認用に `Tools/ProjectCheck/MessagePackDump.ps1` を作った
+    - 通信互換の確認用に `Tools/ProjectCheck/MessagePackDump.ps1` を作った（Phase 4 で .NET 10 用の `Tools/ProjectCheck/MessagePackDump` に置き換えた）
       - 34 種類の通信データ型に決まった値（日本語の文字列、入れ子の配列、Tuple を含む）を入れてシリアライズし、バイト列を書き出す
       - 1.9.11 の結果は `Tools/ProjectCheck/messagepack_v1.txt`
       - 新しい版では次の 2 点を確認する
@@ -357,7 +357,14 @@ Phase 7  配布・更新の仕組みの対応、リリース
     - PPDEditor、PPDConfig、KeyConfiger、Effect2DEditor、BMSTOPPD、FlowScriptControlTest、BezierDrawControlTest、PPDExpansion が起動する
     - Debug / Release ともビルドできる
   - 未確認: 高 DPI（PPDConfig は同じ見た目だった）、プラグインの読み込みの細かい動作（skins / dlls は動作している）、DirectShow の動画（PPDTest の動画シーンは表示される）- [x] PPDEditor の統計ウィンドウ（`DockForm/StatsManager`）は WinForms の `System.Windows.Forms.DataVisualization`（Chart）を使っている。これは .NET 10 に含まれないので、.NET 向けの移植版（NuGet の `WinForms.DataVisualization` など）に置き換える。（Phase 3 で見つけた）
-- [ ] MessagePack を 2.x 以降に上げる（Phase 3 から移した）。`Tools/ProjectCheck/MessagePackDump.ps1 -Compare Tools/ProjectCheck/messagepack_v1.txt` で通信互換を確認する。
+- [x] MessagePack を 1.9.11 から **3.1.10** に上げた（Phase 3 から移した）。MessagePackAnalyzer（1.x 用）は削除した。
+  - コードの変更は不要だった
+  - 通信互換の確認ツールを .NET 10 用に作り直した（`Tools/ProjectCheck/MessagePackDump`）。1.9.11 で作った基準（`messagepack_v1.txt`）と比べ、34 種類の通信データ全てで次のことを確認した
+    - 同じバイト列を出力する
+    - 古いバイト列を読み込んで書き直すと、同じバイト列になる
+    - 後ろに別のメッセージが続いていても、先頭の 1 つを読める（`Parser` が前提にしている動作）
+  - ツールが基準を作った .ps1 と同じ値を作ることは、1.9.11 の .NET 10 ビルドで基準と完全に一致することで確認した
+  - 使い方: `MessagePackDump.exe <PPDMultiCommon.dll と MessagePack.dll のあるフォルダー> --compare Tools\ProjectCheck\messagepack_v1.txt`
 - [ ] ShaderCompiler、PPDReleaser、FolderDiffChecker などのツール類も移行する。
 
 **完了条件**: .NET 10 で全体がビルドでき、回帰テストと実プレイ確認が通る。

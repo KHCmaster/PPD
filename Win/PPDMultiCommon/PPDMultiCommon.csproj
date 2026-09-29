@@ -33,7 +33,6 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="MessagePack" />
-    <PackageReference Include="MessagePackAnalyzer" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PPDFrameworkCore\PPDFrameworkCore.csproj" />
