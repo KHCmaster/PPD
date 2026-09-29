@@ -35,11 +35,20 @@ namespace PPDCore
             IAsyncResult result = null;
             result = listener.BeginAcceptTcpClient(state =>
             {
-                if (listener == null)
+                var currentListener = listener;
+                if (currentListener == null)
                 {
                     return;
                 }
-                client = listener.EndAcceptTcpClient(result);
+                try
+                {
+                    client = currentListener.EndAcceptTcpClient(result);
+                }
+                catch (Exception ex) when (ex is ObjectDisposedException || ex is SocketException || ex is InvalidOperationException)
+                {
+                    // Close で待ち受けを止めた
+                    return;
+                }
                 thread = ThreadManager.Instance.GetThread(Work);
                 thread.Start();
             }, listener);
@@ -47,11 +56,8 @@ namespace PPDCore
 
         public void Close()
         {
-            if (thread != null && thread.IsAlive)
-            {
-                thread.Abort();
-                thread = null;
-            }
+            // .NET では Thread.Abort が使えない。受信のスレッドは、接続を閉じると Read が終わるので止まる
+            thread = null;
 
             if (client != null)
             {
@@ -147,9 +153,18 @@ namespace PPDCore
         public void Work()
         {
             byte[] lastBytes = new byte[0];
+            Stream stream;
+            try
+            {
+                stream = client.GetStream();
+            }
+            catch (Exception ex) when (ex is ObjectDisposedException || ex is InvalidOperationException || ex is NullReferenceException)
+            {
+                return;
+            }
             while (true)
             {
-                var bytes = Read(client.GetStream());
+                var bytes = Read(stream);
                 if (bytes.Length == 0)
                 {
                     return;

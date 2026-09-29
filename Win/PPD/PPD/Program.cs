@@ -102,6 +102,8 @@ namespace PPD
                     {
                         var psi = new ProcessStartInfo();
                         psi.FileName = "PPDUpdater.exe";
+                        // .NET Framework の既定値と同じ。管理者権限が必要な場合も起動できるようにシェル経由で起動する
+                        psi.UseShellExecute = true;
                         Process.Start(psi);
                     }
 #endif

@@ -35,7 +35,7 @@ namespace PPDInput
             stopwatch = new Stopwatch();
             stopwatch.Start();
             finish = false;
-            thread = new Thread(WorkImpl);
+            thread = new Thread(WorkImpl) { IsBackground = true };
             thread.Start();
         }
 
@@ -46,13 +46,9 @@ namespace PPDInput
                 finish = true;
                 if (thread != null)
                 {
+                    // 通常は finish で止まる。止まらなかった場合もバックグラウンドスレッドなのでプロセスの終了は妨げない
                     thread.Join(1000);
-                    if (thread.IsAlive)
-                    {
-                        thread.Abort();
-                        thread.Join(1000);
-                        thread = null;
-                    }
+                    thread = null;
                 }
                 if (stopwatch != null)
                 {

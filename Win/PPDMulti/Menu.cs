@@ -693,7 +693,7 @@ namespace PPDMulti
                             {
                                 ThreadManager.Instance.GetThread(() =>
                                 {
-                                    System.Diagnostics.Process.Start(ppdScoreInfo.CreateUrl());
+                                    System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(ppdScoreInfo.CreateUrl()) { UseShellExecute = true });
                                 }).Start();
                             }
                             catch

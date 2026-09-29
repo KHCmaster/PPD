@@ -176,6 +176,9 @@ namespace PPDFramework
             public int dwOffset;
         }
 
+        [DllImport("kernel32.dll")]
+        internal static extern int GetACP();
+
         [DllImport("user32.dll")]
         internal static extern IntPtr GetDC(IntPtr hWnd);
 
@@ -329,7 +332,8 @@ namespace PPDFramework
                 Marshal.Copy(BufList, buf, 0, dwSize);
                 Marshal.FreeHGlobal(BufList);
                 int os = list.dwOffset;
-                var str = System.Text.Encoding.Default.GetString(buf, os, buf.Length - os);
+                // ANSI 版の API なので、システムの ANSI コードページで読む（.NET では Encoding.Default が UTF-8 になるため明示する）
+                var str = System.Text.Encoding.GetEncoding(GetACP()).GetString(buf, os, buf.Length - os);
                 str = Regex.Replace(str, @"\0+$", "");
                 var par = "\0".ToCharArray();
                 ImmReleaseContext(window, imContext);

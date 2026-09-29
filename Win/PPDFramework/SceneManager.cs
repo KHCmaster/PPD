@@ -348,7 +348,9 @@ namespace PPDFramework
                     {
                         nextScene.ShouldFinishLoad = true;
                     }
-                    loadingThread.Abort();
+                    // 読み込みの中断を要求して、終わるまで少し待つ（.NET では Thread.Abort が使えない）。
+                    // 終わらなかった場合もバックグラウンドスレッドなので、プロセスの終了は妨げない
+                    loadingThread.Join(3000);
                 }
                 while (sceneStack.Count > 0)
                 {

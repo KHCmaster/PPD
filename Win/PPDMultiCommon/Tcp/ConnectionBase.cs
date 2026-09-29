@@ -15,7 +15,7 @@ namespace PPDMultiCommon.Tcp
         Thread writeThread;
         Queue<byte[]> jobs;
 
-        bool disposed;
+        volatile bool disposed;
 
         public bool IsClosed
         {
@@ -101,6 +101,11 @@ namespace PPDMultiCommon.Tcp
         {
             while (true)
             {
+                if (disposed)
+                {
+                    // Dispose で止められた（以前は Thread.Abort で止めていたので、OnClose は呼ばない）
+                    return;
+                }
                 if (!IsClosed && jobs.Count > 0)
                 {
                     try
@@ -137,6 +142,10 @@ namespace PPDMultiCommon.Tcp
                 }
             }
 
+            if (disposed)
+            {
+                return;
+            }
             OnClose();
         }
 
@@ -175,17 +184,10 @@ namespace PPDMultiCommon.Tcp
                     client = null;
                 }
 
-                if (readThread != null)
-                {
-                    readThread.Abort();
-                    readThread = null;
-                }
-
-                if (writeThread != null)
-                {
-                    writeThread.Abort();
-                    writeThread = null;
-                }
+                // .NET では Thread.Abort が使えない。読み込みのスレッドは接続を閉じたことで、
+                // 書き込みのスレッドは disposed を見て終わる
+                readThread = null;
+                writeThread = null;
             }
         }
     }

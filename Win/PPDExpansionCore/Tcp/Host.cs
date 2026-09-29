@@ -12,7 +12,7 @@ namespace PPDExpansionCore.Tcp
         private TcpListener listener;
         private TcpClient client;
         private Thread thread;
-        private bool closed;
+        private volatile bool closed;
 
         public event Action Connected;
         public event Action Disconnected;
@@ -41,12 +41,21 @@ namespace PPDExpansionCore.Tcp
             IAsyncResult result = null;
             result = listener.BeginAcceptTcpClient(state =>
             {
-                if (listener == null)
+                var currentListener = listener;
+                if (currentListener == null)
                 {
                     return;
                 }
-                client = listener.EndAcceptTcpClient(result);
-                thread = new Thread(Work);
+                try
+                {
+                    client = currentListener.EndAcceptTcpClient(result);
+                }
+                catch (Exception ex) when (ex is ObjectDisposedException || ex is SocketException || ex is InvalidOperationException)
+                {
+                    // Close で待ち受けを止めた
+                    return;
+                }
+                thread = new Thread(Work) { IsBackground = true };
                 thread.Start();
                 OnConnected();
             }, listener);
@@ -55,11 +64,8 @@ namespace PPDExpansionCore.Tcp
         public void Close()
         {
             closed = true;
-            if (thread != null && thread.IsAlive)
-            {
-                thread.Abort();
-                thread = null;
-            }
+            // .NET では Thread.Abort が使えない。受信のスレッドは、接続を閉じると Read が終わるので止まる
+            thread = null;
 
             if (client != null)
             {
@@ -77,9 +83,18 @@ namespace PPDExpansionCore.Tcp
         private void Work()
         {
             byte[] lastBytes = new byte[0];
+            NetworkStream stream;
+            try
+            {
+                stream = client.GetStream();
+            }
+            catch (Exception ex) when (ex is ObjectDisposedException || ex is InvalidOperationException || ex is NullReferenceException)
+            {
+                return;
+            }
             while (true)
             {
-                var bytes = Read(client.GetStream());
+                var bytes = Read(stream);
                 if (bytes.Length == 0)
                 {
                     break;
@@ -97,11 +112,13 @@ namespace PPDExpansionCore.Tcp
                     bytes = restBytes;
                 }
             }
-            OnDisconnected();
-            if (!closed)
+            if (closed)
             {
-                WaitConnected();
+                // Close で止められた（以前は Thread.Abort で止めていたので、OnDisconnected は呼ばない）
+                return;
             }
+            OnDisconnected();
+            WaitConnected();
         }
 
         private byte[] WorkImpl(byte[] bytes)

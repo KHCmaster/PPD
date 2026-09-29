@@ -118,7 +118,7 @@ namespace PPDInstaller.Controls
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            System.Diagnostics.Process.Start("http://ossipedia.ipa.go.jp/ipafont/index.html");
+            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo("http://ossipedia.ipa.go.jp/ipafont/index.html") { UseShellExecute = true });
         }
     }
 }

@@ -52,14 +52,16 @@ namespace FlowScriptControlTest
         {
             thread = new Thread(() =>
             {
-                workingThread = new Thread(ExecuteImpl);
+                workingThread = new Thread(ExecuteImpl) { IsBackground = true };
                 workingThread.Start();
                 int executionTime = 0;
                 while (workingThread != null && workingThread.IsAlive)
                 {
                     if (executionTime > 60000)
                     {
-                        workingThread.Abort();
+                        // .NET では Thread.Abort が使えないので、スクリプトに中止を要求して少し待つ
+                        controller.Abort();
+                        workingThread.Join(1000);
                         workingThread = null;
                         OnAborted();
                         break;
@@ -72,6 +74,7 @@ namespace FlowScriptControlTest
                 }
                 OnFinished();
             });
+            thread.IsBackground = true;
             thread.Start();
         }
 
@@ -80,9 +83,9 @@ namespace FlowScriptControlTest
             if (workingThread != null && workingThread.IsAlive)
             {
                 controller.Abort();
-                if (!workingThread.Join(100))
+                if (!workingThread.Join(1000))
                 {
-                    workingThread.Abort();
+                    // 止まらなかった場合も、バックグラウンドスレッドなのでアプリの終了は妨げない
                     workingThread = null;
                 }
             }

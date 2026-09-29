@@ -11,6 +11,7 @@ namespace PPDEditor.FlowScript
     {
         private Dictionary<string, object> items;
         private Thread thread;
+        private volatile bool killed;
         private DebugController debugController;
         private TcpDebugControllerClient controllerClient;
 
@@ -67,17 +68,17 @@ namespace PPDEditor.FlowScript
         {
             if (thread != null && thread.IsAlive)
             {
-                thread.Abort();
-                while (!thread.Join(100))
-                {
-                    thread.Abort();
-                }
+                // .NET では Thread.Abort が使えないので、スクリプトに中止を要求する（次のノードの評価で止まる）。
+                // 止まらない場合（ノードの中で処理が終わらない場合）も、バックグラウンドスレッドなのでアプリの終了は妨げない
+                killed = true;
+                debugController.Abort();
+                thread.Join(3000);
             }
         }
 
         public void Execute()
         {
-            thread = new Thread(ExecuteImpl);
+            thread = new Thread(ExecuteImpl) { IsBackground = true };
             thread.SetApartmentState(ApartmentState.STA);
             thread.Start();
         }
@@ -121,6 +122,11 @@ namespace PPDEditor.FlowScript
                 {
                     controllerClient.Close();
                 }
+            }
+            if (killed)
+            {
+                // 以前は Kill で Thread.Abort していたので、Finished は呼ばれなかった
+                return;
             }
             Finished?.Invoke(this, EventArgs.Empty);
         }

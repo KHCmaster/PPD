@@ -229,6 +229,10 @@ namespace FlowScriptEngine
                 eventSet.EventHandler.Invoke(eventArgs);
                 Evaluate(source);
             }
+            catch (Exception e) when (IsAbortException(e))
+            {
+                // DebugController.Abort による中止。エラーとしては扱わない
+            }
             catch (FlowExecutionException e)
             {
                 Error?.Invoke(e);
@@ -249,9 +253,21 @@ namespace FlowScriptEngine
             }
         }
 
+        private static bool IsAbortException(Exception e)
+        {
+            for (var current = e; current != null; current = current.InnerException)
+            {
+                if (current is FlowAbortedException)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         private void ProcessError(FlowExecutionException e)
         {
-            if (debugController != null)
+            if (debugController != null && !debugController.IsAbortRequested)
             {
                 debugController.Error(this, e);
                 Evaluate(e.SourceObject, false);
@@ -374,6 +390,12 @@ namespace FlowScriptEngine
 
         internal void Evaluate(FlowSourceObjectBase source, bool checkBreakPoints)
         {
+            if (debugController != null && debugController.IsAbortRequested)
+            {
+                // 実行の中止が要求された。例外で今のフローを抜ける（ProcessEvent で捕捉する）
+                nextOperation = OperationType.Abort;
+                throw new FlowAbortedException();
+            }
             if (evaluating || debugController == null || lastEvaluateSource == source || source == null || nextOperation == OperationType.Abort)
             {
                 return;

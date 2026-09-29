@@ -1098,7 +1098,8 @@ namespace PPDMulti
                 {
                     if (thread != null && thread.IsAlive)
                     {
-                        thread.Abort();
+                        // .NET では Thread.Abort が使えない。計算はこのオブジェクトに結果を入れるだけなので、
+                        // 終わるまでバックグラウンドで続けさせて、結果は使わない
                         thread = null;
                     }
                 }

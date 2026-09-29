@@ -14,6 +14,7 @@ namespace PPDSingle
         private static WebSongInformationManager instance = new WebSongInformationManager();
 
         private Thread updateWorkerThread;
+        private volatile bool stopRequested;
         private Thread updateScoreWorkerThread;
 
         private WebSongInformation[] informations;
@@ -98,6 +99,7 @@ namespace PPDSingle
                 {
                     return;
                 }
+                stopRequested = false;
                 updateWorkerThread = ThreadManager.Instance.GetThread(UpdateImpl);
                 updateWorkerThread.Start();
             }
@@ -119,29 +121,30 @@ namespace PPDSingle
 
         public void UpdateScore()
         {
+            stopRequested = false;
             updateScoreWorkerThread = ThreadManager.Instance.GetThread(UpdateScoreImpl);
             updateScoreWorkerThread.Start();
         }
 
         public void Stop()
         {
-            if (updateWorkerThread != null && updateWorkerThread.IsAlive)
-            {
-                updateWorkerThread.Abort();
-                updateWorkerThread = null;
-            }
-            if (updateScoreWorkerThread != null && updateScoreWorkerThread.IsAlive)
-            {
-                updateScoreWorkerThread.Abort();
-                updateScoreWorkerThread = null;
-            }
+            // .NET では Thread.Abort が使えないので、止めるよう要求する。
+            // スレッドは次の区切り（1 曲ごと）で止まり、それ以降の結果は反映しない
+            stopRequested = true;
+            updateWorkerThread = null;
+            updateScoreWorkerThread = null;
         }
 
         private void UpdateImpl()
         {
             try
             {
-                informations = WebManager.Instance.GetScores();
+                var newInformations = WebManager.Instance.GetScores();
+                if (stopRequested)
+                {
+                    return;
+                }
+                informations = newInformations;
                 webSongInfoHashDict.Clear();
                 webSongInfoIDDict.Clear();
                 foreach (var information in informations)
@@ -185,6 +188,10 @@ namespace PPDSingle
                 WebSongInformation[] list = UpdatableInformations;
                 foreach (WebSongInformation webSongInfo in list)
                 {
+                    if (stopRequested)
+                    {
+                        return;
+                    }
                     try
                     {
                         var tempPath = Path.GetTempFileName();

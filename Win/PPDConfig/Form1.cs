@@ -645,7 +645,7 @@ namespace PPDConfig
             {
                 try
                 {
-                    Process.Start("http://projectdxxx.me/forum/thread/id/280");
+                    Process.Start(new ProcessStartInfo("http://projectdxxx.me/forum/thread/id/280") { UseShellExecute = true });
                 }
                 catch
                 {

@@ -137,11 +137,8 @@ namespace PPDCore
         public void Close()
         {
             LogManager.Instance.LogReceived -= Instance_LogReceived;
-            if (asyncReadThread != null && asyncReadThread.IsAlive)
-            {
-                asyncReadThread.Abort();
-                asyncReadThread = null;
-            }
+            // .NET では Thread.Abort が使えない。受信のスレッドは、接続を閉じると Read が終わるので止まる
+            asyncReadThread = null;
 
             if (!connected)
             {
@@ -285,11 +282,17 @@ namespace PPDCore
 
         private void AsyncRead(Func<byte[], bool> callback)
         {
+            var stream = tcpClient.GetStream();
             asyncReadThread = ThreadManager.Instance.GetThread(() =>
             {
                 while (true)
                 {
-                    var bytes = Read(tcpClient.GetStream());
+                    var bytes = Read(stream);
+                    if (bytes.Length == 0)
+                    {
+                        // 接続が閉じられた（以前は OnClosed → Close の中でこのスレッドを Abort していた）
+                        break;
+                    }
                     if (callback(bytes))
                     {
                         break;

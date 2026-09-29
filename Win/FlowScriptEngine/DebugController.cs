@@ -20,8 +20,20 @@ namespace FlowScriptEngine
             private set;
         }
 
+        /// <summary>
+        /// 実行の中止が要求されたかどうかを取得します。
+        /// 要求されると、実行中のスクリプトは次のノードの評価で止まります（.NET では Thread.Abort が使えないため）。
+        /// </summary>
+        public bool IsAbortRequested
+        {
+            get { return abortRequested; }
+        }
+
+        private volatile bool abortRequested;
+
         public void Abort()
         {
+            abortRequested = true;
             operationType = OperationType.Abort;
             resetEvent.Set();
         }

@@ -90,7 +90,7 @@ namespace PPDSingle
                 {
                     try
                     {
-                        Process.Start(WebManager.Instance.GetScorePageUrl(ScoreLibraryId));
+                        Process.Start(new ProcessStartInfo(WebManager.Instance.GetScorePageUrl(ScoreLibraryId)) { UseShellExecute = true });
                     }
                     catch
                     {
