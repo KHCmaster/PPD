@@ -217,7 +217,7 @@ Phase 7  配布・更新の仕組みの対応、リリース
 - PPD 終了時のアクセス違反はゼロ。
 - Mod 28 個・譜面スクリプト 17 個の既定値が基準と一致した。
 
-気になる点: 最初の 1 回だけ、終了処理の途中で `0xC0000008`（無効なハンドル、初回例外）が出たあとプロセスが終了しなかった。その後の 8 回は再現していない。Phase 1 以前から起きていたかは不明。実プレイの確認で注意して見る。
+気になる点（→ Phase 4 で原因が分かった）: 最初の 1 回だけ、終了処理の途中で `0xC0000008`（無効なハンドル、初回例外）が出たあとプロセスが終了しなかった。原因は PPD ではなく、この PC に常駐している CLaunch のフック DLL（`ClHook.dll`）がプロセス終了時に無効なハンドルを閉じていたこと。この例外はデバッガー接続時にだけ発生し、ExceptionWatch が「未処理」として返していたために止まっていた。ExceptionWatch は、この例外を処理済みとして続けるように直した。
 **完了条件**: Effects11 への参照がゼロ。回帰テストが基準と一致する。終了時のアクセス違反がない（Effects11 のファイナライザー問題も同時に解消する）。
 
 **規模の目安**: 中〜大。本計画で最も設計判断が多いフェーズ。
@@ -317,8 +317,11 @@ Phase 7  配布・更新の仕組みの対応、リリース
 **目的**: 実行環境を .NET 10 に切り替える。
 
 - [ ] 全プロジェクトの `TargetFramework` を `net10.0-windows` にする（WinForms / WPF を使うものは `UseWindowsForms` / `UseWPF` を指定）。
-- [ ] **SharpDX を 4.2.0 に上げる**（3.1.1 は .NET Standard 2.0 に対応していないため）。4.x は 3.x と API の差分がある（例: `SharpDX.Mathematics` の分離、`Raw*` 型）ので、ここで吸収する。
-  - SharpDX 4.2.0 が .NET 10 で問題なく動くかを**最初に検証する**。問題が大きければ、Phase 5・6 と一緒にして SharpDX を飛ばし、直接 Vortice に移る。
+- [x] **SharpDX を 4.2.0 に上げた**（net48 のまま先に行った）。3.1.1 は net45 と古い portable 版しかなく、.NET 10 から使えないため。
+  - このプロジェクトが使っている範囲では API の違いがなく、コードの変更なしでビルドできた
+  - シーンの画素比較、PPD 終了時のアクセス違反チェック、Mod と譜面スクリプトの既定値の比較が通った
+  - SharpDX.Desktop（`RenderLoop` / `RenderForm`）は 4.2.0 でも .NET Framework 版しかない。そこで PPDFramework に同じ動作の `RenderLoop` を作り、SharpDX.Desktop を削除した（Phase 6 の予定を前倒し）
+  - SharpDX 4.2.0 は、.NET 10 からは netstandard1.1 / 1.3 の版が使われる
 - [ ] .NET Framework との挙動の違いに対応する。
   - **WinForms の既定フォント**が「MS UI Gothic」から「Segoe UI 9pt」に変わり、画面の配置が崩れる可能性がある。必要なら `Application.SetDefaultFont` で従来のフォントを指定する。PPDConfig、PPDEditor、KeyConfiger などを目視で確認する。
   - 高 DPI の扱い。`Application.SetHighDpiMode` を明示し、今と同じ見え方になるモードを選ぶ。

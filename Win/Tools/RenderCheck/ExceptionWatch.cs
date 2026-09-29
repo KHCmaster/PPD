@@ -143,12 +143,20 @@ static class ExceptionWatch
                         {
                             DumpStack(tid);
                         }
+                        else if (exCode == 0xC0000008)
+                        {
+                            // 無効なハンドルを閉じた（デバッガー接続時だけ例外になる）。どこで閉じたかを調べるためにスタックを出す
+                            DumpStack(tid);
+                        }
                     }
                     else if (exCode == 0xE0434352)
                     {
                         Log(string.Format("CLR exception thread={0} firstChance={1}", tid, firstChance));
                     }
-                    cont = exCode == 0x80000003 ? DBG_CONTINUE : DBG_EXCEPTION_NOT_HANDLED;
+                    // 0xC0000008（無効なハンドル）は、デバッガー接続時だけ CloseHandle が発生させる例外で、デバッガーがなければエラーが返るだけ。
+                    // 処理済みとして続けないと、終了処理中（ローダーロック中）に発生した場合にプロセスが止まってしまう。
+                    // 例: 常駐ソフトのフック DLL（CLaunch の ClHook.dll）が、プロセス終了時に無効なハンドルを閉じる
+                    cont = exCode == 0x80000003 || exCode == 0xC0000008 ? DBG_CONTINUE : DBG_EXCEPTION_NOT_HANDLED;
                     break;
                 case 2: // CREATE_THREAD
                     threads[tid] = Marshal.ReadIntPtr(u, 0);

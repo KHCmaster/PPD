@@ -176,7 +176,6 @@ namespace PPD.Update
                 "PPDShareComponent.dll",
                 "PPDSound.dll",
                 "SharpDX.dll",
-                "SharpDX.Desktop.dll",
                 "SharpDX.Mathematics.dll",
                 "SharpDX.Direct2D1.dll",
                 "SharpDX.DirectInput.dll",

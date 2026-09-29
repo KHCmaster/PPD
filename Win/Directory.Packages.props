@@ -1,4 +1,4 @@
-<Project>
+﻿<Project>
   <!-- NuGet パッケージの版はここでまとめて管理する（各 csproj の PackageReference には Version を書かない） -->
   <PropertyGroup>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
@@ -13,15 +13,14 @@
     <PackageVersion Include="MessagePackAnalyzer" Version="1.6.0" />
     <PackageVersion Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.161" />
     <PackageVersion Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageVersion Include="SharpDX" Version="3.1.1" />
-    <PackageVersion Include="SharpDX.D3DCompiler" Version="3.1.1" />
-    <PackageVersion Include="SharpDX.Desktop" Version="3.1.1" />
-    <PackageVersion Include="SharpDX.Direct2D1" Version="3.1.1" />
-    <PackageVersion Include="SharpDX.Direct3D11" Version="3.1.1" />
-    <PackageVersion Include="SharpDX.DirectInput" Version="3.1.1" />
-    <PackageVersion Include="SharpDX.DirectSound" Version="3.1.1" />
-    <PackageVersion Include="SharpDX.DXGI" Version="3.1.1" />
-    <PackageVersion Include="SharpDX.Mathematics" Version="3.1.1" />
+    <PackageVersion Include="SharpDX" Version="4.2.0" />
+    <PackageVersion Include="SharpDX.D3DCompiler" Version="4.2.0" />
+    <PackageVersion Include="SharpDX.Direct2D1" Version="4.2.0" />
+    <PackageVersion Include="SharpDX.Direct3D11" Version="4.2.0" />
+    <PackageVersion Include="SharpDX.DirectInput" Version="4.2.0" />
+    <PackageVersion Include="SharpDX.DirectSound" Version="4.2.0" />
+    <PackageVersion Include="SharpDX.DXGI" Version="4.2.0" />
+    <PackageVersion Include="SharpDX.Mathematics" Version="4.2.0" />
     <PackageVersion Include="SharpZipLib" Version="1.3.3" />
     <PackageVersion Include="System.Data.SQLite.Core" Version="1.0.119" />
     <PackageVersion Include="WinSCP" Version="5.7.7" />

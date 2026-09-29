@@ -30,7 +30,6 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="SharpDX" />
-    <PackageReference Include="SharpDX.Desktop" />
     <PackageReference Include="SharpDX.Direct2D1" />
     <PackageReference Include="SharpDX.Direct3D11" />
     <PackageReference Include="SharpDX.DXGI" />

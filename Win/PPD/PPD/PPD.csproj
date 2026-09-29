@@ -32,7 +32,6 @@
     <PackageReference Include="CommunityToolkit.Mvvm" />
     <PackageReference Include="Newtonsoft.Json" />
     <PackageReference Include="SharpDX" />
-    <PackageReference Include="SharpDX.Desktop" />
     <PackageReference Include="SharpDX.DirectInput" />
     <PackageReference Include="SharpDX.Mathematics" />
     <PackageReference Include="System.Data.SQLite.Core" />

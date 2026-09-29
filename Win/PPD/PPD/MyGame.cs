@@ -555,7 +555,7 @@ namespace PPD
         {
             get
             {
-                return SharpDX.Windows.RenderForm.ActiveForm == Form;
+                return System.Windows.Forms.Form.ActiveForm == Form;
             }
         }
 
