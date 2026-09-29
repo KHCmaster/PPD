@@ -27,11 +27,11 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="SharpDX" Version="3.1.1" />
-    <PackageReference Include="SharpDX.Desktop" Version="3.1.1" />
-    <PackageReference Include="SharpDX.DirectInput" Version="3.1.1" />
-    <PackageReference Include="SharpDX.Mathematics" Version="3.1.1" />
-    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.119" />
+    <PackageReference Include="SharpDX" />
+    <PackageReference Include="SharpDX.Desktop" />
+    <PackageReference Include="SharpDX.DirectInput" />
+    <PackageReference Include="SharpDX.Mathematics" />
+    <PackageReference Include="System.Data.SQLite.Core" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System.ComponentModel.DataAnnotations" />

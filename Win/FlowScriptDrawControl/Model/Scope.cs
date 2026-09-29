@@ -18,7 +18,7 @@ namespace FlowScriptDrawControl.Model
                 if (id != value)
                 {
                     id = value;
-                    RaisePropertyChanged("Id");
+                    OnPropertyChanged("Id");
                 }
             }
         }
@@ -31,7 +31,7 @@ namespace FlowScriptDrawControl.Model
                 if (color != value)
                 {
                     color = value;
-                    RaisePropertyChanged("Color");
+                    OnPropertyChanged("Color");
                     Brush = new SolidColorBrush(Color);
                 }
             }
@@ -45,7 +45,7 @@ namespace FlowScriptDrawControl.Model
                 if (brush != value)
                 {
                     brush = value;
-                    RaisePropertyChanged("Brush");
+                    OnPropertyChanged("Brush");
                 }
             }
         }
@@ -58,7 +58,7 @@ namespace FlowScriptDrawControl.Model
                 if (parent != value)
                 {
                     parent = value;
-                    RaisePropertyChanged("Parent");
+                    OnPropertyChanged("Parent");
                 }
             }
         }

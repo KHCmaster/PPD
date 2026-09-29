@@ -29,9 +29,9 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="SharpZipLib" Version="1.3.3" />
-    <PackageReference Include="SharpDX" Version="3.1.1" />
-    <PackageReference Include="SharpDX.Mathematics" Version="3.1.1" />
+    <PackageReference Include="SharpZipLib" />
+    <PackageReference Include="SharpDX" />
+    <PackageReference Include="SharpDX.Mathematics" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="PresentationCore" />

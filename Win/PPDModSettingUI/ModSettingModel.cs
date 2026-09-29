@@ -1,4 +1,5 @@
-﻿using PPDMvvm;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using PPDConfiguration;
 using PPDFramework.Mod;
 using System;
@@ -8,7 +9,7 @@ using System.Windows.Input;
 
 namespace PPDModSettingUI
 {
-    public class ModSettingModel : ViewModelBase
+    public class ModSettingModel : ObservableObject
     {
         private ModSetting modSetting;
         private LanguageReader language;
@@ -31,7 +32,7 @@ namespace PPDModSettingUI
                 if (name != value)
                 {
                     name = value;
-                    RaisePropertyChanged("Name");
+                    OnPropertyChanged("Name");
                 }
             }
         }
@@ -44,7 +45,7 @@ namespace PPDModSettingUI
                 if (description != value)
                 {
                     description = value;
-                    RaisePropertyChanged("Description");
+                    OnPropertyChanged("Description");
                 }
             }
         }
@@ -57,7 +58,7 @@ namespace PPDModSettingUI
                 if (defaultValue != value)
                 {
                     defaultValue = value;
-                    RaisePropertyChanged("DefaultValue");
+                    OnPropertyChanged("DefaultValue");
                 }
             }
         }
@@ -70,7 +71,7 @@ namespace PPDModSettingUI
                 if (otherValues != value)
                 {
                     otherValues = value;
-                    RaisePropertyChanged("OtherValues");
+                    OnPropertyChanged("OtherValues");
                 }
             }
         }
@@ -83,7 +84,7 @@ namespace PPDModSettingUI
                 if (newValue != value)
                 {
                     newValue = value;
-                    RaisePropertyChanged("NewValue");
+                    OnPropertyChanged("NewValue");
                     Validate();
                 }
             }
@@ -97,7 +98,7 @@ namespace PPDModSettingUI
                 if (isOkEnabled != value)
                 {
                     isOkEnabled = value;
-                    RaisePropertyChanged("IsOkEnabled");
+                    OnPropertyChanged("IsOkEnabled");
                 }
             }
         }
@@ -110,7 +111,7 @@ namespace PPDModSettingUI
                 if (availableValues != value)
                 {
                     availableValues = value;
-                    RaisePropertyChanged("AvailableValues");
+                    OnPropertyChanged("AvailableValues");
                 }
             }
         }
@@ -123,7 +124,7 @@ namespace PPDModSettingUI
                 if (selectedIndex != value)
                 {
                     selectedIndex = value;
-                    RaisePropertyChanged("SelectedIndex");
+                    OnPropertyChanged("SelectedIndex");
                     UpdateNewValueBySelectedIndex();
                 }
             }

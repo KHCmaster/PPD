@@ -28,8 +28,8 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="SharpDX" Version="3.1.1" />
-    <PackageReference Include="SharpDX.DirectInput" Version="3.1.1" />
+    <PackageReference Include="SharpDX" />
+    <PackageReference Include="SharpDX.DirectInput" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System.Deployment" />

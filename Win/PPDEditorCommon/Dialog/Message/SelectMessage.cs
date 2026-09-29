@@ -1,5 +1,4 @@
-﻿using PPDMvvm;
-
+﻿
 namespace PPDEditorCommon.Dialog.Message
 {
     class SelectMessage : MessageBase

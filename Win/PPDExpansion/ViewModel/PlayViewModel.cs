@@ -1,9 +1,9 @@
-﻿using PPDMvvm;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using PPDExpansionCore;
 
 namespace PPDExpansion.ViewModel
 {
-    abstract class PlayViewModel : ViewModelBase
+    abstract class PlayViewModel : ObservableObject
     {
         public abstract PlayType PlayType { get; }
         public abstract void ProcessData(PackableBase packable);

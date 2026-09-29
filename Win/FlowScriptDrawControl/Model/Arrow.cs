@@ -1,4 +1,4 @@
-﻿using PPDMvvm;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using System.ComponentModel;
 using System.Windows.Media;
 
@@ -19,7 +19,7 @@ namespace FlowScriptDrawControl.Model
                 if (geometry != value)
                 {
                     geometry = value;
-                    RaisePropertyChanged("Geometry");
+                    OnPropertyChanged("Geometry");
                 }
             }
         }
@@ -32,7 +32,7 @@ namespace FlowScriptDrawControl.Model
                 if (stroke != value)
                 {
                     stroke = value;
-                    RaisePropertyChanged("Stroke");
+                    OnPropertyChanged("Stroke");
                 }
             }
         }
@@ -53,7 +53,7 @@ namespace FlowScriptDrawControl.Model
                     {
                         srcItem.PropertyChanged += srcItem_PropertyChanged;
                     }
-                    RaisePropertyChanged("SrcItem");
+                    OnPropertyChanged("SrcItem");
                     UpdateStroke();
                 }
             }
@@ -75,7 +75,7 @@ namespace FlowScriptDrawControl.Model
                     {
                         destItem.PropertyChanged += destItem_PropertyChanged;
                     }
-                    RaisePropertyChanged("DestItem");
+                    OnPropertyChanged("DestItem");
                 }
             }
         }

@@ -35,9 +35,10 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.161" />
-    <PackageReference Include="SharpDX" Version="3.1.1" />
-    <PackageReference Include="SharpDX.Mathematics" Version="3.1.1" />
+    <PackageReference Include="CommunityToolkit.Mvvm" />
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" />
+    <PackageReference Include="SharpDX" />
+    <PackageReference Include="SharpDX.Mathematics" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
@@ -51,7 +52,6 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\PPDMvvm\PPDMvvm.csproj" />
     <ProjectReference Include="..\PPDConfiguration\PPDConfiguration.csproj" />
     <ProjectReference Include="..\PPDCoreModel\PPDCoreModel.csproj" />
     <ProjectReference Include="..\PPDFramework\PPDFramework.csproj" />

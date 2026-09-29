@@ -13,7 +13,7 @@
                 if (scope != value)
                 {
                     scope = value;
-                    RaisePropertyChanged("Scope");
+                    OnPropertyChanged("Scope");
                 }
             }
         }

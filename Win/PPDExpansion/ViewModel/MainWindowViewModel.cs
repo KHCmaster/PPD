@@ -1,4 +1,6 @@
-﻿using PPDMvvm;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using PPDExpansion.Message;
 using PPDExpansionCore;
 using PPDExpansionCore.Tcp;
@@ -8,7 +10,7 @@ using System.Windows.Threading;
 
 namespace PPDExpansion.ViewModel
 {
-    class MainWindowViewModel : ViewModelBase
+    class MainWindowViewModel : ObservableObject
     {
         private readonly Dispatcher dispatcher;
 
@@ -37,7 +39,7 @@ namespace PPDExpansion.ViewModel
                 if (title != value)
                 {
                     title = value;
-                    RaisePropertyChanged("Title");
+                    OnPropertyChanged("Title");
                 }
             }
         }
@@ -50,7 +52,7 @@ namespace PPDExpansion.ViewModel
                 if (isConnected != value)
                 {
                     isConnected = value;
-                    RaisePropertyChanged("IsConnected");
+                    OnPropertyChanged("IsConnected");
                     Title = String.Format("PPDExpansion{0}", isConnected ?
                         String.Format(" - {0}", Utility.Language["Connecting"]) : "");
                 }
@@ -77,7 +79,7 @@ namespace PPDExpansion.ViewModel
                 if (isMulti != value)
                 {
                     isMulti = value;
-                    RaisePropertyChanged("IsMulti");
+                    OnPropertyChanged("IsMulti");
                 }
             }
         }
@@ -90,7 +92,7 @@ namespace PPDExpansion.ViewModel
                 if (showMyHighScore != value)
                 {
                     PPDExpansionSetting.Setting.ShowMyHighScore = showMyHighScore = value;
-                    RaisePropertyChanged("ShowMyHighScore");
+                    OnPropertyChanged("ShowMyHighScore");
                 }
             }
         }
@@ -103,7 +105,7 @@ namespace PPDExpansion.ViewModel
                 if (showWebHighScore != value)
                 {
                     PPDExpansionSetting.Setting.ShowWebHighScore = showWebHighScore = value;
-                    RaisePropertyChanged("ShowWebHighScore");
+                    OnPropertyChanged("ShowWebHighScore");
                 }
             }
         }
@@ -116,7 +118,7 @@ namespace PPDExpansion.ViewModel
                 if (showCurrentStatus != value)
                 {
                     PPDExpansionSetting.Setting.ShowCurrentStatus = showCurrentStatus = value;
-                    RaisePropertyChanged("ShowCurrentStatus");
+                    OnPropertyChanged("ShowCurrentStatus");
                 }
             }
         }
@@ -129,7 +131,7 @@ namespace PPDExpansion.ViewModel
                 if (showGridLines != value)
                 {
                     PPDExpansionSetting.Setting.ShowGridLines = showGridLines = value;
-                    RaisePropertyChanged("ShowGridLines");
+                    OnPropertyChanged("ShowGridLines");
                 }
             }
         }
@@ -142,7 +144,7 @@ namespace PPDExpansion.ViewModel
                 if (showIIDXStyle != value)
                 {
                     PPDExpansionSetting.Setting.ShowIIDXStyle = showIIDXStyle = value;
-                    RaisePropertyChanged("ShowIIDXStyle");
+                    OnPropertyChanged("ShowIIDXStyle");
                 }
             }
         }
@@ -155,7 +157,7 @@ namespace PPDExpansion.ViewModel
                 if (showScoreDiff != value)
                 {
                     PPDExpansionSetting.Setting.ShowScoreDiff = showScoreDiff = value;
-                    RaisePropertyChanged("ShowScoreDiff");
+                    OnPropertyChanged("ShowScoreDiff");
                 }
             }
         }
@@ -168,7 +170,7 @@ namespace PPDExpansion.ViewModel
                 if (width != value)
                 {
                     width = value;
-                    RaisePropertyChanged("Width");
+                    OnPropertyChanged("Width");
                 }
             }
         }
@@ -181,7 +183,7 @@ namespace PPDExpansion.ViewModel
                 if (height != value)
                 {
                     height = value;
-                    RaisePropertyChanged("Height");
+                    OnPropertyChanged("Height");
                 }
             }
         }
@@ -264,7 +266,7 @@ namespace PPDExpansion.ViewModel
 
         private void CloseCommand_Execute()
         {
-            Messenger.Default.Send(new CloseWindowMessage(this));
+            WeakReferenceMessenger.Default.Send(new CloseWindowMessage(this));
         }
 
         private void ClosedCommand_Execute()

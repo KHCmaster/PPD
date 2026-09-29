@@ -1,10 +1,10 @@
-﻿using PPDMvvm;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace PPDEditorCommon.Dialog.ViewModel
 {
-    public class SettingWindowViewModel : ViewModelBase
+    public class SettingWindowViewModel : ObservableObject
     {
         private bool isOkEnabled;
         private List<SettingViewModelBase> settings;
@@ -46,7 +46,7 @@ namespace PPDEditorCommon.Dialog.ViewModel
                 if (isOkEnabled != value)
                 {
                     isOkEnabled = value;
-                    RaisePropertyChanged("IsOkEnabled");
+                    OnPropertyChanged("IsOkEnabled");
                 }
             }
         }

@@ -1,5 +1,4 @@
-﻿using PPDMvvm;
-
+﻿
 namespace PPDExpansion.Message
 {
     class CloseWindowMessage : MessageBase

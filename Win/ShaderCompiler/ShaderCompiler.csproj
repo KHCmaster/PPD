@@ -27,8 +27,8 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="SharpDX" Version="3.1.1" />
-    <PackageReference Include="SharpDX.D3DCompiler" Version="3.1.1" />
+    <PackageReference Include="SharpDX" />
+    <PackageReference Include="SharpDX.D3DCompiler" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />

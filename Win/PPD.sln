@@ -141,8 +141,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlueSky", "BlueSky\BlueSky.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlueSkyTest", "BlueSkyTest\BlueSkyTest.csproj", "{335F1AA2-8BFA-4725-B0D1-C196A99CADE1}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PPDMvvm", "PPDMvvm\PPDMvvm.csproj", "{3F6A1C52-8E4B-4D7A-9C21-5B0E7D9A4F13}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -365,10 +363,6 @@ Global
 		{335F1AA2-8BFA-4725-B0D1-C196A99CADE1}.Debug|x64.Build.0 = Debug|x64
 		{335F1AA2-8BFA-4725-B0D1-C196A99CADE1}.Release|x64.ActiveCfg = Release|x64
 		{335F1AA2-8BFA-4725-B0D1-C196A99CADE1}.Release|x64.Build.0 = Release|x64
-		{3F6A1C52-8E4B-4D7A-9C21-5B0E7D9A4F13}.Debug|x64.ActiveCfg = Debug|x64
-		{3F6A1C52-8E4B-4D7A-9C21-5B0E7D9A4F13}.Debug|x64.Build.0 = Debug|x64
-		{3F6A1C52-8E4B-4D7A-9C21-5B0E7D9A4F13}.Release|x64.ActiveCfg = Release|x64
-		{3F6A1C52-8E4B-4D7A-9C21-5B0E7D9A4F13}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

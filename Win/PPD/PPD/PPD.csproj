@@ -28,13 +28,15 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="SharpDX" Version="3.1.1" />
-    <PackageReference Include="SharpDX.Desktop" Version="3.1.1" />
-    <PackageReference Include="SharpDX.DirectInput" Version="3.1.1" />
-    <PackageReference Include="SharpDX.Mathematics" Version="3.1.1" />
-    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.119" />
-    <PackageReference Include="YamlDotNet" Version="5.1.0" />
+    <!-- skins の PPDModSettingUI が使う。PPD.exe のフォルダーに新しい版の依存 DLL を置き、バインディングリダイレクトを自動生成させるために PPD 本体でも参照する -->
+    <PackageReference Include="CommunityToolkit.Mvvm" />
+    <PackageReference Include="Newtonsoft.Json" />
+    <PackageReference Include="SharpDX" />
+    <PackageReference Include="SharpDX.Desktop" />
+    <PackageReference Include="SharpDX.DirectInput" />
+    <PackageReference Include="SharpDX.Mathematics" />
+    <PackageReference Include="System.Data.SQLite.Core" />
+    <PackageReference Include="YamlDotNet" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System.ComponentModel.DataAnnotations" />

@@ -1,4 +1,4 @@
-﻿using PPDMvvm;
+﻿using CommunityToolkit.Mvvm.Input;
 using System.Windows.Input;
 
 namespace PPDEditorCommon.Dialog.ViewModel
@@ -16,7 +16,7 @@ namespace PPDEditorCommon.Dialog.ViewModel
                 if (this.text != value)
                 {
                     this.text = value;
-                    RaisePropertyChanged("Text");
+                    OnPropertyChanged("Text");
                 }
             }
         }

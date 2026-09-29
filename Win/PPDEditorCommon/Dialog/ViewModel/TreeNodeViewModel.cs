@@ -1,4 +1,4 @@
-﻿using PPDMvvm;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
@@ -41,7 +41,7 @@ namespace PPDEditorCommon.Dialog.ViewModel
                 }
                 if (changed)
                 {
-                    RaisePropertyChanged("Value");
+                    OnPropertyChanged("Value");
                 }
             }
         }
@@ -54,7 +54,7 @@ namespace PPDEditorCommon.Dialog.ViewModel
                 if (text != value)
                 {
                     text = value;
-                    RaisePropertyChanged("Text");
+                    OnPropertyChanged("Text");
                 }
             }
         }
@@ -67,7 +67,7 @@ namespace PPDEditorCommon.Dialog.ViewModel
                 if (isExpanded != value)
                 {
                     isExpanded = value;
-                    RaisePropertyChanged("IsExpanded");
+                    OnPropertyChanged("IsExpanded");
                 }
             }
         }
@@ -80,7 +80,7 @@ namespace PPDEditorCommon.Dialog.ViewModel
                 if (isSelected != value)
                 {
                     isSelected = value;
-                    RaisePropertyChanged("IsSelected");
+                    OnPropertyChanged("IsSelected");
                 }
             }
         }

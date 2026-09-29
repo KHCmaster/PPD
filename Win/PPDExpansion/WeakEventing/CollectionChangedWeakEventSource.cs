@@ -13,19 +13,23 @@ namespace PPDExpansion
                                                      INotifyCollectionChanged,
                                                      NotifyCollectionChangedEventArgs>(this, eventObject)
             {
-                OnDetachAction = (listener, source) =>
-                {
-                    source.CollectionChanged -= listener.OnEvent;
-                },
-                OnEventAction = (instance, source, e) =>
-                {
-                    // fire event
-                    instance.CollectionChanged?.Invoke(source, e);
-                }
+                // ラムダ式は（何も捕捉しなくても）インスタンスメソッドにコンパイルされ、WeakEventListener の静的メソッドのチェックで例外になるので、静的メソッドを渡す
+                OnDetachAction = Detach,
+                OnEventAction = FireCollectionChanged
             };
             eventObject.CollectionChanged += weakListener.OnEvent;
 
             return weakListener;
+        }
+
+        private static void Detach(WeakEventListener<CollectionChangedWeakEventSource, INotifyCollectionChanged, NotifyCollectionChangedEventArgs> listener, INotifyCollectionChanged source)
+        {
+            source.CollectionChanged -= listener.OnEvent;
+        }
+
+        private static void FireCollectionChanged(CollectionChangedWeakEventSource instance, object source, NotifyCollectionChangedEventArgs e)
+        {
+            instance.CollectionChanged?.Invoke(source, e);
         }
 
         public event NotifyCollectionChangedEventHandler CollectionChanged;

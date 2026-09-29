@@ -1,4 +1,4 @@
-﻿using PPDMvvm;
+﻿using CommunityToolkit.Mvvm.Messaging;
 using PPDExpansion.Message;
 using PPDExpansion.ViewModel;
 using System.Windows;
@@ -14,7 +14,7 @@ namespace PPDExpansion
         {
             InitializeComponent();
 
-            Messenger.Default.Register<CloseWindowMessage>(this, CloseWindowMessage_Received);
+            WeakReferenceMessenger.Default.Register<CloseWindowMessage>(this, (r, m) => CloseWindowMessage_Received(m));
             Loaded += MainWindow_Loaded;
         }
 

@@ -1,4 +1,4 @@
-﻿using PPDMvvm;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using PPDExpansionCore;
 using System;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ using System.Windows.Media.Imaging;
 
 namespace PPDExpansion.Model
 {
-    public class Player : ViewModelBase
+    public class Player : ObservableObject
     {
         public ObservableCollection<KeyValuePair<DateTime, int>> Scores
         {

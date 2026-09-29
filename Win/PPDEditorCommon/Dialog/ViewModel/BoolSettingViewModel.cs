@@ -12,7 +12,7 @@
                 if (this.value != value)
                 {
                     this.value = value;
-                    RaisePropertyChanged("Value");
+                    OnPropertyChanged("Value");
                 }
             }
         }

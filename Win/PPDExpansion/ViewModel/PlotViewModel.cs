@@ -1,4 +1,4 @@
-﻿using PPDMvvm;
+﻿using CommunityToolkit.Mvvm.Input;
 using PPDExpansionCore;
 using System;
 using System.Windows;
@@ -40,7 +40,7 @@ namespace PPDExpansion.ViewModel
                 if (xMinimum != value)
                 {
                     xMinimum = value;
-                    RaisePropertyChanged("XMinimum");
+                    OnPropertyChanged("XMinimum");
                 }
             }
         }
@@ -53,7 +53,7 @@ namespace PPDExpansion.ViewModel
                 if (xMaximum != value)
                 {
                     xMaximum = value;
-                    RaisePropertyChanged("XMaximum");
+                    OnPropertyChanged("XMaximum");
                 }
             }
         }
@@ -66,7 +66,7 @@ namespace PPDExpansion.ViewModel
                 if (yMinimum != value)
                 {
                     yMinimum = value;
-                    RaisePropertyChanged("YMinimum");
+                    OnPropertyChanged("YMinimum");
                 }
             }
         }
@@ -79,7 +79,7 @@ namespace PPDExpansion.ViewModel
                 if (yMaximum != value)
                 {
                     yMaximum = value;
-                    RaisePropertyChanged("YMaximum");
+                    OnPropertyChanged("YMaximum");
                 }
             }
         }

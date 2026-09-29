@@ -1,4 +1,5 @@
-﻿using PPDMvvm;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using System;
 using System.Windows;
 using System.Windows.Input;
@@ -23,7 +24,7 @@ namespace FlowScriptDrawControl.Model
                 {
                     position = value;
                     Transform = new TranslateTransform(position.X, position.Y);
-                    RaisePropertyChanged("Position");
+                    OnPropertyChanged("Position");
                 }
             }
         }
@@ -36,8 +37,8 @@ namespace FlowScriptDrawControl.Model
                 if (transform != value)
                 {
                     transform = value;
-                    RaisePropertyChanged("Transform");
-                    RaisePropertyChanged("Transform2");
+                    OnPropertyChanged("Transform");
+                    OnPropertyChanged("Transform2");
                 }
             }
         }

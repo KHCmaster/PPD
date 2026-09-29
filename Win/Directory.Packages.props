@@ -1,0 +1,40 @@
+<Project>
+  <!-- NuGet パッケージの版はここでまとめて管理する（各 csproj の PackageReference には Version を書かない） -->
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    <!-- 間接的に使うパッケージも下の版にそろえる。
+         release\x64\PPD には複数の exe が同じフォルダーに出力されるので、プロジェクトごとに版が違うと、後からコピーされた古い版で上書きされてしまう -->
+    <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageVersion Include="CommunityToolkit.Mvvm" Version="8.4.2" />
+    <PackageVersion Include="DotNetProjects.WpfToolkit.DataVisualization" Version="6.1.94" />
+    <PackageVersion Include="MessagePack" Version="1.9.11" />
+    <PackageVersion Include="MessagePackAnalyzer" Version="1.6.0" />
+    <PackageVersion Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.161" />
+    <PackageVersion Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageVersion Include="SharpDX" Version="3.1.1" />
+    <PackageVersion Include="SharpDX.D3DCompiler" Version="3.1.1" />
+    <PackageVersion Include="SharpDX.Desktop" Version="3.1.1" />
+    <PackageVersion Include="SharpDX.Direct2D1" Version="3.1.1" />
+    <PackageVersion Include="SharpDX.Direct3D11" Version="3.1.1" />
+    <PackageVersion Include="SharpDX.DirectInput" Version="3.1.1" />
+    <PackageVersion Include="SharpDX.DirectSound" Version="3.1.1" />
+    <PackageVersion Include="SharpDX.DXGI" Version="3.1.1" />
+    <PackageVersion Include="SharpDX.Mathematics" Version="3.1.1" />
+    <PackageVersion Include="SharpZipLib" Version="1.3.3" />
+    <PackageVersion Include="System.Data.SQLite.Core" Version="1.0.119" />
+    <PackageVersion Include="WinSCP" Version="5.7.7" />
+    <PackageVersion Include="YamlDotNet" Version="5.1.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- 間接的に使うパッケージ（CommunityToolkit.Mvvm、MessagePack などの依存） -->
+    <PackageVersion Include="Microsoft.Bcl.AsyncInterfaces" Version="10.0.1" />
+    <PackageVersion Include="System.Buffers" Version="4.6.1" />
+    <PackageVersion Include="System.Memory" Version="4.6.3" />
+    <PackageVersion Include="System.Numerics.Vectors" Version="4.6.1" />
+    <PackageVersion Include="System.Runtime.CompilerServices.Unsafe" Version="6.1.2" />
+    <PackageVersion Include="System.Threading.Tasks.Extensions" Version="4.6.3" />
+    <PackageVersion Include="System.ValueTuple" Version="4.5.0" />
+  </ItemGroup>
+</Project>

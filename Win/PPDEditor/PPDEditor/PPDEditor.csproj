@@ -28,12 +28,12 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="SharpDX" Version="3.1.1" />
-    <PackageReference Include="SharpDX.DirectInput" Version="3.1.1" />
-    <PackageReference Include="SharpDX.Mathematics" Version="3.1.1" />
-    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.119" />
-    <PackageReference Include="YamlDotNet" Version="5.1.0" />
+    <PackageReference Include="Newtonsoft.Json" />
+    <PackageReference Include="SharpDX" />
+    <PackageReference Include="SharpDX.DirectInput" />
+    <PackageReference Include="SharpDX.Mathematics" />
+    <PackageReference Include="System.Data.SQLite.Core" />
+    <PackageReference Include="YamlDotNet" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="PresentationCore" />

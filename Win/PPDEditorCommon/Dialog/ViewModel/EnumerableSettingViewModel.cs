@@ -21,7 +21,7 @@ namespace PPDEditorCommon.Dialog.ViewModel
                 if (selectedItem != value)
                 {
                     selectedItem = value;
-                    RaisePropertyChanged("SelectedItem");
+                    OnPropertyChanged("SelectedItem");
                 }
             }
         }

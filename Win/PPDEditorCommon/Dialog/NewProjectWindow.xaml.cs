@@ -1,4 +1,4 @@
-﻿using PPDMvvm;
+﻿using CommunityToolkit.Mvvm.Messaging;
 using PPDEditorCommon.Dialog.Message;
 using System;
 using System.Windows;
@@ -15,22 +15,22 @@ namespace PPDEditorCommon.Dialog
         {
             InitializeComponent();
 
-            Messenger.Default.Register<ShowMessageBoxMessage>(this, ShowMessageBoxMessage_Received);
-            Messenger.Default.Register<CloseWindowMessage>(this, CloseWindowMessage_Received);
-            Messenger.Default.Register<OpenFileDialogMessage>(this, OpenFileDialogMessage_Received);
-            Messenger.Default.Register<FolderBrowserDialogMessage>(this, FolderBrowserDialogMessage_Received);
-            Messenger.Default.Register<SelectMessage>(this, SelectMessage_Received);
+            WeakReferenceMessenger.Default.Register<ShowMessageBoxMessage>(this, (r, m) => ShowMessageBoxMessage_Received(m));
+            WeakReferenceMessenger.Default.Register<CloseWindowMessage>(this, (r, m) => CloseWindowMessage_Received(m));
+            WeakReferenceMessenger.Default.Register<OpenFileDialogMessage>(this, (r, m) => OpenFileDialogMessage_Received(m));
+            WeakReferenceMessenger.Default.Register<FolderBrowserDialogMessage>(this, (r, m) => FolderBrowserDialogMessage_Received(m));
+            WeakReferenceMessenger.Default.Register<SelectMessage>(this, (r, m) => SelectMessage_Received(m));
 
             Unloaded += NewProjectWindow_Unloaded;
         }
 
         void NewProjectWindow_Unloaded(object sender, RoutedEventArgs e)
         {
-            Messenger.Default.Unregister<ShowMessageBoxMessage>(this, ShowMessageBoxMessage_Received);
-            Messenger.Default.Unregister<CloseWindowMessage>(this, CloseWindowMessage_Received);
-            Messenger.Default.Unregister<OpenFileDialogMessage>(this, OpenFileDialogMessage_Received);
-            Messenger.Default.Unregister<FolderBrowserDialogMessage>(this, FolderBrowserDialogMessage_Received);
-            Messenger.Default.Unregister<SelectMessage>(this, SelectMessage_Received);
+            WeakReferenceMessenger.Default.Unregister<ShowMessageBoxMessage>(this);
+            WeakReferenceMessenger.Default.Unregister<CloseWindowMessage>(this);
+            WeakReferenceMessenger.Default.Unregister<OpenFileDialogMessage>(this);
+            WeakReferenceMessenger.Default.Unregister<FolderBrowserDialogMessage>(this);
+            WeakReferenceMessenger.Default.Unregister<SelectMessage>(this);
         }
 
         protected override void OnSourceInitialized(EventArgs e)

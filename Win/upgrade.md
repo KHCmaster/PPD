@@ -255,16 +255,26 @@ Phase 7  配布・更新の仕組みの対応、リリース
   - 5 つの app.config から、EF の設定セクションと EF6 のプロバイダー登録を削除した
   - `Checker.cs` / `PPDReleaser` の DLL 一覧からも外した
 - [ ] 依存パッケージを整理する（2 章の表）。**.NET Framework と .NET 10 の両方で動く版を選び**、このフェーズで先に更新しておく。
-  - [x] MvvmLight → **自前の小さなライブラリ（PPDMvvm）** と Microsoft.Xaml.Behaviors.Wpf に置き換えた。
-    - CommunityToolkit.Mvvm にしなかった理由: net48 では依存 DLL が 5 つ増える（System.Memory、Unsafe 6.x など）。skins から読み込まれる PPDModSettingUI でバインディングリダイレクトの問題が起きやすい
-    - 実際に使っていたのは次の機能だけで、MvvmLight（WPF 版）と同じ動作を依存なしで再現できた
-      - `ObservableObject` / `ViewModelBase` の `RaisePropertyChanged`
-      - `RelayCommand`。`CommandManager.RequerySuggested` による再評価も含む
-      - `Messenger` の Register / Unregister / Send
-      - `MessageBase`
+  - [x] MvvmLight → **CommunityToolkit.Mvvm 8.4.2** と Microsoft.Xaml.Behaviors.Wpf に置き換えた。
+    - 途中で自前の小さなライブラリ（PPDMvvm）にしたが、CommunityToolkit.Mvvm を使う方針にして置き換えた
+    - 置き換えの対応
+      - `ViewModelBase` → `ObservableObject`
+      - `RaisePropertyChanged` → `OnPropertyChanged`
+      - `Messenger.Default` → `WeakReferenceMessenger.Default`
+      - `MessageBase` は Toolkit にないので、PPDEditorCommon と PPDExpansion にそれぞれ小さな基底クラス（`Sender` を持つだけ）を置いた
+      - `canExecute` 付きの `RelayCommand` は使っていないので、`CommandManager` による再評価がなくなっても影響はない
     - XAML の `EventToCommand`（System.Windows.Interactivity）は、Microsoft.Xaml.Behaviors の `InvokeCommandAction` に置き換えた。`PassEventArgsToCommand` はそのまま使える
-    - 確認: WPF のコントロールとウィンドウ（FlowScriptDrawControl、PPDEditorCommon、PPDModSettingUI）を全て生成して、XAML が読み込めることを確認した。PPDExpansion の起動も確認した
-      - 気付いた点: PPDExpansion はウィンドウを閉じてもプロセスが終了しない。変更前のビルドでも同じなので、今回の変更とは無関係
+    - net48 では CommunityToolkit.Mvvm の依存 DLL（System.Memory、Unsafe 6.x、Bcl.AsyncInterfaces など）が増える。そのため次の 2 つを行った
+      - **Central Package Management（`Directory.Packages.props`）を導入した。** 間接的な依存の版も固定する（`CentralPackageTransitivePinningEnabled`）。`release\x64\PPD` には複数の exe が出力されるため、プロジェクトごとに版が違うと、古い版で上書きされる
+      - skins から読み込まれる PPDModSettingUI のために、**PPD.exe でも CommunityToolkit.Mvvm を参照する**。新しい版の依存 DLL が PPD.exe のフォルダーに置かれ、バインディングリダイレクトも自動生成される
+    - バインディングの確認用に `Tools/ProjectCheck/BindingCheck.ps1` を作った。exe（とプラグインのフォルダー）から参照をたどり、置かれている版と違う版の参照が、リダイレクトで解決されるかを調べる。Debug / Release の全 exe で問題がないことを確認した
+    - その他の確認
+      - WPF のコントロールとウィンドウ（FlowScriptDrawControl、PPDEditorCommon、PPDModSettingUI）を全て生成して、XAML が読み込めることを確認した
+      - PPDExpansion の画面が変更前と画素単位で一致することを確認した
+      - PPDExpansion の「ファイル → 終了」でウィンドウが閉じることを確認した（RelayCommand → Messenger の流れ）
+    - 見つけて直した既存の不具合: PPDExpansion で「Fatal Error Occurred」が出て、閉じてもプロセスが終了しなかった
+      - 原因: `WeakEventListener` は、渡されたメソッドが static であることを確認している。しかし、C# 6（Roslyn）以降は、何も捕捉しないラムダ式もインスタンスメソッドにコンパイルされるため、この確認で例外になっていた
+      - `CollectionChangedWeakEventSource` で、ラムダ式の代わりに static メソッドを渡すようにした
   - [x] SharpZipLib: プロジェクトフォルダーにあった 0.86 を NuGet の **1.3.3** にした。
     - 0.86 には zip のパストラバーサル（Zip Slip）の脆弱性がある。PPDSingle は Web からダウンロードした zip を展開するので対応が必要
     - 1.4 系は netstandard2.0 のみで、net48 では依存 DLL が増えるため 1.3.3（net45 版があり依存なし）にした。.NET 10 では netstandard2.1 版が使われる
@@ -289,7 +299,7 @@ Phase 7  配布・更新の仕組みの対応、リリース
   - WPFToolkit（3.5）は DataVisualization の依存としてだけ入っていたので削除した
 
 **結果（2026-09-29）**: 次の確認が通った。
-- 全プロジェクト（PPDMvvm を加えて 55 個）が、SDK 形式・PackageReference で Debug / Release ともビルドできる。
+- 全プロジェクト（54 個）が、SDK 形式・PackageReference で Debug / Release ともビルドできる。
 - シーン 0〜7 の画素比較、PPD 終了時のアクセス違反チェック、Mod 28 個・譜面スクリプト 17 個の既定値の比較。
 - `PPDReleaser` の DLL 一覧にあるファイルが、全て Release の出力にある。
 
