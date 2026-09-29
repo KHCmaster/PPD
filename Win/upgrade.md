@@ -243,7 +243,9 @@ Phase 7  配布・更新の仕組みの対応、リリース
   - SDK 形式では .cs / .resx / .xaml がフォルダーから自動で取り込まれる。そのため、どのプロジェクトからもコンパイルされていなかった古いファイル 86 個を削除した（PPD\PPD、PPDEditor の SlimDX 時代のフォーム、PPDFramework・PPDSingle・FlowScriptControl・WinFormsUI の未使用ファイル）。
   - どこからも参照されていない PPDTwitter を削除した。
 - [x] `packages\` フォルダへの HintPath 参照をなくし、`packages.config` を削除した。SQLite の `.targets` の手動インポートも不要になった。
-- [ ] NuGet 管理外の DLL（SharpZipLib、WacomMTDN）を NuGet 版にするか、`lib\` に置いて明示的に参照する。→ 現在はプロジェクトフォルダーの DLL を HintPath で参照している（動作に問題はない）。
+- [x] NuGet 管理外の DLL を整理した。
+  - SharpZipLib は NuGet 版にした（下記）
+  - WacomMTDN はどのプロジェクトからも参照されていなかった（古いビルドの出力に残っているだけ）ので、`Checker.cs` / `PPDReleaser` の一覧から外した
 - [x] ビルド後のコピー処理を MSBuild のターゲットに置き換えた（`Directory.Build.targets` の `CopyFlowScriptPlugin`）。
   - FlowScriptEngine* の 7 プロジェクトは、コピー先を `FlowScriptPluginFolder` で指定する
   - 従来は Release ビルドでも Debug の DLL をコピーしていたので、Debug ビルドのときだけコピーするようにした
@@ -270,10 +272,32 @@ Phase 7  配布・更新の仕組みの対応、リリース
     - 0.86 と 1.3.3 の間で作成・展開を相互に行い、日本語のファイル名・フォルダー・空フォルダーが一致することを確認した
   - [x] YamlDotNet は **5.1.0 のままにする**。既知の脆弱性はなく、netstandard1.3 版で .NET 10 でも動く。新しい版は `Yaml.Dump` ノードの出力書式が変わる可能性があり、Mod の互換を優先した
   - [x] morelinq は `MinBy` / `MaxBy` の 2 か所だけだったので、`OrderBy(...).First()`（安定ソートなので同じ要素を返す）に置き換えて削除した。新しい morelinq は戻り値の型が変わっているうえ、.NET 10 の `Enumerable.MinBy` と名前がぶつかるため
-  - [ ] MessagePack（通信互換の検証が必要なので単独で実施）
+  - [ ] MessagePack（1.9.11）→ **Phase 4 で行う**。
+    - 2.x / 3.x は net48 では依存 DLL が多い（System.Memory、Unsafe 6.x、Collections.Immutable など）。PPDMulti は skins から読み込まれるため、PPD.exe でバインディングリダイレクトの問題が起きやすい。.NET 10 ではこれらが標準に含まれるので、移行後に行う
+    - 通信互換の確認用に `Tools/ProjectCheck/MessagePackDump.ps1` を作った
+      - 34 種類の通信データ型に決まった値（日本語の文字列、入れ子の配列、Tuple を含む）を入れてシリアライズし、バイト列を書き出す
+      - 1.9.11 の結果は `Tools/ProjectCheck/messagepack_v1.txt`
+      - 新しい版では次の 2 点を確認する
+        - 同じバイト列を出力すること
+        - 古いバイト列を読み込んで書き直したときに、同じバイト列になること
+      - 後者が必要なのは、`Parser` が受信データの長さを再シリアライズで求めているため
   - [x] System.Data.SQLite.Core を 1.0.100 から 1.0.119 に上げた（SQLite 3 のファイル形式は互換）。skins フォルダーにはネイティブ DLL をコピーしないようにした（`CopySQLiteInteropFiles=false`）
-- [ ] WPFToolkit / DataVisualization（PPDExpansion のグラフ）を代替に置き換える。
+- [x] WPFToolkit / DataVisualization（PPDExpansion のグラフ）を、同じコードを引き継いでいるフォーク **DotNetProjects.WpfToolkit.DataVisualization 6.1.94** に置き換えた。
+  - 対象は net40 と net6.0-windows で、依存なし、MS-PL
+  - 名前空間と型が同じなので、XAML の assembly 名を変えるだけで済んだ
+  - 変更前後の PPDExpansion のウィンドウを撮影して比べ、画素単位で一致することを確認した
+  - WPFToolkit（3.5）は DataVisualization の依存としてだけ入っていたので削除した
 
+**結果（2026-09-29）**: 次の確認が通った。
+- 全プロジェクト（PPDMvvm を加えて 55 個）が、SDK 形式・PackageReference で Debug / Release ともビルドできる。
+- シーン 0〜7 の画素比較、PPD 終了時のアクセス違反チェック、Mod 28 個・譜面スクリプト 17 個の既定値の比較。
+- `PPDReleaser` の DLL 一覧にあるファイルが、全て Release の出力にある。
+
+残りは次の 2 つで、どちらも Phase 4 に回した。
+- .resx の `System.Resources.Extensions`（.NET でだけ必要）
+- MessagePack の更新
+
+実プレイの確認（エディター、マルチプレイ、PPDExpansion など）は未実施。
 **完了条件**: 全プロジェクトが SDK 形式・PackageReference でビルドでき、回帰テストと実プレイ確認が通る。
 
 **規模の目安**: 中。機械的な作業が多いが、プロジェクト数が多い。
@@ -293,6 +317,8 @@ Phase 7  配布・更新の仕組みの対応、リリース
   - プラグインの読み込み（`Assembly.LoadFrom`: `GameLoader`、`FlowSourceEnumerator`）の挙動を確認する。同名アセンブリの重複読み込みや依存 DLL の解決は、必要に応じて `AssemblyLoadContext` で制御する。
   - DirectShow の COM 相互運用（`ComImport`、`Type.GetTypeFromCLSID`）の動作を確認する。
   - `Encoding.GetEncoding` で Shift_JIS などを使っている箇所（BMSTOPPD、FlowScriptEngineBasic の `EncodingType` / `ReadAllText` / `ReadAllLines` ノード）のために、起動時に `CodePagesEncodingProvider` を登録する。
+- [ ] PPDEditor の統計ウィンドウ（`DockForm/StatsManager`）は WinForms の `System.Windows.Forms.DataVisualization`（Chart）を使っている。これは .NET 10 に含まれないので、.NET 向けの移植版（NuGet の `WinForms.DataVisualization` など）に置き換える。（Phase 3 で見つけた）
+- [ ] MessagePack を 2.x 以降に上げる（Phase 3 から移した）。`Tools/ProjectCheck/MessagePackDump.ps1 -Compare Tools/ProjectCheck/messagepack_v1.txt` で通信互換を確認する。
 - [ ] ShaderCompiler、PPDReleaser、FolderDiffChecker などのツール類も移行する。
 
 **完了条件**: .NET 10 で全体がビルドでき、回帰テストと実プレイ確認が通る。

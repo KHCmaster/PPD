@@ -33,8 +33,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.161" />
     <PackageReference Include="System.Data.SQLite.Core" Version="1.0.119" />
-    <PackageReference Include="System.Windows.Controls.DataVisualization.Toolkit" Version="4.0.0.0" />
-    <PackageReference Include="WPFToolkit" Version="3.5.50211.1" />
+    <PackageReference Include="DotNetProjects.WpfToolkit.DataVisualization" Version="6.1.94" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
