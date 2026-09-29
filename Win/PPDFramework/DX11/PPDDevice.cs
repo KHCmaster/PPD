@@ -18,7 +18,6 @@ namespace PPDFramework.DX11
     class PPDDevice : PPDFramework.PPDDevice
     {
         const int MaxFanPrimitiveCount = 4096;
-        const int InitialUserVertexBufferSize = 1024 * 64;
 
         SharpDX.Direct3D11.Device device;
         SwapChain swapChain;
@@ -29,8 +28,6 @@ namespace PPDFramework.DX11
         RasterizerState scissorEnabledState;
         RasterizerState scissorDisabledState;
         SharpDX.Direct3D11.Buffer fanIndexBuffer;
-        SharpDX.Direct3D11.Buffer userVertexBuffer;
-        int userVertexBufferSize;
         Dictionary<PrimitiveType, PrimitiveTopology> primitiveTypeMap = new Dictionary<PrimitiveType, PrimitiveTopology>
         {
             { PrimitiveType.PointList, PrimitiveTopology.PointList },
@@ -80,15 +77,6 @@ namespace PPDFramework.DX11
         internal override string ShaderNamePrefix
         {
             get { return "d3d11_"; }
-        }
-
-        /// <summary>
-        /// スクリーン全体を描画する際のテクセルのオフセットを取得します。
-        /// DirectX11ではピクセルの中心とテクセルの中心が一致するので不要です。
-        /// </summary>
-        internal override float ScreenTexelOffset
-        {
-            get { return 0; }
         }
 
         /// <summary>
@@ -212,13 +200,6 @@ namespace PPDFramework.DX11
         }
 
         /// <summary>
-        /// デバイスをリセットします。
-        /// </summary>
-        internal override void ResetDevice()
-        {
-        }
-
-        /// <summary>
         /// 描画を開始します。
         /// </summary>
         internal override void DrawStart()
@@ -288,46 +269,6 @@ namespace PPDFramework.DX11
             Context.DrawIndexed(GetVertexCount(primitiveType, primCount), startIndex, baseVertexIndex);
         }
 
-        /// <summary>
-        /// ユーザープリミティブを描画します。
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="primitiveType"></param>
-        /// <param name="offset"></param>
-        /// <param name="primitiveCount"></param>
-        /// <param name="data"></param>
-        internal override void DrawUserPrimitives<T>(PrimitiveType primitiveType, int offset, int primitiveCount, T[] data)
-        {
-            var vertexSize = Utilities.SizeOf<T>();
-            var sizeInBytes = vertexSize * data.Length;
-            if (userVertexBuffer == null || userVertexBufferSize < sizeInBytes)
-            {
-                if (userVertexBuffer != null)
-                {
-                    userVertexBuffer.Dispose();
-                }
-                userVertexBufferSize = Math.Max(InitialUserVertexBufferSize, sizeInBytes);
-                userVertexBuffer = new SharpDX.Direct3D11.Buffer(device, new BufferDescription
-                {
-                    SizeInBytes = userVertexBufferSize,
-                    Usage = ResourceUsage.Dynamic,
-                    BindFlags = BindFlags.VertexBuffer,
-                    CpuAccessFlags = CpuAccessFlags.Write
-                });
-            }
-            var dataBox = Context.MapSubresource(userVertexBuffer, 0, MapMode.WriteDiscard, SharpDX.Direct3D11.MapFlags.None);
-            try
-            {
-                Utilities.Write(dataBox.DataPointer, data, 0, data.Length);
-            }
-            finally
-            {
-                Context.UnmapSubresource(userVertexBuffer, 0);
-            }
-            Context.InputAssembler.SetVertexBuffers(0, new VertexBufferBinding(userVertexBuffer, vertexSize, 0));
-            currentBuffer = null;
-            DrawPrimitives(primitiveType, offset, primitiveCount);
-        }
 
         private void DrawFan(int offset, int primitiveCount)
         {
@@ -445,11 +386,6 @@ namespace PPDFramework.DX11
             {
                 fanIndexBuffer.Dispose();
                 fanIndexBuffer = null;
-            }
-            if (userVertexBuffer != null)
-            {
-                userVertexBuffer.Dispose();
-                userVertexBuffer = null;
             }
             if (scissorEnabledState != null)
             {

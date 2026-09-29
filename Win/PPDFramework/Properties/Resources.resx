@@ -136,22 +136,4 @@
   <data name="d3d11_Mosaic" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Shaders\DX11\d3d11_Mosaic.fxc;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="d3d9_AlphaBlend" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Shaders\DX9\d3d9_AlphaBlend.fxc;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="d3d9_BasicEffect" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\shaders\dx9\d3d9_basiceffect.fxc;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="d3d9_Border" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Shaders\DX9\d3d9_Border.fxc;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="d3d9_GaussianFilter" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Shaders\DX9\d3d9_GaussianFilter.fxc;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="d3d9_Glass" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Shaders\DX9\d3d9_Glass.fxc;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="d3d9_Mosaic" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Shaders\DX9\d3d9_Mosaic.fxc;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
 </root>

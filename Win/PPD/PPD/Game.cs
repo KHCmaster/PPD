@@ -73,7 +73,12 @@ namespace PPD
 
         protected override void OnFailedInitializeDirectX()
         {
-            MessageBox.Show(Utility.Language["DirectXInitializeFailed"]);
+            var message = Utility.Language["DirectXInitializeFailed"];
+            if (InitializeDirectXException != null)
+            {
+                message += Environment.NewLine + Environment.NewLine + InitializeDirectXException.Message;
+            }
+            MessageBox.Show(message);
         }
 
         protected override void OnSuccessInitializeDirectX()

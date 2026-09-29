@@ -465,7 +465,6 @@ namespace PPDEditor.Forms
             this.インポートToolStripMenuItem.Text = Utility.Language["Import"];
             this.別のファイルToolStripMenuItem.Text = Utility.Language["Other Files"];
             this.disableExpansionToolStripMenuItem.Text = Utility.Language["DisableExpansion"];
-            this.disableShaderToolStripMenuItem.Text = Utility.Language["DisableShader"];
             this.コマンドToolStripMenuItem.Text = Utility.Language["Command"];
             this.一覧を再読み込みToolStripMenuItem.Text = Utility.Language["ReloadList"];
             infof.SetLang();
@@ -1468,7 +1467,6 @@ namespace PPDEditor.Forms
             setting.ReplaceOrAdd(headdot + "connect", Connect);
             setting.ReplaceOrAdd(headdot + "modlist", ModList);
             setting.ReplaceOrAdd(headdot + "disableexpansion", DisableExpansion);
-            setting.ReplaceOrAdd(headdot + "disableshader", DisableShader);
 
             setting.ReplaceOrAdd("memo", mw.MemoText.Replace("[", "\\[").Replace("]", "\\]"));
             mw.ContentSaved();
@@ -2254,7 +2252,6 @@ namespace PPDEditor.Forms
             bool connect = setting.ReadString(headdot + "connect") == "1";
             bool showHoldExtent = setting.ReadString(headdot + "showholdextent") == "1";
             bool disableExpansion = setting.ReadString(headdot + "disableexpansion") == "1";
-            bool disableShader = setting.ReadString(headdot + "disableshader") == "1";
             var modList = setting.ReadString(headdot + "modlist");
             if (!int.TryParse(setting.ReadString(headdot + "speedscale"), NumberStyles.Integer, CultureInfo.InvariantCulture, out int speedscale))
             {
@@ -2286,7 +2283,6 @@ namespace PPDEditor.Forms
             this.Connect = connect;
             this.ModList = modList;
             this.DisableExpansion = disableExpansion;
-            this.DisableShader = disableShader;
             double.TryParse(setting.ReadString(headdot + "lastseektime"), NumberStyles.Float, CultureInfo.InvariantCulture, out double seektime);
             if (MovieInitialized)
             {
@@ -2753,7 +2749,7 @@ namespace PPDEditor.Forms
             if (!OverWriteProject()) return;
             var psi = new ProcessStartInfo
             {
-                Arguments = String.Format("-game PPDSingle -d \"{0}\" -auto {1} -bpm {2} -st {3} -dif {4} -connect {5} -mod \"{6}\" {7} {8}",
+                Arguments = String.Format("-game PPDSingle -d \"{0}\" -auto {1} -bpm {2} -st {3} -dif {4} -connect {5} -mod \"{6}\" {7}",
                 Path.Combine(projectfiledir, Path.GetFileNameWithoutExtension(projectfilename)),
                 auto ? "1" : "0",
                 WindowUtility.IniFileWriter.BPM,
@@ -2761,8 +2757,7 @@ namespace PPDEditor.Forms
                 CurrentDifficulty.ToString(),
                 Connect ? "1" : "0",
                 ModList,
-                DisableExpansion ? "-disableexpansion" : "",
-                DisableShader ? "-disableshader" : "")
+                DisableExpansion ? "-disableexpansion" : "")
             };
             ExecutePPD(psi);
         }
@@ -3646,10 +3641,6 @@ namespace PPDEditor.Forms
             DisableExpansion = !DisableExpansion;
         }
 
-        private void disableShaderToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            DisableShader = !DisableShader;
-        }
 
         private void pPDプロセスを強制終了ToolStripMenuItem_Click(object sender, EventArgs e)
         {

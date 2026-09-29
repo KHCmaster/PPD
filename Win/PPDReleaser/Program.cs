@@ -121,7 +121,6 @@ namespace PPDReleaser
                 "SharpDX.Desktop.dll",
                 "SharpDX.Mathematics.dll",
                 "SharpDX.Direct2D1.dll",
-                "SharpDX.Direct3D9.dll",
                 "SharpDX.DirectInput.dll",
                 "SharpDX.DirectSound.dll",
                 "SharpDX.DXGI.dll",

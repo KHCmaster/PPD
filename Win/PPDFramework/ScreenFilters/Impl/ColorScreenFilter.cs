@@ -18,10 +18,6 @@ namespace PPDFramework.ScreenFilters.Impl
         /// <param name="filters"></param>
         public void Draw(PPDDevice device, IEnumerable<ColorFilterBase> filters)
         {
-            if (PPDSetting.Setting.ShaderDisabled)
-            {
-                return;
-            }
             using (var temp = device.Workspace.Get())
             {
                 var context = device.GetModule<AlphaBlendContextCache>().Get();

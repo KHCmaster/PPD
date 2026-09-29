@@ -39,11 +39,6 @@ namespace PPDFramework
         internal abstract string ShaderNamePrefix { get; }
 
         /// <summary>
-        /// スクリーン全体を描画する際のテクセルのオフセットを取得します。
-        /// </summary>
-        internal abstract float ScreenTexelOffset { get; }
-
-        /// <summary>
         /// 使用しているDirectXのバージョン名を取得します。
         /// </summary>
         public abstract string DirectXVersion { get; }
@@ -285,11 +280,6 @@ namespace PPDFramework
         internal abstract void Clear(Color4 color);
 
         /// <summary>
-        /// デバイスをリセットします。
-        /// </summary>
-        internal abstract void ResetDevice();
-
-        /// <summary>
         /// 描画を開始します。
         /// </summary>
         internal abstract void DrawStart();
@@ -335,14 +325,6 @@ namespace PPDFramework
         /// <param name="primCount"></param>
         internal abstract void DrawIndexedPrimitives(PrimitiveType primitiveType, int baseVertexIndex, int minVertexIndex, int numVertices, int startIndex, int primCount);
 
-        /// <summary>
-        /// 描画します。
-        /// </summary>
-        /// <param name="primitiveType"></param>
-        /// <param name="offset"></param>
-        /// <param name="primitiveCount"></param>
-        /// <param name="data"></param>
-        internal abstract void DrawUserPrimitives<T>(PrimitiveType primitiveType, int offset, int primitiveCount, T[] data) where T : struct;
 
         /// <summary>
         /// バックバッファをファイルに書き込みます。
@@ -425,41 +407,15 @@ namespace PPDFramework
         /// <param name="expectedWidth"></param>
         /// <param name="expectedHeight"></param>
         /// <param name="expectedAspectRatio"></param>
-        /// <param name="isDX11"></param>
-        public static PPDDevice Initialize(IntPtr handle, int width, int height, int expectedWidth, int expectedHeight, float expectedAspectRatio, bool isDX11 = false)
+        public static PPDDevice Initialize(IntPtr handle, int width, int height, int expectedWidth, int expectedHeight, float expectedAspectRatio)
         {
-            PPDDevice ppdDevice = null;
-            if (isDX11)
-            {
-                Effect.EffectFactoryManager.Initialize(new Effect.DX11.EffectFactory());
-                Resource.ImageResourceFactoryManager.Initialize(new Resource.DX11.ImageResourceFactory());
-                PPDFramework.Texture.TextureFactoryManager.Initialize(new Texture.DX11.TextureFactory());
-                Vertex.VertexBufferFactoryManager.Initialize(new Vertex.DX11.VertexBufferFactory());
-                Vertex.VertexDeclarationFactoryManager.Initialize(new Vertex.DX11.VertexDeclarationFactory());
-                Vertex.IndexBufferFactoryManager.Initialize(new Vertex.DX11.IndexBufferFactory());
-                try
-                {
-                    ppdDevice = new DX11.PPDDevice(handle, width, height, expectedWidth, expectedHeight, expectedAspectRatio);
-                    // DirectX11では固定機能パイプラインがないため、シェーダーは常に有効です
-                    PPDSetting.Setting.ShaderDisabled = false;
-                }
-                catch (Exception e)
-                {
-                    // DirectX11が使えない環境ではDirectX9で動作させます
-                    System.Diagnostics.Debug.WriteLine(e);
-                    ppdDevice = null;
-                }
-            }
-            if (ppdDevice == null)
-            {
-                Effect.EffectFactoryManager.Initialize(new Effect.DX9.EffectFactory());
-                Resource.ImageResourceFactoryManager.Initialize(new Resource.DX9.ImageResourceFactory());
-                PPDFramework.Texture.TextureFactoryManager.Initialize(new Texture.DX9.TextureFactory());
-                Vertex.VertexBufferFactoryManager.Initialize((IVertexBufferFactory)new Vertex.DX9.VertexBufferFactory());
-                Vertex.VertexDeclarationFactoryManager.Initialize(new Vertex.DX9.VertexDeclarationFactory());
-                Vertex.IndexBufferFactoryManager.Initialize(new Vertex.DX9.IndexBufferFactory());
-                ppdDevice = new DX9.PPDDevice(handle, width, height, expectedWidth, expectedHeight, expectedAspectRatio);
-            }
+            Effect.EffectFactoryManager.Initialize(new Effect.DX11.EffectFactory());
+            Resource.ImageResourceFactoryManager.Initialize(new Resource.DX11.ImageResourceFactory());
+            PPDFramework.Texture.TextureFactoryManager.Initialize(new Texture.DX11.TextureFactory());
+            Vertex.VertexBufferFactoryManager.Initialize(new Vertex.DX11.VertexBufferFactory());
+            Vertex.VertexDeclarationFactoryManager.Initialize(new Vertex.DX11.VertexDeclarationFactory());
+            Vertex.IndexBufferFactoryManager.Initialize(new Vertex.DX11.IndexBufferFactory());
+            var ppdDevice = new DX11.PPDDevice(handle, width, height, expectedWidth, expectedHeight, expectedAspectRatio);
             ppdDevice.InitializeWorkspace();
             return ppdDevice;
         }

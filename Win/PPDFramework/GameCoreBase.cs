@@ -135,6 +135,15 @@ namespace PPDFramework
         }
 
         /// <summary>
+        /// DirectXの初期化に失敗したときの例外を取得します。
+        /// </summary>
+        protected Exception InitializeDirectXException
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
         /// DirectXの初期化に失敗したときの処理です。
         /// </summary>
         protected virtual void OnFailedInitializeDirectX()
@@ -209,12 +218,9 @@ namespace PPDFramework
                         presentStartTime = lastPresentEndTime;
                     }
                 }
-                catch (SharpDXException e)
+                catch (SharpDXException)
                 {
-                    if (e.ResultCode == SharpDX.Direct3D9.ResultCode.DeviceLost)
-                    {
-                        device.ResetDevice();
-                    }
+                    // 表示に失敗したフレームは捨てて、次のフレームで再試行します
                 }
             }
         }
@@ -238,7 +244,7 @@ namespace PPDFramework
                 Control.Size = new System.Drawing.Size(width.Value, height.Value);
                 InitializeUI();
 
-                device = PPDDevice.Initialize(Control.Handle, width.Value, height.Value, expectedWidth.Value, expectedHeight.Value, expectedAspectRatio.Value, PPDSetting.Setting.DirectX11Enabled);
+                device = PPDDevice.Initialize(Control.Handle, width.Value, height.Value, expectedWidth.Value, expectedHeight.Value, expectedAspectRatio.Value);
                 device.RegisterModule(new AlphaBlendContextCache(1024));
                 device.RegisterModule(new ShaderCommon(device));
                 device.RegisterModule(new ColorTextureAllcator(device));
@@ -285,9 +291,10 @@ namespace PPDFramework
                 MessageBox.Show(e.StackTrace);
                 throw;
 #else
-            catch
+            catch (Exception e)
             {
                 //初期化失敗
+                InitializeDirectXException = e;
                 return false;
 #endif
             }

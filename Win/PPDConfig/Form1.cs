@@ -137,11 +137,9 @@ namespace PPDConfig
             userIconFilter = Utility.Language["UserIconFilter"];
 
             this.checkBox11.Text = Utility.Language["DisableAutoAdjustLatency"];
-            this.checkBox4.Text = Utility.Language["DisableShader"];
             this.checkBox13.Text = Utility.Language["DisableFontScale"];
             this.checkBox14.Text = Utility.Language["DisableHighResolutionImage"];
             this.checkBox15.Text = Utility.Language["DisableFixedFPS"];
-            this.checkBox16.Text = Utility.Language["EnableDirectX11"];
         }
 
         private void ReadPPDIni()
@@ -172,11 +170,9 @@ namespace PPDConfig
                 RunExpansion = setting.ReadString("runexpansion") == "1";
                 ExpansionWaitPort = setting.ReadInt("expansionwaitport", defaultExpansionPort);
                 AutoAdjustLatencyDisabled = setting.ReadBoolean("autoadjustlatencydisabled");
-                ShaderDisabled = setting.ReadBoolean("shaderdisabled");
                 FontScaleDisabled = setting.ReadBoolean("fontscaledisabled");
                 HighResolutionImageDisabled = setting.ReadBoolean("highresolutionimagedisabled");
                 FixedFPSDisabled = setting.ReadBoolean("fixedfpsdisabled");
-                DirectX11Enabled = setting.ReadBoolean("directx11");
                 BlueSkyId = setting.ReadString("blueskyid");
                 BlueSkyPassword = setting.ReadString("blueskypassword");
             }
@@ -226,11 +222,9 @@ namespace PPDConfig
             setting.ReplaceOrAdd("runexpansion", RunExpansion);
             setting.ReplaceOrAdd("expansionwaitport", ExpansionWaitPort);
             setting.ReplaceOrAdd("autoadjustlatencydisabled", AutoAdjustLatencyDisabled);
-            setting.ReplaceOrAdd("shaderdisabled", ShaderDisabled);
             setting.ReplaceOrAdd("fontscaledisabled", FontScaleDisabled);
             setting.ReplaceOrAdd("highresolutionimagedisabled", HighResolutionImageDisabled);
             setting.ReplaceOrAdd("fixedfpsdisabled", FixedFPSDisabled);
-            setting.ReplaceOrAdd("directx11", DirectX11Enabled);
             setting.ReplaceOrAdd("blueskyid", BlueSkyId);
             setting.ReplaceOrAdd("blueskypassword", BlueSkyPassword);
             var sw = new SettingWriter(ppdini, false);
@@ -292,16 +286,13 @@ namespace PPDConfig
             EveryFramePollingDisabled = false;
             MenuMoviePreviewDisabled = false;
             AutoAdjustLatencyDisabled = false;
-            ShaderDisabled = false;
             AccurateInputSleepTime = 0;
             RunExpansion = false;
             ExpansionWaitPort = defaultExpansionPort;
             AutoAdjustLatencyDisabled = false;
-            ShaderDisabled = false;
             FontScaleDisabled = false;
             HighResolutionImageDisabled = false;
             FixedFPSDisabled = false;
-            DirectX11Enabled = false;
         }
 
         public int FormWidth
@@ -545,17 +536,6 @@ namespace PPDConfig
             }
         }
 
-        private bool ShaderDisabled
-        {
-            get
-            {
-                return checkBox4.Checked;
-            }
-            set
-            {
-                checkBox4.Checked = value;
-            }
-        }
 
         private bool FontScaleDisabled
         {
@@ -593,17 +573,6 @@ namespace PPDConfig
             }
         }
 
-        private bool DirectX11Enabled
-        {
-            get
-            {
-                return checkBox16.Checked;
-            }
-            set
-            {
-                checkBox16.Checked = value;
-            }
-        }
 
         private int AccurateInputSleepTime
         {

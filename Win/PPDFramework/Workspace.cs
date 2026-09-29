@@ -45,38 +45,6 @@ namespace PPDFramework
         }
 
         /// <summary>
-        /// デバイスがロストしたときの処理です。
-        /// </summary>
-        public void OnLostDevice()
-        {
-            Primal.OnLostDevice();
-            foreach (var texture in usingTextures)
-            {
-                texture.OnLostDevice();
-            }
-            foreach (var texture in textures)
-            {
-                texture.OnLostDevice();
-            }
-        }
-
-        /// <summary>
-        /// デバイスがリセットされたときの処理です。
-        /// </summary>
-        public void OnResetDevice()
-        {
-            Primal.OnResetDevice();
-            foreach (var texture in usingTextures)
-            {
-                texture.OnResetDevice();
-            }
-            foreach (var texture in textures)
-            {
-                texture.OnResetDevice();
-            }
-        }
-
-        /// <summary>
         /// リセットします。
         /// </summary>
         public void Reset()

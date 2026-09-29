@@ -81,8 +81,7 @@ namespace PPD
                 isDebug: arg.Count > 0,
                 songDir: arg.ContainsKey("songdir") ? arg["songdir"] : "",
                 langIso: arg.ContainsKey("lang") ? arg["lang"] : null,
-                disableExpansion: arg.ContainsKey("disableexpansion"),
-                disableShader: arg.ContainsKey("disableshader"));
+                disableExpansion: arg.ContainsKey("disableexpansion"));
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             var errorHandler = new SendErrorHandler();

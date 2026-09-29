@@ -61,11 +61,9 @@
             this.label6 = new System.Windows.Forms.Label();
             this.textBox5 = new System.Windows.Forms.TextBox();
             this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.checkBox16 = new System.Windows.Forms.CheckBox();
             this.checkBox15 = new System.Windows.Forms.CheckBox();
             this.checkBox14 = new System.Windows.Forms.CheckBox();
             this.checkBox13 = new System.Windows.Forms.CheckBox();
-            this.checkBox4 = new System.Windows.Forms.CheckBox();
             this.checkBox11 = new System.Windows.Forms.CheckBox();
             this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
             this.label4 = new System.Windows.Forms.Label();
@@ -458,11 +456,9 @@
             // tabPage3
             // 
             this.tabPage3.BackColor = System.Drawing.Color.Transparent;
-            this.tabPage3.Controls.Add(this.checkBox16);
             this.tabPage3.Controls.Add(this.checkBox15);
             this.tabPage3.Controls.Add(this.checkBox14);
             this.tabPage3.Controls.Add(this.checkBox13);
-            this.tabPage3.Controls.Add(this.checkBox4);
             this.tabPage3.Controls.Add(this.checkBox11);
             this.tabPage3.Controls.Add(this.numericUpDown1);
             this.tabPage3.Controls.Add(this.label4);
@@ -480,21 +476,10 @@
             this.tabPage3.Text = "無効化設定";
             this.tabPage3.UseVisualStyleBackColor = true;
             //
-            // checkBox16
-            //
-            this.checkBox16.AutoSize = true;
-            this.checkBox16.Location = new System.Drawing.Point(10, 408);
-            this.checkBox16.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
-            this.checkBox16.Name = "checkBox16";
-            this.checkBox16.Size = new System.Drawing.Size(199, 22);
-            this.checkBox16.TabIndex = 13;
-            this.checkBox16.Text = "DirectX11で描画する";
-            this.checkBox16.UseVisualStyleBackColor = true;
-            //
             // checkBox15
             //
             this.checkBox15.AutoSize = true;
-            this.checkBox15.Location = new System.Drawing.Point(10, 376);
+            this.checkBox15.Location = new System.Drawing.Point(10, 344);
             this.checkBox15.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
             this.checkBox15.Name = "checkBox15";
             this.checkBox15.Size = new System.Drawing.Size(188, 22);
@@ -505,7 +490,7 @@
             // checkBox14
             // 
             this.checkBox14.AutoSize = true;
-            this.checkBox14.Location = new System.Drawing.Point(10, 344);
+            this.checkBox14.Location = new System.Drawing.Point(10, 310);
             this.checkBox14.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
             this.checkBox14.Name = "checkBox14";
             this.checkBox14.Size = new System.Drawing.Size(210, 22);
@@ -516,24 +501,13 @@
             // checkBox13
             // 
             this.checkBox13.AutoSize = true;
-            this.checkBox13.Location = new System.Drawing.Point(10, 310);
+            this.checkBox13.Location = new System.Drawing.Point(10, 278);
             this.checkBox13.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
             this.checkBox13.Name = "checkBox13";
             this.checkBox13.Size = new System.Drawing.Size(210, 22);
             this.checkBox13.TabIndex = 10;
             this.checkBox13.Text = "フォントスケールを無効化";
             this.checkBox13.UseVisualStyleBackColor = true;
-            // 
-            // checkBox4
-            // 
-            this.checkBox4.AutoSize = true;
-            this.checkBox4.Location = new System.Drawing.Point(10, 278);
-            this.checkBox4.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
-            this.checkBox4.Name = "checkBox4";
-            this.checkBox4.Size = new System.Drawing.Size(171, 22);
-            this.checkBox4.TabIndex = 9;
-            this.checkBox4.Text = "シェーダーを無効化";
-            this.checkBox4.UseVisualStyleBackColor = true;
             // 
             // checkBox11
             // 
@@ -770,11 +744,9 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.TextBox textBox4;
         private System.Windows.Forms.CheckBox checkBox11;
-        private System.Windows.Forms.CheckBox checkBox4;
         private System.Windows.Forms.CheckBox checkBox13;
         private System.Windows.Forms.CheckBox checkBox14;
         private System.Windows.Forms.CheckBox checkBox15;
-        private System.Windows.Forms.CheckBox checkBox16;
         private System.Windows.Forms.TextBox textBox5;
         private System.Windows.Forms.TextBox textBox7;
         private System.Windows.Forms.Label label18;

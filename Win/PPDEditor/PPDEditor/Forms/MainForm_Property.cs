@@ -664,17 +664,6 @@ namespace PPDEditor.Forms
             }
         }
 
-        public bool DisableShader
-        {
-            get
-            {
-                return disableShaderToolStripMenuItem.Checked;
-            }
-            set
-            {
-                disableShaderToolStripMenuItem.Checked = value;
-            }
-        }
 
         public bool IsTimeLineRowLimited
         {

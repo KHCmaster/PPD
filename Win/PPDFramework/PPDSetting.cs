@@ -1,5 +1,4 @@
 ﻿using PPDConfiguration;
-using SharpDX.Direct3D9;
 using System;
 using System.Globalization;
 using System.IO;
@@ -16,7 +15,7 @@ namespace PPDFramework
         string settingFileName = "PPD.ini";
         static PPDSetting setting;
         static string[] defaultsounds = { "sounds\\cursor1.wav", "sounds\\cursor2.wav", "sounds\\cursor3.wav", "sounds\\cursor4.wav" };
-        private PPDSetting(bool isDebug, string songDir, string langIso, bool disableExpansion, bool disableShader)
+        private PPDSetting(bool isDebug, string songDir, string langIso, bool disableExpansion)
         {
             SongDir = "songs";
             FontName = "IPAGothic";
@@ -33,7 +32,6 @@ namespace PPDFramework
                 var s = sr.ReadToEnd();
                 sr.Close();
                 var setting = new SettingReader(s);
-                MultiSample = (MultisampleType)GetValue(setting.ReadString("multisample"), 0);
                 SkinName = setting.ReadString("skinname");
                 AdjustGapTime = GetValue(setting.ReadString("adjustgaptime"), 0);
                 FontName = setting.ReadString("fontname");
@@ -41,7 +39,6 @@ namespace PPDFramework
                 Width = (int)GetValue(setting.ReadString("width"), 800);
                 Height = (int)GetValue(setting.ReadString("height"), 450);
                 MovieLatency = GetValue(setting.ReadString("movielatency"), 0);
-                MoviePlayType = (MoviePlayType)((int)GetValue(setting.ReadString("movieplaytype"), 0));
                 Token = setting.ReadString("token");
                 TokenSecret = setting.ReadString("tokensecret");
                 SongDir = setting.ReadString("songdir");
@@ -65,8 +62,6 @@ namespace PPDFramework
                 RunExpansion = setting.ReadString("runexpansion") == "1";
                 ExpansionWaitPort = setting.ReadInt("expansionwaitport", 54320);
                 AutoAdjustLatencyDisabled = setting.ReadBoolean("autoadjustlatencydisabled");
-                ShaderDisabled = setting.ReadBoolean("shaderdisabled");
-                DirectX11Enabled = setting.ReadBoolean("directx11");
                 FontScaleDisabled = setting.ReadBoolean("fontscaledisabled");
                 HighResolutionImageDisabled = setting.ReadBoolean("highresolutionimagedisabled");
                 TextureCharMode = setting.ReadEnum<TextureCharMode>("texturecharmode", TextureCharMode.D2D);
@@ -88,7 +83,6 @@ namespace PPDFramework
                 }
             }
             RunExpansion &= !disableExpansion;
-            ShaderDisabled |= disableShader;
             if (langIso != null)
             {
                 LangISO = langIso;
@@ -250,14 +244,6 @@ namespace PPDFramework
             private set;
         }
 
-        /// <summary>
-        /// マルチサンプル
-        /// </summary>
-        public MultisampleType MultiSample
-        {
-            get;
-            private set;
-        }
 
         /// <summary>
         /// スキン名
@@ -295,14 +281,6 @@ namespace PPDFramework
             private set;
         }
 
-        /// <summary>
-        /// 動画再生タイプ
-        /// </summary>
-        public MoviePlayType MoviePlayType
-        {
-            get;
-            private set;
-        }
 
         /// <summary>
         /// 検索用のテキストボックスが無効化されているか
@@ -442,23 +420,7 @@ namespace PPDFramework
             private set;
         }
 
-        /// <summary>
-        /// シェーダを無効化するかどうかを取得、設定します。
-        /// </summary>
-        public bool ShaderDisabled
-        {
-            get;
-            set;
-        }
 
-        /// <summary>
-        /// DirectX11で描画するかどうかを取得します。
-        /// </summary>
-        public bool DirectX11Enabled
-        {
-            get;
-            private set;
-        }
 
         /// <summary>
         /// 高解像度画像が無効化されているかどうかを取得します。
@@ -503,10 +465,9 @@ namespace PPDFramework
         /// <param name="songDir">譜面フォルダ。</param>
         /// <param name="langIso">言語。</param>
         /// <param name="disableExpansion">Expansionを無効化するかどうか。</param>
-        /// <param name="disableShader">シェーダーを無効化するかどうか。</param>
-        public static void Initialize(bool isDebug = false, string songDir = "", string langIso = null, bool disableExpansion = false, bool disableShader = false)
+        public static void Initialize(bool isDebug = false, string songDir = "", string langIso = null, bool disableExpansion = false)
         {
-            setting = new PPDSetting(isDebug, songDir, langIso, disableExpansion, disableShader);
+            setting = new PPDSetting(isDebug, songDir, langIso, disableExpansion);
         }
     }
 }

@@ -423,15 +423,7 @@ namespace PPD
             var filename = songInformation.MoviePath;
             if (PPDSetting.Setting.IsMovie(filename))
             {
-                switch (PPDSetting.Setting.MoviePlayType)
-                {
-                    /*case MoviePlayType.VMR9:
-                        CurrentPlayerBase = new VMR9Movie(device, ((PPDFramework.DX9.PPDDevice)device).D3D, filename);
-                        break;*/
-                    default:
-                        CurrentPlayerBase = new SampleGrabberMovie(device, filename);
-                        break;
-                }
+                CurrentPlayerBase = new SampleGrabberMovie(device, filename);
             }
             else
             {

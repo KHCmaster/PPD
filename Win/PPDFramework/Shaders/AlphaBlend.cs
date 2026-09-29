@@ -20,7 +20,7 @@ namespace PPDFramework.Shaders
         /// <param name="device"></param>
         public AlphaBlend(PPDDevice device)
         {
-            alphaBlend = PPDSetting.Setting.ShaderDisabled ? (AlphaBlendBase)new AlphaBlendLegacy(device) : new AlphaBlendShading(device);
+            alphaBlend = new AlphaBlendShading(device);
         }
 
         /// <summary>
@@ -131,108 +131,6 @@ namespace PPDFramework.Shaders
                 protected override void DisposeResource()
                 {
                     alphaBlend.EndMaskGeneration(this);
-                }
-            }
-        }
-
-        class AlphaBlendLegacy : AlphaBlendBase
-        {
-            EffectBase effect;
-            SharpDX.Direct3D9.Texture[] alphas;
-            SharpDX.Direct3D9.Texture[] paAlphas;
-
-            public AlphaBlendLegacy(PPDDevice device)
-            {
-                effect = EffectFactoryManager.Factory.FromMemory(device, device.GetShaderBytecode("AlphaBlend"));
-                alphas = new SharpDX.Direct3D9.Texture[256];
-                paAlphas = new SharpDX.Direct3D9.Texture[256];
-                for (var i = 0; i < alphas.Length; i++)
-                {
-                    alphas[i] = ((Texture.DX9.Texture)device.GetModule<ColorTextureAllcator>().CreateTexture(new Color4(1, 1, 1, i / 255f)))._Texture;
-                    paAlphas[i] = ((Texture.DX9.Texture)device.GetModule<ColorTextureAllcator>().CreateTexture(new Color4(i / 255f)))._Texture;
-                }
-            }
-
-            public override void Draw(PPDDevice device, AlphaBlendContext context, PrimitiveType primitiveType, int primitiveCount, int startIndex, int vertexCount)
-            {
-                if (context.Texture == null)
-                {
-                    return;
-                }
-#if BENCHMARK
-                using (var handler = Benchmark.Instance.Start("Draw"))
-                {
-#endif
-                    Matrix m = context.SRTS[0];
-                    if (!context.WorldDisabled)
-                    {
-                        m *= device.World;
-                    }
-                    for (var i = 1; i <= context.SRTDepth; i++)
-                    {
-                        m = context.SRTS[i] * m;
-                    }
-                    var _device = (device.Device as SharpDX.Direct3D9.Device);
-                    _device.SetRenderState(SharpDX.Direct3D9.RenderState.SourceBlend, context.Texture.PA ? SharpDX.Direct3D9.Blend.One : SharpDX.Direct3D9.Blend.SourceAlpha);
-                    _device.SetTransform(SharpDX.Direct3D9.TransformState.World, m);
-                    _device.SetTexture(0, ((Texture.DX9.Texture)context.Texture)._Texture);
-                    var alpha = Math.Max(0, Math.Min(255, (int)(context.Alpha * 255)));
-                    _device.SetTexture(1, context.Texture.PA ? paAlphas[alpha] : alphas[alpha]);
-                    _device.SetTextureStageState(1, SharpDX.Direct3D9.TextureStage.ColorOperation, SharpDX.Direct3D9.TextureOperation.Modulate);
-                    _device.SetTextureStageState(1, SharpDX.Direct3D9.TextureStage.ColorArg1, SharpDX.Direct3D9.TextureArgument.Texture);
-                    _device.SetTextureStageState(1, SharpDX.Direct3D9.TextureStage.ColorArg2, SharpDX.Direct3D9.TextureArgument.Current);
-                    _device.SetTextureStageState(1, SharpDX.Direct3D9.TextureStage.AlphaOperation, SharpDX.Direct3D9.TextureOperation.Modulate);
-                    _device.SetTextureStageState(1, SharpDX.Direct3D9.TextureStage.AlphaArg1, SharpDX.Direct3D9.TextureArgument.Texture);
-                    _device.SetTextureStageState(1, SharpDX.Direct3D9.TextureStage.AlphaArg2, SharpDX.Direct3D9.TextureArgument.Current);
-                    if (context.Overlay.Alpha > 0)
-                    {
-                        var colorTexture = ((Texture.DX9.Texture)device.GetModule<ColorTextureAllcator>().CreateTexture(context.Overlay))._Texture;
-                        _device.SetTexture(2, colorTexture);
-                        _device.SetTextureStageState(2, SharpDX.Direct3D9.TextureStage.ColorOperation, SharpDX.Direct3D9.TextureOperation.Modulate);
-                        _device.SetTextureStageState(2, SharpDX.Direct3D9.TextureStage.ColorArg1, SharpDX.Direct3D9.TextureArgument.Texture);
-                        _device.SetTextureStageState(2, SharpDX.Direct3D9.TextureStage.ColorArg2, SharpDX.Direct3D9.TextureArgument.Current);
-                        _device.SetTextureStageState(2, SharpDX.Direct3D9.TextureStage.AlphaOperation, SharpDX.Direct3D9.TextureOperation.Modulate);
-                        _device.SetTextureStageState(2, SharpDX.Direct3D9.TextureStage.AlphaArg1, SharpDX.Direct3D9.TextureArgument.Texture);
-                        _device.SetTextureStageState(2, SharpDX.Direct3D9.TextureStage.AlphaArg2, SharpDX.Direct3D9.TextureArgument.Current);
-                    }
-                    else
-                    {
-                        _device.SetTexture(2, null);
-                        _device.SetTextureStageState(2, SharpDX.Direct3D9.TextureStage.ColorOperation, SharpDX.Direct3D9.TextureOperation.Disable);
-                        _device.SetTextureStageState(2, SharpDX.Direct3D9.TextureStage.AlphaOperation, SharpDX.Direct3D9.TextureOperation.Disable);
-                    }
-                    if (context?.Vertex?.VertexBucket?.VertexBuffer is VertexBufferBase vertexBuffer)
-                    {
-                        device.DrawUserPrimitives(primitiveType, context.Vertex.Offset + startIndex, primitiveCount, vertexBuffer.Vertices);
-                    }
-#if BENCHMARK
-                }
-#endif
-            }
-
-            protected override void DisposeResource()
-            {
-                base.DisposeResource();
-                if (alphas != null)
-                {
-                    foreach (var alpha in alphas)
-                    {
-                        alpha.Dispose();
-                    }
-                    alphas = null;
-                }
-                if (paAlphas != null)
-                {
-                    foreach (var paAlpha in paAlphas)
-                    {
-                        paAlpha.Dispose();
-                    }
-                    paAlphas = null;
-                }
-                if (effect != null)
-                {
-                    effect.Dispose();
-                    effect = null;
                 }
             }
         }

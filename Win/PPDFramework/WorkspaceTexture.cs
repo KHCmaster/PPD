@@ -44,23 +44,6 @@ namespace PPDFramework
             Texture = TextureFactoryManager.Factory.CreateRenderTarget(device, device.Width, device.Height, 1, false);
         }
 
-        /// <summary>
-        /// デバイスがロストしたときの処理です。
-        /// </summary>
-        public void OnLostDevice()
-        {
-            Texture.Dispose();
-            Texture = null;
-        }
-
-        /// <summary>
-        /// デバイスがリセットされたときの処理です。
-        /// </summary>
-        public void OnResetDevice()
-        {
-            Texture = TextureFactoryManager.Factory.CreateRenderTarget(Workspace.Device, Workspace.Device.Width, Workspace.Device.Height, 1, false);
-        }
-
         internal void Use()
         {
         }

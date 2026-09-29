@@ -38,10 +38,6 @@ namespace PPDFramework.ScreenFilters.Impl
         /// <param name="weights"></param>
         public void Draw(PPDDevice device, float[] weights)
         {
-            if (PPDSetting.Setting.ShaderDisabled)
-            {
-                return;
-            }
             using (var tempWorkSpace = device.Workspace.Get())
             {
                 effect.SetValue(weightsHandle, weights);

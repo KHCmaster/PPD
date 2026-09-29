@@ -941,7 +941,7 @@ namespace PPDFramework
             var enabledRenderMask = renderMasks.Where(m => m.Enabled).ToArray();
 
             WorkspaceTexture renderMaskTexture = null;
-            if (enabledRenderMask.Length > 0 && !PPDSetting.Setting.ShaderDisabled)
+            if (enabledRenderMask.Length > 0)
             {
                 device.GetModule<AlphaBlend>().Flush();
                 var renderTarget = device.GetRenderTarget();
@@ -953,7 +953,7 @@ namespace PPDFramework
                 device.SetRenderTarget(renderTarget);
             }
             WorkspaceTexture maskTexture = null;
-            if (Mask != null && !PPDSetting.Setting.ShaderDisabled)
+            if (Mask != null)
             {
                 device.GetModule<AlphaBlend>().Flush();
                 maskTexture = device.Workspace.Get();
@@ -969,7 +969,7 @@ namespace PPDFramework
             }
             WorkspaceTexture filterTargetTexture = null;
             WorkspaceTexture prevRenderTarget = null;
-            if (currentFilterCount >= 2 && !PPDSetting.Setting.ShaderDisabled)
+            if (currentFilterCount >= 2)
             {
                 device.GetModule<AlphaBlend>().Flush();
                 alphaBlendContext.Alpha = 1;
@@ -980,7 +980,7 @@ namespace PPDFramework
                 device.Clear(new Color4(0, 0, 0, 0));
             }
             DrawImpl(alphaBlendContext);
-            if (currentFilterCount >= 2 && !PPDSetting.Setting.ShaderDisabled)
+            if (currentFilterCount >= 2)
             {
                 device.GetModule<AlphaBlend>().Flush();
                 var context = device.GetModule<AlphaBlendContextCache>().Get();
@@ -1014,7 +1014,7 @@ namespace PPDFramework
                     renderedTexture.Dispose();
                 }
             }
-            if (enabledRenderMask.Length > 0 && !PPDSetting.Setting.ShaderDisabled)
+            if (enabledRenderMask.Length > 0)
             {
                 device.GetModule<AlphaBlend>().Flush();
                 foreach (var renderMask in enabledRenderMask)
@@ -1027,7 +1027,7 @@ namespace PPDFramework
                 }
             }
             DrawChildrenImpl(alphaBlendContext, currentAlpha, currentBlendMode, currentFilterCount, depth + 1);
-            if (Mask != null && !PPDSetting.Setting.ShaderDisabled)
+            if (Mask != null)
             {
                 alphaBlendContext.MaskTexture = null;
                 if (maskTexture != null)

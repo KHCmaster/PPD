@@ -292,21 +292,16 @@ namespace PPDFramework.Chars
             return texture;
         }
 
+        /// <summary>
+        /// 文字テクスチャに書き込む前の一時テクスチャを作成します。後で CPU 側でコピーするので、CPU 側にデータを保持させます。
+        /// </summary>
         private static TextureBase CreateTemporaryTexture(PPDDevice device, Stream stream, int width, int height)
         {
-            if (TextureFactoryManager.Factory is PPDFramework.Texture.DX9.TextureFactory dx9Factory)
-            {
-                return dx9Factory.FromStream(device, stream, width, height, SharpDX.Direct3D9.Pool.SystemMemory, true);
-            }
             return ((PPDFramework.Texture.DX11.TextureFactory)TextureFactoryManager.Factory).FromStream(device, stream, width, height, true, true);
         }
 
         private static TextureBase CreateTemporaryTexture(PPDDevice device, int width, int height)
         {
-            if (TextureFactoryManager.Factory is PPDFramework.Texture.DX9.TextureFactory dx9Factory)
-            {
-                return dx9Factory.Create(device, width, height, 1, SharpDX.Direct3D9.Pool.SystemMemory, true);
-            }
             return TextureFactoryManager.Factory.Create(device, width, height, 1, true);
         }
 

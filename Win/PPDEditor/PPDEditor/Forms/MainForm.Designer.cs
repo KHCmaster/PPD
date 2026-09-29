@@ -172,7 +172,6 @@ namespace PPDEditor.Forms
             this.詳細設定ToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripButton3 = new System.Windows.Forms.ToolStripButton();
             this.pxToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.disableShaderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.toolStripContainer1.BottomToolStripPanel.SuspendLayout();
@@ -800,8 +799,7 @@ namespace PPDEditor.Forms
             this.connectToolStripMenuItem,
             this.mODToolStripMenuItem,
             this.toolStripSeparator6,
-            this.disableExpansionToolStripMenuItem,
-            this.disableShaderToolStripMenuItem});
+            this.disableExpansionToolStripMenuItem});
             this.ゲームToolStripMenuItem.Name = "ゲームToolStripMenuItem";
             this.ゲームToolStripMenuItem.Size = new System.Drawing.Size(56, 22);
             this.ゲームToolStripMenuItem.Text = "ゲーム";
@@ -1330,13 +1328,6 @@ namespace PPDEditor.Forms
             this.pxToolStripMenuItem.Text = "5px";
             this.pxToolStripMenuItem.Click += new System.EventHandler(this.pxToolStripMenuItem_Click);
             // 
-            // disableShaderToolStripMenuItem
-            // 
-            this.disableShaderToolStripMenuItem.Name = "disableShaderToolStripMenuItem";
-            this.disableShaderToolStripMenuItem.Size = new System.Drawing.Size(277, 22);
-            this.disableShaderToolStripMenuItem.Text = "シェーダーを無効化";
-            this.disableShaderToolStripMenuItem.Click += new System.EventHandler(this.disableShaderToolStripMenuItem_Click);
-            // 
             // EditorForm
             // 
             this.AllowDrop = true;
@@ -1505,7 +1496,6 @@ namespace PPDEditor.Forms
         private System.Windows.Forms.ToolStripMenuItem レイヤー全体ToolStripMenuItem;
         private System.Windows.Forms.ToolStripButton toolStripButton3;
         private System.Windows.Forms.ToolStripMenuItem mODToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem disableShaderToolStripMenuItem;
     }
 }
 

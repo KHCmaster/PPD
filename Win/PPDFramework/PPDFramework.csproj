@@ -93,10 +93,6 @@
       <HintPath>..\packages\SharpDX.Direct3D11.Effects.3.1.1\lib\net45\SharpDX.Direct3D11.Effects.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="SharpDX.Direct3D9, Version=3.1.1.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
-      <HintPath>..\packages\SharpDX.Direct3D9.3.1.1\lib\net45\SharpDX.Direct3D9.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="SharpDX.DXGI, Version=3.1.1.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
       <HintPath>..\packages\SharpDX.DXGI.3.1.1\lib\net45\SharpDX.DXGI.dll</HintPath>
       <Private>True</Private>
@@ -148,13 +144,9 @@
     <Compile Include="DisposableComponent.cs" />
     <Compile Include="DrawInfo.cs" />
     <Compile Include="DX11\PPDDevice.cs" />
-    <Compile Include="DX9\PPDDevice.cs" />
     <Compile Include="Effect\DX11\Effect.cs" />
     <Compile Include="Effect\DX11\EffectFactory.cs" />
     <Compile Include="Effect\DX11\EffectHandle.cs" />
-    <Compile Include="Effect\DX9\Effect.cs" />
-    <Compile Include="Effect\DX9\EffectFactory.cs" />
-    <Compile Include="Effect\DX9\EffectHandle.cs" />
     <Compile Include="Effect\EffectBase.cs" />
     <Compile Include="Effect\EffectFactoryManager.cs" />
     <Compile Include="Effect\EffectHandleBase.cs" />
@@ -170,7 +162,6 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="IGameForm.cs" />
-    <Compile Include="MoviePlayType.cs" />
     <Compile Include="PathManager.cs" />
     <Compile Include="PathObject.cs" />
     <Compile Include="PolygonObject.cs" />
@@ -180,7 +171,6 @@
     <Compile Include="Resource\ColorTextureResourceBase.cs" />
     <Compile Include="Resource\DX11\ImageResourceFactory.cs" />
     <Compile Include="Resource\DX11\ImageResource.cs" />
-    <Compile Include="Resource\DX9\ImageResourceFactory.cs" />
     <Compile Include="Resource\ImageResourceFactoryManager.cs" />
     <Compile Include="Resource\IImageResourceFactory.cs" />
     <Compile Include="Resource\SpriteImageResource.cs" />
@@ -202,11 +192,7 @@
     <Compile Include="Texture\DX11\Texture.cs" />
     <Compile Include="Texture\DX11\TextureData.cs" />
     <Compile Include="Texture\DX11\TextureFactory.cs" />
-    <Compile Include="Texture\DX9\Surface.cs" />
-    <Compile Include="Texture\DX9\TextureData.cs" />
     <Compile Include="Texture\SurfaceBase.cs" />
-    <Compile Include="Texture\DX9\Texture.cs" />
-    <Compile Include="Texture\DX9\TextureFactory.cs" />
     <Compile Include="Texture\TextureBase.cs" />
     <Compile Include="PostDrawManager.cs" />
     <Compile Include="PPDColors.cs" />
@@ -291,19 +277,13 @@
     <Compile Include="Vertex\DX11\VertexBufferFactory.cs" />
     <Compile Include="Vertex\DX11\VertexDeclaration.cs" />
     <Compile Include="Vertex\DX11\VertexDeclarationFactory.cs" />
-    <Compile Include="Vertex\DX9\IndexBuffer.cs" />
-    <Compile Include="Vertex\DX9\IndexBufferFactory.cs" />
     <Compile Include="Vertex\ManagedVertexBuffer.cs" />
-    <Compile Include="Vertex\DX9\VertexBufferFactory.cs" />
-    <Compile Include="Vertex\DX9\VertexDeclaration.cs" />
-    <Compile Include="Vertex\DX9\VertexDeclarationFactory.cs" />
     <Compile Include="Vertex\IIndexBufferFactory.cs" />
     <Compile Include="Vertex\IndexBufferBase.cs" />
     <Compile Include="Vertex\IndexBufferFactoryManager.cs" />
     <Compile Include="Vertex\IVertexBufferFactory.cs" />
     <Compile Include="Vertex\IVertexDeclarationFactory.cs" />
     <Compile Include="Vertex\VertexBucket.cs" />
-    <Compile Include="Vertex\DX9\VertexBuffer.cs" />
     <Compile Include="Vertex\VertexBufferBase.cs" />
     <Compile Include="Vertex\VertexBufferFactoryManager.cs" />
     <Compile Include="Vertex\VertexDeclarationBase.cs" />
@@ -334,7 +314,6 @@
     <Compile Include="IGameComponent.cs" />
     <Compile Include="Scene\ISceneBase.cs" />
     <Compile Include="IUpdatable.cs" />
-    <Compile Include="Resource\DX9\ImageResource.cs" />
     <Compile Include="NumberPictureObject.cs" />
     <Compile Include="PictureObject.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -471,12 +450,6 @@
     <None Include="Shaders\DX11\d3d11_GaussianFilter.fxc" />
     <None Include="Shaders\DX11\d3d11_Glass.fxc" />
     <None Include="Shaders\DX11\d3d11_Mosaic.fxc" />
-    <None Include="Shaders\DX9\d3d9_AlphaBlend.fxc" />
-    <None Include="Shaders\DX9\d3d9_BasicEffect.fxc" />
-    <None Include="Shaders\DX9\d3d9_Border.fxc" />
-    <None Include="Shaders\DX9\d3d9_GaussianFilter.fxc" />
-    <None Include="Shaders\DX9\d3d9_Glass.fxc" />
-    <None Include="Shaders\DX9\d3d9_Mosaic.fxc" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
