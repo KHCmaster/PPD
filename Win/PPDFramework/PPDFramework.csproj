@@ -73,10 +73,6 @@
       <HintPath>..\packages\SharpDX.3.1.1\lib\net45\SharpDX.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="SharpDX.D3DCompiler, Version=3.1.1.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
-      <HintPath>..\packages\SharpDX.D3DCompiler.3.1.1\lib\net45\SharpDX.D3DCompiler.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="SharpDX.Desktop, Version=3.1.1.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
       <HintPath>..\packages\SharpDX.Desktop.3.1.1\lib\net45\SharpDX.Desktop.dll</HintPath>
       <Private>True</Private>
@@ -87,10 +83,6 @@
     </Reference>
     <Reference Include="SharpDX.Direct3D11, Version=3.1.1.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
       <HintPath>..\packages\SharpDX.Direct3D11.3.1.1\lib\net45\SharpDX.Direct3D11.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="SharpDX.Direct3D11.Effects, Version=3.1.1.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
-      <HintPath>..\packages\SharpDX.Direct3D11.Effects.3.1.1\lib\net45\SharpDX.Direct3D11.Effects.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="SharpDX.DXGI, Version=3.1.1.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
@@ -145,6 +137,7 @@
     <Compile Include="DrawInfo.cs" />
     <Compile Include="DX11\PPDDevice.cs" />
     <Compile Include="Effect\DX11\Effect.cs" />
+    <Compile Include="Effect\DX11\EffectData.cs" />
     <Compile Include="Effect\DX11\EffectFactory.cs" />
     <Compile Include="Effect\DX11\EffectHandle.cs" />
     <Compile Include="Effect\EffectBase.cs" />
@@ -423,6 +416,12 @@
       <Project>{1496449C-E132-43C2-9AC9-9FB8BF4AE6AE}</Project>
       <Name>PPDPack</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ShaderCompiler\ShaderCompiler.csproj">
+      <Project>{554A975C-C675-416B-9830-B58B69D5A3A0}</Project>
+      <Name>ShaderCompiler</Name>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <Private>false</Private>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
@@ -444,12 +443,12 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
-    <None Include="Shaders\DX11\d3d11_AlphaBlend.fxc" />
-    <None Include="Shaders\DX11\d3d11_BasicEffect.fxc" />
-    <None Include="Shaders\DX11\d3d11_Border.fxc" />
-    <None Include="Shaders\DX11\d3d11_GaussianFilter.fxc" />
-    <None Include="Shaders\DX11\d3d11_Glass.fxc" />
-    <None Include="Shaders\DX11\d3d11_Mosaic.fxc" />
+    <None Include="Shaders\DX11\d3d11_AlphaBlend.bin" />
+    <None Include="Shaders\DX11\d3d11_BasicEffect.bin" />
+    <None Include="Shaders\DX11\d3d11_Border.bin" />
+    <None Include="Shaders\DX11\d3d11_GaussianFilter.bin" />
+    <None Include="Shaders\DX11\d3d11_Glass.bin" />
+    <None Include="Shaders\DX11\d3d11_Mosaic.bin" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -457,12 +456,19 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="sharpdx_direct3d11_1_effects_x64.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- .fxt を展開・コンパイルして Shaders\DX11\d3d11_*.bin を作る（リソースに埋め込む前に実行する）。
+       .fxt か共通の .fx が .bin より新しいシェーダーだけを作り直す。 -->
+  <ItemGroup>
+    <ShaderTemplate Include="Shaders\DX11\*.fxt" />
+    <ShaderInclude Include="Shaders\DX11\Common.fx;Shaders\DX11\Blend.fx;Shaders\DX11\Filter.fx" />
+  </ItemGroup>
+  <PropertyGroup>
+    <ShaderCompilerPath>$(MSBuildThisFileDirectory)..\ShaderCompiler\bin\$(Platform)\$(Configuration)\ShaderCompiler.exe</ShaderCompilerPath>
+  </PropertyGroup>
+  <Target Name="CompileShaders" BeforeTargets="PrepareResources" DependsOnTargets="ResolveProjectReferences" Inputs="@(ShaderTemplate);@(ShaderInclude);$(ShaderCompilerPath)" Outputs="Shaders\DX11\d3d11_%(ShaderTemplate.Filename).bin">
+    <Exec Command="&quot;$(ShaderCompilerPath)&quot; &quot;%(ShaderTemplate.FullPath)&quot; &quot;$(MSBuildThisFileDirectory)Shaders\DX11\d3d11_%(ShaderTemplate.Filename).bin&quot;" />
+  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

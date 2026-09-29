@@ -190,16 +190,34 @@ Phase 7  配布・更新の仕組みの対応、リリース
 - テクスチャとサンプラーのスロットも、コンパイル時の情報から決める。
 
 作業:
-- [ ] ShaderCompiler を拡張する。`.fxt` を展開し、テクニックごとに VS/PS を fxc でコンパイルし、次を 1 つのバイナリにまとめて出力する。
-  - バイトコード
-  - 定数バッファのレイアウト
-  - テクスチャのスロット
-  - ブレンドステートの種類
-- [ ] ビルド時に自動でシェーダーを生成する。今は `compile_shader.bat` を手動で実行しているので、MSBuild のターゲットにする。
-- [ ] `Effect/DX11/Effect.cs` を新方式で書き直す。定数バッファの更新は、変更があったときだけまとめて行う。
-- [ ] `sharpdx_direct3d11_1_effects_x64.dll` と `SharpDX.Direct3D11.Effects` の参照を削除する。
-- [ ] AlphaBlend の 416 テクニックについて、起動時間とメモリを計測する。必要なら、初回使用時に作成する遅延生成にする。
+- [x] 準備として、Effects11 のままシェーダーを書き換えた（画素単位で変化なしを確認済み）。
+  - 定数を `cbuffer Parameters : register(b0)` に明示的にまとめた
+  - テクスチャ（`register(tN)`）とサンプラー（`register(s0)`）のスロットを明示した
+- [x] ShaderCompiler を拡張した（`ShaderCompiler/EffectCompiler.cs`）。`ShaderCompiler.exe X.fxt d3d11_X.bin` で次の処理をする。
+  1. `.fxt` を展開する
+  2. `technique11` / `pass` の記述を読み取って取り除く
+  3. パスごとの VS/PS を D3DCompiler でコンパイルする。同じ関数・引数の組は共有する
+  4. 次を 1 つのバイナリ（`PPDFX` 形式）にまとめる
+     - バイトコード
+     - 定数バッファのレイアウト（リフレクションで取得）
+     - テクスチャのスロット
+     - テクニック / パス → VS・PS の番号とブレンドステート名
+  - 注意: SharpDX の `ShaderBytecode.Compile(string)` は、ソースに日本語があると途中で切れる（文字数をバイト数として渡している）。UTF-8 のバイト列で渡している。
+- [x] ビルド時に自動でシェーダーを生成するようにした。PPDFramework.csproj の `CompileShaders` ターゲットで行い、`.fxt` か共通の `.fx`（Common / Blend / Filter）が `.bin` より新しいときだけ作り直す。ShaderCompiler はプロジェクト参照（`ReferenceOutputAssembly=false`）で先にビルドされる。`compile_shader.bat` も新しい形式に合わせた。
+- [x] `Effect/DX11/Effect.cs` を書き直した。
+  - 定数は CPU 側の配列に書き、変更があったときだけ `UpdateSubresource` でまとめて送る
+  - ブレンドステートとサンプラーは `DX11.PPDDevice` で共有する（Common.fx の定義と同じ設定）
+  - シェーダーオブジェクトは初回使用時に作る（遅延生成）
+- [x] `sharpdx_direct3d11_1_effects_x64.dll` と `SharpDX.Direct3D11.Effects` の参照を削除した。PPDFramework は実行時に D3DCompiler も使わなくなったので、`SharpDX.D3DCompiler` の参照も削除した（ShaderCompiler だけが使う）。`Checker.cs` / `PPDReleaser` の DLL 一覧からも外した。
+- [x] AlphaBlend（420 テクニック、PS 420 個、約 1 MB）は、シェーダーオブジェクトを遅延生成にしたので、起動時に作るのは読み込みと解析だけになった。
 
+**結果（2026-09-29）**: 次の確認が全て通った。
+- `SharpDX.Direct3D11.Effects` への参照はゼロ。ソリューション全体（Debug / Release）がビルドできる。
+- シーン 0〜7（EffectScene を含む）が基準と一致した。差は各 62 画素だけで、Windows 11 のウィンドウの角丸に写り込む背景の違い。
+- PPD 終了時のアクセス違反はゼロ。
+- Mod 28 個・譜面スクリプト 17 個の既定値が基準と一致した。
+
+気になる点: 最初の 1 回だけ、終了処理の途中で `0xC0000008`（無効なハンドル、初回例外）が出たあとプロセスが終了しなかった。その後の 8 回は再現していない。Phase 1 以前から起きていたかは不明。実プレイの確認で注意して見る。
 **完了条件**: Effects11 への参照がゼロ。回帰テストが基準と一致する。終了時のアクセス違反がない（Effects11 のファイナライザー問題も同時に解消する）。
 
 **規模の目安**: 中〜大。本計画で最も設計判断が多いフェーズ。
@@ -375,4 +393,4 @@ Phase 7  配布・更新の仕組みの対応、リリース
 - `FlowScriptEngine.Serializer` は値の型を `type.FullName` で出力する。使っているのは、FlowScript のデバッガー表示（`FlowSourceManager.SerializeSource`）と、YAML ダンプ（FlowScriptEngineData）のみ。
 - プラグインは `Assembly.LoadFrom` で読み込まれる（`PPD/PPD/GameLoader.cs` がスキン、`FlowScriptEngine/FlowSourceEnumerator.cs` が FlowScript 拡張）。
 - SharpDX の DLL 名は、`PPD/PPD/Update/Checker.cs`（`CheckAssembly`）と `PPDReleaser/Program.cs` にハードコードされている。
-- `EnableReleaseOnFinalizer = true` は `GameCoreBase` のコンストラクタで設定している。Effects11 の変数やパスに対してこれが働くと、終了時にアクセス違反が起きる（現在は `Effect.SuppressRelease` で回避済み。Phase 2 で根本的になくなる）。
+- `EnableReleaseOnFinalizer = true` は `GameCoreBase` のコンストラクタで設定している。Effects11 の変数やパスに対してこれが働くと、終了時にアクセス違反が起きる（Phase 1 では `Effect.SuppressRelease` で回避していた。Phase 2 で Effects11 ごとなくなった）。

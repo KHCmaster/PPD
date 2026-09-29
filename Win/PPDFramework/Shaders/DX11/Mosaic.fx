@@ -1,12 +1,15 @@
 #include "Common.fx"
 
-float2 WidthHeight;
-float4x4 Projection;
-int Size;
+cbuffer Parameters : register(b0)
+{
+    float2 WidthHeight;
+    float4x4 Projection;
+    int Size;
+};
 
-Texture2D LastRenderTargetTexture;
-Texture2D XTexture;
-Texture2D FilterTexture;
+Texture2D LastRenderTargetTexture : register(t0);
+Texture2D XTexture : register(t1);
+Texture2D FilterTexture : register(t2);
 
 struct VertexShaderInput
 {

@@ -1,6 +1,6 @@
 #pragma pack_matrix(row_major)
 
-SamplerState LinearSampler
+SamplerState LinearSampler : register(s0)
 {
 	Filter = MIN_MAG_LINEAR_MIP_POINT;
 	AddressU = Clamp;

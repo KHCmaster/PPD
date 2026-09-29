@@ -119,21 +119,21 @@
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="d3d11_AlphaBlend" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Shaders\DX11\d3d11_AlphaBlend.fxc;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>..\Shaders\DX11\d3d11_AlphaBlend.bin;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="d3d11_BasicEffect" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Shaders\DX11\d3d11_BasicEffect.fxc;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>..\Shaders\DX11\d3d11_BasicEffect.bin;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="d3d11_Border" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Shaders\DX11\d3d11_Border.fxc;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>..\Shaders\DX11\d3d11_Border.bin;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="d3d11_GaussianFilter" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Shaders\DX11\d3d11_GaussianFilter.fxc;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>..\Shaders\DX11\d3d11_GaussianFilter.bin;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="d3d11_Glass" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Shaders\DX11\d3d11_Glass.fxc;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>..\Shaders\DX11\d3d11_Glass.bin;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="d3d11_Mosaic" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Shaders\DX11\d3d11_Mosaic.fxc;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>..\Shaders\DX11\d3d11_Mosaic.bin;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
 </root>

@@ -1,16 +1,11 @@
 #include "Common.fx"
 
-float2 WidthHeight;
-float4x4 Projection;
-
 struct DrawInformation
 {
     float4x4 Matrix;
     float4 OverlayColor;
     float Alpha;
 };
-
-DrawInformation DrawInfo;
 
 struct FilterInformation
 {
@@ -19,11 +14,17 @@ struct FilterInformation
 	float4 Arg3;
 };
 
-FilterInformation FilterInfo;
+cbuffer Parameters : register(b0)
+{
+    float2 WidthHeight;
+    float4x4 Projection;
+    DrawInformation DrawInfo;
+    FilterInformation FilterInfo;
+};
 
-Texture2D Texture;
-Texture2D LastRenderTargetTexture;
-Texture2D MaskTexture;
+Texture2D Texture : register(t0);
+Texture2D LastRenderTargetTexture : register(t1);
+Texture2D MaskTexture : register(t2);
 
 struct VertexShaderInput
 {

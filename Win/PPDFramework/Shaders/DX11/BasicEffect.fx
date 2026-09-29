@@ -1,9 +1,12 @@
 #include "Common.fx"
 
-float4 OverlayColor;
-float4x4 Projection;
+cbuffer Parameters : register(b0)
+{
+    float4 OverlayColor;
+    float4x4 Projection;
+};
 
-Texture2D Texture;
+Texture2D Texture : register(t0);
 
 struct VertexShaderInput
 {

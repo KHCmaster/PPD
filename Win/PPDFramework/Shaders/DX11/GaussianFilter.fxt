@@ -1,10 +1,13 @@
 #include "Common.fx"
 
-float2 WidthHeight;
-float Weights[32];
-float4x4 Projection;
+cbuffer Parameters : register(b0)
+{
+    float2 WidthHeight;
+    float Weights[32];
+    float4x4 Projection;
+};
 
-Texture2D Texture;
+Texture2D Texture : register(t0);
 
 struct VertexShaderInput
 {
@@ -19,7 +22,6 @@ struct VertexShaderOutput
 	float4 Color    : COLOR0;
 	float2 TexCoord : TEXCOORD0;
 };
-
 
 VertexShaderOutput VertexShaderFunctionPass1(VertexShaderInput input)
 {

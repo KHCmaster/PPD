@@ -28,6 +28,7 @@ namespace PPDFramework.DX11
         RasterizerState scissorEnabledState;
         RasterizerState scissorDisabledState;
         SharpDX.Direct3D11.Buffer fanIndexBuffer;
+        Dictionary<string, BlendState> blendStates;
         Dictionary<PrimitiveType, PrimitiveTopology> primitiveTypeMap = new Dictionary<PrimitiveType, PrimitiveTopology>
         {
             { PrimitiveType.PointList, PrimitiveTopology.PointList },
@@ -50,6 +51,15 @@ namespace PPDFramework.DX11
         /// デバイスコンテキストを取得します。
         /// </summary>
         public DeviceContext Context
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// シェーダーで使うサンプラーを取得します（Common.fx の LinearSampler）。
+        /// </summary>
+        internal SamplerState LinearSampler
         {
             get;
             private set;
@@ -142,8 +152,61 @@ namespace PPDFramework.DX11
                 IsScissorEnabled = true
             });
             Context.Rasterizer.State = scissorDisabledState;
+            CreateShaderStates();
             CreateFanIndexBuffer();
             SpriteBatch = new SpriteBatch(this);
+        }
+
+        /// <summary>
+        /// Common.fx で定義しているブレンドステートとサンプラーを作成します。
+        /// </summary>
+        private void CreateShaderStates()
+        {
+            LinearSampler = new SamplerState(device, new SamplerStateDescription
+            {
+                Filter = Filter.MinMagLinearMipPoint,
+                AddressU = TextureAddressMode.Clamp,
+                AddressV = TextureAddressMode.Clamp,
+                AddressW = TextureAddressMode.Clamp,
+                ComparisonFunction = Comparison.Never,
+                MaximumAnisotropy = 1,
+                MinimumLod = float.MinValue,
+                MaximumLod = float.MaxValue
+            });
+            blendStates = new Dictionary<string, BlendState>
+            {
+                { "NoBlend", CreateBlendState(false, BlendOption.One, BlendOption.Zero) },
+                { "AlphaBlending", CreateBlendState(true, BlendOption.SourceAlpha, BlendOption.InverseSourceAlpha) },
+                { "PremultipliedAlphaBlending", CreateBlendState(true, BlendOption.One, BlendOption.InverseSourceAlpha) }
+            };
+        }
+
+        private BlendState CreateBlendState(bool enabled, BlendOption source, BlendOption destination)
+        {
+            var description = BlendStateDescription.Default();
+            description.RenderTarget[0].IsBlendEnabled = enabled;
+            description.RenderTarget[0].SourceBlend = source;
+            description.RenderTarget[0].DestinationBlend = destination;
+            description.RenderTarget[0].BlendOperation = BlendOperation.Add;
+            description.RenderTarget[0].SourceAlphaBlend = source;
+            description.RenderTarget[0].DestinationAlphaBlend = destination;
+            description.RenderTarget[0].AlphaBlendOperation = BlendOperation.Add;
+            description.RenderTarget[0].RenderTargetWriteMask = ColorWriteMaskFlags.All;
+            return new BlendState(device, description);
+        }
+
+        /// <summary>
+        /// 名前からブレンドステートを取得します。
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        internal BlendState GetBlendState(string name)
+        {
+            if (!blendStates.TryGetValue(name, out BlendState blendState))
+            {
+                throw new ArgumentException("Unknown blend state: " + name);
+            }
+            return blendState;
         }
 
         private void CreateFanIndexBuffer()
@@ -386,6 +449,19 @@ namespace PPDFramework.DX11
             {
                 fanIndexBuffer.Dispose();
                 fanIndexBuffer = null;
+            }
+            if (blendStates != null)
+            {
+                foreach (var blendState in blendStates.Values)
+                {
+                    blendState.Dispose();
+                }
+                blendStates = null;
+            }
+            if (LinearSampler != null)
+            {
+                LinearSampler.Dispose();
+                LinearSampler = null;
             }
             if (scissorEnabledState != null)
             {
