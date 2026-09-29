@@ -44,6 +44,9 @@ float4 PixelShaderMosaicXFunction(VertexShaderOutput input) : SV_TARGET{
         sum += LastRenderTargetTexture.SampleLevel(LinearSampler, tex, 0) * alpha;
         count += alpha;
 	}
+    if (count.a == 0) {
+        return float4(0, 0, 0, 0);
+    }
     return sum / count;
 }
 
@@ -58,6 +61,10 @@ float4 PixelShaderMosaicYFunction(VertexShaderOutput input) : SV_TARGET{
         sum += XTexture.SampleLevel(LinearSampler, tex, 0) * alpha;
         count += alpha;
 	}
+    // モザイクの範囲外（フィルタのアルファが全て 0）では 0 除算になるので、元の色をそのまま返す
+    if (count.a == 0) {
+        return LastRenderTargetTexture.SampleLevel(LinearSampler, input.TexCoord, 0);
+    }
     float4 color = sum / count;
     color.a *= FilterTexture.SampleLevel(LinearSampler, input.TexCoord, 0).a;
     return Normal(LastRenderTargetTexture.SampleLevel(LinearSampler, input.TexCoord, 0), color);

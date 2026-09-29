@@ -65,6 +65,12 @@ static class SceneCapture
                 var path = Path.Combine(outDir, string.Format("scene{0}.png", scene));
                 var stable = CaptureStable(hwnd, path);
                 Console.WriteLine("captured " + path + (stable ? "" : " (not stable)"));
+                // 別のアプリにキーが届かないように、前面にあることを確かめてから送る
+                if (!BringToFront(hwnd))
+                {
+                    Console.WriteLine("could not bring window to front before switching scene " + scene);
+                    return 1;
+                }
                 // DirectInput に届くようにスキャンコード付きで送る
                 keybd_event(VK_Y, SCAN_Y, 0, UIntPtr.Zero);
                 Thread.Sleep(150);
@@ -128,6 +134,15 @@ static class SceneCapture
             {
                 bitmap?.Dispose();
                 bitmap = Capture(hwnd);
+                if (bitmap == null)
+                {
+                    // 別のウィンドウが前面に来た。前面に戻してやり直す
+                    Console.WriteLine("window lost focus; retrying");
+                    BringToFront(hwnd);
+                    previous = null;
+                    Thread.Sleep(1000);
+                    continue;
+                }
                 var current = ToBytes(bitmap);
                 if (previous != null && IsSame(previous, current) && !IsUniform(current))
                 {
@@ -136,6 +151,10 @@ static class SceneCapture
                 }
                 previous = current;
                 Thread.Sleep(500);
+            }
+            if (bitmap == null)
+            {
+                throw new InvalidOperationException("could not capture the window (another window kept the focus)");
             }
             bitmap.Save(path, System.Drawing.Imaging.ImageFormat.Png);
             return false;
@@ -146,8 +165,17 @@ static class SceneCapture
         }
     }
 
+    /// <summary>
+    /// ウィンドウのクライアント領域を画面からコピーして撮影します。
+    /// （DirectX のスワップチェーンの内容は PrintWindow では取得できないため、画面からコピーする。
+    /// 別のウィンドウが写り込まないように、撮影の前後で対象ウィンドウが前面にあることを確認し、違えば null を返す）
+    /// </summary>
     static Bitmap Capture(IntPtr hwnd)
     {
+        if (GetForegroundWindow() != hwnd)
+        {
+            return null;
+        }
         RECT rect;
         GetClientRect(hwnd, out rect);
         var point = new POINT();
@@ -158,6 +186,11 @@ static class SceneCapture
         using (var g = Graphics.FromImage(bitmap))
         {
             g.CopyFromScreen(point.X, point.Y, 0, 0, new Size(w, h));
+        }
+        if (GetForegroundWindow() != hwnd)
+        {
+            bitmap.Dispose();
+            return null;
         }
         return bitmap;
     }

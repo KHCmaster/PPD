@@ -14,7 +14,7 @@ namespace PPDFramework.Effect.DX11
         SharpDX.Direct3D11.EffectPass currentPass;
         Dictionary<string, SharpDX.Direct3D11.EffectPass[]> techniquePasses;
         VertexDeclarationBase vertexDeclaration;
-        HashSet<EffectHandle> textureSetHandles;
+        static readonly SharpDX.Direct3D11.ShaderResourceView[] nullShaderResources = new SharpDX.Direct3D11.ShaderResourceView[8];
 
         public override string Technique
         {
@@ -43,7 +43,6 @@ namespace PPDFramework.Effect.DX11
 
         public Effect(PPDDevice device, byte[] bytes) : base(device)
         {
-            textureSetHandles = new HashSet<EffectHandle>();
             techniquePasses = new Dictionary<string, SharpDX.Direct3D11.EffectPass[]>();
             effect = new SharpDX.Direct3D11.Effect((SharpDX.Direct3D11.Device)device.Device, bytes);
             vertexDeclaration = VertexDeclarationFactoryManager.Factory.Create(device, this);
@@ -111,15 +110,9 @@ namespace PPDFramework.Effect.DX11
 
         public override void EndPass()
         {
-            if (textureSetHandles.Count > 0)
-            {
-                foreach (var handle in textureSetHandles)
-                {
-                    handle.ShaderResource.SetResource(null);
-                }
-                textureSetHandles.Clear();
-                currentPass.Apply(Context);
-            }
+            // 次に描画先として使うテクスチャがシェーダーリソースとして残らないように、パイプラインからだけ外す。
+            // 変数の値は残す（DX9 と同じく、複数パスのエフェクトで次のパスでも同じテクスチャを使うため）。
+            Context.PixelShader.SetShaderResources(0, nullShaderResources.Length, nullShaderResources);
             currentPass = null;
         }
 
@@ -130,7 +123,6 @@ namespace PPDFramework.Effect.DX11
             {
                 dx11Texture.Flush(Context);
                 effectHandle.ShaderResource.SetResource(dx11Texture._ShaderResourceView);
-                textureSetHandles.Add(effectHandle);
             }
             else
             {

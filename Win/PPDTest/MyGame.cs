@@ -88,6 +88,7 @@ namespace PPDTest
             testSceneManager.Add(typeof(NumberImageScene));
             testSceneManager.Add(typeof(ScreenFilterScene));
             testSceneManager.Add(typeof(MaskScene));
+            testSceneManager.Add(typeof(EffectScene));
             testSceneManager.Add(typeof(MovieScene));
             var scene = testSceneManager.Initialize();
             SetPropertyToScene(scene);
