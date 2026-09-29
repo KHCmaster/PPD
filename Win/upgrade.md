@@ -330,7 +330,7 @@ Phase 7  配布・更新の仕組みの対応、リリース
     - ThreadManager のスレッドはバックグラウンドスレッドにした
     - 通信のスレッドは、接続を閉じることで止める
     - Web の更新・ログイン・難易度計算は、中止の要求（または結果を反映しない）で止める
-  - FlowScript の実行の中止（PPDEditor、FlowScriptControlTest）は、`DebugController.Abort` で次のノードの評価で止まるようにした（`FlowAbortedException`）。**実際に中止する操作は未確認**
+  - FlowScript の実行の中止（PPDEditor、FlowScriptControlTest）は、`DebugController.Abort` で次のノードの評価で止まるようにした（`FlowAbortedException`）。無限ループのスクリプト（`Repeat.While` の Condition が True）を実行し、`Abort` で 1 ms 以内に止まり、エラーが報告されないことを確認した。あわせて、ブレークポイントで止まっていないときに `DebugController.Abort` が NullReferenceException になる既存の不具合を直した
   - **`Encoding.Default`**（.NET では UTF-8 になる）は、システムの ANSI コードページ（`GetACP`）に置き換えた
   - URL と PPDUpdater の起動は、`UseShellExecute = true` にした
 - [x] **SharpDX を 4.2.0 に上げた**（net48 のまま先に行った）。3.1.1 は net45 と古い portable 版しかなく、.NET 10 から使えないため。

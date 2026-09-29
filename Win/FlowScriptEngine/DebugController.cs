@@ -35,7 +35,8 @@ namespace FlowScriptEngine
         {
             abortRequested = true;
             operationType = OperationType.Abort;
-            resetEvent.Set();
+            // ブレークポイントで止まっていないとき（まだ一度も待っていないとき）は resetEvent がない
+            resetEvent?.Set();
         }
 
         public void Continue()
