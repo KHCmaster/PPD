@@ -319,10 +319,10 @@ Phase 7  配布・更新の仕組みの対応、リリース
 - [x] 全プロジェクトの `TargetFramework` を `net10.0-windows` にした（2026-09-29）。
   - フレームワークの `<Reference>` を削除した。.NET では共有フレームワークに含まれる
   - 追加したパッケージ
-    - `System.Configuration.ConfigurationManager`: 設定（Settings）を使うプロジェクト
     - `System.ServiceProcess.ServiceController`: PPDMultiServerService
     - `WinForms.DataVisualization`: PPDEditor の統計ウィンドウ
-    - `System.Resources.Extensions`: .resx の byte[] や画像などのリソースを読むため（全プロジェクト）
+  - `System.Configuration.ConfigurationManager`（設定）と `System.Resources.Extensions`（.resx の byte[] や画像）は、.NET 10 の Microsoft.WindowsDesktop.App に含まれるのでパッケージは不要だった
+  - net48 のために入れていたもの（間接的な依存の版の固定、PPD での CommunityToolkit.Mvvm の参照）は、.NET 10 では不要なので削除した
   - `WFO1000`（WinForms デザイナー向けの分析）は、実行時の動作に関係しないので抑止した
   - BlueSky の `LangVersion 7.3` の指定を削除した。他のプロジェクトは .NET 10 の既定（C# 14）になった。C# 14 で `field` がキーワードになる影響（CS9258）はない
 - [x] .NET Framework と動作が変わる箇所を、先に net48 のまま直した（コミット `151377e`）。
