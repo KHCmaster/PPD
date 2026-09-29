@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net48</TargetFramework>
+    <TargetFramework>net10.0-windows</TargetFramework>
     <OutputType>Library</OutputType>
     <RootNamespace>Effect2D</RootNamespace>
     <AssemblyName>Effect2D</AssemblyName>
@@ -30,9 +30,6 @@
   <ItemGroup>
     <PackageReference Include="SharpDX" />
     <PackageReference Include="SharpDX.Mathematics" />
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BezierCaliculator\BezierCaliculator.csproj" />

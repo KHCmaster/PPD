@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net48</TargetFramework>
+    <TargetFramework>net10.0-windows</TargetFramework>
     <OutputType>Library</OutputType>
     <RootNamespace>PPDMulti</RootNamespace>
     <AssemblyName>PPDMulti</AssemblyName>
@@ -32,14 +32,6 @@
     <PackageReference Include="MessagePack" />
     <PackageReference Include="SharpDX" />
     <PackageReference Include="SharpDX.Mathematics" />
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
-    <Reference Include="System.Web" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xaml" />
-    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Effect2D\Effect2D.csproj" />

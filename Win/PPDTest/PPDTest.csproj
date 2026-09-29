@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net48</TargetFramework>
+    <TargetFramework>net10.0-windows</TargetFramework>
     <OutputType>WinExe</OutputType>
     <RootNamespace>PPDTest</RootNamespace>
     <AssemblyName>PPDTest</AssemblyName>
@@ -27,15 +27,11 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="System.Configuration.ConfigurationManager" />
     <PackageReference Include="SharpDX" />
     <PackageReference Include="SharpDX.DirectInput" />
     <PackageReference Include="SharpDX.Mathematics" />
     <PackageReference Include="System.Data.SQLite.Core" />
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="System.ComponentModel.DataAnnotations" />
-    <Reference Include="System.Deployment" />
-    <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Effect2D\Effect2D.csproj" />

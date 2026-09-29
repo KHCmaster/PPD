@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net48</TargetFramework>
+    <TargetFramework>net10.0-windows</TargetFramework>
     <OutputType>Library</OutputType>
     <RootNamespace>PPDExpansionCore</RootNamespace>
     <AssemblyName>PPDExpansionCore</AssemblyName>
@@ -30,10 +30,6 @@
     <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data.DataSetExtensions" />
-  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PPDFrameworkCore\PPDFrameworkCore.csproj" />
     <ProjectReference Include="..\PPDMultiCommon\PPDMultiCommon.csproj" />

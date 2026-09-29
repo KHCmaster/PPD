@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net48</TargetFramework>
+    <TargetFramework>net10.0-windows</TargetFramework>
     <OutputType>Exe</OutputType>
     <RootNamespace>ShaderCompiler</RootNamespace>
     <AssemblyName>ShaderCompiler</AssemblyName>
@@ -29,10 +29,5 @@
   <ItemGroup>
     <PackageReference Include="SharpDX" />
     <PackageReference Include="SharpDX.D3DCompiler" />
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Net.Http" />
   </ItemGroup>
 </Project>

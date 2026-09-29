@@ -316,21 +316,47 @@ Phase 7  配布・更新の仕組みの対応、リリース
 
 **目的**: 実行環境を .NET 10 に切り替える。
 
-- [ ] 全プロジェクトの `TargetFramework` を `net10.0-windows` にする（WinForms / WPF を使うものは `UseWindowsForms` / `UseWPF` を指定）。
+- [x] 全プロジェクトの `TargetFramework` を `net10.0-windows` にした（2026-09-29）。
+  - フレームワークの `<Reference>` を削除した。.NET では共有フレームワークに含まれる
+  - 追加したパッケージ
+    - `System.Configuration.ConfigurationManager`: 設定（Settings）を使うプロジェクト
+    - `System.ServiceProcess.ServiceController`: PPDMultiServerService
+    - `WinForms.DataVisualization`: PPDEditor の統計ウィンドウ
+    - `System.Resources.Extensions`: .resx の byte[] や画像などのリソースを読むため（全プロジェクト）
+  - `WFO1000`（WinForms デザイナー向けの分析）は、実行時の動作に関係しないので抑止した
+  - BlueSky の `LangVersion 7.3` の指定を削除した。他のプロジェクトは .NET 10 の既定（C# 14）になった。C# 14 で `field` がキーワードになる影響（CS9258）はない
+- [x] .NET Framework と動作が変わる箇所を、先に net48 のまま直した（コミット `151377e`）。
+  - **`Thread.Abort`**（19 か所、.NET では例外になる）を次のように置き換えた
+    - ThreadManager のスレッドはバックグラウンドスレッドにした
+    - 通信のスレッドは、接続を閉じることで止める
+    - Web の更新・ログイン・難易度計算は、中止の要求（または結果を反映しない）で止める
+  - FlowScript の実行の中止（PPDEditor、FlowScriptControlTest）は、`DebugController.Abort` で次のノードの評価で止まるようにした（`FlowAbortedException`）。**実際に中止する操作は未確認**
+  - **`Encoding.Default`**（.NET では UTF-8 になる）は、システムの ANSI コードページ（`GetACP`）に置き換えた
+  - URL と PPDUpdater の起動は、`UseShellExecute = true` にした
 - [x] **SharpDX を 4.2.0 に上げた**（net48 のまま先に行った）。3.1.1 は net45 と古い portable 版しかなく、.NET 10 から使えないため。
   - このプロジェクトが使っている範囲では API の違いがなく、コードの変更なしでビルドできた
   - シーンの画素比較、PPD 終了時のアクセス違反チェック、Mod と譜面スクリプトの既定値の比較が通った
   - SharpDX.Desktop（`RenderLoop` / `RenderForm`）は 4.2.0 でも .NET Framework 版しかない。そこで PPDFramework に同じ動作の `RenderLoop` を作り、SharpDX.Desktop を削除した（Phase 6 の予定を前倒し）
   - SharpDX 4.2.0 は、.NET 10 からは netstandard1.1 / 1.3 の版が使われる
-- [ ] .NET Framework との挙動の違いに対応する。
-  - **WinForms の既定フォント**が「MS UI Gothic」から「Segoe UI 9pt」に変わり、画面の配置が崩れる可能性がある。必要なら `Application.SetDefaultFont` で従来のフォントを指定する。PPDConfig、PPDEditor、KeyConfiger などを目視で確認する。
-  - 高 DPI の扱い。`Application.SetHighDpiMode` を明示し、今と同じ見え方になるモードを選ぶ。
-  - `Properties.Settings`（PPD のウィンドウ位置保存）用に `System.Configuration.ConfigurationManager` を追加する。
-  - `app.config` のバインディングリダイレクトは不要になるので削除する。
-  - プラグインの読み込み（`Assembly.LoadFrom`: `GameLoader`、`FlowSourceEnumerator`）の挙動を確認する。同名アセンブリの重複読み込みや依存 DLL の解決は、必要に応じて `AssemblyLoadContext` で制御する。
-  - DirectShow の COM 相互運用（`ComImport`、`Type.GetTypeFromCLSID`）の動作を確認する。
-  - `Encoding.GetEncoding` で Shift_JIS などを使っている箇所（BMSTOPPD、FlowScriptEngineBasic の `EncodingType` / `ReadAllText` / `ReadAllLines` ノード）のために、起動時に `CodePagesEncodingProvider` を登録する。
-- [ ] PPDEditor の統計ウィンドウ（`DockForm/StatsManager`）は WinForms の `System.Windows.Forms.DataVisualization`（Chart）を使っている。これは .NET 10 に含まれないので、.NET 向けの移植版（NuGet の `WinForms.DataVisualization` など）に置き換える。（Phase 3 で見つけた）
+- [x] .NET 10 で動作が変わる箇所に対応した。
+  - **起動時の共通設定**（`Shared/ProcessInitializer.cs`）。`Directory.Build.targets` で全ての exe に組み込み、Main より前に実行する
+    - `CodePagesEncodingProvider` を登録する（Shift_JIS などのため）
+    - WinForms の既定フォントを `SystemFonts.DefaultFont` にする（.NET Framework と同じ。日本語の Windows では MS UI Gothic 9pt）。PPDConfig の画面が .NET Framework 版と同じになることを確認した
+  - **カルチャーのデータを Windows の NLS にした**（`System.Globalization.UseNls`）。.NET の既定の ICU では、日付や数値の書式・文字列の比較が変わるため
+  - **FlowScript の数値の文字列化を .NET Framework と同じにした**（`FlowScriptEngine.LegacyNumberFormat`）。.NET では書式を指定しない `ToString` の結果が変わるため（例: `1f/3` が "0.33333334"、`0.1+0.2` が "0.30000000000000004"、-0 が "-0"）
+    - 使っている場所: float / double / object から string への変換、Vector2/3/4 から string への変換、`String.Format` ノード（書式指定のない数値だけ）、デバッガーの表示
+    - float は有効数字 7 桁、double は 15 桁にし、-0 は "0" と表示する。Windows PowerShell（.NET Framework）の出力と 12 通りの値で一致することを確認した
+    - `.fsml` の既定値の解析（float / double / Vector）では、`"-0"` を 0 として読む（.NET Framework と同じ。.NET は -0 を返すため、`Atan2` などの結果が変わる）
+  - **`<system.data>` を app.config から削除した**。.NET の ConfigurationManager が「Unrecognized configuration section」で失敗し、PPD が起動時にエラーダイアログを出していた。DbProviderFactories はコードで使っていない
+  - **リプレイの読み込み**（`PPDPlayDecorder`）: .NET では `GZipStream.Read` が要求より少ないバイト数を返すことがあるため、要求したバイト数まで読むようにした（しないとリプレイのデータが壊れる）。その他の `Stream.Read`（CA2022）は、FileStream / MemoryStream などで読み方が変わらないので、そのままにした
+  - 回帰テスト: RenderCheck の PPD の確認で、error.log に書き込まれた場合も失敗にした。ModCheck は .NET 10 のプロジェクトとしてビルドするようにした
+  - 確認した結果（.NET 10）
+    - シーン 0〜7 の画素比較が通った
+    - PPD は起動・終了でき、アクセス違反も error.log への書き込みもない
+    - Mod 28 個・譜面スクリプト 17 個の既定値が、.NET Framework で作った基準と完全に一致した
+    - PPDEditor、PPDConfig、KeyConfiger、Effect2DEditor、BMSTOPPD、FlowScriptControlTest、BezierDrawControlTest、PPDExpansion が起動する
+    - Debug / Release ともビルドできる
+  - 未確認: 高 DPI（PPDConfig は同じ見た目だった）、プラグインの読み込みの細かい動作（skins / dlls は動作している）、DirectShow の動画（PPDTest の動画シーンは表示される）- [x] PPDEditor の統計ウィンドウ（`DockForm/StatsManager`）は WinForms の `System.Windows.Forms.DataVisualization`（Chart）を使っている。これは .NET 10 に含まれないので、.NET 向けの移植版（NuGet の `WinForms.DataVisualization` など）に置き換える。（Phase 3 で見つけた）
 - [ ] MessagePack を 2.x 以降に上げる（Phase 3 から移した）。`Tools/ProjectCheck/MessagePackDump.ps1 -Compare Tools/ProjectCheck/messagepack_v1.txt` で通信互換を確認する。
 - [ ] ShaderCompiler、PPDReleaser、FolderDiffChecker などのツール類も移行する。
 

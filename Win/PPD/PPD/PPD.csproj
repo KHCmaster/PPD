@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net48</TargetFramework>
+    <TargetFramework>net10.0-windows</TargetFramework>
     <OutputType>WinExe</OutputType>
     <RootNamespace>PPD</RootNamespace>
     <AssemblyName>PPD</AssemblyName>
@@ -36,12 +36,6 @@
     <PackageReference Include="SharpDX.Mathematics" />
     <PackageReference Include="System.Data.SQLite.Core" />
     <PackageReference Include="YamlDotNet" />
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="System.ComponentModel.DataAnnotations" />
-    <Reference Include="System.Configuration" />
-    <Reference Include="System.Deployment" />
-    <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\DirectShow\DirectShow.csproj" />

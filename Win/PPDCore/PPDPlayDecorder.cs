@@ -90,6 +90,25 @@ namespace PPDCore
             }
         }
 
+        /// <summary>
+        /// count バイト読み込むか、ストリームの終わりに達するまで読み込みます。
+        /// .NET では GZipStream.Read が要求より少ないバイト数を返すことがあるため（.NET Framework では要求したバイト数まで読み込んでいた）。
+        /// </summary>
+        private static int ReadFully(Stream stream, byte[] buffer, int count)
+        {
+            var total = 0;
+            while (total < count)
+            {
+                var read = stream.Read(buffer, total, count - total);
+                if (read == 0)
+                {
+                    break;
+                }
+                total += read;
+            }
+            return total;
+        }
+
         public static PPDPlayDecorder FromStream(Stream stream)
         {
             var ret = new PPDPlayDecorder();
@@ -104,19 +123,19 @@ namespace PPDCore
                     UInt16[] pressCount = new UInt16[10];
                     byte[] pressed = new byte[2];
                     byte[] released = new byte[2];
-                    readSize = compStream.Read(bytes4, 0, bytes4.Length);
+                    readSize = ReadFully(compStream, bytes4, bytes4.Length);
                     if (readSize == 0)
                     {
                         break;
                     }
                     var time = BitConverter.ToSingle(bytes4, 0);
-                    readSize = compStream.Read(bytes8, 0, bytes8.Length);
+                    readSize = ReadFully(compStream, bytes8, bytes8.Length);
                     if (readSize == 0)
                     {
                         break;
                     }
                     var currentTime = BitConverter.ToInt64(bytes8, 0);
-                    readSize = compStream.Read(bytes2, 0, bytes2.Length);
+                    readSize = ReadFully(compStream, bytes2, bytes2.Length);
                     if (readSize == 0)
                     {
                         break;
@@ -126,7 +145,7 @@ namespace PPDCore
                     {
                         if (bits.Get(i))
                         {
-                            readSize = compStream.Read(bytes2, 0, bytes2.Length);
+                            readSize = ReadFully(compStream, bytes2, bytes2.Length);
                             if (readSize == 0)
                             {
                                 break;
@@ -134,12 +153,12 @@ namespace PPDCore
                             pressCount[i] = BitConverter.ToUInt16(bytes2, 0);
                         }
                     }
-                    readSize = compStream.Read(pressed, 0, pressed.Length);
+                    readSize = ReadFully(compStream, pressed, pressed.Length);
                     if (readSize == 0)
                     {
                         break;
                     }
-                    readSize = compStream.Read(released, 0, released.Length);
+                    readSize = ReadFully(compStream, released, released.Length);
                     if (readSize == 0)
                     {
                         break;

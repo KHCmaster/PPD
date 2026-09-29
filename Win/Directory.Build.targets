@@ -4,4 +4,12 @@
   <Target Name="CopyFlowScriptPlugin" AfterTargets="Build" Condition="'$(Configuration)' == 'Debug' And '@(FlowScriptPluginFolder)' != ''">
     <Copy SourceFiles="$(TargetPath)" DestinationFolder="%(FlowScriptPluginFolder.FullPath)" SkipUnchangedFiles="true" />
   </Target>
+
+  <!-- exe には、起動時の共通設定（コードページの登録、WinForms の既定フォント）を入れる -->
+  <PropertyGroup Condition="('$(OutputType)' == 'Exe' Or '$(OutputType)' == 'WinExe') And '$(UseWindowsForms)' == 'true'">
+    <DefineConstants>$(DefineConstants);PPD_WINFORMS</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup Condition="'$(OutputType)' == 'Exe' Or '$(OutputType)' == 'WinExe'">
+    <Compile Include="$(MSBuildThisFileDirectory)Shared\ProcessInitializer.cs" Link="Properties\ProcessInitializer.cs" />
+  </ItemGroup>
 </Project>

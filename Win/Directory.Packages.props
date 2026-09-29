@@ -25,6 +25,11 @@
     <PackageVersion Include="System.Data.SQLite.Core" Version="1.0.119" />
     <PackageVersion Include="WinSCP" Version="5.7.7" />
     <PackageVersion Include="YamlDotNet" Version="5.1.0" />
+    <!-- .NET で必要になったもの -->
+    <PackageVersion Include="System.Configuration.ConfigurationManager" Version="10.0.12" />
+    <PackageVersion Include="System.Resources.Extensions" Version="10.0.12" />
+    <PackageVersion Include="System.ServiceProcess.ServiceController" Version="10.0.12" />
+    <PackageVersion Include="WinForms.DataVisualization" Version="1.10.2" />
   </ItemGroup>
   <ItemGroup>
     <!-- 間接的に使うパッケージ（CommunityToolkit.Mvvm、MessagePack などの依存） -->

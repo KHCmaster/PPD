@@ -76,10 +76,19 @@ if (-not $UpdateBaseline -and -not $SkipScenes) {
 if (-not $SkipPPD) {
     $ppd = Join-Path $root "PPD\PPD\bin\x64\Debug\PPD.exe"
     $log = Join-Path $outDir "exception.log"
+    # PPD 自身が捕まえた例外は error.log に書かれ、エラーダイアログを出して終了する（アクセス違反のチェックでは分からない）
+    $errorLog = Join-Path (Split-Path $ppd) "error.log"
+    $errorLogSize = if (Test-Path $errorLog) { (Get-Item $errorLog).Length } else { 0 }
     # 25 秒後に閉じる。終了確認画面では Circle（既定のキー設定では K = スキャンコード 0x25）で確定する
     & "$binDir\ExceptionWatch.exe" $ppd "-disableexpansion" 25 $log 25
-    if ($LASTEXITCODE -ne 0) {
+    $exitCode = $LASTEXITCODE
+    $errorLogGrew = (Test-Path $errorLog) -and (Get-Item $errorLog).Length -gt $errorLogSize
+    if ($exitCode -ne 0) {
         Write-Output "PPD: NG (アクセス違反あり。$log を確認してください)"
+        $failed = $true
+    }
+    elseif ($errorLogGrew) {
+        Write-Output "PPD: NG (エラーが発生しました。$errorLog を確認してください)"
         $failed = $true
     }
     else {
@@ -90,10 +99,11 @@ if (-not $SkipPPD) {
 # Mod / FlowScript の互換チェック
 if (-not $SkipMods) {
     $ppdBin = Join-Path $root "PPD\PPD\bin\x64\Debug"
-    & $csc /nologo /platform:x64 /out:"$binDir\ModCheck.exe" /r:"$ppdBin\PPDFramework.dll" /r:"$ppdBin\FlowScriptEngine.dll" /r:"$ppdBin\PPDPack.dll" /r:System.Xml.Linq.dll "/r:$env:WINDIR\Microsoft.NET\Framework64\v4.0.30319\System.Runtime.dll" "$toolDir\ModCheck.cs"
+    # PPD と同じ .NET で動かすため、プロジェクトとしてビルドする
+    & dotnet build "$toolDir\ModCheck\ModCheck.csproj" -c Release -o "$binDir\ModCheck" -nologo -v:q | Out-Null
     if ($LASTEXITCODE -ne 0) { throw "ModCheck のビルドに失敗しました" }
     $modResult = if ($UpdateBaseline) { Join-Path $baselineDir "mods.txt" } else { Join-Path $outDir "mods.txt" }
-    & "$binDir\ModCheck.exe" $ppdBin $modResult @ScriptDirs
+    & "$binDir\ModCheck\ModCheck.exe" $ppdBin $modResult @ScriptDirs
     if ($LASTEXITCODE -ne 0) {
         Write-Output "Mods: NG (読み込めないスクリプトあり。$modResult を確認してください)"
         $failed = $true

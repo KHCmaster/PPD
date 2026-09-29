@@ -7,7 +7,8 @@ namespace FlowScriptEngineSlimDX.TypeConverters
         public override object Convert(object data)
         {
             var vec2 = (SharpDX.Vector2)data;
-            return vec2.ToString();
+            // SharpDX の Vector2.ToString と同じ書式で、数値は .NET Framework と同じ書式にする
+            return string.Format(LegacyNumberFormat.CurrentCulture, "X:{0} Y:{1}", vec2.X, vec2.Y);
         }
     }
 }

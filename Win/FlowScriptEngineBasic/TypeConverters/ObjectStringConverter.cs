@@ -7,7 +7,8 @@ namespace FlowScriptEngineBasic.TypeConverters
 
         public override object Convert(object data)
         {
-            var val = data.ToString();
+            // float / double は .NET Framework と同じ書式にする
+            var val = LegacyNumberFormat.ToString(data);
             return val;
         }
     }

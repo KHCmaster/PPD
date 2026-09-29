@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net48</TargetFramework>
+    <TargetFramework>net10.0-windows</TargetFramework>
     <OutputType>Library</OutputType>
     <RootNamespace>FlowScriptEnginePPDEditor</RootNamespace>
     <AssemblyName>FlowScriptEnginePPDEditor</AssemblyName>
@@ -33,15 +33,6 @@
   <ItemGroup>
     <PackageReference Include="SharpDX" />
     <PackageReference Include="SharpDX.Mathematics" />
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xaml" />
-    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FlowScriptEngine\FlowScriptEngine.csproj" />

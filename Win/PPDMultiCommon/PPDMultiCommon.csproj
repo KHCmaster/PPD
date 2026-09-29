@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net48</TargetFramework>
+    <TargetFramework>net10.0-windows</TargetFramework>
     <OutputType>Library</OutputType>
     <RootNamespace>PPDMultiCommon</RootNamespace>
     <AssemblyName>PPDMultiCommon</AssemblyName>
@@ -34,11 +34,6 @@
   <ItemGroup>
     <PackageReference Include="MessagePack" />
     <PackageReference Include="MessagePackAnalyzer" />
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Web" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PPDFrameworkCore\PPDFrameworkCore.csproj" />

@@ -1,4 +1,4 @@
-<Project>
+﻿<Project>
   <!-- 全プロジェクト共通の設定（SDK 形式の csproj に変換したときに、従来の出力を変えないためのもの） -->
   <PropertyGroup>
     <!-- 出力先は従来どおり bin\<Platform>\<Configuration>\（net48 などのフォルダーを付けない） -->
@@ -7,5 +7,16 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <!-- 埋め込みリソースの名前を従来と同じ規則（DependentUpon の指定があるときだけ型名を使う）で付ける -->
     <EmbeddedResourceUseDependentUponConvention>false</EmbeddedResourceUseDependentUponConvention>
+    <!-- WFO1000: WinForms デザイナー向けの分析（コントロールの公開プロパティに DesignerSerializationVisibility を付ける）。実行時の動作には影響しないので抑止する -->
+    <NoWarn>$(NoWarn);WFO1000</NoWarn>
   </PropertyGroup>
+  <ItemGroup>
+    <!-- カルチャーのデータ（日付や数値の書式、文字列の比較など）を .NET Framework と同じ Windows の NLS にする。
+         .NET 5 以降は既定で ICU になり、スクリプト（Mod）の表示や並び順が変わる可能性があるため -->
+    <RuntimeHostConfigurationOption Include="System.Globalization.UseNls" Value="true" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- .resx の byte[] や画像などの文字列以外のリソースを .NET で読み込むために必要 -->
+    <PackageReference Include="System.Resources.Extensions" />
+  </ItemGroup>
 </Project>

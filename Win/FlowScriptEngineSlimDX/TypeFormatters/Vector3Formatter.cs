@@ -20,9 +20,9 @@ namespace FlowScriptEngineSlimDX.TypeFormatters
             var m = regex.Match(str);
             if (m.Success)
             {
-                if (float.TryParse(m.Groups["X"].Value, NumberStyles.Float, CultureInfo.InvariantCulture, out float x)
-                    && float.TryParse(m.Groups["Y"].Value, NumberStyles.Float, CultureInfo.InvariantCulture, out float y)
-                    && float.TryParse(m.Groups["Z"].Value, NumberStyles.Float, CultureInfo.InvariantCulture, out float z))
+                if (LegacyNumberFormat.TryParse(m.Groups["X"].Value, NumberStyles.Float, CultureInfo.InvariantCulture, out float x)
+                    && LegacyNumberFormat.TryParse(m.Groups["Y"].Value, NumberStyles.Float, CultureInfo.InvariantCulture, out float y)
+                    && LegacyNumberFormat.TryParse(m.Groups["Z"].Value, NumberStyles.Float, CultureInfo.InvariantCulture, out float z))
                 {
                     value = new SharpDX.Vector3(x, y, z);
                     return true;

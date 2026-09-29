@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net48</TargetFramework>
+    <TargetFramework>net10.0-windows</TargetFramework>
     <OutputType>Library</OutputType>
     <RootNamespace>PPDSound</RootNamespace>
     <AssemblyName>PPDSound</AssemblyName>
@@ -35,11 +35,6 @@
   <ItemGroup>
     <PackageReference Include="SharpDX" />
     <PackageReference Include="SharpDX.DirectSound" />
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PPDFramework\PPDFramework.csproj" />

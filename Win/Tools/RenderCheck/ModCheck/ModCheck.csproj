@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Mod / FlowScript の互換チェック。PPD と同じ .NET で動かすため、プロジェクトとしてビルドする（RenderCheck.ps1 から使う）。
+       PPD の DLL はコピーせず、実行時に PPD のフォルダーから読み込む（ModCheck.cs の AssemblyResolve）。 -->
+  <PropertyGroup>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <OutputType>Exe</OutputType>
+    <PlatformTarget>x64</PlatformTarget>
+    <UseWindowsForms>true</UseWindowsForms>
+    <Nullable>disable</Nullable>
+    <PPDBin>$(MSBuildThisFileDirectory)..\..\..\PPD\PPD\bin\x64\Debug\</PPDBin>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="..\ModCheck.cs" />
+    <Reference Include="PPDFramework" HintPath="$(PPDBin)PPDFramework.dll" Private="false" />
+    <Reference Include="FlowScriptEngine" HintPath="$(PPDBin)FlowScriptEngine.dll" Private="false" />
+    <Reference Include="PPDPack" HintPath="$(PPDBin)PPDPack.dll" Private="false" />
+  </ItemGroup>
+</Project>

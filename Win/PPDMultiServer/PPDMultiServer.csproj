@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net48</TargetFramework>
+    <TargetFramework>net10.0-windows</TargetFramework>
     <OutputType>Library</OutputType>
     <RootNamespace>PPDMultiServer</RootNamespace>
     <AssemblyName>PPDMultiServer</AssemblyName>
@@ -28,10 +28,6 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="MessagePack" />
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data.DataSetExtensions" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PPDFrameworkCore\PPDFrameworkCore.csproj" />

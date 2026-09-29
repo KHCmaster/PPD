@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net48</TargetFramework>
+    <TargetFramework>net10.0-windows</TargetFramework>
     <OutputType>Library</OutputType>
     <RootNamespace>PPDFramework</RootNamespace>
     <AssemblyName>PPDFramework</AssemblyName>
@@ -35,11 +35,6 @@
     <PackageReference Include="SharpDX.DXGI" />
     <PackageReference Include="SharpDX.Mathematics" />
     <PackageReference Include="System.Data.SQLite.Core" />
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="System.ComponentModel.DataAnnotations" />
-    <Reference Include="System.Web" />
-    <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BezierCaliculator\BezierCaliculator.csproj" />
