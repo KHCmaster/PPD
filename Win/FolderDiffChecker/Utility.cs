@@ -79,6 +79,8 @@ namespace FolderDiffChecker
             Directory.CreateDirectory(targetDir);
             Utility.CopyDirectory(sourceDir, targetDir, exceptFiles);
 
+            // ファイル名は、従来（SharpZipLib 0.86）と同じく OEM コードページで書く（古い PPDUpdater でも読めるように）
+            ZipStrings.CodePage = System.Globalization.CultureInfo.CurrentCulture.TextInfo.OEMCodePage;
             var fastZip = new FastZip
             {
                 CreateEmptyDirectories = true

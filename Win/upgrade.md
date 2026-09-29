@@ -253,11 +253,25 @@ Phase 7  配布・更新の仕組みの対応、リリース
   - 5 つの app.config から、EF の設定セクションと EF6 のプロバイダー登録を削除した
   - `Checker.cs` / `PPDReleaser` の DLL 一覧からも外した
 - [ ] 依存パッケージを整理する（2 章の表）。**.NET Framework と .NET 10 の両方で動く版を選び**、このフェーズで先に更新しておく。
-  - MvvmLight → CommunityToolkit.Mvvm
-  - SharpZipLib を NuGet の最新版に
-  - YamlDotNet を最新版に
-  - MessagePack（通信互換の検証が必要なので単独で実施）
-  - System.Data.SQLite（DB ファイルの互換を確認）
+  - [x] MvvmLight → **自前の小さなライブラリ（PPDMvvm）** と Microsoft.Xaml.Behaviors.Wpf に置き換えた。
+    - CommunityToolkit.Mvvm にしなかった理由: net48 では依存 DLL が 5 つ増える（System.Memory、Unsafe 6.x など）。skins から読み込まれる PPDModSettingUI でバインディングリダイレクトの問題が起きやすい
+    - 実際に使っていたのは次の機能だけで、MvvmLight（WPF 版）と同じ動作を依存なしで再現できた
+      - `ObservableObject` / `ViewModelBase` の `RaisePropertyChanged`
+      - `RelayCommand`。`CommandManager.RequerySuggested` による再評価も含む
+      - `Messenger` の Register / Unregister / Send
+      - `MessageBase`
+    - XAML の `EventToCommand`（System.Windows.Interactivity）は、Microsoft.Xaml.Behaviors の `InvokeCommandAction` に置き換えた。`PassEventArgsToCommand` はそのまま使える
+    - 確認: WPF のコントロールとウィンドウ（FlowScriptDrawControl、PPDEditorCommon、PPDModSettingUI）を全て生成して、XAML が読み込めることを確認した。PPDExpansion の起動も確認した
+      - 気付いた点: PPDExpansion はウィンドウを閉じてもプロセスが終了しない。変更前のビルドでも同じなので、今回の変更とは無関係
+  - [x] SharpZipLib: プロジェクトフォルダーにあった 0.86 を NuGet の **1.3.3** にした。
+    - 0.86 には zip のパストラバーサル（Zip Slip）の脆弱性がある。PPDSingle は Web からダウンロードした zip を展開するので対応が必要
+    - 1.4 系は netstandard2.0 のみで、net48 では依存 DLL が増えるため 1.3.3（net45 版があり依存なし）にした。.NET 10 では netstandard2.1 版が使われる
+    - 1.3.3 は、UTF-8 フラグのないファイル名を既定で UTF-8 として読む。そのため、`ZipStrings.CodePage` に OEM コードページを指定して 0.86 と同じ動作にした
+    - 0.86 と 1.3.3 の間で作成・展開を相互に行い、日本語のファイル名・フォルダー・空フォルダーが一致することを確認した
+  - [x] YamlDotNet は **5.1.0 のままにする**。既知の脆弱性はなく、netstandard1.3 版で .NET 10 でも動く。新しい版は `Yaml.Dump` ノードの出力書式が変わる可能性があり、Mod の互換を優先した
+  - [x] morelinq は `MinBy` / `MaxBy` の 2 か所だけだったので、`OrderBy(...).First()`（安定ソートなので同じ要素を返す）に置き換えて削除した。新しい morelinq は戻り値の型が変わっているうえ、.NET 10 の `Enumerable.MinBy` と名前がぶつかるため
+  - [ ] MessagePack（通信互換の検証が必要なので単独で実施）
+  - [x] System.Data.SQLite.Core を 1.0.100 から 1.0.119 に上げた（SQLite 3 のファイル形式は互換）。skins フォルダーにはネイティブ DLL をコピーしないようにした（`CopySQLiteInteropFiles=false`）
 - [ ] WPFToolkit / DataVisualization（PPDExpansion のグラフ）を代替に置き換える。
 
 **完了条件**: 全プロジェクトが SDK 形式・PackageReference でビルドでき、回帰テストと実プレイ確認が通る。

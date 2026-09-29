@@ -1,5 +1,4 @@
-﻿using MoreLinq;
-using PPDEditorCommon;
+﻿using PPDEditorCommon;
 using PPDFramework;
 using PPDFramework.PPDStructure.PPDData;
 using SharpDX;
@@ -1127,7 +1126,7 @@ namespace PPDEditor.Command.PPDSheet
                     if (nextTime > 0)
                     {
                         list = data2[nextTime];
-                        next = list.MinBy(m => typeConverter[(int)m.Type]);
+                        next = list.OrderBy(m => typeConverter[(int)m.Type]).First();
                     }
                 }
             }
@@ -1141,7 +1140,7 @@ namespace PPDEditor.Command.PPDSheet
                     if (prevTime > 0)
                     {
                         list = data2[prevTime];
-                        next = list.MaxBy(m => typeConverter[(int)m.Type]);
+                        next = list.OrderByDescending(m => typeConverter[(int)m.Type]).First();
                     }
                 }
             }

@@ -1,4 +1,4 @@
-﻿using GalaSoft.MvvmLight.Messaging;
+﻿using PPDMvvm;
 using PPDEditorCommon.Dialog.Message;
 using System;
 using System.Windows;

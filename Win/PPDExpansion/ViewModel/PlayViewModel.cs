@@ -1,4 +1,4 @@
-﻿using GalaSoft.MvvmLight;
+﻿using PPDMvvm;
 using PPDExpansionCore;
 
 namespace PPDExpansion.ViewModel

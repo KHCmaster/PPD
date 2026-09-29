@@ -1,6 +1,4 @@
-﻿using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Command;
-using GalaSoft.MvvmLight.Messaging;
+﻿using PPDMvvm;
 using PPDConfiguration;
 using PPDEditorCommon.Dialog.Message;
 using PPDEditorCommon.Dialog.Model;

@@ -34,9 +34,9 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="CommonServiceLocator" Version="1.3" />
-    <PackageReference Include="MvvmLight" Version="4.2.32.7" />
-    <PackageReference Include="MvvmLightLibs" Version="4.4.32.7" />
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.161" />
+  </ItemGroup>
+  <ItemGroup>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
@@ -50,6 +50,7 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\PPDMvvm\PPDMvvm.csproj" />
     <ProjectReference Include="..\ColorCanvas\ColorCanvas.csproj" />
     <ProjectReference Include="..\FlowScriptEngine\FlowScriptEngine.csproj" />
   </ItemGroup>

@@ -7,8 +7,7 @@
              xmlns:visualization="clr-namespace:System.Windows.Controls.DataVisualization;assembly=System.Windows.Controls.DataVisualization.Toolkit"
              xmlns:toolkit="clr-namespace:System.Windows.Controls.DataVisualization.Charting;assembly=System.Windows.Controls.DataVisualization.Toolkit"
              xmlns:converter="clr-namespace:PPDExpansion.Converter"
-             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"  
-             xmlns:cmd="clr-namespace:GalaSoft.MvvmLight.Command;assembly=GalaSoft.MvvmLight.Extras"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:expansion="clr-namespace:PPDExpansion"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
@@ -51,16 +50,16 @@
             </control:MultiChart.Title>
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="MouseWheel">
-                    <cmd:EventToCommand Command="{Binding ZoomCommand}" PassEventArgsToCommand="True"/>
+                    <i:InvokeCommandAction Command="{Binding ZoomCommand}" PassEventArgsToCommand="True"/>
                 </i:EventTrigger>
                 <i:EventTrigger EventName="MouseUp">
-                    <cmd:EventToCommand Command="{Binding ResetZoomCommand}" PassEventArgsToCommand="True"/>
+                    <i:InvokeCommandAction Command="{Binding ResetZoomCommand}" PassEventArgsToCommand="True"/>
                 </i:EventTrigger>
                 <i:EventTrigger EventName="MouseDown">
-                    <cmd:EventToCommand Command="{Binding PanStartCommand}" PassEventArgsToCommand="True"/>
+                    <i:InvokeCommandAction Command="{Binding PanStartCommand}" PassEventArgsToCommand="True"/>
                 </i:EventTrigger>
                 <i:EventTrigger EventName="MouseMove">
-                    <cmd:EventToCommand Command="{Binding PanCommand}" PassEventArgsToCommand="True"/>
+                    <i:InvokeCommandAction Command="{Binding PanCommand}" PassEventArgsToCommand="True"/>
                 </i:EventTrigger>
             </i:Interaction.Triggers>
             <control:MultiChart.LegendTitle>

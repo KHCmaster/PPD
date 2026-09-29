@@ -29,14 +29,13 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="morelinq" Version="1.4.0" />
     <PackageReference Include="SharpDX" Version="3.1.1" />
     <PackageReference Include="SharpDX.Desktop" Version="3.1.1" />
     <PackageReference Include="SharpDX.Direct2D1" Version="3.1.1" />
     <PackageReference Include="SharpDX.Direct3D11" Version="3.1.1" />
     <PackageReference Include="SharpDX.DXGI" Version="3.1.1" />
     <PackageReference Include="SharpDX.Mathematics" Version="3.1.1" />
-    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.100.0" />
+    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.119" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System.ComponentModel.DataAnnotations" />

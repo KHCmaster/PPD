@@ -1,4 +1,4 @@
-﻿using GalaSoft.MvvmLight.Messaging;
+﻿using PPDMvvm;
 
 namespace PPDExpansion.Message
 {

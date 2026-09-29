@@ -1,13 +1,12 @@
 ﻿<Window x:Class="PPDEditorCommon.Dialog.NewProjectWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
-        xmlns:cmd="clr-namespace:GalaSoft.MvvmLight.Command;assembly=GalaSoft.MvvmLight.Extras"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:PPDEditorCommon="clr-namespace:PPDEditorCommon"
         Title="{PPDEditorCommon:Translate CPF}" MinHeight="300" MinWidth="500" Height="450" Width="740">
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
-            <cmd:EventToCommand Command="{Binding LoadedCommand}"/>
+            <i:InvokeCommandAction Command="{Binding LoadedCommand}"/>
         </i:EventTrigger>
     </i:Interaction.Triggers>
     <Grid>
@@ -30,7 +29,7 @@
                 <TreeView Grid.Row="1" Width="200" VerticalContentAlignment="Stretch" ItemsSource="{Binding Root.Children}">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="SelectedItemChanged">
-                            <cmd:EventToCommand Command="{Binding SelectedItemChangedCommand}" PassEventArgsToCommand="True" />
+                            <i:InvokeCommandAction Command="{Binding SelectedItemChangedCommand}" PassEventArgsToCommand="True" />
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                     <TreeView.ItemTemplate>

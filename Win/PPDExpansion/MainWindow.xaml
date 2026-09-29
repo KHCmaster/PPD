@@ -3,8 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"  
-        xmlns:cmd="clr-namespace:GalaSoft.MvvmLight.Command;assembly=GalaSoft.MvvmLight.Extras"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:control="clr-namespace:PPDExpansion.Control"
         xmlns:vm="clr-namespace:PPDExpansion.ViewModel"
         xmlns:converter="clr-namespace:PPDExpansion.Converter"
@@ -19,7 +18,7 @@
     </Window.Resources>
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Closed">
-            <cmd:EventToCommand Command="{Binding ClosedCommand}"/>
+            <i:InvokeCommandAction Command="{Binding ClosedCommand}"/>
         </i:EventTrigger>
     </i:Interaction.Triggers>
     <DockPanel Style="{StaticResource DockPanelStyle}">

@@ -27,12 +27,10 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="SharpZipLib" Version="1.3.3" />
     <PackageReference Include="WinSCP" Version="5.7.7" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="ICSharpCode.SharpZipLib">
-      <HintPath>.\ICSharpCode.SharpZipLib.dll</HintPath>
-    </Reference>
     <Reference Include="System.Deployment" />
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>

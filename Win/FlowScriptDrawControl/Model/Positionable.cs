@@ -1,5 +1,4 @@
-﻿using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Command;
+﻿using PPDMvvm;
 using System;
 using System.Windows;
 using System.Windows.Input;

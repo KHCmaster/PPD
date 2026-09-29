@@ -33,7 +33,7 @@
     <PackageReference Include="SharpDX.Desktop" Version="3.1.1" />
     <PackageReference Include="SharpDX.DirectInput" Version="3.1.1" />
     <PackageReference Include="SharpDX.Mathematics" Version="3.1.1" />
-    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.100.0" />
+    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.119" />
     <PackageReference Include="YamlDotNet" Version="5.1.0" />
   </ItemGroup>
   <ItemGroup>

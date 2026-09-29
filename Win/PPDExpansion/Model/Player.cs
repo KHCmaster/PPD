@@ -1,4 +1,4 @@
-﻿using GalaSoft.MvvmLight;
+﻿using PPDMvvm;
 using PPDExpansionCore;
 using System;
 using System.Collections.Generic;

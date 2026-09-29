@@ -1,4 +1,4 @@
-﻿using GalaSoft.MvvmLight.Messaging;
+﻿using PPDMvvm;
 using PPDExpansion.Message;
 using PPDExpansion.ViewModel;
 using System.Windows;

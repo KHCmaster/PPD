@@ -1,5 +1,4 @@
-﻿using MoreLinq;
-using PPDFramework.Sprites;
+﻿using PPDFramework.Sprites;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -65,7 +64,7 @@ namespace PPDFramework.Resource
                 var key = pair.Key;
                 var list = pair.Value;
                 var overScaledList = list.Where(i => i.Item2.ImageScale.Ratio >= device.Scale.X).ToArray();
-                var nearest = overScaledList.Length > 0 ? overScaledList.MinBy(i => Math.Abs(i.Item2.ImageScale.Ratio - device.Scale.X)) : list.MinBy(i => Math.Abs(i.Item2.ImageScale.Ratio - device.Scale.X));
+                var nearest = overScaledList.Length > 0 ? overScaledList.OrderBy(i => Math.Abs(i.Item2.ImageScale.Ratio - device.Scale.X)).First() : list.OrderBy(i => Math.Abs(i.Item2.ImageScale.Ratio - device.Scale.X)).First();
                 if (!usedSpriteDictionary.TryGetValue(nearest.Item2, out var imageResource))
                 {
                     imageResource = ImageResourceFactoryManager.Factory.Create(device, nearest.Item2.ImagePath, true);

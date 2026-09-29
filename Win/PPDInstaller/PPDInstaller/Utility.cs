@@ -46,6 +46,8 @@ namespace PPDInstaller
         public static void Unzip(string path, string unzippath)
         {
             string fileFilter = "";
+            // UTF-8 フラグのないファイル名は、従来（SharpZipLib 0.86）と同じく OEM コードページで読む
+            ICSharpCode.SharpZipLib.Zip.ZipStrings.CodePage = System.Globalization.CultureInfo.CurrentCulture.TextInfo.OEMCodePage;
             var fastZip =
                 new ICSharpCode.SharpZipLib.Zip.FastZip
                 {

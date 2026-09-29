@@ -5,12 +5,11 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:control="clr-namespace:FlowScriptDrawControl.Control" 
              xmlns:converter="clr-namespace:FlowScriptDrawControl.Converter"  
-             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"  
-             xmlns:cmd="clr-namespace:GalaSoft.MvvmLight.Command;assembly=GalaSoft.MvvmLight.Extras"  
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"  
              FontSize="18" BorderThickness="1" BorderBrush="White" RenderTransform="{Binding Transform}">
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="SizeChanged">
-            <cmd:EventToCommand Command="{Binding SizeChangedCommand}"/>
+            <i:InvokeCommandAction Command="{Binding SizeChangedCommand}"/>
         </i:EventTrigger>
     </i:Interaction.Triggers>
     <control:SelectableControl.Resources>

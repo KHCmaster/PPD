@@ -9,6 +9,8 @@ namespace PPDUpdater
     {
         static Utility()
         {
+            // UTF-8 フラグのないファイル名は、従来（SharpZipLib 0.86）と同じく OEM コードページで読む
+            ZipStrings.CodePage = System.Globalization.CultureInfo.CurrentCulture.TextInfo.OEMCodePage;
             FastZip = new FastZip
             {
                 RestoreAttributesOnExtract = true,

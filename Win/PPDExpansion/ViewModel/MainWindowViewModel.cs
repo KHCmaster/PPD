@@ -1,6 +1,4 @@
-﻿using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Command;
-using GalaSoft.MvvmLight.Messaging;
+﻿using PPDMvvm;
 using PPDExpansion.Message;
 using PPDExpansionCore;
 using PPDExpansionCore.Tcp;

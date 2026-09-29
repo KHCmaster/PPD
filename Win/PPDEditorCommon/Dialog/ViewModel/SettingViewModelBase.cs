@@ -1,4 +1,4 @@
-﻿using GalaSoft.MvvmLight;
+﻿using PPDMvvm;
 
 namespace PPDEditorCommon.Dialog.ViewModel
 {

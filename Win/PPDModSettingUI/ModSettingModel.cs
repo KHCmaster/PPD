@@ -1,5 +1,4 @@
-﻿using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Command;
+﻿using PPDMvvm;
 using PPDConfiguration;
 using PPDFramework.Mod;
 using System;
