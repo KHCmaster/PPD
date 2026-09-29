@@ -140,7 +140,7 @@ Phase 7  配布・更新の仕組みの対応、リリース
   - マルチプレイ
   - キー設定（KeyConfiger）
   - 終了時にアクセス違反が出ないこと
-- [ ] 不要物を整理する。→ **Phase 3（csproj の作り直し）で行う**。
+- [x] 不要物を整理する。→ Phase 3 で行った。
   - どこからも参照されていない PPDTwitter
   - 使われていない EntityFramework / System.Data.SQLite.EF6 / Linq パッケージ
   - コンパイル対象外の古い SlimDX 時代の .cs ファイル（PPD\PPD 配下など）
@@ -226,10 +226,32 @@ Phase 7  配布・更新の仕組みの対応、リリース
 
 **目的**: .NET 10 への切り替えを「TargetFramework を変えるだけ」に近づける。
 
-- [ ] 55 プロジェクトを SDK 形式の csproj に変換する（`TargetFramework` は `net48`、`PackageReference`）。依存の少ないものから順に行う（→ 5 章）。
-- [ ] `packages\` フォルダへの HintPath 参照をなくす。NuGet 管理外の DLL（SharpZipLib、WacomMTDN）は NuGet 版にするか、`lib\` に置いて明示的に参照する。
-- [ ] ビルド後のコピー処理（FlowScriptEngine* の 7 プロジェクトが、`dlls\` へのコピーを post-build で書いている）を、MSBuild のターゲットか出力先の設定に置き換える。
-- [ ] リソース（.resx）の対応。byte[] や画像を `ResXFileRef` で持つ .resx が 142 個ある。SDK 形式・.NET では、文字列以外のリソースに `System.Resources.Extensions` パッケージが必要になるので追加する。
+- [x] ソリューションの 54 プロジェクトを SDK 形式の csproj に変換した（`TargetFramework` は `net48`、`PackageReference`）。
+  - 変換は一括で行い、ビルド出力を変換前と比べて確認した（`Tools/ProjectCheck/AssemblyDump.ps1`）。比べたのは次の項目で、Debug / Release とも同じだった
+    - アセンブリ名・バージョン・ファイルバージョン
+    - 参照アセンブリ
+    - 埋め込みリソースの名前と内容
+    - 型の一覧
+  - 違いは 2 つだけだった。
+    - コンパイラーが生成する型の番号（`<>c__DisplayClass4_0` → `7_0` など）。ソースファイルのコンパイル順が変わったため
+    - WPF の BAML（`*.g.resources`）のハッシュ。含まれるエントリーは同じ
+  - 共通設定は `Directory.Build.props` に置いた。従来の出力を変えないためのもの。
+    - 出力先に `net48\` を付けない
+    - `AssemblyInfo.cs` を使い続ける
+    - 埋め込みリソースの名前を従来の規則で付ける
+  - 構成ごとの `OutputPath`（`release\x64\PPD\`、`skins\` など）や `DefineConstants` は、元の csproj からそのまま移した。
+  - SDK 形式では .cs / .resx / .xaml がフォルダーから自動で取り込まれる。そのため、どのプロジェクトからもコンパイルされていなかった古いファイル 86 個を削除した（PPD\PPD、PPDEditor の SlimDX 時代のフォーム、PPDFramework・PPDSingle・FlowScriptControl・WinFormsUI の未使用ファイル）。
+  - どこからも参照されていない PPDTwitter を削除した。
+- [x] `packages\` フォルダへの HintPath 参照をなくし、`packages.config` を削除した。SQLite の `.targets` の手動インポートも不要になった。
+- [ ] NuGet 管理外の DLL（SharpZipLib、WacomMTDN）を NuGet 版にするか、`lib\` に置いて明示的に参照する。→ 現在はプロジェクトフォルダーの DLL を HintPath で参照している（動作に問題はない）。
+- [x] ビルド後のコピー処理を MSBuild のターゲットに置き換えた（`Directory.Build.targets` の `CopyFlowScriptPlugin`）。
+  - FlowScriptEngine* の 7 プロジェクトは、コピー先を `FlowScriptPluginFolder` で指定する
+  - 従来は Release ビルドでも Debug の DLL をコピーしていたので、Debug ビルドのときだけコピーするようにした
+- [ ] リソース（.resx）の対応。byte[] や画像を `ResXFileRef` で持つ .resx が 142 個ある。net48 を Visual Studio の MSBuild でビルドする限りは今のままで動く。.NET では文字列以外のリソースに `System.Resources.Extensions` が必要になるので、**Phase 4 で追加する**。
+- [x] 使われていない EntityFramework / System.Data.SQLite.EF6 / System.Data.SQLite.Linq（と、これらをまとめて参照する System.Data.SQLite パッケージ）を削除した。
+  - コードが使っているのは `System.Data.SQLite`（ADO.NET）だけなので、System.Data.SQLite.Core だけを残した
+  - 5 つの app.config から、EF の設定セクションと EF6 のプロバイダー登録を削除した
+  - `Checker.cs` / `PPDReleaser` の DLL 一覧からも外した
 - [ ] 依存パッケージを整理する（2 章の表）。**.NET Framework と .NET 10 の両方で動く版を選び**、このフェーズで先に更新しておく。
   - MvvmLight → CommunityToolkit.Mvvm
   - SharpZipLib を NuGet の最新版に

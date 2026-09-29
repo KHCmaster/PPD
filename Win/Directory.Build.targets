@@ -1,0 +1,7 @@
+<Project>
+  <!-- FlowScript 拡張（FlowScriptEngine*）を、Debug ビルドのときに各アプリの dlls フォルダーへコピーする。
+       コピー先は各プロジェクトの FlowScriptPluginFolder で指定する。 -->
+  <Target Name="CopyFlowScriptPlugin" AfterTargets="Build" Condition="'$(Configuration)' == 'Debug' And '@(FlowScriptPluginFolder)' != ''">
+    <Copy SourceFiles="$(TargetPath)" DestinationFolder="%(FlowScriptPluginFolder.FullPath)" SkipUnchangedFiles="true" />
+  </Target>
+</Project>

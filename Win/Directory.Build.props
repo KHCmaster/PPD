@@ -1,0 +1,11 @@
+<Project>
+  <!-- 全プロジェクト共通の設定（SDK 形式の csproj に変換したときに、従来の出力を変えないためのもの） -->
+  <PropertyGroup>
+    <!-- 出力先は従来どおり bin\<Platform>\<Configuration>\（net48 などのフォルダーを付けない） -->
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <!-- バージョンなどは各プロジェクトの Properties\AssemblyInfo.cs で指定している -->
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <!-- 埋め込みリソースの名前を従来と同じ規則（DependentUpon の指定があるときだけ型名を使う）で付ける -->
+    <EmbeddedResourceUseDependentUponConvention>false</EmbeddedResourceUseDependentUponConvention>
+  </PropertyGroup>
+</Project>
