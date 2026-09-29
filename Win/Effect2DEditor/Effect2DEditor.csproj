@@ -28,7 +28,6 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="System.Configuration.ConfigurationManager" />
     <PackageReference Include="SharpDX" />
     <PackageReference Include="SharpDX.Mathematics" />
   </ItemGroup>

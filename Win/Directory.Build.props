@@ -15,8 +15,4 @@
          .NET 5 以降は既定で ICU になり、スクリプト（Mod）の表示や並び順が変わる可能性があるため -->
     <RuntimeHostConfigurationOption Include="System.Globalization.UseNls" Value="true" />
   </ItemGroup>
-  <ItemGroup>
-    <!-- .resx の byte[] や画像などの文字列以外のリソースを .NET で読み込むために必要 -->
-    <PackageReference Include="System.Resources.Extensions" />
-  </ItemGroup>
 </Project>

@@ -2,9 +2,6 @@
   <!-- NuGet パッケージの版はここでまとめて管理する（各 csproj の PackageReference には Version を書かない） -->
   <PropertyGroup>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
-    <!-- 間接的に使うパッケージも下の版にそろえる。
-         release\x64\PPD には複数の exe が同じフォルダーに出力されるので、プロジェクトごとに版が違うと、後からコピーされた古い版で上書きされてしまう -->
-    <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
   </PropertyGroup>
   <ItemGroup>
     <PackageVersion Include="CommunityToolkit.Mvvm" Version="8.4.2" />
@@ -25,19 +22,7 @@
     <PackageVersion Include="WinSCP" Version="5.7.7" />
     <PackageVersion Include="YamlDotNet" Version="5.1.0" />
     <!-- .NET で必要になったもの -->
-    <PackageVersion Include="System.Configuration.ConfigurationManager" Version="10.0.12" />
-    <PackageVersion Include="System.Resources.Extensions" Version="10.0.12" />
     <PackageVersion Include="System.ServiceProcess.ServiceController" Version="10.0.12" />
     <PackageVersion Include="WinForms.DataVisualization" Version="1.10.2" />
-  </ItemGroup>
-  <ItemGroup>
-    <!-- 間接的に使うパッケージ（CommunityToolkit.Mvvm、MessagePack などの依存） -->
-    <PackageVersion Include="Microsoft.Bcl.AsyncInterfaces" Version="10.0.1" />
-    <PackageVersion Include="System.Buffers" Version="4.6.1" />
-    <PackageVersion Include="System.Memory" Version="4.6.3" />
-    <PackageVersion Include="System.Numerics.Vectors" Version="4.6.1" />
-    <PackageVersion Include="System.Runtime.CompilerServices.Unsafe" Version="6.1.2" />
-    <PackageVersion Include="System.Threading.Tasks.Extensions" Version="4.6.3" />
-    <PackageVersion Include="System.ValueTuple" Version="4.5.0" />
   </ItemGroup>
 </Project>

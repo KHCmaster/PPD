@@ -31,7 +31,6 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="System.ServiceProcess.ServiceController" />
-    <PackageReference Include="System.Configuration.ConfigurationManager" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ErrorHandler\ErrorHandle.csproj" />

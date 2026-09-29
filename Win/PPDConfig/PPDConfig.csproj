@@ -20,7 +20,6 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="System.Configuration.ConfigurationManager" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ErrorHandler\ErrorHandle.csproj" />
