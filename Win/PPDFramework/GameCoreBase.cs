@@ -128,9 +128,8 @@ namespace PPDFramework
         /// <param name="control"></param>
         protected GameCoreBase(PPDExecuteArg args, Control control)
         {
-            // Dispose されなかった COM オブジェクトもファイナライザーで解放する（SharpDX のときと同じ動作）。
             // 最初の COM オブジェクトの破棄より前に設定する必要がある
-            SharpGen.Runtime.Configuration.EnableReleaseOnFinalizer = true;
+            ComDiagnostics.Configure();
             gameTimer = new GameTimer();
             Control = control;
             Args = args;
@@ -354,6 +353,7 @@ namespace PPDFramework
                 device.Dispose();
                 device = null;
             }
+            ComDiagnostics.ReportActiveObjects("Active COM objects after GameCoreBase.Dispose");
         }
     }
 }

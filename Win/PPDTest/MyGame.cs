@@ -117,6 +117,13 @@ namespace PPDTest
 
         protected override void Update()
         {
+            // 閉じるボタン（WM_CLOSE）で終了する。確認はしない
+            if (Form.IsCloseRequired)
+            {
+                Form.CloseAdmitted = true;
+                ShouldBeExit = true;
+                return;
+            }
             InputInfoBase inputInfo = null;
             if (IsWindowActive)
             {
@@ -152,6 +159,22 @@ namespace PPDTest
 
         public void Exit(object sender, EventArgs e)
         {
+            if (sceneManager != null)
+            {
+                sceneManager.CurrentScene?.Dispose();
+                sceneManager.Dispose();
+                sceneManager = null;
+            }
+            if (resourceManager != null)
+            {
+                resourceManager.Dispose();
+                resourceManager = null;
+            }
+            if (input != null)
+            {
+                input.Dispose();
+                input = null;
+            }
         }
 
         public IMovie GetMovie(SongInformation songInformation)

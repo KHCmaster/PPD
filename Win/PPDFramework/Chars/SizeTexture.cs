@@ -111,5 +111,15 @@ namespace PPDFramework.Chars
         {
             return a1.Size.Width * a1.Size.Height - a2.Size.Width * a2.Size.Height;
         }
+
+        protected override void DisposeResource()
+        {
+            base.DisposeResource();
+            if (Texture != null)
+            {
+                Texture.Dispose();
+                Texture = null;
+            }
+        }
     }
 }

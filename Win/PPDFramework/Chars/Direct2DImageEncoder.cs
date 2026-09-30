@@ -10,7 +10,7 @@ using System.IO;
 
 namespace PPDFramework.Chars
 {
-    class Direct2DImageEncoder
+    class Direct2DImageEncoder : IDisposable
     {
         private readonly Direct2DFactoryManager factoryManager;
 
@@ -23,6 +23,11 @@ namespace PPDFramework.Chars
             this.imageDpi = imageDpi;
 
             factoryManager = new Direct2DFactoryManager();
+        }
+
+        public void Dispose()
+        {
+            factoryManager.Dispose();
         }
 
         public void Save(Stream systemStream, Direct2DImageFormat format, string text, string faceName, float fontSize, out int width, out int height)
@@ -66,7 +71,7 @@ namespace PPDFramework.Chars
     }
 }
 
-class Direct2DFactoryManager
+class Direct2DFactoryManager : IDisposable
 {
     private readonly IWICImagingFactory wicFactory;
     private readonly ID2D1Factory d2DFactory;
@@ -101,6 +106,13 @@ class Direct2DFactoryManager
         {
             return dwFactory;
         }
+    }
+
+    public void Dispose()
+    {
+        dwFactory.Dispose();
+        d2DFactory.Dispose();
+        wicFactory.Dispose();
     }
 }
 

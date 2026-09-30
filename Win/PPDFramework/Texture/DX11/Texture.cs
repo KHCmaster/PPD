@@ -81,6 +81,7 @@ namespace PPDFramework.Texture.DX11
             var d3dDevice = (ID3D11Device)device.Device;
             _ShaderResourceView = d3dDevice.CreateShaderResourceView(texture);
             Surface = new Surface();
+            ComDiagnostics.Track(this, string.Format("Texture {0}x{1} renderTarget={2}", Width, Height, isRenderTarget));
             if (isRenderTarget)
             {
                 _RenderTargetView = d3dDevice.CreateRenderTargetView(texture);
@@ -110,6 +111,7 @@ namespace PPDFramework.Texture.DX11
                 Surface = null;
             }
             cpuData = null;
+            ComDiagnostics.UnTrack(this);
             base.DisposeResource();
         }
 

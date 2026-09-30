@@ -110,7 +110,7 @@ namespace PPDFramework
             usingTextures.Clear();
             if (primal != null)
             {
-                primal.Dispose();
+                primal.DisposeInternal();
                 primal = null;
             }
         }

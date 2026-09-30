@@ -124,6 +124,10 @@ namespace PPDFramework.DX11
             };
             var featureLevels = new[] { FeatureLevel.Level_11_0, FeatureLevel.Level_10_1, FeatureLevel.Level_10_0 };
             var flag = DeviceCreationFlags.BgraSupport;
+            if (ComDiagnostics.IsEnabled)
+            {
+                flag |= DeviceCreationFlags.Debug;
+            }
             try
             {
                 CreateDeviceAndSwapChain(DriverType.Hardware, flag, featureLevels, swapChainDescription);
@@ -499,10 +503,45 @@ namespace PPDFramework.DX11
                 Context.Dispose();
                 Context = null;
             }
+            ReportLiveDeviceObjects();
+            ComDiagnostics.ReportTrackedObjects("Textures not disposed");
             if (device != null)
             {
                 device.Dispose();
                 device = null;
+            }
+        }
+
+        /// <summary>
+        /// デバイスに残っているオブジェクトを書き出します（<see cref="ComDiagnostics"/> が有効なときだけ）。
+        /// デバイス自身と、ここで取得するデバッグ用のインターフェース以外が残っていれば解放漏れです。
+        /// </summary>
+        private void ReportLiveDeviceObjects()
+        {
+            if (!ComDiagnostics.IsEnabled || device == null)
+            {
+                return;
+            }
+            var debug = device.QueryInterfaceOrNull<Vortice.Direct3D11.Debug.ID3D11Debug>();
+            var infoQueue = device.QueryInterfaceOrNull<Vortice.Direct3D11.Debug.ID3D11InfoQueue>();
+            if (debug == null || infoQueue == null)
+            {
+                ComDiagnostics.Write("D3D11 live objects", new[] { "  (debug layer is not available)" });
+                debug?.Dispose();
+                infoQueue?.Dispose();
+                return;
+            }
+            using (debug)
+            using (infoQueue)
+            {
+                infoQueue.ClearStoredMessages();
+                debug.ReportLiveDeviceObjects(Vortice.Direct3D11.Debug.ReportLiveDeviceObjectFlags.Detail | Vortice.Direct3D11.Debug.ReportLiveDeviceObjectFlags.IgnoreInternal);
+                var lines = new List<string>();
+                for (ulong i = 0; i < infoQueue.NumStoredMessages; i++)
+                {
+                    lines.Add("  " + infoQueue.GetMessage(i).Description);
+                }
+                ComDiagnostics.Write("D3D11 live objects", lines.ToArray());
             }
         }
     }

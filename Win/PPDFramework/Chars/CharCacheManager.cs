@@ -160,6 +160,11 @@ namespace PPDFramework.Chars
                 }
                 sizeTextures.Clear();
             }
+            if (encoder != null)
+            {
+                encoder.Dispose();
+                encoder = null;
+            }
         }
     }
 }
