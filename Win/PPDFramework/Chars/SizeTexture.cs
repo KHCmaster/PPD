@@ -49,7 +49,7 @@ namespace PPDFramework.Chars
                     device.StretchRectangle(texture,
                            null,
                            Texture,
-                           new SharpDX.Mathematics.Interop.RawPoint((int)availableSpace.Position.X, (int)availableSpace.Position.Y));
+                           new Point((int)availableSpace.Position.X, (int)availableSpace.Position.Y));
                     uv = new Vector2(availableSpace.Position.X / (float)Size, availableSpace.Position.Y / (float)Size);
                     uvSize = new Vector2(width / (float)Size, height / (float)Size);
                     usedAvailableSpace = availableSpace;
@@ -72,7 +72,7 @@ namespace PPDFramework.Chars
                         device.StretchRectangle(texture,
                             null,
                             Texture,
-                            new SharpDX.Mathematics.Interop.RawPoint((int)availableSpace.Position.X, (int)availableSpace.Position.Y));
+                            new Point((int)availableSpace.Position.X, (int)availableSpace.Position.Y));
                         if (availableSpace.Size.Width - width > 0)
                         {
                             availableSpaces.Add(new AvailableSpace(this,

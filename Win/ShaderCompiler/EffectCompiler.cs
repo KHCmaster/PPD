@@ -1,5 +1,7 @@
-using SharpDX;
-using SharpDX.D3DCompiler;
+using SharpGen.Runtime;
+using Vortice.D3DCompiler;
+using Vortice.Direct3D;
+using Vortice.Direct3D11.Shader;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -248,17 +250,25 @@ namespace ShaderCompiler
 
         private static byte[] CompileEntry(string source, string entry, ShaderCall call, Include include, string fileName)
         {
-            // string を渡すと SharpDX が文字数をバイト数として渡すため、日本語のコメントがあると末尾が切れる。バイト列で渡す
+            // 日本語のコメントがあっても長さがずれないように、UTF-8 のバイト列で渡す
             var sourceBytes = Encoding.UTF8.GetBytes(source);
-            var result = ShaderBytecode.Compile(sourceBytes, entry, call.Profile, ShaderFlags.OptimizationLevel3, EffectFlags.None, null, include, fileName);
-            if (result.HasErrors || result.Bytecode == null)
+            var hr = Compiler.Compile(sourceBytes, null, include, entry, fileName, call.Profile, ShaderFlags.OptimizationLevel3, EffectFlags.None, out Blob blob, out Blob errorBlob);
+            try
             {
-                // 調査用に、実際にコンパイルしたソースを書き出す
-                var dumpPath = Path.ChangeExtension(fileName, ".failed.hlsl");
-                File.WriteAllText(dumpPath, source);
-                throw new Exception(string.Format("{0} のコンパイルに失敗しました（ソース: {1}）:\n{2}", call.Key, dumpPath, result.Message));
+                if (hr.Failure || blob == null)
+                {
+                    // 調査用に、実際にコンパイルしたソースを書き出す
+                    var dumpPath = Path.ChangeExtension(fileName, ".failed.hlsl");
+                    File.WriteAllText(dumpPath, source);
+                    throw new Exception(string.Format("{0} のコンパイルに失敗しました（ソース: {1}）:\n{2}", call.Key, dumpPath, errorBlob?.AsString()));
+                }
+                return blob.AsBytes();
             }
-            return result.Bytecode.Data;
+            finally
+            {
+                blob?.Dispose();
+                errorBlob?.Dispose();
+            }
         }
 
         enum BaseType : byte
@@ -280,19 +290,19 @@ namespace ShaderCompiler
 
         private static void Reflect(byte[] bytecode, Dictionary<string, VariableInfo> variables, ref int constantBufferSize, SortedDictionary<string, int> textures)
         {
-            using (var reflection = new ShaderReflection(bytecode))
+            using (var reflection = Compiler.Reflect<ID3D11ShaderReflection>(bytecode))
             {
                 var description = reflection.Description;
                 for (var i = 0; i < description.BoundResources; i++)
                 {
-                    var binding = reflection.GetResourceBindingDescription(i);
+                    var binding = reflection.GetResourceBindingDescription((uint)i);
                     if (binding.Type == ShaderInputType.Texture)
                     {
-                        if (textures.TryGetValue(binding.Name, out int slot) && slot != binding.BindPoint)
+                        if (textures.TryGetValue(binding.Name, out int slot) && slot != (int)binding.BindPoint)
                         {
                             throw new Exception(binding.Name + " のスロットがシェーダーによって異なります。register で明示してください");
                         }
-                        textures[binding.Name] = binding.BindPoint;
+                        textures[binding.Name] = (int)binding.BindPoint;
                     }
                     else if (binding.Type == ShaderInputType.ConstantBuffer && binding.Name != ConstantBufferName)
                     {
@@ -301,30 +311,30 @@ namespace ShaderCompiler
                 }
                 for (var i = 0; i < description.ConstantBuffers; i++)
                 {
-                    var buffer = reflection.GetConstantBuffer(i);
+                    var buffer = reflection.GetConstantBufferByIndex((uint)i);
                     var bufferDescription = buffer.Description;
                     if (bufferDescription.Name != ConstantBufferName)
                     {
                         continue;
                     }
-                    constantBufferSize = Math.Max(constantBufferSize, bufferDescription.Size);
+                    constantBufferSize = Math.Max(constantBufferSize, (int)bufferDescription.Size);
                     for (var j = 0; j < bufferDescription.VariableCount; j++)
                     {
-                        var variable = buffer.GetVariable(j);
+                        var variable = buffer.GetVariableByIndex((uint)j);
                         var variableDescription = variable.Description;
-                        var typeDescription = variable.GetVariableType().Description;
+                        var typeDescription = variable.VariableType.Description;
                         var info = new VariableInfo
                         {
                             Name = variableDescription.Name,
-                            Offset = variableDescription.StartOffset,
-                            Size = variableDescription.Size,
-                            Elements = typeDescription.ElementCount,
+                            Offset = (int)variableDescription.StartOffset,
+                            Size = (int)variableDescription.Size,
+                            Elements = (int)typeDescription.ElementCount,
                             BaseType = typeDescription.Class == ShaderVariableClass.Struct ? BaseType.Other :
                                 typeDescription.Type == ShaderVariableType.Int ? BaseType.Int :
                                 typeDescription.Type == ShaderVariableType.Float ? BaseType.Float : BaseType.Other
                         };
                         // cbuffer 内の配列は要素ごとに 16 バイト境界に揃えられる
-                        var elementSize = typeDescription.Class == ShaderVariableClass.Struct ? info.Size : typeDescription.RowCount * typeDescription.ColumnCount * 4;
+                        var elementSize = typeDescription.Class == ShaderVariableClass.Struct ? info.Size : (int)(typeDescription.RowCount * typeDescription.ColumnCount) * 4;
                         info.Stride = info.Elements > 0 ? (elementSize + 15) / 16 * 16 : info.Size;
                         if (variables.TryGetValue(info.Name, out VariableInfo existing) && (existing.Offset != info.Offset || existing.Size != info.Size))
                         {

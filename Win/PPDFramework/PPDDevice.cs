@@ -1,13 +1,11 @@
 ﻿using PPDFramework.Sprites;
 using PPDFramework.Texture;
 using PPDFramework.Vertex;
-using SharpDX;
 using System.Numerics;
 using PPDMath;
 using Matrix = System.Numerics.Matrix4x4;
 using Color4 = Vortice.Mathematics.Color4;
 using Rectangle = Vortice.Mathematics.RectI;
-using SharpDX.Mathematics.Interop;
 using System;
 using System.Collections.Generic;
 
@@ -141,7 +139,7 @@ namespace PPDFramework
         /// <summary>
         /// デバイスを取得します。
         /// </summary>
-        public abstract ComObject Device
+        public abstract SharpGen.Runtime.ComObject Device
         {
             get;
         }
@@ -268,7 +266,7 @@ namespace PPDFramework
         /// <param name="sourceRect"></param>
         /// <param name="dest"></param>
         /// <param name="destPoint"></param>
-        internal abstract void StretchRectangle(TextureBase src, RawRectangle? sourceRect, TextureBase dest, RawPoint? destPoint);
+        internal abstract void StretchRectangle(TextureBase src, Vortice.RawRect? sourceRect, TextureBase dest, Vortice.Mathematics.Int2? destPoint);
 
         /// <summary>
         /// クリアします。

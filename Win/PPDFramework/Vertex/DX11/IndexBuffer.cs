@@ -1,4 +1,5 @@
-using SharpDX.Direct3D11;
+using Vortice.Direct3D11;
+using Vortice.Mathematics;
 using System.Runtime.InteropServices;
 
 namespace PPDFramework.Vertex.DX11
@@ -8,13 +9,13 @@ namespace PPDFramework.Vertex.DX11
     /// </summary>
     class IndexBuffer : IndexBufferBase
     {
-        public SharpDX.Direct3D11.Buffer _Buffer
+        public ID3D11Buffer _Buffer
         {
             get;
             private set;
         }
 
-        public IndexBuffer(PPDDevice device, SharpDX.Direct3D11.Buffer buffer) : base(device)
+        public IndexBuffer(PPDDevice device, ID3D11Buffer buffer) : base(device)
         {
             _Buffer = buffer;
         }
@@ -29,7 +30,7 @@ namespace PPDFramework.Vertex.DX11
             try
             {
                 ((PPDFramework.DX11.PPDDevice)device).Context.UpdateSubresource(_Buffer, 0,
-                    new ResourceRegion(offset * sizeof(int), 0, 0, (offset + count) * sizeof(int), 1, 1),
+                    new Box(offset * sizeof(int), 0, 0, (offset + count) * sizeof(int), 1, 1),
                     handle.AddrOfPinnedObject(), 0, 0);
             }
             finally

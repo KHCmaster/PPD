@@ -1,7 +1,4 @@
-﻿using SharpDX;
-using System.Numerics;
-using PPDMath;
-
+﻿
 namespace PPDFramework.Texture
 {
     /// <summary>

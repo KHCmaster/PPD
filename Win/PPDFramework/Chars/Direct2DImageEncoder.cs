@@ -1,11 +1,10 @@
-﻿using SharpDX;
-using System.Numerics;
-using PPDMath;
+﻿using System.Numerics;
 using Color4 = Vortice.Mathematics.Color4;
-using SharpDX.Direct2D1;
-using SharpDX.DirectWrite;
-using SharpDX.DXGI;
-using SharpDX.WIC;
+using Vortice.DCommon;
+using Vortice.Direct2D1;
+using Vortice.DirectWrite;
+using Vortice.DXGI;
+using Vortice.WIC;
 using System;
 using System.IO;
 
@@ -31,29 +30,32 @@ namespace PPDFramework.Chars
 #if BENCHMARK
             using (var handler = Benchmark.Instance.Start("DirectWrite", "Save"))
 #endif
-            using (var layout = new TextLayout(factoryManager.DwFactory, text, new TextFormat(factoryManager.DwFactory, faceName, fontSize * 1.3f), 4000, 4000))
+            using (var textFormat = factoryManager.DwFactory.CreateTextFormat(faceName, fontSize * 1.3f))
+            using (var layout = factoryManager.DwFactory.CreateTextLayout(text, textFormat, 4000, 4000))
             {
-                width = (int)Math.Ceiling(layout.Metrics.WidthIncludingTrailingWhitespace);
-                height = (int)Math.Ceiling(layout.Metrics.Height);
-                using (var wicBitmap = new SharpDX.WIC.Bitmap(factoryManager.WicFactory, width, height, SharpDX.WIC.PixelFormat.Format32bppPRGBA, BitmapCreateCacheOption.CacheOnLoad))
+                var metrics = layout.Metrics;
+                width = (int)Math.Ceiling(metrics.WidthIncludingTrailingWhitespace);
+                height = (int)Math.Ceiling(metrics.Height);
+                using (var wicBitmap = factoryManager.WicFactory.CreateBitmap((uint)width, (uint)height, Vortice.WIC.PixelFormat.Format32bppPRGBA, BitmapCreateCacheOption.CacheOnLoad))
                 {
                     var renderTargetProperties = new RenderTargetProperties(RenderTargetType.Default,
-                        new SharpDX.Direct2D1.PixelFormat(Format.R8G8B8A8_UNorm, SharpDX.Direct2D1.AlphaMode.Unknown), imageDpi, imageDpi, RenderTargetUsage.None, FeatureLevel.Level_DEFAULT);
-                    using (var renderTarget = new WicRenderTarget(factoryManager.D2DFactory, wicBitmap, renderTargetProperties))
-                    using (var brush = new SolidColorBrush(renderTarget, new SharpDX.Mathematics.Interop.RawColor4(1f, 1f, 1f, 1f)))
-                    using (var encoder = new BitmapEncoder(factoryManager.WicFactory, Direct2DConverter.ConvertImageFormat(format)))
+                        new Vortice.DCommon.PixelFormat(Format.R8G8B8A8_UNorm, Vortice.DCommon.AlphaMode.Unknown), imageDpi, imageDpi, RenderTargetUsage.None, Vortice.Direct2D1.FeatureLevel.Default);
+                    using (var renderTarget = factoryManager.D2DFactory.CreateWicBitmapRenderTarget(wicBitmap, renderTargetProperties))
+                    using (var brush = renderTarget.CreateSolidColorBrush(new Color4(1f, 1f, 1f, 1f), null))
+                    using (var encoder = factoryManager.WicFactory.CreateEncoder(Direct2DConverter.ConvertImageFormat(format)))
+                    using (var stream = factoryManager.WicFactory.CreateStream(systemStream))
                     {
                         renderTarget.BeginDraw();
-                        renderTarget.Clear(new SharpDX.Mathematics.Interop.RawColor4(1, 1, 1, 0));
-                        renderTarget.DrawTextLayout(new SharpDX.Mathematics.Interop.RawVector2(0, 0), layout, brush);
-                        renderTarget.EndDraw();
-                        var stream = new WICStream(factoryManager.WicFactory, systemStream);
-                        encoder.Initialize(stream);
-                        using (var bitmapFrameEncode = new BitmapFrameEncode(encoder))
+                        renderTarget.Clear(new Color4(1, 1, 1, 0));
+                        renderTarget.DrawTextLayout(new Vector2(0, 0), layout, brush);
+                        renderTarget.EndDraw().CheckError();
+                        encoder.Initialize(stream, BitmapEncoderCacheOption.NoCache);
+                        using (var bitmapFrameEncode = encoder.CreateNewFrame(out var encoderOptions))
                         {
-                            bitmapFrameEncode.Initialize();
-                            bitmapFrameEncode.SetSize(width, height);
-                            bitmapFrameEncode.WriteSource(wicBitmap);
+                            encoderOptions?.Dispose();
+                            bitmapFrameEncode.Initialize().CheckError();
+                            bitmapFrameEncode.SetSize((uint)width, (uint)height).CheckError();
+                            bitmapFrameEncode.WriteSource(wicBitmap).CheckError();
                             bitmapFrameEncode.Commit();
                         }
                         encoder.Commit();
@@ -66,18 +68,18 @@ namespace PPDFramework.Chars
 
 class Direct2DFactoryManager
 {
-    private readonly SharpDX.WIC.ImagingFactory wicFactory;
-    private readonly SharpDX.Direct2D1.Factory d2DFactory;
-    private readonly SharpDX.DirectWrite.Factory dwFactory;
+    private readonly IWICImagingFactory wicFactory;
+    private readonly ID2D1Factory d2DFactory;
+    private readonly IDWriteFactory dwFactory;
 
     public Direct2DFactoryManager()
     {
-        wicFactory = new SharpDX.WIC.ImagingFactory();
-        d2DFactory = new SharpDX.Direct2D1.Factory();
-        dwFactory = new SharpDX.DirectWrite.Factory();
+        wicFactory = new IWICImagingFactory();
+        d2DFactory = D2D1.D2D1CreateFactory<ID2D1Factory>(Vortice.Direct2D1.FactoryType.SingleThreaded, DebugLevel.None);
+        dwFactory = DWrite.DWriteCreateFactory<IDWriteFactory>(Vortice.DirectWrite.FactoryType.Shared);
     }
 
-    public SharpDX.WIC.ImagingFactory WicFactory
+    public IWICImagingFactory WicFactory
     {
         get
         {
@@ -85,7 +87,7 @@ class Direct2DFactoryManager
         }
     }
 
-    public SharpDX.Direct2D1.Factory D2DFactory
+    public ID2D1Factory D2DFactory
     {
         get
         {
@@ -93,7 +95,7 @@ class Direct2DFactoryManager
         }
     }
 
-    public SharpDX.DirectWrite.Factory DwFactory
+    public IDWriteFactory DwFactory
     {
         get
         {

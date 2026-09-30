@@ -1,12 +1,12 @@
-using SharpDX;
 using PPDFramework.Texture;
 using PPDFramework.Vertex;
 using System.Numerics;
 using PPDMath;
 using Matrix = System.Numerics.Matrix4x4;
 using Color4 = Vortice.Mathematics.Color4;
-using SharpDX.Direct3D11;
+using Vortice.Direct3D11;
 using System;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 namespace PPDFramework.Effect.DX11
@@ -20,18 +20,18 @@ namespace PPDFramework.Effect.DX11
         const int MaxTextureSlots = 8;
 
         EffectData data;
-        VertexShader[] vertexShaders;
-        PixelShader[] pixelShaders;
-        SharpDX.Direct3D11.Buffer constantBuffer;
+        ID3D11VertexShader[] vertexShaders;
+        ID3D11PixelShader[] pixelShaders;
+        ID3D11Buffer constantBuffer;
         byte[] constants;
         bool constantsDirty = true;
-        ShaderResourceView[] textures = new ShaderResourceView[MaxTextureSlots];
+        ID3D11ShaderResourceView[] textures = new ID3D11ShaderResourceView[MaxTextureSlots];
         string technique;
         EffectData.Technique currentTechnique;
         EffectData.Pass currentPass;
         VertexDeclarationBase vertexDeclaration;
 
-        static readonly ShaderResourceView[] nullShaderResources = new ShaderResourceView[MaxTextureSlots];
+        static readonly ID3D11ShaderResourceView[] nullShaderResources = new ID3D11ShaderResourceView[MaxTextureSlots];
 
         public override string Technique
         {
@@ -57,7 +57,7 @@ namespace PPDFramework.Effect.DX11
             get { return (PPDFramework.DX11.PPDDevice)device; }
         }
 
-        private DeviceContext Context
+        private ID3D11DeviceContext Context
         {
             get { return DX11Device.Context; }
         }
@@ -65,16 +65,16 @@ namespace PPDFramework.Effect.DX11
         public Effect(PPDDevice device, byte[] bytes) : base(device)
         {
             data = new EffectData(bytes);
-            vertexShaders = new VertexShader[data.VertexShaders.Length];
-            pixelShaders = new PixelShader[data.PixelShaders.Length];
+            vertexShaders = new ID3D11VertexShader[data.VertexShaders.Length];
+            pixelShaders = new ID3D11PixelShader[data.PixelShaders.Length];
             constants = new byte[Math.Max(16, data.ConstantBufferSize)];
-            constantBuffer = new SharpDX.Direct3D11.Buffer((SharpDX.Direct3D11.Device)device.Device, new BufferDescription
+            constantBuffer = ((ID3D11Device)device.Device).CreateBuffer(new BufferDescription
             {
-                SizeInBytes = constants.Length,
+                ByteWidth = (uint)constants.Length,
                 Usage = ResourceUsage.Default,
                 BindFlags = BindFlags.ConstantBuffer,
-                CpuAccessFlags = CpuAccessFlags.None
-            });
+                CPUAccessFlags = CpuAccessFlags.None
+            }, (SubresourceData?)null);
             vertexDeclaration = VertexDeclarationFactoryManager.Factory.Create(device, this);
         }
 
@@ -131,12 +131,12 @@ namespace PPDFramework.Effect.DX11
         {
             currentPass = currentTechnique.Passes[pass];
             var context = Context;
-            context.VertexShader.Set(GetVertexShader(currentPass.VertexShaderIndex));
-            context.PixelShader.Set(GetPixelShader(currentPass.PixelShaderIndex));
-            context.OutputMerger.SetBlendState(DX11Device.GetBlendState(currentPass.BlendState));
-            context.VertexShader.SetConstantBuffer(0, constantBuffer);
-            context.PixelShader.SetConstantBuffer(0, constantBuffer);
-            context.PixelShader.SetSampler(0, DX11Device.LinearSampler);
+            context.VSSetShader(GetVertexShader(currentPass.VertexShaderIndex));
+            context.PSSetShader(GetPixelShader(currentPass.PixelShaderIndex));
+            context.OMSetBlendState(DX11Device.GetBlendState(currentPass.BlendState));
+            context.VSSetConstantBuffer(0, constantBuffer);
+            context.PSSetConstantBuffer(0, constantBuffer);
+            context.PSSetSampler(0, DX11Device.LinearSampler);
             ApplyChanges();
         }
 
@@ -149,7 +149,7 @@ namespace PPDFramework.Effect.DX11
         {
             // 次に描画先として使うテクスチャがシェーダーリソースとして残らないように、パイプラインからだけ外す。
             // 設定した値は残す（複数パスのエフェクトで次のパスでも同じテクスチャを使うため）。
-            Context.PixelShader.SetShaderResources(0, nullShaderResources.Length, nullShaderResources);
+            Context.PSSetShaderResources(0, (uint)nullShaderResources.Length, nullShaderResources);
             currentPass = null;
         }
 
@@ -177,18 +177,18 @@ namespace PPDFramework.Effect.DX11
                 }
                 constantsDirty = false;
             }
-            context.PixelShader.SetShaderResources(0, textures.Length, textures);
+            context.PSSetShaderResources(0, (uint)textures.Length, textures);
         }
 
-        private VertexShader GetVertexShader(int index)
+        private ID3D11VertexShader GetVertexShader(int index)
         {
-            return vertexShaders[index] ?? (vertexShaders[index] = new VertexShader((SharpDX.Direct3D11.Device)device.Device, data.VertexShaders[index]));
+            return vertexShaders[index] ?? (vertexShaders[index] = ((ID3D11Device)device.Device).CreateVertexShader(data.VertexShaders[index], null));
         }
 
-        private PixelShader GetPixelShader(int index)
+        private ID3D11PixelShader GetPixelShader(int index)
         {
             // AlphaBlend は 400 を超えるピクセルシェーダーを持つので、使うときに作る
-            return pixelShaders[index] ?? (pixelShaders[index] = new PixelShader((SharpDX.Direct3D11.Device)device.Device, data.PixelShaders[index]));
+            return pixelShaders[index] ?? (pixelShaders[index] = ((ID3D11Device)device.Device).CreatePixelShader(data.PixelShaders[index], null));
         }
 
         public override void SetTexture(EffectHandleBase handle, TextureBase texture)
@@ -243,7 +243,7 @@ namespace PPDFramework.Effect.DX11
 
         public override void SetValue(EffectHandleBase handle, Matrix matrix)
         {
-            // シェーダーは row_major なので、SharpDX の Matrix をそのまま書き込む
+            // シェーダーは row_major なので、Matrix4x4 をそのまま書き込む
             WriteStruct(((EffectHandle)handle).Variable, matrix, 0);
         }
 
@@ -322,13 +322,13 @@ namespace PPDFramework.Effect.DX11
             }
             var offset = variable.Offset + elementOffset;
             // 変数の範囲を超えて書き込まないようにする
-            var size = Math.Min(Utilities.SizeOf<T>(), Math.Min(variable.Stride, constants.Length - offset));
+            var size = Math.Min(Unsafe.SizeOf<T>(), Math.Min(variable.Stride, constants.Length - offset));
             if (size <= 0)
             {
                 return;
             }
-            var buffer = new byte[Utilities.SizeOf<T>()];
-            Utilities.Pin(buffer, ptr => Utilities.Write(ptr, ref value));
+            var buffer = new byte[Unsafe.SizeOf<T>()];
+            MemoryMarshal.Write(buffer, in value);
             System.Buffer.BlockCopy(buffer, 0, constants, offset, size);
             constantsDirty = true;
         }

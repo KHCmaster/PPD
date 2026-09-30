@@ -1,4 +1,5 @@
-using SharpDX.Direct3D11;
+using Vortice.Direct3D11;
+using Vortice.Mathematics;
 using System;
 using System.Runtime.InteropServices;
 
@@ -14,13 +15,13 @@ namespace PPDFramework.Vertex.DX11
         int dirtyStart;
         int dirtyEnd;
 
-        public SharpDX.Direct3D11.Buffer _Buffer
+        public ID3D11Buffer _Buffer
         {
             get;
             private set;
         }
 
-        public VertexBuffer(PPDDevice device, SharpDX.Direct3D11.Buffer buffer, int sizeInBytes) : base(device, sizeInBytes)
+        public VertexBuffer(PPDDevice device, ID3D11Buffer buffer, int sizeInBytes) : base(device, sizeInBytes)
         {
             _Buffer = buffer;
         }
@@ -47,7 +48,7 @@ namespace PPDFramework.Vertex.DX11
         /// CPU側で書き込まれた頂点をGPUへ転送します。描画スレッドから呼ぶ必要があります。
         /// </summary>
         /// <param name="context"></param>
-        internal void Flush(DeviceContext context)
+        internal void Flush(ID3D11DeviceContext context)
         {
             if (dirtyEnd <= dirtyStart)
             {
@@ -64,7 +65,7 @@ namespace PPDFramework.Vertex.DX11
                 {
                     var ptr = handle.AddrOfPinnedObject() + dirtyStart * ColoredTexturedVertex.Size;
                     context.UpdateSubresource(_Buffer, 0,
-                        new ResourceRegion(dirtyStart * ColoredTexturedVertex.Size, 0, 0, dirtyEnd * ColoredTexturedVertex.Size, 1, 1),
+                        new Box(dirtyStart * ColoredTexturedVertex.Size, 0, 0, dirtyEnd * ColoredTexturedVertex.Size, 1, 1),
                         ptr, 0, 0);
                 }
                 finally

@@ -179,7 +179,7 @@ static class ExceptionWatch
                 case 7: // UNLOAD_DLL
                     var b = Marshal.ReadInt64(u, 0);
                     var m = modules.FirstOrDefault(x => x.Base == b);
-                    if (m != null && (m.Name.IndexOf("sharpdx", StringComparison.OrdinalIgnoreCase) >= 0 || m.Name.IndexOf("d3d", StringComparison.OrdinalIgnoreCase) >= 0 || m.Name.IndexOf("clr", StringComparison.OrdinalIgnoreCase) >= 0))
+                    if (m != null && (m.Name.IndexOf("sharpdx", StringComparison.OrdinalIgnoreCase) >= 0 || m.Name.IndexOf("vortice", StringComparison.OrdinalIgnoreCase) >= 0 || m.Name.IndexOf("d3d", StringComparison.OrdinalIgnoreCase) >= 0 || m.Name.IndexOf("clr", StringComparison.OrdinalIgnoreCase) >= 0))
                     {
                         Log("UNLOAD " + m.Name);
                     }

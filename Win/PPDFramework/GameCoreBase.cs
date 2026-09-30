@@ -2,7 +2,6 @@
 using PPDFramework.ScreenFilters.Impl;
 using PPDFramework.Shaders;
 using PPDFrameworkCore;
-using SharpDX;
 using System.Numerics;
 using PPDMath;
 using System;
@@ -129,7 +128,9 @@ namespace PPDFramework
         /// <param name="control"></param>
         protected GameCoreBase(PPDExecuteArg args, Control control)
         {
-            SharpDX.Configuration.EnableReleaseOnFinalizer = true;
+            // Dispose されなかった COM オブジェクトもファイナライザーで解放する（SharpDX のときと同じ動作）。
+            // 最初の COM オブジェクトの破棄より前に設定する必要がある
+            SharpGen.Runtime.Configuration.EnableReleaseOnFinalizer = true;
             gameTimer = new GameTimer();
             Control = control;
             Args = args;
@@ -220,7 +221,7 @@ namespace PPDFramework
                         presentStartTime = lastPresentEndTime;
                     }
                 }
-                catch (SharpDXException)
+                catch (SharpGen.Runtime.SharpGenException)
                 {
                     // 表示に失敗したフレームは捨てて、次のフレームで再試行します
                 }

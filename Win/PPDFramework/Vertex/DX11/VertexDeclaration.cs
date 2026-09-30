@@ -2,13 +2,13 @@
 {
     class VertexDeclaration : VertexDeclarationBase
     {
-        public SharpDX.Direct3D11.InputLayout _InputLayout
+        public Vortice.Direct3D11.ID3D11InputLayout _InputLayout
         {
             get;
             private set;
         }
 
-        public VertexDeclaration(SharpDX.Direct3D11.InputLayout inputLayout)
+        public VertexDeclaration(Vortice.Direct3D11.ID3D11InputLayout inputLayout)
         {
             _InputLayout = inputLayout;
         }

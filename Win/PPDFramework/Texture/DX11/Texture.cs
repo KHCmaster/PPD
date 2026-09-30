@@ -1,7 +1,7 @@
 using System.Numerics;
 using PPDMath;
-using SharpDX.Direct3D11;
-using SharpDX.Mathematics.Interop;
+using Vortice.Direct3D11;
+using Vortice.Mathematics;
 using System;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -52,38 +52,38 @@ namespace PPDFramework.Texture.DX11
             get { return Width * BytesPerPixel; }
         }
 
-        public Texture2D _Texture
+        public ID3D11Texture2D _Texture
         {
             get;
             private set;
         }
 
-        public ShaderResourceView _ShaderResourceView
+        public ID3D11ShaderResourceView _ShaderResourceView
         {
             get;
             private set;
         }
 
-        public RenderTargetView _RenderTargetView
+        public ID3D11RenderTargetView _RenderTargetView
         {
             get;
             private set;
         }
 
-        public Texture(PPDDevice device, Texture2D texture, bool pa, bool isRenderTarget, byte[] cpuData)
+        public Texture(PPDDevice device, ID3D11Texture2D texture, bool pa, bool isRenderTarget, byte[] cpuData)
         {
             this.device = device;
             this.pa = pa;
             this.cpuData = cpuData;
             _Texture = texture;
-            Width = texture.Description.Width;
-            Height = texture.Description.Height;
-            var d3dDevice = (SharpDX.Direct3D11.Device)device.Device;
-            _ShaderResourceView = new ShaderResourceView(d3dDevice, texture);
+            Width = (int)texture.Description.Width;
+            Height = (int)texture.Description.Height;
+            var d3dDevice = (ID3D11Device)device.Device;
+            _ShaderResourceView = d3dDevice.CreateShaderResourceView(texture);
             Surface = new Surface();
             if (isRenderTarget)
             {
-                _RenderTargetView = new RenderTargetView(d3dDevice, texture);
+                _RenderTargetView = d3dDevice.CreateRenderTargetView(texture);
             }
         }
 
@@ -183,10 +183,10 @@ namespace PPDFramework.Texture.DX11
         /// <param name="src"></param>
         /// <param name="sourceRect"></param>
         /// <param name="destPoint"></param>
-        internal void CopyFrom(Texture src, RawRectangle? sourceRect, RawPoint? destPoint)
+        internal void CopyFrom(Texture src, Vortice.RawRect? sourceRect, Int2? destPoint)
         {
-            var rect = sourceRect ?? new RawRectangle(0, 0, src.Width, src.Height);
-            var point = destPoint ?? new RawPoint(0, 0);
+            var rect = sourceRect ?? new Vortice.RawRect(0, 0, src.Width, src.Height);
+            var point = destPoint ?? new Int2(0, 0);
             var srcData = src.GetCpuDataCopy();
             lock (cpuDataLock)
             {
@@ -211,7 +211,7 @@ namespace PPDFramework.Texture.DX11
         /// CPU側で書き込まれたデータをGPUへ転送します。描画スレッドから呼ぶ必要があります。
         /// </summary>
         /// <param name="context"></param>
-        internal void Flush(DeviceContext context)
+        internal void Flush(ID3D11DeviceContext context)
         {
             if (dirtyBottom <= dirtyTop)
             {
@@ -227,7 +227,7 @@ namespace PPDFramework.Texture.DX11
                 try
                 {
                     var ptr = handle.AddrOfPinnedObject() + dirtyTop * Pitch;
-                    context.UpdateSubresource(_Texture, 0, new ResourceRegion(0, dirtyTop, 0, Width, dirtyBottom, 1), ptr, Pitch, 0);
+                    context.UpdateSubresource(_Texture, 0, new Box(0, dirtyTop, 0, Width, dirtyBottom, 1), ptr, (uint)Pitch, 0);
                 }
                 finally
                 {
@@ -282,37 +282,40 @@ namespace PPDFramework.Texture.DX11
         /// <param name="context"></param>
         /// <param name="texture"></param>
         /// <returns></returns>
-        internal static byte[] ReadPixels(DeviceContext context, Texture2D texture)
+        internal static byte[] ReadPixels(ID3D11DeviceContext context, ID3D11Texture2D texture)
         {
             var desc = texture.Description;
-            var data = new byte[desc.Width * desc.Height * BytesPerPixel];
-            using (var staging = new Texture2D(texture.Device, new Texture2DDescription
+            var width = (int)desc.Width;
+            var height = (int)desc.Height;
+            var data = new byte[width * height * BytesPerPixel];
+            using (var device = texture.Device)
+            using (var staging = device.CreateTexture2D(new Texture2DDescription
             {
                 Width = desc.Width,
                 Height = desc.Height,
                 MipLevels = 1,
                 ArraySize = 1,
                 Format = desc.Format,
-                SampleDescription = new SharpDX.DXGI.SampleDescription(1, 0),
+                SampleDescription = new Vortice.DXGI.SampleDescription(1, 0),
                 Usage = ResourceUsage.Staging,
                 BindFlags = BindFlags.None,
-                CpuAccessFlags = CpuAccessFlags.Read,
-                OptionFlags = ResourceOptionFlags.None
+                CPUAccessFlags = CpuAccessFlags.Read,
+                MiscFlags = ResourceOptionFlags.None
             }))
             {
-                context.CopySubresourceRegion(texture, 0, null, staging, 0);
-                var dataBox = context.MapSubresource(staging, 0, MapMode.Read, MapFlags.None);
+                context.CopySubresourceRegion(staging, 0, 0, 0, 0, texture, 0, null);
+                var dataBox = context.Map(staging, 0, MapMode.Read, MapFlags.None);
                 try
                 {
-                    var rowBytes = desc.Width * BytesPerPixel;
-                    for (var y = 0; y < desc.Height; y++)
+                    var rowBytes = width * BytesPerPixel;
+                    for (var y = 0; y < height; y++)
                     {
-                        Marshal.Copy(dataBox.DataPointer + y * dataBox.RowPitch, data, y * rowBytes, rowBytes);
+                        Marshal.Copy(dataBox.DataPointer + y * (int)dataBox.RowPitch, data, y * rowBytes, rowBytes);
                     }
                 }
                 finally
                 {
-                    context.UnmapSubresource(staging, 0);
+                    context.Unmap(staging, 0);
                 }
             }
             return data;

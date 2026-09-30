@@ -27,7 +27,7 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="SharpDX" />
-    <PackageReference Include="SharpDX.D3DCompiler" />
+    <PackageReference Include="Vortice.D3DCompiler" />
+    <PackageReference Include="Vortice.Direct3D11" />
   </ItemGroup>
 </Project>

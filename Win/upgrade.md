@@ -445,10 +445,26 @@ Phase 7  配布・更新の仕組みの対応、リリース
   - WAV の読み込みに使っていた SharpDX の `SoundStream` の代わりに、FMOD の出力から作る RIFF WAVE（fmt / data チャンク）を読む小さな関数を置いた
   - 確認した結果: 同梱の効果音 7 個（ogg / wav）を読み込み、バッファの中身・再生状態・再生速度の変更・停止を確かめた。RenderCheck も全て通った
   - 注意: Vortice 3.8.3 の `IDirectSoundBuffer.Caps` は E_INVALIDARG になる（PPD では使っていない）
-- [ ] D3D11 / DXGI（PPDFramework の DX11 層）
-- [ ] Direct2D / DirectWrite / WIC（Direct2DImageEncoder）
-- [ ] ShaderCompiler（D3DCompiler）
-- [ ] `EnableReleaseOnFinalizer` への依存をなくす
+- [x] 使っていない `using SharpDX;`（208 ファイル）と、18 プロジェクトの SharpDX への参照を削除した（2026-09-30）
+- [x] ShaderCompiler（2026-09-30）: Vortice.D3DCompiler の `Compiler.Compile`（UTF-8 のバイト列で渡す）と、Vortice.Direct3D11 の `ID3D11ShaderReflection` に置き換えた。
+  - **出力するシェーダーのバイナリ（d3d11_*.bin の 6 個）が移行前とバイト単位で一致することを確認した**
+- [x] D3D11 / DXGI（2026-09-30）: PPDFramework の DX11 層（PPDDevice、Texture、TextureFactory、VertexBuffer、IndexBuffer、VertexDeclaration、Effect）を Vortice.Direct3D11 / Vortice.DXGI 3.8.3 に置き換えた。
+  - `D3D11CreateDeviceAndSwapChain` で作る（失敗したら WARP。SharpDX のときと同じ）
+  - 注意した違い
+    - `CopyResource` の引数の順番が逆（SharpDX は (コピー元, コピー先)、Vortice は (コピー先, コピー元)）
+    - `RSSetScissorRect(int, int, int, int)` は (x, y, 幅, 高さ)。SharpDX の `SetScissorRectangle` は (左, 上, 右, 下) なので、`RawRect` を渡す形にした
+    - `ResourceRegion` → `Vortice.Mathematics.Box`（引数の順番は同じ）
+  - `PPDDevice.Device` の型は `SharpGen.Runtime.ComObject`、`StretchRectangle` の引数は `Vortice.RawRect?` / `Int2?` にした（FlowScript からは使っていない）
+  - `TextureDataBase.DataStream` は PPDFramework の `DataStream`（`UnmanagedMemoryStream` に `DataPointer` を加えたもの）にした。Vortice の DataStream はポインターから作れないため
+- [x] Direct2D / DirectWrite / WIC（2026-09-30）: Direct2DImageEncoder を Vortice.Direct2D1 に置き換えた。SharpDX の既定値（D2D はシングルスレッド、DirectWrite は Shared、エンコーダーは NoCache）に合わせた。Dispose していなかった `TextFormat` と `WICStream` を Dispose するようにした
+- [x] `EnableReleaseOnFinalizer`: SharpGen.Runtime にも同じ設定（`SharpGen.Runtime.Configuration.EnableReleaseOnFinalizer`）があるので、GameCoreBase で同じように有効にした（ファイナライザーで COM の参照を解放する。SharpDX と同じ動作）。
+  - この設定への依存をなくす（全て Dispose で解放し、ReportLiveObjects で漏れを確かめる）のは今後の課題として残す
+- 確認した結果（2026-09-30）
+  - `SharpDX*` のパッケージ・DLL への参照はゼロ（PPD.deps.json にも出てこない）。Debug / Release ともビルドできる
+  - シーン 0〜7 の画素比較が通った（文字は D2D で描画している）。PPD の起動・終了でアクセス違反なし。Mod 28 個・譜面スクリプト 17 個の既定値が一致
+  - PPDEditor、PPDConfig、KeyConfiger、Effect2DEditor、BMSTOPPD、FlowScriptControlTest が起動する
+  - 配布ファイルの一覧を `Vortice.Direct2D1.dll`、`Vortice.DXGI.dll`、`Vortice.Direct3D11.dll` に更新し、`SharpDX.dll` を外した
+  - 既知の問題（移行前から）: 文字の描画方法を WinAPI（`[texturecharmode]1`）にすると文字が表示されない。移行前のビルドでも同じ画像になることを確認した。既定の D2D では問題ない
 
 **完了条件**: `SharpDX*` への参照がゼロ。回帰テスト、実プレイ確認、終了時のアクセス違反チェックが通る。フレームレートが移行前と同等以上。
 

@@ -1,4 +1,4 @@
-using SharpDX.Direct3D11;
+using Vortice.Direct3D11;
 
 namespace PPDFramework.Vertex.DX11
 {
@@ -6,13 +6,13 @@ namespace PPDFramework.Vertex.DX11
     {
         public VertexBufferBase Create(PPDDevice device, int sizeInBytes)
         {
-            return new VertexBuffer(device, new Buffer((SharpDX.Direct3D11.Device)device.Device, new BufferDescription
+            return new VertexBuffer(device, ((ID3D11Device)device.Device).CreateBuffer(new BufferDescription
             {
-                SizeInBytes = sizeInBytes,
-                CpuAccessFlags = CpuAccessFlags.None,
+                ByteWidth = (uint)sizeInBytes,
+                CPUAccessFlags = CpuAccessFlags.None,
                 BindFlags = BindFlags.VertexBuffer,
                 Usage = ResourceUsage.Default
-            }), sizeInBytes);
+            }, (SubresourceData?)null), sizeInBytes);
         }
     }
 }

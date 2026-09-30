@@ -1,8 +1,7 @@
-using SharpDX;
 using System.Numerics;
 using PPDMath;
-using SharpDX.Direct3D11;
-using SharpDX.DXGI;
+using Vortice.Direct3D11;
+using Vortice.DXGI;
 using System.IO;
 using System.Runtime.InteropServices;
 
@@ -19,19 +18,20 @@ namespace PPDFramework.Texture.DX11
 
         public TextureBase CreateRenderTarget(PPDDevice device, int width, int height, int level, bool pa)
         {
-            var texture = new Texture2D((SharpDX.Direct3D11.Device)device.Device, new Texture2DDescription
+            var description = new Texture2DDescription
             {
-                Width = width,
-                Height = height,
+                Width = (uint)width,
+                Height = (uint)height,
                 MipLevels = 1,
                 ArraySize = 1,
                 Format = TextureFormat,
                 SampleDescription = new SampleDescription(1, 0),
                 Usage = ResourceUsage.Default,
                 BindFlags = BindFlags.ShaderResource | BindFlags.RenderTarget,
-                CpuAccessFlags = CpuAccessFlags.None,
-                OptionFlags = ResourceOptionFlags.None
-            });
+                CPUAccessFlags = CpuAccessFlags.None,
+                MiscFlags = ResourceOptionFlags.None
+            };
+            var texture = ((ID3D11Device)device.Device).CreateTexture2D(description);
             return new Texture(device, texture, pa, true, null);
         }
 
@@ -121,19 +121,20 @@ namespace PPDFramework.Texture.DX11
             var handle = GCHandle.Alloc(pixels, GCHandleType.Pinned);
             try
             {
-                var texture = new Texture2D((SharpDX.Direct3D11.Device)device.Device, new Texture2DDescription
+                var description = new Texture2DDescription
                 {
-                    Width = width,
-                    Height = height,
+                    Width = (uint)width,
+                    Height = (uint)height,
                     MipLevels = 1,
                     ArraySize = 1,
                     Format = TextureFormat,
                     SampleDescription = new SampleDescription(1, 0),
                     Usage = ResourceUsage.Default,
                     BindFlags = BindFlags.ShaderResource,
-                    CpuAccessFlags = CpuAccessFlags.None,
-                    OptionFlags = ResourceOptionFlags.None
-                }, new DataRectangle(handle.AddrOfPinnedObject(), width * 4));
+                    CPUAccessFlags = CpuAccessFlags.None,
+                    MiscFlags = ResourceOptionFlags.None
+                };
+                var texture = ((ID3D11Device)device.Device).CreateTexture2D(description, new SubresourceData(handle.AddrOfPinnedObject(), (uint)width * 4, 0));
                 return new Texture(device, texture, pa, false, keepCpuData ? pixels : null);
             }
             finally

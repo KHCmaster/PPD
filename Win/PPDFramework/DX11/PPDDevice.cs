@@ -1,4 +1,3 @@
-using SharpDX;
 using PPDFramework.Sprites;
 using PPDFramework.Texture;
 using PPDFramework.Vertex;
@@ -6,10 +5,10 @@ using System.Numerics;
 using PPDMath;
 using Color4 = Vortice.Mathematics.Color4;
 using Rectangle = Vortice.Mathematics.RectI;
-using SharpDX.Direct3D;
-using SharpDX.Direct3D11;
-using SharpDX.DXGI;
-using SharpDX.Mathematics.Interop;
+using SharpGen.Runtime;
+using Vortice.Direct3D;
+using Vortice.Direct3D11;
+using Vortice.DXGI;
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -23,16 +22,16 @@ namespace PPDFramework.DX11
     {
         const int MaxFanPrimitiveCount = 4096;
 
-        SharpDX.Direct3D11.Device device;
-        SwapChain swapChain;
-        Texture2D backBuffer;
+        ID3D11Device device;
+        IDXGISwapChain swapChain;
+        ID3D11Texture2D backBuffer;
         VertexDeclarationBase vertexDeclaration;
         VertexBufferBase currentBuffer;
         IndexBufferBase currentIndex;
-        RasterizerState scissorEnabledState;
-        RasterizerState scissorDisabledState;
-        SharpDX.Direct3D11.Buffer fanIndexBuffer;
-        Dictionary<string, BlendState> blendStates;
+        ID3D11RasterizerState scissorEnabledState;
+        ID3D11RasterizerState scissorDisabledState;
+        ID3D11Buffer fanIndexBuffer;
+        Dictionary<string, ID3D11BlendState> blendStates;
         Dictionary<PrimitiveType, PrimitiveTopology> primitiveTypeMap = new Dictionary<PrimitiveType, PrimitiveTopology>
         {
             { PrimitiveType.PointList, PrimitiveTopology.PointList },
@@ -54,7 +53,7 @@ namespace PPDFramework.DX11
         /// <summary>
         /// デバイスコンテキストを取得します。
         /// </summary>
-        public DeviceContext Context
+        public ID3D11DeviceContext Context
         {
             get;
             private set;
@@ -63,7 +62,7 @@ namespace PPDFramework.DX11
         /// <summary>
         /// シェーダーで使うサンプラーを取得します（Common.fx の LinearSampler）。
         /// </summary>
-        internal SamplerState LinearSampler
+        internal ID3D11SamplerState LinearSampler
         {
             get;
             private set;
@@ -80,7 +79,7 @@ namespace PPDFramework.DX11
                 if (vertexDeclaration != value)
                 {
                     vertexDeclaration = value;
-                    Context.InputAssembler.InputLayout = ((Vertex.DX11.VertexDeclaration)vertexDeclaration)._InputLayout;
+                    Context.IASetInputLayout(((Vertex.DX11.VertexDeclaration)vertexDeclaration)._InputLayout);
                 }
             }
         }
@@ -116,49 +115,57 @@ namespace PPDFramework.DX11
             var swapChainDescription = new SwapChainDescription
             {
                 BufferCount = 1,
-                ModeDescription = new ModeDescription(width, height, new Rational(60, 1), Texture.DX11.TextureFactory.TextureFormat),
-                IsWindowed = true,
-                OutputHandle = handle,
+                BufferDescription = new ModeDescription((uint)width, (uint)height, new Rational(60, 1), Texture.DX11.TextureFactory.TextureFormat),
+                Windowed = true,
+                OutputWindow = handle,
                 SampleDescription = new SampleDescription(1, 0),
                 SwapEffect = SwapEffect.Discard,
-                Usage = Usage.RenderTargetOutput
+                BufferUsage = Usage.RenderTargetOutput
             };
             var featureLevels = new[] { FeatureLevel.Level_11_0, FeatureLevel.Level_10_1, FeatureLevel.Level_10_0 };
             var flag = DeviceCreationFlags.BgraSupport;
             try
             {
-                SharpDX.Direct3D11.Device.CreateWithSwapChain(DriverType.Hardware, flag, featureLevels, swapChainDescription, out device, out swapChain);
+                CreateDeviceAndSwapChain(DriverType.Hardware, flag, featureLevels, swapChainDescription);
             }
-            catch (SharpDXException)
+            catch (SharpGenException)
             {
-                SharpDX.Direct3D11.Device.CreateWithSwapChain(DriverType.Warp, flag, featureLevels, swapChainDescription, out device, out swapChain);
+                CreateDeviceAndSwapChain(DriverType.Warp, flag, featureLevels, swapChainDescription);
             }
             // フルスクリーンの切り替えはアプリケーション側で行うので、Alt+Enterを無効にします
-            using (var factory = swapChain.GetParent<SharpDX.DXGI.Factory>())
+            using (var factory = swapChain.GetParent<IDXGIFactory>())
             {
-                factory.MakeWindowAssociation(handle, WindowAssociationFlags.IgnoreAll);
+                factory.MakeWindowAssociation(handle, WindowAssociationFlags.IgnoreAll).CheckError();
             }
-            Context = device.ImmediateContext;
-            backBuffer = Texture2D.FromSwapChain<Texture2D>(swapChain, 0);
-            Context.Rasterizer.SetViewport(new RawViewportF { X = 0, Y = 0, Width = width, Height = height, MinDepth = 0.0f, MaxDepth = 1.0f });
-            scissorDisabledState = new RasterizerState(device, new RasterizerStateDescription
+            backBuffer = swapChain.GetBuffer<ID3D11Texture2D>(0);
+            Context.RSSetViewport(0, 0, width, height, 0.0f, 1.0f);
+            scissorDisabledState = device.CreateRasterizerState(new RasterizerDescription
             {
                 CullMode = CullMode.None,
                 FillMode = FillMode.Solid,
-                IsDepthClipEnabled = true,
-                IsScissorEnabled = false
+                DepthClipEnable = true,
+                ScissorEnable = false
             });
-            scissorEnabledState = new RasterizerState(device, new RasterizerStateDescription
+            scissorEnabledState = device.CreateRasterizerState(new RasterizerDescription
             {
                 CullMode = CullMode.None,
                 FillMode = FillMode.Solid,
-                IsDepthClipEnabled = true,
-                IsScissorEnabled = true
+                DepthClipEnable = true,
+                ScissorEnable = true
             });
-            Context.Rasterizer.State = scissorDisabledState;
+            Context.RSSetState(scissorDisabledState);
             CreateShaderStates();
             CreateFanIndexBuffer();
             SpriteBatch = new SpriteBatch(this);
+        }
+
+        private void CreateDeviceAndSwapChain(DriverType driverType, DeviceCreationFlags flags, FeatureLevel[] featureLevels, SwapChainDescription swapChainDescription)
+        {
+            D3D11.D3D11CreateDeviceAndSwapChain(null, driverType, flags, featureLevels, swapChainDescription,
+                out IDXGISwapChain newSwapChain, out ID3D11Device newDevice, out _, out ID3D11DeviceContext newContext).CheckError();
+            swapChain = newSwapChain;
+            device = newDevice;
+            Context = newContext;
         }
 
         /// <summary>
@@ -166,37 +173,37 @@ namespace PPDFramework.DX11
         /// </summary>
         private void CreateShaderStates()
         {
-            LinearSampler = new SamplerState(device, new SamplerStateDescription
+            LinearSampler = device.CreateSamplerState(new SamplerDescription
             {
                 Filter = Filter.MinMagLinearMipPoint,
                 AddressU = TextureAddressMode.Clamp,
                 AddressV = TextureAddressMode.Clamp,
                 AddressW = TextureAddressMode.Clamp,
-                ComparisonFunction = Comparison.Never,
-                MaximumAnisotropy = 1,
-                MinimumLod = float.MinValue,
-                MaximumLod = float.MaxValue
+                ComparisonFunc = ComparisonFunction.Never,
+                MaxAnisotropy = 1,
+                MinLOD = float.MinValue,
+                MaxLOD = float.MaxValue
             });
-            blendStates = new Dictionary<string, BlendState>
+            blendStates = new Dictionary<string, ID3D11BlendState>
             {
-                { "NoBlend", CreateBlendState(false, BlendOption.One, BlendOption.Zero) },
-                { "AlphaBlending", CreateBlendState(true, BlendOption.SourceAlpha, BlendOption.InverseSourceAlpha) },
-                { "PremultipliedAlphaBlending", CreateBlendState(true, BlendOption.One, BlendOption.InverseSourceAlpha) }
+                { "NoBlend", CreateBlendState(false, Blend.One, Blend.Zero) },
+                { "AlphaBlending", CreateBlendState(true, Blend.SourceAlpha, Blend.InverseSourceAlpha) },
+                { "PremultipliedAlphaBlending", CreateBlendState(true, Blend.One, Blend.InverseSourceAlpha) }
             };
         }
 
-        private BlendState CreateBlendState(bool enabled, BlendOption source, BlendOption destination)
+        private ID3D11BlendState CreateBlendState(bool enabled, Blend source, Blend destination)
         {
-            var description = BlendStateDescription.Default();
-            description.RenderTarget[0].IsBlendEnabled = enabled;
+            var description = new BlendDescription();
+            description.RenderTarget[0].BlendEnable = enabled;
             description.RenderTarget[0].SourceBlend = source;
             description.RenderTarget[0].DestinationBlend = destination;
             description.RenderTarget[0].BlendOperation = BlendOperation.Add;
-            description.RenderTarget[0].SourceAlphaBlend = source;
-            description.RenderTarget[0].DestinationAlphaBlend = destination;
-            description.RenderTarget[0].AlphaBlendOperation = BlendOperation.Add;
-            description.RenderTarget[0].RenderTargetWriteMask = ColorWriteMaskFlags.All;
-            return new BlendState(device, description);
+            description.RenderTarget[0].SourceBlendAlpha = source;
+            description.RenderTarget[0].DestinationBlendAlpha = destination;
+            description.RenderTarget[0].BlendOperationAlpha = BlendOperation.Add;
+            description.RenderTarget[0].RenderTargetWriteMask = ColorWriteEnable.All;
+            return device.CreateBlendState(description);
         }
 
         /// <summary>
@@ -204,9 +211,9 @@ namespace PPDFramework.DX11
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        internal BlendState GetBlendState(string name)
+        internal ID3D11BlendState GetBlendState(string name)
         {
-            if (!blendStates.TryGetValue(name, out BlendState blendState))
+            if (!blendStates.TryGetValue(name, out ID3D11BlendState blendState))
             {
                 throw new ArgumentException("Unknown blend state: " + name);
             }
@@ -222,7 +229,7 @@ namespace PPDFramework.DX11
                 indices[i * 3 + 1] = i + 1;
                 indices[i * 3 + 2] = i + 2;
             }
-            fanIndexBuffer = SharpDX.Direct3D11.Buffer.Create(device, BindFlags.IndexBuffer, indices, 0, ResourceUsage.Immutable);
+            fanIndexBuffer = device.CreateBuffer(indices, BindFlags.IndexBuffer, ResourceUsage.Immutable, CpuAccessFlags.None, ResourceOptionFlags.None, 0, 0);
         }
 
         /// <summary>
@@ -232,7 +239,7 @@ namespace PPDFramework.DX11
         internal override void SetRenderTarget(WorkspaceTexture workSpaceTexture)
         {
             renderTarget = workSpaceTexture;
-            Context.OutputMerger.SetTargets(((Texture.DX11.Texture)workSpaceTexture.Texture)._RenderTargetView);
+            Context.OMSetRenderTargets(((Texture.DX11.Texture)workSpaceTexture.Texture)._RenderTargetView);
         }
 
         /// <summary>
@@ -242,7 +249,7 @@ namespace PPDFramework.DX11
         /// <param name="dest"></param>
         internal override void StretchRectangle(WorkspaceTexture src, WorkspaceTexture dest)
         {
-            Context.CopyResource(((Texture.DX11.Texture)src.Texture)._Texture, ((Texture.DX11.Texture)dest.Texture)._Texture);
+            Context.CopyResource(((Texture.DX11.Texture)dest.Texture)._Texture, ((Texture.DX11.Texture)src.Texture)._Texture);
         }
 
         /// <summary>
@@ -252,7 +259,7 @@ namespace PPDFramework.DX11
         /// <param name="sourceRect"></param>
         /// <param name="dest"></param>
         /// <param name="destPoint"></param>
-        internal override void StretchRectangle(TextureBase src, RawRectangle? sourceRect, TextureBase dest, RawPoint? destPoint)
+        internal override void StretchRectangle(TextureBase src, Vortice.RawRect? sourceRect, TextureBase dest, Vortice.Mathematics.Int2? destPoint)
         {
             ((Texture.DX11.Texture)dest).CopyFrom((Texture.DX11.Texture)src, sourceRect, destPoint);
         }
@@ -263,7 +270,7 @@ namespace PPDFramework.DX11
         /// <param name="color"></param>
         internal override void Clear(Color4 color)
         {
-            Context.ClearRenderTargetView(((Texture.DX11.Texture)GetRenderTarget().Texture)._RenderTargetView, new RawColor4(color.R, color.G, color.B, color.A));
+            Context.ClearRenderTargetView(((Texture.DX11.Texture)GetRenderTarget().Texture)._RenderTargetView, color);
         }
 
         /// <summary>
@@ -276,8 +283,8 @@ namespace PPDFramework.DX11
             Reset();
             var newRenderTarget = GetRenderTarget();
             SetRenderTarget(newRenderTarget);
-            Context.Rasterizer.SetViewport(new RawViewportF { X = 0, Y = 0, Width = Width, Height = Height, MinDepth = 0.0f, MaxDepth = 1.0f });
-            Context.ClearRenderTargetView(((Texture.DX11.Texture)newRenderTarget.Texture)._RenderTargetView, new RawColor4(0f, 0f, 0f, 1f));
+            Context.RSSetViewport(0, 0, Width, Height, 0.0f, 1.0f);
+            Context.ClearRenderTargetView(((Texture.DX11.Texture)newRenderTarget.Texture)._RenderTargetView, new Color4(0f, 0f, 0f, 1f));
             SetScissorRect(new Rectangle(0, 0, Width, Height), false);
         }
 
@@ -288,8 +295,8 @@ namespace PPDFramework.DX11
         {
             SpriteBatch.Flush();
             SpriteBatch.End();
-            Context.OutputMerger.SetTargets((RenderTargetView)null);
-            Context.CopyResource(((Texture.DX11.Texture)GetRenderTarget().Texture)._Texture, backBuffer);
+            Context.UnsetRenderTargets();
+            Context.CopyResource(backBuffer, ((Texture.DX11.Texture)GetRenderTarget().Texture)._Texture);
         }
 
         /// <summary>
@@ -297,7 +304,7 @@ namespace PPDFramework.DX11
         /// </summary>
         internal override void Present()
         {
-            swapChain.Present(1, PresentFlags.None);
+            swapChain.Present(1, PresentFlags.None).CheckError();
         }
 
         /// <summary>
@@ -308,13 +315,13 @@ namespace PPDFramework.DX11
         /// <param name="primitiveCount"></param>
         internal override void DrawPrimitives(PrimitiveType primitiveType, int offset, int primitiveCount)
         {
-            Context.InputAssembler.PrimitiveTopology = primitiveTypeMap[primitiveType];
+            Context.IASetPrimitiveTopology(primitiveTypeMap[primitiveType]);
             if (primitiveType == PrimitiveType.TriangleFan)
             {
                 DrawFan(offset, primitiveCount);
                 return;
             }
-            Context.Draw(GetVertexCount(primitiveType, primitiveCount), offset);
+            Context.Draw((uint)GetVertexCount(primitiveType, primitiveCount), (uint)offset);
         }
 
         /// <summary>
@@ -332,8 +339,8 @@ namespace PPDFramework.DX11
             {
                 throw new NotSupportedException("TriangleFan is not supported for indexed drawing in DirectX11");
             }
-            Context.InputAssembler.PrimitiveTopology = primitiveTypeMap[primitiveType];
-            Context.DrawIndexed(GetVertexCount(primitiveType, primCount), startIndex, baseVertexIndex);
+            Context.IASetPrimitiveTopology(primitiveTypeMap[primitiveType]);
+            Context.DrawIndexed((uint)GetVertexCount(primitiveType, primCount), (uint)startIndex, baseVertexIndex);
         }
 
 
@@ -343,9 +350,9 @@ namespace PPDFramework.DX11
             {
                 throw new NotSupportedException("Too many primitives for TriangleFan");
             }
-            Context.InputAssembler.SetIndexBuffer(fanIndexBuffer, Format.R32_UInt, 0);
+            Context.IASetIndexBuffer(fanIndexBuffer, Format.R32_UInt, 0);
             currentIndex = null;
-            Context.DrawIndexed(primitiveCount * 3, 0, offset);
+            Context.DrawIndexed((uint)(primitiveCount * 3), 0, offset);
         }
 
         private static int GetVertexCount(PrimitiveType primitiveType, int primitiveCount)
@@ -378,7 +385,7 @@ namespace PPDFramework.DX11
                 return;
             }
             currentBuffer = buffer;
-            Context.InputAssembler.SetVertexBuffers(0, new VertexBufferBinding(dx11Buffer._Buffer, ColoredTexturedVertex.Size, 0));
+            Context.IASetVertexBuffer(0, dx11Buffer._Buffer, (uint)ColoredTexturedVertex.Size, 0);
         }
 
         /// <summary>
@@ -392,7 +399,7 @@ namespace PPDFramework.DX11
                 return;
             }
             currentIndex = index;
-            Context.InputAssembler.SetIndexBuffer(((Vertex.DX11.IndexBuffer)index)._Buffer, Format.R32_UInt, 0);
+            Context.IASetIndexBuffer(((Vertex.DX11.IndexBuffer)index)._Buffer, Format.R32_UInt, 0);
         }
 
         /// <summary>
@@ -402,7 +409,7 @@ namespace PPDFramework.DX11
         public override void BackBufferToFile(string filepath)
         {
             var pixels = Texture.DX11.Texture.ReadPixels(Context, backBuffer);
-            using (var bitmap = Texture.DX11.Texture.ToBitmap(pixels, backBuffer.Description.Width, backBuffer.Description.Height))
+            using (var bitmap = Texture.DX11.Texture.ToBitmap(pixels, (int)backBuffer.Description.Width, (int)backBuffer.Description.Height))
             {
                 bitmap.Save(filepath, System.Drawing.Imaging.ImageFormat.Png);
             }
@@ -425,8 +432,8 @@ namespace PPDFramework.DX11
         /// <param name="enabled"></param>
         internal override void ApplyScissorRect(Rectangle rectangle, bool enabled)
         {
-            Context.Rasterizer.SetScissorRectangle(rectangle.Left, rectangle.Top, rectangle.Right, rectangle.Bottom);
-            Context.Rasterizer.State = enabled ? scissorEnabledState : scissorDisabledState;
+            Context.RSSetScissorRect(new Vortice.RawRect(rectangle.Left, rectangle.Top, rectangle.Right, rectangle.Bottom));
+            Context.RSSetState(enabled ? scissorEnabledState : scissorDisabledState);
         }
 
         /// <summary>
