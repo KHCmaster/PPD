@@ -1,4 +1,8 @@
-﻿using SharpDX;
+﻿using SharpDX;
+using System.Numerics;
+using PPDMath;
+using Matrix = System.Numerics.Matrix4x4;
+using Color4 = Vortice.Mathematics.Color4;
 using System.Runtime.InteropServices;
 
 namespace PPDFramework

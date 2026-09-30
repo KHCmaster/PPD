@@ -1,4 +1,5 @@
-﻿using PPDFramework;
+﻿using PPDMath;
+using PPDFramework;
 using PPDFramework.Web;
 using PPDFrameworkCore;
 using System;
@@ -33,7 +34,7 @@ namespace PPDSingle
             AddChild(rivalRanking = new MenuRankingBoard(device, resourceManager)
             {
                 RankKindText = Utility.Language["RivalRanking"],
-                Position = new SharpDX.Vector2(0, 90)
+                Position = new System.Numerics.Vector2(0, 90)
             });
         }
 
@@ -90,7 +91,7 @@ namespace PPDSingle
             this.AddChild(info = new PictureObject(device, resourceManager, Utility.Path.Combine("infoboard2.png")));
             this.AddChild(yourRankText = new TextureString(device, "", 12, PPDColors.White)
             {
-                Position = new SharpDX.Vector2(280, -10),
+                Position = new System.Numerics.Vector2(280, -10),
                 Alignment = Alignment.Right,
                 Border = new Border
                 {
@@ -100,7 +101,7 @@ namespace PPDSingle
             });
             this.AddChild(rankKindText = new TextureString(device, "", 12, PPDColors.White)
             {
-                Position = new SharpDX.Vector2(5, -10),
+                Position = new System.Numerics.Vector2(5, -10),
                 Border = new Border
                 {
                     Color = PPDColors.Black,
@@ -108,9 +109,9 @@ namespace PPDSingle
                 }
             });
             ranks = new RankingChild[3];
-            info.AddChild(ranks[0] = new RankingChild(device, resourceManager) { Position = new SharpDX.Vector2(15, 10) });
-            info.AddChild(ranks[1] = new RankingChild(device, resourceManager) { Position = new SharpDX.Vector2(15, 30) });
-            info.AddChild(ranks[2] = new RankingChild(device, resourceManager) { Position = new SharpDX.Vector2(15, 50) });
+            info.AddChild(ranks[0] = new RankingChild(device, resourceManager) { Position = new System.Numerics.Vector2(15, 10) });
+            info.AddChild(ranks[1] = new RankingChild(device, resourceManager) { Position = new System.Numerics.Vector2(15, 30) });
+            info.AddChild(ranks[2] = new RankingChild(device, resourceManager) { Position = new System.Numerics.Vector2(15, 50) });
         }
 
         public void ChangeSongInfo(Func<Ranking> rankingFunc)
@@ -243,7 +244,7 @@ namespace PPDSingle
                 gold.Hidden = silver.Hidden = bronze.Hidden = true;
                 text = new TextureString(device, "", 12, 230, PPDColors.White)
                 {
-                    Position = new SharpDX.Vector2(25, 0),
+                    Position = new System.Numerics.Vector2(25, 0),
                     AllowScroll = true
                 };
 

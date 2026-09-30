@@ -3,7 +3,9 @@ using PPDFrameworkCore;
 using PPDMulti.Data;
 using PPDMulti.Model;
 using PPDShareComponent;
-using SharpDX;
+using SharpDX;
+using System.Numerics;
+using PPDMath;
 using System;
 using System.Linq;
 
@@ -123,7 +125,7 @@ namespace PPDMulti
         {
             if (!(args.FocusObject is UserMenuDialog))
             {
-                back.Position = new SharpDX.Vector2(0, 50);
+                back.Position = new System.Numerics.Vector2(0, 50);
                 Alpha = 0;
             }
         }
@@ -217,12 +219,12 @@ namespace PPDMulti
         {
             if (OverFocused)
             {
-                back.Position = new SharpDX.Vector2(0, AnimationUtility.GetAnimationValue(back.Position.Y, 0));
+                back.Position = new System.Numerics.Vector2(0, AnimationUtility.GetAnimationValue(back.Position.Y, 0));
                 Alpha = AnimationUtility.IncreaseAlpha(Alpha);
             }
             else
             {
-                back.Position = new SharpDX.Vector2(0, AnimationUtility.GetAnimationValue(back.Position.Y, 50));
+                back.Position = new System.Numerics.Vector2(0, AnimationUtility.GetAnimationValue(back.Position.Y, 50));
                 Alpha = AnimationUtility.DecreaseAlpha(Alpha);
             }
         }
@@ -325,7 +327,7 @@ namespace PPDMulti
 
             private void ChangeUserIconScale()
             {
-                userIcon.Scale = new SharpDX.Vector2(20 / userIcon.Width, 20 / userIcon.Height);
+                userIcon.Scale = new System.Numerics.Vector2(20 / userIcon.Width, 20 / userIcon.Height);
             }
         }
 

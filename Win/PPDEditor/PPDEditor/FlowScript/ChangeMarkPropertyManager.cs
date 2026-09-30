@@ -1,7 +1,9 @@
 ﻿using PPDCoreModel.Data;
 using PPDEditor.Command.PPDSheet;
 using PPDEditorCommon;
-using SharpDX;
+using SharpDX;
+using System.Numerics;
+using PPDMath;
 using System.Collections.Generic;
 
 namespace PPDEditor.FlowScript
@@ -60,7 +62,7 @@ namespace PPDEditor.FlowScript
             editorMarkInfo.Angle = angle;
         }
 
-        public void ChangeMarkPosition(IEditorMarkInfo mark, SharpDX.Vector2 position)
+        public void ChangeMarkPosition(IEditorMarkInfo mark, System.Numerics.Vector2 position)
         {
             var editorMarkInfo = (EditorMarkInfo)mark;
             tasks.Add(new ChangeMarkPositionTask(editorMarkInfo, position));

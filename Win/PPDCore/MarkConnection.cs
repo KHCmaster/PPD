@@ -1,7 +1,9 @@
 ﻿using PPDFramework;
 using PPDFramework.Shaders;
 using PPDFramework.Vertex;
-using SharpDX;
+using SharpDX;
+using System.Numerics;
+using PPDMath;
 using System;
 using System.Collections.Generic;
 
@@ -96,7 +98,7 @@ namespace PPDCore
                 {
                     return;
                 }
-                vec.Normalize();
+                vec = MathCompat.NormalizeSharpDX(vec);
                 Position = (pos1 + pos2) / 2;
                 if (vec.Y < 0)
                 {

@@ -386,17 +386,35 @@ Phase 7  配布・更新の仕組みの対応、リリース
 | `Color4` | `Vortice.Mathematics.Color4` | プロパティ名（`Red`→`R` など）、`ToBgra()` の有無 |
 | `Rectangle` / `RectangleF` | `Vortice.Mathematics` の矩形型か自前の型 | `Left/Top/Right/Bottom` と `X/Y/Width/Height` の扱いの違い |
 
-作業:
-- [ ] まず互換用の拡張メソッド群（例: `PPDFramework.MathExtensions`）を用意し、SharpDX 固有のメソッドを同名で提供する。これで置換の差分を小さくする。
-- [ ] 依存の少ない順に移行する: Effect2D → PPDFramework → PPDCoreModel / PPDCore → PPDShareComponent → PPDSingle / PPDMulti → PPDEditor 系 → FlowScript 系。
-- [ ] 構造体のレイアウトを確認する。`ColoredTexturedVertex`、`DrawInfo` など GPU に渡す構造体のサイズと並びが変わらないこと（テストで `Marshal.SizeOf` を検証する）。
-- [ ] **FlowScriptEngineSlimDX**（223 ファイル）について
-  - 保存済みの譜面スクリプト（`.fsml`）には、**ノードのクラス名（`FlowScriptEngineSlimDX.*`）だけが保存され、SharpDX の型名は含まれない**ことを確認済み。**アセンブリ名・名前空間・ノードのクラス名は変えない**（名前に "SlimDX" が残るが、既存譜面の互換のため）。
-  - ノードの入出力プロパティの型を、System.Numerics の型に変える。
-  - `TypeSerializers` / `TypeFormatters` / `TypeConverters` / 型エイリアス（型の完全名をキーにしている）を新しい型に合わせる。
-  - **スクリプトに書かれた値の文字列表現**（例: Vector2 の値の書式）は、変換（パース）の後方互換を保つ。`System.Numerics.Vector2.ToString()` は書式が違うので、`ToString()` に頼らない。
-  - デバッガー表示と YAML ダンプ（`Serializer`）が出力する型名は `SharpDX.Vector2` から変わる。保存データではないので影響は小さいが、YAML を読み込むスクリプトがないか確認する。
-
+作業（2026-09-30 に実施）:
+- [x] 互換レイヤー **PPDMath**（新しいプロジェクト）を作った。
+  - C# 14 の拡張メンバーで、SharpDX にあって System.Numerics にないメンバーを同じ名前で提供する
+    - 静的メンバーの例: `Matrix4x4.Transformation2D`、`Matrix4x4.RotationZ`
+    - インスタンスのプロパティの例: `q.Angle`、`m.Row1`、`c.Alpha`
+    - 演算子: `Matrix / float`
+  - 計算は、SharpDX.Mathematics 4.2.0 を逆コンパイルした実装を移した。三角関数は `Math`（double）、行列の積は SharpDX と同じ順序のスカラー演算
+  - System.Numerics に同じ名前のメンバーがあって拡張にできないものは、名前を変えて `MathCompat` に置いた
+    - `Translation`（Matrix4x4 のプロパティと重なる）
+    - `TransformToVector4`（SharpDX の Vector2/3.Transform は Vector4 を返す）
+    - `NormalizeSharpDX`（長さ 0 のときそのまま返す。System.Numerics は NaN になる）
+    - `ClampSharpDX`（min > max のときの結果が違う）
+    - `ToBgraInt` / `ToRgbaInt` / `Color4FromRgba`（SharpDX と同じ切り捨てで int にする。Mod の設定の保存に使っている）
+  - **SharpDX.Mathematics 4.2.0 と並べて、移した全ての関数を乱数と境界値（長さ 0、min > max、-0 など）で比べ、178,969 回の比較で全てビット単位で一致した**
+- [x] 504 ファイルを機械的に置き換えた。
+  - `SharpDX.Vector2` → `System.Numerics.Vector2`、`SharpDX.Matrix` → `Matrix4x4`、`SharpDX.Color4` → `Vortice.Mathematics.Color4` など
+  - `using SharpDX;` のあるファイルには、使っている名前に応じて別名を付けた（`using Matrix = System.Numerics.Matrix4x4;` など）。型名を変えずに済むので、`Matrix` という名前のプロパティなどはそのまま
+  - `using Vortice.Mathematics;` は使わない。WinForms のファイルで `System.Drawing.Size` と名前がぶつかるため
+- [x] SharpDX の DirectX の API（Raw* 型を受け取る）に渡す箇所は、`RawColor4` / `RawVector2` / `RawViewportF` に明示的に変換した（Phase 6 で Vortice に置き換える部分）。
+- [x] **FlowScriptEngineSlimDX**: アセンブリ名・名前空間・ノードのクラス名は変えていない。ノードの入出力の型を System.Numerics の型にし、TypeFormatter / TypeConverter / TypeSerializer も合わせた。
+  - スクリプトに書かれた値（`"X:1 Y:2"` など）の解析と、文字列への変換（SharpDX と同じ書式）は変わらない
+- [x] ModCheck の既定値の出力を、数学型についてはライブラリによらない表記（`Vector2{X=.., Y=..}`、`Color4{R=.., G=.., B=.., A=..}`）にした。移行前のビルドで基準を作り直し、変わったのが数学型の 246 行だけであることを確認した。
+- 確認した結果
+  - Debug / Release ともビルドできる
+  - シーン 0〜7 の画素比較が通った
+  - PPD の起動・終了でアクセス違反も error.log への書き込みもない
+  - Mod 28 個・譜面スクリプト 17 個の既定値が移行前と完全に一致した
+  - PPDEditor などのアプリが起動する
+- 残る違い: アプリの中の行列同士の積（`*` 演算子）は System.Numerics の実装（SIMD）を使うので、SharpDX と最下位ビットが違うことがある（乱数の行列では 98% で違った）。描画の比較では差は出ていない。FlowScript のノードには行列同士の積はないが、PPD が計算した行列を Mod が受け取ることはある
 **完了条件**: `SharpDX.Mathematics` への参照がゼロ。既存の譜面スクリプト（同梱の `.fsml` と、手元にある実際の譜面のスクリプト）が読み込めて同じ動作をする。回帰テストが一致する。
 
 **規模の目安**: 大（量が多い）。ただし作業は機械的で、分割して進めやすい。

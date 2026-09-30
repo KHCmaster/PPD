@@ -4,7 +4,9 @@ using PPDFramework.Shaders;
 using PPDFramework.Texture;
 using PPDFrameworkCore;
 using PPDShareComponent;
-using SharpDX;
+using SharpDX;
+using System.Numerics;
+using PPDMath;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -64,11 +66,11 @@ namespace PPD
             OnLoadProgressed(20);
             this.AddChild(temp);
             OnLoadProgressed(30);
-            temp.AddChild((selection = new LineRectangleComponent(device, resourceManager, PPDColors.Selection) { RectangleWidth = 180, RectangleHeight = 100, Position = new SharpDX.Vector2(10, 190) }));
+            temp.AddChild((selection = new LineRectangleComponent(device, resourceManager, PPDColors.Selection) { RectangleWidth = 180, RectangleHeight = 100, Position = new System.Numerics.Vector2(10, 190) }));
             OnLoadProgressed(50);
             temp.AddChild((thumbSprite = new SpriteObject(device)));
             OnLoadProgressed(60);
-            temp.AddChild(new PictureObject(device, resourceManager, Utility.Path.Combine("leftmenu.png")) { Alpha = 0.5f, Scale = new SharpDX.Vector2(1.2f, 1) });
+            temp.AddChild(new PictureObject(device, resourceManager, Utility.Path.Combine("leftmenu.png")) { Alpha = 0.5f, Scale = new System.Numerics.Vector2(1.2f, 1) });
             OnLoadProgressed(80);
             this.AddChild((movieSprite = new SpriteObject(device)));
             OnLoadProgressed(90);
@@ -252,13 +254,13 @@ namespace PPD
             int iter = 0;
             var temp = new ThumbList(device)
             {
-                Position = new SharpDX.Vector2(200 * newParent.Depth, 0)
+                Position = new System.Numerics.Vector2(200 * newParent.Depth, 0)
             };
             foreach (SongInformation songInfo in newParent.Children)
             {
                 var component = new LoadablePictureComponent(device, resourceManager, songInfo)
                 {
-                    Position = new SharpDX.Vector2(100, 225 + 100 * iter)
+                    Position = new System.Numerics.Vector2(100, 225 + 100 * iter)
                 };
                 temp.AddChild(component);
                 iter++;
@@ -271,11 +273,11 @@ namespace PPD
         {
             if (initialized)
             {
-                thumbSprite.Position = new SharpDX.Vector2(AnimationUtility.GetAnimationValue(thumbSprite.Position.X, -(currentParent.Depth) * 200), 0);
+                thumbSprite.Position = new System.Numerics.Vector2(AnimationUtility.GetAnimationValue(thumbSprite.Position.X, -(currentParent.Depth) * 200), 0);
                 foreach (GameComponent gc in thumbSprite.Children)
                 {
                     var thumbList = gc as ThumbList;
-                    thumbList.Position = new SharpDX.Vector2(thumbList.Position.X, AnimationUtility.GetAnimationValue(thumbList.Position.Y, -100 * thumbList.CurrentIndex, 0.2f));
+                    thumbList.Position = new System.Numerics.Vector2(thumbList.Position.X, AnimationUtility.GetAnimationValue(thumbList.Position.Y, -100 * thumbList.CurrentIndex, 0.2f));
                 }
 
                 for (int i = removeList.Count - 1; i >= 0; i--)
@@ -351,11 +353,11 @@ namespace PPD
                 this.AddChild((changeTrimming = new FadableButton(device, resourceManager,
                     Utility.Path.Combine("moviecontroller", "changetrimming.png"),
                     Utility.Path.Combine("moviecontroller", "changetrimming_select.png"), Utility.Language["ChangeTrimming"])
-                { Position = new SharpDX.Vector2(-60, 0) }));
+                { Position = new System.Numerics.Vector2(-60, 0) }));
                 this.AddChild((seekBackward = new FadableButton(device, resourceManager,
                     Utility.Path.Combine("moviecontroller", "seekbackward.png"),
                     Utility.Path.Combine("moviecontroller", "seekbackward_select.png"), Utility.Language["SeekBackward"])
-                { Position = new SharpDX.Vector2(-30, 0) }));
+                { Position = new System.Numerics.Vector2(-30, 0) }));
                 this.AddChild((play = new FadableButton(device, resourceManager,
                     Utility.Path.Combine("moviecontroller", "play.png"),
                     Utility.Path.Combine("moviecontroller", "play_select.png"), Utility.Language["Play"])));
@@ -365,27 +367,27 @@ namespace PPD
                 this.AddChild((stop = new FadableButton(device, resourceManager,
                     Utility.Path.Combine("moviecontroller", "stop.png"),
                     Utility.Path.Combine("moviecontroller", "stop_select.png"), Utility.Language["Stop"])
-                { Position = new SharpDX.Vector2(30, 0) }));
+                { Position = new System.Numerics.Vector2(30, 0) }));
                 this.AddChild((seekForward = new FadableButton(device, resourceManager,
                     Utility.Path.Combine("moviecontroller", "seekforward.png"),
                     Utility.Path.Combine("moviecontroller", "seekforward_select.png"), Utility.Language["SeekForward"])
-                { Position = new SharpDX.Vector2(60, 0) }));
+                { Position = new System.Numerics.Vector2(60, 0) }));
                 this.AddChild((getThumb = new FadableButton(device, resourceManager,
                     Utility.Path.Combine("moviecontroller", "getthumb.png"),
                     Utility.Path.Combine("moviecontroller", "getthumb_select.png"), Utility.Language["GetThumb"])
-                { Position = new SharpDX.Vector2(90, 0) }));
+                { Position = new System.Numerics.Vector2(90, 0) }));
                 this.AddChild((secLoop = new FadableButton(device, resourceManager,
                     Utility.Path.Combine("moviecontroller", "secloop.png"),
                     Utility.Path.Combine("moviecontroller", "secloop_select.png"), Utility.Language["FolderLoop"])
-                { Position = new SharpDX.Vector2(120, 0) }));
+                { Position = new System.Numerics.Vector2(120, 0) }));
                 this.AddChild((oneLoop = new FadableButton(device, resourceManager,
                     Utility.Path.Combine("moviecontroller", "oneloop.png"),
                     Utility.Path.Combine("moviecontroller", "oneloop_select.png"), Utility.Language["OneLoop"])
-                { Position = new SharpDX.Vector2(120, 0) }));
+                { Position = new System.Numerics.Vector2(120, 0) }));
                 this.AddChild((randomLoop = new FadableButton(device, resourceManager,
                     Utility.Path.Combine("moviecontroller", "randomloop.png"),
                     Utility.Path.Combine("moviecontroller", "randomloop_select.png"), Utility.Language["RandomLoop"])
-                { Position = new SharpDX.Vector2(120, 0) }));
+                { Position = new System.Numerics.Vector2(120, 0) }));
                 this.AddChild(new PictureObject(device, resourceManager, Utility.Path.Combine("moviecontroller", "back.png"), true));
                 play.Alpha = 0;
                 loopDict = new Dictionary<MovieLoopType, FadableButton>
@@ -407,7 +409,7 @@ namespace PPD
                     oneLoop
                 };
 
-                this.Position = new SharpDX.Vector2(400, 420);
+                this.Position = new System.Numerics.Vector2(400, 420);
 
                 Inputed += MovieController_Inputed;
                 GotFocused += MovieController_GotFocused;
@@ -492,7 +494,7 @@ namespace PPD
                     if (moviePlayer.Movie != null && moviePlayer.Movie.Initialized)
                     {
                         moviePos.Text = String.Format("{0}/{1}", GetTime(moviePlayer.Movie.MoviePosition), GetTime(moviePlayer.Movie.Length));
-                        moviePos.Position = new SharpDX.Vector2(-moviePos.Width - 75, moviePos.Position.Y);
+                        moviePos.Position = new System.Numerics.Vector2(-moviePos.Width - 75, moviePos.Position.Y);
                     }
 
                     play.Selected = pause.Selected;
@@ -750,7 +752,7 @@ namespace PPD
                 this.AddChild((loading = new EffectObject(device, resourceManager, Utility.Path.Combine("loading.etd"))));
                 loading.PlayType = Effect2D.EffectManager.PlayType.Loop;
                 loading.Play();
-                loading.Scale = new SharpDX.Vector2(0.5f, 0.5f);
+                loading.Scale = new System.Numerics.Vector2(0.5f, 0.5f);
                 if (songInfo.IsPPDSong)
                 {
 
@@ -771,7 +773,7 @@ namespace PPD
                     {
                         picture = new PictureObject(device, resourceManager, Utility.Path.Combine("noimage.png"), true)
                         {
-                            Scale = new SharpDX.Vector2(0.25f, 0.25f),
+                            Scale = new System.Numerics.Vector2(0.25f, 0.25f),
                             Alpha = 0
                         };
                         this.AddChild(picture);
@@ -781,7 +783,7 @@ namespace PPD
                 {
                     picture = new PictureObject(device, resourceManager, Utility.Path.Combine("bigfolder.png"), true)
                     {
-                        Scale = new SharpDX.Vector2(0.25f, 0.25f),
+                        Scale = new System.Numerics.Vector2(0.25f, 0.25f),
                         Alpha = 0
                     };
                     this.AddChild(picture);
@@ -815,7 +817,7 @@ namespace PPD
                     Thread.Sleep(100);
                 }
                 picture = new PictureObject(device, resourceManager, PathObject.Absolute(thumbPath), true);
-                picture.Scale = new SharpDX.Vector2(480 / picture.Width * 0.25f, 270 / picture.Height * 0.25f);
+                picture.Scale = new System.Numerics.Vector2(480 / picture.Width * 0.25f, 270 / picture.Height * 0.25f);
                 picture.Alpha = 0;
                 this.AddChild(picture);
 

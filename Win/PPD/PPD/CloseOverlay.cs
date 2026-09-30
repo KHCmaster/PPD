@@ -1,7 +1,9 @@
 ﻿using PPDFramework;
 using PPDFramework.Scene;
 using PPDShareComponent;
-using SharpDX;
+using SharpDX;
+using System.Numerics;
+using PPDMath;
 using System;
 
 namespace PPD
@@ -67,7 +69,7 @@ namespace PPD
                     currentIndex++;
                     RemoveNext();
 
-                    var keyButtonSprite = new SlideSprite(device, ResourceManager, Sound) { Position = new SharpDX.Vector2(800 * currentIndex, 0) };
+                    var keyButtonSprite = new SlideSprite(device, ResourceManager, Sound) { Position = new System.Numerics.Vector2(800 * currentIndex, 0) };
                     keyButtonSprite.Selected += keyButtonSprite_Selected;
                     keyButtonSprite.LostFocused += slideSprite_LostFocused;
                     keyButtonSprite.AddSelection(Utility.Language["ChangeCurrentController"]);
@@ -79,7 +81,7 @@ namespace PPD
                     currentIndex++;
                     RemoveNext();
 
-                    var changeVolumeSprite = new ChangeVolumeSprite(device, ResourceManager, myGame, Sound) { Position = new SharpDX.Vector2(800 * currentIndex, 0) };
+                    var changeVolumeSprite = new ChangeVolumeSprite(device, ResourceManager, myGame, Sound) { Position = new System.Numerics.Vector2(800 * currentIndex, 0) };
                     changeVolumeSprite.LostFocused += slideSprite_LostFocused;
                     allSlideSprite.AddChild(changeVolumeSprite);
                     focusManager.Focus(changeVolumeSprite);
@@ -107,7 +109,7 @@ namespace PPD
             switch (keyButtonSprite.CurrentSelection)
             {
                 case 0:
-                    var changeControllerSprite = new SlideSprite(device, ResourceManager, Sound) { Position = new SharpDX.Vector2(800 * currentIndex, 0) };
+                    var changeControllerSprite = new SlideSprite(device, ResourceManager, Sound) { Position = new System.Numerics.Vector2(800 * currentIndex, 0) };
                     changeControllerSprite.Selected += changeControllerSprite_Selected;
                     changeControllerSprite.LostFocused += slideSprite_LostFocused;
                     myGame.Input.Load();
@@ -133,7 +135,7 @@ namespace PPD
                     focusManager.Focus(changeControllerSprite);
                     break;
                 case 1:
-                    var changeProfileSprite = new SlideSprite(device, ResourceManager, Sound) { Position = new SharpDX.Vector2(800 * currentIndex, 0) };
+                    var changeProfileSprite = new SlideSprite(device, ResourceManager, Sound) { Position = new System.Numerics.Vector2(800 * currentIndex, 0) };
                     changeProfileSprite.Selected += changeProfileSprite_Selected;
                     changeProfileSprite.LostFocused += slideSprite_LostFocused;
 
@@ -214,12 +216,12 @@ namespace PPD
             if (focus)
             {
                 currentIndex = 0;
-                allSlideSprite.Position = new SharpDX.Vector2(0, 0);
+                allSlideSprite.Position = new System.Numerics.Vector2(0, 0);
                 firstSprite.ChangeMenuEnabled(4, GameHost.CanGoHome);
                 firstSprite.CurrentSelection = 0;
             }
 
-            allSlideSprite.Position = new SharpDX.Vector2(AnimationUtility.GetAnimationValue(allSlideSprite.Position.X, -currentIndex * 800), allSlideSprite.Position.Y);
+            allSlideSprite.Position = new System.Numerics.Vector2(AnimationUtility.GetAnimationValue(allSlideSprite.Position.X, -currentIndex * 800), allSlideSprite.Position.Y);
 
 
             focusManager.ProcessInput(inputInfo);

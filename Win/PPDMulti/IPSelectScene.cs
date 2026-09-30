@@ -1,4 +1,5 @@
-﻿using PPDFramework;
+﻿using PPDMath;
+using PPDFramework;
 using PPDFramework.Scene;
 using PPDMultiCommon.Web;
 using PPDShareComponent;
@@ -101,17 +102,17 @@ namespace PPDMulti
 
         private void CreateRoomNameSprite()
         {
-            var roomSprite = new SlideSprite(device, ResourceManager, Sound) { Position = new SharpDX.Vector2(800 * currentIndex, 0) };
+            var roomSprite = new SlideSprite(device, ResourceManager, Sound) { Position = new System.Numerics.Vector2(800 * currentIndex, 0) };
             roomSprite.AddUserComponent(new TextureString(device, Utility.Language["InputRoomName"], 18, true, PPDColors.White)
             {
-                Position = new SharpDX.Vector2(400, 200)
+                Position = new System.Numerics.Vector2(400, 200)
             });
             var roomNameTextBox = new DxTextBox(device, GameHost, ResourceManager)
             {
                 DrawOnlyFocus = false
             };
             roomNameTextBox.LostFocused += roomNameTextBox_LostFocused;
-            roomNameTextBox.Position = new SharpDX.Vector2(300, 250);
+            roomNameTextBox.Position = new System.Numerics.Vector2(300, 250);
             roomNameTextBox.TextBoxHeight = 20;
             roomNameTextBox.TextBoxWidth = roomNameTextBox.MaxWidth = 200;
             roomNameTextBox.Text = "";
@@ -119,7 +120,7 @@ namespace PPDMulti
             roomSprite.AddUserComponent(roomNameTextBox);
             roomSprite.AddUserComponent(new TextureString(device, "", 18, true, PPDColors.White)
             {
-                Position = new SharpDX.Vector2(400, 300)
+                Position = new System.Numerics.Vector2(400, 300)
             });
             roomSprite.Inputed += slideSprite_Inputed;
             roomSprite.LostFocused += slideSprite_LostFocused;
@@ -145,24 +146,24 @@ namespace PPDMulti
                     {
                         var confirmSprite = new SlideSprite(device, ResourceManager, Sound)
                         {
-                            Position = new SharpDX.Vector2(800 * currentIndex, 0),
+                            Position = new System.Numerics.Vector2(800 * currentIndex, 0),
                             AutoBack = false
                         };
                         confirmSprite.AddUserComponent(new TextureString(device, Utility.Language["CreateRoomByLastInfoConfirm"], 18, true, PPDColors.White)
                         {
-                            Position = new SharpDX.Vector2(400, 150)
+                            Position = new System.Numerics.Vector2(400, 150)
                         });
                         confirmSprite.AddUserComponent(new TextureString(device, String.Format(Utility.Language["RoomName"], lastCreatedRoom.RoomName), 18, PPDColors.White)
                         {
-                            Position = new SharpDX.Vector2(300, 200)
+                            Position = new System.Numerics.Vector2(300, 200)
                         });
                         confirmSprite.AddUserComponent(new TextureString(device, String.Format(Utility.Language["Password"], lastCreatedRoom.PasswordHash), 18, PPDColors.White)
                         {
-                            Position = new SharpDX.Vector2(300, 230)
+                            Position = new System.Numerics.Vector2(300, 230)
                         });
                         confirmSprite.AddUserComponent(new TextureString(device, String.Format(Utility.Language["Port"], lastCreatedRoom.Port), 18, PPDColors.White)
                         {
-                            Position = new SharpDX.Vector2(300, 260)
+                            Position = new System.Numerics.Vector2(300, 260)
                         });
                         confirmSprite.LostFocused += slideSprite_LostFocused;
                         confirmSprite.Inputed += confirmSprite_Inputed2;
@@ -171,7 +172,7 @@ namespace PPDMulti
                     }
                     break;
                 case 1:
-                    var roomListSplite = new SlideSprite(device, ResourceManager, Sound) { Position = new SharpDX.Vector2(800 * currentIndex, 0) };
+                    var roomListSplite = new SlideSprite(device, ResourceManager, Sound) { Position = new System.Numerics.Vector2(800 * currentIndex, 0) };
                     var roomList = new RoomListComponent(device, ResourceManager, Sound, GameHost);
                     roomList.RoomSelected += roomList_RoomSelected;
                     roomListSplite.AddUserComponent(roomList);
@@ -186,17 +187,17 @@ namespace PPDMulti
                     break;
                 case 3:
                     asHost = false;
-                    var ipSprite = new SlideSprite(device, ResourceManager, Sound) { Position = new SharpDX.Vector2(800 * currentIndex, 0) };
+                    var ipSprite = new SlideSprite(device, ResourceManager, Sound) { Position = new System.Numerics.Vector2(800 * currentIndex, 0) };
                     ipSprite.AddUserComponent(new TextureString(device, Utility.Language["InputIP"], 18, true, PPDColors.White)
                     {
-                        Position = new SharpDX.Vector2(400, 200)
+                        Position = new System.Numerics.Vector2(400, 200)
                     });
                     var ipTextBox = new DxTextBox(device, GameHost, ResourceManager)
                     {
                         DrawOnlyFocus = false
                     };
                     ipTextBox.LostFocused += ipTextBox_LostFocused;
-                    ipTextBox.Position = new SharpDX.Vector2(300, 250);
+                    ipTextBox.Position = new System.Numerics.Vector2(300, 250);
                     ipTextBox.TextBoxHeight = 20;
                     ipTextBox.TextBoxWidth = ipTextBox.MaxWidth = 200;
                     ipTextBox.Text = "";
@@ -204,7 +205,7 @@ namespace PPDMulti
                     ipSprite.AddUserComponent(ipTextBox);
                     ipSprite.AddUserComponent(new TextureString(device, "", 18, true, PPDColors.White)
                     {
-                        Position = new SharpDX.Vector2(400, 300)
+                        Position = new System.Numerics.Vector2(400, 300)
                     });
                     ipSprite.Inputed += slideSprite_Inputed;
                     ipSprite.LostFocused += slideSprite_LostFocused;
@@ -240,10 +241,10 @@ namespace PPDMulti
 
         private void CreatePortPanel(bool toConfirm)
         {
-            var portSprite = new SlideSprite(device, ResourceManager, Sound) { Position = new SharpDX.Vector2(800 * currentIndex, 0) };
+            var portSprite = new SlideSprite(device, ResourceManager, Sound) { Position = new System.Numerics.Vector2(800 * currentIndex, 0) };
             portSprite.AddUserComponent(new TextureString(device, Utility.Language["InputPort"], 18, true, PPDColors.White)
             {
-                Position = new SharpDX.Vector2(400, 200)
+                Position = new System.Numerics.Vector2(400, 200)
             });
             var portTextBox = new DxTextBox(device, GameHost, ResourceManager)
             {
@@ -257,7 +258,7 @@ namespace PPDMulti
             {
                 portTextBox.LostFocused += portToConfirmTextBox_LostFocused;
             }
-            portTextBox.Position = new SharpDX.Vector2(300, 250);
+            portTextBox.Position = new System.Numerics.Vector2(300, 250);
             portTextBox.TextBoxHeight = 20;
             portTextBox.TextBoxWidth = portTextBox.MaxWidth = 200;
             portTextBox.Text = "";
@@ -265,11 +266,11 @@ namespace PPDMulti
             portSprite.AddUserComponent(portTextBox);
             portSprite.AddUserComponent(new TextureString(device, "", 18, true, PPDColors.White)
             {
-                Position = new SharpDX.Vector2(400, 300)
+                Position = new System.Numerics.Vector2(400, 300)
             });
             portSprite.AddUserComponent(new TextureString(device, asHost ? Utility.Language["MustOpenPort"] : "", 18, true, PPDColors.White)
             {
-                Position = new SharpDX.Vector2(400, 220)
+                Position = new System.Numerics.Vector2(400, 220)
             });
             portSprite.LostFocused += slideSprite_LostFocused;
             portSprite.Inputed += slideSprite_Inputed;
@@ -282,23 +283,23 @@ namespace PPDMulti
         {
             var confirmSprite = new SlideSprite(device, ResourceManager, Sound)
             {
-                Position = new SharpDX.Vector2(800 * currentIndex, 0)
+                Position = new System.Numerics.Vector2(800 * currentIndex, 0)
             };
             confirmSprite.AddUserComponent(new TextureString(device, Utility.Language["ConfirmCreateRoom"], 18, true, PPDColors.White)
             {
-                Position = new SharpDX.Vector2(400, 150)
+                Position = new System.Numerics.Vector2(400, 150)
             });
             confirmSprite.AddUserComponent(new TextureString(device, String.Format(Utility.Language["RoomName"], roomName), 18, PPDColors.White)
             {
-                Position = new SharpDX.Vector2(300, 200)
+                Position = new System.Numerics.Vector2(300, 200)
             });
             confirmSprite.AddUserComponent(new TextureString(device, String.Format(Utility.Language["Password"], password), 18, PPDColors.White)
             {
-                Position = new SharpDX.Vector2(300, 230)
+                Position = new System.Numerics.Vector2(300, 230)
             });
             confirmSprite.AddUserComponent(new TextureString(device, String.Format(Utility.Language["Port"], port), 18, PPDColors.White)
             {
-                Position = new SharpDX.Vector2(300, 260)
+                Position = new System.Numerics.Vector2(300, 260)
             });
             confirmSprite.LostFocused += slideSprite_LostFocused;
             confirmSprite.Inputed += confirmSprite_Inputed;
@@ -332,17 +333,17 @@ namespace PPDMulti
 
         private void CreatePasswordPanel()
         {
-            var passwordSprite = new SlideSprite(device, ResourceManager, Sound) { Position = new SharpDX.Vector2(800 * currentIndex, 0) };
+            var passwordSprite = new SlideSprite(device, ResourceManager, Sound) { Position = new System.Numerics.Vector2(800 * currentIndex, 0) };
             passwordSprite.AddUserComponent(new TextureString(device, Utility.Language["InputPassword"], 18, true, PPDColors.White)
             {
-                Position = new SharpDX.Vector2(400, 200)
+                Position = new System.Numerics.Vector2(400, 200)
             });
             var passwordTextBox = new DxTextBox(device, GameHost, ResourceManager)
             {
                 DrawOnlyFocus = false
             };
             passwordTextBox.LostFocused += passwordTextBox_LostFocused;
-            passwordTextBox.Position = new SharpDX.Vector2(300, 250);
+            passwordTextBox.Position = new System.Numerics.Vector2(300, 250);
             passwordTextBox.TextBoxHeight = 20;
             passwordTextBox.TextBoxWidth = passwordTextBox.MaxWidth = 200;
             passwordTextBox.Text = "";
@@ -350,7 +351,7 @@ namespace PPDMulti
             passwordSprite.AddUserComponent(passwordTextBox);
             passwordSprite.AddUserComponent(new TextureString(device, "", 18, true, PPDColors.White)
             {
-                Position = new SharpDX.Vector2(400, 300)
+                Position = new System.Numerics.Vector2(400, 300)
             });
             passwordSprite.LostFocused += slideSprite_LostFocused;
             passwordSprite.Inputed += slideSprite_Inputed;
@@ -578,7 +579,7 @@ namespace PPDMulti
             }
             generatePanel = NextPanel.None;
 
-            allSlideSprite.Position = new SharpDX.Vector2(AnimationUtility.GetAnimationValue(allSlideSprite.Position.X, -currentIndex * 800), allSlideSprite.Position.Y);
+            allSlideSprite.Position = new System.Numerics.Vector2(AnimationUtility.GetAnimationValue(allSlideSprite.Position.X, -currentIndex * 800), allSlideSprite.Position.Y);
 
 
             focusManager.ProcessInput(inputInfo);
@@ -618,8 +619,8 @@ namespace PPDMulti
                 this.AddChild((userSprite = new SpriteObject(device)));
                 this.AddChild((select = new PictureObject(device, resourceManager, Utility.Path.Combine("right.png"), true)
                 {
-                    Position = new SharpDX.Vector2(30, 0),
-                    Scale = new SharpDX.Vector2(0.5f, 0.5f)
+                    Position = new System.Numerics.Vector2(30, 0),
+                    Scale = new System.Numerics.Vector2(0.5f, 0.5f)
                 }));
 
                 Inputed += SlideSprite_Inputed;
@@ -711,7 +712,7 @@ namespace PPDMulti
             {
                 var textureString = new TextureString(device, text, 18, PPDColors.White)
                 {
-                    Position = new SharpDX.Vector2(400, 0)
+                    Position = new System.Numerics.Vector2(400, 0)
                 };
                 //textureString.MouseEnter += new MouseEventHandler(textureString_MouseEnter);
                 //textureString.MouseLeftClick += new MouseEventHandler(textureString_MouseLeftClick);
@@ -766,17 +767,17 @@ namespace PPDMulti
                     textSprite.Update();
                     for (int i = 0; i < textSprite.ChildrenCount; i++)
                     {
-                        textSprite[i].Position = new SharpDX.Vector2(400 - textSprite.Width / 2, 225 - (25) * textSprite.ChildrenCount / 2 + i * 25);
+                        textSprite[i].Position = new System.Numerics.Vector2(400 - textSprite.Width / 2, 225 - (25) * textSprite.ChildrenCount / 2 + i * 25);
                         (textSprite[i] as TextureString).Alpha = menuEnabled[i] ? 1 : 0f;
                     }
 
-                    select.Position = new SharpDX.Vector2(400 - textSprite.Width / 2 - 10, textSprite[currentIndex].Position.Y + 10);
+                    select.Position = new System.Numerics.Vector2(400 - textSprite.Width / 2 - 10, textSprite[currentIndex].Position.Y + 10);
                     modified = false;
                 }
 
                 if (selectCount > 0)
                 {
-                    select.Position = new SharpDX.Vector2(select.Position.X, AnimationUtility.GetAnimationValue(select.Position.Y, textSprite[currentIndex].Position.Y + 10, 0.2f));
+                    select.Position = new System.Numerics.Vector2(select.Position.X, AnimationUtility.GetAnimationValue(select.Position.Y, textSprite[currentIndex].Position.Y + 10, 0.2f));
                 }
                 else
                 {

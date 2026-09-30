@@ -1,7 +1,9 @@
 ﻿using PPDFramework;
 using PPDFramework.Shaders;
 using PPDFramework.Vertex;
-using SharpDX;
+using SharpDX;
+using System.Numerics;
+using PPDMath;
 
 namespace PPDCore
 {
@@ -95,7 +97,7 @@ namespace PPDCore
                         continue;
                     }
 
-                    vD = Vector2.Normalize(v);
+                    vD = MathCompat.NormalizeSharpDX(v);
                     vD *= width;
                     vN1.X = -vD.Y;
                     vN1.Y = vD.X;
@@ -103,7 +105,7 @@ namespace PPDCore
                     vN2.Y = -vD.X;
                 }
 
-                var color = PPDColors.White.ToBgra();
+                var color = PPDColors.White.ToBgraInt();
                 dataVertices[drawVerticesCount].Position = new Vector3(pos[i].X + vN1.X, pos[i].Y + vN1.Y, 0.5f);
                 dataVertices[drawVerticesCount].TextureCoordinates = trace.ImageResource.GetActualUV(new Vector2(alpha, 0)) + trace.ImageResource.HalfPixel;
                 dataVertices[drawVerticesCount].Color = color;

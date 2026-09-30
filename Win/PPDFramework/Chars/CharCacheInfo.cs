@@ -1,5 +1,7 @@
 ﻿using PPDFramework.Texture;
-using SharpDX;
+using SharpDX;
+using System.Numerics;
+using PPDMath;
 using System;
 using System.Drawing;
 using System.IO;
@@ -320,12 +322,12 @@ namespace PPDFramework.Chars
             return UV + ActualUVSize * uv;
         }
 
-        public SharpDX.RectangleF GetActualUVRectangle(float left, float top, float right, float bottom)
+        public Vortice.Mathematics.Rect GetActualUVRectangle(float left, float top, float right, float bottom)
         {
             var topLeft = GetActualUV(new Vector2(left, top));
             var bottomRight = GetActualUV(new Vector2(right, bottom));
             var halfPixel = HalfPixel;
-            return new SharpDX.RectangleF(topLeft.X + halfPixel.X, topLeft.Y + halfPixel.Y,
+            return new Vortice.Mathematics.Rect(topLeft.X + halfPixel.X, topLeft.Y + halfPixel.Y,
                 bottomRight.X - topLeft.X - halfPixel.X,
                 bottomRight.Y - topLeft.Y - halfPixel.Y);
 

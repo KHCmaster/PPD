@@ -1,4 +1,5 @@
-﻿using MessagePack;
+﻿using PPDMath;
+using MessagePack;
 using PPDCore;
 using PPDCoreModel.Data;
 using PPDExpansionCore;
@@ -54,7 +55,7 @@ namespace PPDMulti
         int lastComboCount;
         int lastLife;
         int lastScore;
-        SharpDX.Vector2 lastMarkPos;
+        System.Numerics.Vector2 lastMarkPos;
         Random r = new Random();
         PPDGameUtility gameutility;
 
@@ -167,12 +168,12 @@ namespace PPDMulti
             userPlayStateList.ItemChanged += userPlayStateList_ItemChanged;
             userScoreListComponent = new UserScoreListComponent(device, ResourceManager)
             {
-                Position = new SharpDX.Vector2(680, 45)
+                Position = new System.Numerics.Vector2(680, 45)
             };
 
             itemManagerComponent = new ItemManagerComponent(device, ResourceManager, gameRule)
             {
-                Position = new SharpDX.Vector2(682, 420)
+                Position = new System.Numerics.Vector2(682, 420)
             };
 
             itemOverrayComponent = new ItemOverrayComponent(device, ResourceManager, itemManagerComponent);
@@ -325,7 +326,7 @@ namespace PPDMulti
             itemManagerComponent.AddItem();
         }
 
-        void mainGameComponent_ComboChanged(int obj1, SharpDX.Vector2 obj2)
+        void mainGameComponent_ComboChanged(int obj1, System.Numerics.Vector2 obj2)
         {
             if (!gameRule.ItemAvailable)
             {

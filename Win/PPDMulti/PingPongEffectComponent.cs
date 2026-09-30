@@ -1,6 +1,9 @@
 ﻿using PPDFramework;
 using PPDShareComponent;
-using SharpDX;
+using SharpDX;
+using System.Numerics;
+using PPDMath;
+using Rectangle = Vortice.Mathematics.RectI;
 using System;
 
 namespace PPDMulti
@@ -101,7 +104,7 @@ namespace PPDMulti
             }
             if (ballVector.Length() > 100)
             {
-                ballVector.Normalize();
+                ballVector = MathCompat.NormalizeSharpDX(ballVector);
                 ballVector = ballVector * 100;
             }
         }

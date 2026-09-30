@@ -1,4 +1,7 @@
-﻿using SharpDX;
+﻿using SharpDX;
+using System.Numerics;
+using PPDMath;
+using Color4 = Vortice.Mathematics.Color4;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -93,7 +96,7 @@ namespace PPDFramework.Mod
                     case "Color4":
                         if (int.TryParse(elem.Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out intVal))
                         {
-                            addValue = new Color4(intVal);
+                            addValue = MathCompat.Color4FromRgba(intVal);
                         }
                         break;
                     default:
@@ -153,7 +156,7 @@ namespace PPDFramework.Mod
                 else if (pair.Value is Color4)
                 {
                     type = "Color4";
-                    value = ((Color4)pair.Value).ToRgba().ToString(CultureInfo.InvariantCulture);
+                    value = ((Color4)pair.Value).ToRgbaInt().ToString(CultureInfo.InvariantCulture);
                 }
                 else
                 {

@@ -1,7 +1,12 @@
 ﻿using PPDFramework.Sprites;
 using PPDFramework.Texture;
 using PPDFramework.Vertex;
-using SharpDX;
+using SharpDX;
+using System.Numerics;
+using PPDMath;
+using Matrix = System.Numerics.Matrix4x4;
+using Color4 = Vortice.Mathematics.Color4;
+using Rectangle = Vortice.Mathematics.RectI;
 using SharpDX.Mathematics.Interop;
 using System;
 using System.Collections.Generic;

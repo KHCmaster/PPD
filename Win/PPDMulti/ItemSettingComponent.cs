@@ -1,7 +1,9 @@
 ﻿using PPDFramework;
 using PPDMultiCommon.Data;
 using PPDShareComponent;
-using SharpDX;
+using SharpDX;
+using System.Numerics;
+using PPDMath;
 using System;
 
 namespace PPDMulti
@@ -47,18 +49,18 @@ namespace PPDMulti
             });
             back.AddChild(new LineRectangleComponent(device, resourceManager, PPDColors.White)
             {
-                Position = new SharpDX.Vector2(50, 100),
+                Position = new System.Numerics.Vector2(50, 100),
                 RectangleHeight = 310,
                 RectangleWidth = 300
             });
             back.AddChild(new LineRectangleComponent(device, resourceManager, PPDColors.White)
             {
-                Position = new SharpDX.Vector2(450, 100),
+                Position = new System.Numerics.Vector2(450, 100),
                 RectangleHeight = 310,
                 RectangleWidth = 300
             });
-            back.AddChild(manualUseSprite = new SpriteObject(device) { Position = new SharpDX.Vector2(60, 105) });
-            back.AddChild(autoUseSprite = new SpriteObject(device) { Position = new SharpDX.Vector2(460, 105) });
+            back.AddChild(manualUseSprite = new SpriteObject(device) { Position = new System.Numerics.Vector2(60, 105) });
+            back.AddChild(autoUseSprite = new SpriteObject(device) { Position = new System.Numerics.Vector2(460, 105) });
 
             back.AddChild(new TextureString(device, Utility.Language["ItemUseSetting"], 30, PPDColors.White)
             {
@@ -72,7 +74,7 @@ namespace PPDMulti
             {
                 autoUseSprite.AddChild(new UseItemComponent(device, resourceManager, ItemUseManager.Manager.AutoUseItemTypes[i])
                 {
-                    Position = new SharpDX.Vector2(0, i * 20)
+                    Position = new System.Numerics.Vector2(0, i * 20)
                 });
             }
 
@@ -84,7 +86,7 @@ namespace PPDMulti
                 {
                     manualUseSprite.AddChild(new UseItemComponent(device, resourceManager, itemTypeArray[i])
                     {
-                        Position = new SharpDX.Vector2(0, addedCount * 20)
+                        Position = new System.Numerics.Vector2(0, addedCount * 20)
                     });
                     addedCount++;
                 }
@@ -103,7 +105,7 @@ namespace PPDMulti
 
         void ItemSettingComponent_GotFocused(IFocusable sender, FocusEventArgs args)
         {
-            back.Position = new SharpDX.Vector2(0, 50);
+            back.Position = new System.Numerics.Vector2(0, 50);
             Alpha = 0;
         }
 
@@ -215,12 +217,12 @@ namespace PPDMulti
         {
             if (OverFocused)
             {
-                back.Position = new SharpDX.Vector2(0, AnimationUtility.GetAnimationValue(back.Position.Y, 0));
+                back.Position = new System.Numerics.Vector2(0, AnimationUtility.GetAnimationValue(back.Position.Y, 0));
                 Alpha = AnimationUtility.IncreaseAlpha(Alpha);
             }
             else
             {
-                back.Position = new SharpDX.Vector2(0, AnimationUtility.GetAnimationValue(back.Position.Y, 50));
+                back.Position = new System.Numerics.Vector2(0, AnimationUtility.GetAnimationValue(back.Position.Y, 50));
                 Alpha = AnimationUtility.DecreaseAlpha(Alpha);
             }
         }

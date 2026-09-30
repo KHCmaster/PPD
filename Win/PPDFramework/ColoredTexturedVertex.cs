@@ -19,7 +19,11 @@
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 * THE SOFTWARE.
 */
-using SharpDX;
+using SharpDX;
+using System.Numerics;
+using PPDMath;
+using Color4 = Vortice.Mathematics.Color4;
+using Color = Vortice.Mathematics.Color;
 using System;
 using System.Runtime.InteropServices;
 
@@ -80,7 +84,7 @@ namespace PPDFramework
             : this()
         {
             Position = position;
-            Color = color.ToBgra();
+            Color = color.ToBgraInt();
             TextureCoordinates = textureCoordinates;
         }
 

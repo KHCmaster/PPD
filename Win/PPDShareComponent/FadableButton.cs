@@ -1,4 +1,5 @@
-﻿using PPDFramework;
+﻿using PPDMath;
+using PPDFramework;
 
 namespace PPDShareComponent
 {
@@ -43,7 +44,7 @@ namespace PPDShareComponent
             this.str = str;
             this.AddChild(str);
             str.Alpha = 0;
-            str.Position = new SharpDX.Vector2(-str.Width / 2, -normal.Height / 2 - str.Height);
+            str.Position = new System.Numerics.Vector2(-str.Width / 2, -normal.Height / 2 - str.Height);
 
             MouseEnter += FadableButton_MouseEnter;
             MouseLeave += FadableButton_MouseLeave;
@@ -83,9 +84,9 @@ namespace PPDShareComponent
             str.Alpha = 1 - newAlpha;
         }
 
-        public override bool HitTest(SharpDX.Vector2 vec)
+        public override bool HitTest(System.Numerics.Vector2 vec)
         {
-            return base.HitTest(vec + new SharpDX.Vector2(normal.Width / 2, normal.Height / 2));
+            return base.HitTest(vec + new System.Numerics.Vector2(normal.Width / 2, normal.Height / 2));
         }
     }
 }

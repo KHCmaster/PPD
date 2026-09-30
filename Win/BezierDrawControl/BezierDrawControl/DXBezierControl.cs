@@ -1,4 +1,5 @@
-﻿using PPDFramework;
+﻿using PPDMath;
+using PPDFramework;
 using PPDFramework.Resource;
 using PPDShareComponent;
 using System;
@@ -101,24 +102,24 @@ namespace BezierDrawControl
             public void DrawString(string text, Color color, float fontSize, PointF point)
             {
                 Drawer.DrawTarget.InsertChild(new TextureString(Drawer.Device, text, (int)fontSize,
-                    new SharpDX.Color4(color.R / 255f, color.G / 255f, color.B / 255f, color.A / 255f))
+                    new Vortice.Mathematics.Color4(color.R / 255f, color.G / 255f, color.B / 255f, color.A / 255f))
                 {
-                    Position = new SharpDX.Vector2(point.X, point.Y)
+                    Position = new System.Numerics.Vector2(point.X, point.Y)
                 }, 0);
             }
 
             public void DrawEllipse(Color color, RectangleF rect)
             {
-                var center = new SharpDX.Vector2(rect.X + rect.Width / 2, rect.Y + rect.Height / 2);
+                var center = new System.Numerics.Vector2(rect.X + rect.Width / 2, rect.Y + rect.Height / 2);
                 var maxRadius = (int)Math.Ceiling(Math.Max(rect.Width / 2, rect.Height / 2));
-                var points = new SharpDX.Vector2[maxRadius * 4 + 1];
+                var points = new System.Numerics.Vector2[maxRadius * 4 + 1];
                 for (var i = 0; i < points.Length; i++)
                 {
                     var rad = Math.PI * 2 * i / points.Length;
-                    points[i] = center + new SharpDX.Vector2(rect.Width / 2 * (float)Math.Cos(rad), rect.Height / 2 * (float)Math.Sin(rad));
+                    points[i] = center + new System.Numerics.Vector2(rect.Width / 2 * (float)Math.Cos(rad), rect.Height / 2 * (float)Math.Sin(rad));
                 }
                 var line = new LineComponent(Drawer.Device, Drawer.ResourceManager,
-                    new SharpDX.Color4(color.R / 255f, color.G / 255f, color.B / 255f, color.A / 255f))
+                    new Vortice.Mathematics.Color4(color.R / 255f, color.G / 255f, color.B / 255f, color.A / 255f))
                 {
                     Points = points,
                     LineWidth = 1
@@ -129,11 +130,11 @@ namespace BezierDrawControl
             public void DrawLine(Color color, PointF p1, PointF p2)
             {
                 var line = new LineComponent(Drawer.Device, Drawer.ResourceManager,
-                    new SharpDX.Color4(color.R / 255f, color.G / 255f, color.B / 255f, color.A / 255f))
+                    new Vortice.Mathematics.Color4(color.R / 255f, color.G / 255f, color.B / 255f, color.A / 255f))
                 {
-                    Points = new SharpDX.Vector2[] {
-                        new SharpDX.Vector2(p1.X,p1.Y),
-                        new SharpDX.Vector2(p2.X,p2.Y)
+                    Points = new System.Numerics.Vector2[] {
+                        new System.Numerics.Vector2(p1.X,p1.Y),
+                        new System.Numerics.Vector2(p2.X,p2.Y)
                     },
                     LineWidth = 1
                 };
@@ -143,9 +144,9 @@ namespace BezierDrawControl
             public void DrawLines(Color color, PointF[] points)
             {
                 var line = new LineComponent(Drawer.Device, Drawer.ResourceManager,
-                    new SharpDX.Color4(color.R / 255f, color.G / 255f, color.B / 255f, color.A / 255f))
+                    new Vortice.Mathematics.Color4(color.R / 255f, color.G / 255f, color.B / 255f, color.A / 255f))
                 {
-                    Points = points.Select(p => new SharpDX.Vector2(p.X, p.Y)).ToArray(),
+                    Points = points.Select(p => new System.Numerics.Vector2(p.X, p.Y)).ToArray(),
                     LineWidth = 1
                 };
                 Drawer.DrawTarget.InsertChild(line, 0);
@@ -154,9 +155,9 @@ namespace BezierDrawControl
             public void DrawRectangle(Color color, float x, float y, float width, float height)
             {
                 var lineRect = new LineRectangleComponent(Drawer.Device, Drawer.ResourceManager,
-                    new SharpDX.Color4(color.R / 255f, color.G / 255f, color.B / 255f, color.A / 255f))
+                    new Vortice.Mathematics.Color4(color.R / 255f, color.G / 255f, color.B / 255f, color.A / 255f))
                 {
-                    Position = new SharpDX.Vector2(x, y),
+                    Position = new System.Numerics.Vector2(x, y),
                     RectangleWidth = width,
                     RectangleHeight = height,
                     BorderThickness = 1
@@ -167,9 +168,9 @@ namespace BezierDrawControl
             public void FillRectangle(Color color, float x, float y, float width, float height)
             {
                 var rect = new RectangleComponent(Drawer.Device, Drawer.ResourceManager,
-                    new SharpDX.Color4(color.R / 255f, color.G / 255f, color.B / 255f, color.A / 255f))
+                    new Vortice.Mathematics.Color4(color.R / 255f, color.G / 255f, color.B / 255f, color.A / 255f))
                 {
-                    Position = new SharpDX.Vector2(x, y),
+                    Position = new System.Numerics.Vector2(x, y),
                     RectangleWidth = width,
                     RectangleHeight = height
                 };

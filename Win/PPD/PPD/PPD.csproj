@@ -31,11 +31,11 @@
     <PackageReference Include="Newtonsoft.Json" />
     <PackageReference Include="SharpDX" />
     <PackageReference Include="SharpDX.DirectInput" />
-    <PackageReference Include="SharpDX.Mathematics" />
     <PackageReference Include="System.Data.SQLite.Core" />
     <PackageReference Include="YamlDotNet" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\PPDMath\PPDMath.csproj" />
     <ProjectReference Include="..\..\DirectShow\DirectShow.csproj" />
     <ProjectReference Include="..\..\Effect2D\Effect2D.csproj" />
     <ProjectReference Include="..\..\ErrorHandler\ErrorHandle.csproj" />

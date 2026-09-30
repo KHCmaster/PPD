@@ -1,4 +1,5 @@
-﻿using PPDFramework;
+﻿using PPDMath;
+using PPDFramework;
 using PPDShareComponent;
 using System.Collections.Generic;
 
@@ -20,7 +21,7 @@ namespace PPDMulti
         {
             anim = new EffectObject(device, ResourceManager, Utility.Path.Combine("Loading.etd"))
             {
-                Position = new SharpDX.Vector2(700, 420)
+                Position = new System.Numerics.Vector2(700, 420)
             };
             anim.PlayType = Effect2D.EffectManager.PlayType.Loop;
             anim.Play();

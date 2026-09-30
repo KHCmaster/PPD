@@ -28,9 +28,9 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="SharpDX" />
-    <PackageReference Include="SharpDX.Mathematics" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\PPDMath\PPDMath.csproj" />
     <ProjectReference Include="..\Effect2D\Effect2D.csproj" />
     <ProjectReference Include="..\PPDConfiguration\PPDConfiguration.csproj" />
     <ProjectReference Include="..\PPDCore\PPDCore.csproj" />

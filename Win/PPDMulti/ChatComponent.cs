@@ -3,7 +3,11 @@ using PPDFrameworkCore;
 using PPDMulti.Model;
 using PPDMultiCommon.Model;
 using PPDShareComponent;
-using SharpDX;
+using SharpDX;
+using System.Numerics;
+using PPDMath;
+using Color4 = Vortice.Mathematics.Color4;
+using Color = Vortice.Mathematics.Color;
 using System;
 
 namespace PPDMulti
@@ -78,7 +82,7 @@ namespace PPDMulti
                 IsPrivate = isPrivate
             };
 
-            messageSprite.AddChild(new MessageComponent(device, resourceManager, message) { Position = new SharpDX.Vector2(20, messageSprite.ChildrenCount * 41) });
+            messageSprite.AddChild(new MessageComponent(device, resourceManager, message) { Position = new System.Numerics.Vector2(20, messageSprite.ChildrenCount * 41) });
 
             if (scrollIndex + 1 == messageSprite.ChildrenCount - 9)
             {
@@ -94,7 +98,7 @@ namespace PPDMulti
                 User = User.SystemUser
             };
 
-            messageSprite.AddChild(new SystemMessageComponent(device, resourceManager, message) { Position = new SharpDX.Vector2(20, messageSprite.ChildrenCount * 41) });
+            messageSprite.AddChild(new SystemMessageComponent(device, resourceManager, message) { Position = new System.Numerics.Vector2(20, messageSprite.ChildrenCount * 41) });
 
             if (scrollIndex + 1 == messageSprite.ChildrenCount - 9)
             {
@@ -305,7 +309,7 @@ namespace PPDMulti
 
             private void ChangeUserIconScale()
             {
-                userIcon.Scale = new SharpDX.Vector2(32 / userIcon.Width, 32 / userIcon.Height);
+                userIcon.Scale = new System.Numerics.Vector2(32 / userIcon.Width, 32 / userIcon.Height);
             }
 
             protected override void UpdateImpl()

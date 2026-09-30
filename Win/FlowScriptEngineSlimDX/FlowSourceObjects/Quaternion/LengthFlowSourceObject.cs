@@ -1,4 +1,5 @@
-﻿using FlowScriptEngine;
+﻿using PPDMath;
+using FlowScriptEngine;
 
 namespace FlowScriptEngineSlimDX.FlowSourceObjects.Quaternion
 {
@@ -11,7 +12,7 @@ namespace FlowScriptEngineSlimDX.FlowSourceObjects.Quaternion
         }
 
         [ToolTipText("Quaternion_Length_Quaternion_Summary")]
-        public SharpDX.Quaternion Quaternion
+        public System.Numerics.Quaternion Quaternion
         {
             private get;
             set;

@@ -1,4 +1,7 @@
-﻿using SharpDX;
+﻿using SharpDX;
+using System.Numerics;
+using PPDMath;
+using Color4 = Vortice.Mathematics.Color4;
 using SharpDX.Direct2D1;
 using SharpDX.DirectWrite;
 using SharpDX.DXGI;
@@ -37,12 +40,12 @@ namespace PPDFramework.Chars
                     var renderTargetProperties = new RenderTargetProperties(RenderTargetType.Default,
                         new SharpDX.Direct2D1.PixelFormat(Format.R8G8B8A8_UNorm, SharpDX.Direct2D1.AlphaMode.Unknown), imageDpi, imageDpi, RenderTargetUsage.None, FeatureLevel.Level_DEFAULT);
                     using (var renderTarget = new WicRenderTarget(factoryManager.D2DFactory, wicBitmap, renderTargetProperties))
-                    using (var brush = new SolidColorBrush(renderTarget, SharpDX.Color.White))
+                    using (var brush = new SolidColorBrush(renderTarget, new SharpDX.Mathematics.Interop.RawColor4(1f, 1f, 1f, 1f)))
                     using (var encoder = new BitmapEncoder(factoryManager.WicFactory, Direct2DConverter.ConvertImageFormat(format)))
                     {
                         renderTarget.BeginDraw();
-                        renderTarget.Clear(new Color4(1, 1, 1, 0));
-                        renderTarget.DrawTextLayout(Vector2.Zero, layout, brush);
+                        renderTarget.Clear(new SharpDX.Mathematics.Interop.RawColor4(1, 1, 1, 0));
+                        renderTarget.DrawTextLayout(new SharpDX.Mathematics.Interop.RawVector2(0, 0), layout, brush);
                         renderTarget.EndDraw();
                         var stream = new WICStream(factoryManager.WicFactory, systemStream);
                         encoder.Initialize(stream);

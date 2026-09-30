@@ -1,4 +1,5 @@
-﻿using FlowScriptEngine;
+﻿using PPDMath;
+using FlowScriptEngine;
 
 namespace FlowScriptEngineSlimDX.FlowSourceObjects.Vector3
 {
@@ -11,14 +12,14 @@ namespace FlowScriptEngineSlimDX.FlowSourceObjects.Vector3
         }
 
         [ToolTipText("FirstArgument")]
-        public SharpDX.Vector3 A
+        public System.Numerics.Vector3 A
         {
             private get;
             set;
         }
 
         [ToolTipText("SecondArgument")]
-        public SharpDX.Vector3 B
+        public System.Numerics.Vector3 B
         {
             private get;
             set;
@@ -31,7 +32,7 @@ namespace FlowScriptEngineSlimDX.FlowSourceObjects.Vector3
             {
                 SetValue(nameof(A));
                 SetValue(nameof(B));
-                return SharpDX.Vector3.Distance(A, B);
+                return System.Numerics.Vector3.Distance(A, B);
             }
         }
     }

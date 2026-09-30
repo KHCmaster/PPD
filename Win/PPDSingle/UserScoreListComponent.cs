@@ -1,4 +1,5 @@
-﻿using PPDFramework;
+﻿using PPDMath;
+using PPDFramework;
 using PPDShareComponent;
 using System;
 using System.Collections.Generic;
@@ -28,7 +29,7 @@ namespace PPDSingle
         {
             var playUserIcon = new PlayUserIcon(device, resourceManager, userPlayState, showScore, showEvaluate, showLife)
             {
-                Position = new SharpDX.Vector2(0, ChildrenCount * ItemHeight)
+                Position = new System.Numerics.Vector2(0, ChildrenCount * ItemHeight)
             };
             this.AddChild(playUserIcon);
             list.Add(playUserIcon);
@@ -43,7 +44,7 @@ namespace PPDSingle
             list.Sort(Compare);
             for (int i = 0; i < list.Count; i++)
             {
-                list[i].Position = new SharpDX.Vector2(0, i * ItemHeight);
+                list[i].Position = new System.Numerics.Vector2(0, i * ItemHeight);
             }
         }
 
@@ -83,7 +84,7 @@ namespace PPDSingle
 
             for (int i = 0; i < list.Count; i++)
             {
-                list[i].Position = new SharpDX.Vector2(0, AnimationUtility.GetAnimationValue(list[i].Position.Y, i * ItemHeight));
+                list[i].Position = new System.Numerics.Vector2(0, AnimationUtility.GetAnimationValue(list[i].Position.Y, i * ItemHeight));
             }
         }
 

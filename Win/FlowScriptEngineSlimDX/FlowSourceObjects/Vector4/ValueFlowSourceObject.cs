@@ -1,11 +1,12 @@
-﻿using FlowScriptEngine;
+﻿using PPDMath;
+using FlowScriptEngine;
 
 namespace FlowScriptEngineSlimDX.FlowSourceObjects.Vector4
 {
     [ToolTipText("Vector_Value_Summary")]
     public partial class ValueFlowSourceObject : FlowSourceObjectBase
     {
-        private SharpDX.Vector4 value;
+        private System.Numerics.Vector4 value;
 
         public override string Name
         {
@@ -13,7 +14,7 @@ namespace FlowScriptEngineSlimDX.FlowSourceObjects.Vector4
         }
 
         [ToolTipText("Vector4_Value_Value_Summary")]
-        public SharpDX.Vector4 Value
+        public System.Numerics.Vector4 Value
         {
             get
             {

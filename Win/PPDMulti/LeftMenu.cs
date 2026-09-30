@@ -5,7 +5,10 @@ using PPDMulti.Data;
 using PPDMulti.Model;
 using PPDMultiCommon.Model;
 using PPDShareComponent;
-using SharpDX;
+using SharpDX;
+using System.Numerics;
+using PPDMath;
+using Color4 = Vortice.Mathematics.Color4;
 using System;
 
 namespace PPDMulti

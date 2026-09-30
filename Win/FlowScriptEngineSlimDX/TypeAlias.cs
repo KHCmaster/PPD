@@ -1,4 +1,5 @@
-﻿using FlowScriptEngine;
+﻿using PPDMath;
+using FlowScriptEngine;
 using System;
 using System.Collections.Generic;
 
@@ -11,12 +12,12 @@ namespace FlowScriptEngineSlimDX
         {
             dictionary = new Dictionary<Type, string>
             {
-                { typeof(SharpDX.Vector2), "Vector2" },
-                { typeof(SharpDX.Vector3), "Vector3" },
-                { typeof(SharpDX.Vector4), "Vector4" },
-                { typeof(SharpDX.Matrix), "Matrix" },
-                { typeof(SharpDX.Quaternion), "Quaternion" },
-                { typeof(SharpDX.Color4), "Color4" }
+                { typeof(System.Numerics.Vector2), "Vector2" },
+                { typeof(System.Numerics.Vector3), "Vector3" },
+                { typeof(System.Numerics.Vector4), "Vector4" },
+                { typeof(System.Numerics.Matrix4x4), "Matrix" },
+                { typeof(System.Numerics.Quaternion), "Quaternion" },
+                { typeof(Vortice.Mathematics.Color4), "Color4" }
             };
         }
 

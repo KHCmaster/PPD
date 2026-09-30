@@ -1,4 +1,5 @@
-﻿using PPDFramework;
+﻿using PPDMath;
+using PPDFramework;
 using PPDShareComponent;
 using System;
 
@@ -23,7 +24,7 @@ namespace PPD
             {
                 strings[i] = new TextureString(device, Utility.Language[HomeBottomMenu.ModeArray[i].ToString()], 18, true, PPDColors.White)
                 {
-                    Position = new SharpDX.Vector2(400, 5)
+                    Position = new System.Numerics.Vector2(400, 5)
                 };
                 strings[i].Alpha = 0;
                 this.AddChild(strings[i]);
@@ -33,11 +34,11 @@ namespace PPD
 
             this.AddChild(new PictureObject(device, resourceManager, Utility.Path.Combine("l.png"))
             {
-                Position = new SharpDX.Vector2(5, 5)
+                Position = new System.Numerics.Vector2(5, 5)
             });
             this.AddChild(new PictureObject(device, resourceManager, Utility.Path.Combine("r.png"))
             {
-                Position = new SharpDX.Vector2(760, 5)
+                Position = new System.Numerics.Vector2(760, 5)
             });
             this.AddChild(new PictureObject(device, resourceManager, Utility.Path.Combine("header.png")));
         }
@@ -66,12 +67,12 @@ namespace PPD
             if (drawCount >= 60 && operated)
             {
                 this.Alpha = AnimationUtility.DecreaseAlpha(this.Alpha, 0.2f);
-                this.Position = new SharpDX.Vector2(0, AnimationUtility.GetAnimationValue(this.Position.Y, -30));
+                this.Position = new System.Numerics.Vector2(0, AnimationUtility.GetAnimationValue(this.Position.Y, -30));
             }
             else
             {
                 this.Alpha = AnimationUtility.IncreaseAlpha(this.Alpha, 0.2f);
-                this.Position = new SharpDX.Vector2(0, AnimationUtility.GetAnimationValue(this.Position.Y, 0));
+                this.Position = new System.Numerics.Vector2(0, AnimationUtility.GetAnimationValue(this.Position.Y, 0));
             }
 
             operated |= drawCount >= 200;

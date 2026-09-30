@@ -1,6 +1,8 @@
 ﻿using PPDCore;
 using PPDFramework;
-using SharpDX;
+using SharpDX;
+using System.Numerics;
+using PPDMath;
 using System;
 
 namespace PPDShareComponent

@@ -1,4 +1,5 @@
-﻿using PPDFramework;
+﻿using PPDMath;
+using PPDFramework;
 using PPDShareComponent;
 
 namespace PPD
@@ -32,35 +33,35 @@ namespace PPD
                 texts[0] = new TextureString(device, Utility.Language["Master"], 18, PPDColors.White),
                 texts[1] = new TextureString(device, Utility.Language["Movie"], 18, PPDColors.White)
                 {
-                    Position = new SharpDX.Vector2(0, 25)
+                    Position = new System.Numerics.Vector2(0, 25)
                 },
                 texts[2] = new TextureString(device, Utility.Language["SE"], 18, PPDColors.White)
                 {
-                    Position = new SharpDX.Vector2(0, 50)
+                    Position = new System.Numerics.Vector2(0, 50)
                 },
-                rects[0] = new RectangleComponent(device, resourceManager, PPDColors.White) { Position = new SharpDX.Vector2(RectStartX, 10), RectangleHeight = 2, RectangleWidth = RectWidth },
-                rects[1] = new RectangleComponent(device, resourceManager, PPDColors.White) { Position = new SharpDX.Vector2(RectStartX, 35), RectangleHeight = 2, RectangleWidth = RectWidth },
-                rects[2] = new RectangleComponent(device, resourceManager, PPDColors.White) { Position = new SharpDX.Vector2(RectStartX, 60), RectangleHeight = 2, RectangleWidth = RectWidth },
+                rects[0] = new RectangleComponent(device, resourceManager, PPDColors.White) { Position = new System.Numerics.Vector2(RectStartX, 10), RectangleHeight = 2, RectangleWidth = RectWidth },
+                rects[1] = new RectangleComponent(device, resourceManager, PPDColors.White) { Position = new System.Numerics.Vector2(RectStartX, 35), RectangleHeight = 2, RectangleWidth = RectWidth },
+                rects[2] = new RectangleComponent(device, resourceManager, PPDColors.White) { Position = new System.Numerics.Vector2(RectStartX, 60), RectangleHeight = 2, RectangleWidth = RectWidth },
                 spheres[0] = new PictureObject(device, resourceManager, Utility.Path.Combine("sphere.png"), true)
                 {
-                    Position = new SharpDX.Vector2(RectStartX, 10)
+                    Position = new System.Numerics.Vector2(RectStartX, 10)
                 },
                 spheres[1] = new PictureObject(device, resourceManager, Utility.Path.Combine("sphere.png"), true)
                 {
-                    Position = new SharpDX.Vector2(RectStartX, 35)
+                    Position = new System.Numerics.Vector2(RectStartX, 35)
                 },
                 spheres[2] = new PictureObject(device, resourceManager, Utility.Path.Combine("sphere.png"), true)
                 {
-                    Position = new SharpDX.Vector2(RectStartX, 60)
+                    Position = new System.Numerics.Vector2(RectStartX, 60)
                 },
                 select = new PictureObject(device, resourceManager, Utility.Path.Combine("right.png"), true)
                 {
-                    Position = new SharpDX.Vector2(30, 0),
-                    Scale = new SharpDX.Vector2(0.5f, 0.5f)
+                    Position = new System.Numerics.Vector2(30, 0),
+                    Scale = new System.Numerics.Vector2(0.5f, 0.5f)
                 }
             )
             {
-                Position = new SharpDX.Vector2(160, 225 - 75 / 2f)
+                Position = new System.Numerics.Vector2(160, 225 - 75 / 2f)
             };
             modified = true;
 
@@ -87,7 +88,7 @@ namespace PPD
 
         private void AdjustPosition(PictureObject sphere, float ratio)
         {
-            sphere.Position = new SharpDX.Vector2(RectStartX + RectWidth * ratio, sphere.Position.Y);
+            sphere.Position = new System.Numerics.Vector2(RectStartX + RectWidth * ratio, sphere.Position.Y);
         }
 
         private void ChangeVolume(int diff)
@@ -157,11 +158,11 @@ namespace PPD
         {
             if (modified)
             {
-                select.Position = new SharpDX.Vector2(-10, texts[currentIndex].Position.Y + 10);
+                select.Position = new System.Numerics.Vector2(-10, texts[currentIndex].Position.Y + 10);
                 modified = false;
             }
 
-            select.Position = new SharpDX.Vector2(select.Position.X,
+            select.Position = new System.Numerics.Vector2(select.Position.X,
                 AnimationUtility.GetAnimationValue(select.Position.Y, texts[currentIndex].Position.Y + 10, 0.2f));
         }
     }

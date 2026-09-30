@@ -1,6 +1,8 @@
 ﻿using PPDFramework;
 using PPDShareComponent;
-using SharpDX;
+using SharpDX;
+using System.Numerics;
+using PPDMath;
 using System;
 
 namespace PPD
@@ -51,7 +53,7 @@ namespace PPD
             var component = new GameInfoComponent(device, resourceManager, gl)
             {
                 PlayingTime = String.Format("{0:F1}{1}", ConvertSecond(GetPlayingSecond(gl)), Utility.Language["Hour"]),
-                Position = new SharpDX.Vector2(0, listSprite.ChildrenCount * 90)
+                Position = new System.Numerics.Vector2(0, listSprite.ChildrenCount * 90)
             };
             listSprite.AddChild(component);
         }
@@ -117,8 +119,8 @@ namespace PPD
 
         protected override void UpdateImpl()
         {
-            select.Position = new SharpDX.Vector2(0, AnimationUtility.GetAnimationValue(select.Position.Y, 90 * currentIndex, 0.2f));
-            this.Position = new SharpDX.Vector2(0, AnimationUtility.GetAnimationValue(this.Position.Y, -90 * scrollIndex));
+            select.Position = new System.Numerics.Vector2(0, AnimationUtility.GetAnimationValue(select.Position.Y, 90 * currentIndex, 0.2f));
+            this.Position = new System.Numerics.Vector2(0, AnimationUtility.GetAnimationValue(this.Position.Y, -90 * scrollIndex));
         }
 
         class GameInfoComponent : GameComponent

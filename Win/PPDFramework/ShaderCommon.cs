@@ -1,5 +1,7 @@
 ﻿using PPDFramework.Vertex;
-using SharpDX;
+using SharpDX;
+using System.Numerics;
+using PPDMath;
 
 namespace PPDFramework
 {

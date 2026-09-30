@@ -1,18 +1,19 @@
-﻿using FlowScriptEngine;
+﻿using PPDMath;
+using FlowScriptEngine;
 
 namespace FlowScriptEngineSlimDX.FlowSourceObjects.Matrix
 {
     [ToolTipText("Matrix_Value_Summary")]
     public partial class ValueFlowSourceObject : FlowSourceObjectBase
     {
-        private SharpDX.Matrix value;
+        private System.Numerics.Matrix4x4 value;
         public override string Name
         {
             get { return "Matrix.Value"; }
         }
 
         [ToolTipText("Matrix_Value_Value_Summary")]
-        public SharpDX.Matrix Value
+        public System.Numerics.Matrix4x4 Value
         {
             get
             {

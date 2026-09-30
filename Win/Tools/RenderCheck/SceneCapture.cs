@@ -130,7 +130,8 @@ static class SceneCapture
         Bitmap bitmap = null;
         try
         {
-            for (var i = 0; i < 20; i++)
+            // 起動直後はまだ描画されていないことがあるので、最大 20 秒待つ
+            for (var i = 0; i < 40; i++)
             {
                 bitmap?.Dispose();
                 bitmap = Capture(hwnd);
@@ -144,7 +145,7 @@ static class SceneCapture
                     continue;
                 }
                 var current = ToBytes(bitmap);
-                if (previous != null && IsSame(previous, current) && !IsUniform(current))
+                if (previous != null && IsSame(previous, current) && !IsUniform(current, bitmap.Width, bitmap.Height))
                 {
                     bitmap.Save(path, System.Drawing.Imaging.ImageFormat.Png);
                     return true;
@@ -220,11 +221,22 @@ static class SceneCapture
         return true;
     }
 
-    static bool IsUniform(byte[] a)
+    /// <summary>
+    /// 一色だけの画像（まだ描画されていないウィンドウ）かどうかを調べます。
+    /// Windows 11 の角丸の部分には背景が写るので、周囲 16 ピクセルは見ない。
+    /// </summary>
+    static bool IsUniform(byte[] a, int width, int height)
     {
-        for (var i = 4; i < a.Length; i += 4)
+        const int margin = 16;
+        var stride = width * 4;
+        var first = (margin * width + margin) * 4;
+        for (var y = margin; y < height - margin; y++)
         {
-            if (a[i] != a[0] || a[i + 1] != a[1] || a[i + 2] != a[2]) return false;
+            for (var x = margin; x < width - margin; x++)
+            {
+                var i = y * stride + x * 4;
+                if (a[i] != a[first] || a[i + 1] != a[first + 1] || a[i + 2] != a[first + 2]) return false;
+            }
         }
         return true;
     }

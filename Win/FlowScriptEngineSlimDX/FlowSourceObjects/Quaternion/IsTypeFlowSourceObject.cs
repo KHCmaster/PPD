@@ -1,6 +1,7 @@
-﻿namespace FlowScriptEngineSlimDX.FlowSourceObjects.Quaternion
+﻿using PPDMath;
+namespace FlowScriptEngineSlimDX.FlowSourceObjects.Quaternion
 {
-    public partial class IsTypeFlowSourceObject : TemplateIsTypeFlowSourceObject<SharpDX.Quaternion>
+    public partial class IsTypeFlowSourceObject : TemplateIsTypeFlowSourceObject<System.Numerics.Quaternion>
     {
         public override string Name
         {

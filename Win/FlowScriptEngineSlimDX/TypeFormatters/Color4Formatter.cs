@@ -1,4 +1,5 @@
-﻿using FlowScriptEngine;
+﻿using PPDMath;
+using FlowScriptEngine;
 using System;
 using System.Drawing;
 using System.Globalization;
@@ -9,13 +10,13 @@ namespace FlowScriptEngineSlimDX.TypeFormatters
     {
         public override Type Type
         {
-            get { return typeof(SharpDX.Color4); }
+            get { return typeof(Vortice.Mathematics.Color4); }
         }
 
         public override bool Format(string str, out object value)
         {
             value = null;
-            SharpDX.Color4 color;
+            Vortice.Mathematics.Color4 color;
             if (str.StartsWith("#"))
             {
                 if (GetSharpColor(str.Substring(1), out color))
@@ -29,7 +30,7 @@ namespace FlowScriptEngineSlimDX.TypeFormatters
                 try
                 {
                     var c = ColorTranslator.FromHtml(str);
-                    color = new SharpDX.Color4(c.R / 255f, c.G / 255f, c.B / 255f, c.A / 255f);
+                    color = new Vortice.Mathematics.Color4(c.R / 255f, c.G / 255f, c.B / 255f, c.A / 255f);
                     value = color;
                     return true;
                 }
@@ -46,9 +47,9 @@ namespace FlowScriptEngineSlimDX.TypeFormatters
             return false;
         }
 
-        private bool GetSharpColor(string str, out SharpDX.Color4 color)
+        private bool GetSharpColor(string str, out Vortice.Mathematics.Color4 color)
         {
-            color = new SharpDX.Color4();
+            color = new Vortice.Mathematics.Color4();
             try
             {
                 int a, r, g, b;
@@ -58,20 +59,20 @@ namespace FlowScriptEngineSlimDX.TypeFormatters
                         r = int.Parse(str.Substring(0, 1), NumberStyles.HexNumber);
                         g = int.Parse(str.Substring(1, 1), NumberStyles.HexNumber);
                         b = int.Parse(str.Substring(2, 1), NumberStyles.HexNumber);
-                        color = new SharpDX.Color4(r / 255f, g / 255f, b / 255f, 1f);
+                        color = new Vortice.Mathematics.Color4(r / 255f, g / 255f, b / 255f, 1f);
                         return true;
                     case 6:
                         r = int.Parse(str.Substring(0, 2), NumberStyles.HexNumber);
                         g = int.Parse(str.Substring(2, 2), NumberStyles.HexNumber);
                         b = int.Parse(str.Substring(4, 2), NumberStyles.HexNumber);
-                        color = new SharpDX.Color4(r / 255f, g / 255f, b / 255f, 1f);
+                        color = new Vortice.Mathematics.Color4(r / 255f, g / 255f, b / 255f, 1f);
                         return true;
                     case 8:
                         a = int.Parse(str.Substring(0, 2), NumberStyles.HexNumber);
                         r = int.Parse(str.Substring(2, 2), NumberStyles.HexNumber);
                         g = int.Parse(str.Substring(4, 2), NumberStyles.HexNumber);
                         b = int.Parse(str.Substring(6, 2), NumberStyles.HexNumber);
-                        color = new SharpDX.Color4(r / 255f, g / 255f, b / 255f, a / 255f);
+                        color = new Vortice.Mathematics.Color4(r / 255f, g / 255f, b / 255f, a / 255f);
                         return true;
                     default:
                         return false;

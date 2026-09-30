@@ -1,6 +1,11 @@
 ﻿using PPDFramework.Effect;
 using PPDFramework.Vertex;
 using SharpDX;
+using System.Numerics;
+using PPDMath;
+using Matrix = System.Numerics.Matrix4x4;
+using Color4 = Vortice.Mathematics.Color4;
+using Rectangle = Vortice.Mathematics.RectI;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -267,9 +272,9 @@ namespace PPDFramework.Sprites
                 {
                     temp[i] = Vertices[i + Offset];
                     temp[i].Position = Vector3.TransformCoordinate(temp[i].Position, Matrix);
-                    var newColor = new ColorBGRA(temp[i].Color);
-                    newColor.A = (byte)(newColor.A * Alpha);
-                    temp[i].Color = newColor.ToBgra();
+                    // BGRA の A だけに Alpha を掛ける（SharpDX の ColorBGRA を使っていたときと同じ計算）
+                    var alpha = (byte)((byte)((temp[i].Color >> 24) & 0xFF) * Alpha);
+                    temp[i].Color = (temp[i].Color & 0x00FFFFFF) | (alpha << 24);
                 }
                 Vertices = temp;
             }

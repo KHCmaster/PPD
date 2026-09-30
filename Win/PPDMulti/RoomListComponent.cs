@@ -1,7 +1,9 @@
 ﻿using PPDFramework;
 using PPDMultiCommon.Web;
 using PPDShareComponent;
-using SharpDX;
+using SharpDX;
+using System.Numerics;
+using PPDMath;
 using System;
 
 namespace PPDMulti
@@ -61,7 +63,7 @@ namespace PPDMulti
             {
                 Position = new Vector2(35, 30)
             });
-            back.AddChild(listSprite = new SpriteObject(device) { Position = new SharpDX.Vector2(38, 77) });
+            back.AddChild(listSprite = new SpriteObject(device) { Position = new System.Numerics.Vector2(38, 77) });
 
             loading.PlayType = Effect2D.EffectManager.PlayType.Loop;
             loading.Play();
@@ -127,7 +129,7 @@ namespace PPDMulti
         {
             listSprite.AddChild(new RoomContentComponent(device, resourceManager, roomInfo)
             {
-                Position = new SharpDX.Vector2(0, 28 * listSprite.ChildrenCount)
+                Position = new System.Numerics.Vector2(0, 28 * listSprite.ChildrenCount)
             });
 
         }

@@ -32,9 +32,9 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="SharpDX" />
-    <PackageReference Include="SharpDX.Mathematics" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\PPDMath\PPDMath.csproj" />
     <ProjectReference Include="..\FlowScriptEngine\FlowScriptEngine.csproj" />
     <ProjectReference Include="..\PPDCoreModel\PPDCoreModel.csproj" />
     <ProjectReference Include="..\PPDEditorCommon\PPDEditorCommon.csproj" />

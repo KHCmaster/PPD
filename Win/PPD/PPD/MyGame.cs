@@ -6,7 +6,9 @@ using PPDFrameworkCore;
 using PPDInput;
 using PPDMovie;
 using PPDSound;
-using SharpDX;
+using SharpDX;
+using System.Numerics;
+using PPDMath;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -581,13 +583,13 @@ namespace PPD
         {
             var ratio = new Vector2((float)device.Width / width, (float)device.Height / height);
             var pos = new Vector2(x, y);
-            device.SetScissorRect(new SharpDX.Rectangle((int)(x * device.Scale.X + device.Offset.X), (int)(y * device.Scale.Y + device.Offset.Y),
+            device.SetScissorRect(new Vortice.Mathematics.RectI((int)(x * device.Scale.X + device.Offset.X), (int)(y * device.Scale.Y + device.Offset.Y),
                 (int)(width * device.Scale.X), (int)(height * device.Scale.Y)), true);
         }
 
         public void RestoreClipping()
         {
-            device.SetScissorRect(new SharpDX.Rectangle(0, 0, device.Width, device.Height), false);
+            device.SetScissorRect(new Vortice.Mathematics.RectI(0, 0, device.Width, device.Height), false);
         }
 
         public void AddNotify(string text)

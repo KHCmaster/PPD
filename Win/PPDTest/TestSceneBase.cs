@@ -1,4 +1,5 @@
-﻿using PPDFramework;
+﻿using PPDMath;
+using PPDFramework;
 using PPDFramework.Scene;
 
 namespace PPDTest
@@ -20,13 +21,13 @@ namespace PPDTest
 
         public override bool Load()
         {
-            this.AddChild(new TextureString(device, Title, 20, new SharpDX.Color4(1, 1, 1, 1))
+            this.AddChild(new TextureString(device, Title, 20, new Vortice.Mathematics.Color4(1, 1, 1, 1))
             {
-                Position = new SharpDX.Vector2(10, 10)
+                Position = new System.Numerics.Vector2(10, 10)
             });
             this.AddChild(contentSprite = new SpriteObject(device)
             {
-                Position = new SharpDX.Vector2(10, 40)
+                Position = new System.Numerics.Vector2(10, 40)
             });
             OnInitialize();
             this.AddChild(new RectangleComponent(device, ResourceManager, PPDColors.Selection)

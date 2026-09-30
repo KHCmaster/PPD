@@ -1,5 +1,7 @@
 ﻿using PPDFramework.Texture;
-using SharpDX;
+using SharpDX;
+using System.Numerics;
+using PPDMath;
 using System.Collections.Generic;
 
 namespace PPDFramework.Chars

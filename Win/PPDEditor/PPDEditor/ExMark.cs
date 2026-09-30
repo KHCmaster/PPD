@@ -1,7 +1,10 @@
 ﻿using PPDFramework;
 using PPDFramework.PPDStructure.EVDData;
 using PPDFramework.PPDStructure.PPDData;
-using SharpDX;
+using SharpDX;
+using System.Numerics;
+using PPDMath;
+using Color4 = Vortice.Mathematics.Color4;
 using System;
 
 namespace PPDEditor
@@ -276,10 +279,10 @@ namespace PPDEditor
             {
                 fwv[i * 2].Position = new Vector3(x + circlepoints[i * 2].X, y + circlepoints[i * 2].Y, 0.5f);
                 fwv[i * 2].TextureCoordinates = new Vector2(1.0f, 0.5f);
-                fwv[i * 2].Color = new Color4(alpha, 1, 1, 1).ToBgra();
+                fwv[i * 2].Color = new Color4(alpha, 1, 1, 1).ToBgraInt();
                 fwv[i * 2 + 1].Position = new Vector3(x + circlepoints[i * 2 + 1].X, y + circlepoints[i * 2 + 1].Y, 0.5f);
                 fwv[i * 2 + 1].TextureCoordinates = new Vector2(1.0f, 0.5f);
-                fwv[i * 2 + 1].Color = new Color4(alpha, 1, 1, 1).ToBgra();
+                fwv[i * 2 + 1].Color = new Color4(alpha, 1, 1, 1).ToBgraInt();
             }
             var t = trace.ImageResource.Texture;
         }

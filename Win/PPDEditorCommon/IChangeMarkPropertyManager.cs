@@ -1,5 +1,7 @@
 ﻿using PPDCoreModel.Data;
-using SharpDX;
+using SharpDX;
+using System.Numerics;
+using PPDMath;
 
 namespace PPDEditorCommon
 {

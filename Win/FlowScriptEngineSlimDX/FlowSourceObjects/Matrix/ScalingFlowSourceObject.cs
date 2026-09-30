@@ -1,4 +1,5 @@
-﻿using FlowScriptEngine;
+﻿using PPDMath;
+using FlowScriptEngine;
 
 namespace FlowScriptEngineSlimDX.FlowSourceObjects.Matrix
 {
@@ -11,19 +12,19 @@ namespace FlowScriptEngineSlimDX.FlowSourceObjects.Matrix
         }
 
         [ToolTipText("Matrix_Scaling_Scale_Summary")]
-        public SharpDX.Vector3 Scale
+        public System.Numerics.Vector3 Scale
         {
             private get;
             set;
         }
 
         [ToolTipText("Matrix_Scaling_Value_Summary")]
-        public SharpDX.Matrix Value
+        public System.Numerics.Matrix4x4 Value
         {
             get
             {
                 SetValue(nameof(Scale));
-                return SharpDX.Matrix.Scaling(Scale);
+                return System.Numerics.Matrix4x4.Scaling(Scale);
             }
         }
     }

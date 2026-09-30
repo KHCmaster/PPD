@@ -1,4 +1,5 @@
-﻿using MessagePack;
+﻿using PPDMath;
+using MessagePack;
 using PPDCore;
 using PPDFramework;
 using PPDFrameworkCore;
@@ -374,32 +375,32 @@ namespace PPDMulti
             leftMenu.KickUser += leftMenu_KickUser;
             this.AddChild(textBox = new DxTextBox(device, GameHost, ResourceManager));
 
-            this.AddChild((chatComponent = new ChatComponent(device, ResourceManager, GameHost) { Position = new SharpDX.Vector2(430, 0) }));
+            this.AddChild((chatComponent = new ChatComponent(device, ResourceManager, GameHost) { Position = new System.Numerics.Vector2(430, 0) }));
             this.AddChild(userListComponent = new UserListComponent(device, ResourceManager)
             {
-                Position = new SharpDX.Vector2(10, 10)
+                Position = new System.Numerics.Vector2(10, 10)
             });
 
             PictureObject bottom;
             this.AddChild(bottom = new PictureObject(device, ResourceManager, Utility.Path.Combine("menu_bottom.png"))
             {
-                Position = new SharpDX.Vector2(0, 421)
+                Position = new System.Numerics.Vector2(0, 421)
             });
             bottom.AddChild(new PictureObject(device, ResourceManager, Utility.Path.Combine("bottom_triangle.png"))
             {
-                Position = new SharpDX.Vector2(7, 7)
+                Position = new System.Numerics.Vector2(7, 7)
             });
             bottom.AddChild(new TextureString(device, Utility.Language["Menu"], 16, PPDColors.White)
             {
-                Position = new SharpDX.Vector2(30, 5)
+                Position = new System.Numerics.Vector2(30, 5)
             });
             bottom.AddChild(new PictureObject(device, ResourceManager, Utility.Path.Combine("bottom_circle.png"))
             {
-                Position = new SharpDX.Vector2(157, 7)
+                Position = new System.Numerics.Vector2(157, 7)
             });
             bottom.AddChild(stateString = new TextureString(device, Utility.Language["ChangeReadyState"], 16, PPDColors.White)
             {
-                Position = new SharpDX.Vector2(180, 5)
+                Position = new System.Numerics.Vector2(180, 5)
             });
 
             this.AddChild((bgd = new BackGroundDisplay(device, ResourceManager, "skins\\PPDMulti_BackGround.xml", "Menu")));
@@ -808,7 +809,7 @@ namespace PPDMulti
                     textBox.TextBoxHeight = 12;
                     textBox.MaxWidth = textBox.TextBoxWidth = 340;
                     textBox.DrawMode = DxTextBox.DrawingMode.DrawCaret | DxTextBox.DrawingMode.DrawSelection;
-                    textBox.Position = new SharpDX.Vector2(445, 390);
+                    textBox.Position = new System.Numerics.Vector2(445, 390);
                     textBox.Text = "";
                     focusManager.Focus(textBox);
                 }

@@ -1,4 +1,5 @@
-﻿using FlowScriptEngine;
+﻿using PPDMath;
+using FlowScriptEngine;
 
 namespace FlowScriptEngineSlimDX.FlowSourceObjects.Quaternion
 {
@@ -11,7 +12,7 @@ namespace FlowScriptEngineSlimDX.FlowSourceObjects.Quaternion
         }
 
         [ToolTipText("Quaternion_RotationAxis_Axis_Summary")]
-        public SharpDX.Vector3 Axis
+        public System.Numerics.Vector3 Axis
         {
             private get;
             set;
@@ -25,13 +26,13 @@ namespace FlowScriptEngineSlimDX.FlowSourceObjects.Quaternion
         }
 
         [ToolTipText("Quaternion_RotationAxis_Value_Summary")]
-        public SharpDX.Quaternion Value
+        public System.Numerics.Quaternion Value
         {
             get
             {
                 SetValue(nameof(Axis));
                 SetValue(nameof(Angle));
-                return SharpDX.Quaternion.RotationAxis(Axis, Angle);
+                return System.Numerics.Quaternion.RotationAxis(Axis, Angle);
             }
         }
     }

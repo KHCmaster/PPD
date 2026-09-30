@@ -1,4 +1,5 @@
-﻿using PPDCore;
+﻿using PPDMath;
+using PPDCore;
 using PPDCoreModel;
 using PPDCoreModel.Data;
 using PPDFramework;
@@ -54,7 +55,7 @@ namespace PPDSingle
                         }
                         userScoreListComponent = new UserScoreListComponent(device, ResourceManager)
                         {
-                            Position = new SharpDX.Vector2(680, 45)
+                            Position = new System.Numerics.Vector2(680, 45)
                         };
 
                         var ghostInfo = new Dictionary<GhostInfo, GhostFrame[]>();

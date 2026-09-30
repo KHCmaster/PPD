@@ -2,7 +2,9 @@
 using PPDMultiCommon.Data;
 using PPDMultiCommon.Model;
 using PPDShareComponent;
-using SharpDX;
+using SharpDX;
+using System.Numerics;
+using PPDMath;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -266,7 +268,7 @@ namespace PPDMulti
             for (int i = 0; i < itemSprite.ChildrenCount; i++)
             {
                 var pic = itemSprite[i] as PictureObject;
-                itemSprite[i].Position = new SharpDX.Vector2(AnimationUtility.GetAnimationValue(itemSprite[i].Position.X, 11 + i * 19), itemSprite[i].Position.Y);
+                itemSprite[i].Position = new System.Numerics.Vector2(AnimationUtility.GetAnimationValue(itemSprite[i].Position.X, 11 + i * 19), itemSprite[i].Position.Y);
                 itemSprite[i].Alpha = AnimationUtility.IncreaseAlpha(itemSprite[i].Alpha);
                 pic.Scale = new Vector2(AnimationUtility.IncreaseAlpha(pic.Scale.X));
             }

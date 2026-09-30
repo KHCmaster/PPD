@@ -1,4 +1,5 @@
-﻿using PPDFramework;
+﻿using PPDMath;
+using PPDFramework;
 using System.Globalization;
 using System.IO;
 using System.Xml;
@@ -72,10 +73,10 @@ namespace PPDSingle
             {
                 var po = new PictureObject(device, resourceManager, filePath, reader.GetAttribute("Center") == "1")
                 {
-                    Position = new SharpDX.Vector2(ReadAttribute(reader, "X", 0), ReadAttribute(reader, "Y", 0))
+                    Position = new System.Numerics.Vector2(ReadAttribute(reader, "X", 0), ReadAttribute(reader, "Y", 0))
                 };
                 po.Alpha = ReadAttribute(reader, "Alpha", 1);
-                po.Scale = new SharpDX.Vector2(ReadAttribute(reader, "ScaleX", 1), ReadAttribute(reader, "ScaleY", 1));
+                po.Scale = new System.Numerics.Vector2(ReadAttribute(reader, "ScaleX", 1), ReadAttribute(reader, "ScaleY", 1));
                 po.Rotation = ReadAttribute(reader, "Rotation", 0);
                 this.AddChild(po);
             }
@@ -88,11 +89,11 @@ namespace PPDSingle
             {
                 var eo = new EffectObject(device, resourceManager, filePath)
                 {
-                    Position = new SharpDX.Vector2(ReadAttribute(reader, "X", 0), ReadAttribute(reader, "Y", 0))
+                    Position = new System.Numerics.Vector2(ReadAttribute(reader, "X", 0), ReadAttribute(reader, "Y", 0))
                 };
                 eo.Alignment = reader.GetAttribute("Center") == "1" ? EffectObject.EffectAlignment.Center : EffectObject.EffectAlignment.TopLeft;
                 eo.Alpha = ReadAttribute(reader, "Alpha", 1);
-                eo.Scale = new SharpDX.Vector2(ReadAttribute(reader, "ScaleX", 1), ReadAttribute(reader, "ScaleY", 1));
+                eo.Scale = new System.Numerics.Vector2(ReadAttribute(reader, "ScaleX", 1), ReadAttribute(reader, "ScaleY", 1));
                 eo.Rotation = ReadAttribute(reader, "Rotation", 0);
                 eo.PlayType = ParsePlayType(reader.GetAttribute("PlayType"));
                 eo.Play();

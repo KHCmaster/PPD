@@ -29,10 +29,10 @@
   <ItemGroup>
     <PackageReference Include="SharpDX" />
     <PackageReference Include="SharpDX.DirectInput" />
-    <PackageReference Include="SharpDX.Mathematics" />
     <PackageReference Include="System.Data.SQLite.Core" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\PPDMath\PPDMath.csproj" />
     <ProjectReference Include="..\Effect2D\Effect2D.csproj" />
     <ProjectReference Include="..\PPDFrameworkCore\PPDFrameworkCore.csproj" />
     <ProjectReference Include="..\PPDFramework\PPDFramework.csproj" />

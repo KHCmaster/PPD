@@ -1,4 +1,5 @@
-﻿using PPDFramework;
+﻿using PPDMath;
+using PPDFramework;
 using PPDFrameworkCore;
 using PPDShareComponent;
 using System;
@@ -38,19 +39,19 @@ namespace PPD
             OnLoadProgressed(20);
             left.AddChild((leftSelection = new PictureObject(device, resourceManager, Utility.Path.Combine("right.png"), true)
             {
-                Position = new SharpDX.Vector2(30, 0),
-                Scale = new SharpDX.Vector2(0.5f, 0.5f)
+                Position = new System.Numerics.Vector2(30, 0),
+                Scale = new System.Numerics.Vector2(0.5f, 0.5f)
             }));
             OnLoadProgressed(40);
             this.AddChild((errorString = new TextureString(device, Utility.Language["ErrorInFeedLoading"], 20, true, PPDColors.White)
             {
-                Position = new SharpDX.Vector2(400, 220),
+                Position = new System.Numerics.Vector2(400, 220),
                 Alpha = 0
             }));
             OnLoadProgressed(60);
             this.AddChild((feedSprite = new SpriteObject(device)
             {
-                Position = new SharpDX.Vector2(200, 0),
+                Position = new System.Numerics.Vector2(200, 0),
                 Clip = new ClipInfo(gameHost)
                 {
                     PositionX = 200,
@@ -90,7 +91,7 @@ namespace PPD
                         {
                             if (feedSprite.ChildrenCount > 0 && (feedSprite[feedSprite.ChildrenCount - 1] as FeedComponent).Finished && currentIndex < loader.List.Length)
                             {
-                                feedSprite.AddChild(new FeedComponent(device, resourceManager, loader.List[currentIndex]) { Position = new SharpDX.Vector2(0, 450 * currentIndex) });
+                                feedSprite.AddChild(new FeedComponent(device, resourceManager, loader.List[currentIndex]) { Position = new System.Numerics.Vector2(0, 450 * currentIndex) });
                                 sound.Play(PPDSetting.DefaultSounds[0], -1000);
                             }
                             else
@@ -133,7 +134,7 @@ namespace PPD
                         {
                             left.AddChild(new TextureString(device, feed.Date.ToShortDateString(), 14, PPDColors.White)
                             {
-                                Position = new SharpDX.Vector2(40, 10 + 20 * iter)
+                                Position = new System.Numerics.Vector2(40, 10 + 20 * iter)
                             });
                             iter++;
                         }
@@ -141,8 +142,8 @@ namespace PPD
                     }
                 }
 
-                feedSprite.Position = new SharpDX.Vector2(feedSprite.Position.X, AnimationUtility.GetAnimationValue(feedSprite.Position.Y, -currentIndex * 450));
-                leftSelection.Position = new SharpDX.Vector2(leftSelection.Position.X, AnimationUtility.GetAnimationValue(leftSelection.Position.Y, currentIndex * 20 + 17));
+                feedSprite.Position = new System.Numerics.Vector2(feedSprite.Position.X, AnimationUtility.GetAnimationValue(feedSprite.Position.Y, -currentIndex * 450));
+                leftSelection.Position = new System.Numerics.Vector2(leftSelection.Position.X, AnimationUtility.GetAnimationValue(leftSelection.Position.Y, currentIndex * 20 + 17));
                 errorString.Alpha = loader.Error ? AnimationUtility.IncreaseAlpha(errorString.Alpha) : AnimationUtility.DecreaseAlpha(errorString.Alpha);
             }
         }
@@ -172,7 +173,7 @@ namespace PPD
                 thread.Start();
                 loading = new EffectObject(device, resourceManager, Utility.Path.Combine("loading.etd"))
                 {
-                    Position = new SharpDX.Vector2(300, 225),
+                    Position = new System.Numerics.Vector2(300, 225),
                     PlayType = Effect2D.EffectManager.PlayType.Loop
                 };
                 loading.Play();
@@ -259,24 +260,24 @@ namespace PPD
             {
                 this.AddChild(new TextureString(device, feed.Title, 20, PPDColors.White)
                 {
-                    Position = new SharpDX.Vector2(10, 10)
+                    Position = new System.Numerics.Vector2(10, 10)
                 });
                 this.AddChild(new TextureString(device, feed.Date.ToShortDateString(), 12, PPDColors.White)
                 {
-                    Position = new SharpDX.Vector2(10, 40)
+                    Position = new System.Numerics.Vector2(10, 40)
                 });
                 this.AddChild(new TextureString(device, feed.Author, 12, PPDColors.White)
                 {
-                    Position = new SharpDX.Vector2(100, 40)
+                    Position = new System.Numerics.Vector2(100, 40)
                 });
-                this.AddChild(new RectangleComponent(device, resourceManager, PPDColors.White) { Position = new SharpDX.Vector2(10, 35), RectangleWidth = 600, RectangleHeight = 1 });
+                this.AddChild(new RectangleComponent(device, resourceManager, PPDColors.White) { Position = new System.Numerics.Vector2(10, 35), RectangleWidth = 600, RectangleHeight = 1 });
 
                 float y = 70;
                 foreach (string str in feed.Text.Split('\n'))
                 {
                     var textureString = new TextureString(device, str, 14, 500, 800, true, PPDColors.White)
                     {
-                        Position = new SharpDX.Vector2(30, y)
+                        Position = new System.Numerics.Vector2(30, y)
                     };
                     textureString.Update();
                     this.AddChild(textureString);

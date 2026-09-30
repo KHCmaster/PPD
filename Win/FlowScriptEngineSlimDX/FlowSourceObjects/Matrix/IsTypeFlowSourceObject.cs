@@ -1,6 +1,7 @@
-﻿namespace FlowScriptEngineSlimDX.FlowSourceObjects.Matrix
+﻿using PPDMath;
+namespace FlowScriptEngineSlimDX.FlowSourceObjects.Matrix
 {
-    public partial class IsTypeFlowSourceObject : TemplateIsTypeFlowSourceObject<SharpDX.Matrix>
+    public partial class IsTypeFlowSourceObject : TemplateIsTypeFlowSourceObject<System.Numerics.Matrix4x4>
     {
         public override string Name
         {

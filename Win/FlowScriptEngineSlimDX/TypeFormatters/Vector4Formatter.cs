@@ -1,4 +1,5 @@
-﻿using FlowScriptEngine;
+﻿using PPDMath;
+using FlowScriptEngine;
 using System;
 using System.Globalization;
 using System.Text.RegularExpressions;
@@ -11,7 +12,7 @@ namespace FlowScriptEngineSlimDX.TypeFormatters
 
         public override Type Type
         {
-            get { return typeof(SharpDX.Vector4); }
+            get { return typeof(System.Numerics.Vector4); }
         }
 
         public override bool Format(string str, out object value)
@@ -25,7 +26,7 @@ namespace FlowScriptEngineSlimDX.TypeFormatters
                     && LegacyNumberFormat.TryParse(m.Groups["Z"].Value, NumberStyles.Float, CultureInfo.InvariantCulture, out float z)
                     && LegacyNumberFormat.TryParse(m.Groups["W"].Value, NumberStyles.Float, CultureInfo.InvariantCulture, out float w))
                 {
-                    value = new SharpDX.Vector4(x, y, z, w);
+                    value = new System.Numerics.Vector4(x, y, z, w);
                     return true;
                 }
             }

@@ -1,4 +1,5 @@
-﻿using PPDCoreModel.Data;
+﻿using PPDMath;
+using PPDCoreModel.Data;
 using PPDEditorCommon;
 using System;
 using System.Collections.Generic;
@@ -50,7 +51,7 @@ namespace PPDEditor.FlowScript
 
         #region IMarkInfo メンバー
 
-        public SharpDX.Vector2 ColorPosition
+        public System.Numerics.Vector2 ColorPosition
         {
             get
             {
@@ -62,7 +63,7 @@ namespace PPDEditor.FlowScript
             }
         }
 
-        public SharpDX.Vector2 Position
+        public System.Numerics.Vector2 Position
         {
             get;
             set;

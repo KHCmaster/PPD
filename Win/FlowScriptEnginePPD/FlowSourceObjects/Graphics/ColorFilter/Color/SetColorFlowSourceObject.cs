@@ -1,5 +1,9 @@
 ﻿using FlowScriptEngine;
-using SharpDX;
+using SharpDX;
+using System.Numerics;
+using PPDMath;
+using Color4 = Vortice.Mathematics.Color4;
+using Color = Vortice.Mathematics.Color;
 
 namespace FlowScriptEnginePPD.FlowSourceObjects.Graphics.ColorFilter.Color
 {

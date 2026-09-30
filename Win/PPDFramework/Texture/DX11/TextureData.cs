@@ -1,4 +1,6 @@
 using SharpDX;
+using System.Numerics;
+using PPDMath;
 using System.Runtime.InteropServices;
 
 namespace PPDFramework.Texture.DX11

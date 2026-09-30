@@ -1,4 +1,5 @@
-﻿using PPDFramework;
+﻿using PPDMath;
+using PPDFramework;
 
 namespace PPDTest
 {
@@ -24,15 +25,15 @@ namespace PPDTest
             {
                 Mask = new PictureObject(device, ResourceManager, pathManager.Combine("num.png"))
                 {
-                    Position = new SharpDX.Vector2(10, 10)
+                    Position = new System.Numerics.Vector2(10, 10)
                 }
             });
             contentSprite.AddChild(new PictureObject(device, ResourceManager, pathManager.Combine("num.png"))
             {
-                Position = new SharpDX.Vector2(0, 40),
+                Position = new System.Numerics.Vector2(0, 40),
                 Mask = new PictureObject(device, ResourceManager, pathManager.Combine("num.png"))
                 {
-                    Position = new SharpDX.Vector2(10, 10)
+                    Position = new System.Numerics.Vector2(10, 10)
                 },
                 MaskType = PPDFramework.Shaders.MaskType.Exclude
             });

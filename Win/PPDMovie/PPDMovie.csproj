@@ -33,9 +33,9 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="SharpDX" />
-    <PackageReference Include="SharpDX.Mathematics" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\PPDMath\PPDMath.csproj" />
     <ProjectReference Include="..\DirectShow\DirectShow.csproj" />
     <ProjectReference Include="..\PPDFramework\PPDFramework.csproj" />
   </ItemGroup>

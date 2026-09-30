@@ -28,9 +28,9 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="SharpDX" />
-    <PackageReference Include="SharpDX.Mathematics" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\PPDMath\PPDMath.csproj" />
     <ProjectReference Include="..\..\BezierCaliculator\BezierCaliculator.csproj" />
     <ProjectReference Include="..\..\PPDFrameworkCore\PPDFrameworkCore.csproj" />
     <ProjectReference Include="..\..\PPDFramework\PPDFramework.csproj" />

@@ -1,4 +1,5 @@
-﻿using PPDFramework;
+﻿using PPDMath;
+using PPDFramework;
 using PPDShareComponent;
 using System;
 using System.Collections.Generic;
@@ -30,8 +31,8 @@ namespace PPD
             this.AddChild((userSprite = new SpriteObject(device)));
             this.AddChild((select = new PictureObject(device, resourceManager, Utility.Path.Combine("right.png"), true)
             {
-                Position = new SharpDX.Vector2(30, 0),
-                Scale = new SharpDX.Vector2(0.5f, 0.5f)
+                Position = new System.Numerics.Vector2(30, 0),
+                Scale = new System.Numerics.Vector2(0.5f, 0.5f)
             }));
 
             Inputed += SlideSprite_Inputed;
@@ -121,7 +122,7 @@ namespace PPD
         {
             var textureString = new TextureString(device, text, 18, PPDColors.White)
             {
-                Position = new SharpDX.Vector2(400, 0)
+                Position = new System.Numerics.Vector2(400, 0)
             };
             textureString.MouseEnter += textureString_MouseEnter;
             textureString.MouseLeftClick += textureString_MouseLeftClick;
@@ -170,17 +171,17 @@ namespace PPD
             {
                 for (int i = 0; i < textSprite.ChildrenCount; i++)
                 {
-                    textSprite[i].Position = new SharpDX.Vector2(400 - textSprite.Width / 2, 225 - (25) * textSprite.ChildrenCount / 2 + i * 25);
+                    textSprite[i].Position = new System.Numerics.Vector2(400 - textSprite.Width / 2, 225 - (25) * textSprite.ChildrenCount / 2 + i * 25);
                     (textSprite[i] as TextureString).Alpha = menuEnabled[i] ? 1 : 0f;
                 }
 
-                select.Position = new SharpDX.Vector2(400 - textSprite.Width / 2 - 10, textSprite[currentIndex].Position.Y + 10);
+                select.Position = new System.Numerics.Vector2(400 - textSprite.Width / 2 - 10, textSprite[currentIndex].Position.Y + 10);
                 modified = false;
             }
 
             if (selectCount > 0)
             {
-                select.Position = new SharpDX.Vector2(select.Position.X, AnimationUtility.GetAnimationValue(select.Position.Y, textSprite[currentIndex].Position.Y + 10, 0.2f));
+                select.Position = new System.Numerics.Vector2(select.Position.X, AnimationUtility.GetAnimationValue(select.Position.Y, textSprite[currentIndex].Position.Y + 10, 0.2f));
             }
             select.Hidden = selectCount == 0;
         }

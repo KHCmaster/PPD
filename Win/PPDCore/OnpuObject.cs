@@ -1,4 +1,5 @@
-﻿using PPDFramework;
+﻿using PPDMath;
+using PPDFramework;
 
 namespace PPDCore
 {
@@ -10,7 +11,7 @@ namespace PPDCore
         public OnpuObject(PPDDevice device, PPDFramework.Resource.ResourceManager resourceManager, PathObject filename, float x, float y, bool center)
             : base(device, resourceManager, filename, center)
         {
-            Position = new SharpDX.Vector2(x, y);
+            Position = new System.Numerics.Vector2(x, y);
         }
 
         public float VelX

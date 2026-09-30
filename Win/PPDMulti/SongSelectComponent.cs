@@ -1,7 +1,10 @@
 ﻿using PPDFramework;
 using PPDFrameworkCore;
 using PPDShareComponent;
-using SharpDX;
+using SharpDX;
+using System.Numerics;
+using PPDMath;
+using Color4 = Vortice.Mathematics.Color4;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -140,7 +143,7 @@ namespace PPDMulti
             back.AddChild(new LineRectangleComponent(device, resourceManager, PPDColors.White) { RectangleWidth = 1, RectangleHeight = MaxScrollBarHeight, Position = new Vector2(510, ScrollBarY) });
             back.AddChild(scrollBar = new RectangleComponent(device, resourceManager, PPDColors.White)
             {
-                Position = new SharpDX.Vector2(500, ScrollBarY),
+                Position = new System.Numerics.Vector2(500, ScrollBarY),
                 RectangleWidth = 5,
                 RectangleHeight = MaxScrollBarHeight
             });
@@ -187,7 +190,7 @@ namespace PPDMulti
                     {
                         songInfoSprite.AddChild(new SongInformationComponent(device, resourceManager, songInfo, null)
                         {
-                            Position = new SharpDX.Vector2(45, 20 * iter + 77),
+                            Position = new System.Numerics.Vector2(45, 20 * iter + 77),
                             Hidden = iter >= MaxDisplayCount
                         });
                         iter++;
@@ -198,7 +201,7 @@ namespace PPDMulti
                     {
                         songInfoSprite.AddChild(new SongInformationComponent(device, resourceManager, null, logicInfo)
                         {
-                            Position = new SharpDX.Vector2(45, 20 * iter + 77),
+                            Position = new System.Numerics.Vector2(45, 20 * iter + 77),
                             Hidden = iter >= MaxDisplayCount
                         });
                         iter++;
@@ -243,7 +246,7 @@ namespace PPDMulti
                             }
                             songInfoSprite.AddChild(new SongInformationComponent(device, resourceManager, songInfo, null)
                             {
-                                Position = new SharpDX.Vector2(45, 20 * iter + 77),
+                                Position = new System.Numerics.Vector2(45, 20 * iter + 77),
                                 Hidden = iter >= MaxDisplayCount
                             });
                             iter++;
@@ -287,12 +290,12 @@ namespace PPDMulti
             if (songInfoSprite.ChildrenCount > MaxDisplayCount)
             {
                 scrollBar.RectangleHeight = MaxScrollBarHeight * MaxDisplayCount / (float)songInfoSprite.ChildrenCount;
-                scrollBar.Position = new SharpDX.Vector2(scrollBar.Position.X, ScrollBarY + (MaxScrollBarHeight - scrollBar.RectangleHeight) * scrollIndex / (songInfoSprite.ChildrenCount - MaxDisplayCount));
+                scrollBar.Position = new System.Numerics.Vector2(scrollBar.Position.X, ScrollBarY + (MaxScrollBarHeight - scrollBar.RectangleHeight) * scrollIndex / (songInfoSprite.ChildrenCount - MaxDisplayCount));
             }
             else
             {
                 scrollBar.RectangleHeight = MaxScrollBarHeight;
-                scrollBar.Position = new SharpDX.Vector2(scrollBar.Position.X, ScrollBarY);
+                scrollBar.Position = new System.Numerics.Vector2(scrollBar.Position.X, ScrollBarY);
             }
         }
 
@@ -727,7 +730,7 @@ namespace PPDMulti
         {
             if (!(args.FocusObject is DifficultyDialog))
             {
-                back.Position = new SharpDX.Vector2(0, 50);
+                back.Position = new System.Numerics.Vector2(0, 50);
                 Alpha = 0;
             }
         }
@@ -736,12 +739,12 @@ namespace PPDMulti
         {
             if (OverFocused)
             {
-                back.Position = new SharpDX.Vector2(0, AnimationUtility.GetAnimationValue(back.Position.Y, 0));
+                back.Position = new System.Numerics.Vector2(0, AnimationUtility.GetAnimationValue(back.Position.Y, 0));
                 Alpha = AnimationUtility.IncreaseAlpha(Alpha);
             }
             else
             {
-                back.Position = new SharpDX.Vector2(0, AnimationUtility.GetAnimationValue(back.Position.Y, 50));
+                back.Position = new System.Numerics.Vector2(0, AnimationUtility.GetAnimationValue(back.Position.Y, 50));
                 Alpha = AnimationUtility.DecreaseAlpha(Alpha);
             }
 
@@ -779,7 +782,7 @@ namespace PPDMulti
                 {
                     this.AddChild(new PictureObject(device, resourceManager, Utility.Path.Combine("scoremanager", "score.png"))
                     {
-                        Scale = new SharpDX.Vector2(0.8f)
+                        Scale = new System.Numerics.Vector2(0.8f)
                     });
                 }
                 else
@@ -787,7 +790,7 @@ namespace PPDMulti
                     this.AddChild(new PictureObject(device, resourceManager, Utility.Path.Combine("folder.png"))
                     {
                         Position = new Vector2(0, 2),
-                        Scale = new SharpDX.Vector2(0.5f)
+                        Scale = new System.Numerics.Vector2(0.5f)
                     });
                 }
                 this.AddChild(songName = new TextureString(device, DisplayName, 14, 420, PPDColors.White)

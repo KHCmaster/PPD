@@ -1,4 +1,5 @@
-﻿using BezierDrawControl;
+﻿using PPDMath;
+using BezierDrawControl;
 using Effect2D;
 using PPDConfiguration;
 using PPDFramework;
@@ -257,7 +258,7 @@ namespace Effect2DEditor.DockForm
                     break;
                 case DockForm.BackGroundMode.Color:
                     drawer.Background.AddChild(new RectangleComponent(drawer.Device, drawer.ResourceManager,
-                        new SharpDX.Color4(BackGroundColor.R / 255f, BackGroundColor.G / 255f, BackGroundColor.B / 255f, 1.0f))
+                        new Vortice.Mathematics.Color4(BackGroundColor.R / 255f, BackGroundColor.G / 255f, BackGroundColor.B / 255f, 1.0f))
                     {
                         RectangleWidth = bezierControl1.Width,
                         RectangleHeight = bezierControl1.Height
@@ -280,7 +281,7 @@ namespace Effect2DEditor.DockForm
                         {
                             drawer.Background.AddChild(new PictureObject(drawer.Device, drawer.ResourceManager, PathObject.Absolute(BackImageFileName))
                             {
-                                Position = new SharpDX.Vector2(i * resource.Width, j * resource.Height)
+                                Position = new System.Numerics.Vector2(i * resource.Width, j * resource.Height)
                             });
                         }
                     }
@@ -314,7 +315,7 @@ namespace Effect2DEditor.DockForm
             }
             var obj = new CustomEffectObject(bezierControl1.Drawer.Device, bezierControl1.Drawer.ResourceManager, filename, state)
             {
-                Position = new SharpDX.Vector2(bezierControl1.Width / 2, bezierControl1.Height / 2)
+                Position = new System.Numerics.Vector2(bezierControl1.Width / 2, bezierControl1.Height / 2)
             };
             bezierControl1.Drawer.DrawTarget.InsertChild(obj, 0);
         }
@@ -420,8 +421,8 @@ namespace Effect2DEditor.DockForm
                 {
                     alphaBlendContext.SetSRT(matrix, alphaBlendContext.SRTDepth++);
                 }
-                var pos = new SharpDX.Vector2(-imageResource.Width / 2, -imageResource.Height / 2);
-                alphaBlendContext.SetSRT(SharpDX.Matrix.Translation(new SharpDX.Vector3(pos, 0)), alphaBlendContext.SRTDepth);
+                var pos = new System.Numerics.Vector2(-imageResource.Width / 2, -imageResource.Height / 2);
+                alphaBlendContext.SetSRT(MathCompat.Translation(new System.Numerics.Vector3(pos, 0)), alphaBlendContext.SRTDepth);
                 device.GetModule<AlphaBlend>().Draw(device, alphaBlendContext);
             }
         }

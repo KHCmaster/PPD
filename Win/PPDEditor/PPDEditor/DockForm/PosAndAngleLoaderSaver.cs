@@ -1,6 +1,8 @@
 ﻿using PPDEditor.Controls;
 using PPDEditor.Forms;
-using SharpDX;
+using SharpDX;
+using System.Numerics;
+using PPDMath;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -253,13 +255,13 @@ namespace PPDEditor
             else if (radioButton3.Checked)
             {
                 float x1 = float.Parse(this.textBox3.Text), y1 = float.Parse(this.textBox4.Text), x2 = float.Parse(this.textBox5.Text), y2 = float.Parse(this.textBox6.Text);
-                var basicvec = Vector2.Normalize(new Vector2(x2 - x1, y2 - y1));
+                var basicvec = MathCompat.NormalizeSharpDX(new Vector2(x2 - x1, y2 - y1));
                 for (int i = 0; i < infos.Length; i++)
                 {
                     Vector2 position = infos[i].Position.HasValue ? infos[i].Position.Value : Vector2.Zero;
                     float angle = infos[i].Rotation.HasValue ? infos[i].Rotation.Value : 0;
                     var targetvec = new Vector2(position.X - x1, position.Y - y1);
-                    var targetvecnormal = Vector2.Normalize(targetvec);
+                    var targetvecnormal = MathCompat.NormalizeSharpDX(targetvec);
                     var bitweenangle = Vector2.Dot(basicvec, targetvecnormal);
                     var anservec = Vector2.Add(targetvecnormal, 2 * (bitweenangle * basicvec - targetvecnormal));
                     displayPositions[i] = new Vector2(anservec.X * Vector2.Distance(Vector2.Zero, targetvec) + x1, anservec.Y * Vector2.Distance(Vector2.Zero, targetvec) + y1);
@@ -282,7 +284,7 @@ namespace PPDEditor
             }
             for (int i = 0; i < infos.Length; i++)
             {
-                displayPositions[i] = Vector2.Clamp(displayPositions[i], Vector2.Zero, new Vector2(800, 450));
+                displayPositions[i] = MathCompat.ClampSharpDX(displayPositions[i], Vector2.Zero, new Vector2(800, 450));
                 displayAngles[i] = NormalizeAngle(displayAngles[i]);
             }
             if (WindowUtility.MainForm != null)

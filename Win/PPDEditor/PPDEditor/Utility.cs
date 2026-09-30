@@ -1,6 +1,8 @@
 ﻿using PPDConfiguration;
 using PPDFramework;
-using SharpDX;
+using SharpDX;
+using System.Numerics;
+using PPDMath;
 using System;
 using System.Collections.Generic;
 using System.Globalization;

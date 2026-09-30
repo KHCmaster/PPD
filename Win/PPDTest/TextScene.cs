@@ -1,4 +1,5 @@
-﻿using PPDFramework;
+﻿using PPDMath;
+using PPDFramework;
 
 namespace PPDTest
 {
@@ -26,7 +27,7 @@ namespace PPDTest
                     Thickness = 1,
                     Color = PPDColors.Black
                 },
-                Position = new SharpDX.Vector2(100, 100)
+                Position = new System.Numerics.Vector2(100, 100)
             });
         }
     }

@@ -1,7 +1,9 @@
 ﻿using PPDFramework;
 using PPDFramework.Shaders;
 using PPDFramework.Vertex;
-using SharpDX;
+using SharpDX;
+using System.Numerics;
+using PPDMath;
 
 namespace PPDCore
 {
@@ -23,7 +25,7 @@ namespace PPDCore
             vertices = device.GetModule<ShaderCommon>().CreateVertex(circlePoints.Length);
             ColoredTexturedVertex[] dataVertices = new ColoredTexturedVertex[circlePoints.Length];
             var uv = trace.ImageResource.GetActualUV(new Vector2(alpha, 0.5f)) + trace.ImageResource.HalfPixel;
-            var color = PPDColors.White.ToBgra();
+            var color = PPDColors.White.ToBgraInt();
             for (int i = 0; i < dataVertices.Length; i++)
             {
                 dataVertices[i].Position = new Vector3(circlePoints[i].X, circlePoints[i].Y, 0.5f);

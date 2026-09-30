@@ -33,10 +33,10 @@
     <PackageReference Include="SharpDX.Direct2D1" />
     <PackageReference Include="SharpDX.Direct3D11" />
     <PackageReference Include="SharpDX.DXGI" />
-    <PackageReference Include="SharpDX.Mathematics" />
     <PackageReference Include="System.Data.SQLite.Core" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\PPDMath\PPDMath.csproj" />
     <ProjectReference Include="..\BezierCaliculator\BezierCaliculator.csproj" />
     <ProjectReference Include="..\Effect2D\Effect2D.csproj" />
     <ProjectReference Include="..\ErrorHandler\ErrorHandle.csproj" />

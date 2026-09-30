@@ -1,6 +1,8 @@
 ﻿using FlowScriptEngine;
 using PPDFramework.PPDStructure.PPDData;
-using SharpDX;
+using SharpDX;
+using System.Numerics;
+using PPDMath;
 using System.Collections.Generic;
 using System.Linq;
 

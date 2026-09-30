@@ -1,4 +1,5 @@
-﻿using FlowScriptEngine;
+﻿using PPDMath;
+using FlowScriptEngine;
 
 namespace FlowScriptEngineSlimDX.FlowSourceObjects.Vector3
 {
@@ -32,14 +33,14 @@ namespace FlowScriptEngineSlimDX.FlowSourceObjects.Vector3
         }
 
         [ToolTipText("Vector_FromElement_Value_Summary")]
-        public SharpDX.Vector3 Value
+        public System.Numerics.Vector3 Value
         {
             get
             {
                 SetValue(nameof(X));
                 SetValue(nameof(Y));
                 SetValue(nameof(Z));
-                return new SharpDX.Vector3(X, Y, Z);
+                return new System.Numerics.Vector3(X, Y, Z);
             }
         }
     }

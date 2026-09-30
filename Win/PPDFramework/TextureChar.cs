@@ -1,7 +1,11 @@
 ﻿using PPDFramework.Chars;
 using PPDFramework.Shaders;
 using PPDFramework.Vertex;
-using SharpDX;
+using SharpDX;
+using System.Numerics;
+using PPDMath;
+using Color4 = Vortice.Mathematics.Color4;
+using Color = Vortice.Mathematics.Color;
 
 namespace PPDFramework
 {
@@ -174,7 +178,7 @@ namespace PPDFramework
             }
             set
             {
-                color.Alpha = value;
+                color = new Color4(color.R, color.G, color.B, value);
             }
         }
 

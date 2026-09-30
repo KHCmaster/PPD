@@ -1,18 +1,19 @@
-﻿using FlowScriptEngine;
+﻿using PPDMath;
+using FlowScriptEngine;
 
 namespace FlowScriptEngineSlimDX.FlowSourceObjects.Quaternion
 {
     [ToolTipText("Quaternion_Value_Summary")]
     public partial class ValueFlowSourceObject : FlowSourceObjectBase
     {
-        private SharpDX.Quaternion value;
+        private System.Numerics.Quaternion value;
         public override string Name
         {
             get { return "Quaternion.Value"; }
         }
 
         [ToolTipText("Quaternion_Value_Value_Summary")]
-        public SharpDX.Quaternion Value
+        public System.Numerics.Quaternion Value
         {
             get
             {

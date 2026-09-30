@@ -1,6 +1,11 @@
 ﻿using PPDFramework.RenderMask;
 using PPDFramework.Shaders;
-using SharpDX;
+using SharpDX;
+using System.Numerics;
+using PPDMath;
+using Color4 = Vortice.Mathematics.Color4;
+using Color = Vortice.Mathematics.Color;
+using Size2F = Vortice.Mathematics.Size;
 using System;
 
 namespace PPDFramework
@@ -446,7 +451,7 @@ namespace PPDFramework
                 if (color.Alpha != value)
                 {
                     colorChanged = true;
-                    color.Alpha = value;
+                    color = new Color4(color.R, color.G, color.B, value);
                 }
             }
         }

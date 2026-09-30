@@ -1,6 +1,8 @@
 ﻿using PPDFramework;
 using PPDFramework.Shaders;
-using SharpDX;
+using SharpDX;
+using System.Numerics;
+using PPDMath;
 using System;
 using System.Collections.Generic;
 using System.Linq;

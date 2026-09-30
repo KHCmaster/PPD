@@ -1,4 +1,5 @@
-﻿using PPDFramework;
+﻿using PPDMath;
+using PPDFramework;
 using PPDShareComponent;
 using SharpDX.DirectInput;
 using System;
@@ -43,29 +44,29 @@ namespace PPD
             var sprite = new SpriteObject(device);
             sprite.AddChild(new TextureString(device, Utility.Language["WelcomeToPPD"], 20, true, PPDColors.White)
             {
-                Position = new SharpDX.Vector2(400, 200)
+                Position = new System.Numerics.Vector2(400, 200)
             });
             sprite.AddChild(new TextureString(device, Utility.Language["StartInitialSetting"], 16, true, PPDColors.White)
             {
-                Position = new SharpDX.Vector2(400, 240)
+                Position = new System.Numerics.Vector2(400, 240)
             });
             Add(sprite);
 
             sprite = new SpriteObject(device);
             sprite.AddChild(new TextureString(device, Utility.Language["StartKeyButtonSetting"], 20, true, PPDColors.White)
             {
-                Position = new SharpDX.Vector2(400, 200)
+                Position = new System.Numerics.Vector2(400, 200)
             });
             sprite.AddChild(new TextureString(device, Utility.Language["InsertKeyboardAndController"], 16, true, PPDColors.White)
             {
-                Position = new SharpDX.Vector2(400, 240)
+                Position = new System.Numerics.Vector2(400, 240)
             });
             Add(sprite);
 
             sprite = new SpriteObject(device);
             sprite.AddChild((controllerNameText = new TextureString(device, "", 14, true, PPDColors.White)
             {
-                Position = new SharpDX.Vector2(400, 10)
+                Position = new System.Numerics.Vector2(400, 10)
             }));
             reload = new FadableButton(device, resourceManager, Utility.Path.Combine("reload.png"), Utility.Path.Combine("reload_select.png"), "");
             reload.MouseLeftClick += reload_MouseLeftClick;
@@ -76,13 +77,13 @@ namespace PPD
             sprite.AddChild(up);
             sprite.AddChild(down);
             sprite.AddChild(reload);
-            up.Position = down.Position = reload.Position = new SharpDX.Vector2(400, 225);
+            up.Position = down.Position = reload.Position = new System.Numerics.Vector2(400, 225);
             sprite.AddChild(new PictureObject(device, resourceManager, Utility.Path.Combine("keysettinggrid.png"))
             {
-                Position = new SharpDX.Vector2(290, 30)
+                Position = new System.Numerics.Vector2(290, 30)
             });
-            sprite.AddChild(new TextButton(device, resourceManager) { Position = new SharpDX.Vector2(320, 390), Text = Utility.Language["Start"] });
-            sprite.AddChild(new TextButton(device, resourceManager) { Position = new SharpDX.Vector2(320, 420), Text = Utility.Language["Home"] });
+            sprite.AddChild(new TextButton(device, resourceManager) { Position = new System.Numerics.Vector2(320, 390), Text = Utility.Language["Start"] });
+            sprite.AddChild(new TextButton(device, resourceManager) { Position = new System.Numerics.Vector2(320, 420), Text = Utility.Language["Home"] });
             keys = new TextureString[ButtonUtility.Array.Length];
             buttons = new TextureString[ButtonUtility.Array.Length];
             if (myGame.KeyConfigManager.Configs.Length > 0)
@@ -91,16 +92,16 @@ namespace PPD
             }
             for (int i = 0; i < ButtonUtility.Array.Length; i++)
             {
-                var textButton = new TextButton(device, resourceManager) { Position = new SharpDX.Vector2(530, 90 + i * 30), Text = Utility.Language["Change"], Index = i };
+                var textButton = new TextButton(device, resourceManager) { Position = new System.Numerics.Vector2(530, 90 + i * 30), Text = Utility.Language["Change"], Index = i };
                 textButton.MouseLeftDown += textButton_MouseLeftDown;
 
                 keys[i] = new TextureString(device, keyConfig.GetKeyMap((ButtonType)i).ToString(), 14, true, PPDColors.White)
                 {
-                    Position = new SharpDX.Vector2(388, 82 + i * 30)
+                    Position = new System.Numerics.Vector2(388, 82 + i * 30)
                 };
                 buttons[i] = new TextureString(device, keyConfig.GetButtonMap((ButtonType)i).ToString(), 14, true, PPDColors.White)
                 {
-                    Position = new SharpDX.Vector2(460, 82 + i * 30)
+                    Position = new System.Numerics.Vector2(460, 82 + i * 30)
                 };
                 sprite.AddChild(textButton);
                 sprite.AddChild(keys[i]);
@@ -111,17 +112,17 @@ namespace PPD
             sprite = new SpriteObject(device);
             sprite.AddChild(new TextureString(device, Utility.Language["SettingCompleted"], 20, true, PPDColors.White)
             {
-                Position = new SharpDX.Vector2(400, 200)
+                Position = new System.Numerics.Vector2(400, 200)
             });
             sprite.AddChild(new TextureString(device, Utility.Language["UserKeyboardOrController"], 16, true, PPDColors.White)
             {
-                Position = new SharpDX.Vector2(400, 240)
+                Position = new System.Numerics.Vector2(400, 240)
             });
             Add(sprite);
 
-            right = new FadableButton(device, resourceManager, Utility.Path.Combine("right.png"), Utility.Path.Combine("right_select.png"), "Next") { Position = new SharpDX.Vector2(770, 225) };
+            right = new FadableButton(device, resourceManager, Utility.Path.Combine("right.png"), Utility.Path.Combine("right_select.png"), "Next") { Position = new System.Numerics.Vector2(770, 225) };
             this.AddChild(right);
-            left = new FadableButton(device, resourceManager, Utility.Path.Combine("left.png"), Utility.Path.Combine("left_select.png"), "Back") { Position = new SharpDX.Vector2(30, 225) };
+            left = new FadableButton(device, resourceManager, Utility.Path.Combine("left.png"), Utility.Path.Combine("left_select.png"), "Back") { Position = new System.Numerics.Vector2(30, 225) };
             this.AddChild(left);
 
             left.MouseLeftClick += left_MouseLeftClick;
@@ -252,22 +253,22 @@ namespace PPD
                 {
                     controllerNameText.Text = Utility.Language["NoController"];
                 }
-                up.Position = new SharpDX.Vector2(controllerNameText.Position.X + controllerNameText.Width / 2 + 10, controllerNameText.Position.Y);
-                down.Position = new SharpDX.Vector2(controllerNameText.Position.X + controllerNameText.Width / 2 + 10, controllerNameText.Position.Y + 15);
-                reload.Position = new SharpDX.Vector2(controllerNameText.Position.X + controllerNameText.Width / 2 + 30, controllerNameText.Position.Y + controllerNameText.Height / 2);
+                up.Position = new System.Numerics.Vector2(controllerNameText.Position.X + controllerNameText.Width / 2 + 10, controllerNameText.Position.Y);
+                down.Position = new System.Numerics.Vector2(controllerNameText.Position.X + controllerNameText.Width / 2 + 10, controllerNameText.Position.Y + 15);
+                reload.Position = new System.Numerics.Vector2(controllerNameText.Position.X + controllerNameText.Width / 2 + 30, controllerNameText.Position.Y + controllerNameText.Height / 2);
             }
         }
 
         private void Add(GameComponent gc)
         {
-            gc.Position = new SharpDX.Vector2(contentSprite.ChildrenCount * 800, 0);
+            gc.Position = new System.Numerics.Vector2(contentSprite.ChildrenCount * 800, 0);
             contentSprite.AddChild(gc);
         }
 
         protected override void UpdateImpl()
         {
             this.Alpha = AnimationUtility.IncreaseAlpha(this.Alpha);
-            contentSprite.Position = new SharpDX.Vector2(AnimationUtility.GetAnimationValue(contentSprite.Position.X, -currentPageIndex * 800), 0);
+            contentSprite.Position = new System.Numerics.Vector2(AnimationUtility.GetAnimationValue(contentSprite.Position.X, -currentPageIndex * 800), 0);
 
             left.Alpha = currentPageIndex != 0 ? AnimationUtility.IncreaseAlpha(left.Alpha) : AnimationUtility.DecreaseAlpha(left.Alpha);
 
@@ -304,7 +305,7 @@ namespace PPD
         {
             this.AddChild((textString = new TextureString(device, "", 12, true, PPDColors.White)));
             this.AddChild(new PictureObject(device, resourceManager, Utility.Path.Combine("keysettingbutton.png"), true));
-            textString.Position = new SharpDX.Vector2(0, -textString.Height / 2);
+            textString.Position = new System.Numerics.Vector2(0, -textString.Height / 2);
         }
 
         public string Text
@@ -325,9 +326,9 @@ namespace PPD
             set;
         }
 
-        public override bool HitTest(SharpDX.Vector2 vec)
+        public override bool HitTest(System.Numerics.Vector2 vec)
         {
-            return base.HitTest(vec + new SharpDX.Vector2(this[1].Width / 2, this[1].Height / 2));
+            return base.HitTest(vec + new System.Numerics.Vector2(this[1].Width / 2, this[1].Height / 2));
         }
     }
 }

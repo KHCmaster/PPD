@@ -1,4 +1,6 @@
-﻿using SharpDX;
+﻿using SharpDX;
+using System.Numerics;
+using PPDMath;
 using System;
 using System.Drawing;
 
@@ -74,7 +76,7 @@ namespace PPDEditor.Command.PPDSheet
         {
             for (int i = 0; i < mks.Length; i++)
             {
-                mks[i].Position = new SharpDX.Vector2(lastState[i][0], lastState[i][1]);
+                mks[i].Position = new System.Numerics.Vector2(lastState[i][0], lastState[i][1]);
                 if (applyRotation)
                 {
                     mks[i].Rotation = lastState[i][2];
@@ -98,7 +100,7 @@ namespace PPDEditor.Command.PPDSheet
             return ret;
         }
 
-        private SharpDX.Vector2 TransPos(Vector2 pos)
+        private System.Numerics.Vector2 TransPos(Vector2 pos)
         {
             //in this function to expand (400,225) to (800,450)
             //and also check is inside (800,450)
@@ -108,7 +110,7 @@ namespace PPDEditor.Command.PPDSheet
             if (x >= 800) x = 800;
             if (y <= 0) y = 0;
             if (y >= 450) y = 450;
-            return new SharpDX.Vector2(x, y);
+            return new System.Numerics.Vector2(x, y);
         }
 
         public override CommandType CommandType

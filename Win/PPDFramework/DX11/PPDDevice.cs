@@ -2,6 +2,10 @@ using PPDFramework.Sprites;
 using PPDFramework.Texture;
 using PPDFramework.Vertex;
 using SharpDX;
+using System.Numerics;
+using PPDMath;
+using Color4 = Vortice.Mathematics.Color4;
+using Rectangle = Vortice.Mathematics.RectI;
 using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;
@@ -136,7 +140,7 @@ namespace PPDFramework.DX11
             }
             Context = device.ImmediateContext;
             backBuffer = Texture2D.FromSwapChain<Texture2D>(swapChain, 0);
-            Context.Rasterizer.SetViewport(new Viewport(0, 0, width, height, 0.0f, 1.0f));
+            Context.Rasterizer.SetViewport(new RawViewportF { X = 0, Y = 0, Width = width, Height = height, MinDepth = 0.0f, MaxDepth = 1.0f });
             scissorDisabledState = new RasterizerState(device, new RasterizerStateDescription
             {
                 CullMode = CullMode.None,
@@ -259,7 +263,7 @@ namespace PPDFramework.DX11
         /// <param name="color"></param>
         internal override void Clear(Color4 color)
         {
-            Context.ClearRenderTargetView(((Texture.DX11.Texture)GetRenderTarget().Texture)._RenderTargetView, color);
+            Context.ClearRenderTargetView(((Texture.DX11.Texture)GetRenderTarget().Texture)._RenderTargetView, new RawColor4(color.R, color.G, color.B, color.A));
         }
 
         /// <summary>
@@ -272,8 +276,8 @@ namespace PPDFramework.DX11
             Reset();
             var newRenderTarget = GetRenderTarget();
             SetRenderTarget(newRenderTarget);
-            Context.Rasterizer.SetViewport(new Viewport(0, 0, Width, Height, 0.0f, 1.0f));
-            Context.ClearRenderTargetView(((Texture.DX11.Texture)newRenderTarget.Texture)._RenderTargetView, new Color4(0f, 0f, 0f, 1f));
+            Context.Rasterizer.SetViewport(new RawViewportF { X = 0, Y = 0, Width = Width, Height = Height, MinDepth = 0.0f, MaxDepth = 1.0f });
+            Context.ClearRenderTargetView(((Texture.DX11.Texture)newRenderTarget.Texture)._RenderTargetView, new RawColor4(0f, 0f, 0f, 1f));
             SetScissorRect(new Rectangle(0, 0, Width, Height), false);
         }
 

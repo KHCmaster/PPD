@@ -2,7 +2,11 @@
 using PPDFramework.Resource;
 using PPDFramework.Shaders;
 using PPDFramework.Vertex;
-using SharpDX;
+using SharpDX;
+using System.Numerics;
+using PPDMath;
+using Color4 = Vortice.Mathematics.Color4;
+using Color = Vortice.Mathematics.Color;
 using System;
 
 namespace PPDShareComponent
@@ -116,7 +120,7 @@ namespace PPDShareComponent
                     for (var i = 0; i < points.Length - 1; i++)
                     {
                         Vector2 nextDirection = (points[i + 1] - points[i]);
-                        nextDirection.Normalize();
+                        nextDirection = MathCompat.NormalizeSharpDX(nextDirection);
                         var nextDirectionNormal = new Vector2(-nextDirection.Y, nextDirection.X);
                         if (i == 0)
                         {
@@ -126,7 +130,7 @@ namespace PPDShareComponent
                         else
                         {
                             var vec = new Vector2(writeVertices[2 * i].Position.X - points[i].X, writeVertices[2 * i].Position.Y - points[i].Y);
-                            var normalized = Vector2.Normalize(vec);
+                            var normalized = MathCompat.NormalizeSharpDX(vec);
                             var normal = new Vector2(-normalized.Y, normalized.X);
                             var newPos = Solve(vec, normal, nextDirectionNormal * lineWidth2, nextDirection);
                             writeVertices[2 * i] = new ColoredTexturedVertex(new Vector3(points[i] + newPos, 0.5f));

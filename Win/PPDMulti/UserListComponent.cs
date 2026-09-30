@@ -1,4 +1,5 @@
-﻿using PPDFramework;
+﻿using PPDMath;
+using PPDFramework;
 using PPDMulti.Model;
 using PPDShareComponent;
 
@@ -57,7 +58,7 @@ namespace PPDMulti
             var y = this.ChildrenCount / 2 * 50;
             this.AddChild(new MenuUserIcon(device, resourceManager, this, user)
             {
-                Position = new SharpDX.Vector2(x, y),
+                Position = new System.Numerics.Vector2(x, y),
                 Alpha = 0
             });
         }
@@ -88,7 +89,7 @@ namespace PPDMulti
                 gc.Alpha = AnimationUtility.IncreaseAlpha(gc.Alpha);
                 var x = AnimationUtility.GetAnimationValue(gc.Position.X, 210 * (iter % 2));
                 var y = AnimationUtility.GetAnimationValue(gc.Position.Y, iter / 2 * 50);
-                gc.Position = new SharpDX.Vector2(x, y);
+                gc.Position = new System.Numerics.Vector2(x, y);
                 iter++;
             }
             if (nameAnimCount >= 0)

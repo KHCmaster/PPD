@@ -208,6 +208,12 @@ static class ModCheck
         {
             return Convert.ToString(value, CultureInfo.InvariantCulture);
         }
+        // 数学型は、ライブラリ（SharpDX / System.Numerics / Vortice.Mathematics）によらず同じ表記にする（値だけを比べるため）
+        var canonical = DescribeMathValue(value, type, depth);
+        if (canonical != null)
+        {
+            return canonical;
+        }
         if (depth >= 2)
         {
             return type.Name;
@@ -225,6 +231,53 @@ static class ModCheck
             .OrderBy(m => m.Key, StringComparer.Ordinal)
             .Select(m => m.Key + "=" + DescribeValue(m.Value, depth + 1));
         return type.Name + "{" + string.Join(", ", members) + "}";
+    }
+
+    static string DescribeMathValue(object value, Type type, int depth)
+    {
+        var ns = type.Namespace ?? "";
+        if (ns != "SharpDX" && ns != "System.Numerics" && ns != "Vortice.Mathematics")
+        {
+            return null;
+        }
+        string[] names;
+        string name = type.Name;
+        switch (type.Name)
+        {
+            case "Vector2": names = new[] { "X", "Y" }; break;
+            case "Vector3": names = new[] { "X", "Y", "Z" }; break;
+            case "Vector4":
+            case "Quaternion": names = new[] { "X", "Y", "Z", "W" }; break;
+            case "Color4":
+            case "Color": names = new[] { "R", "G", "B", "A" }; break;
+            case "Matrix":
+            case "Matrix4x4":
+                name = "Matrix";
+                names = Enumerable.Range(1, 4).SelectMany(r => Enumerable.Range(1, 4).Select(c => "M" + r + c)).ToArray();
+                break;
+            case "Rectangle":
+            case "RectangleF":
+            case "RectI":
+            case "Rect":
+                name = "Rect";
+                names = new[] { "X", "Y", "Width", "Height" };
+                break;
+            default:
+                return null;
+        }
+        // SharpDX の Color4 / Color は Red / Green / Blue / Alpha
+        var aliases = new Dictionary<string, string> { { "R", "Red" }, { "G", "Green" }, { "B", "Blue" }, { "A", "Alpha" } };
+        var parts = names.Select(n =>
+        {
+            var member = (MemberInfo)type.GetField(n) ?? type.GetProperty(n);
+            if (member == null && aliases.TryGetValue(n, out var alias))
+            {
+                member = (MemberInfo)type.GetField(alias) ?? type.GetProperty(alias);
+            }
+            var v = member is FieldInfo f ? f.GetValue(value) : member is PropertyInfo p ? p.GetValue(value) : null;
+            return n + "=" + DescribeValue(v, depth + 1);
+        });
+        return name + "{" + string.Join(", ", parts) + "}";
     }
 
     static object SafeGet(PropertyInfo property, object target)

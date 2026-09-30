@@ -1,5 +1,8 @@
 ﻿using PPDEditor.Forms;
-using SharpDX;
+using SharpDX;
+using System.Numerics;
+using PPDMath;
+using Point = Vortice.Mathematics.Int2;
 using System;
 using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;

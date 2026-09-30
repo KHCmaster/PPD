@@ -1,7 +1,10 @@
 ﻿using PPDEditorCommon;
 using PPDFramework;
 using PPDFramework.PPDStructure.PPDData;
-using SharpDX;
+using SharpDX;
+using System.Numerics;
+using PPDMath;
+using Point = Vortice.Mathematics.Int2;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -362,7 +365,7 @@ namespace PPDEditor.Command.PPDSheet
         }
         public Mark AddMark(float time, float x, float y, float rotation, int num, uint id, KeyValuePair<string, string>[] parameters, bool selectMark = true)
         {
-            var position = Vector2.Clamp(new Vector2(x, y), Vector2.Zero, new Vector2(800, 450));
+            var position = MathCompat.ClampSharpDX(new Vector2(x, y), Vector2.Zero, new Vector2(800, 450));
             rotation = NormalizeAngle(rotation);
             if (num >= 0 && num < 10)
             {
@@ -398,7 +401,7 @@ namespace PPDEditor.Command.PPDSheet
         }
         public Mark AddExMark(float time, float endtime, float x, float y, float rotation, int num, uint id, KeyValuePair<string, string>[] parameters, bool selectMark = true)
         {
-            var position = Vector2.Clamp(new Vector2(x, y), Vector2.Zero, new Vector2(800, 450));
+            var position = MathCompat.ClampSharpDX(new Vector2(x, y), Vector2.Zero, new Vector2(800, 450));
             rotation = NormalizeAngle(rotation);
             if (num >= 0 && num < 10)
             {
@@ -1268,7 +1271,7 @@ namespace PPDEditor.Command.PPDSheet
         {
             if (mark != null)
             {
-                position = Vector2.Clamp(position, Vector2.Zero, new Vector2(800, 450));
+                position = MathCompat.ClampSharpDX(position, Vector2.Zero, new Vector2(800, 450));
                 var command = new ChangeMarkPosOrAngleCommand(mark, ChangeMarkPosOrAngleCommand.TransType.Position, position, 0);
                 commandManager.AddCommand(command);
                 return true;

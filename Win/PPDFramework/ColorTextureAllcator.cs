@@ -1,5 +1,8 @@
 ﻿using PPDFramework.Texture;
-using SharpDX;
+using SharpDX;
+using System.Numerics;
+using PPDMath;
+using Color4 = Vortice.Mathematics.Color4;
 using System.Collections.Generic;
 
 namespace PPDFramework

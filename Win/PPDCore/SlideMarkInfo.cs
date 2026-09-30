@@ -1,4 +1,5 @@
-﻿using PPDCoreModel;
+﻿using PPDMath;
+using PPDCoreModel;
 using System.Collections.Generic;
 
 namespace PPDCore
@@ -16,13 +17,13 @@ namespace PPDCore
 
         #region IMarkInfo メンバー
 
-        public SharpDX.Vector2 ColorPosition
+        public System.Numerics.Vector2 ColorPosition
         {
             get;
             set;
         }
 
-        public SharpDX.Vector2 Position
+        public System.Numerics.Vector2 Position
         {
             get { return slideColorMarkInfo.BasePosition; }
         }

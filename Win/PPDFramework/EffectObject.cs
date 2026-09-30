@@ -1,7 +1,10 @@
 ﻿using Effect2D;
 using PPDFramework.Resource;
 using PPDFramework.Shaders;
-using SharpDX;
+using SharpDX;
+using System.Numerics;
+using PPDMath;
+using Matrix = System.Numerics.Matrix4x4;
 using System;
 using System.Windows.Forms;
 
@@ -198,7 +201,7 @@ namespace PPDFramework
                     {
                         pos = Vector2.Zero;
                     }
-                    alphaBlendContext.SetSRT(Matrix.Translation(new Vector3(pos, 0)), alphaBlendContext.SRTDepth);
+                    alphaBlendContext.SetSRT(MathCompat.Translation(new Vector3(pos, 0)), alphaBlendContext.SRTDepth);
                     device.GetModule<AlphaBlend>().Draw(device, alphaBlendContext);
                 }
             });

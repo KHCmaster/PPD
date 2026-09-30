@@ -1,5 +1,8 @@
 ﻿using PPDFramework;
-using SharpDX;
+using SharpDX;
+using System.Numerics;
+using PPDMath;
+using RectangleF = Vortice.Mathematics.Rect;
 using System;
 using System.Collections.Generic;
 
@@ -41,7 +44,7 @@ namespace PPDCore
             };
             frame = new PictureObject(device, resourceManager, Utility.Path.Combine("lifegage", "frame.png"))
             {
-                Scale = new SharpDX.Vector2(0.99f, 0.95f)
+                Scale = new System.Numerics.Vector2(0.99f, 0.95f)
             };
             this.AddChild(frame);
             this.AddChild(black);
@@ -114,7 +117,7 @@ namespace PPDCore
                 float previouslife = currentlife;
                 currentlife = value;
                 black.Rectangle = new RectangleF(0, 0, black.Width * (1 - value / 100f), black.Height);
-                black.Position = new SharpDX.Vector2(Position.X + 2 + black.Width - black.Rectangle.Width, black.Position.Y);
+                black.Position = new System.Numerics.Vector2(Position.X + 2 + black.Width - black.Rectangle.Width, black.Position.Y);
 
                 flareSprite[(int)state].Hidden = overraySprite[(int)state].Hidden = backSprite[(int)state].Hidden = true;
 
@@ -147,7 +150,7 @@ namespace PPDCore
             for (int i = onpus.Count - 1; i >= 0; i--)
             {
                 OnpuObject onpu = onpus[i];
-                onpu.Position = new SharpDX.Vector2(onpu.Position.X + onpu.VelX, onpu.Position.Y);
+                onpu.Position = new System.Numerics.Vector2(onpu.Position.X + onpu.VelX, onpu.Position.Y);
                 onpu.Alpha = (black.Position.X - onpu.Position.X) / (black.Width - black.Rectangle.Width);
                 if (onpu.Alpha <= 0)
                 {

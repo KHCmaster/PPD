@@ -1,7 +1,9 @@
 ﻿using PPDFramework;
 using PPDMultiCommon.Web;
 using PPDShareComponent;
-using SharpDX;
+using SharpDX;
+using System.Numerics;
+using PPDMath;
 using System;
 
 namespace PPDMulti
@@ -29,7 +31,7 @@ namespace PPDMulti
                 DrawOnlyFocus = false
             };
             textBox.LostFocused += textBox_LostFocused;
-            textBox.Position = new SharpDX.Vector2(300, 250);
+            textBox.Position = new System.Numerics.Vector2(300, 250);
             textBox.TextBoxHeight = 20;
             textBox.TextBoxWidth = textBox.MaxWidth = 200;
             textBox.Text = "";

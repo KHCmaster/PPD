@@ -1,4 +1,5 @@
-﻿using FlowScriptEngine;
+﻿using PPDMath;
+using FlowScriptEngine;
 
 namespace FlowScriptEngineSlimDX.FlowSourceObjects.Quaternion
 {
@@ -11,7 +12,7 @@ namespace FlowScriptEngineSlimDX.FlowSourceObjects.Quaternion
         }
 
         [ToolTipText("FirstArgument")]
-        public SharpDX.Quaternion A
+        public System.Numerics.Quaternion A
         {
             private get;
             set;
@@ -25,13 +26,13 @@ namespace FlowScriptEngineSlimDX.FlowSourceObjects.Quaternion
         }
 
         [ToolTipText("Devide_Value")]
-        public SharpDX.Quaternion Value
+        public System.Numerics.Quaternion Value
         {
             get
             {
                 SetValue(nameof(A));
                 SetValue(nameof(B));
-                return new SharpDX.Quaternion(
+                return new System.Numerics.Quaternion(
                     A.X / B,
                     A.Y / B,
                     A.Z / B,
