@@ -27,7 +27,6 @@ namespace PPDConfig
         public Form1()
         {
             InitializeComponent();
-            comboBox1.SelectedIndex = 0;
             CheckSetting();
             CheckLangFiles();
             SetLanguage(langFileISO);
@@ -96,7 +95,6 @@ namespace PPDConfig
         {
             Utility.ChangeLanguage(langIso);
             言語ToolStripMenuItem.Text = Utility.Language["Language"];
-            this.label1.Text = Utility.Language["Label1"];
             this.label2.Text = Utility.Language["Label2"];
             this.label3.Text = Utility.Language["MusicExtensions"];
             this.label7.Text = Utility.Language["Label7"];
@@ -107,15 +105,6 @@ namespace PPDConfig
             this.button6.Text = Utility.Language["Button6"];
             this.button7.Text = Utility.Language["Button7"];
             this.groupBox1.Text = Utility.Language["GroupBox1"];
-
-            int lastSelection = comboBox1.SelectedIndex;
-            this.comboBox1.Items.Clear();
-            this.comboBox1.Items.Add(Utility.Language["ComboBox1"]);
-            this.comboBox1.Items.Add(Utility.Language["ComboBox2"]);
-            this.comboBox1.Items.Add(Utility.Language["ComboBox3"]);
-            this.comboBox1.Items.Add(Utility.Language["ComboBox4"]);
-            this.comboBox1.SelectedIndex = lastSelection;
-
             this.label16.Text = Utility.Language["Label16"];
             this.label18.Text = Utility.Language["Label18"];
             this.label19.Text = Utility.Language["Label19"];
@@ -150,7 +139,6 @@ namespace PPDConfig
                 var sr = new StreamReader(ppdini);
                 var setting = new SettingReader(sr.ReadToEnd());
                 sr.Close();
-                MultiSample = setting.ReadInt("multisample", 0);
                 MonitorLatency = setting.ReadFloat("adjustgaptime", 0);
                 FontName = setting.ReadString("fontname");
                 FontSize = setting.ReadInt("fontsize", 30);
@@ -191,7 +179,6 @@ namespace PPDConfig
             var sr = new StreamReader(ppdini);
             var setting = new SettingReader(sr.ReadToEnd());
             sr.Close();
-            setting.ReplaceOrAdd("multisample", MultiSample);
             setting.ReplaceOrAdd("d3d", 0);
             setting.ReplaceOrAdd("adjustgaptime", MonitorLatency);
             setting.ReplaceOrAdd("fontname", FontName);
@@ -269,7 +256,6 @@ namespace PPDConfig
 
         private void button7_Click(object sender, EventArgs e)
         {
-            this.comboBox1.SelectedIndex = 0;
             MonitorLatency = 0.017f;
             MovieExtensions = "mp4;flv;avi;wmv;mkv;divx;mov;ogv;webm";
             MusicExtensions = "wav;mp3;ogg;flac;aac";
@@ -374,45 +360,6 @@ namespace PPDConfig
             set
             {
                 this.textBox10.Text = value.ToString();
-            }
-        }
-
-
-        private int MultiSample
-        {
-            get
-            {
-                switch (comboBox1.SelectedIndex)
-                {
-                    case 0:
-                        return 0;
-                    case 1:
-                        return 2;
-                    case 2:
-                        return 4;
-                    case 3:
-                        return 8;
-                    default:
-                        return 0;
-                }
-            }
-            set
-            {
-                switch (value)
-                {
-                    case 0:
-                        comboBox1.SelectedIndex = 0;
-                        break;
-                    case 2:
-                        comboBox1.SelectedIndex = 1;
-                        break;
-                    case 4:
-                        comboBox1.SelectedIndex = 2;
-                        break;
-                    case 8:
-                        comboBox1.SelectedIndex = 3;
-                        break;
-                }
             }
         }
 
