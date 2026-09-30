@@ -1065,9 +1065,8 @@ namespace PPDFramework
                 using (FileStream fs = File.Open(path, FileMode.Open))
                 {
                     byte[] data = new byte[fs.Length];
-                    fs.Read(data, 0, data.Length);
-                    var SHA256 = new SHA256Managed();
-                    var hash = SHA256.ComputeHash(data);
+                    fs.ReadAtLeast(data, data.Length, throwOnEndOfStream: false);
+                    var hash = SHA256.HashData(data);
                     return hash;
                 }
             }

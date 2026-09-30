@@ -64,7 +64,7 @@ namespace PPDPack.V2
             }
 
             byte[] header = new byte[PackUtility.FileSignature.Length];
-            stream.Read(header, 0, header.Length);
+            stream.ReadAtLeast(header, header.Length, throwOnEndOfStream: false);
             for (int i = 0; i < header.Length; i++)
             {
                 if (header[i] != PackUtility.FileSignature[i])
@@ -80,9 +80,9 @@ namespace PPDPack.V2
             }
 
             byte[] bytes = new byte[4];
-            stream.Read(bytes, 0, bytes.Length);
+            stream.ReadAtLeast(bytes, bytes.Length, throwOnEndOfStream: false);
             FileSize = BitConverter.ToUInt32(bytes, 0);
-            stream.Read(bytes, 0, bytes.Length);
+            stream.ReadAtLeast(bytes, bytes.Length, throwOnEndOfStream: false);
             headerOffset = BitConverter.ToInt32(bytes, 0);
             if (stream.Length < FileSize)
             {
@@ -93,12 +93,12 @@ namespace PPDPack.V2
             while (stream.Position < stream.Length && stream.Position < FileSize)
             {
                 byte[] bytes2 = new byte[2];
-                stream.Read(bytes2, 0, bytes2.Length);
+                stream.ReadAtLeast(bytes2, bytes2.Length, throwOnEndOfStream: false);
                 var fileNameLength = BitConverter.ToUInt16(bytes2, 0);
                 byte[] fileNameBytes = new byte[fileNameLength];
-                stream.Read(fileNameBytes, 0, fileNameBytes.Length);
+                stream.ReadAtLeast(fileNameBytes, fileNameBytes.Length, throwOnEndOfStream: false);
                 var fileName = Encoding.UTF8.GetString(fileNameBytes);
-                stream.Read(bytes, 0, bytes.Length);
+                stream.ReadAtLeast(bytes, bytes.Length, throwOnEndOfStream: false);
                 var fileSize = BitConverter.ToUInt32(bytes, 0);
                 files.Add(fileName, new FileInfo(fileName, fileSize, fileHeaderPos));
                 fileHeaderPos += fileSize;

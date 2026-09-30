@@ -38,6 +38,9 @@ namespace FlowScriptDrawControl
             return MeasureSize(text, fontFamily, fontSize).Width;
         }
 
+        // 旧形式のコンストラクターと同じく、システムの DPI を使う（ツリーにない Visual の DPI はシステムの DPI になる）
+        private static readonly double PixelsPerDip = VisualTreeHelper.GetDpi(new DrawingVisual()).PixelsPerDip;
+
         public static Size MeasureSize(string text, FontFamily fontFamily, double fontSize)
         {
             if (text == null)
@@ -57,7 +60,8 @@ namespace FlowScriptDrawControl
                     fontWeight,
                     FontStretches.Normal),
                     fontSize,
-                    System.Windows.Media.Brushes.Black
+                    System.Windows.Media.Brushes.Black,
+                    PixelsPerDip
                 );
             var _textGeometry = formattedText.BuildGeometry(new System.Windows.Point(0, 0));
             var _textHighLightGeometry = formattedText.BuildHighlightGeometry(new System.Windows.Point(0, 0));

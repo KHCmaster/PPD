@@ -193,12 +193,10 @@ namespace PPDMultiCommon.Web
 
         public static string GetPasswordHash(string password)
         {
-            var sha = new SHA256Managed();
-
             string val = "a83" + password + "asdo9";
             var array = Encoding.UTF8.GetBytes(val);
 
-            var hash = sha.ComputeHash(array);
+            var hash = SHA256.HashData(array);
 
             var ret = new StringBuilder();
             for (int i = 0; i < hash.Length; i++)

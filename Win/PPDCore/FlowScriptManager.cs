@@ -190,7 +190,7 @@ namespace PPDCore
             using (stream)
             {
                 byte[] buffer = new byte[stream.Length];
-                stream.Read(buffer, 0, buffer.Length);
+                stream.ReadAtLeast(buffer, buffer.Length, throwOnEndOfStream: false);
                 scriptList.Add(new KeyValuePair<MemoryStream, ScriptInfo>(new MemoryStream(buffer),
                     new ScriptInfo(scriptResourceManager, modInfo, fileName)));
             }

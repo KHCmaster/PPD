@@ -1,7 +1,6 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
-using System.Security.Permissions;
 using System.Windows.Forms;
 
 namespace WeifenLuo.WinFormsUI.Docking
@@ -177,7 +176,6 @@ namespace WeifenLuo.WinFormsUI.Docking
             base.SetBoundsCore(x, y, width, height, specified);
         }
 
-        [SecurityPermission(SecurityAction.LinkDemand, Flags = SecurityPermissionFlag.UnmanagedCode)]
         protected override void WndProc(ref Message m)
         {
             switch (m.Msg)

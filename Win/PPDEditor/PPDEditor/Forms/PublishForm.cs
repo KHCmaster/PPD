@@ -108,7 +108,7 @@ namespace PPDEditor.Forms
         private bool CheckSameScore()
         {
             var hashs = new Dictionary<string, PPDEditor.AvailableDifficulty>();
-            var sha256 = new SHA256Managed();
+            using var sha256 = SHA256.Create();
             bool found = false;
             foreach (AvailableDifficulty difficulty in EditorForm.DifficultyArray)
             {

@@ -299,7 +299,7 @@ namespace PPDEditor
             using (FileStream fs = File.Open(path, FileMode.Open))
             {
                 byte[] data = new byte[fs.Length];
-                fs.Read(data, 0, data.Length);
+                fs.ReadAtLeast(data, data.Length, throwOnEndOfStream: false);
                 stream.Write(data, 0, data.Length);
             }
         }

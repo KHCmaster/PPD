@@ -23,7 +23,7 @@ namespace FlowScriptEngineBasic.FlowSourceObjects.Stream
             if (Stream != null)
             {
                 byte[] array = new byte[4];
-                Stream.Read(array, 0, array.Length);
+                Stream.ReadAtLeast(array, array.Length, throwOnEndOfStream: false);
                 Value = BitConverter.ToSingle(array, 0);
                 OnSuccess();
             }

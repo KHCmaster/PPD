@@ -125,7 +125,7 @@ namespace PPDFrameworkCore
         /// <returns></returns>
         public static byte[] CalcSha256Hash(byte[] bytes)
         {
-            using (SHA256Managed sha = new SHA256Managed())
+            using (var sha = SHA256.Create())
             {
                 return sha.ComputeHash(bytes);
             }
@@ -159,7 +159,7 @@ namespace PPDFrameworkCore
         /// <returns></returns>
         public static string CalcSha256HashString(byte[] bytes)
         {
-            using (SHA256Managed sha = new SHA256Managed())
+            using (var sha = SHA256.Create())
             {
                 return Getx2Encoding(sha.ComputeHash(bytes));
             }

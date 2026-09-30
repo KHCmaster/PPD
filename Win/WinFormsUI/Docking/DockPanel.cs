@@ -6,11 +6,11 @@ using System.Drawing;
 using System.Windows.Forms;
 
 // To simplify the process of finding the toolbox bitmap resource:
-// #1 Create an internal class called "resfinder" outside of the root namespace.
-// #2 Use "resfinder" in the toolbox bitmap attribute instead of the control name.
+// #1 Create an internal class called "ResFinder" outside of the root namespace.
+// #2 Use "ResFinder" in the toolbox bitmap attribute instead of the control name.
 // #3 use the "<default namespace>.<resourcename>" string to locate the resource.
 // See: http://www.bobpowell.net/toolboxbitmap.htm
-internal class resfinder
+internal class ResFinder
 {
 }
 
@@ -21,7 +21,7 @@ namespace WeifenLuo.WinFormsUI.Docking
 
     [LocalizedDescription("DockPanel_Description")]
     [Designer("System.Windows.Forms.Design.ControlDesigner, System.Design")]
-    [ToolboxBitmap(typeof(resfinder), "WeifenLuo.WinFormsUI.Docking.DockPanel.bmp")]
+    [ToolboxBitmap(typeof(ResFinder), "WeifenLuo.WinFormsUI.Docking.DockPanel.bmp")]
     [DefaultProperty("DocumentStyle")]
     [DefaultEvent("ActiveContentChanged")]
     public partial class DockPanel : Panel

@@ -247,7 +247,7 @@ namespace PPDFramework.Mod
             using (FileStream fs = File.Open(ModPath, FileMode.Open))
             {
                 byte[] data = new byte[fs.Length];
-                fs.Read(data, 0, data.Length);
+                fs.ReadAtLeast(data, data.Length, throwOnEndOfStream: false);
                 FileHash = CryptographyUtility.CalcSha256Hash(data);
                 FileHashString = CryptographyUtility.Getx2Encoding(FileHash);
             }
@@ -351,9 +351,8 @@ namespace PPDFramework.Mod
             using (FileStream fs = File.Open(ModPath, FileMode.Open))
             {
                 byte[] data = new byte[fs.Length];
-                fs.Read(data, 0, data.Length);
-                var SHA256 = new SHA256Managed();
-                var hash = SHA256.ComputeHash(data);
+                fs.ReadAtLeast(data, data.Length, throwOnEndOfStream: false);
+                var hash = SHA256.HashData(data);
                 return CompareArray(hash, FileHash);
             }
         }
@@ -441,7 +440,7 @@ namespace PPDFramework.Mod
                     return defaultValue;
                 }
                 byte[] bytes = new byte[packReader.Length];
-                packReader.Read(bytes, 0, bytes.Length);
+                packReader.ReadAtLeast(bytes, bytes.Length, throwOnEndOfStream: false);
                 return Encoding.UTF8.GetString(bytes);
             }
         }

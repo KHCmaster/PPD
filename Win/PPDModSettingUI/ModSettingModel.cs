@@ -224,7 +224,7 @@ namespace PPDModSettingUI
                 var stringModSetting = (StringModSetting)modSetting;
                 if (!stringModSetting.IsMaxLengthClassMaxLength)
                 {
-                    OtherValues = String.Format("{0}:{1}}", language["MaxLength"], stringModSetting.MaxLength);
+                    OtherValues = String.Format("{0}:{1}", language["MaxLength"], stringModSetting.MaxLength);
                 }
             }
             DefaultValue = modSetting.GetStringValue(modSetting.Default);

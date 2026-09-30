@@ -2037,7 +2037,7 @@ namespace PPDEditor.Forms
                 {
                     var fs = File.Open(filepath, FileMode.Open);
                     byte[] data = new byte[fs.Length];
-                    fs.Read(data, 0, data.Length);
+                    fs.ReadAtLeast(data, data.Length, throwOnEndOfStream: false);
                     fs.Close();
                     ppdpsw.Write(data, 0, data.Length);
                     File.Delete(filepath);

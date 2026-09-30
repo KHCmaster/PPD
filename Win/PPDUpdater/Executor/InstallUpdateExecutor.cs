@@ -167,7 +167,7 @@ namespace PPDUpdater.Executor
                 while (fs1.Position < fs1.Length)
                 {
                     var readSize = fs1.Read(buffer1, 0, buffer1.Length);
-                    fs2.Read(buffer2, 0, buffer2.Length);
+                    fs2.ReadAtLeast(buffer2, buffer2.Length, throwOnEndOfStream: false);
                     for (int i = 0; i < readSize; i++)
                     {
                         if (buffer1[i] != buffer2[i])

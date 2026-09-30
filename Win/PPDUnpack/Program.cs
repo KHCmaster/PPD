@@ -27,7 +27,7 @@ namespace PPDUnpack
                 {
                     var r = reader.Read(name);
                     byte[] b = new byte[r.Length];
-                    r.Read(b, 0, b.Length);
+                    r.ReadAtLeast(b, b.Length, throwOnEndOfStream: false);
                     var fileName = Path.Combine(baseDir, name);
                     var dirName = Path.GetDirectoryName(fileName);
                     if (!String.IsNullOrEmpty(dirName))

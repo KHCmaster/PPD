@@ -163,7 +163,7 @@ namespace PPDExpansionCore
         protected int ParseInt(PPDPackStreamReader packStreamReader)
         {
             byte[] data = new byte[sizeof(int)];
-            packStreamReader.Read(data, 0, data.Length);
+            packStreamReader.ReadAtLeast(data, data.Length, throwOnEndOfStream: false);
             var ret = BitConverter.ToInt32(data, 0);
             return ret;
         }
@@ -171,7 +171,7 @@ namespace PPDExpansionCore
         protected float ParseFloat(PPDPackStreamReader packStreamReader)
         {
             byte[] data = new byte[sizeof(float)];
-            packStreamReader.Read(data, 0, data.Length);
+            packStreamReader.ReadAtLeast(data, data.Length, throwOnEndOfStream: false);
             var ret = BitConverter.ToSingle(data, 0);
             return ret;
         }
@@ -184,7 +184,7 @@ namespace PPDExpansionCore
         protected bool ParseBoolean(PPDPackStreamReader packStreamReader)
         {
             byte[] data = new byte[sizeof(bool)];
-            packStreamReader.Read(data, 0, data.Length);
+            packStreamReader.ReadAtLeast(data, data.Length, throwOnEndOfStream: false);
             var ret = BitConverter.ToBoolean(data, 0);
             return ret;
         }

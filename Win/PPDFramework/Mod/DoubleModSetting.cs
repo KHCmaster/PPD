@@ -12,7 +12,7 @@ namespace PPDFramework.Mod
         /// </summary>
         protected override double ClassMinValue
         {
-            get { return double.MinValue; throw new NotImplementedException(); }
+            get { return double.MinValue; }
         }
 
         /// <summary>

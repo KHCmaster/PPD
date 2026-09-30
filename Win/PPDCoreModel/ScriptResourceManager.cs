@@ -67,13 +67,17 @@ namespace PPDCoreModel
                     }
                     initialized = true;
                 }
+#if DEBUG
                 catch (Exception e)
                 {
-#if DEBUG
                     Console.WriteLine(e.Message);
                     Console.WriteLine(e.StackTrace);
-#endif
                 }
+#else
+                catch
+                {
+                }
+#endif
             }
         }
 
@@ -131,12 +135,12 @@ namespace PPDCoreModel
                             break;
                         case "Sound":
                             byte[] data = new byte[ppdpsr.Length];
-                            ppdpsr.Read(data, 0, data.Length);
+                            ppdpsr.ReadAtLeast(data, data.Length, throwOnEndOfStream: false);
                             soundDict.Add(resourceName, data);
                             break;
                         case "Others":
                             data = new byte[ppdpsr.Length];
-                            ppdpsr.Read(data, 0, data.Length);
+                            ppdpsr.ReadAtLeast(data, data.Length, throwOnEndOfStream: false);
                             othersDict.Add(resourceName, data);
                             break;
                     }

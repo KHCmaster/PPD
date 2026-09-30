@@ -16,7 +16,7 @@ namespace PPDExpansionCore.Tcp
                 using (PPDPackStreamReader packStreamReader = reader.Read(keyName))
                 {
                     byte[] data = new byte[sizeof(int)];
-                    packStreamReader.Read(data, 0, data.Length);
+                    packStreamReader.ReadAtLeast(data, data.Length, throwOnEndOfStream: false);
                     var ret = BitConverter.ToInt32(data, 0);
                     return ret;
                 }

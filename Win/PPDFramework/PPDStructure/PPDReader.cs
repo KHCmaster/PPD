@@ -52,7 +52,7 @@ namespace PPDFramework.PPDStructure
             var dict = new Dictionary<int, MarkDataBase>();
             var sign = new byte[] { (byte)'P', (byte)'P', (byte)'D' };
             byte[] headdata = new byte[3];
-            stream.Read(headdata, 0, headdata.Length);
+            stream.ReadAtLeast(headdata, headdata.Length, throwOnEndOfStream: false);
             if (sign[0] != headdata[0] || sign[1] != headdata[1] || sign[2] != headdata[2])
             {
                 signError = true;
@@ -61,22 +61,22 @@ namespace PPDFramework.PPDStructure
             byte[] fdata = new byte[4];
             while (stream.Position < stream.Length)
             {
-                stream.Read(fdata, 0, fdata.Length);
+                stream.ReadAtLeast(fdata, fdata.Length, throwOnEndOfStream: false);
                 var time = System.BitConverter.ToSingle(fdata, 0);
                 if (float.IsNaN(time))
                 {
-                    stream.Read(fdata, 0, fdata.Length);
+                    stream.ReadAtLeast(fdata, fdata.Length, throwOnEndOfStream: false);
                     var count = System.BitConverter.ToInt32(fdata, 0);
                     int index = 0;
                     while (stream.Position < stream.Length)
                     {
                         uint markId;
-                        stream.Read(fdata, 0, fdata.Length);
+                        stream.ReadAtLeast(fdata, fdata.Length, throwOnEndOfStream: false);
                         markId = System.BitConverter.ToUInt32(fdata, 0);
-                        stream.Read(fdata, 0, fdata.Length);
+                        stream.ReadAtLeast(fdata, fdata.Length, throwOnEndOfStream: false);
                         var length = System.BitConverter.ToInt32(fdata, 0);
                         byte[] temp = new byte[length];
-                        stream.Read(temp, 0, temp.Length);
+                        stream.ReadAtLeast(temp, temp.Length, throwOnEndOfStream: false);
                         if (!dict.TryGetValue((int)markId, out MarkDataBase ppdData))
                         {
                             continue;
@@ -95,11 +95,11 @@ namespace PPDFramework.PPDStructure
                     }
                     break;
                 }
-                stream.Read(fdata, 0, fdata.Length);
+                stream.ReadAtLeast(fdata, fdata.Length, throwOnEndOfStream: false);
                 var x = System.BitConverter.ToSingle(fdata, 0);
-                stream.Read(fdata, 0, fdata.Length);
+                stream.ReadAtLeast(fdata, fdata.Length, throwOnEndOfStream: false);
                 var y = System.BitConverter.ToSingle(fdata, 0);
-                stream.Read(fdata, 0, fdata.Length);
+                stream.ReadAtLeast(fdata, fdata.Length, throwOnEndOfStream: false);
                 var rotation = System.BitConverter.ToSingle(fdata, 0);
                 var type = stream.ReadByte();
                 bool withID = type >= 40;
@@ -109,13 +109,13 @@ namespace PPDFramework.PPDStructure
                 float endTime = 0;
                 if (isEx)
                 {
-                    stream.Read(fdata, 0, fdata.Length);
+                    stream.ReadAtLeast(fdata, fdata.Length, throwOnEndOfStream: false);
                     endTime = System.BitConverter.ToSingle(fdata, 0);
                 }
                 uint id = 0;
                 if (withID)
                 {
-                    stream.Read(fdata, 0, fdata.Length);
+                    stream.ReadAtLeast(fdata, fdata.Length, throwOnEndOfStream: false);
                     id = System.BitConverter.ToUInt32(fdata, 0);
                 }
                 var markData = isEx ? new ExMarkData(x, y, rotation, time, endTime, (ButtonType)type, id) : new MarkData(x, y, rotation, time, (ButtonType)type, id);

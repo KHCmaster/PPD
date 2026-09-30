@@ -12,4 +12,9 @@
   <ItemGroup Condition="'$(OutputType)' == 'Exe' Or '$(OutputType)' == 'WinExe'">
     <Compile Include="$(MSBuildThisFileDirectory)Shared\ProcessInitializer.cs" Link="Properties\ProcessInitializer.cs" />
   </ItemGroup>
+
+  <!-- 全プロジェクトが Windows 専用であることを示す属性（GenerateAssemblyInfo=false では自動生成されないため） -->
+  <ItemGroup Condition="'$(Language)' == 'C#'">
+    <Compile Include="$(MSBuildThisFileDirectory)Shared\SupportedPlatform.cs" Link="Properties\SupportedPlatform.cs" />
+  </ItemGroup>
 </Project>

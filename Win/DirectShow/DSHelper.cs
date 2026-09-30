@@ -5,7 +5,6 @@ using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
-using System.Security.Permissions;
 
 namespace DirectShow
 {
@@ -815,8 +814,6 @@ namespace DirectShow
 
     #region Base COM object
 
-    [SecurityPermission(SecurityAction.InheritanceDemand, UnmanagedCode = true)]
-    [SecurityPermission(SecurityAction.Demand, UnmanagedCode = true)]
     public class DSObject<T> : COMHelper, IDisposable where T : class
     {
         #region Variables
@@ -982,7 +979,7 @@ namespace DirectShow
                 IntPtr _interface = IntPtr.Zero;
                 try
                 {
-                    int hr = Marshal.QueryInterface(_this, ref _guid, out _interface);
+                    int hr = Marshal.QueryInterface(_this, in _guid, out _interface);
 
                     if (SUCCEEDED(hr) && _interface != IntPtr.Zero)
                     {
@@ -1027,7 +1024,7 @@ namespace DirectShow
                 IntPtr _interface = IntPtr.Zero;
                 try
                 {
-                    return SUCCEEDED(Marshal.QueryInterface(_this, ref _guid, out _interface));
+                    return SUCCEEDED(Marshal.QueryInterface(_this, in _guid, out _interface));
                 }
                 finally
                 {

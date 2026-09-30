@@ -18,7 +18,14 @@ namespace PPDCore
             AC,
         }
 
-        public event Action<int> Progressed;
+        /// <summary>
+        /// 進捗を通知するイベントです（現在は通知していません）。
+        /// </summary>
+        public event Action<int> Progressed
+        {
+            add { }
+            remove { }
+        }
 
         private MarkManager markManager;
         private EventManager eventManager;
@@ -28,9 +35,6 @@ namespace PPDCore
         private int[] evaPoint;
         private float safeCoolArea;
         private float safeGoodArea;
-        private bool doJust;
-        private bool doPermutation;
-        private bool doDumpNotes;
         private bool includeFine;
         private ButtonType[] buttons;
         private ItemType autoType;
@@ -67,29 +71,6 @@ namespace PPDCore
             }
             safeCoolArea = PPDSetting.Setting.CoolArea - 0.001f;
             safeGoodArea = PPDSetting.Setting.GoodArea - 0.001f;
-            switch (autoType)
-            {
-                case ItemType.Auto1:
-                    doJust = true;
-                    doPermutation = false;
-                    doDumpNotes = false;
-                    break;
-                case ItemType.Auto2:
-                    doJust = true;
-                    doPermutation = true;
-                    doDumpNotes = false;
-                    break;
-                case ItemType.Auto3:
-                    doJust = false;
-                    doPermutation = true;
-                    doDumpNotes = false;
-                    break;
-                case ItemType.Auto4:
-                    doJust = false;
-                    doPermutation = true;
-                    doDumpNotes = true;
-                    break;
-            }
         }
 
         public bool CanCreate()
