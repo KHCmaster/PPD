@@ -33,8 +33,7 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="SharpDX" />
-    <PackageReference Include="SharpDX.DirectSound" />
+    <PackageReference Include="Vortice.DirectSound" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PPDFramework\PPDFramework.csproj" />

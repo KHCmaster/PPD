@@ -440,7 +440,11 @@ Phase 7  配布・更新の仕組みの対応、リリース
   - `Acquire()` / `Poll()` などは `Result` を返すので `.CheckError()` を付け、SharpDX と同じく失敗したときに例外にした
   - 配布ファイルの一覧（Checker / PPDReleaser）に `Vortice.DirectInput.dll`、`Vortice.DirectX.dll`、`SharpGen.Runtime.dll`、`SharpGen.Runtime.COM.dll` を加えた
   - 確認した結果: シーン 0〜8 を DirectInput で受けたキー入力で切り替えられ、画素比較も通った。PPD の起動・終了、Mod の既定値、KeyConfiger と PPDEditor の起動も問題なし
-- [ ] DirectSound
+- [x] DirectSound（2026-09-30）: PPDSound を Vortice.DirectSound 3.8.3 に置き換えた。
+  - `SecondarySoundBuffer` → `IDirectSoundBuffer`（`CreateSoundBuffer`）。`Volume` / `Pan` / `CurrentPosition` のプロパティは `SetVolume` などのメソッドになった
+  - WAV の読み込みに使っていた SharpDX の `SoundStream` の代わりに、FMOD の出力から作る RIFF WAVE（fmt / data チャンク）を読む小さな関数を置いた
+  - 確認した結果: 同梱の効果音 7 個（ogg / wav）を読み込み、バッファの中身・再生状態・再生速度の変更・停止を確かめた。RenderCheck も全て通った
+  - 注意: Vortice 3.8.3 の `IDirectSoundBuffer.Caps` は E_INVALIDARG になる（PPD では使っていない）
 - [ ] D3D11 / DXGI（PPDFramework の DX11 層）
 - [ ] Direct2D / DirectWrite / WIC（Direct2DImageEncoder）
 - [ ] ShaderCompiler（D3DCompiler）

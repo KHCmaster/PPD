@@ -1,10 +1,10 @@
-﻿using SharpDX.DirectSound;
+﻿using Vortice.DirectSound;
 
 namespace PPDSound
 {
     class BufferInfo
     {
-        public SecondarySoundBuffer Buffer
+        public IDirectSoundBuffer Buffer
         {
             get;
             private set;
@@ -16,7 +16,7 @@ namespace PPDSound
             private set;
         }
 
-        public BufferInfo(SecondarySoundBuffer buffer)
+        public BufferInfo(IDirectSoundBuffer buffer)
         {
             Buffer = buffer;
             Frequency = buffer.Frequency;

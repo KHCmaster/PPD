@@ -183,7 +183,7 @@ namespace PPD.Update
                 "Vortice.DirectX.dll",
                 "SharpGen.Runtime.dll",
                 "SharpGen.Runtime.COM.dll",
-                "SharpDX.DirectSound.dll",
+                "Vortice.DirectSound.dll",
                 "SharpDX.DXGI.dll",
                 "SharpDX.Direct3D11.dll",
                 "System.Data.SQLite.dll",
