@@ -1,7 +1,7 @@
 ﻿using PPDFramework;
 using PPDMultiCommon.Data;
 using PPDShareComponent;
-using SharpDX;
+using SharpDX;
 using System.Numerics;
 using PPDMath;
 using System;

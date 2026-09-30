@@ -6,7 +6,7 @@ using PPDFrameworkCore;
 using PPDInput;
 using PPDMovie;
 using PPDSound;
-using SharpDX;
+using SharpDX;
 using System.Numerics;
 using PPDMath;
 using System;

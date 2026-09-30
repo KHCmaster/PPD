@@ -1,6 +1,6 @@
 ﻿using PPDFramework;
 using PPDFramework.Resource;
-using SharpDX;
+using SharpDX;
 using System.Numerics;
 using PPDMath;
 using RectangleF = Vortice.Mathematics.Rect;

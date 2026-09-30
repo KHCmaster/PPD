@@ -1,6 +1,6 @@
 ﻿using PPDFramework;
 using PPDShareComponent;
-using SharpDX;
+using SharpDX;
 using System.Numerics;
 using PPDMath;
 using Color4 = Vortice.Mathematics.Color4;

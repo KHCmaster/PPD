@@ -1,4 +1,3 @@
-using SharpDX;
 using System.Numerics;
 using PPDMath;
 using SharpDX.Direct3D11;

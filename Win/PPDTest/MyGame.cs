@@ -4,7 +4,7 @@ using PPDFramework.Sprites;
 using PPDFrameworkCore;
 using PPDInput;
 using PPDMovie;
-using SharpDX;
+using SharpDX;
 using System.Numerics;
 using PPDMath;
 using SharpDX.DirectInput;

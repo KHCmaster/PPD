@@ -1,7 +1,7 @@
 ﻿using PPDFramework.Sprites;
 using PPDFramework.Texture;
 using PPDFramework.Vertex;
-using SharpDX;
+using SharpDX;
 using System.Numerics;
 using PPDMath;
 

@@ -1,5 +1,5 @@
-﻿using PPDFramework;
-using SharpDX;
+﻿using SharpDX;
+using PPDFramework;
 using SharpDX.DirectSound;
 using SharpDX.Multimedia;
 using System;

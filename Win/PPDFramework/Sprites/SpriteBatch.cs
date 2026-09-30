@@ -1,6 +1,5 @@
 ﻿using PPDFramework.Effect;
 using PPDFramework.Vertex;
-using SharpDX;
 using System.Numerics;
 using PPDMath;
 using Matrix = System.Numerics.Matrix4x4;

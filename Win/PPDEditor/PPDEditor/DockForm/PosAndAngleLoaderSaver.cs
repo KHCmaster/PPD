@@ -1,6 +1,6 @@
 ﻿using PPDEditor.Controls;
 using PPDEditor.Forms;
-using SharpDX;
+using SharpDX;
 using System.Numerics;
 using PPDMath;
 using System;

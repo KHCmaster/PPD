@@ -1,6 +1,6 @@
 ﻿using PPDFramework.Effect;
 using PPDFramework.Texture;
-using SharpDX;
+using SharpDX;
 using System.Numerics;
 using PPDMath;
 

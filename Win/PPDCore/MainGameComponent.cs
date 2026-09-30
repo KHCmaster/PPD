@@ -7,7 +7,7 @@ using PPDFramework.Scene;
 using PPDFramework.Shaders;
 using PPDFramework.Web;
 using PPDPack;
-using SharpDX;
+using SharpDX;
 using System.Numerics;
 using PPDMath;
 using RectangleF = Vortice.Mathematics.Rect;

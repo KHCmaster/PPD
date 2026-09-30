@@ -1,6 +1,6 @@
 ﻿using Effect2D;
 using PPDFramework.Shaders;
-using SharpDX;
+using SharpDX;
 using System.Numerics;
 using PPDMath;
 using Matrix = System.Numerics.Matrix4x4;

@@ -1,6 +1,6 @@
 ﻿using PPDFramework.Resource;
 using PPDFramework.Shaders;
-using SharpDX;
+using SharpDX;
 using System.Numerics;
 using PPDMath;
 

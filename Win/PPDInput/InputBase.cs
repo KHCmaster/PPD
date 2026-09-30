@@ -1,5 +1,5 @@
-﻿using PPDFramework;
-using SharpDX;
+﻿using SharpDX;
+using PPDFramework;
 using SharpDX.DirectInput;
 using System;
 using System.Collections.Generic;
