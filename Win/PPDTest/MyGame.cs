@@ -4,7 +4,6 @@ using PPDFramework.Sprites;
 using PPDFrameworkCore;
 using PPDInput;
 using PPDMovie;
-using SharpDX;
 using System.Numerics;
 using PPDMath;
 using Vortice.DirectInput;

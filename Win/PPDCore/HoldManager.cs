@@ -1,7 +1,6 @@
 ﻿using PPDCoreModel;
 using PPDCoreModel.Data;
 using PPDFramework;
-using SharpDX;
 using System.Numerics;
 using PPDMath;
 using System;

@@ -27,9 +27,6 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="SharpDX" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\PPDMath\PPDMath.csproj" />
     <ProjectReference Include="..\BlueSky\BlueSky.csproj" />
     <ProjectReference Include="..\Effect2D\Effect2D.csproj" />

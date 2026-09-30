@@ -1,7 +1,6 @@
 ﻿using FlowScriptEngine;
 using PPDCoreModel;
 using PPDFramework;
-using SharpDX;
 using System.Numerics;
 using PPDMath;
 using System.Collections.Generic;

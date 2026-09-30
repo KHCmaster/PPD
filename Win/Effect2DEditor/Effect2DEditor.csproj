@@ -28,9 +28,6 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="SharpDX" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\PPDMath\PPDMath.csproj" />
     <ProjectReference Include="..\BezierCaliculator\BezierCaliculator.csproj" />
     <ProjectReference Include="..\BezierDrawControl\BezierDrawControl\BezierDrawControl.csproj" />

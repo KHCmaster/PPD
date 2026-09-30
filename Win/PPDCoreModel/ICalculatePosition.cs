@@ -1,5 +1,4 @@
-﻿using SharpDX;
-using System.Numerics;
+﻿using System.Numerics;
 using PPDMath;
 
 namespace PPDCoreModel

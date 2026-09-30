@@ -19,7 +19,6 @@
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 * THE SOFTWARE.
 */
-using SharpDX;
 using System.Numerics;
 using PPDMath;
 using Color4 = Vortice.Mathematics.Color4;

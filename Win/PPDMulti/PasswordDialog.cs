@@ -1,7 +1,6 @@
 ﻿using PPDFramework;
 using PPDMultiCommon.Web;
 using PPDShareComponent;
-using SharpDX;
 using System.Numerics;
 using PPDMath;
 using System;

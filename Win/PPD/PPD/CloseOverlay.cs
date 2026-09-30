@@ -1,7 +1,6 @@
 ﻿using PPDFramework;
 using PPDFramework.Scene;
 using PPDShareComponent;
-using SharpDX;
 using System.Numerics;
 using PPDMath;
 using System;

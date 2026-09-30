@@ -6,7 +6,6 @@ using PPDFramework.PPDStructure;
 using PPDFramework.PPDStructure.PPDData;
 using PPDFramework.Shaders;
 using PPDFrameworkCore;
-using SharpDX;
 using System.Numerics;
 using PPDMath;
 using System;

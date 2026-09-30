@@ -3,7 +3,6 @@ using PPDCoreModel.Data;
 using PPDFramework;
 using PPDFramework.PPDStructure.EVDData;
 using PPDFramework.PPDStructure.PPDData;
-using SharpDX;
 using System.Numerics;
 using PPDMath;
 using System;

@@ -1,7 +1,6 @@
 ﻿using PPDFramework;
 using PPDFramework.Shaders;
 using PPDFramework.Vertex;
-using SharpDX;
 using System.Numerics;
 using PPDMath;
 

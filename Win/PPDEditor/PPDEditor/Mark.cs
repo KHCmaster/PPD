@@ -1,7 +1,6 @@
 ﻿using PPDFramework;
 using PPDFramework.PPDStructure.EVDData;
 using PPDFramework.PPDStructure.PPDData;
-using SharpDX;
 using System.Numerics;
 using PPDMath;
 using Matrix = System.Numerics.Matrix4x4;

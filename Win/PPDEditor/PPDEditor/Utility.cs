@@ -1,6 +1,5 @@
 ﻿using PPDConfiguration;
 using PPDFramework;
-using SharpDX;
 using System.Numerics;
 using PPDMath;
 using System;

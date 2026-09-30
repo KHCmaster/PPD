@@ -1,5 +1,4 @@
 ﻿using PPDFramework.Effect;
-using SharpDX;
 using System.Numerics;
 using PPDMath;
 

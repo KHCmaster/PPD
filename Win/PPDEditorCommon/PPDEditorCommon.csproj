@@ -37,7 +37,6 @@
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" />
-    <PackageReference Include="SharpDX" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PPDMath\PPDMath.csproj" />

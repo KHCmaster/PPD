@@ -1,7 +1,6 @@
 ﻿using PPDFramework.Resource;
 using PPDFramework.Shaders;
 using PPDFramework.Vertex;
-using SharpDX;
 using System.Numerics;
 using PPDMath;
 using Size2F = Vortice.Mathematics.Size;

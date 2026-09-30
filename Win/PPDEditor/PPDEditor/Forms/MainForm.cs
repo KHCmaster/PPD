@@ -9,7 +9,6 @@ using PPDFramework.PPDStructure;
 using PPDFramework.PPDStructure.EVDData;
 using PPDFramework.PPDStructure.PPDData;
 using PPDPack;
-using SharpDX;
 using System.Numerics;
 using PPDMath;
 using Rectangle = Vortice.Mathematics.RectI;

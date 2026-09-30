@@ -2,7 +2,6 @@
 using PPDFrameworkCore;
 using PPDMulti.Model;
 using PPDShareComponent;
-using SharpDX;
 using System.Numerics;
 using PPDMath;
 using System;

@@ -2,7 +2,6 @@
 using PPDFramework.Sprites;
 using PPDInput;
 using PPDSound;
-using SharpDX;
 using System.Numerics;
 using PPDMath;
 using Point = Vortice.Mathematics.Int2;

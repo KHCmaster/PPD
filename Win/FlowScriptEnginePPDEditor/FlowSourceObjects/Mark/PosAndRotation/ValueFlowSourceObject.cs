@@ -1,6 +1,5 @@
 ﻿using FlowScriptEngine;
 using PPDEditorCommon;
-using SharpDX;
 using System.Numerics;
 using PPDMath;
 

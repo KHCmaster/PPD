@@ -1,5 +1,4 @@
-﻿using SharpDX;
-using System.Numerics;
+﻿using System.Numerics;
 using PPDMath;
 using Point = Vortice.Mathematics.Int2;
 using Size2 = Vortice.Mathematics.SizeI;

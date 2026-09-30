@@ -1,5 +1,4 @@
 ﻿using PPDFramework.Vertex;
-using SharpDX;
 using System.Numerics;
 using PPDMath;
 

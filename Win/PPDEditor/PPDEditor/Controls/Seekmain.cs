@@ -2,7 +2,6 @@
 using PPDEditor.Forms;
 using PPDFramework;
 using PPDFramework.PPDStructure.PPDData;
-using SharpDX;
 using System.Numerics;
 using PPDMath;
 using Point = Vortice.Mathematics.Int2;

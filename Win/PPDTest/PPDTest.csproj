@@ -27,7 +27,6 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="SharpDX" />
     <PackageReference Include="Vortice.DirectInput" />
     <PackageReference Include="System.Data.SQLite.Core" />
   </ItemGroup>

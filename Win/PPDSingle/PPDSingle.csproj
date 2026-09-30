@@ -30,7 +30,6 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="SharpZipLib" />
-    <PackageReference Include="SharpDX" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PPDMath\PPDMath.csproj" />
