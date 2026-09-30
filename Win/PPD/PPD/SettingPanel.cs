@@ -2,7 +2,7 @@
 using PPDFramework;
 using PPDFramework.Web;
 using PPDShareComponent;
-using SharpDX.DirectInput;
+using Vortice.DirectInput;
 using System;
 
 namespace PPD

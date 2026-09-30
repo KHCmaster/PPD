@@ -1,7 +1,7 @@
 ﻿using PPDMath;
 using PPDFramework;
 using PPDShareComponent;
-using SharpDX.DirectInput;
+using Vortice.DirectInput;
 using System;
 
 namespace PPD

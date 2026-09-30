@@ -1,6 +1,6 @@
 ﻿using PPDFramework;
 using PPDInput;
-using SharpDX.DirectInput;
+using Vortice.DirectInput;
 
 namespace KeyConfiger
 {

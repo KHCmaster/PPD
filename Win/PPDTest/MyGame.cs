@@ -7,7 +7,7 @@ using PPDMovie;
 using SharpDX;
 using System.Numerics;
 using PPDMath;
-using SharpDX.DirectInput;
+using Vortice.DirectInput;
 using System;
 using System.Collections.Generic;
 using System.Drawing;

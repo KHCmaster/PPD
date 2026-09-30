@@ -29,7 +29,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="SharpDX" />
-    <PackageReference Include="SharpDX.DirectInput" />
+    <PackageReference Include="Vortice.DirectInput" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\ErrorHandler\ErrorHandle.csproj" />

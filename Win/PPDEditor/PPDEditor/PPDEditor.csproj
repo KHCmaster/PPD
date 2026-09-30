@@ -31,7 +31,7 @@
     <PackageReference Include="WinForms.DataVisualization" />
     <PackageReference Include="Newtonsoft.Json" />
     <PackageReference Include="SharpDX" />
-    <PackageReference Include="SharpDX.DirectInput" />
+    <PackageReference Include="Vortice.DirectInput" />
     <PackageReference Include="System.Data.SQLite.Core" />
     <PackageReference Include="YamlDotNet" />
   </ItemGroup>

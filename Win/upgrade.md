@@ -433,6 +433,19 @@ Phase 7  配布・更新の仕組みの対応、リリース
 | PPDSound の DirectSound | Vortice.DirectSound に置き換える |
 | PPDMovie（SampleGrabber 経由で描画） | テクスチャ書き込み部分のみ。DirectShow 部分はそのまま |
 
+作業:
+- [x] DirectInput（2026-09-30）: PPDInput・PPD・PPDEditor・KeyConfiger・PPDTest を Vortice.DirectInput 3.8.3 に置き換えた。
+  - `Key` 列挙体は SharpDX と同じ名前・値。Vortice には別名の `CapsLock`（= `Capital`）が加わっているだけで、`ToString()` の結果は変わらない。キー設定の保存形式に影響はない
+  - デバイスは `CreateDevice` と `SetDataFormat<RawKeyboardState>()` / `SetDataFormat<RawJoystickState>()` で作る
+  - `Acquire()` / `Poll()` などは `Result` を返すので `.CheckError()` を付け、SharpDX と同じく失敗したときに例外にした
+  - 配布ファイルの一覧（Checker / PPDReleaser）に `Vortice.DirectInput.dll`、`Vortice.DirectX.dll`、`SharpGen.Runtime.dll`、`SharpGen.Runtime.COM.dll` を加えた
+  - 確認した結果: シーン 0〜8 を DirectInput で受けたキー入力で切り替えられ、画素比較も通った。PPD の起動・終了、Mod の既定値、KeyConfiger と PPDEditor の起動も問題なし
+- [ ] DirectSound
+- [ ] D3D11 / DXGI（PPDFramework の DX11 層）
+- [ ] Direct2D / DirectWrite / WIC（Direct2DImageEncoder）
+- [ ] ShaderCompiler（D3DCompiler）
+- [ ] `EnableReleaseOnFinalizer` への依存をなくす
+
 **完了条件**: `SharpDX*` への参照がゼロ。回帰テスト、実プレイ確認、終了時のアクセス違反チェックが通る。フレームレートが移行前と同等以上。
 
 **規模の目安**: 中。

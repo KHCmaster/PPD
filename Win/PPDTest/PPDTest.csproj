@@ -28,7 +28,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="SharpDX" />
-    <PackageReference Include="SharpDX.DirectInput" />
+    <PackageReference Include="Vortice.DirectInput" />
     <PackageReference Include="System.Data.SQLite.Core" />
   </ItemGroup>
   <ItemGroup>
