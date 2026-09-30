@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
@@ -9,7 +8,7 @@ namespace PPDInstaller.Executor
     class IPAFontInstallExecutor : CExecutor
     {
         public static Uri ipafonturi = new Uri("http://ossipedia.ipa.go.jp/ipafont/ipag00303.php");
-        System.Net.WebClient downloadClient = new System.Net.WebClient();
+        FileDownloader downloadClient = new FileDownloader();
         string filePath;
         string unzipPath;
         public IPAFontInstallExecutor(string filePath, string unzipPath, Control control)
@@ -24,8 +23,8 @@ namespace PPDInstaller.Executor
             base.Execute();
             try
             {
-                downloadClient.DownloadProgressChanged += IPAFontDownloadProgressChanged;
-                downloadClient.DownloadFileCompleted += IPAFontDownloadFileCompleted;
+                downloadClient.ProgressChanged += IPAFontDownloadProgressChanged;
+                downloadClient.Completed += IPAFontDownloadFileCompleted;
                 downloadClient.DownloadFileAsync(ipafonturi, filePath);
                 System.Threading.Thread.Sleep(1000);
             }
@@ -36,17 +35,17 @@ namespace PPDInstaller.Executor
             }
         }
 
-        void IPAFontDownloadProgressChanged(object sender, System.Net.DownloadProgressChangedEventArgs e)
+        void IPAFontDownloadProgressChanged(int progressPercentage)
         {
-            Progress = e.ProgressPercentage.ToString();
+            Progress = progressPercentage.ToString();
             OnProgress();
         }
-        void IPAFontDownloadFileCompleted(object sender, AsyncCompletedEventArgs e)
+        void IPAFontDownloadFileCompleted(Exception error)
         {
             try
             {
-                downloadClient.DownloadProgressChanged -= IPAFontDownloadProgressChanged;
-                downloadClient.DownloadFileCompleted -= IPAFontDownloadFileCompleted;
+                downloadClient.ProgressChanged -= IPAFontDownloadProgressChanged;
+                downloadClient.Completed -= IPAFontDownloadFileCompleted;
                 Utility.Unzip(filePath, unzipPath);
                 var cachefolder = Path.GetDirectoryName(unzipPath);
                 var dir = Path.Combine(cachefolder, "ipag00302\\ipag00303");

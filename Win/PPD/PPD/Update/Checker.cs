@@ -1,5 +1,6 @@
 ﻿using PPDConfiguration;
 using PPDFramework.Web;
+using PPDFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -81,8 +82,7 @@ namespace PPD.Update
             splits[splits.Length - 1] = Settings.Setting.Updater["Channel"] + splits[splits.Length - 1];
             var url = new Uri(String.Join("/", splits));
             var latestVersion = new Version("0.0.0.0");
-            var req = (HttpWebRequest)HttpWebRequest.Create(url);
-            using (HttpWebResponse res = (HttpWebResponse)req.GetResponse())
+            using (var res = SyncHttpClient.Get(url.AbsoluteUri))
             using (Stream stream = res.GetResponseStream())
             using (XmlReader reader = XmlReader.Create(stream))
             {
@@ -247,14 +247,7 @@ namespace PPD.Update
 
         private string GetUrlContent(string url)
         {
-            var request = (HttpWebRequest)HttpWebRequest.Create(url);
-            using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
-            {
-                using (StreamReader reader = new StreamReader(response.GetResponseStream()))
-                {
-                    return reader.ReadToEnd();
-                }
-            }
+            return SyncHttpClient.GetString(url);
         }
 
         class AssemblyInfo

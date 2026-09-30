@@ -81,7 +81,7 @@ namespace PPDFramework.Web
             try
             {
                 var req = CreateRequest(url);
-                using (WebResponse res = req.GetResponse())
+                using (var res = req.GetResponse())
                 {
                     using (XmlReader reader = GetXmlReader(res))
                     {
@@ -145,7 +145,7 @@ namespace PPDFramework.Web
                 query["validatekey"] = validateKey;
                 query.Remove("token");
                 var req = CreatePostRequest(url, query);
-                using (WebResponse res = req.GetResponse())
+                using (var res = req.GetResponse())
                 {
                     using (XmlReader reader = GetXmlReader(res))
                     {
@@ -227,7 +227,7 @@ namespace PPDFramework.Web
                 query["validatekey"] = validateKey;
                 query.Remove("token");
                 var req = CreatePostRequest(url, query);
-                using (WebResponse res = req.GetResponse())
+                using (var res = req.GetResponse())
                 {
                     using (XmlReader reader = GetXmlReader(res))
                     {
@@ -299,7 +299,7 @@ namespace PPDFramework.Web
                 query["validatekey"] = validateKey;
                 query.Remove("token");
                 var req = CreatePostRequest(url, query);
-                using (WebResponse res = req.GetResponse())
+                using (var res = req.GetResponse())
                 {
                     using (XmlReader reader = GetXmlReader(res))
                     {
@@ -426,7 +426,7 @@ namespace PPDFramework.Web
                 query.Remove("token");
                 query["perfecttrialtoken"] = perfectTrialToken;
                 var req = CreatePostRequest(url, query);
-                using (WebResponse res = req.GetResponse())
+                using (var res = req.GetResponse())
                 {
                     using (XmlReader reader = GetXmlReader(res))
                     {
@@ -481,7 +481,7 @@ namespace PPDFramework.Web
             try
             {
                 var req = CreateRequest(url);
-                using (WebResponse res = req.GetResponse())
+                using (var res = req.GetResponse())
                 {
                     using (XmlReader reader = GetXmlReader(res))
                     {
@@ -566,7 +566,7 @@ namespace PPDFramework.Web
                 query["validatekey"] = validateKey;
                 query.Remove("token");
                 var req = CreatePostRequest(url, query);
-                using (WebResponse res = req.GetResponse())
+                using (var res = req.GetResponse())
                 {
                     using (XmlReader reader = GetXmlReader(res))
                     {
@@ -648,7 +648,7 @@ namespace PPDFramework.Web
                 query.Remove("token");
                 var req = CreatePostRequest(url, query);
                 var trials = new List<PerfectTrialInfo>();
-                using (WebResponse res = req.GetResponse())
+                using (var res = req.GetResponse())
                 {
                     using (XmlReader reader = GetXmlReader(res))
                     {
@@ -726,7 +726,7 @@ namespace PPDFramework.Web
                 query.Remove("token");
                 var req = CreatePostRequest(url, query);
                 var lists = new List<ListInfo>();
-                using (WebResponse res = req.GetResponse())
+                using (var res = req.GetResponse())
                 {
                     using (XmlReader reader = GetXmlReader(res))
                     {
@@ -793,7 +793,7 @@ namespace PPDFramework.Web
                 query.Remove("token");
                 var req = CreatePostRequest(url, query);
                 var replays = new List<ReplayInfo>();
-                using (WebResponse res = req.GetResponse())
+                using (var res = req.GetResponse())
                 {
                     using (XmlReader reader = GetXmlReader(res))
                     {
@@ -880,7 +880,7 @@ namespace PPDFramework.Web
                 query["validatekey"] = validateKey;
                 query.Remove("token");
                 var req = CreatePostRequest(url, query);
-                using (WebResponse res = req.GetResponse())
+                using (var res = req.GetResponse())
                 {
                     var memoryStream = new MemoryStream();
                     byte[] buffer = new byte[1024];
@@ -954,7 +954,7 @@ namespace PPDFramework.Web
             try
             {
                 var req = CreateRequest(url);
-                using (WebResponse res = req.GetResponse())
+                using (var res = req.GetResponse())
                 {
                     using (XmlReader reader = GetXmlReader(res))
                     {
@@ -1022,7 +1022,7 @@ namespace PPDFramework.Web
                 query["validatekey"] = validateKey;
                 query.Remove("token");
                 var req = CreateRequest(url, query);
-                using (WebResponse res = req.GetResponse())
+                using (var res = req.GetResponse())
                 {
                     using (XmlReader reader = GetXmlReader(res))
                     {
@@ -1083,7 +1083,7 @@ namespace PPDFramework.Web
                 query["validatekey"] = validateKey;
                 query.Remove("token");
                 var req = CreatePostRequest(url, query);
-                using (WebResponse res = req.GetResponse())
+                using (var res = req.GetResponse())
                 {
                     using (XmlReader reader = GetXmlReader(res))
                     {
@@ -1136,7 +1136,7 @@ namespace PPDFramework.Web
                 query["validatekey"] = validateKey;
                 query.Remove("token");
                 var req = CreatePostRequest(url, query);
-                using (WebResponse res = req.GetResponse())
+                using (var res = req.GetResponse())
                 {
                     using (XmlReader reader = GetXmlReader(res))
                     {
@@ -1349,7 +1349,7 @@ namespace PPDFramework.Web
             try
             {
                 var req = CreateRequest(url);
-                using (WebResponse res = req.GetResponse())
+                using (var res = req.GetResponse())
                 {
                     using (MemoryStream memoryStream = new MemoryStream())
                     {
@@ -1429,7 +1429,7 @@ namespace PPDFramework.Web
         public void DownloadFile(string url, string filePath)
         {
             var req = CreateRequest(url);
-            using (HttpWebResponse response = (HttpWebResponse)req.GetResponse())
+            using (var response = req.GetResponse())
             {
                 using (FileStream fs = File.Open(filePath, FileMode.Create))
                 {
@@ -1515,7 +1515,7 @@ namespace PPDFramework.Web
             return DateTime.ParseExact(str, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
         }
 
-        private HttpWebRequest CreateRequest(string url, IDictionary<string, string> parameters)
+        private Request CreateRequest(string url, IDictionary<string, string> parameters)
         {
             var paramList = new List<string>();
             foreach (KeyValuePair<string, string> kvp in parameters)
@@ -1525,27 +1525,15 @@ namespace PPDFramework.Web
             return CreateRequest(String.Format("{0}?{1}", url, String.Join("&", paramList.ToArray())));
         }
 
-        private HttpWebRequest CreateRequest(string url)
+        private Request CreateRequest(string url)
         {
-            var request = (HttpWebRequest)HttpWebRequest.Create(url);
-            request.Timeout = 15000;
-#if DEBUG
-            if (File.Exists("credentials"))
-            {
-                var lines = File.ReadAllLines("credentials");
-                if (lines.Length >= 2)
-                {
-                    request.Credentials = new NetworkCredential(lines[0], lines[1]);
-                }
-            }
-#endif
-            return request;
+            return new Request(url, null);
         }
 
         private string GetString(string url)
         {
             var req = CreateRequest(url);
-            using (HttpWebResponse response = (HttpWebResponse)req.GetResponse())
+            using (var response = req.GetResponse())
             {
                 using (StreamReader reader = new StreamReader(response.GetResponseStream()))
                 {
@@ -1554,7 +1542,7 @@ namespace PPDFramework.Web
             }
         }
 
-        private HttpWebRequest CreatePostRequest(string url, IDictionary<string, string> param)
+        private Request CreatePostRequest(string url, IDictionary<string, string> param)
         {
             var paramList = new List<string>();
             foreach (KeyValuePair<string, string> kvp in param)
@@ -1565,18 +1553,10 @@ namespace PPDFramework.Web
             var postData = String.Join("&", paramList.ToArray());
             var postDataBytes = System.Text.Encoding.ASCII.GetBytes(postData);
 
-            var req = CreateRequest(url);
-            req.Method = "POST";
-            req.ContentType = "application/x-www-form-urlencoded";
-            req.ContentLength = postDataBytes.Length;
-            using (Stream reqStream = req.GetRequestStream())
-            {
-                reqStream.Write(postDataBytes, 0, postDataBytes.Length);
-            }
-            return req;
+            return new Request(url, postDataBytes);
         }
 
-        private XmlReader GetXmlReader(WebResponse res, bool dump = false)
+        private XmlReader GetXmlReader(HttpResponse res, bool dump = false)
         {
             if (dump)
             {
@@ -1610,6 +1590,39 @@ namespace PPDFramework.Web
             memStream.Seek(0, SeekOrigin.Begin);
             return XmlReader.Create(memStream);
 
+        }
+        /// <summary>
+        /// 送る前のリクエストです（HttpWebRequest の代わり）。
+        /// </summary>
+        private sealed class Request
+        {
+            private static readonly TimeSpan timeout = TimeSpan.FromMilliseconds(15000);
+            private readonly string url;
+            private readonly byte[] postData;
+
+            public Request(string url, byte[] postData)
+            {
+                this.url = url;
+                this.postData = postData;
+            }
+
+            public HttpResponse GetResponse()
+            {
+                ICredentials credentials = null;
+#if DEBUG
+                if (File.Exists("credentials"))
+                {
+                    var lines = File.ReadAllLines("credentials");
+                    if (lines.Length >= 2)
+                    {
+                        credentials = new NetworkCredential(lines[0], lines[1]);
+                    }
+                }
+#endif
+                return postData == null
+                    ? SyncHttpClient.Get(url, timeout, credentials)
+                    : SyncHttpClient.Post(url, postData, "application/x-www-form-urlencoded", timeout, credentials);
+            }
         }
     }
 }

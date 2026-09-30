@@ -6,7 +6,7 @@ namespace PPDInstaller.Executor
     class LAVFiltersInstallExecutor : CExecutor
     {
         public static Uri lavFiltersUri = new Uri("http://lavfilters.googlecode.com/files/LAVFilters-0.58.2.exe");
-        System.Net.WebClient downloadClient = new System.Net.WebClient();
+        FileDownloader downloadClient = new FileDownloader();
 
         private string filePath;
         public LAVFiltersInstallExecutor(string filePath, Control control)
@@ -20,8 +20,8 @@ namespace PPDInstaller.Executor
             base.Execute();
             try
             {
-                downloadClient.DownloadProgressChanged += downloadClient_DownloadProgressChanged;
-                downloadClient.DownloadFileCompleted += downloadClient_DownloadFileCompleted;
+                downloadClient.ProgressChanged += downloadClient_DownloadProgressChanged;
+                downloadClient.Completed += downloadClient_DownloadFileCompleted;
                 downloadClient.DownloadFileAsync(lavFiltersUri, filePath);
                 System.Threading.Thread.Sleep(1000);
             }
@@ -32,12 +32,12 @@ namespace PPDInstaller.Executor
             }
         }
 
-        void downloadClient_DownloadFileCompleted(object sender, System.ComponentModel.AsyncCompletedEventArgs e)
+        void downloadClient_DownloadFileCompleted(Exception error)
         {
             try
             {
-                downloadClient.DownloadProgressChanged -= downloadClient_DownloadProgressChanged;
-                downloadClient.DownloadFileCompleted -= downloadClient_DownloadFileCompleted;
+                downloadClient.ProgressChanged -= downloadClient_DownloadProgressChanged;
+                downloadClient.Completed -= downloadClient_DownloadFileCompleted;
                 var p = new System.Diagnostics.Process();
                 var psi = new System.Diagnostics.ProcessStartInfo
                 {
@@ -56,9 +56,9 @@ namespace PPDInstaller.Executor
             OnFinish();
         }
 
-        void downloadClient_DownloadProgressChanged(object sender, System.Net.DownloadProgressChangedEventArgs e)
+        void downloadClient_DownloadProgressChanged(int progressPercentage)
         {
-            Progress = e.ProgressPercentage.ToString();
+            Progress = progressPercentage.ToString();
             OnProgress();
         }
     }

@@ -1,6 +1,7 @@
 ﻿using PPDUpdater.Model;
 using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Windows.Forms;
 using System.Xml;
 
@@ -8,6 +9,9 @@ namespace PPDUpdater.Executor
 {
     class CheckUpdateListExecutor : CExecutor
     {
+        // HttpWebRequest と同じく Cookie は保持しない
+        private static readonly HttpClient client = new HttpClient(new HttpClientHandler { UseCookies = false });
+
         public string Url
         {
             get;
@@ -32,9 +36,9 @@ namespace PPDUpdater.Executor
             base.Execute();
             try
             {
-                var webreq = (System.Net.HttpWebRequest)System.Net.WebRequest.Create(Url);
-                var webres = (System.Net.HttpWebResponse)webreq.GetResponse();
-                var st = webres.GetResponseStream();
+                var webres = client.Send(new HttpRequestMessage(HttpMethod.Get, Url), HttpCompletionOption.ResponseHeadersRead);
+                webres.EnsureSuccessStatusCode();
+                var st = webres.Content.ReadAsStream();
                 var temp = new Uri(Url);
                 string host = temp.Scheme + "://" + temp.Host;
                 for (int i = 0; i < temp.Segments.Length - 1; i++)
@@ -53,7 +57,7 @@ namespace PPDUpdater.Executor
                     }
                 }
                 reader.Close();
-                webres.Close();
+                webres.Dispose();
                 UpdateInfos.Sort(UpdateInfoComparer.Comparer);
                 Success = true;
             }

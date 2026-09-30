@@ -1,14 +1,13 @@
 ﻿using PPDUpdater.Model;
 using System;
 using System.IO;
-using System.Net;
 using System.Windows.Forms;
 
 namespace PPDUpdater.Executor
 {
     class DownloadUpdateExecutor : CExecutor
     {
-        private WebClient downloadClient;
+        private FileDownloader downloadClient;
 
         public UpdateInfo UpdateInfo
         {
@@ -53,9 +52,9 @@ namespace PPDUpdater.Executor
             }
             FilePath = Path.Combine(Dir, URL.Segments[URL.Segments.Length - 1]);
             updateInfo.FilePath = FilePath;
-            downloadClient = new WebClient();
-            downloadClient.DownloadProgressChanged += downloadClient_DownloadProgressChanged;
-            downloadClient.DownloadFileCompleted += downloadClient_DownloadFileCompleted;
+            downloadClient = new FileDownloader();
+            downloadClient.ProgressChanged += downloadClient_DownloadProgressChanged;
+            downloadClient.Completed += downloadClient_DownloadFileCompleted;
         }
 
         public override void Execute()
@@ -72,20 +71,18 @@ namespace PPDUpdater.Executor
             }
         }
 
-        private void downloadClient_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
+        private void downloadClient_DownloadProgressChanged(int progressPercentage)
         {
-            Progress = e.ProgressPercentage;
+            Progress = progressPercentage;
             OnProgress();
         }
 
-        private void downloadClient_DownloadFileCompleted(object sender, System.ComponentModel.AsyncCompletedEventArgs e)
+        private void downloadClient_DownloadFileCompleted(Exception error)
         {
-            if (e.Error != null) Success = false;
-            else if (e.Cancelled) Success = false;
-            else Success = true;
+            Success = error == null;
             if (!Success)
             {
-                ErrorLog += e.Error.Message;
+                ErrorLog += error.Message;
             }
             else
             {

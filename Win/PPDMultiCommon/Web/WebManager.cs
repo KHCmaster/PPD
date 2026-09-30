@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PPDFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
@@ -23,7 +24,7 @@ namespace PPDMultiCommon.Web
                 var url = String.Format("{0}/createroom?username={1}&roomname={2}&passwordhash={3}&language={4}&port={5}", baseUrl, roomInfo.UserName,
                     HttpUtility.UrlEncode(roomInfo.RoomName), roomInfo.PasswordHash, roomInfo.Language, roomInfo.Port);
                 var req = CreateRequest(url);
-                using (WebResponse res = req.GetResponse())
+                using (var res = req.GetResponse())
                 {
                     using (XmlReader reader = XmlReader.Create(res.GetResponseStream()))
                     {
@@ -54,21 +55,9 @@ namespace PPDMultiCommon.Web
                 return HttpStatusCode.OK;
             }
 
-            try
-            {
-                var url = String.Format("{0}/updateroominfo?token={1}&playercount={2}&scorehash={3}", baseUrl, token, playerCount, scoreHash);
-
-                var req = CreateRequest(url);
-                using (var res = (HttpWebResponse)req.GetResponse())
-                {
-                    return res.StatusCode;
-                }
-            }
-            catch (WebException e)
-            {
-                var response = (HttpWebResponse)e.Response;
-                return response.StatusCode;
-            }
+            var url = String.Format("{0}/updateroominfo?token={1}&playercount={2}&scorehash={3}", baseUrl, token, playerCount, scoreHash);
+            // 成功以外のステータスコードも、例外にせずそのまま返す
+            return SyncHttpClient.GetStatusCode(url);
         }
 
         internal void DeleteRoom()
@@ -82,7 +71,7 @@ namespace PPDMultiCommon.Web
             {
                 var url = String.Format("{0}/deleteroom?token={1}", baseUrl, token);
                 var req = CreateRequest(url);
-                using (WebResponse res = req.GetResponse())
+                using (var res = req.GetResponse())
                 {
                 }
 
@@ -102,7 +91,7 @@ namespace PPDMultiCommon.Web
             try
             {
                 var req = CreateRequest(url);
-                using (WebResponse res = req.GetResponse())
+                using (var res = req.GetResponse())
                 {
                     using (XmlReader reader = XmlReader.Create(res.GetResponseStream()))
                     {
@@ -137,7 +126,7 @@ namespace PPDMultiCommon.Web
             {
                 var list = new List<PPDScoreInfo>();
                 var request = CreateRequest(String.Format("{0}/api/all-score-list", PPDFrameworkCore.Web.WebManager.BaseUrl));
-                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                using (var response = request.GetResponse())
                 using (Stream stream = response.GetResponseStream())
                 using (XmlReader reader = XmlReader.Create(stream))
                 {
@@ -176,7 +165,7 @@ namespace PPDMultiCommon.Web
         private static string GetString(string url)
         {
             var req = CreateRequest(url);
-            using (HttpWebResponse response = (HttpWebResponse)req.GetResponse())
+            using (var response = req.GetResponse())
             {
                 using (StreamReader reader = new StreamReader(response.GetResponseStream()))
                 {
@@ -185,10 +174,27 @@ namespace PPDMultiCommon.Web
             }
         }
 
-        private static HttpWebRequest CreateRequest(string url)
+        private static Request CreateRequest(string url)
         {
-            var req = (HttpWebRequest)HttpWebRequest.Create(url);
-            return req;
+            return new Request(url);
+        }
+
+        /// <summary>
+        /// 送る前のリクエストです（HttpWebRequest の代わり）。
+        /// </summary>
+        private sealed class Request
+        {
+            private readonly string url;
+
+            public Request(string url)
+            {
+                this.url = url;
+            }
+
+            public HttpResponse GetResponse()
+            {
+                return SyncHttpClient.Get(url);
+            }
         }
 
         public static string GetPasswordHash(string password)

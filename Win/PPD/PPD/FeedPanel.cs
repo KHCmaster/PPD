@@ -197,8 +197,7 @@ namespace PPD
                             break;
                     }
 
-                    var webReq = (HttpWebRequest)HttpWebRequest.Create(String.Format(@"http://projectdxxx.me/feed/{0}", feed.Path));
-                    var res = (HttpWebResponse)webReq.GetResponse();
+                    var res = SyncHttpClient.Get(String.Format(@"http://projectdxxx.me/feed/{0}", feed.Path));
 
                     var sb = new StringBuilder();
                     bool shouldRead = false;
@@ -245,7 +244,7 @@ namespace PPD
                         }
                     }
 
-                    res.Close();
+                    res.Dispose();
                     feed.Text = sb.ToString();
                     Generate();
                 }
@@ -349,8 +348,7 @@ namespace PPD
             {
                 try
                 {
-                    var webReq = (HttpWebRequest)HttpWebRequest.Create(@"http://projectdxxx.me/feed/FeedList.xml");
-                    var res = (HttpWebResponse)webReq.GetResponse();
+                    var res = SyncHttpClient.Get(@"http://projectdxxx.me/feed/FeedList.xml");
 
                     using (XmlReader reader = XmlReader.Create(res.GetResponseStream(), new XmlReaderSettings()))
                     {
@@ -368,7 +366,7 @@ namespace PPD
                         }
                     }
 
-                    res.Close();
+                    res.Dispose();
                     feedList.Sort(Compare);
                     while (feedList.Count > 10)
                     {
