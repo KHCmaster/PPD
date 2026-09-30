@@ -132,8 +132,8 @@ Phase 7  配布・更新の仕組みの対応、リリース
   - `RenderCheck.ps1`: 上記をまとめて実行する。`-UpdateBaseline` で基準を作り直す
 - [x] 基準（`Tools/RenderCheck/baseline/`、git 管理外）を保存した。シーン画像 8 枚（DX11）と Mod の結果（Mod 28 個・譜面スクリプト 17 個、既定値 2,488 件）。
   - 注意: 最初に撮った基準は、DX11 の初期化が失敗して DX9 に切り替わった状態で撮られていた（原因は不明、その後は再現しない）。Phase 1 後に DX11 のみの状態で撮り直した。
-- [ ] PPDTest に不足しているシーンを追加する。例: Glass ブレンド（背景に模様を敷く）、ボーダー、モザイク。→ **Phase 2 の着手前に行う**（Effects11 置き換えの検証に必要）。動画シーンは曲を置けば動作する（確認済み）。
-- [ ] 実プレイの確認手順書（チェックリスト）を作る。確認対象は次のとおり。
+- [x] PPDTest に不足しているシーンを追加した（Phase 2 の前）。`EffectScene` で、ガラス（模様のある背景の上）、モザイク、ボーダー（内側・中央、乗算）、ブレンド + 半透明 + フィルタ + マスク、フィルタの 2 段重ねを確認する。動画シーンは曲を置けば動作する（確認済み）。
+- [x] 実プレイの確認手順書（チェックリスト）を作った → `play_checklist.md`（2026-09-30）。確認対象は次のとおり。
   - 起動、選曲、プレイ、リザルト
   - 動画付き譜面
   - エディター（PPDEditor）での編集と再生
@@ -165,7 +165,7 @@ Phase 7  配布・更新の仕組みの対応、リリース
   - `PPD.ini` の `shaderdisabled` / `directx11` / `movieplaytype` / `multisample` は読まなくなった（書かれていても無視される）
   - PPDConfig の「シェーダーを無効化」「DirectX11で描画する」、PPDEditor の「シェーダーを無効化」メニューと `-disableshader` の受け渡し
   - 起動引数 `-disableshader`（`PPDSetting.Initialize` の `disableShader` 引数ごと削除）
-  - PPDConfig の「アンチエイリアス」は DX9 時代から実際には効いていなかった（TODO のまま）。画面配置の都合で残しているが、Phase 3 以降で削除を検討する
+  - PPDConfig の「アンチエイリアス」は DX9 時代から実際には効いていなかった（TODO のまま）。→ 2026-09-30 に削除した（項目と各言語の文字列。`PPD.ini` に `multisample` を書かなくなった。下の項目は上に詰めた）
 - [x] `PPD\Update\Checker.cs` と `PPDReleaser` の DLL 一覧から `SharpDX.Direct3D9.dll` を外した。
 - [x] `compile_shader.bat` を DX11 のみに変更した。
 - [x] DX11 の初期化に失敗したとき、原因（例外のメッセージ）を「DirectXのデバイスを初期化できませんでした」の後に表示するようにした（`GameCoreBase.InitializeDirectXException`）。DX9 への逃げ道がなくなったため。
@@ -249,12 +249,12 @@ Phase 7  配布・更新の仕組みの対応、リリース
 - [x] ビルド後のコピー処理を MSBuild のターゲットに置き換えた（`Directory.Build.targets` の `CopyFlowScriptPlugin`）。
   - FlowScriptEngine* の 7 プロジェクトは、コピー先を `FlowScriptPluginFolder` で指定する
   - 従来は Release ビルドでも Debug の DLL をコピーしていたので、Debug ビルドのときだけコピーするようにした
-- [ ] リソース（.resx）の対応。byte[] や画像を `ResXFileRef` で持つ .resx が 142 個ある。net48 を Visual Studio の MSBuild でビルドする限りは今のままで動く。.NET では文字列以外のリソースに `System.Resources.Extensions` が必要になるので、**Phase 4 で追加する**。
+- [x] リソース（.resx）の対応（→ Phase 4 で確認。パッケージの追加は不要だった）。byte[] や画像を `ResXFileRef` で持つ .resx が 142 個ある。net48 を Visual Studio の MSBuild でビルドする限りは今のままで動く。.NET では文字列以外のリソースに `System.Resources.Extensions` が必要になるので、**Phase 4 で追加する**。
 - [x] 使われていない EntityFramework / System.Data.SQLite.EF6 / System.Data.SQLite.Linq（と、これらをまとめて参照する System.Data.SQLite パッケージ）を削除した。
   - コードが使っているのは `System.Data.SQLite`（ADO.NET）だけなので、System.Data.SQLite.Core だけを残した
   - 5 つの app.config から、EF の設定セクションと EF6 のプロバイダー登録を削除した
   - `Checker.cs` / `PPDReleaser` の DLL 一覧からも外した
-- [ ] 依存パッケージを整理する（2 章の表）。**.NET Framework と .NET 10 の両方で動く版を選び**、このフェーズで先に更新しておく。
+- [x] 依存パッケージを整理する（2 章の表）。**.NET Framework と .NET 10 の両方で動く版を選び**、このフェーズで先に更新しておく。
   - [x] MvvmLight → **CommunityToolkit.Mvvm 8.4.2** と Microsoft.Xaml.Behaviors.Wpf に置き換えた。
     - 途中で自前の小さなライブラリ（PPDMvvm）にしたが、CommunityToolkit.Mvvm を使う方針にして置き換えた
     - 置き換えの対応
@@ -282,7 +282,7 @@ Phase 7  配布・更新の仕組みの対応、リリース
     - 0.86 と 1.3.3 の間で作成・展開を相互に行い、日本語のファイル名・フォルダー・空フォルダーが一致することを確認した
   - [x] YamlDotNet は **5.1.0 のままにする**。既知の脆弱性はなく、netstandard1.3 版で .NET 10 でも動く。新しい版は `Yaml.Dump` ノードの出力書式が変わる可能性があり、Mod の互換を優先した
   - [x] morelinq は `MinBy` / `MaxBy` の 2 か所だけだったので、`OrderBy(...).First()`（安定ソートなので同じ要素を返す）に置き換えて削除した。新しい morelinq は戻り値の型が変わっているうえ、.NET 10 の `Enumerable.MinBy` と名前がぶつかるため
-  - [ ] MessagePack（1.9.11）→ **Phase 4 で行う**。
+  - [x] MessagePack（1.9.11）→ Phase 4 で 3.1.10 に上げた。
     - 2.x / 3.x は net48 では依存 DLL が多い（System.Memory、Unsafe 6.x、Collections.Immutable など）。PPDMulti は skins から読み込まれるため、PPD.exe でバインディングリダイレクトの問題が起きやすい。.NET 10 ではこれらが標準に含まれるので、移行後に行う
     - 通信互換の確認用に `Tools/ProjectCheck/MessagePackDump.ps1` を作った（Phase 4 で .NET 10 用の `Tools/ProjectCheck/MessagePackDump` に置き換えた）
       - 34 種類の通信データ型に決まった値（日本語の文字列、入れ子の配列、Tuple を含む）を入れてシリアライズし、バイト列を書き出す
@@ -356,7 +356,8 @@ Phase 7  配布・更新の仕組みの対応、リリース
     - Mod 28 個・譜面スクリプト 17 個の既定値が、.NET Framework で作った基準と完全に一致した
     - PPDEditor、PPDConfig、KeyConfiger、Effect2DEditor、BMSTOPPD、FlowScriptControlTest、BezierDrawControlTest、PPDExpansion が起動する
     - Debug / Release ともビルドできる
-  - 未確認: 高 DPI（PPDConfig は同じ見た目だった）、プラグインの読み込みの細かい動作（skins / dlls は動作している）、DirectShow の動画（PPDTest の動画シーンは表示される）- [x] PPDEditor の統計ウィンドウ（`DockForm/StatsManager`）は WinForms の `System.Windows.Forms.DataVisualization`（Chart）を使っている。これは .NET 10 に含まれないので、.NET 向けの移植版（NuGet の `WinForms.DataVisualization` など）に置き換える。（Phase 3 で見つけた）
+  - 未確認: 高 DPI（PPDConfig は同じ見た目だった）、プラグインの読み込みの細かい動作（skins / dlls は動作している）、DirectShow の動画（PPDTest の動画シーンは表示される）
+- [x] PPDEditor の統計ウィンドウ（`DockForm/StatsManager`）は WinForms の `System.Windows.Forms.DataVisualization`（Chart）を使っている。これは .NET 10 に含まれないので、.NET 向けの移植版（NuGet の `WinForms.DataVisualization` など）に置き換える。（Phase 3 で見つけた）
 - [x] MessagePack を 1.9.11 から **3.1.10** に上げた（Phase 3 から移した）。MessagePackAnalyzer（1.x 用）は削除した。
   - コードの変更は不要だった
   - 通信互換の確認ツールを .NET 10 用に作り直した（`Tools/ProjectCheck/MessagePackDump`）。1.9.11 で作った基準（`messagepack_v1.txt`）と比べ、34 種類の通信データ全てで次のことを確認した
@@ -365,7 +366,7 @@ Phase 7  配布・更新の仕組みの対応、リリース
     - 後ろに別のメッセージが続いていても、先頭の 1 つを読める（`Parser` が前提にしている動作）
   - ツールが基準を作った .ps1 と同じ値を作ることは、1.9.11 の .NET 10 ビルドで基準と完全に一致することで確認した
   - 使い方: `MessagePackDump.exe <PPDMultiCommon.dll と MessagePack.dll のあるフォルダー> --compare Tools\ProjectCheck\messagepack_v1.txt`
-- [ ] ShaderCompiler、PPDReleaser、FolderDiffChecker などのツール類も移行する。
+- [x] ShaderCompiler、PPDReleaser、FolderDiffChecker などのツール類も移行した（ソリューションの全 54 プロジェクトが net10.0-windows。ShaderCompiler はビルドのたびに実行され、FolderDiffChecker は起動を確認した）。PPDReleaser の配布ファイルの一覧を .NET の構成（`*.exe.config` の代わりに `*.runtimeconfig.json` / `*.deps.json` など）にするのは Phase 7 で行う。
 
 **完了条件**: .NET 10 で全体がビルドでき、回帰テストと実プレイ確認が通る。
 
@@ -458,7 +459,18 @@ Phase 7  配布・更新の仕組みの対応、リリース
   - `TextureDataBase.DataStream` は PPDFramework の `DataStream`（`UnmanagedMemoryStream` に `DataPointer` を加えたもの）にした。Vortice の DataStream はポインターから作れないため
 - [x] Direct2D / DirectWrite / WIC（2026-09-30）: Direct2DImageEncoder を Vortice.Direct2D1 に置き換えた。SharpDX の既定値（D2D はシングルスレッド、DirectWrite は Shared、エンコーダーは NoCache）に合わせた。Dispose していなかった `TextFormat` と `WICStream` を Dispose するようにした
 - [x] `EnableReleaseOnFinalizer`: SharpGen.Runtime にも同じ設定（`SharpGen.Runtime.Configuration.EnableReleaseOnFinalizer`）があるので、GameCoreBase で同じように有効にした（ファイナライザーで COM の参照を解放する。SharpDX と同じ動作）。
-  - この設定への依存をなくす（全て Dispose で解放し、ReportLiveObjects で漏れを確かめる）のは今後の課題として残す
+- [x] COM オブジェクトの解放漏れを調べる仕組みを作り、見つかった漏れを直した（2026-09-30）。
+  - 環境変数 `PPD_COM_DIAGNOSTICS=1` で起動すると（`PPDFramework/ComDiagnostics.cs`）、次のことをして結果を実行ファイルのフォルダーの `com_diagnostics.log` に書き出す
+    - ファイナライザーでの解放を止め、SharpGen のオブジェクト追跡を有効にする。ゲームの破棄の後に、Dispose されていない COM オブジェクトの型と数を書き出す
+    - D3D11 のデバイスをデバッグレイヤー付きで作り、デバイスの破棄の直前に `ReportLiveDeviceObjects` の結果を書き出す
+    - Dispose されていないテクスチャについて、作成した場所（スタックトレース）を書き出す
+  - 見つかって直した漏れ
+    - `Workspace` の最初の描画先（1600x900 のレンダーターゲット）: `Dispose` がプールに返すだけで、テクスチャを破棄していなかった
+    - 文字のテクスチャ（`SizeTexture`、1024x1024）: 破棄の処理がなかった
+    - Direct2D / DirectWrite / WIC のファクトリー: 破棄していなかった
+    - PPDTest: 終了時にシーンなどを破棄していなかった。また閉じるボタンで終了できなかったので、終了できるようにした
+  - 結果: PPD（起動 → ホーム → 終了）は、デバイス以外に残っているオブジェクトがゼロになった。PPDTest（全シーン → 終了）は、動画のテクスチャ 5 個だけが残る。これは動画の破棄が非同期（1〜2 秒後に解放）なためで、プレイ中は解放される
+  - ファイナライザーでの解放（`EnableReleaseOnFinalizer`）は、**安全策として残す**。プレイ、エディター、マルチプレイの経路はまだ測っていないため。実プレイの確認のときに `PPD_COM_DIAGNOSTICS=1` で漏れを測り、漏れがなくなったら外す
 - 確認した結果（2026-09-30）
   - `SharpDX*` のパッケージ・DLL への参照はゼロ（PPD.deps.json にも出てこない）。Debug / Release ともビルドできる
   - シーン 0〜7 の画素比較が通った（文字は D2D で描画している）。PPD の起動・終了でアクセス違反なし。Mod 28 個・譜面スクリプト 17 個の既定値が一致
@@ -506,7 +518,7 @@ Phase 7  配布・更新の仕組みの対応、リリース
 | ビルド | ソリューション全体（Debug / Release、x64） | エラーなし |
 | 描画の回帰 | PPDTest の全シーンを自動撮影し、基準画像と画素比較 | 差分が輪郭の数画素以内。差分画像を目視確認 |
 | 終了時の例外 | 簡易デバッガーで PPD を起動・終了 | アクセス違反なし、終了コード 0 |
-| 実プレイ | チェックリスト（Phase 0 で作成） | 全項目 OK |
+| 実プレイ | チェックリスト（`play_checklist.md`） | 全項目 OK |
 | 性能 | タイトル・選曲・プレイ中の FPS、起動時間、メモリ使用量 | 移行前と同等以上 |
 | 互換性 | 既存の `PPD.db`、`PPD.ini`、譜面・譜面スクリプト、同梱スキン | 読み込めて同じ動作 |
 | マルチプレイ | 新旧クライアント・サーバーの組み合わせ（MessagePack 更新時） | 想定どおりの互換性（非互換にする場合は明示） |
