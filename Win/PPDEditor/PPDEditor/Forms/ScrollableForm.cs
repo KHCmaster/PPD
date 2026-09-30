@@ -142,5 +142,14 @@ namespace PPDEditor.Forms
                 }
             }
         }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                timer?.Dispose();
+            }
+            base.Dispose(disposing);
+        }
     }
 }

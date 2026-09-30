@@ -88,5 +88,14 @@ namespace FlowScriptControl.Controls
         }
 
 
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                timer?.Dispose();
+            }
+            base.Dispose(disposing);
+        }
     }
 }

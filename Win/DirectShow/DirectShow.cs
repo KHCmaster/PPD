@@ -2090,7 +2090,7 @@ namespace DirectShow
             AllocFormat(nSize);
             if (pFormat != IntPtr.Zero)
             {
-                COMHelper.API.CopyMemory(formatPtr, pFormat, formatSize);
+                COMHelper.NativeMethods.CopyMemory(formatPtr, pFormat, formatSize);
             }
         }
 
@@ -3105,10 +3105,6 @@ namespace DirectShow
 
     public static class DsError
     {
-        [DllImport("quartz.dll", CharSet = CharSet.Unicode, ExactSpelling = true, EntryPoint = "AMGetErrorTextW"),
-        SuppressUnmanagedCodeSecurity]
-        public static extern int AMGetErrorText(int hr, StringBuilder buf, int max);
-
         public static void ThrowExceptionForHR(int hr)
         {
             // If a severe error has occurred
@@ -3137,7 +3133,7 @@ namespace DirectShow
             var buf = new StringBuilder(MAX_ERROR_TEXT_LEN, MAX_ERROR_TEXT_LEN);
 
             // If a string is returned, build a com error from it
-            if (AMGetErrorText(hr, buf, MAX_ERROR_TEXT_LEN) > 0)
+            if (COMHelper.NativeMethods.AMGetErrorText(hr, buf, MAX_ERROR_TEXT_LEN) > 0)
             {
                 return buf.ToString();
             }

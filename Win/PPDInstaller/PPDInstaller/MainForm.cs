@@ -379,7 +379,7 @@ namespace PPDInstaller
             {
                 if (confirmPanel1.InstallInfo.RegisterToMenu)
                 {
-                    var programs = Win32API.GetCommonStartmenuPath();
+                    var programs = NativeMethods.GetCommonStartmenuPath();
                     var main = Path.Combine(programs, "PPD");
                     CreateDirectory(main);
                     if (confirmPanel1.InstallInfo.PPD)

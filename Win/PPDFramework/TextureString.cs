@@ -143,11 +143,16 @@ namespace PPDFramework
         }
 
         /// <summary>
-        /// デストラクタ
+        /// 破棄します。Dispose されずに回収されたときも、文字のキャッシュへの参照を返します（従来の動作）。
         /// </summary>
-        ~TextureString()
+        /// <param name="disposing">Dispose から呼ばれたときは true、ファイナライザーから呼ばれたときは false。</param>
+        protected override void Dispose(bool disposing)
         {
-            Dispose();
+            if (!disposing)
+            {
+                DisposeResource();
+            }
+            base.Dispose(disposing);
         }
 
         private void InnerStruct()

@@ -83,5 +83,14 @@ namespace FlowScriptControlTest
         {
             Output?.Invoke(str);
         }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                resetEvent?.Dispose();
+            }
+            base.Dispose(disposing);
+        }
     }
 }

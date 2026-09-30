@@ -17,6 +17,12 @@
             {
                 components.Dispose();
             }
+            if (disposing)
+            {
+                CheckBack?.Dispose();
+                timer?.Dispose();
+                moveMatrix?.Dispose();
+            }
             base.Dispose(disposing);
         }
 

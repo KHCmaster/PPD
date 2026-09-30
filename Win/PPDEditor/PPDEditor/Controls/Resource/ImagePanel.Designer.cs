@@ -17,6 +17,10 @@
             {
                 components.Dispose();
             }
+            if (disposing)
+            {
+                DisposeImage();
+            }
             base.Dispose(disposing);
         }
 

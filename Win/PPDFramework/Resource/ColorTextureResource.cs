@@ -48,14 +48,6 @@ namespace PPDFramework.Resource
         }
 
         /// <summary>
-        /// デストラクタ
-        /// </summary>
-        ~ColorTextureResource()
-        {
-            Dispose();
-        }
-
-        /// <summary>
         /// 破棄します
         /// </summary>
         protected override void DisposeResource()

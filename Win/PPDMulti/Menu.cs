@@ -23,6 +23,7 @@ namespace PPDMulti
 {
     public class Menu : NetworkSceneBase
     {
+        private readonly object syncRoot = new object();
         enum LastPlayState
         {
             TryToPlayGame = 0,
@@ -113,7 +114,7 @@ namespace PPDMulti
             });
             AddProcessor<GoToPlayNetworkData>(networkData =>
             {
-                lock (this)
+                lock (syncRoot)
                 {
                     clientHandledData.Clear();
                 }
@@ -562,7 +563,7 @@ namespace PPDMulti
                 var pingNetworkData = readInfo.NetworkData as PingNetworkData;
                 client.Write(MessagePackSerializer.Serialize(new PingNetworkData { Time = pingNetworkData.Time }));
             }
-            lock (this)
+            lock (syncRoot)
             {
                 clientHandledData.Enqueue(readInfo.NetworkData);
             }
@@ -649,7 +650,7 @@ namespace PPDMulti
         {
             var networkData = new CloseConnectNetworkData { Reason = CloseConnectReason.HostCloseTcp };
 
-            lock (this)
+            lock (syncRoot)
             {
                 clientHandledData.Enqueue(networkData);
             }
@@ -974,7 +975,7 @@ namespace PPDMulti
             while (clientHandledData.Count > 0)
             {
                 NetworkData networkData = null;
-                lock (this)
+                lock (syncRoot)
                 {
                     networkData = clientHandledData.Dequeue();
                 }
@@ -1064,7 +1065,7 @@ namespace PPDMulti
             client.Close();
             client.Closed -= client_Closed;
             client.Read -= client_Read;
-            movieManager.Stop();
+            movieManager.Dispose();
             base.DisposeResource();
         }
     }

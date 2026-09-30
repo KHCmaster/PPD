@@ -28,7 +28,7 @@ namespace FlowScriptDrawControl.Dialog
 
         protected override void OnSourceInitialized(EventArgs e)
         {
-            Win32.RemoveIcon(this);
+            NativeMethods.RemoveIcon(this);
         }
 
         private void okButton_Click(object sender, RoutedEventArgs e)

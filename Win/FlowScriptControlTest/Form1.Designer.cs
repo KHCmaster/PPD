@@ -17,6 +17,10 @@
             {
                 components.Dispose();
             }
+            if (disposing)
+            {
+                consoleWriter?.Dispose();
+            }
             base.Dispose(disposing);
         }
 

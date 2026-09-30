@@ -318,8 +318,13 @@ namespace PPDCore
             }
             if (controllerClient != null)
             {
-                controllerClient.Close();
+                controllerClient.Dispose();
                 controllerClient = null;
+            }
+            if (debugController != null)
+            {
+                debugController.Dispose();
+                debugController = null;
             }
         }
     }

@@ -4,9 +4,9 @@ using System.Text;
 
 namespace PPDInstaller
 {
-    class Win32API
+    class NativeMethods
     {
-        [DllImport("shell32.dll")]
+        [DllImport("shell32.dll", CharSet = CharSet.Unicode)]
         static extern bool SHGetSpecialFolderPath(IntPtr hwndOwner, [Out] StringBuilder lpszPath, int nFolder, bool fCreate);
         const int CSIDL_COMMON_PROGRAMS = 0x17;
 
@@ -16,5 +16,8 @@ namespace PPDInstaller
             SHGetSpecialFolderPath(IntPtr.Zero, path, CSIDL_COMMON_PROGRAMS, false);
             return path.ToString();
         }
+
+        [DllImport("kernel32.dll")]
+        internal static extern int GetACP();
     }
 }

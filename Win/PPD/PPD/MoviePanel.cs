@@ -729,6 +729,8 @@ namespace PPD
 
         class LoadablePictureComponent : GameComponent
         {
+            // isLoading は全インスタンスで共有するので、ロックも共有する
+            static readonly object loadingLock = new object();
             static bool isLoading;
 
             PPDFramework.Resource.ResourceManager resourceManager;
@@ -805,7 +807,7 @@ namespace PPD
             {
                 while (true)
                 {
-                    lock (this)
+                    lock (loadingLock)
                     {
                         if (!isLoading)
                         {
@@ -820,7 +822,7 @@ namespace PPD
                 picture.Alpha = 0;
                 this.AddChild(picture);
 
-                lock (this)
+                lock (loadingLock)
                 {
                     isLoading = false;
                 }

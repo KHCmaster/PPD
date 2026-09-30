@@ -52,5 +52,14 @@ namespace PPDEditor.Controls
             DrawToBuffer(grafx.Graphics);
             Refresh();
         }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                grafx?.Dispose();
+            }
+            base.Dispose(disposing);
+        }
     }
 }

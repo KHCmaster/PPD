@@ -171,6 +171,7 @@ namespace PPDEditor.Controls.Resource
         private void CanvasSizeChanged()
         {
             CreateCheckBack(canvasPanel.Width);
+            moveMatrix?.Dispose();
             moveMatrix = new Matrix();
             moveMatrix.Translate(canvasPanel.Width / 2, canvasPanel.Height / 2);
         }

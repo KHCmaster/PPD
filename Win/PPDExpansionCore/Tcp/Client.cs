@@ -4,7 +4,7 @@ using System.Net.Sockets;
 
 namespace PPDExpansionCore.Tcp
 {
-    public class Client : Base
+    public class Client : Base, IDisposable
     {
         private TcpClient tcpClient;
         private bool connected;
@@ -90,6 +90,27 @@ namespace PPDExpansionCore.Tcp
         {
             connected = false;
             Close();
+        }
+
+        /// <summary>
+        /// 接続を閉じます（Close() と同じ）。
+        /// </summary>
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        /// <summary>
+        /// 破棄します。
+        /// </summary>
+        /// <param name="disposing">Dispose から呼ばれたときは true。</param>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                Close();
+            }
         }
     }
 }

@@ -10,13 +10,6 @@ namespace PPDEditor.Controls
         Seekmain sm;
         int num = -1;
         int anchorx;
-
-        //Pens and Brush
-        Brush area = Brushes.LightGray;
-        Pen border = Pens.Gray;
-        Brush text = Brushes.Black;
-        Pen hline = Pens.Gray;
-
         Image[] images;
 
         public Seekex()
@@ -55,10 +48,10 @@ namespace PPDEditor.Controls
             }
 
             g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-            area = new SolidBrush(PPDEditorSkin.Skin.TimeLineSeekAreaColor);
-            border = new Pen(PPDEditorSkin.Skin.TimeLineSeekAreaBorderColor);
-            text = new SolidBrush(PPDEditorSkin.Skin.TimeLineTextColor);
-            hline = new Pen(PPDEditorSkin.Skin.TimeLineHorizontalLineColor);
+            using var area = new SolidBrush(PPDEditorSkin.Skin.TimeLineSeekAreaColor);
+            using var border = new Pen(PPDEditorSkin.Skin.TimeLineSeekAreaBorderColor);
+            using var text = new SolidBrush(PPDEditorSkin.Skin.TimeLineTextColor);
+            using var hline = new Pen(PPDEditorSkin.Skin.TimeLineHorizontalLineColor);
             if (BackgroundImage != null)
             {
                 g.DrawImage(BackgroundImage, new Point(0, 0));

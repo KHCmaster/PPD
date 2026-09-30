@@ -17,6 +17,11 @@
             {
                 components.Dispose();
             }
+            if (disposing)
+            {
+                tpf?.Dispose();
+                bb?.Dispose();
+            }
             base.Dispose(disposing);
         }
 

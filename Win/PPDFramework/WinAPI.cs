@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 
 namespace PPDFramework
 {
-    internal static class WinAPI
+    internal static class NativeMethods
     {
         public const int IMN_CLOSESTATUSWINDOW = 0x1;
         public const int IMN_OPENSTATUSWINDOW = 0x2;
@@ -215,7 +215,7 @@ namespace PPDFramework
         [DllImport("imm32.dll")]
         public static extern Int32 ImmGetCompositionStringW(IntPtr imContext, int index, byte[] out_string, int maxStringLen);
 
-        [DllImport("imm32.dll")]
+        [DllImport("imm32.dll", CharSet = CharSet.Unicode)]
         public static extern Int32 ImmSetCompositionStringW(IntPtr imContext, UInt32 index, StringBuilder lpComp, UInt32 dwCompLen, StringBuilder lpRead, UInt32 readLen);
 
         [DllImport("imm32.dll")]

@@ -166,29 +166,28 @@ namespace PPDInput
 
         protected virtual void ReleaseObjects()
         {
-            if (loaded)
+            // Load が途中で失敗した（loaded が false の）場合も、作成済みのデバイスを解放する
+            // キーボードデバイスの終了
+            if (this.keyboard != null)
             {
-                // キーボードデバイスの終了
-                if (this.keyboard != null)
-                {
-                    this.keyboard.Unacquire();
-                    this.keyboard.Dispose();
-                }
-                // ジョイスティックデバイスの終了
-                foreach (IDirectInputDevice8 joystick in joysticks)
-                {
-                    if (joystick != null)
-                    {
-                        joystick.Unacquire();
-                        joystick.Dispose();
-                    }
-                }
-                joysticks.Clear();
-                joystickNames.Clear();
-                currentJoyStickIndex = -1;
-
-                loaded = false;
+                this.keyboard.Unacquire();
+                this.keyboard.Dispose();
+                this.keyboard = null;
             }
+            // ジョイスティックデバイスの終了
+            foreach (IDirectInputDevice8 joystick in joysticks)
+            {
+                if (joystick != null)
+                {
+                    joystick.Unacquire();
+                    joystick.Dispose();
+                }
+            }
+            joysticks.Clear();
+            joystickNames.Clear();
+            currentJoyStickIndex = -1;
+
+            loaded = false;
         }
 
         protected IDirectInputDevice8 GetJoystickFromIndex(int joyStickIndex)
@@ -209,7 +208,7 @@ namespace PPDInput
             GC.SuppressFinalize(this);
         }
 
-        private void Dispose(bool disposing)
+        protected virtual void Dispose(bool disposing)
         {
             if (!this.disposed)
             {

@@ -2,7 +2,7 @@
 
 namespace PPDCore
 {
-    class Win32API
+    class NativeMethods
     {
         [DllImport("winmm.dll")]
         public static extern long timeGetTime();

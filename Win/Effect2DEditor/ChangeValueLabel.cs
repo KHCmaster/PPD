@@ -49,6 +49,14 @@ namespace Effect2DEditor
             timer.Start();
         }
 
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                timer?.Dispose();
+            }
+            base.Dispose(disposing);
+        }
     }
     public class ValueChangeEventArgs : EventArgs
     {

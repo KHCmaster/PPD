@@ -9,6 +9,7 @@ namespace PPDSingle
 {
     class UpdateScoreControl : FocusableGameComponent
     {
+        private readonly object syncRoot = new object();
         const int MaxDisplayCount = 13;
         const int scrollBarStartY = 80;
         const int scrollBarMaxHeight = 330;
@@ -119,7 +120,7 @@ namespace PPDSingle
 
         void Instance_ScoreUpdateFailed(int obj, SongInformation songInfo)
         {
-            lock (this)
+            lock (syncRoot)
             {
                 updateSucess.Add(false);
                 updateIndex = obj;
@@ -128,7 +129,7 @@ namespace PPDSingle
 
         void Instance_ScoreUpdated(int obj, SongInformation songInfo)
         {
-            lock (this)
+            lock (syncRoot)
             {
                 updateSucess.Add(true);
                 updatedSongInformations.Add(songInfo);
@@ -171,7 +172,7 @@ namespace PPDSingle
 
         private void CheckUpdateIndex()
         {
-            lock (this)
+            lock (syncRoot)
             {
                 if (updateIndex < scrollIndex)
                 {

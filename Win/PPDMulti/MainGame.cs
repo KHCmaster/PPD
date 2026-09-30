@@ -18,6 +18,7 @@ namespace PPDMulti
 {
     class MainGame : NetworkSceneBase
     {
+        private readonly object syncRoot = new object();
         enum FadeOutAction
         {
             None,
@@ -70,7 +71,7 @@ namespace PPDMulti
         {
             AddProcessor<CloseNetworkData>(networkData =>
             {
-                lock (this)
+                lock (syncRoot)
                 {
                     clientHandledData.Clear();
                     SceneManager.PopCurrentScene(null);
@@ -128,7 +129,7 @@ namespace PPDMulti
             });
             AddProcessor<JustGoToMenuNetworkData>(networkData =>
             {
-                lock (this)
+                lock (syncRoot)
                 {
                     clientHandledData.Clear();
                 }
@@ -384,7 +385,7 @@ namespace PPDMulti
 
         void TcpByteReader_ByteReaded(ReadInfo readInfo, int id)
         {
-            lock (this)
+            lock (syncRoot)
             {
                 clientHandledData.Enqueue(readInfo.NetworkData);
             }
@@ -447,7 +448,7 @@ namespace PPDMulti
         {
             var networkData = new CloseNetworkData();
 
-            lock (this)
+            lock (syncRoot)
             {
                 clientHandledData.Enqueue(networkData);
             }
@@ -499,7 +500,7 @@ namespace PPDMulti
             while (clientHandledData.Count > 0)
             {
                 NetworkData networkData = null;
-                lock (this)
+                lock (syncRoot)
                 {
                     networkData = clientHandledData.Dequeue();
                 }
@@ -520,7 +521,7 @@ namespace PPDMulti
 
         private void GoToMenu(Tuple<int, Result>[] results)
         {
-            lock (this)
+            lock (syncRoot)
             {
                 clientHandledData.Clear();
             }

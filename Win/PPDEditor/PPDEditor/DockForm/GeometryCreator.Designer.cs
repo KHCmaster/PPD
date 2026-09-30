@@ -18,6 +18,10 @@ namespace PPDEditor
             {
                 components.Dispose();
             }
+            if (disposing)
+            {
+                hinttimergc?.Dispose();
+            }
             base.Dispose(disposing);
         }
 

@@ -3,10 +3,10 @@ using System.Threading;
 
 namespace FlowScriptEngine
 {
-    public class DebugController
+    public class DebugController : IDisposable
     {
         private OperationType operationType;
-        private ManualResetEvent resetEvent;
+        private readonly ManualResetEvent resetEvent = new ManualResetEvent(false);
         private FlowSourceManager currentFlowSourceManager;
 
         public event Action<string, FlowSourceManager> SourceChanged;
@@ -35,8 +35,7 @@ namespace FlowScriptEngine
         {
             abortRequested = true;
             operationType = OperationType.Abort;
-            // ブレークポイントで止まっていないとき（まだ一度も待っていないとき）は resetEvent がない
-            resetEvent?.Set();
+            resetEvent.Set();
         }
 
         public void Continue()
@@ -72,7 +71,7 @@ namespace FlowScriptEngine
         {
             currentFlowSourceManager = flowSourceManager;
             operationType = OperationType.Wait;
-            resetEvent = new ManualResetEvent(false);
+            resetEvent.Reset();
             Waiting = true;
             OnOperationWaited(flowSourceManager);
             while (operationType == OperationType.Wait)
@@ -101,6 +100,27 @@ namespace FlowScriptEngine
         internal void OnSourceChanged(string str, FlowSourceManager flowSourceManager)
         {
             SourceChanged?.Invoke(str, flowSourceManager);
+        }
+
+        /// <summary>
+        /// 破棄します。
+        /// </summary>
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        /// <summary>
+        /// 破棄します。
+        /// </summary>
+        /// <param name="disposing">Dispose から呼ばれたときは true。</param>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                resetEvent.Dispose();
+            }
         }
     }
 }

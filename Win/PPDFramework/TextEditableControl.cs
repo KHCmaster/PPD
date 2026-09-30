@@ -363,27 +363,27 @@ namespace PPDFramework
             {
                 switch (m.Msg)
                 {
-                    case WinAPI.WM_IME_COMPOSITION:
+                    case NativeMethods.WM_IME_COMPOSITION:
                         if (IsTextEditMode)
                         {
-                            if ((m.LParam.ToInt32() & WinAPI.GCS_RESULTSTR) != 0)
+                            if ((m.LParam.ToInt32() & NativeMethods.GCS_RESULTSTR) != 0)
                             {
-                                var str = GetIMEString(WinAPI.GCS_RESULTSTR);
+                                var str = GetIMEString(NativeMethods.GCS_RESULTSTR);
                                 ReplaceString(str);
                             }
-                            else if ((m.LParam.ToInt32() & WinAPI.GCS_COMPSTR) != 0)
+                            else if ((m.LParam.ToInt32() & NativeMethods.GCS_COMPSTR) != 0)
                             {
-                                //Console.WriteLine(GetIMEString(WinAPI.GCS_COMPSTR));
+                                //Console.WriteLine(GetIMEString(NativeMethods.GCS_COMPSTR));
                             }
                         }
 
                         break;
-                    case WinAPI.WM_IME_STARTCOMPOSITION:
+                    case NativeMethods.WM_IME_STARTCOMPOSITION:
                         OnIMEStart();
                         UpdateCaret();
-                        WinAPI.SetImeWindowFont(Handle, Font);
+                        NativeMethods.SetImeWindowFont(Handle, Font);
                         break;
-                    case WinAPI.WM_IME_ENDCOMPOSITION:
+                    case NativeMethods.WM_IME_ENDCOMPOSITION:
                         break;
                 }
             }
@@ -401,12 +401,12 @@ namespace PPDFramework
             string text;
             IntPtr ime;
             int len;
-            ime = WinAPI.ImmGetContext(Handle);
-            len = WinAPI.ImmGetCompositionStringW(ime, gcs, null, 0);
+            ime = NativeMethods.ImmGetContext(Handle);
+            len = NativeMethods.ImmGetCompositionStringW(ime, gcs, null, 0);
             byte[] buf = new byte[len];
-            WinAPI.ImmGetCompositionStringW(ime, gcs, buf, len);
+            NativeMethods.ImmGetCompositionStringW(ime, gcs, buf, len);
             text = System.Text.Encoding.Unicode.GetString(buf, 0, buf.Length);
-            WinAPI.ImmReleaseContext(Handle, ime);
+            NativeMethods.ImmReleaseContext(Handle, ime);
             return text;
         }
 
@@ -477,7 +477,7 @@ namespace PPDFramework
         private void UpdateCaret()
         {
             // move IMM window to caret position
-            WinAPI.SetImeWindowPos(Handle, TextBoxLocation);
+            NativeMethods.SetImeWindowPos(Handle, TextBoxLocation);
         }
 
         /// <summary>

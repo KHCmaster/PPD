@@ -17,6 +17,11 @@
             {
                 components.Dispose();
             }
+            if (disposing)
+            {
+                tooltip?.Dispose();
+                timer?.Dispose();
+            }
             base.Dispose(disposing);
         }
 

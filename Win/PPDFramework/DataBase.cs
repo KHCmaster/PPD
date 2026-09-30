@@ -9,7 +9,7 @@ namespace PPDFramework
     /// <summary>
     /// データベースの基底クラスです
     /// </summary>
-    public abstract class DataBase
+    public abstract class DataBase : IDisposable
     {
         SQLiteConnection connection;
         readonly object lockObject = new object();
@@ -285,6 +285,27 @@ namespace PPDFramework
         public void AddColumn(string tableName, string columnName, string columnType, string defaultValue)
         {
             ExecuteNonQueryCommand(string.Format("ALTER TABLE {0} ADD COLUMN {1} {2} default {3};", tableName, columnName, columnType, defaultValue));
+        }
+
+        /// <summary>
+        /// データベースを閉じます（Close() と同じ）。
+        /// </summary>
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        /// <summary>
+        /// 破棄します。
+        /// </summary>
+        /// <param name="disposing">Dispose から呼ばれたときは true。</param>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                Close();
+            }
         }
     }
 }

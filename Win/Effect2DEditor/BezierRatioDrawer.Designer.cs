@@ -17,6 +17,10 @@
             {
                 components.Dispose();
             }
+            if (disposing)
+            {
+                grafx?.Dispose();
+            }
             base.Dispose(disposing);
         }
 

@@ -23,7 +23,11 @@ namespace PPDFramework
         {
         }
 
-        private void Dispose(bool disposing)
+        /// <summary>
+        /// 破棄します。
+        /// </summary>
+        /// <param name="disposing">Dispose から呼ばれたときは true、ファイナライザーから呼ばれたときは false。</param>
+        protected virtual void Dispose(bool disposing)
         {
             if (disposing)
             {

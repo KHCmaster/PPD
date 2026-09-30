@@ -10,7 +10,7 @@ using System.Threading;
 
 namespace PPDCore
 {
-    public class TcpDebugControllerHost : TcpDebugControllerBase
+    public class TcpDebugControllerHost : TcpDebugControllerBase, IDisposable
     {
         private TcpListener listener;
         private TcpClient client;
@@ -284,6 +284,27 @@ namespace PPDCore
         private void OnLogReceived(string logType, string logText)
         {
             LogReceived?.Invoke(logType, logText);
+        }
+
+        /// <summary>
+        /// 接続を閉じます（Close() と同じ）。
+        /// </summary>
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        /// <summary>
+        /// 破棄します。
+        /// </summary>
+        /// <param name="disposing">Dispose から呼ばれたときは true。</param>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                Close();
+            }
         }
     }
 }

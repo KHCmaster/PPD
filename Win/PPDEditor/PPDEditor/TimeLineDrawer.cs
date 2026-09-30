@@ -9,23 +9,6 @@ namespace PPDEditor
     {
         public const int CircleWidth = 10;
 
-        //Pens and Brush
-        Brush area = Brushes.LightGray;
-        Pen border = Pens.Gray;
-        Brush text = Brushes.Black;
-        Pen hline = Pens.Gray;
-        Pen time = Pens.Red;
-        Pen vline1 = Pens.DarkSlateGray;
-        Pen vline2 = Pens.Silver;
-        Pen vline3 = new Pen(Color.FromArgb(204, 204, 204));
-        Pen vline4 = Pens.Green;
-        Pen vline5 = Pens.LightGreen;
-        Brush selection = Brushes.SkyBlue;
-        Brush mark = Brushes.Black;
-        Brush selectedmark = Brushes.Blue;
-        Brush diffmark = new SolidBrush(Color.FromArgb(128, 0, 0, 0));
-        Brush holdExtent = new SolidBrush(Color.Orange);
-
         public void Draw(TimeLineDrawParameter parameter)
         {
             if (parameter == null)
@@ -33,19 +16,19 @@ namespace PPDEditor
                 return;
             }
 
-            area = new SolidBrush(PPDEditorSkin.Skin.TimeLineSeekAreaColor);
-            border = new Pen(PPDEditorSkin.Skin.TimeLineSeekAreaBorderColor);
-            text = new SolidBrush(PPDEditorSkin.Skin.TimeLineTextColor);
-            hline = new Pen(PPDEditorSkin.Skin.TimeLineHorizontalLineColor);
-            time = new Pen(PPDEditorSkin.Skin.TimeLineCurrentTimeColor);
-            vline1 = new Pen(PPDEditorSkin.Skin.TimeLineVerticalLineColor1);
-            vline2 = new Pen(PPDEditorSkin.Skin.TimeLineVerticalLineColor2);
-            vline3 = new Pen(PPDEditorSkin.Skin.TimeLineVerticalLineColor3);
-            vline4 = new Pen(PPDEditorSkin.Skin.TimeLineVerticalLineColor4);
-            vline5 = new Pen(PPDEditorSkin.Skin.TimeLineVerticalLineColor5);
-            selection = new SolidBrush(PPDEditorSkin.Skin.TimeLineSelectionAreaColor);
-            selectedmark = new SolidBrush(PPDEditorSkin.Skin.TimeLineSelectedMarkColor);
-            holdExtent = new SolidBrush(PPDEditorSkin.Skin.TimeLineHoldExtentColor);
+            using var area = new SolidBrush(PPDEditorSkin.Skin.TimeLineSeekAreaColor);
+            using var border = new Pen(PPDEditorSkin.Skin.TimeLineSeekAreaBorderColor);
+            using var text = new SolidBrush(PPDEditorSkin.Skin.TimeLineTextColor);
+            using var hline = new Pen(PPDEditorSkin.Skin.TimeLineHorizontalLineColor);
+            using var time = new Pen(PPDEditorSkin.Skin.TimeLineCurrentTimeColor);
+            using var vline1 = new Pen(PPDEditorSkin.Skin.TimeLineVerticalLineColor1);
+            using var vline2 = new Pen(PPDEditorSkin.Skin.TimeLineVerticalLineColor2);
+            using var vline3 = new Pen(PPDEditorSkin.Skin.TimeLineVerticalLineColor3);
+            using var vline4 = new Pen(PPDEditorSkin.Skin.TimeLineVerticalLineColor4);
+            using var vline5 = new Pen(PPDEditorSkin.Skin.TimeLineVerticalLineColor5);
+            using var selection = new SolidBrush(PPDEditorSkin.Skin.TimeLineSelectionAreaColor);
+            using var selectedmark = new SolidBrush(PPDEditorSkin.Skin.TimeLineSelectedMarkColor);
+            using var holdExtent = new SolidBrush(PPDEditorSkin.Skin.TimeLineHoldExtentColor);
 
             parameter.Graphics.FillRectangle(Brushes.White, new Rectangle(0, 0, parameter.Width, parameter.Height));
             if (parameter.BackGroundImage != null && parameter.Width > 0 && parameter.Height > 0)
@@ -159,8 +142,8 @@ namespace PPDEditor
                 foreach (var layer in layers)
                 {
                     var sheet = layer.PPDData;
-                    mark = new SolidBrush(layer.MarkColor);
-                    diffmark = new SolidBrush(Color.FromArgb(64 * layer.MarkColor.A / 255, layer.MarkColor));
+                    using var mark = new SolidBrush(layer.MarkColor);
+                    using var diffmark = new SolidBrush(Color.FromArgb(64 * layer.MarkColor.A / 255, layer.MarkColor));
                     bool isSelectedLayer = sheet == WindowUtility.LayerManager.SelectedPpdSheet;
                     iter = 0;
                     foreach (var row in rows)

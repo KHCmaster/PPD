@@ -18,6 +18,10 @@ namespace PPDEditor.Forms
             {
                 components.Dispose();
             }
+            if (disposing)
+            {
+                currentProcess?.Dispose();
+            }
             base.Dispose(disposing);
         }
 

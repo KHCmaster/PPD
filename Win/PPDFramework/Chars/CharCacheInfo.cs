@@ -213,9 +213,9 @@ namespace PPDFramework.Chars
 
         private TextureBase CreateTextureByWinAPI(PPDDevice device)
         {
-            var metrics = new WinAPI.GLYPHMETRICS();
-            var tmetrics = new WinAPI.TEXTMETRIC();
-            var matrix = new WinAPI.MAT2();
+            var metrics = new NativeMethods.GLYPHMETRICS();
+            var tmetrics = new NativeMethods.TEXTMETRIC();
+            var matrix = new NativeMethods.MAT2();
             TextureBase texture = null;
             matrix.eM11.value = 1;
             matrix.eM12.value = 0;
@@ -225,13 +225,13 @@ namespace PPDFramework.Chars
             using (Graphics g = Graphics.FromHwnd(IntPtr.Zero))
             {
                 var hdc = g.GetHdc();
-                var prev = WinAPI.SelectObject(hdc, font.ToHfont());
-                var bufferSize = (int)WinAPI.GetGlyphOutlineW(hdc, Character, (uint)6, out metrics, 0, IntPtr.Zero, ref matrix);
+                var prev = NativeMethods.SelectObject(hdc, font.ToHfont());
+                var bufferSize = (int)NativeMethods.GetGlyphOutlineW(hdc, Character, (uint)6, out metrics, 0, IntPtr.Zero, ref matrix);
                 var buffer = Marshal.AllocHGlobal(bufferSize);
                 try
                 {
                     uint ret;
-                    if ((ret = WinAPI.GetGlyphOutlineW(hdc, Character, (uint)6, out metrics, (uint)bufferSize, buffer, ref matrix)) > 0 && WinAPI.GetTextMetrics(hdc, ref tmetrics))
+                    if ((ret = NativeMethods.GetGlyphOutlineW(hdc, Character, (uint)6, out metrics, (uint)bufferSize, buffer, ref matrix)) > 0 && NativeMethods.GetTextMetrics(hdc, ref tmetrics))
                     {
                         int iBmp_w = metrics.gmBlackBoxX + (4 - (metrics.gmBlackBoxX % 4)) % 4;
                         int iBmp_h = metrics.gmBlackBoxY;
@@ -251,7 +251,7 @@ namespace PPDFramework.Chars
                                 Marshal.Copy(buffer, data, 0, bufferSize);
                                 int offset1 = (iOfs_x + iOfs_y * t_width) * 4;
                                 int offset2 = (iOfs_x + t_width - iOfs_x - iBmp_w) * 4;
-                                WinAPI.ZeroMemory(rec.DataPointer, (uint)rec.Length);
+                                NativeMethods.ZeroMemory(rec.DataPointer, (uint)rec.Length);
                                 var writedata = new byte[] { (byte)255, (byte)255, (byte)255, (byte)255 };
                                 for (int i = 0; i < iBmp_h; i++)
                                 {
@@ -284,8 +284,8 @@ namespace PPDFramework.Chars
                 }
                 finally
                 {
-                    WinAPI.SelectObject(hdc, prev);
-                    WinAPI.DeleteObject(prev);
+                    NativeMethods.SelectObject(hdc, prev);
+                    NativeMethods.DeleteObject(prev);
                     g.ReleaseHdc(hdc);
                     Marshal.FreeHGlobal(buffer);
                 }

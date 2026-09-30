@@ -3,7 +3,7 @@ using System;
 
 namespace PPDMulti
 {
-    class MovieManager
+    sealed class MovieManager : IDisposable
     {
         MovieComponent movie;
         SongInformation currentSongInformation;
@@ -39,6 +39,14 @@ namespace PPDMulti
             }
             movie.Dispose();
             movie = null;
+        }
+
+        /// <summary>
+        /// 動画を止めて破棄します（Stop と同じ）。
+        /// </summary>
+        public void Dispose()
+        {
+            Stop();
         }
 
         public void Change(bool reload)

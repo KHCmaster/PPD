@@ -30,13 +30,6 @@ namespace PPDEditor.Forms
 {
     public partial class EditorForm : Form, IGameForm, IMovieManager, ISongInfo
     {
-        [DllImport("winmm.dll")]
-        static extern long timeGetTime();
-        [DllImport("winmm.dll")]
-        static extern void timeBeginPeriod(int x);
-        [DllImport("winmm.dll")]
-        static extern void timeEndPeriod(int x);
-
 
         const string rescuedirectory = "rescueddata";
         const string dockxmlname = "dockforminfo.xml";
@@ -163,7 +156,7 @@ namespace PPDEditor.Forms
             stm = new StatsManager();
 
             Grid = new SquareGrid();
-            timeBeginPeriod(1);
+            NativeMethods.timeBeginPeriod(1);
             WindowUtility.MainForm = this;
             WindowUtility.BPMMeasure = bm;
             WindowUtility.DXForm = dxf;
@@ -998,7 +991,7 @@ namespace PPDEditor.Forms
                     this.MyGame.StartRecord();
                     this.MyGame.StartPlay();
                     PlayMovie();
-                    starttime = timeGetTime();
+                    starttime = NativeMethods.timeGetTime();
                 }
             }
         }
@@ -1015,10 +1008,10 @@ namespace PPDEditor.Forms
         public void UpdateStatus()
         {
             UpdateMovieStatus();
-            if (timeGetTime() - movielastime > 50)
+            if (NativeMethods.timeGetTime() - movielastime > 50)
             {
                 tlf.Seekmain.Currenttime = MovieInitialized ? MoviePosition : 0;
-                movielastime = timeGetTime();
+                movielastime = NativeMethods.timeGetTime();
             }
         }
 
@@ -2492,15 +2485,6 @@ namespace PPDEditor.Forms
             MyGame.ChangeData(positions, angles);
         }
 
-        [System.Runtime.InteropServices.DllImport("user32.dll")]
-        static extern IntPtr GetSystemMenu(IntPtr hWnd, bool bRevert);
-        [System.Runtime.InteropServices.DllImport("user32.dll")]
-        static extern int GetMenuItemCount(IntPtr hMenu);
-        [System.Runtime.InteropServices.DllImport("user32.dll")]
-        static extern bool DrawMenuBar(IntPtr hWnd);
-        [System.Runtime.InteropServices.DllImport("user32.dll")]
-        static extern bool RemoveMenu(IntPtr hMenu, uint uPosition, uint uFlags);
-
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
@@ -2509,14 +2493,14 @@ namespace PPDEditor.Forms
 
             const UInt32 SC_CLOSE = 0x0000F060;
             const UInt32 MF_BYCOMMAND = 0x00000000;
-            var menu = GetSystemMenu(this.Handle, false);
-            RemoveMenu(menu, SC_CLOSE, MF_BYCOMMAND);
-            var menuCount = GetMenuItemCount(menu);
+            var menu = NativeMethods.GetSystemMenu(this.Handle, false);
+            NativeMethods.RemoveMenu(menu, SC_CLOSE, MF_BYCOMMAND);
+            var menuCount = NativeMethods.GetMenuItemCount(menu);
             if (menuCount > 1)
             {
                 //メニューの「閉じる」を削除
-                RemoveMenu(menu, (uint)(menuCount - 1), MF_BYPOSITION | MF_REMOVE);
-                DrawMenuBar(this.Handle);
+                NativeMethods.RemoveMenu(menu, (uint)(menuCount - 1), MF_BYPOSITION | MF_REMOVE);
+                NativeMethods.DrawMenuBar(this.Handle);
             }
         }
 
@@ -3297,10 +3281,6 @@ namespace PPDEditor.Forms
             toolStripContainer1.TopToolStripPanelVisible = !ツールバーを隠すToolStripMenuItem.Checked;
         }
 
-        [DllImport("user32.dll")]
-        private static extern int GetWindowRect(IntPtr hWnd,
-                                                ref Rectangle lpRect);
-
         protected override void WndProc(ref Message m)
         {
             switch (m.Msg)
@@ -3309,7 +3289,7 @@ namespace PPDEditor.Forms
                 case 0xA0:
                     int x, y;
                     var windowRect = new Rectangle();
-                    GetWindowRect(m.HWnd, ref windowRect);
+                    NativeMethods.GetWindowRect(m.HWnd, ref windowRect);
                     // Extract the least significant 16 bits
                     x = ((int)m.LParam << 16) >> 16;
                     // Extract the most significant 16 bits

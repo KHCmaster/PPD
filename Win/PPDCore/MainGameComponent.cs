@@ -447,7 +447,7 @@ namespace PPDCore
             if (startTime < 0)
             {
                 waitingMovieStart = true;
-                lastTime = Win32API.timeGetTime();
+                lastTime = NativeMethods.timeGetTime();
             }
             else
             {
@@ -667,7 +667,7 @@ namespace PPDCore
             if (startTime < 0)
             {
                 waitingMovieStart = true;
-                lastTime = Win32API.timeGetTime();
+                lastTime = NativeMethods.timeGetTime();
             }
             else if (movie != null && movie.Initialized)
             {
@@ -816,7 +816,7 @@ namespace PPDCore
             {
                 if (waitingMovieStart)
                 {
-                    var temptime = Win32API.timeGetTime();
+                    var temptime = NativeMethods.timeGetTime();
                     lastTime = (long)((-tempLastTime + startTime) * 1000 + temptime);
                 }
                 else
@@ -948,7 +948,7 @@ namespace PPDCore
                 if (startTime < 0)
                 {
                     waitingMovieStart = true;
-                    lastTime = Win32API.timeGetTime();
+                    lastTime = NativeMethods.timeGetTime();
                 }
                 else
                 {
@@ -1019,7 +1019,7 @@ namespace PPDCore
         private void PreUpdate(float time, InputInfoBase inputInfo, Action<int> progressCallback = null)
         {
             currentMovieTime = time;
-            currentTime = Win32API.timeGetTime();
+            currentTime = NativeMethods.timeGetTime();
 
             if (playDecorder != null)
             {
@@ -1244,7 +1244,7 @@ namespace PPDCore
             time += PPDSetting.Setting.MovieLatency + aprilFoolMovieLatency + latencyUpdater.Latency;
             if (waitingMovieStart && state == State.Playing)
             {
-                var deftime = Win32API.timeGetTime();
+                var deftime = NativeMethods.timeGetTime();
                 /*if ((deftime - lasttime) / (double)1000 >= Math.Abs(ppdgameutil.StartTime + util.startgap) && !movie.Playing)
                 {
                     movie.Play();

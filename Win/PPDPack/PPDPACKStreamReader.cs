@@ -5,6 +5,7 @@ namespace PPDPack
 {
     public class PPDPackStreamReader : Stream
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2213:Disposable fields should be disposed", Justification = "元のストリームは PackReader が所有し、破棄する")]
         Stream _baseStream;
         int _length;
         int _offset;

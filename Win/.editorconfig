@@ -1,0 +1,8 @@
+# 外部から取り込んだコードは、元のコードとの差分を小さく保つため、アナライザー（CA 規則）の対象外にする。
+# - PPDSound/fmod*.cs: FMOD Ex の C# ラッパー（Firelight Technologies）。文字列は FMOD の仕様どおり ANSI で渡す必要がある
+# - WinFormsUI: DockPanel Suite。子コントロールは Controls コレクションで破棄されるため、CA2213 などは誤検知になる
+[PPDSound/fmod*.cs]
+generated_code = true
+
+[WinFormsUI/**.cs]
+generated_code = true

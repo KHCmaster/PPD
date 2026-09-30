@@ -8,8 +8,6 @@ namespace PPDEditor
 {
     public partial class BPMMeasure : ScrollableForm
     {
-        [DllImport("winmm.dll")]
-        static extern long timeGetTime();
         ArrayList data;
         public BPMMeasure()
         {
@@ -52,7 +50,7 @@ namespace PPDEditor
 
         private void button1_MouseDown(object sender, MouseEventArgs e)
         {
-            data.Add(timeGetTime());
+            data.Add(NativeMethods.timeGetTime());
             updateText();
 
         }
@@ -66,7 +64,7 @@ namespace PPDEditor
                 if (e.KeyData == Keys.Return || e.KeyCode == Keys.Space)
                 {
                     e.Handled = true;
-                    data.Add(timeGetTime());
+                    data.Add(NativeMethods.timeGetTime());
                     updateText();
                 }
             }

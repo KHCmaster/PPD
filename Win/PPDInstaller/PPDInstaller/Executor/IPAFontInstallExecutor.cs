@@ -8,9 +8,6 @@ namespace PPDInstaller.Executor
 {
     class IPAFontInstallExecutor : CExecutor
     {
-        [System.Runtime.InteropServices.DllImport("kernel32.dll")]
-        private static extern int GetACP();
-
         public static Uri ipafonturi = new Uri("http://ossipedia.ipa.go.jp/ipafont/ipag00303.php");
         System.Net.WebClient downloadClient = new System.Net.WebClient();
         string filePath;
@@ -61,7 +58,7 @@ namespace PPDInstaller.Executor
                 //copy ipag00302\ipag00302\ipag.ttf %systemroot%\fonts
                 //regedit /s font.reg
                 // バッチファイルと REGEDIT4 形式の .reg はシステムの ANSI コードページで書く（.NET では Encoding.Default が UTF-8 になるため明示する）
-                var ansi = Encoding.GetEncoding(GetACP());
+                var ansi = Encoding.GetEncoding(NativeMethods.GetACP());
                 var sw = new StreamWriter(Path.Combine(dir, "temp.bat"), false, ansi);
                 sw.Write("@echo off");
                 sw.WriteLine();

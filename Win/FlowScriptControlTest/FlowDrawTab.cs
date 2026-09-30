@@ -40,5 +40,14 @@ namespace FlowScriptControlTest
             this.Controls.Add(flowDrawPanel);
             FilePath = Guid.NewGuid().ToString();
         }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                flowDrawPanel?.Dispose();
+            }
+            base.Dispose(disposing);
+        }
     }
 }

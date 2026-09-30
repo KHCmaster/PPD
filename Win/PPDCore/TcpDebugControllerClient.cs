@@ -11,7 +11,7 @@ using System.Threading;
 
 namespace PPDCore
 {
-    public class TcpDebugControllerClient : TcpDebugControllerBase
+    public class TcpDebugControllerClient : TcpDebugControllerBase, IDisposable
     {
         private DebugController debugController;
         private TcpClient tcpClient;
@@ -306,6 +306,27 @@ namespace PPDCore
         {
             connected = false;
             Close();
+        }
+
+        /// <summary>
+        /// 接続を閉じます（Close() と同じ）。
+        /// </summary>
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        /// <summary>
+        /// 破棄します。
+        /// </summary>
+        /// <param name="disposing">Dispose から呼ばれたときは true。</param>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                Close();
+            }
         }
     }
 }

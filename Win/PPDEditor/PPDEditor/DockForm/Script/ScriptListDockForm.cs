@@ -84,7 +84,7 @@ namespace PPDEditor.DockForm.Script
             treeView1.ImageList.Images.Add("script", PPDEditor.Properties.Resources.document);
             treeView1.ImageList.Images.Add("disabled", PPDEditor.Properties.Resources.disabled);
 
-            Win32.ImageList_SetOverlayImage(treeView1.ImageList.Handle, 2, 1);
+            NativeMethods.ImageList_SetOverlayImage(treeView1.ImageList.Handle, 2, 1);
 
             treeView1.Nodes.Add("folder", "Commands").ContextMenuStrip = contextMenuStrip2;
             treeView1.Nodes.Add("folder", "Functions").ContextMenuStrip = contextMenuStrip2;
@@ -291,7 +291,7 @@ namespace PPDEditor.DockForm.Script
                 var node = Utility.GetTreeNodeFromPath(treeView1.Nodes, disable);
                 if (node != null)
                 {
-                    Win32.SetTreeViewOverlay(node, 1);
+                    NativeMethods.SetTreeViewOverlay(node, 1);
                 }
             }
         }
@@ -564,7 +564,7 @@ namespace PPDEditor.DockForm.Script
 
         private void contextMenuStrip1_Opening(object sender, CancelEventArgs e)
         {
-            無効化ToolStripMenuItem.Text = Win32.GetTreeViewOverlay(treeView1.SelectedNode) == 0 ? Utility.Language["MakeInvalid"] : Utility.Language["MakeValid"];
+            無効化ToolStripMenuItem.Text = NativeMethods.GetTreeViewOverlay(treeView1.SelectedNode) == 0 ? Utility.Language["MakeInvalid"] : Utility.Language["MakeValid"];
             無効化ToolStripMenuItem.Enabled = GetRootNode(treeView1.SelectedNode) == ScriptNode;
             名前の変更ToolStripMenuItem.Enabled = ChildNodeSelected;
         }
@@ -576,12 +576,12 @@ namespace PPDEditor.DockForm.Script
 
         private void 無効化ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Win32.SetTreeViewOverlay(treeView1.SelectedNode, EnabledNode(treeView1.SelectedNode) ? (uint)1 : 0);
+            NativeMethods.SetTreeViewOverlay(treeView1.SelectedNode, EnabledNode(treeView1.SelectedNode) ? (uint)1 : 0);
         }
 
         private bool EnabledNode(TreeNode node)
         {
-            return Win32.GetTreeViewOverlay(node) == 0;
+            return NativeMethods.GetTreeViewOverlay(node) == 0;
         }
 
         private void treeView1_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)

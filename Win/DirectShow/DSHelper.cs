@@ -36,7 +36,7 @@ namespace DirectShow
         public const object NULL = null;
 
         public static void _TRACE(string _message) { if (!string.IsNullOrEmpty(_message)) Trace.WriteLine(_message); }
-        public static void TRACE(string _message) { if (!string.IsNullOrEmpty(_message)) _message += "\n"; API.OutputDebugString(_message); }
+        public static void TRACE(string _message) { if (!string.IsNullOrEmpty(_message)) _message += "\n"; NativeMethods.OutputDebugString(_message); }
 
         public static void TRACE_ENTER()
         {
@@ -109,22 +109,22 @@ namespace DirectShow
 
         #region API
 
-        public static class API
+        internal static class NativeMethods
         {
             [DllImport("kernel32.dll", EntryPoint = "OutputDebugStringW", CharSet = CharSet.Unicode)]
-            public static extern void OutputDebugString(string _text);
+            internal static extern void OutputDebugString(string _text);
 
             [DllImport("kernel32.dll", EntryPoint = "RtlMoveMemory")]
-            public static extern void CopyMemory(IntPtr Destination, IntPtr Source, [MarshalAs(UnmanagedType.U4)] int Length);
+            internal static extern void CopyMemory(IntPtr Destination, IntPtr Source, [MarshalAs(UnmanagedType.U4)] int Length);
 
             [DllImport("ole32.dll")]
-            public static extern int CreateBindCtx(int reserved, out IBindCtx ppbc);
+            internal static extern int CreateBindCtx(int reserved, out IBindCtx ppbc);
 
             [DllImport("ole32.dll", CharSet = CharSet.Unicode)]
-            public static extern int MkParseDisplayName(IBindCtx pbc, string szUserName, ref int pchEaten, out IMoniker ppmk);
+            internal static extern int MkParseDisplayName(IBindCtx pbc, string szUserName, ref int pchEaten, out IMoniker ppmk);
 
             [DllImport("olepro32.dll")]
-            public static extern int OleCreatePropertyFrame(
+            internal static extern int OleCreatePropertyFrame(
                 IntPtr hwndOwner,
                 int x,
                 int y,
@@ -138,6 +138,12 @@ namespace DirectShow
                 int dwReserved,
                 IntPtr lpvReserved
                 );
+
+            [DllImport("quartz.dll", EntryPoint = "AMGetErrorText", CharSet = CharSet.Auto)]
+            internal static extern uint AMGetErrorText(int hr, IntPtr sText, [In] uint _length);
+
+            [DllImport("quartz.dll", CharSet = CharSet.Unicode, ExactSpelling = true, EntryPoint = "AMGetErrorTextW")]
+            internal static extern int AMGetErrorText(int hr, System.Text.StringBuilder buf, int max);
         }
 
         #endregion
@@ -417,7 +423,7 @@ namespace DirectShow
             IntPtr _ptr = Marshal.AllocCoTaskMem((int)_length);
             try
             {
-                if (AMGetErrorText(m_Result, _ptr, _length) > 0)
+                if (NativeMethods.AMGetErrorText(m_Result, _ptr, _length) > 0)
                 {
                     _text = Marshal.PtrToStringAuto(_ptr);
                 }
@@ -463,13 +469,6 @@ namespace DirectShow
                     ));
             }
         }
-
-        #endregion
-
-        #region Imports
-
-        [DllImport("quartz.dll", EntryPoint = "AMGetErrorText", CharSet = CharSet.Auto)]
-        private static extern uint AMGetErrorText(int hr, IntPtr sText, [In] uint _length);
 
         #endregion
 
@@ -914,7 +913,7 @@ namespace DirectShow
 
         ~DSObject()
         {
-            Dispose();
+            Dispose(false);
         }
 
         #endregion
@@ -953,7 +952,13 @@ namespace DirectShow
 
         #region IDisposable Members
 
-        public virtual void Dispose()
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
         {
             if (m_bReleaseOnDestroy && m_pUnknown != null)
             {
@@ -1179,10 +1184,10 @@ namespace DirectShow
             IBindCtx _context = null;
             try
             {
-                if (SUCCEEDED(API.CreateBindCtx(0, out _context)))
+                if (SUCCEEDED(NativeMethods.CreateBindCtx(0, out _context)))
                 {
                     int n = 0;
-                    ASSERT(SUCCEEDED(API.MkParseDisplayName(_context, _moniker, ref n, out m_pUnknown)));
+                    ASSERT(SUCCEEDED(NativeMethods.MkParseDisplayName(_context, _moniker, ref n, out m_pUnknown)));
                 }
             }
             finally
@@ -1348,7 +1353,7 @@ namespace DirectShow
 
         #region IDisposable Members
 
-        public override void Dispose()
+        protected override void Dispose(bool disposing)
         {
             if (m_pEnumMoniker != null)
             {
@@ -1362,7 +1367,7 @@ namespace DirectShow
                 m_Objects.RemoveAt(0);
             }
 
-            base.Dispose();
+            base.Dispose(disposing);
         }
 
         #endregion
@@ -2143,7 +2148,7 @@ namespace DirectShow
                 {
                     pProp.GetPages(out DsCAUUID pCAUUID);
                     var oDevice = (object)m_pUnknown;
-                    int hr = API.OleCreatePropertyFrame(_hwnd, 0, 0, Name, 1, ref oDevice, pCAUUID.cElems, pCAUUID.pElems, 0, 0, IntPtr.Zero);
+                    int hr = NativeMethods.OleCreatePropertyFrame(_hwnd, 0, 0, Name, 1, ref oDevice, pCAUUID.cElems, pCAUUID.pElems, 0, 0, IntPtr.Zero);
                     if (hr < 0) Marshal.ThrowExceptionForHR(hr);
                     Marshal.FreeCoTaskMem(pCAUUID.pElems);
                     pProp = null;
@@ -2650,7 +2655,7 @@ namespace DirectShow
 
         #region Overridden Methods
 
-        public override void Dispose()
+        protected override void Dispose(bool disposing)
         {
             m_SampleGrabber = (ISampleGrabber)QueryInterface(typeof(ISampleGrabber));
             if (m_SampleGrabber != null)
@@ -2658,7 +2663,7 @@ namespace DirectShow
                 m_SampleGrabber.SetCallback(null, 0);
                 m_SampleGrabber = null;
             }
-            base.Dispose();
+            base.Dispose(disposing);
         }
 
         #endregion

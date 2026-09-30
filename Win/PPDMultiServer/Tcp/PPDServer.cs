@@ -9,6 +9,7 @@ namespace PPDMultiServer.Tcp
 {
     public class PPDServer : IContextManager
     {
+        private readonly object syncRoot = new object();
         static byte[] PPDPackV2DisconnectBytes = { 80, 80, 68, 80, 65, 67, 75, 86, 50, 51, 0, 0, 0, 23, 0, 0, 0, 7, 0, 0, 0, 0, 0, 10, 0, 77, 101, 116, 104, 111, 100, 84, 121, 112, 101, 2, 0, 0, 0, 6, 0, 82, 101, 97, 115, 111, 110, 4, 0, 0, 0 };
 
         public event EventHandler FailedToCreateRoom;
@@ -154,7 +155,7 @@ namespace PPDMultiServer.Tcp
             while (hostHandledData.Count > 0)
             {
                 NetworkData networkData = null;
-                lock (this)
+                lock (syncRoot)
                 {
                     networkData = hostHandledData.Dequeue();
                 }
@@ -275,7 +276,7 @@ namespace PPDMultiServer.Tcp
                 Id = id
             };
 
-            lock (this)
+            lock (syncRoot)
             {
                 hostHandledData.Enqueue(networkData);
             }
@@ -306,7 +307,7 @@ namespace PPDMultiServer.Tcp
 
         public void Enqueue(NetworkData networkData)
         {
-            lock (this)
+            lock (syncRoot)
             {
                 hostHandledData.Enqueue(networkData);
             }

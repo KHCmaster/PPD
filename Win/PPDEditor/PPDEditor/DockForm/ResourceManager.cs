@@ -87,7 +87,7 @@ namespace PPDEditor
             treeView1.ImageList.Images.Add("sound", PPDEditor.Properties.Resources.sound);
             treeView1.ImageList.Images.Add("others", PPDEditor.Properties.Resources.document);
 
-            Win32.ImageList_SetOverlayImage(treeView1.ImageList.Handle, 1, 1);
+            NativeMethods.ImageList_SetOverlayImage(treeView1.ImageList.Handle, 1, 1);
 
             CreateFolderNode(treeView1.Nodes, "Image");
             CreateFolderNode(treeView1.Nodes, "Effect");
@@ -185,7 +185,7 @@ namespace PPDEditor
                 var node = Utility.GetTreeNodeFromPath(treeView1.Nodes, disable);
                 if (node != null)
                 {
-                    Win32.SetTreeViewOverlay(node, 1);
+                    NativeMethods.SetTreeViewOverlay(node, 1);
                 }
             }
         }
@@ -467,12 +467,12 @@ namespace PPDEditor
 
         private void contextMenuStrip1_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            無効化ToolStripMenuItem.Text = Win32.GetTreeViewOverlay(treeView1.SelectedNode) == 0 ? Utility.Language["MakeInvalid"] : Utility.Language["MakeValid"];
+            無効化ToolStripMenuItem.Text = NativeMethods.GetTreeViewOverlay(treeView1.SelectedNode) == 0 ? Utility.Language["MakeInvalid"] : Utility.Language["MakeValid"];
         }
 
         private bool EnabledNode(TreeNode node)
         {
-            return Win32.GetTreeViewOverlay(node) == 0;
+            return NativeMethods.GetTreeViewOverlay(node) == 0;
         }
 
         private void 削除ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -506,7 +506,7 @@ namespace PPDEditor
         {
             if (treeView1.SelectedNode != null)
             {
-                Win32.SetTreeViewOverlay(treeView1.SelectedNode, EnabledNode(treeView1.SelectedNode) ? (uint)1 : 0);
+                NativeMethods.SetTreeViewOverlay(treeView1.SelectedNode, EnabledNode(treeView1.SelectedNode) ? (uint)1 : 0);
                 ContentChanged();
             }
         }

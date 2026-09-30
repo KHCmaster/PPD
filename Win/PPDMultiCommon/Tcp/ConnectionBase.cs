@@ -9,6 +9,7 @@ namespace PPDMultiCommon.Tcp
 {
     public abstract class ConnectionBase
     {
+        private readonly object syncRoot = new object();
         protected TcpClient client;
         NetworkStream net;
         Thread readThread;
@@ -113,7 +114,7 @@ namespace PPDMultiCommon.Tcp
                         if (net.CanWrite)
                         {
                             byte[] sendData;
-                            lock (this)
+                            lock (syncRoot)
                             {
                                 sendData = jobs.Dequeue();
                             }
@@ -151,7 +152,7 @@ namespace PPDMultiCommon.Tcp
 
         public void Write(byte[] data)
         {
-            lock (this)
+            lock (syncRoot)
             {
                 jobs.Enqueue(data);
             }

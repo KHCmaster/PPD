@@ -18,6 +18,10 @@ namespace PPDEditor
             {
                 components.Dispose();
             }
+            if (disposing)
+            {
+                timer?.Dispose();
+            }
             base.Dispose(disposing);
         }
 

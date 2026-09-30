@@ -163,7 +163,7 @@ namespace PPDFramework
         {
             try
             {
-                var prev = WinAPI.SetThreadExecutionState(WinAPI.EXECUTION_STATE.ES_DISPLAY_REQUIRED);
+                var prev = NativeMethods.SetThreadExecutionState(NativeMethods.EXECUTION_STATE.ES_DISPLAY_REQUIRED);
             }
             catch
             {

@@ -48,6 +48,7 @@ namespace DirectShow
 
         #region Variables
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2213:Disposable fields should be disposed", Justification = "外部から設定されるコントロールで、このクラスは所有しない")]
         protected Control m_VideoControl = null;
         protected Control m_EventControl = new HelperForm();
         protected IGraphBuilder m_GraphBuilder = null;
@@ -69,7 +70,7 @@ namespace DirectShow
 
         ~DSFilterGraphBase()
         {
-            Dispose();
+            Dispose(false);
         }
 
         #endregion
@@ -736,9 +737,19 @@ namespace DirectShow
 
         #region IDisposable Members
 
-        public virtual void Dispose()
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
         {
             CloseInterfaces();
+            if (disposing)
+            {
+                m_EventControl.Dispose();
+            }
         }
 
         #endregion

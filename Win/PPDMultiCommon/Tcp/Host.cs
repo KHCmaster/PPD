@@ -8,7 +8,7 @@ namespace PPDMultiCommon.Tcp
 {
     public delegate void ReadClientEventHandler(byte[] data, int id);
     public delegate void ClosedEventHandler(int id);
-    public class Host
+    public class Host : IDisposable
     {
         public event ReadClientEventHandler ReadClient;
         public event ClosedEventHandler Closed;
@@ -331,6 +331,27 @@ namespace PPDMultiCommon.Tcp
                 {
                     Closed.Invoke(id);
                 }
+            }
+        }
+
+        /// <summary>
+        /// 待ち受けと接続を終了します（Stop() と同じ）。
+        /// </summary>
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        /// <summary>
+        /// 破棄します。
+        /// </summary>
+        /// <param name="disposing">Dispose から呼ばれたときは true。</param>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                Stop();
             }
         }
     }

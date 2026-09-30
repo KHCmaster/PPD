@@ -33,7 +33,20 @@ namespace PPDFramework.Resource
         /// </summary>
         ~ResourceManager()
         {
-            Dispose();
+            Dispose(false);
+        }
+
+        /// <summary>
+        /// 破棄します。Dispose されずに回収されたときも、リソースを破棄します（従来の動作）。
+        /// </summary>
+        /// <param name="disposing">Dispose から呼ばれたときは true、ファイナライザーから呼ばれたときは false。</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (!disposing)
+            {
+                DisposeResource();
+            }
+            base.Dispose(disposing);
         }
 
         /// <summary>

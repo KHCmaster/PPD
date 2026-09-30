@@ -17,7 +17,7 @@ namespace FlowScriptDrawControl.Control
     /// <summary>
     /// FlowAreaControl.xaml の相互作用ロジック
     /// </summary>
-    public partial class FlowAreaControl : UserControl
+    public partial class FlowAreaControl : UserControl, IDisposable
     {
         const int gridThickness = 1;
         const int gridWidth = 10;
@@ -389,6 +389,28 @@ namespace FlowScriptDrawControl.Control
                 currentDestItems = null;
             }
             itemPositionManager = null;
+        }
+
+        /// <summary>
+        /// タイマーを破棄します。
+        /// </summary>
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        /// <summary>
+        /// タイマーを破棄します。
+        /// </summary>
+        /// <param name="disposing">Dispose から呼ばれたときは true。</param>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                DisableMove();
+                DisposeAutoFocusTimer();
+            }
         }
 
         private void DisableMove()

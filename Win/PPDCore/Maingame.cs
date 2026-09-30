@@ -10,7 +10,7 @@ using System.Collections.Generic;
 
 namespace PPDCore
 {
-    public class MainGame : SceneBase, IDisposable, IBlueSkyManager, IReviewManager
+    public class MainGame : SceneBase, IBlueSkyManager, IReviewManager
     {
         enum FadeOutAction
         {

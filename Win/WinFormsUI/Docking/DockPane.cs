@@ -233,7 +233,7 @@ namespace WeifenLuo.WinFormsUI.Docking
             set { m_autoHideTabs = value; }
         }
 
-        private object TabPageContextMenu
+        private ContextMenuStrip TabPageContextMenu
         {
             get
             {
@@ -242,12 +242,7 @@ namespace WeifenLuo.WinFormsUI.Docking
                 if (content == null)
                     return null;
 
-                if (content.DockHandler.TabPageContextMenuStrip != null)
-                    return content.DockHandler.TabPageContextMenuStrip;
-                else if (content.DockHandler.TabPageContextMenu != null)
-                    return content.DockHandler.TabPageContextMenu;
-                else
-                    return null;
+                return content.DockHandler.TabPageContextMenuStrip;
             }
         }
 
@@ -258,19 +253,7 @@ namespace WeifenLuo.WinFormsUI.Docking
 
         internal void ShowTabPageContextMenu(Control control, Point position)
         {
-            object menu = TabPageContextMenu;
-
-            if (menu == null)
-                return;
-
-            if (menu is ContextMenuStrip contextMenuStrip)
-            {
-                contextMenuStrip.Show(control, position);
-                return;
-            }
-
-            if (menu is ContextMenu contextMenu)
-                contextMenu.Show(this, position);
+            TabPageContextMenu?.Show(control, position);
         }
 
         private Rectangle CaptionRectangle

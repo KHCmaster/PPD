@@ -5,7 +5,7 @@ using System.Windows.Interop;
 
 namespace FlowScriptDrawControl
 {
-    class Win32
+    class NativeMethods
     {
         [DllImport("user32.dll")]
         static extern int GetWindowLong(IntPtr hwnd, int index);
