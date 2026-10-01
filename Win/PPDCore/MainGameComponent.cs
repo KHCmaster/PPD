@@ -107,6 +107,7 @@ namespace PPDCore
         bool perfectTrialing;
 
         bool dontUpdateExtraProcess;
+        bool gcPlayStarted;
 
         SpriteObject hiddenSprite;
 
@@ -426,6 +427,10 @@ namespace PPDCore
             {
                 waitingMovieStart = true;
                 lastTime = NativeMethods.timeGetTime();
+                if (play)
+                {
+                    BeginGCPlay();
+                }
             }
             else
             {
@@ -445,7 +450,8 @@ namespace PPDCore
             scriptManager.SuppressErrorLog = true;
             effectManager.SuspendAdd = true;
             dontUpdateExtraProcess = true;
-            Retry();
+            // 読み込み中に並列で計算するので、GC は行わない
+            RetryCore();
             var ret = new List<GhostFrame>();
             playDecorder = PPDPlayDecorder.FromBytes(replayData);
             void lifeChangeHandler(int l)
@@ -648,6 +654,25 @@ namespace PPDCore
                 movie.Play();
             }
             state = State.Playing;
+            BeginGCPlay();
+        }
+
+        /// <summary>
+        /// プレイ中は、止まる形のフル GC を避けるモードにする（ゴーストの計算用のインスタンスは Play を呼ばないので対象外）。
+        /// </summary>
+        private void BeginGCPlay()
+        {
+            gcPlayStarted = true;
+            GCPolicy.BeginPlay();
+        }
+
+        private void EndGCPlay(string reason)
+        {
+            if (gcPlayStarted)
+            {
+                gcPlayStarted = false;
+                GCPolicy.EndPlay(reason);
+            }
         }
 
         protected void OnPause()
@@ -696,6 +721,7 @@ namespace PPDCore
 
         public void ShowResult()
         {
+            EndGCPlay("result");
             ProcessRestRecord();
             movie.Stop();
             if (gameResult != null)
@@ -822,6 +848,13 @@ namespace PPDCore
 
         public void Retry()
         {
+            CollectBeforeRestart("retry");
+            RetryCore();
+            BeginGCPlay();
+        }
+
+        private void RetryCore()
+        {
             if (!superAuto)
             {
                 StartRecord();
@@ -835,8 +868,19 @@ namespace PPDCore
 
         public void Replay()
         {
+            CollectBeforeRestart("replay");
             StartReplay();
             Reset();
+            BeginGCPlay();
+        }
+
+        /// <summary>
+        /// リトライやリプレイの前（画面は暗転している）に、前のプレイのごみをまとめて回収する。
+        /// </summary>
+        private void CollectBeforeRestart(string reason)
+        {
+            EndGCPlay(reason);
+            GCPolicy.CollectNow(reason);
         }
 
         private void Reset()
@@ -1172,6 +1216,10 @@ namespace PPDCore
 
         public void Update(InputInfoBase inputInfo, MouseInfo mouseInfo)
         {
+            if (gcPlayStarted)
+            {
+                GCPolicy.Sample();
+            }
             var time = (float)movie.MoviePosition;
             time += PPDSetting.Setting.MovieLatency + aprilFoolMovieLatency + latencyUpdater.Latency;
             if (waitingMovieStart && state == State.Playing)
@@ -1403,6 +1451,7 @@ namespace PPDCore
         protected override void DisposeResource()
         {
             base.DisposeResource();
+            EndGCPlay("exit");
             movie?.Dispose();
             soundManager?.Dispose();
             gameInterface?.Dispose();

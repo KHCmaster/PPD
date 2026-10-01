@@ -268,6 +268,11 @@ namespace PPDFramework
                 }
                 previousScene = null;
                 device.GetModule<CharCacheManager>().ClearUnUsed();
+                if (nextScene == null)
+                {
+                    // 読み込みのないシーンの切り替え（スタックからのポップなど）。読み込みがある場合は、読み込みの後にまとめて行う
+                    GCPolicy.CollectNow("scene");
+                }
             }
             if (nextScene != null)
             {
@@ -282,6 +287,8 @@ namespace PPDFramework
                     loadingThread.Join();
                     loadingThread = null;
                     device.GetModule<CharCacheManager>().ClearUnUsed();
+                    // 前のシーンの破棄と読み込みで出たごみを、次のシーンが始まる前に回収する
+                    GCPolicy.CollectNow("scene");
                     if (loadResult)
                     {
                         CurrentScene = nextScene;
