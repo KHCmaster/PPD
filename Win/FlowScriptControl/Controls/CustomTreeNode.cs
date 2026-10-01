@@ -7,7 +7,7 @@ using System.Windows.Forms;
 namespace FlowScriptControl.Controls
 {
     [Serializable]
-    public class CustomTreeNode : TreeNode, ISerializable
+    public sealed class CustomTreeNode : TreeNode, ISerializable
     {
         public IToolTipText CustomToolTipText
         {
@@ -57,7 +57,7 @@ namespace FlowScriptControl.Controls
 
         #region ISerializable メンバー
 
-        protected CustomTreeNode(SerializationInfo info, StreamingContext context)
+        private CustomTreeNode(SerializationInfo info, StreamingContext context)
         {
             var address = (IntPtr)info.GetValue("dataAddress", typeof(IntPtr));
             var handle = GCHandle.FromIntPtr(address);

@@ -348,6 +348,19 @@ namespace PPDFramework
         protected override void DisposeResource()
         {
             base.DisposeResource();
+            if (blackRectangles != null)
+            {
+                foreach (var rect in blackRectangles)
+                {
+                    rect?.Dispose();
+                }
+                blackRectangles = null;
+            }
+            if (resourceManager != null)
+            {
+                resourceManager.Dispose();
+                resourceManager = null;
+            }
             if (device != null)
             {
                 device.Dispose();

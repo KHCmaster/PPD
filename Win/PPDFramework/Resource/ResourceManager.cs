@@ -29,24 +29,12 @@ namespace PPDFramework.Resource
         }
 
         /// <summary>
-        /// デストラクタ
+        /// デストラクタ。Dispose されずに回収されたときも、リソースを破棄します。
         /// </summary>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1063:Implement IDisposable Correctly", Justification = "Dispose されなかったリソースマネージャーのリソースを破棄するため")]
         ~ResourceManager()
         {
-            Dispose(false);
-        }
-
-        /// <summary>
-        /// 破棄します。Dispose されずに回収されたときも、リソースを破棄します（従来の動作）。
-        /// </summary>
-        /// <param name="disposing">Dispose から呼ばれたときは true、ファイナライザーから呼ばれたときは false。</param>
-        protected override void Dispose(bool disposing)
-        {
-            if (!disposing)
-            {
-                DisposeResource();
-            }
-            base.Dispose(disposing);
+            Dispose();
         }
 
         /// <summary>

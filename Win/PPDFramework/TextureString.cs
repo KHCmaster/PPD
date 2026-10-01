@@ -12,6 +12,7 @@ namespace PPDFramework
     /// <summary>
     /// Sprite非使用の文字列描画クラス
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1063:Implement IDisposable Correctly", Justification = "Dispose されなかった文字列も、ファイナライザーで文字のキャッシュへの参照を返すため")]
     public class TextureString : GameComponent
     {
         const int ScrollSpeed = 3;
@@ -143,16 +144,11 @@ namespace PPDFramework
         }
 
         /// <summary>
-        /// 破棄します。Dispose されずに回収されたときも、文字のキャッシュへの参照を返します（従来の動作）。
+        /// デストラクタ。Dispose されずに回収されたときも、文字のキャッシュへの参照を返します。
         /// </summary>
-        /// <param name="disposing">Dispose から呼ばれたときは true、ファイナライザーから呼ばれたときは false。</param>
-        protected override void Dispose(bool disposing)
+        ~TextureString()
         {
-            if (!disposing)
-            {
-                DisposeResource();
-            }
-            base.Dispose(disposing);
+            Dispose();
         }
 
         private void InnerStruct()

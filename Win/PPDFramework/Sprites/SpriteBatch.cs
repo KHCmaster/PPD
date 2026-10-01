@@ -222,6 +222,11 @@ namespace PPDFramework.Sprites
                 overlayColorHandle.Dispose();
                 overlayColorHandle = null;
             }
+            if (projectionHandle != null)
+            {
+                projectionHandle.Dispose();
+                projectionHandle = null;
+            }
             if (effect != null)
             {
                 effect.Dispose();

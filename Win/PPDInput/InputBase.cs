@@ -12,6 +12,7 @@ namespace PPDInput
     {
         protected Form window;
         IDirectInput8 di;
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2213:Disposable fields should be disposed", Justification = "Dispose から呼ばれる ReleaseObjects で破棄する")]
         protected IDirectInputDevice8 keyboard;
         List<IDirectInputDevice8> joysticks;
         List<string> joystickNames;

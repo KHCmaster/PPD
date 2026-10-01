@@ -247,6 +247,11 @@ namespace PPDEditor
                 input.Dispose();
                 input = null;
             }
+            if (resourceManager != null)
+            {
+                resourceManager.Dispose();
+                resourceManager = null;
+            }
         }
     }
 }

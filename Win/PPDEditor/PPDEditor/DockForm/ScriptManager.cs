@@ -159,7 +159,7 @@ namespace PPDEditor
             toolStrip1.Visible = false;
             if (controllerHost != null)
             {
-                controllerHost.Close();
+                controllerHost.Dispose();
             }
             foreach (var flowDrawDockForm in FlowDrawForms)
             {

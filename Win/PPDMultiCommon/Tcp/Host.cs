@@ -55,7 +55,7 @@ namespace PPDMultiCommon.Tcp
         {
             if (_listener != null)
             {
-                _listener.Stop();
+                _listener.Dispose();
             }
 
             if (manager != null)

@@ -132,6 +132,16 @@ namespace PPDFramework.Shaders
                 actualThicknessHandle.Dispose();
                 actualThicknessHandle = null;
             }
+            if (widthHeightHandle != null)
+            {
+                widthHeightHandle.Dispose();
+                widthHeightHandle = null;
+            }
+            if (colorHandle != null)
+            {
+                colorHandle.Dispose();
+                colorHandle = null;
+            }
         }
     }
 }

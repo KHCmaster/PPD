@@ -10,7 +10,7 @@ using System.Windows.Threading;
 
 namespace PPDExpansion.ViewModel
 {
-    class MainWindowViewModel : ObservableObject
+    sealed class MainWindowViewModel : ObservableObject, IDisposable
     {
         private readonly Dispatcher dispatcher;
 
@@ -269,13 +269,21 @@ namespace PPDExpansion.ViewModel
             WeakReferenceMessenger.Default.Send(new CloseWindowMessage(this));
         }
 
-        private void ClosedCommand_Execute()
+        /// <summary>
+        /// PPD との接続を閉じます。
+        /// </summary>
+        public void Dispose()
         {
             if (host != null)
             {
-                host.Close();
+                host.Dispose();
                 host = null;
             }
+        }
+
+        private void ClosedCommand_Execute()
+        {
+            Dispose();
             PPDExpansionSetting.Setting.Width = Width;
             PPDExpansionSetting.Setting.Height = Height;
         }

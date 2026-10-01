@@ -84,6 +84,11 @@ namespace PPDFramework.Sprites
             }
         }
 
+        /// <summary>
+        /// パスから拡大率の部分（例: "image.2_1.png" の ".2_1"）を取り除きます。
+        /// </summary>
+        /// <param name="path">パス。</param>
+        /// <returns>拡大率を取り除いたパス。</returns>
         public static string RemoveScale(string path)
         {
             return scaleRegex.Replace(path, (match) =>

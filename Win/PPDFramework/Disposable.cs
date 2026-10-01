@@ -5,7 +5,7 @@ namespace PPDFramework
     /// <summary>
     /// 処分可能なオブジェクトです。
     /// </summary>
-    public class Disposable : IDisposable
+    public sealed class Disposable : IDisposable
     {
         bool disposed;
         Action disposedCallback;
@@ -28,11 +28,7 @@ namespace PPDFramework
             GC.SuppressFinalize(this);
         }
 
-        /// <summary>
-        /// 破棄します。
-        /// </summary>
-        /// <param name="disposing">Dispose から呼ばれたときは true、ファイナライザーから呼ばれたときは false。</param>
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (!this.disposed)
             {

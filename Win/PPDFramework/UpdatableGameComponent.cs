@@ -5,6 +5,7 @@ namespace PPDFramework
     /// <summary>
     /// 更新可能なゲームコンポーネントクラス
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1063:Implement IDisposable Correctly", Justification = "派生クラスは DisposeResource をオーバーライドして破棄する設計。子のコンポーネントは親が破棄する")]
     public abstract class UpdatableGameComponent : IUpdatable, IDisposable
     {
         /// <summary>
@@ -35,11 +36,7 @@ namespace PPDFramework
         {
         }
 
-        /// <summary>
-        /// 破棄します。
-        /// </summary>
-        /// <param name="disposing">Dispose から呼ばれたときは true、ファイナライザーから呼ばれたときは false。</param>
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (!this.disposed)
             {

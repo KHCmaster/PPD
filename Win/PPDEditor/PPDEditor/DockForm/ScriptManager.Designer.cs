@@ -17,6 +17,10 @@
             {
                 components.Dispose();
             }
+            if (disposing)
+            {
+                controllerHost?.Dispose();
+            }
             base.Dispose(disposing);
         }
 

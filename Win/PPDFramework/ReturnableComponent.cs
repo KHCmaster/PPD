@@ -5,6 +5,7 @@ namespace PPDFramework
     /// <summary>
     /// 返却可能なオブジェクトです。
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1063:Implement IDisposable Correctly", Justification = "派生クラスは DisposeResource をオーバーライドして破棄する設計")]
     public class ReturnableComponent : IDisposable
     {
         /// <summary>
@@ -23,11 +24,7 @@ namespace PPDFramework
         {
         }
 
-        /// <summary>
-        /// 破棄します。
-        /// </summary>
-        /// <param name="disposing">Dispose から呼ばれたときは true、ファイナライザーから呼ばれたときは false。</param>
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (disposing)
             {

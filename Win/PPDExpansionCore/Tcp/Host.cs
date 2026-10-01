@@ -75,7 +75,7 @@ namespace PPDExpansionCore.Tcp
 
             if (listener != null)
             {
-                listener.Stop();
+                listener.Dispose();
                 listener = null;
             }
         }

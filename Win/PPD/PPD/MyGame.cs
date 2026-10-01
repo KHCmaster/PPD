@@ -352,6 +352,8 @@ namespace PPD
             DisposeIDisposable(sound);
             DisposeIDisposable(input);
             DisposeIDisposable(homeResourceManager);
+            DisposeIDisposable(movieVolumeSprite);
+            DisposeIDisposable(notifyControl);
         }
 
         private void DisposeIDisposable(IDisposable dispo)

@@ -252,7 +252,8 @@ namespace PPDFramework
             if (string.IsNullOrEmpty(ids)) return new List<LogicFolderInfomation>();
 
             var orderList = PPDDatabase.ParseStringToList(ids);
-            ids = ids.Replace('|', ',');
+            // SQL に埋め込むので、数値として読めた ID だけを使う
+            ids = String.Join(",", orderList);
             var list = new List<LogicFolderInfomation>();
             /*            using (SQLiteDataReader reader = PPDDatabase.ExecuteReader("select * from LogicFolder where folderid in (@ids);", new SQLiteParameter[] {
                             new SQLiteParameter("@ids",ids)}))

@@ -67,7 +67,7 @@ namespace PPDCore
 
             if (listener != null)
             {
-                listener.Stop();
+                listener.Dispose();
                 listener = null;
             }
         }

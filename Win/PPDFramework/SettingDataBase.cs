@@ -34,6 +34,7 @@ namespace PPDFramework
         /// <summary>
         /// コンストラクタです
         /// </summary>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2214:Do not call overridable methods in constructors", Justification = "派生クラスは DB の名前とテーブルの初期値（OnInitialize）だけを決める設計で、派生クラスのフィールドには依存しない")]
         protected SettingDataBase()
         {
             this.Open();

@@ -91,21 +91,34 @@ namespace PPDFramework
             connection = null;
         }
 
+        /// <summary>
+        /// トランザクションを開始します。
+        /// </summary>
         public void Begin()
         {
             ExecuteNonQueryCommand("BEGIN");
         }
 
+        /// <summary>
+        /// トランザクションを確定します。
+        /// </summary>
         public void Commit()
         {
             ExecuteNonQueryCommand("COMMIT");
         }
 
+        /// <summary>
+        /// トランザクションを取り消します。
+        /// </summary>
         public void Rollback()
         {
             ExecuteNonQueryCommand("ROLLBACK");
         }
 
+        /// <summary>
+        /// トランザクションを開始します。返されたオブジェクトを破棄すると確定します。
+        /// </summary>
+        /// <returns>トランザクション。</returns>
         public DataBaseTransaction BeginTransaction()
         {
             return new DataBaseTransaction();
@@ -115,6 +128,7 @@ namespace PPDFramework
         /// SQLを実行します
         /// </summary>
         /// <param name="sql"></param>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Security", "CA2100:Review SQL queries for security vulnerabilities", Justification = "SQL は呼び出し側の固定の文字列で、値はパラメーターで渡す")]
         public void ExecuteNonQueryCommand(string sql)
         {
             lock (lockObject)
@@ -131,6 +145,7 @@ namespace PPDFramework
         /// <param name="sql"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Security", "CA2100:Review SQL queries for security vulnerabilities", Justification = "SQL は呼び出し側の固定の文字列で、値はパラメーターで渡す")]
         public long ExecuteDataTable(string sql, SQLiteParameter[] parameters)
         {
             lock (lockObject)
@@ -158,6 +173,7 @@ namespace PPDFramework
         /// <param name="sql"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Security", "CA2100:Review SQL queries for security vulnerabilities", Justification = "SQL は呼び出し側の固定の文字列で、値はパラメーターで渡す")]
         public DataBaseReader ExecuteReader(string sql, SQLiteParameter[] parameters)
         {
             var lockTaken = false;

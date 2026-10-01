@@ -79,6 +79,11 @@ namespace PPDFramework.Shaders
                 projectionHandle.Dispose();
                 projectionHandle = null;
             }
+            if (widthHeightHandle != null)
+            {
+                widthHeightHandle.Dispose();
+                widthHeightHandle = null;
+            }
         }
     }
 }
