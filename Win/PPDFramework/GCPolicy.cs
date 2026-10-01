@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Runtime;
 using System.Threading;
 
@@ -13,12 +12,10 @@ namespace PPDFramework
     /// <remarks>
     /// シーンの切り替えやリトライの前にまとめて GC を行い、プレイ中は止まる形のフル GC（第 2 世代のブロッキング GC）を避ける。
     /// 第 0・第 1 世代の GC はプレイ中も起きる（ヒープが小さければ短い）。
-    /// ログ（gc_log.txt）は、設定の collectlog が 1 のとき、または環境変数 PPD_GC_LOG が 1 のときに出力する。
+    /// ログは PerformanceLog（performance_log.txt）に出力する。プレイの区間は、1 フレームの処理時間の記録（FrameTimeStatistics）にも使う。
     /// </remarks>
     public static class GCPolicy
     {
-        const string logFileName = "gc_log.txt";
-
         static readonly Lock lockObject = new();
         static readonly Stopwatch playStopwatch = new();
         static bool playing;
@@ -45,11 +42,6 @@ namespace PPDFramework
             }
         }
 
-        private static bool IsLogEnabled()
-        {
-            return PPDSetting.Setting?.CollectLog == true || Environment.GetEnvironmentVariable("PPD_GC_LOG") == "1";
-        }
-
         /// <summary>
         /// フル GC を行い、ファイナライザーの完了を待ちます。シーンの切り替えやリトライの前など、止まってよいときに呼びます。
         /// </summary>
@@ -71,9 +63,9 @@ namespace PPDFramework
                     ResetPlayStatistics();
                 }
             }
-            if (IsLogEnabled())
+            if (PerformanceLog.IsEnabled())
             {
-                WriteLog(String.Format("collect reason={0} time={1:F1}ms heap={2:F1}MB",
+                PerformanceLog.Write(String.Format("collect reason={0} time={1:F1}ms heap={2:F1}MB",
                     reason, stopwatch.Elapsed.TotalMilliseconds, GC.GetTotalMemory(false) / 1024.0 / 1024.0));
             }
         }
@@ -90,7 +82,7 @@ namespace PPDFramework
                     return;
                 }
                 playing = true;
-                logEnabled = IsLogEnabled();
+                logEnabled = PerformanceLog.IsEnabled();
                 previousLatencyMode = GCSettings.LatencyMode;
                 GCSettings.LatencyMode = GCLatencyMode.SustainedLowLatency;
                 ResetPlayStatistics();
@@ -105,6 +97,7 @@ namespace PPDFramework
         {
             string log;
             string[] pauses;
+            string[] frames;
             lock (lockObject)
             {
                 if (!playing)
@@ -114,12 +107,14 @@ namespace PPDFramework
                 // 最後のフレーム以降の GC も拾う（playing を下ろす前に呼ぶ）
                 Sample();
                 playing = false;
+                FrameTimeStatistics.Stop();
                 GCSettings.LatencyMode = previousLatencyMode;
                 if (!logEnabled)
                 {
                     return;
                 }
                 pauses = [.. longPauses];
+                frames = FrameTimeStatistics.Summarize();
                 var end = PlayStatistics.Capture();
                 var seconds = playStopwatch.Elapsed.TotalSeconds;
                 var allocatedMB = (end.AllocatedBytes - playStart.AllocatedBytes) / 1024.0 / 1024.0;
@@ -129,10 +124,14 @@ namespace PPDFramework
                     (end.TotalPause - playStart.TotalPause).TotalMilliseconds, maxPause.TotalMilliseconds,
                     GC.GetTotalMemory(false) / 1024.0 / 1024.0);
             }
-            WriteLog(log);
+            PerformanceLog.Write(log);
+            foreach (var line in frames)
+            {
+                PerformanceLog.Write(line);
+            }
             foreach (var pause in pauses)
             {
-                WriteLog(pause);
+                PerformanceLog.Write(pause);
             }
         }
 
@@ -188,18 +187,7 @@ namespace PPDFramework
             }
             maxPause = TimeSpan.Zero;
             longPauses.Clear();
-        }
-
-        private static void WriteLog(string log)
-        {
-            try
-            {
-                File.AppendAllText(logFileName, String.Format("[{0:yyyy-MM-dd HH:mm:ss}] {1}{2}", DateTime.Now, log, Environment.NewLine));
-            }
-            catch
-            {
-                // ログの出力に失敗しても、ゲームは続ける
-            }
+            FrameTimeStatistics.Begin(logEnabled);
         }
 
         readonly struct PlayStatistics(int gen0Count, int gen1Count, int gen2Count, TimeSpan totalPause, long allocatedBytes)

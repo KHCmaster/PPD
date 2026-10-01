@@ -5,6 +5,7 @@ using PPDFrameworkCore;
 using System.Numerics;
 using PPDMath;
 using System;
+using System.Diagnostics;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -175,12 +176,17 @@ namespace PPDFramework
         /// </summary>
         public void Routine()
         {
+            // 1 フレームの処理時間の記録（プレイ中でログが有効なときだけ記録される）
+            var frameSession = FrameTimeStatistics.CurrentSession;
+            var frameStart = Stopwatch.GetTimestamp();
             nextframe = gameTimer.ElapsedTickTime;
             PreventScreenSaver();
             long last = gameTimer.ElapsedTime;
             double beforeUpdateTime = gameTimer.ElapsedTickTime;
             Update();
             LastUpdateTime = (float)(gameTimer.ElapsedTickTime - beforeUpdateTime);
+            var afterUpdate = Stopwatch.GetTimestamp();
+            long afterDraw = afterUpdate, afterSleep = afterUpdate, afterPresent = afterUpdate;
             long current = gameTimer.ElapsedTime;
             if ((double)current < nextframe + wait)
             {
@@ -198,6 +204,7 @@ namespace PPDFramework
                 DrawEnd();
                 device.DrawEnd();
                 LastDrawTime = (float)(gameTimer.ElapsedTickTime - beforeDrawTime);
+                afterDraw = afterSleep = afterPresent = Stopwatch.GetTimestamp();
                 try
                 {
                     //更新
@@ -206,7 +213,9 @@ namespace PPDFramework
                     {
                         Thread.Sleep(diff);
                     }
+                    afterSleep = Stopwatch.GetTimestamp();
                     device.Present();
+                    afterPresent = Stopwatch.GetTimestamp();
                     lastPresentEndTime = gameTimer.ElapsedTickTime;
                     presentCount++;
                     if (presentCount >= 60)
@@ -223,8 +232,10 @@ namespace PPDFramework
                 catch (SharpGen.Runtime.SharpGenException)
                 {
                     // 表示に失敗したフレームは捨てて、次のフレームで再試行します
+                    afterPresent = Stopwatch.GetTimestamp();
                 }
             }
+            FrameTimeStatistics.Record(frameSession, frameStart, afterUpdate, afterDraw, afterSleep, afterPresent);
         }
 
         /// <summary>
