@@ -19,9 +19,9 @@ powershell -ExecutionPolicy Bypass -File Tools\RenderCheck\RenderCheck.ps1 -Upda
 param(
     [switch]$UpdateBaseline,
     [switch]$SkipPPD,
-    [int]$SceneCount = 9,
+    [int]$SceneCount = 11,
     # 動画など毎回内容が変わるシーン。比較結果は表示するが合否には含めない（目視で確認する）
-    [int[]]$DynamicScenes = @(8),
+    [int[]]$DynamicScenes = @(9, 10),
     [int]$AllowedPixels = 500,
     [switch]$SkipScenes,
     [switch]$SkipMods,

@@ -90,7 +90,14 @@ namespace PPDTest
             testSceneManager.Add(typeof(ScreenFilterScene));
             testSceneManager.Add(typeof(MaskScene));
             testSceneManager.Add(typeof(EffectScene));
+            testSceneManager.Add(typeof(Effect2DScene));
+            testSceneManager.Add(typeof(Effect2DPlayScene));
             testSceneManager.Add(typeof(MovieScene));
+            if (Args.ContainsKey("scene") && !testSceneManager.SetInitialScene(Args["scene"]))
+            {
+                MessageBox.Show(string.Format("シーン「{0}」が見つかりません。最初のシーンから始めます。{1}{1}{2}",
+                    Args["scene"], Environment.NewLine, string.Join(Environment.NewLine, testSceneManager.GetSceneNames())), "PPDTest");
+            }
             var scene = testSceneManager.Initialize();
             SetPropertyToScene(scene);
             scene.Load();
