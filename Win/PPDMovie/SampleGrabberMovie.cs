@@ -153,7 +153,7 @@ namespace PPDMovie
             return 0;
         }
 
-        private IPin GetPin(IBaseFilter filter, string name)
+        private static IPin GetPin(IBaseFilter filter, string name)
         {
             filter.EnumPins(out IEnumPins enumPins);
             IntPtr ptr = IntPtr.Zero;

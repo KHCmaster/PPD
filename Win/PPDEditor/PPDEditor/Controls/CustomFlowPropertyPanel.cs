@@ -111,7 +111,7 @@ namespace PPDEditor.Controls
             return base.ValueButtonClicked(sourceName, propertyName, propertyType);
         }
 
-        private string ShowSuggest(KeyValuePair<string, string>[] suggests)
+        private static string ShowSuggest(KeyValuePair<string, string>[] suggests)
         {
             var suggestForm = new SuggestForm();
             foreach (KeyValuePair<string, string> suggest in suggests)

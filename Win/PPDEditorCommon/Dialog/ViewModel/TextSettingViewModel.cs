@@ -16,7 +16,7 @@ namespace PPDEditorCommon.Dialog.ViewModel
                 if (this.text != value)
                 {
                     this.text = value;
-                    OnPropertyChanged("Text");
+                    OnPropertyChanged(nameof(Text));
                 }
             }
         }

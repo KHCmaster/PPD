@@ -39,7 +39,7 @@ namespace PPDExpansion.ViewModel
                 if (title != value)
                 {
                     title = value;
-                    OnPropertyChanged("Title");
+                    OnPropertyChanged(nameof(Title));
                 }
             }
         }
@@ -52,7 +52,7 @@ namespace PPDExpansion.ViewModel
                 if (isConnected != value)
                 {
                     isConnected = value;
-                    OnPropertyChanged("IsConnected");
+                    OnPropertyChanged(nameof(IsConnected));
                     Title = String.Format("PPDExpansion{0}", isConnected ?
                         String.Format(" - {0}", Utility.Language["Connecting"]) : "");
                 }
@@ -79,7 +79,7 @@ namespace PPDExpansion.ViewModel
                 if (isMulti != value)
                 {
                     isMulti = value;
-                    OnPropertyChanged("IsMulti");
+                    OnPropertyChanged(nameof(IsMulti));
                 }
             }
         }
@@ -92,7 +92,7 @@ namespace PPDExpansion.ViewModel
                 if (showMyHighScore != value)
                 {
                     PPDExpansionSetting.Setting.ShowMyHighScore = showMyHighScore = value;
-                    OnPropertyChanged("ShowMyHighScore");
+                    OnPropertyChanged(nameof(ShowMyHighScore));
                 }
             }
         }
@@ -105,7 +105,7 @@ namespace PPDExpansion.ViewModel
                 if (showWebHighScore != value)
                 {
                     PPDExpansionSetting.Setting.ShowWebHighScore = showWebHighScore = value;
-                    OnPropertyChanged("ShowWebHighScore");
+                    OnPropertyChanged(nameof(ShowWebHighScore));
                 }
             }
         }
@@ -118,7 +118,7 @@ namespace PPDExpansion.ViewModel
                 if (showCurrentStatus != value)
                 {
                     PPDExpansionSetting.Setting.ShowCurrentStatus = showCurrentStatus = value;
-                    OnPropertyChanged("ShowCurrentStatus");
+                    OnPropertyChanged(nameof(ShowCurrentStatus));
                 }
             }
         }
@@ -131,7 +131,7 @@ namespace PPDExpansion.ViewModel
                 if (showGridLines != value)
                 {
                     PPDExpansionSetting.Setting.ShowGridLines = showGridLines = value;
-                    OnPropertyChanged("ShowGridLines");
+                    OnPropertyChanged(nameof(ShowGridLines));
                 }
             }
         }
@@ -144,7 +144,7 @@ namespace PPDExpansion.ViewModel
                 if (showIIDXStyle != value)
                 {
                     PPDExpansionSetting.Setting.ShowIIDXStyle = showIIDXStyle = value;
-                    OnPropertyChanged("ShowIIDXStyle");
+                    OnPropertyChanged(nameof(ShowIIDXStyle));
                 }
             }
         }
@@ -157,7 +157,7 @@ namespace PPDExpansion.ViewModel
                 if (showScoreDiff != value)
                 {
                     PPDExpansionSetting.Setting.ShowScoreDiff = showScoreDiff = value;
-                    OnPropertyChanged("ShowScoreDiff");
+                    OnPropertyChanged(nameof(ShowScoreDiff));
                 }
             }
         }
@@ -170,7 +170,7 @@ namespace PPDExpansion.ViewModel
                 if (width != value)
                 {
                     width = value;
-                    OnPropertyChanged("Width");
+                    OnPropertyChanged(nameof(Width));
                 }
             }
         }
@@ -183,7 +183,7 @@ namespace PPDExpansion.ViewModel
                 if (height != value)
                 {
                     height = value;
-                    OnPropertyChanged("Height");
+                    OnPropertyChanged(nameof(Height));
                 }
             }
         }

@@ -108,20 +108,16 @@ namespace PPDUpdater
         private void WriteIni(string key, string value, string section)
         {
             Dictionary<string, string> pool;
-            if (inipool.ContainsKey(section))
+            if (inipool.TryGetValue(section, out Dictionary<string, string> value1))
             {
-                pool = inipool[section];
+                pool = value1;
             }
             else
             {
                 pool = [];
                 inipool.Add(section, pool);
             }
-            if (!pool.ContainsKey(key))
-            {
-                pool.Add(key, value);
-            }
-            else
+            if (!pool.TryAdd(key, value))
             {
                 pool[key] = value;
             }

@@ -85,11 +85,11 @@ namespace PPDEditor.Forms
                 cell.Value = TranslateColor(value.GridColor);
             }
         }
-        private Color TranslateColorString(string color)
+        private static Color TranslateColorString(string color)
         {
             return ColorTranslator.FromHtml(color);
         }
-        private string TranslateColor(Color color)
+        private static string TranslateColor(Color color)
         {
             return "#" + color.R.ToString("X2") + color.G.ToString("X2") + color.B.ToString("X2");
         }

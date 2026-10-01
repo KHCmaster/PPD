@@ -9,10 +9,10 @@ using System.Windows.Forms;
 
 namespace PPDEditor
 {
-    class PPDStaticSetting
+    partial class PPDStaticSetting
     {
-        static readonly Regex rgb = new("(\\d+)\\s*,\\s*(\\d+)\\s*,\\s*(\\d+)");
-        static readonly Regex argb = new("(\\d+)\\s*,\\s*(\\d+)\\s*,\\s*(\\d+)\\s*,\\s*(\\d+)");
+        static readonly Regex rgb = RgbRegex();
+        static readonly Regex argb = ArgbRegex();
 
         public static FormWindowState LastWindowState = FormWindowState.Normal;
         public static Size LastWindowSize = new(800, 600);
@@ -65,7 +65,7 @@ namespace PPDEditor
             }
             AuthorName = setting.ReadString("AuthorName");
             var movielatency = setting.ReadString("MovieLatency");
-            float.TryParse(movielatency, out MovieLatency);
+            _ = float.TryParse(movielatency, out MovieLatency);
             langFileISO = setting.ReadString("Language");
             if (langFileISO == "")
             {
@@ -142,5 +142,10 @@ namespace PPDEditor
             }
             return ret;
         }
+
+        [GeneratedRegex("(\\d+)\\s*,\\s*(\\d+)\\s*,\\s*(\\d+)")]
+        private static partial Regex RgbRegex();
+        [GeneratedRegex("(\\d+)\\s*,\\s*(\\d+)\\s*,\\s*(\\d+)\\s*,\\s*(\\d+)")]
+        private static partial Regex ArgbRegex();
     }
 }

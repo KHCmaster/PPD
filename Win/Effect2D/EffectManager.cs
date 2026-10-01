@@ -283,14 +283,14 @@ namespace Effect2D
             });
         }
 
-        private float NormalizeValue(float val, float baseval)
+        private static float NormalizeValue(float val, float baseval)
         {
             val = (float)Math.IEEERemainder(val, baseval);
             if (val < 0) val += baseval;
             return val;
         }
 
-        private float ReverseValue(float val, float baseval)
+        private static float ReverseValue(float val, float baseval)
         {
             if (val > baseval) return baseval * 2 - val;
             else return val;
@@ -402,7 +402,7 @@ namespace Effect2D
             }
         }
 
-        private void WriteEffect(IEffect effect, XmlWriter writer)
+        private static void WriteEffect(IEffect effect, XmlWriter writer)
         {
             if (effect.Effects.Count == 0)
             {
@@ -442,7 +442,7 @@ namespace Effect2D
             }
         }
 
-        private void WriteSets(SortedList<int, EffectStateRatioSet> sets, XmlWriter writer)
+        private static void WriteSets(SortedList<int, EffectStateRatioSet> sets, XmlWriter writer)
         {
             bool first = true;
             foreach (EffectStateRatioSet set in sets.Values)
@@ -469,7 +469,7 @@ namespace Effect2D
             }
         }
 
-        private void WriteBezierPosition(BezierAnalyzer BAnalyzer, XmlWriter writer)
+        private static void WriteBezierPosition(BezierAnalyzer BAnalyzer, XmlWriter writer)
         {
             writer.WriteStartElement("BezierPositions");
             foreach (BezierControlPoint bcp in BAnalyzer.BCPS)
@@ -483,7 +483,7 @@ namespace Effect2D
             writer.WriteEndElement();
         }
 
-        private void WriteState(EffectStateStructure state, XmlWriter writer)
+        private static void WriteState(EffectStateStructure state, XmlWriter writer)
         {
             writer.WriteStartElement("State");
             foreach (RatioType type in Utility.RatioTypeArray)
@@ -498,7 +498,7 @@ namespace Effect2D
             writer.WriteEndElement();
         }
 
-        private void WriteRaioMaker(IRatioMaker ratiomaker, RatioType type, XmlWriter writer)
+        private static void WriteRaioMaker(IRatioMaker ratiomaker, RatioType type, XmlWriter writer)
         {
             writer.WriteStartElement("RatioMaker");
             writer.WriteStartAttribute("Type");

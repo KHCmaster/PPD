@@ -198,19 +198,19 @@ namespace PPDInstaller.Controls
             label7.Text = String.Format("{0} {1} {2}%", executor.ProgressText, executor.Name, executor.Progress);
         }
 
-        void SetOk(TreeNode Node, string targetText)
+        static void SetOk(TreeNode Node, string targetText)
         {
             var node = GetNodeFromText(Node, targetText);
             node?.ImageKey = OK;
         }
 
-        void SetNotOk(TreeNode Node, string targetText)
+        static void SetNotOk(TreeNode Node, string targetText)
         {
             var node = GetNodeFromText(Node, targetText);
             node?.ImageKey = NotOK;
         }
 
-        TreeNode GetNodeFromText(TreeNode node, string text)
+        static TreeNode GetNodeFromText(TreeNode node, string text)
         {
             TreeNode ret = null;
             if (node == null | text == null) return ret;

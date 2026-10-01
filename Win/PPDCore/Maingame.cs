@@ -59,25 +59,25 @@ namespace PPDCore
 
         public override bool Load()
         {
-            if (!Param.ContainsKey("PPDGameUtility"))
+            if (!Param.TryGetValue("PPDGameUtility", out object gameUtilityValue))
             {
                 throw new PPDException(PPDExceptionType.SkinIsNotCorrectlyImplemented,
                     "Parameter PPDGameUtility is not contained", null);
             }
-            gameUtility = Param["PPDGameUtility"] as PPDGameUtility;
+            gameUtility = gameUtilityValue as PPDGameUtility;
             exitOnReturn |= Param.ContainsKey("ExitOnReturn");
-            if (Param.ContainsKey("StartTime"))
+            if (Param.TryGetValue("StartTime", out object startTimeValue))
             {
                 gameUtility.IsDebug = true;
-                startTime = (float)Param["StartTime"] - 3;
-                mmStartTime = (float)Param["StartTime"];
+                startTime = (float)startTimeValue - 3;
+                mmStartTime = (float)startTimeValue;
             }
-            else if (Param.ContainsKey("StartTimeEx"))
+            else if (Param.TryGetValue("StartTimeEx", out object startTimeExValue))
             {
                 gameUtility.IsDebug = true;
                 gameUtility.LatencyType = LatencyType.File;
-                startTime = (float)Param["StartTimeEx"];
-                mmStartTime = (float)Param["StartTimeEx"];
+                startTime = (float)startTimeExValue;
+                mmStartTime = (float)startTimeExValue;
             }
             else
             {

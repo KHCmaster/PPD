@@ -5,11 +5,13 @@ using System.Windows.Forms;
 
 namespace PPDInstaller.Executor
 {
-    class PPDInstallExecutor(string dataDirectory, string installDirectory, Control control) : CExecutor(control)
+    partial class PPDInstallExecutor(string dataDirectory, string installDirectory, Control control) : CExecutor(control)
     {
 
         readonly Regex[] PPDIgnoreList = [
-        new("PPD\\.ini",RegexOptions.IgnoreCase),        new("keyconfig\\.ini",RegexOptions.IgnoreCase)            /*"0.profile",
+            PPDIniRegex(),
+            KeyConfigIniRegex()
+            /*"0.profile",
             "1.profile",
             "2.profile",
             "3.profile",
@@ -35,5 +37,11 @@ namespace PPDInstaller.Executor
             }
             OnFinish();
         }
+
+        [GeneratedRegex("PPD\\.ini", RegexOptions.IgnoreCase)]
+        private static partial Regex PPDIniRegex();
+
+        [GeneratedRegex("keyconfig\\.ini", RegexOptions.IgnoreCase)]
+        private static partial Regex KeyConfigIniRegex();
     }
 }

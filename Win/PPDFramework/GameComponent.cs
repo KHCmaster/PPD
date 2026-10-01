@@ -364,9 +364,8 @@ namespace PPDFramework
             if (disposed) return;
             if (component == null)
                 throw new NullReferenceException("");
-            if (children.Contains(component))
+            if (children.Remove(component))
             {
-                children.Remove(component);
                 component.parent = null;
             }
             childChanged = true;

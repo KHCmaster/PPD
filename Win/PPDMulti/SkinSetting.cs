@@ -18,7 +18,7 @@ namespace PPDMulti
             }
         }
 
-        public string AutoUseItemTypes
+        public static string AutoUseItemTypes
         {
             get
             {

@@ -73,7 +73,7 @@ namespace PPDFramework
                 {
                     ret = textures.Pop();
                 }
-                ret.Use();
+                WorkspaceTexture.Use();
                 usingTextures.Add(ret);
                 return ret;
             }

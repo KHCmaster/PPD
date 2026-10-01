@@ -43,7 +43,7 @@ namespace PPDUpdater
             MessageBox.Show("Fatal Error Occurred\n");
         }
 
-        void WriteError(Exception e)
+        static void WriteError(Exception e)
         {
             try
             {
@@ -67,7 +67,7 @@ namespace PPDUpdater
             }
         }
 
-        void WriteAssembly(Assembly assembly, StreamWriter writer)
+        static void WriteAssembly(Assembly assembly, StreamWriter writer)
         {
             writer.WriteLine("FullName:{0}", assembly.FullName);
             WriteBinaryInfo(assembly.Location, writer);
@@ -77,7 +77,7 @@ namespace PPDUpdater
             }
         }
 
-        void WriteBinaryInfo(string filePath, StreamWriter writer)
+        static void WriteBinaryInfo(string filePath, StreamWriter writer)
         {
             try
             {
@@ -92,7 +92,7 @@ namespace PPDUpdater
             }
         }
 
-        void WriteErrorImpl(Exception e, StreamWriter writer)
+        static void WriteErrorImpl(Exception e, StreamWriter writer)
         {
             writer.WriteLine(e.Data);
             writer.WriteLine(e.HelpLink);

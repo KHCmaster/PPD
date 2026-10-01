@@ -8,7 +8,7 @@ namespace PPD
 {
     class GameLoader(string path)
     {
-        static readonly ClassType[] classTypeList = Enum.GetValues(typeof(ClassType)) as ClassType[];
+        static readonly ClassType[] classTypeList = Enum.GetValues<ClassType>() as ClassType[];
         static readonly Dictionary<Type, ClassType> typeDictionary;
         enum ClassType
         {

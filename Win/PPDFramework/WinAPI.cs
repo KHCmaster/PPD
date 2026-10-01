@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 
 namespace PPDFramework
 {
-    internal static class NativeMethods
+    internal static partial class NativeMethods
     {
         public const int IMN_CLOSESTATUSWINDOW = 0x1;
         public const int IMN_OPENSTATUSWINDOW = 0x2;
@@ -252,7 +252,7 @@ namespace PPDFramework
 
         public static void CreateCaret(IntPtr window, Size size)
         {
-            CreateCaret_(window, IntPtr.Zero, size.Width, size.Height);
+            _ = CreateCaret_(window, IntPtr.Zero, size.Width, size.Height);
         }
 
         public static Point GetCaretPos()
@@ -276,7 +276,7 @@ namespace PPDFramework
         {
             var imContext = ImmGetContext(window);
             SetImeContextWindowPos(imContext, screenPos);
-            ImmReleaseContext(window, imContext);
+            _ = ImmReleaseContext(window, imContext);
         }
 
         /// <summary>Sets location of the IME composition window (pre-edit window) </summary>
@@ -289,7 +289,7 @@ namespace PPDFramework
                 currentPos = new POINT(screenPos),
                 area = new RECT()
             };
-            ImmSetCompositionWindow(imContext, ref compForm);
+            _ = ImmSetCompositionWindow(imContext, ref compForm);
         }
 
         public static void SetImeWindowFont(IntPtr window, Font font)
@@ -298,16 +298,16 @@ namespace PPDFramework
 
             imContext = ImmGetContext(window);
             CreateLogFont(window, font, out LOGFONTW logicalFont);
-            ImmSetCompositionFontW(imContext, ref logicalFont);
-            ImmReleaseContext(window, imContext);
+            _ = ImmSetCompositionFontW(imContext, ref logicalFont);
+            _ = ImmReleaseContext(window, imContext);
         }
 
         public static void GetImeWindowPos(IntPtr window)
         {
             var imContext = ImmGetContext(window);
-            ImmGetCompositionWindow(imContext, out COMPOSITIONFORM compForm);
+            _ = ImmGetCompositionWindow(imContext, out COMPOSITIONFORM compForm);
             Console.WriteLine(compForm.area.left - compForm.area.right);
-            ImmReleaseContext(window, imContext);
+            _ = ImmReleaseContext(window, imContext);
         }
 
         public static string[] GetImeCandidateList(IntPtr window)
@@ -318,7 +318,7 @@ namespace PPDFramework
             if (dwSize > 0)
             {
                 var BufList = Marshal.AllocHGlobal(dwSize);
-                ImmGetCandidateList(imContext, 0, BufList, dwSize);
+                _ = ImmGetCandidateList(imContext, 0, BufList, dwSize);
                 Marshal.PtrToStructure(BufList, list);
                 byte[] buf = new byte[dwSize];
                 Marshal.Copy(BufList, buf, 0, dwSize);
@@ -326,14 +326,14 @@ namespace PPDFramework
                 int os = list.dwOffset;
                 // ANSI 版の API なので、システムの ANSI コードページで読む（.NET では Encoding.Default が UTF-8 になるため明示する）
                 var str = System.Text.Encoding.GetEncoding(GetACP()).GetString(buf, os, buf.Length - os);
-                str = Regex.Replace(str, @"\0+$", "");
+                str = TrailingNullRegex().Replace(str, "");
                 var par = "\0".ToCharArray();
-                ImmReleaseContext(window, imContext);
+                _ = ImmReleaseContext(window, imContext);
                 return str.Split(par);
             }
             else
             {
-                ImmReleaseContext(window, imContext);
+                _ = ImmReleaseContext(window, imContext);
                 return [];
             }
         }
@@ -349,7 +349,7 @@ namespace PPDFramework
             {
                 dpi_y = GetDeviceCaps(dc, LOGPIXELSY);
             }
-            ReleaseDC(window, dc);
+            _ = ReleaseDC(window, dc);
             lf.escapement = 0;
             lf.orientation = 0;
             lf.height = -(int)(font.Size * dpi_y / 72);
@@ -384,5 +384,7 @@ namespace PPDFramework
 
         [DllImport("user32.dll")]
         public static extern IntPtr GetForegroundWindow();
+        [GeneratedRegex(@"\0+$")]
+        private static partial Regex TrailingNullRegex();
     }
 }

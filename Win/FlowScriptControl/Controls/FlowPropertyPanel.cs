@@ -83,9 +83,9 @@ namespace FlowScriptControl.Controls
                                 row.Cells.Add(cell2);
                                 this.dataGridView1.Rows.Add(row);
                             }
-                            if (data.ContainsKey(propertyInfo.MemberInfo.Name))
+                            if (data.TryGetValue(propertyInfo.MemberInfo.Name, out string value))
                             {
-                                cell2.Value = data[propertyInfo.MemberInfo.Name];
+                                cell2.Value = value;
                             }
                             cell2.ReadOnly = false;
                             cell2.Tag = formatter;

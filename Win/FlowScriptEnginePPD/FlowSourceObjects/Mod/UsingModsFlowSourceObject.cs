@@ -15,9 +15,9 @@ namespace FlowScriptEnginePPD.FlowSourceObjects.Mod
 
         protected override void OnInitialize()
         {
-            if (Manager.Items.ContainsKey("ModInfos"))
+            if (Manager.Items.TryGetValue("ModInfos", out object value))
             {
-                modInfos = Manager.Items["ModInfos"] as PPDFramework.Mod.ModInfo[];
+                modInfos = value as PPDFramework.Mod.ModInfo[];
             }
 
             base.OnInitialize();

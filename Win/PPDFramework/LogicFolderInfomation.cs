@@ -182,7 +182,7 @@ namespace PPDFramework
                         }
                     }
 
-                    PPDDatabase.DB.RemoveUnconnectedLinks();
+                    PPDDatabase.RemoveUnconnectedLinks();
                     SongInformation.Updated += SongInformation_Updated;
                 }
                 return root;
@@ -280,7 +280,7 @@ namespace PPDFramework
             return list;
         }
 
-        private List<LogicFolderInfomation> GetFromFolder(LogicFolderInfomation info)
+        private static List<LogicFolderInfomation> GetFromFolder(LogicFolderInfomation info)
         {
             if (info.IsFolder)
             {
@@ -398,7 +398,7 @@ namespace PPDFramework
             ]);
         }
 
-        private void Remove(LogicFolderInfomation info)
+        private static void Remove(LogicFolderInfomation info)
         {
             if (info == null || info.Name == PPDDatabase.LogicFolderRoot) return;
             StaticBeforeRemove?.Invoke(info, EventArgs.Empty);

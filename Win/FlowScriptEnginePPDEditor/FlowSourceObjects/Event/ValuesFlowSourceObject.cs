@@ -17,9 +17,9 @@ namespace FlowScriptEnginePPDEditor.FlowSourceObjects.Event
         protected override void OnInitialize()
         {
             base.OnInitialize();
-            if (Manager.Items.ContainsKey("Events"))
+            if (Manager.Items.TryGetValue("Events", out object value))
             {
-                events = Manager.Items["Events"] as KeyValuePair<float, EventData>[];
+                events = value as KeyValuePair<float, EventData>[];
             }
         }
 

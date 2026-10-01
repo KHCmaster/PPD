@@ -203,10 +203,7 @@ namespace PPDCore
 
         public void RemoveItem(string key)
         {
-            if (afterLoadList.ContainsKey(key))
-            {
-                afterLoadList.Remove(key);
-            }
+            afterLoadList.Remove(key);
         }
 
         public void Initialize()

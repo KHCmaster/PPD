@@ -145,7 +145,7 @@ namespace FlowScriptEngine.AutoFastGenerator
 
         private static string GetGenericClassName(string name)
         {
-            var backQuoteIndex = name.IndexOf("`");
+            var backQuoteIndex = name.IndexOf('`');
             if (backQuoteIndex < 0)
             {
                 return name;

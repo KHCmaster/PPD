@@ -6,9 +6,9 @@ using System.Text.RegularExpressions;
 
 namespace FlowScriptEngineSlimDX.TypeFormatters
 {
-    public class Vector3Formatter : TypeFormatterBase
+    public partial class Vector3Formatter : TypeFormatterBase
     {
-        static readonly Regex regex = new("^X:(?<X>[0-9.-]+) +Y:(?<Y>[0-9.-]+) +Z:(?<Z>[0-9.-]+)$");
+        static readonly Regex regex = VectorRegex();
 
         public override Type Type
         {
@@ -37,5 +37,8 @@ namespace FlowScriptEngineSlimDX.TypeFormatters
         {
             get { return "X:2.5 Y:2.2 Z:1.0"; }
         }
+
+        [GeneratedRegex("^X:(?<X>[0-9.-]+) +Y:(?<Y>[0-9.-]+) +Z:(?<Z>[0-9.-]+)$")]
+        private static partial Regex VectorRegex();
     }
 }

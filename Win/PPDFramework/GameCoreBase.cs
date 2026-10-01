@@ -159,7 +159,7 @@ namespace PPDFramework
         {
         }
 
-        private void PreventScreenSaver()
+        private static void PreventScreenSaver()
         {
             try
             {

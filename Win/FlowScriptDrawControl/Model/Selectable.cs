@@ -11,7 +11,7 @@
                 if (isSelected != value)
                 {
                     isSelected = value;
-                    OnPropertyChanged("IsSelected");
+                    OnPropertyChanged(nameof(IsSelected));
                 }
             }
         }

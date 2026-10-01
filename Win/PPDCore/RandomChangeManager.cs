@@ -82,7 +82,7 @@ namespace PPDCore
             }
         }
 
-        private int[] Swap(int[] array, int a, int b)
+        private static int[] Swap(int[] array, int a, int b)
         {
             (array[b], array[a]) = (array[a], array[b]);
             return array;

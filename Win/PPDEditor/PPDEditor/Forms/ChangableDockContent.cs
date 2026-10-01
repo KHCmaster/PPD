@@ -8,7 +8,7 @@ namespace PPDEditor.Forms
         public void ContentSaved()
         {
             changed = false;
-            if (this.TabText.StartsWith("*") && this.TabText.Length > 1)
+            if (this.TabText.StartsWith('*') && this.TabText.Length > 1)
             {
                 this.TabText = this.TabText[1..];
             }
@@ -16,7 +16,7 @@ namespace PPDEditor.Forms
         public void ContentChanged()
         {
             changed = true;
-            if (!this.TabText.StartsWith("*"))
+            if (!this.TabText.StartsWith('*'))
             {
                 this.TabText = "*" + this.TabText;
             }

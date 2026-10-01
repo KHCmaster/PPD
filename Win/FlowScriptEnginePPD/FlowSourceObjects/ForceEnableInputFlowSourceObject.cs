@@ -19,9 +19,9 @@ namespace FlowScriptEnginePPD.FlowSourceObjects
         protected override void OnInitialize()
         {
             base.OnInitialize();
-            if (Manager.Items.ContainsKey("InputManager"))
+            if (Manager.Items.TryGetValue("InputManager", out object value))
             {
-                inputManager = Manager.Items["InputManager"] as InputManager;
+                inputManager = value as InputManager;
             }
         }
 

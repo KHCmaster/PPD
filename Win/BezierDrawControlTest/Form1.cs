@@ -127,7 +127,7 @@ namespace BezierDrawControlTest
             return nearest;
         }
 
-        private void DrawAllow(PointF pos, PointF dir, Graphics g)
+        private static void DrawAllow(PointF pos, PointF dir, Graphics g)
         {
             float length = 100;
             g.DrawLine(Pens.Black, pos, new PointF(pos.X + dir.X * length, pos.Y + dir.Y * length));

@@ -36,7 +36,7 @@ namespace PPDEditor.Forms
             Column2.HeaderText = dataGridViewTextBoxColumn2.HeaderText = Utility.Language["Detail"];
         }
 
-        private void UpdateDataGrid(DataGridView dataGrid, SortedList<float, EventData> eventData)
+        private static void UpdateDataGrid(DataGridView dataGrid, SortedList<float, EventData> eventData)
         {
             dataGrid.RowCount = 0;
             foreach (KeyValuePair<float, EventData> kvp in eventData)
@@ -125,7 +125,7 @@ namespace PPDEditor.Forms
             this.Close();
         }
 
-        private void ShowEventData(EventData eventData)
+        private static void ShowEventData(EventData eventData)
         {
             var eef = new EventEditForm();
             eef.SetLang();

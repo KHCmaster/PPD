@@ -31,7 +31,7 @@ namespace ShaderCompiler
 
             try
             {
-                new EffectCompiler().Compile(filePath, args[1]);
+                EffectCompiler.Compile(filePath, args[1]);
                 return 0;
             }
             catch (Exception e)

@@ -14,7 +14,7 @@ namespace FlowScriptDrawControl.Model
                 if (target != value)
                 {
                     target = value;
-                    OnPropertyChanged("Target");
+                    OnPropertyChanged(nameof(Target));
                 }
             }
         }

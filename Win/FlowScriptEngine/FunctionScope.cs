@@ -52,21 +52,17 @@ namespace FlowScriptEngine
 
         public void SetValue(string name, object value)
         {
-            if (dict.ContainsKey(name))
+            if (!dict.TryAdd(name, value))
             {
                 dict[name] = value;
-            }
-            else
-            {
-                dict.Add(name, value);
             }
         }
 
         public object GetValue(string name)
         {
-            if (dict.ContainsKey(name))
+            if (dict.TryGetValue(name, out object value))
             {
-                return dict[name];
+                return value;
             }
             else
             {

@@ -85,7 +85,7 @@ Enter  変形終了";
                 bezierControl1.DrawAndRefresh();
             }
         }
-        private float GetValue(string data, string enddata)
+        private static float GetValue(string data, string enddata)
         {
             if (data == null || enddata == null) return 0;
             float ret;
@@ -216,7 +216,7 @@ Enter  変形終了";
 
             graphics.DrawRectangle(Pens.Red, new System.Drawing.Rectangle(StartX, StartY, 400, 225));
         }
-        private void DrawAllow(PointF pos, PointF dir, Graphics g)
+        private static void DrawAllow(PointF pos, PointF dir, Graphics g)
         {
             float length = 100;
             float length2 = 30;
@@ -226,7 +226,7 @@ Enter  変形終了";
             g.DrawLine(Pens.Blue, pos, new PointF(pos.X - r1.X * length2, pos.Y - r1.Y * length2));
             g.DrawLine(Pens.Blue, pos, new PointF(pos.X - r2.X * length2, pos.Y - r2.Y * length2));
         }
-        private Vector2 Rotate(Vector2 p, float r)
+        private static Vector2 Rotate(Vector2 p, float r)
         {
             return new Vector2((float)(Math.Cos(r) * p.X - Math.Sin(r) * p.Y), (float)(Math.Sin(r) * p.X + Math.Cos(r) * p.Y));
         }

@@ -84,7 +84,7 @@ namespace PPDEditor.Command.PPDSheet
         }
 
 
-        private float GetRotation(PointF p)
+        private static float GetRotation(PointF p)
         {
             float ret = 0;
             if (p.Y < 0)
@@ -99,7 +99,7 @@ namespace PPDEditor.Command.PPDSheet
             return ret;
         }
 
-        private System.Numerics.Vector2 TransPos(Vector2 pos)
+        private static System.Numerics.Vector2 TransPos(Vector2 pos)
         {
             //in this function to expand (400,225) to (800,450)
             //and also check is inside (800,450)

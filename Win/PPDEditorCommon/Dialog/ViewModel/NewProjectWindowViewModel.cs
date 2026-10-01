@@ -51,7 +51,7 @@ namespace PPDEditorCommon.Dialog.ViewModel
                 if (selectedItem != value)
                 {
                     selectedItem = value;
-                    OnPropertyChanged("SelectedItem");
+                    OnPropertyChanged(nameof(SelectedItem));
                 }
             }
         }
@@ -64,7 +64,7 @@ namespace PPDEditorCommon.Dialog.ViewModel
                 if (name != value)
                 {
                     name = value;
-                    OnPropertyChanged("Name");
+                    OnPropertyChanged(nameof(Name));
                     Validate();
                 }
             }
@@ -78,7 +78,7 @@ namespace PPDEditorCommon.Dialog.ViewModel
                 if (folderPath != value)
                 {
                     folderPath = value;
-                    OnPropertyChanged("FolderPath");
+                    OnPropertyChanged(nameof(FolderPath));
                     Validate();
                 }
             }
@@ -92,7 +92,7 @@ namespace PPDEditorCommon.Dialog.ViewModel
                 if (moviePath != value)
                 {
                     moviePath = value;
-                    OnPropertyChanged("MoviePath");
+                    OnPropertyChanged(nameof(MoviePath));
                     Validate();
                 }
             }
@@ -106,7 +106,7 @@ namespace PPDEditorCommon.Dialog.ViewModel
                 if (isOkEnabled != value)
                 {
                     isOkEnabled = value;
-                    OnPropertyChanged("IsOkEnabled");
+                    OnPropertyChanged(nameof(IsOkEnabled));
                 }
             }
         }
@@ -119,7 +119,7 @@ namespace PPDEditorCommon.Dialog.ViewModel
                 if (validateResultMessage != value)
                 {
                     validateResultMessage = value;
-                    OnPropertyChanged("ValidateResultMessage");
+                    OnPropertyChanged(nameof(ValidateResultMessage));
                 }
             }
         }

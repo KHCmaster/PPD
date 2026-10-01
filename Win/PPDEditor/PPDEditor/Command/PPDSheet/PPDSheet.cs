@@ -585,7 +585,7 @@ namespace PPDEditor.Command.PPDSheet
             }
         }
 
-        private bool CheckSameArray<T>(T[] array1, T[] array2) where T : class
+        private static bool CheckSameArray<T>(T[] array1, T[] array2) where T : class
         {
             if (array1.Length != array2.Length)
             {
@@ -602,7 +602,7 @@ namespace PPDEditor.Command.PPDSheet
             return true;
         }
 
-        private float GetNormalizedRotation(Vector2 pos1, Vector2 pos2, bool shiftKey, bool ctrlKey, bool altKey)
+        private static float GetNormalizedRotation(Vector2 pos1, Vector2 pos2, bool shiftKey, bool ctrlKey, bool altKey)
         {
             float rotation = 0;
             int restriction;
@@ -762,7 +762,7 @@ namespace PPDEditor.Command.PPDSheet
             EndGroupCommand();
         }
 
-        private float NormalizeAngle(float angle)
+        private static float NormalizeAngle(float angle)
         {
             double div = angle / (Math.PI * 2);
             if (0 <= div && div <= 1)

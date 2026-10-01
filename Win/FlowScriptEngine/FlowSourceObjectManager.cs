@@ -13,10 +13,7 @@ namespace FlowScriptEngine
 
         internal static void AddFlowSourceObject(AssemblyAndType asmAndType)
         {
-            if (!dict.ContainsKey(asmAndType.Type.FullName))
-            {
-                dict.Add(asmAndType.Type.FullName, asmAndType);
-            }
+            dict.TryAdd(asmAndType.Type.FullName, asmAndType);
         }
 
         public static FlowSourceObjectBase CreateSource(string fullName)

@@ -93,7 +93,7 @@ namespace PPDEditor.Forms
 
         private AvailableDifficulty currentdifficulty = AvailableDifficulty.Base;
         private AvailableDifficulty availabledifficulty;
-        public static AvailableDifficulty[] DifficultyArray = (AvailableDifficulty[])Enum.GetValues(typeof(AvailableDifficulty));
+        public static readonly AvailableDifficulty[] DifficultyArray = Enum.GetValues<AvailableDifficulty>();
 
         private Process currentProcess;
         private Executor currentExecutor;
@@ -249,7 +249,7 @@ namespace PPDEditor.Forms
             LoadMod(mODToolStripMenuItem, "mods");
         }
 
-        private void LoadMod(ToolStripMenuItem menu, string dir)
+        private static void LoadMod(ToolStripMenuItem menu, string dir)
         {
             foreach (string dirName in Directory.GetDirectories(dir))
             {
@@ -271,7 +271,7 @@ namespace PPDEditor.Forms
             }
         }
 
-        private void LoadShortcut()
+        private static void LoadShortcut()
         {
             WindowUtility.Seekmain.ShortcutManager.ClearShortcut();
             try
@@ -323,7 +323,7 @@ namespace PPDEditor.Forms
             WindowUtility.Seekmain.ShortcutManager.RegisterShortcut(new ShortcutInfo(Keys.C, true, true, false, ShortcutType.ClearCopyBuffer));
         }
 
-        private void SaveShortcut()
+        private static void SaveShortcut()
         {
             using StreamWriter writer = new(Path.Combine(Utility.AppDir, shortcutFileName));
             foreach (ShortcutInfo info in WindowUtility.Seekmain.ShortcutManager.Shortcuts)
@@ -332,7 +332,7 @@ namespace PPDEditor.Forms
             }
         }
 
-        private void ChangeHelpUrl()
+        private static void ChangeHelpUrl()
         {
             hf.ChangeUrl(String.Format(@"{0}\help\{1}\index.html", Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), PPDStaticSetting.langFileISO));
         }
@@ -365,7 +365,7 @@ namespace PPDEditor.Forms
                     {
                         Text = name,
                         Name = fileName.ToLower(),
-                        Checked = Path.GetFileName(fileName).ToLower() == String.Format("lang_{0}_{1}.ini", this.GetType().Assembly.GetName().Name, PPDStaticSetting.langFileISO).ToLower()
+                        Checked = Path.GetFileName(fileName).Equals(String.Format("lang_{0}_{1}.ini", this.GetType().Assembly.GetName().Name, PPDStaticSetting.langFileISO), StringComparison.CurrentCultureIgnoreCase)
                     };
                     langtsmi.Click += Langtsmi_Click;
                     言語ToolStripMenuItem.DropDownItems.Add(langtsmi);
@@ -378,7 +378,7 @@ namespace PPDEditor.Forms
             if (sender is ToolStripMenuItem tsmi)
             {
                 langFileName = tsmi.Name;
-                var m = Regex.Match(Path.GetFileName(langFileName), "^lang_\\w+_(?<ISO>\\w+).ini$");
+                var m = LangFileRegex().Match(Path.GetFileName(langFileName));
                 if (m.Success)
                 {
                     PPDStaticSetting.langFileISO = m.Groups["ISO"].Value;
@@ -536,7 +536,7 @@ namespace PPDEditor.Forms
         {
             if (Directory.Exists("view"))
             {
-                var regex = new Regex("^view(?<w>\\d+)x(?<h>\\d+)(?<extra>.*)\\.xml$");
+                var regex = ViewLayoutFileRegex();
                 foreach (string file in Directory.GetFiles("view"))
                 {
                     var m = regex.Match(Path.GetFileName(file));
@@ -607,7 +607,7 @@ namespace PPDEditor.Forms
             }
         }
 
-        private void ChangeAuthorName()
+        private static void ChangeAuthorName()
         {
             var anf = new AuthorNameForm();
             anf.SetLang();
@@ -828,7 +828,7 @@ namespace PPDEditor.Forms
             moviefirstplayafterinitialized = true;
         }
 
-        private string GetMilliSecond(float ms)
+        private static string GetMilliSecond(float ms)
         {
             var s = ms.ToString();
             string ret;
@@ -1004,7 +1004,7 @@ namespace PPDEditor.Forms
             }
         }
 
-        private string GetTimeDisplay(double d)
+        private static string GetTimeDisplay(double d)
         {
             int h = (int)d / 3600;
             int m = (int)(d - 3600 * h) / 60;
@@ -1091,7 +1091,7 @@ namespace PPDEditor.Forms
                 if (saveFileDialog1.FileName[^4..] != ".txt")
                 {
                     string fn = saveFileDialog1.FileName;
-                    var a = fn.IndexOf(".");
+                    var a = fn.IndexOf('.');
                     if (a != -1)
                     {
                         fn = fn[..a];
@@ -1107,7 +1107,7 @@ namespace PPDEditor.Forms
             }
         }
 
-        private void SaveSoundSet(string filename)
+        private static void SaveSoundSet(string filename)
         {
             using StreamWriter sw = new(filename);
             sw.Write(sm.Savesoundset());
@@ -1125,7 +1125,7 @@ namespace PPDEditor.Forms
                 if (saveFileDialog1.FileName[^4..] != ".txt")
                 {
                     string fn = saveFileDialog1.FileName;
-                    var a = fn.IndexOf(".");
+                    var a = fn.IndexOf('.');
                     if (a != -1)
                     {
                         fn = fn[..a];
@@ -1141,7 +1141,7 @@ namespace PPDEditor.Forms
             }
         }
 
-        private void SaveScd(string filename)
+        private static void SaveScd(string filename)
         {
             using (FileStream fs = File.Create(filename))
             {
@@ -1160,7 +1160,7 @@ namespace PPDEditor.Forms
                 if (saveFileDialog1.FileName[^4..] != ".ppd")
                 {
                     string fn = saveFileDialog1.FileName;
-                    var a = fn.IndexOf(".");
+                    var a = fn.IndexOf('.');
                     if (a != -1)
                     {
                         fn = fn[..a];
@@ -1176,13 +1176,13 @@ namespace PPDEditor.Forms
             }
         }
 
-        private void SavePpd(Stream stream, MarkData[] sorted)
+        private static void SavePpd(Stream stream, MarkData[] sorted)
         {
             PPDWriter.Write(stream, sorted);
             tlf.ContentSaved();
         }
 
-        private void Saveppdfile(string filename, MarkData[] sorted)
+        private static void Saveppdfile(string filename, MarkData[] sorted)
         {
             using FileStream fs = File.Create(filename);
             SavePpd(fs, sorted);
@@ -1198,7 +1198,7 @@ namespace PPDEditor.Forms
                 if (saveFileDialog1.FileName[^4..] != ".txt")
                 {
                     string fn = saveFileDialog1.FileName;
-                    var a = fn.IndexOf(".");
+                    var a = fn.IndexOf('.');
                     if (a != -1)
                     {
                         fn = fn[..a];
@@ -1214,7 +1214,7 @@ namespace PPDEditor.Forms
             }
         }
 
-        private void SaveKasi(string filename)
+        private static void SaveKasi(string filename)
         {
             using StreamWriter sw = new(filename);
             sw.Write(ke.Savedata());
@@ -1232,7 +1232,7 @@ namespace PPDEditor.Forms
                 if (saveFileDialog1.FileName[^4..] != ".ini")
                 {
                     string fn = saveFileDialog1.FileName;
-                    var a = fn.IndexOf(".");
+                    var a = fn.IndexOf('.');
                     if (a != -1)
                     {
                         fn = fn[..a];
@@ -1248,7 +1248,7 @@ namespace PPDEditor.Forms
             }
         }
 
-        private void SaveIni(string filename)
+        private static void SaveIni(string filename)
         {
             var sw = new SettingWriter(filename, true);
             ifw.SaveIni(sw);
@@ -1265,7 +1265,7 @@ namespace PPDEditor.Forms
                 if (saveFileDialog1.FileName[^4..] != ".evd")
                 {
                     string fn = saveFileDialog1.FileName;
-                    var a = fn.IndexOf(".");
+                    var a = fn.IndexOf('.');
                     if (a != -1)
                     {
                         fn = fn[..a];
@@ -1282,19 +1282,19 @@ namespace PPDEditor.Forms
             }
         }
 
-        private void SaveEvd(Stream stream)
+        private static void SaveEvd(Stream stream)
         {
             EVDWriter.Write(stream, em.GetEvdData());
             em.ContentSaved();
         }
 
-        private void SaveEvd(string filename)
+        private static void SaveEvd(string filename)
         {
             using FileStream fs = File.Create(filename);
             SaveEvd(fs);
         }
 
-        private void SaveLayers(string insideDirectory)
+        private static void SaveLayers(string insideDirectory)
         {
             LayerDisplay[] lds = lm.AllLayerDisplay;
             if (!Directory.Exists(insideDirectory + "\\layers"))
@@ -1333,7 +1333,7 @@ namespace PPDEditor.Forms
                 if (saveFileDialog1.FileName[^8..] != ".ppdproj")
                 {
                     string fn = saveFileDialog1.FileName;
-                    var a = fn.IndexOf(".");
+                    var a = fn.IndexOf('.');
                     if (a != -1)
                     {
                         fn = fn[..a];
@@ -1545,7 +1545,7 @@ namespace PPDEditor.Forms
             }
         }
 
-        private void ExistDeleteFile(string path)
+        private static void ExistDeleteFile(string path)
         {
             if (File.Exists(path))
             {
@@ -1553,7 +1553,7 @@ namespace PPDEditor.Forms
             }
         }
 
-        private void NonExistCreateDirectory(string path)
+        private static void NonExistCreateDirectory(string path)
         {
             if (!Directory.Exists(path))
             {
@@ -1572,7 +1572,7 @@ namespace PPDEditor.Forms
             }
         }
 
-        private void ReadKasi(string filename)
+        private static void ReadKasi(string filename)
         {
             using StreamReader sr = new(filename);
             ke.Setdata(sr.ReadToEnd());
@@ -1680,7 +1680,7 @@ namespace PPDEditor.Forms
             ifw.ContentSaved();
         }
 
-        private void ReadSoundSet(string filename)
+        private static void ReadSoundSet(string filename)
         {
             using StreamReader sr = new(filename);
             var insidedirectory = Path.GetDirectoryName(filename);
@@ -1700,7 +1700,7 @@ namespace PPDEditor.Forms
             sm.ContentSaved();
         }
 
-        private void ReadScd(string filename)
+        private static void ReadScd(string filename)
         {
             var scdData = SCDReader.Read(filename);
             if (scdData.Length == 0)
@@ -1749,7 +1749,7 @@ namespace PPDEditor.Forms
             }
         }
 
-        private SortedList<float, EventData> ReadEvdAsEventData(Stream stream)
+        private static SortedList<float, EventData> ReadEvdAsEventData(Stream stream)
         {
             var ret = new SortedList<float, EventData>();
             var evdData = EVDReader.Read(stream);
@@ -1814,7 +1814,7 @@ namespace PPDEditor.Forms
             return ret;
         }
 
-        private void ReadEvd(Stream stream)
+        private static void ReadEvd(Stream stream)
         {
             em.Clear();
             var data = ReadEvdAsEventData(stream);
@@ -1825,7 +1825,7 @@ namespace PPDEditor.Forms
             em.ContentSaved();
         }
 
-        private void ReadEvdAsPack(string filename)
+        private static void ReadEvdAsPack(string filename)
         {
             try
             {
@@ -1839,7 +1839,7 @@ namespace PPDEditor.Forms
             }
         }
 
-        private void ReadEvd(string filename)
+        private static void ReadEvd(string filename)
         {
             using FileStream fs = File.Open(filename, FileMode.Open);
             ReadEvd(fs);
@@ -1905,7 +1905,7 @@ namespace PPDEditor.Forms
             };
         }
 
-        private void BackUpProject(string path)
+        private static void BackUpProject(string path)
         {
             var filename = Path.GetFileNameWithoutExtension(path);
             var parentdirectory = Path.GetDirectoryName(path);
@@ -1923,15 +1923,15 @@ namespace PPDEditor.Forms
             {
                 Directory.CreateDirectory(copydir);
             }
-            Utility.CopyDirectory(Path.Combine(parentdirectory, filename), copydir, [new("^movie\\.\\w+$")]);
+            Utility.CopyDirectory(Path.Combine(parentdirectory, filename), copydir, [MovieFileRegex()]);
         }
 
-        private void ConvertProject(string path, int version)
+        private static void ConvertProject(string path, int version)
         {
             if (version <= 1) ConvertProject1TO2(path);
         }
 
-        private void ConvertProject1TO2(string path)
+        private static void ConvertProject1TO2(string path)
         {
             var sr = new StreamReader(path);
             var setting = new SettingReader(sr.ReadToEnd());
@@ -2281,7 +2281,7 @@ namespace PPDEditor.Forms
             gc.AngleRestriction = anglerestriction;
         }
 
-        private bool IsNumber(string s)
+        private static bool IsNumber(string s)
         {
             if (string.IsNullOrEmpty(s)) return false;
             for (int i = 0; i < s.Length; i++)
@@ -3104,7 +3104,7 @@ namespace PPDEditor.Forms
             }
         }
 
-        private void ShowExplorerWithDir(string path)
+        private static void ShowExplorerWithDir(string path)
         {
             try
             {
@@ -3115,7 +3115,7 @@ namespace PPDEditor.Forms
             }
         }
 
-        private void CopySpecificFile(string src, string dest, string filename)
+        private static void CopySpecificFile(string src, string dest, string filename)
         {
             File.Copy(Path.Combine(src, filename), Path.Combine(dest, filename), true);
         }
@@ -3218,7 +3218,7 @@ namespace PPDEditor.Forms
             }
         }
 
-        private string GetProjectDirFromPath(string projectPath)
+        private static string GetProjectDirFromPath(string projectPath)
         {
             return Path.Combine(Path.GetDirectoryName(projectPath), Path.GetFileNameWithoutExtension(projectPath));
         }
@@ -3436,7 +3436,7 @@ namespace PPDEditor.Forms
             }
         }
 
-        private string GetVersion(string path)
+        private static string GetVersion(string path)
         {
             var fvi = FileVersionInfo.GetVersionInfo(path);
             return fvi.FileVersion;
@@ -3452,7 +3452,7 @@ namespace PPDEditor.Forms
             WindowUtility.Seekmain.AngleInterpolation(true);
         }
 
-        private void ImportEvent(string filePath)
+        private static void ImportEvent(string filePath)
         {
             if (!File.Exists(filePath))
             {
@@ -3607,13 +3607,13 @@ namespace PPDEditor.Forms
 
             foreach (string childFile in Directory.GetFiles(dir))
             {
-                if (Path.GetExtension(childFile).ToLower() != ".fsml")
+                if (!Path.GetExtension(childFile).Equals(".fsml", StringComparison.CurrentCultureIgnoreCase))
                 {
                     continue;
                 }
                 var targetPath = Path.Combine(Path.GetDirectoryName(childFile), Path.GetFileNameWithoutExtension(childFile)).ToLower();
                 var shortcut = WindowUtility.Seekmain.ShortcutManager.Shortcuts.FirstOrDefault(s =>
-                    s.ShortcutType == ShortcutType.Custom && s.ScriptPath.ToLower() == targetPath);
+                    s.ShortcutType == ShortcutType.Custom && s.ScriptPath.Equals(targetPath, StringComparison.CurrentCultureIgnoreCase));
                 var name = Path.GetFileNameWithoutExtension(childFile);
                 var childMenu = new ToolStripMenuItem
                 {
@@ -3722,5 +3722,12 @@ namespace PPDEditor.Forms
                 ifw.SetTrimmingData(MovieTrimmingData);
             }
         }
+
+        [GeneratedRegex("^lang_\\w+_(?<ISO>\\w+).ini$")]
+        private static partial Regex LangFileRegex();
+        [GeneratedRegex("^view(?<w>\\d+)x(?<h>\\d+)(?<extra>.*)\\.xml$")]
+        private static partial Regex ViewLayoutFileRegex();
+        [GeneratedRegex("^movie\\.\\w+$")]
+        private static partial Regex MovieFileRegex();
     }
 }

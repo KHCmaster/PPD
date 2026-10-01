@@ -77,7 +77,7 @@ namespace PPDMulti
                 });
             }
 
-            var itemTypeArray = (ItemType[])Enum.GetValues(typeof(ItemType));
+            var itemTypeArray = Enum.GetValues<ItemType>();
             int addedCount = 0;
             for (int i = 1; i < itemTypeArray.Length; i++)
             {

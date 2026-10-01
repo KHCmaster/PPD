@@ -378,7 +378,7 @@ namespace PPDMulti
                 {
                     if (!CheckRoomName(textBox.Text))
                     {
-                        throw new ArgumentException();
+                        throw new FormatException();
                     }
 
                     textBox.Parent.RemoveChild(textBox);
@@ -406,7 +406,7 @@ namespace PPDMulti
                 {
                     if (!CheckIPText(textBox.Text))
                     {
-                        throw new ArgumentException();
+                        throw new FormatException();
                     }
 
                     textBox.Parent.RemoveChild(textBox);
@@ -424,12 +424,12 @@ namespace PPDMulti
             }
         }
 
-        private bool CheckRoomName(string roomName)
+        private static bool CheckRoomName(string roomName)
         {
             return roomName.Trim() != "";
         }
 
-        private bool CheckIPText(string ip)
+        private static bool CheckIPText(string ip)
         {
             var splitIp = ip.Split('.');
             if (splitIp.Length != 4)
@@ -467,7 +467,7 @@ namespace PPDMulti
                     port = int.Parse(textBox.Text);
                     if (port < 0 || port > UInt16.MaxValue)
                     {
-                        throw new ArgumentException();
+                        throw new FormatException();
                     }
                     GoNextScene(false);
                 }
@@ -493,7 +493,7 @@ namespace PPDMulti
                     port = int.Parse(textBox.Text);
                     if (port < 0 || port > UInt16.MaxValue)
                     {
-                        throw new ArgumentException();
+                        throw new FormatException();
                     }
 
                     textBox.Parent.RemoveChild(textBox);

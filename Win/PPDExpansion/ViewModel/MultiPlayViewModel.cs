@@ -37,7 +37,7 @@ namespace PPDExpansion.ViewModel
                 if (score != value)
                 {
                     score = value;
-                    OnPropertyChanged("Score");
+                    OnPropertyChanged(nameof(Score));
                 }
             }
         }
@@ -50,7 +50,7 @@ namespace PPDExpansion.ViewModel
                 if (coolCount != value)
                 {
                     coolCount = value;
-                    OnPropertyChanged("CoolCount");
+                    OnPropertyChanged(nameof(CoolCount));
                 }
             }
         }
@@ -63,7 +63,7 @@ namespace PPDExpansion.ViewModel
                 if (goodCount != value)
                 {
                     goodCount = value;
-                    OnPropertyChanged("GoodCount");
+                    OnPropertyChanged(nameof(GoodCount));
                 }
             }
         }
@@ -76,7 +76,7 @@ namespace PPDExpansion.ViewModel
                 if (safeCount != value)
                 {
                     safeCount = value;
-                    OnPropertyChanged("SafeCount");
+                    OnPropertyChanged(nameof(SafeCount));
                 }
             }
         }
@@ -89,7 +89,7 @@ namespace PPDExpansion.ViewModel
                 if (sadCount != value)
                 {
                     sadCount = value;
-                    OnPropertyChanged("SadCount");
+                    OnPropertyChanged(nameof(SadCount));
                 }
             }
         }
@@ -102,7 +102,7 @@ namespace PPDExpansion.ViewModel
                 if (worstCount != value)
                 {
                     worstCount = value;
-                    OnPropertyChanged("WorstCount");
+                    OnPropertyChanged(nameof(WorstCount));
                 }
             }
         }
@@ -150,7 +150,7 @@ namespace PPDExpansion.ViewModel
                 if (chartHeight != value)
                 {
                     PPDExpansionSetting.Setting.MultiPlayChartHeight = chartHeight = value;
-                    OnPropertyChanged("ChartHeight");
+                    OnPropertyChanged(nameof(ChartHeight));
                 }
             }
         }
@@ -163,7 +163,7 @@ namespace PPDExpansion.ViewModel
                 if (scoreName != value)
                 {
                     scoreName = value;
-                    OnPropertyChanged("ScoreName");
+                    OnPropertyChanged(nameof(ScoreName));
                 }
             }
         }
@@ -176,7 +176,7 @@ namespace PPDExpansion.ViewModel
                 if (difficulty != value)
                 {
                     difficulty = value;
-                    OnPropertyChanged("Difficulty");
+                    OnPropertyChanged(nameof(Difficulty));
                 }
             }
         }

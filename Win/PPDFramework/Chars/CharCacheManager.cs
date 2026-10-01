@@ -119,7 +119,7 @@ namespace PPDFramework.Chars
             }
         }
 
-        internal void FinalizeInternal()
+        internal static void FinalizeInternal()
         {
         }
 

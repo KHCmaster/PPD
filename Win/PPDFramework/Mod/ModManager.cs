@@ -232,7 +232,7 @@ namespace PPDFramework.Mod
             EnumerateClasses("dlls");
         }
 
-        private Version GetVersion(string path)
+        private static Version GetVersion(string path)
         {
             var fvi = FileVersionInfo.GetVersionInfo(path);
             return new Version(fvi.FileVersion);

@@ -6,17 +6,17 @@ namespace BezierDrawControl
     public static class MyCursors
     {
         static readonly Dictionary<int, Cursor> dict = [];
-        public static Cursor Rotate = new(BezierDrawControl.Properties.Resources.rotate.GetHicon());
-        public static Cursor Anchor = new(BezierDrawControl.Properties.Resources.anchor.GetHicon());
-        public static Cursor AnchorPlus = new(BezierDrawControl.Properties.Resources.anchorplus.GetHicon());
-        public static Cursor Handle = new(BezierDrawControl.Properties.Resources.handle.GetHicon());
+        public static readonly Cursor Rotate = new(BezierDrawControl.Properties.Resources.rotate.GetHicon());
+        public static readonly Cursor Anchor = new(BezierDrawControl.Properties.Resources.anchor.GetHicon());
+        public static readonly Cursor AnchorPlus = new(BezierDrawControl.Properties.Resources.anchorplus.GetHicon());
+        public static readonly Cursor Handle = new(BezierDrawControl.Properties.Resources.handle.GetHicon());
 
         public static Cursor CreateArrowCursor(int angle)
         {
             angle = NormalizeAngle(angle);
-            if (dict.ContainsKey(angle))
+            if (dict.TryGetValue(angle, out Cursor value))
             {
-                return dict[angle];
+                return value;
             }
             using Bitmap bit = new(32, 32);
             using Graphics g = Graphics.FromImage(bit);

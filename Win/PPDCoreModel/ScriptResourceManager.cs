@@ -123,9 +123,9 @@ namespace PPDCoreModel
                             {
                                 EffectLoader.Load(ppdpsr, resourceName, (ReadResourceCallBack)((filename) =>
                                 {
-                                    if (effectImageList.ContainsKey(filename))
+                                    if (effectImageList.TryGetValue(filename, out List<string> value))
                                     {
-                                        foreach (var imageFileName in effectImageList[filename])
+                                        foreach (var imageFileName in value)
                                         {
                                             imageList.Add(imageFileName);
                                         }
@@ -155,7 +155,7 @@ namespace PPDCoreModel
         {
             if (initialized)
             {
-                Vector2 position = param != null && param.ContainsKey("Position") ? (Vector2)param["Position"] : Vector2.Zero;
+                Vector2 position = param != null && param.TryGetValue("Position", out object value) ? (Vector2)value : Vector2.Zero;
                 switch (resourceKind)
                 {
                     case ResourceKind.Effect:

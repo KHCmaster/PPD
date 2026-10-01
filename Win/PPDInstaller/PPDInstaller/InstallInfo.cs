@@ -3,7 +3,7 @@
     public class InstallInfo
     {
 
-        public static string[] InstallationInfoData = [
+        public static readonly string[] InstallationInfoData = [
             "PPD",
             "IPAFont",
             "BMSTOPPD",

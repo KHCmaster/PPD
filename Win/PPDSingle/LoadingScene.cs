@@ -75,9 +75,8 @@ namespace PPDSingle
             {
                 return;
             }
-            if (parameters.ContainsKey("Progress"))
+            if (parameters.TryGetValue("Progress", out object val))
             {
-                var val = parameters["Progress"];
                 if (val is int v)
                 {
                     lock (progressQueue)

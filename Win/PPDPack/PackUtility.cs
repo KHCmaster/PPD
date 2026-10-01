@@ -2,7 +2,7 @@
 {
     public static class PackUtility
     {
-        public static byte[] FileSignature = [
+        public static readonly byte[] FileSignature = [
             (byte)'P',
             (byte)'P',
             (byte)'D',

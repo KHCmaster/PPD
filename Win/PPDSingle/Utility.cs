@@ -64,7 +64,7 @@ namespace PPDSingle
                 bool ok = true;
                 foreach (Regex regex in exceptFiles)
                 {
-                    if (regex.Match(filename).Success)
+                    if (regex.IsMatch(filename))
                     {
                         ok = false;
                         break;

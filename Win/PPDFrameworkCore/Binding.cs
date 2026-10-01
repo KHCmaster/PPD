@@ -53,7 +53,7 @@ namespace PPDFrameworkCore
             }
         }
 
-        private Object GetObjectFromString(string exp, object first, out string last)
+        private static Object GetObjectFromString(string exp, object first, out string last)
         {
             Object lastObj = first;
             var srcSplit = exp.Split('.');
@@ -89,7 +89,7 @@ namespace PPDFrameworkCore
             }
         }
 
-        private PropertyInfo FindPropertyInfo(object obj, string propertyName)
+        private static PropertyInfo FindPropertyInfo(object obj, string propertyName)
         {
             foreach (PropertyInfo propertyInfo in obj.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static))
             {

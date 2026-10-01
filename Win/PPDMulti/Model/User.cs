@@ -53,7 +53,7 @@ namespace PPDMulti.Model
                 if (color != value)
                 {
                     color = value;
-                    OnPropertyChanged("Color");
+                    OnPropertyChanged(nameof(Color));
                 }
             }
         }

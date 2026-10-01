@@ -35,7 +35,7 @@ namespace PPDEditorCommon.Dialog.ViewModel
 
         private float GetValue()
         {
-            float.TryParse(Text, out float val);
+            _ = float.TryParse(Text, out float val);
             return val;
         }
     }

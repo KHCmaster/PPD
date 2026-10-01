@@ -71,12 +71,12 @@ namespace FlowScriptControl.Controls
             SelectedFilterChanged?.Invoke(this, EventArgs.Empty);
         }
 
-        private void ReprecateMenuToTree(TreeNodeCollection collection, CustomToolStripMenuItem menu)
+        private static void ReprecateMenuToTree(TreeNodeCollection collection, CustomToolStripMenuItem menu)
         {
             if (menu.IsFolder)
             {
                 var treeNode = new CustomTreeNode(menu.CustomToolTipText, menu.Text);
-                this.AddFolder(collection, treeNode);
+                AddFolder(collection, treeNode);
                 foreach (CustomToolStripMenuItem childMenu in menu.DropDownItems)
                 {
                     ReprecateMenuToTree(treeNode.Nodes, childMenu);
@@ -85,19 +85,19 @@ namespace FlowScriptControl.Controls
             else
             {
                 var treeNode = new CustomTreeNode(menu.Dumper, menu.Text);
-                this.AddFlow(collection, treeNode);
+                AddFlow(collection, treeNode);
                 if (menu.DropDownItems.Count > 0)
                 {
                     foreach (CustomToolStripMenuItem childMenu in menu.DropDownItems)
                     {
                         var childNode = new CustomTreeNode(childMenu.Dumper, childMenu.Text);
-                        this.AddFlow(treeNode.Nodes, childNode);
+                        AddFlow(treeNode.Nodes, childNode);
                     }
                 }
             }
         }
 
-        private void AddFolder(TreeNodeCollection collection, CustomTreeNode node)
+        private static void AddFolder(TreeNodeCollection collection, CustomTreeNode node)
         {
             node.Name = node.Text;
             node.ImageKey = folderKey;
@@ -105,7 +105,7 @@ namespace FlowScriptControl.Controls
             collection.Add(node);
         }
 
-        private void AddFlow(TreeNodeCollection collection, CustomTreeNode node)
+        private static void AddFlow(TreeNodeCollection collection, CustomTreeNode node)
         {
             node.Name = node.Text;
             node.ImageKey = flowSourceKey;
@@ -113,7 +113,7 @@ namespace FlowScriptControl.Controls
             collection.Add(node);
         }
 
-        private TreeNode FindNode(TreeNodeCollection nodes, string name)
+        private static TreeNode FindNode(TreeNodeCollection nodes, string name)
         {
             foreach (TreeNode node in nodes)
             {
@@ -252,7 +252,7 @@ namespace FlowScriptControl.Controls
             return hasVisibleNodes;
         }
 
-        private bool IsFilteredNode(CustomTreeNode node, NodeFilterInfoBase filter)
+        private static bool IsFilteredNode(CustomTreeNode node, NodeFilterInfoBase filter)
         {
             if (node.Dumper == null)
             {
@@ -262,9 +262,9 @@ namespace FlowScriptControl.Controls
             return !filter.IsHide(node.Dumper);
         }
 
-        private bool IsFilteredNode(CustomTreeNode node, string filter)
+        private static bool IsFilteredNode(CustomTreeNode node, string filter)
         {
-            if (node.Text.ToLower().Contains(filter))
+            if (node.Text.Contains(filter, StringComparison.CurrentCultureIgnoreCase))
             {
                 return true;
             }
@@ -277,7 +277,7 @@ namespace FlowScriptControl.Controls
             foreach (var item in customTreeNode.Dumper.InEvents.Concat(customTreeNode.Dumper.OutEvents).Concat(
                 customTreeNode.Dumper.InProperties).Concat(customTreeNode.Dumper.OutProperties))
             {
-                if (item.Name.ToLower().Contains(filter))
+                if (item.Name.Contains(filter, StringComparison.CurrentCultureIgnoreCase))
                 {
                     return true;
                 }

@@ -64,7 +64,7 @@ namespace PPDInstaller.Controls
             }
         }
 
-        private bool CheckFont()
+        private static bool CheckFont()
         {
             var ifc =
                 new System.Drawing.Text.InstalledFontCollection();

@@ -40,9 +40,9 @@ namespace PPDFramework
             {
                 lock (cache)
                 {
-                    if (cache.ContainsKey(color))
+                    if (cache.TryGetValue(color, out TextureBase value))
                     {
-                        return cache[color];
+                        return value;
                     }
                 }
             }

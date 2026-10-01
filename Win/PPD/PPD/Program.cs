@@ -155,20 +155,17 @@ namespace PPD
 
         static bool CheckInstallInfo()
         {
-            var checker = new Checker();
-            return checker.CheckInstallInfo();
+            return Checker.CheckInstallInfo();
         }
 
         static bool CheckVersion()
         {
-            var checker = new Checker();
-            return checker.CheckUpdate();
+            return Checker.CheckUpdate();
         }
 
         static bool CheckAssembly(out string errors)
         {
-            var checker = new Checker();
-            return checker.CheckAssembly(out errors);
+            return Checker.CheckAssembly(out errors);
         }
     }
 }

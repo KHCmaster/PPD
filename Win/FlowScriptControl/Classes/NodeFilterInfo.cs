@@ -3,12 +3,12 @@ using System.Text.RegularExpressions;
 
 namespace FlowScriptControl.Classes
 {
-    public class NodeFilterInfo(string name, Regex[] includeAssemblyNames, Regex[] includeNodeNames,
+    public partial class NodeFilterInfo(string name, Regex[] includeAssemblyNames, Regex[] includeNodeNames,
         Regex[] excludeAssemblyNames, Regex[] excludeNodeNames) : NodeFilterInfoBase
     {
         private static readonly NodeFilterInfo defaultFilter = new("All",
-            [new(".")],
-            [new(".")]);
+            [AnyCharRegex()],
+            [AnyCharRegex()]);
         private readonly string name = name;
         private readonly Regex[] includeAssemblyNames = includeAssemblyNames;
         private readonly Regex[] includeNodeNames = includeNodeNames;
@@ -52,5 +52,8 @@ namespace FlowScriptControl.Classes
 
             return true;
         }
+
+        [GeneratedRegex(".")]
+        private static partial Regex AnyCharRegex();
     }
 }

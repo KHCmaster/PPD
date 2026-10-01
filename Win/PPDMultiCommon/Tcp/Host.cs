@@ -194,9 +194,9 @@ namespace PPDMultiCommon.Tcp
             {
                 lock (connections)
                 {
-                    if (connections.ContainsKey(id))
+                    if (connections.TryGetValue(id, out Connection value))
                     {
-                        connections[id].Write(data);
+                        value.Write(data);
                     }
                 }
             }
@@ -220,9 +220,9 @@ namespace PPDMultiCommon.Tcp
             {
                 lock (connections)
                 {
-                    if (connections.ContainsKey(id))
+                    if (connections.TryGetValue(id, out Connection value))
                     {
-                        return connections[id].Ip;
+                        return value.Ip;
                     }
                 }
                 return null;
@@ -232,9 +232,9 @@ namespace PPDMultiCommon.Tcp
             {
                 lock (connections)
                 {
-                    if (connections.ContainsKey(id))
+                    if (connections.TryGetValue(id, out Connection value))
                     {
-                        return connections[id];
+                        return value;
                     }
                 }
                 return null;

@@ -166,7 +166,7 @@ namespace PPDSingle
             }
         }
 
-        private void UpdateLastTime(string dir)
+        private static void UpdateLastTime(string dir)
         {
             DateTime now = DateTime.Now;
             Directory.SetLastWriteTime(dir, now);

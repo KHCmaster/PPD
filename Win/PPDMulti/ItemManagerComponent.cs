@@ -54,7 +54,7 @@ namespace PPDMulti
             queue = [];
             effects = [];
 
-            var itemTypeArray = (ItemType[])Enum.GetValues(typeof(ItemType));
+            var itemTypeArray = Enum.GetValues<ItemType>();
 
             itemWeight = new int[itemTypeArray.Length - 1];
             int sum = 0;

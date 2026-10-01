@@ -1609,8 +1609,8 @@ namespace DirectShow
                 {
                     if (SUCCEEDED(m_pUnknown.EnumMediaTypes(out IEnumMediaTypes pEnum)))
                     {
-                        IntPtr ulMediaCount = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(uint)));
-                        IntPtr pTypes = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(IntPtr)));
+                        IntPtr ulMediaCount = Marshal.AllocCoTaskMem(Marshal.SizeOf<uint>());
+                        IntPtr pTypes = Marshal.AllocCoTaskMem(Marshal.SizeOf<nint>());
 
                         try
                         {
@@ -1627,7 +1627,7 @@ namespace DirectShow
                                 {
                                     if (_ptrStructure != IntPtr.Zero)
                                     {
-                                        _list.Add((AMMediaType)Marshal.PtrToStructure(_ptrStructure, typeof(AMMediaType)));
+                                        _list.Add(Marshal.PtrToStructure<AMMediaType>(_ptrStructure));
                                     }
                                 }
                                 finally
@@ -1656,7 +1656,7 @@ namespace DirectShow
             get
             {
                 Guid _result = Guid.Empty;
-                int iSize = Marshal.SizeOf(typeof(Guid));
+                int iSize = Marshal.SizeOf<Guid>();
                 IntPtr ipOut = Marshal.AllocCoTaskMem(iSize);
                 try
                 {
@@ -1668,7 +1668,7 @@ namespace DirectShow
                         int hr = pKs.Get(g, (int)AMPropertyPin.Category, IntPtr.Zero, 0, ipOut, iSize, out int cbBytes);
                         if (SUCCEEDED(hr))
                         {
-                            _result = (Guid)Marshal.PtrToStructure(ipOut, typeof(Guid));
+                            _result = Marshal.PtrToStructure<Guid>(ipOut);
                         }
                     }
                 }

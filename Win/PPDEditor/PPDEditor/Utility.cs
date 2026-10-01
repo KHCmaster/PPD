@@ -16,10 +16,10 @@ namespace PPDEditor
 {
     public static class Utility
     {
-        public static PPDDevice Device;
-        public static PPDFramework.Resource.ResourceManager ResourceManager;
-        public static float[] Eval;
-        public static Vector2[] CirclePoints;
+        public static PPDDevice Device { get; set; }
+        public static PPDFramework.Resource.ResourceManager ResourceManager { get; set; }
+        public static float[] Eval { get; set; }
+        public static Vector2[] CirclePoints { get; set; }
 
         private static readonly PathManager pathManager = new(@"img\PPDEditor");
 
@@ -62,7 +62,7 @@ namespace PPDEditor
         {
             foreach (Char c in System.IO.Path.GetInvalidFileNameChars())
             {
-                if (fileName.IndexOf(c) >= 0)
+                if (fileName.Contains(c))
                 {
                     return false;
                 }
@@ -281,7 +281,7 @@ namespace PPDEditor
                 bool ok = true;
                 foreach (Regex regex in exceptFiles)
                 {
-                    if (regex.Match(filename).Success)
+                    if (regex.IsMatch(filename))
                     {
                         ok = false;
                         break;

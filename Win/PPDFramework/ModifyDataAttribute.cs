@@ -5,6 +5,7 @@ namespace PPDFramework
     /// <summary>
     /// ゲームデータを変更しうるクラスに使用する属性です。
     /// </summary>
+    [AttributeUsage(AttributeTargets.All)]
     public class ModifyDataAttribute : Attribute
     {
     }

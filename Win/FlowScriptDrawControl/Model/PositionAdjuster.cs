@@ -97,23 +97,23 @@ namespace FlowScriptDrawControl.Model
             Dictionary<int, double> widths, Dictionary<int, double> heights, Dictionary<SourceControl, Point> positions)
         {
             usedList.Add(source);
-            if (!heights.ContainsKey(level))
+            if (!heights.TryGetValue(level, out double value))
             {
                 positions[source] = new Point(level, 0);
                 heights[level] = source.ActualHeight + 5;
             }
             else
             {
-                positions[source] = new Point(level * 100, heights[level]);
+                positions[source] = new Point(level * 100, value);
                 heights[level] += source.ActualHeight + 5;
             }
-            if (!widths.ContainsKey(level))
+            if (!widths.TryGetValue(level, out double width))
             {
                 widths.Add(level, source.ActualWidth);
             }
             else
             {
-                widths[level] = Math.Max(widths[level], source.ActualWidth);
+                widths[level] = Math.Max(width, source.ActualWidth);
             }
 
             foreach (Item item in source.CurrentSource.InItems)

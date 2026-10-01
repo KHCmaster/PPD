@@ -52,7 +52,7 @@ namespace PPDEditor.Forms
             dataGridView1.Rows.Clear();
 
             regularShortcutCount = 0;
-            foreach (ShortcutType type in Enum.GetValues(typeof(ShortcutType)))
+            foreach (ShortcutType type in Enum.GetValues<ShortcutType>())
             {
                 if (type == ShortcutType.None)
                 {
@@ -76,17 +76,17 @@ namespace PPDEditor.Forms
             dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
         }
 
-        private string GetCustomShortcutText(ShortcutInfo shortcut)
+        private static string GetCustomShortcutText(ShortcutInfo shortcut)
         {
             return GetCustomShortcutText(shortcut.ScriptPath);
         }
 
-        private string GetCustomShortcutText(string scriptPath)
+        private static string GetCustomShortcutText(string scriptPath)
         {
             return String.Join(":", scriptPath.Split(Path.DirectorySeparatorChar).Skip(1).ToArray());
         }
 
-        private string GetCustomShortcutScriptPath(string str)
+        private static string GetCustomShortcutScriptPath(string str)
         {
             return Path.Combine("Commands", String.Join(Path.DirectorySeparatorChar.ToString(), str.Split(':')));
         }
@@ -108,7 +108,7 @@ namespace PPDEditor.Forms
         {
             get
             {
-                float.TryParse(this.textBox2.Text, out float ret);
+                _ = float.TryParse(this.textBox2.Text, out float ret);
                 return ret;
             }
             set
@@ -234,7 +234,7 @@ namespace PPDEditor.Forms
 
             shortcutManager.ClearShortcut();
             int iter = 0;
-            foreach (ShortcutType type in Enum.GetValues(typeof(ShortcutType)))
+            foreach (ShortcutType type in Enum.GetValues<ShortcutType>())
             {
                 if (type == ShortcutType.None)
                 {
@@ -268,7 +268,7 @@ namespace PPDEditor.Forms
             this.Close();
         }
 
-        private void GetModifiers(string str, out Keys key, out bool ctrl, out bool shift, out bool alt)
+        private static void GetModifiers(string str, out Keys key, out bool ctrl, out bool shift, out bool alt)
         {
             var split = str.Split('+');
             key = Keys.None;
@@ -299,7 +299,7 @@ namespace PPDEditor.Forms
             }
         }
 
-        private ShortcutInfo GetShortcutInfo(string str, ShortcutType shortcutType)
+        private static ShortcutInfo GetShortcutInfo(string str, ShortcutType shortcutType)
         {
             GetModifiers(str, out Keys key, out bool ctrl, out bool shift, out bool alt);
 
@@ -311,7 +311,7 @@ namespace PPDEditor.Forms
             return null;
         }
 
-        private ShortcutInfo GetCustomShortcutInfo(string str, string scriptPath)
+        private static ShortcutInfo GetCustomShortcutInfo(string str, string scriptPath)
         {
             GetModifiers(str, out Keys key, out bool ctrl, out bool shift, out bool alt);
 
@@ -322,7 +322,7 @@ namespace PPDEditor.Forms
             return null;
         }
 
-        private string GetReadableShortcut(ShortcutInfo info)
+        private static string GetReadableShortcut(ShortcutInfo info)
         {
             var list = new List<string>();
             if (info.Control)

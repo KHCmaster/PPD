@@ -148,7 +148,7 @@ namespace PPD
             if (currentGame != null)
             {
                 long elapsedTime = (GameHost.GameTimer.ElapsedTime - startTime) / 1000;
-                var value = glp.GetPlayingSecond(currentGame);
+                var value = GameListPanel.GetPlayingSecond(currentGame);
                 value += (int)elapsedTime;
                 glp.UpdatePlayingTime(currentGame, value);
                 PPDGeneralSetting.Setting[currentGame.GetFullName()] = value.ToString();

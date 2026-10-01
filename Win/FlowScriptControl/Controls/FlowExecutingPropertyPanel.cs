@@ -68,13 +68,13 @@ namespace FlowScriptControl.Controls
         {
             var name = element.Attribute("Name").Value;
             var valueElems = element.Elements("Value");
-            if (valueElems.Elements().Count() > 0)
+            if (valueElems.Elements().Any())
             {
                 var valueElem = valueElems.First();
                 var type = valueElem.Attribute("Type").Value;
-                if (FlowDrawPanel.TypeAliasDictionary.ContainsKey(type))
+                if (FlowDrawPanel.TypeAliasDictionary.TryGetValue(type, out string value))
                 {
-                    type = FlowDrawPanel.TypeAliasDictionary[type];
+                    type = value;
                 }
                 else
                 {
@@ -90,13 +90,13 @@ namespace FlowScriptControl.Controls
             else
             {
                 TreeNode valueNode;
-                if (valueElems.Count() > 0)
+                if (valueElems.Any())
                 {
                     var valueElem = valueElems.First();
                     var type = valueElem.Attribute("Type").Value;
-                    if (FlowDrawPanel.TypeAliasDictionary.ContainsKey(type))
+                    if (FlowDrawPanel.TypeAliasDictionary.TryGetValue(type, out string value))
                     {
-                        type = FlowDrawPanel.TypeAliasDictionary[type];
+                        type = value;
                     }
                     else
                     {
@@ -168,7 +168,7 @@ namespace FlowScriptControl.Controls
                 Restore(nodes, root);
             }
 
-            private void Restore(TreeNodeCollection nodes, ExpandInfoChild info)
+            private static void Restore(TreeNodeCollection nodes, ExpandInfoChild info)
             {
                 for (int i = 0; i < Math.Min(nodes.Count, info.ChildrenCount); i++)
                 {
@@ -184,7 +184,7 @@ namespace FlowScriptControl.Controls
                 }
             }
 
-            private void Check(TreeNodeCollection nodes, ExpandInfoChild info)
+            private static void Check(TreeNodeCollection nodes, ExpandInfoChild info)
             {
                 foreach (TreeNode childNode in nodes)
                 {

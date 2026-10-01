@@ -6,7 +6,7 @@ using System.Windows.Forms;
 
 namespace PPDEditor
 {
-    public class ShortcutInfo
+    public partial class ShortcutInfo
     {
         public Keys Key
         {
@@ -71,7 +71,7 @@ namespace PPDEditor
             ScriptPath = scriptFilePath;
         }
 
-        private string ConvertBoolean(bool b)
+        private static string ConvertBoolean(bool b)
         {
             return b ? "1" : "0";
         }
@@ -92,16 +92,16 @@ namespace PPDEditor
 
         public static ShortcutInfo Deserialize(string str)
         {
-            var regex = new Regex(@"Key:(\w+), Control:(\w+), Shift:(\w+), Alt:(\w+), Type:(\w+)");
-            var scriptRegex = new Regex(@"Key:(\w+), Control:(\w+), Shift:(\w+), Alt:(\w+), Path:(.+)");
+            var regex = ShortcutRegex();
+            var scriptRegex = ScriptShortcutRegex();
             var m = regex.Match(str);
             if (m.Success)
             {
-                var key = (Keys)Enum.Parse(typeof(Keys), m.Groups[1].Value);
+                var key = Enum.Parse<Keys>(m.Groups[1].Value);
                 bool control = m.Groups[2].Value == "1",
                     shift = m.Groups[3].Value == "1",
                     alt = m.Groups[4].Value == "1";
-                var type = (ShortcutType)Enum.Parse(typeof(ShortcutType), m.Groups[5].Value);
+                var type = Enum.Parse<ShortcutType>(m.Groups[5].Value);
                 return new ShortcutInfo(key, shift, control, alt, type);
             }
             else
@@ -109,7 +109,7 @@ namespace PPDEditor
                 m = scriptRegex.Match(str);
                 if (m.Success)
                 {
-                    var key = (Keys)Enum.Parse(typeof(Keys), m.Groups[1].Value);
+                    var key = Enum.Parse<Keys>(m.Groups[1].Value);
                     bool control = m.Groups[2].Value == "1",
                         shift = m.Groups[3].Value == "1",
                         alt = m.Groups[4].Value == "1";
@@ -137,5 +137,10 @@ namespace PPDEditor
             temp.Add(Key.ToString());
             return String.Join("+", temp.ToArray());
         }
+
+        [GeneratedRegex(@"Key:(\w+), Control:(\w+), Shift:(\w+), Alt:(\w+), Type:(\w+)")]
+        private static partial Regex ShortcutRegex();
+        [GeneratedRegex(@"Key:(\w+), Control:(\w+), Shift:(\w+), Alt:(\w+), Path:(.+)")]
+        private static partial Regex ScriptShortcutRegex();
     }
 }

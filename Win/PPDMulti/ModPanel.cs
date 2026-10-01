@@ -220,7 +220,7 @@ namespace PPDMulti
             }
         }
 
-        private void LoadMod()
+        private static void LoadMod()
         {
             _ = ModManager.Instance;
         }

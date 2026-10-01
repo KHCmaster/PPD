@@ -51,7 +51,7 @@ namespace PPDSingle
                 ModManager.Instance.WaitForLoadFinish();
                 foreach (var mod in mods)
                 {
-                    var found = ModManager.Instance.Root.Descendants().OfType<ModInfo>().FirstOrDefault(m => m.ModPath.ToLower() == mod.ToLower());
+                    var found = ModManager.Instance.Root.Descendants().OfType<ModInfo>().FirstOrDefault(m => m.ModPath.Equals(mod, StringComparison.CurrentCultureIgnoreCase));
                     if (found != null)
                     {
                         modInfos.Add(found);
@@ -70,7 +70,7 @@ namespace PPDSingle
             gameutility.Random = false;
             gameutility.Connect = connect == "1";
             gameutility.AppliedMods = modInfos.Count > 0 ? [.. modInfos] : null;
-            float.TryParse(starttime, out float starttimevalue);
+            _ = float.TryParse(starttime, out float starttimevalue);
             dic = new Dictionary<string, object>
             {
                 { "PPDGameUtility", gameutility },
@@ -83,7 +83,7 @@ namespace PPDSingle
             };
             return new MainGame(device);
         }
-        private Difficulty ParseDifficulty(string difficuly)
+        private static Difficulty ParseDifficulty(string difficuly)
         {
             return difficuly.ToLower() switch
             {

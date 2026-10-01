@@ -98,7 +98,7 @@ namespace PPD
             }
             else
             {
-                myGame.ShowLoginForm();
+                Game.ShowLoginForm();
             }
             ReturnToFirst();
         }

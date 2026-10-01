@@ -164,7 +164,7 @@ namespace PPDFramework.Chars
                     UV = uv;
                     UVSize = uvSize;
                     ActualUVSize = new Vector2(uvSize.X * width / t_width, uvSize.Y * height / t_height);
-                    HalfPixel = sizeTexture.HalfPixel;
+                    HalfPixel = SizeTexture.HalfPixel;
                 }
             }
         }
@@ -275,7 +275,7 @@ namespace PPDFramework.Chars
                 finally
                 {
                     NativeMethods.SelectObject(hdc, prev);
-                    NativeMethods.DeleteObject(prev);
+                    _ = NativeMethods.DeleteObject(prev);
                     g.ReleaseHdc(hdc);
                     Marshal.FreeHGlobal(buffer);
                 }
@@ -288,7 +288,7 @@ namespace PPDFramework.Chars
         /// </summary>
         private static TextureBase CreateTemporaryTexture(PPDDevice device, Stream stream, int width, int height)
         {
-            return ((PPDFramework.Texture.DX11.TextureFactory)TextureFactoryManager.Factory).FromStream(device, stream, width, height, true, true);
+            return PPDFramework.Texture.DX11.TextureFactory.FromStream(device, stream, width, height, true, true);
         }
 
         private static TextureBase CreateTemporaryTexture(PPDDevice device, int width, int height)

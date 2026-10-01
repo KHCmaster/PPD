@@ -289,13 +289,13 @@ namespace PPDEditor
             WindowUtility.MainForm?.ChangeData(displayPositions, displayAngles);
         }
 
-        private double GetNormalAngle(double angle)
+        private static double GetNormalAngle(double angle)
         {
             var shou = (int)Math.Floor(angle / (Math.PI * 2));
             return angle - Math.PI * 2 * shou;
         }
 
-        private float NormalizeAngle(float angle)
+        private static float NormalizeAngle(float angle)
         {
             var val = Math.IEEERemainder(angle, Math.PI * 2);
             if (val < 0) val += Math.PI * 2;
@@ -415,7 +415,7 @@ namespace PPDEditor
                 Reload();
             }
         }
-        private void WriteData(Mark[] mks, string fileName, bool withAngle)
+        private static void WriteData(Mark[] mks, string fileName, bool withAngle)
         {
             var filePath = Path.Combine("posdat", Path.ChangeExtension(fileName, ".txt"));
             var infos = new List<PosAndAngleInfo>();

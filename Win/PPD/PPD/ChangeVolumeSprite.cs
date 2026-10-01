@@ -86,7 +86,7 @@ namespace PPD
                 (SoundMasterControl.Max - SoundMasterControl.Min));
         }
 
-        private void AdjustPosition(PictureObject sphere, float ratio)
+        private static void AdjustPosition(PictureObject sphere, float ratio)
         {
             sphere.Position = new System.Numerics.Vector2(RectStartX + RectWidth * ratio, sphere.Position.Y);
         }

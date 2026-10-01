@@ -37,7 +37,7 @@ namespace FlowScriptControlTest
             thread.Start();
         }
 
-        public void RestoreOriginal()
+        public static void RestoreOriginal()
         {
             Console.SetOut(original);
         }

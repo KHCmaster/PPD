@@ -621,17 +621,13 @@ namespace FlowScriptEngine
             {
                 return;
             }
-            if (inFlowList.ContainsKey(actualDestName))
+            if (!inFlowList.TryAdd(actualDestName, flow))
             {
                 //disconnect current
                 // error
                 throw new Exception("error in connection");
                 /*InFlowList[flow.DestPropertyName].DisConnect();
                 InFlowList.Add(flow.DestPropertyName, flow);*/
-            }
-            else
-            {
-                inFlowList.Add(actualDestName, flow);
             }
         }
 

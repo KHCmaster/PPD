@@ -180,7 +180,7 @@ namespace FolderDiffChecker
 
         const int bufferSize = 1024;
 
-        private bool CheckSameFileContent(string filePath1, string filePath2)
+        private static bool CheckSameFileContent(string filePath1, string filePath2)
         {
             var extension = Path.GetExtension(filePath1).ToLower();
             if (extension == ".exe" || extension == ".dll")

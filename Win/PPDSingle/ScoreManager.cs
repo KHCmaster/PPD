@@ -373,7 +373,7 @@ namespace PPDSingle
             }
         }
 
-        private bool ChangeIndex(LogicFolderTreeViewItem swaplftvi, bool isUp)
+        private static bool ChangeIndex(LogicFolderTreeViewItem swaplftvi, bool isUp)
         {
             if (swaplftvi == null || swaplftvi.Parent == null) return false;
             var index = swaplftvi.Parent.Items.IndexOf(swaplftvi);
@@ -825,7 +825,7 @@ namespace PPDSingle
             return true;
         }
 
-        private void LFRecursiveDispose(List<TreeViewItem> sis)
+        private static void LFRecursiveDispose(List<TreeViewItem> sis)
         {
             foreach (LogicFolderTreeViewItem child in sis.Cast<LogicFolderTreeViewItem>())
             {
@@ -939,7 +939,7 @@ namespace PPDSingle
             return true;
         }
 
-        private void RecursiveDispose(List<TreeViewItem> sis)
+        private static void RecursiveDispose(List<TreeViewItem> sis)
         {
             foreach (SongInfoTreeViewItem child in sis.Cast<SongInfoTreeViewItem>())
             {

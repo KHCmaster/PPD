@@ -271,9 +271,9 @@ namespace PPDFramework
         protected override bool IsInputKey(Keys keyData)
         {
             if (!isTextEditMode) return false;
-            if (actionList.ContainsKey(keyData))
+            if (actionList.TryGetValue(keyData, out Action value))
             {
-                actionList[keyData].Invoke();
+                value.Invoke();
                 return true;
             }
             return false;
@@ -395,9 +395,9 @@ namespace PPDFramework
             ime = NativeMethods.ImmGetContext(Handle);
             len = NativeMethods.ImmGetCompositionStringW(ime, gcs, null, 0);
             byte[] buf = new byte[len];
-            NativeMethods.ImmGetCompositionStringW(ime, gcs, buf, len);
+            _ = NativeMethods.ImmGetCompositionStringW(ime, gcs, buf, len);
             text = System.Text.Encoding.Unicode.GetString(buf, 0, buf.Length);
-            NativeMethods.ImmReleaseContext(Handle, ime);
+            _ = NativeMethods.ImmReleaseContext(Handle, ime);
             return text;
         }
 

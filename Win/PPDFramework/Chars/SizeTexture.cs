@@ -14,7 +14,7 @@ namespace PPDFramework.Chars
         readonly List<AvailableSpace> availableSpaces;
         readonly List<AvailableSpace> onceUsedSpaces;
 
-        public Vector2 HalfPixel
+        public static Vector2 HalfPixel
         {
             get { return new Vector2(0.5f / Size); }
         }

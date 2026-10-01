@@ -50,7 +50,7 @@ namespace PPDFramework.Texture.DX11
         /// <param name="pa"></param>
         /// <param name="keepCpuData">CPU側にデータを保持するかどうか。</param>
         /// <returns></returns>
-        public TextureBase FromStream(PPDDevice device, Stream stream, int width, int height, bool pa, bool keepCpuData)
+        public static TextureBase FromStream(PPDDevice device, Stream stream, int width, int height, bool pa, bool keepCpuData)
         {
             using var bitmap = new System.Drawing.Bitmap(stream);
             return FromBitmap(device, bitmap, width, height, pa, keepCpuData);
@@ -62,7 +62,7 @@ namespace PPDFramework.Texture.DX11
             return FromStream(device, stream, width, height, pa, false);
         }
 
-        private TextureBase FromBitmap(PPDDevice device, System.Drawing.Bitmap bitmap, int width, int height, bool pa, bool keepCpuData)
+        private static TextureBase FromBitmap(PPDDevice device, System.Drawing.Bitmap bitmap, int width, int height, bool pa, bool keepCpuData)
         {
             if (width <= 0)
             {
@@ -110,7 +110,7 @@ namespace PPDFramework.Texture.DX11
             }
         }
 
-        private TextureBase CreateFromPixels(PPDDevice device, byte[] pixels, int width, int height, bool pa, bool keepCpuData)
+        private static TextureBase CreateFromPixels(PPDDevice device, byte[] pixels, int width, int height, bool pa, bool keepCpuData)
         {
             var handle = GCHandle.Alloc(pixels, GCHandleType.Pinned);
             try

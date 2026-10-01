@@ -150,10 +150,10 @@ namespace ShaderCompiler
         }
     }
 
-    class TextElement(Parser parser, string text) : Element(parser)
+    partial class TextElement(Parser parser, string text) : Element(parser)
     {
         readonly string text = text;
-        readonly Regex replaceRegex = new(@"\$\((?<key>[_a-zA-Z0-9][_a-zA-Z0-9]*)\)");
+        readonly Regex replaceRegex = ReplaceKeyRegex();
 
         public override string ToStr(Scope scope)
         {
@@ -167,6 +167,9 @@ namespace ShaderCompiler
                 return m.Value;
             });
         }
+
+        [GeneratedRegex(@"\$\((?<key>[_a-zA-Z0-9][_a-zA-Z0-9]*)\)")]
+        private static partial Regex ReplaceKeyRegex();
     }
 
     abstract class Exp
@@ -207,9 +210,9 @@ namespace ShaderCompiler
         }
     }
 
-    class HashExp : Exp
+    partial class HashExp : Exp
     {
-        static readonly Regex regex = new(@"^\s*(?<key>[_a-zA-Z][_a-zA-Z0-9]*)\s*=>\s*(?<value>[_a-zA-Z][_a-zA-Z0-9]*)\s*$");
+        static readonly Regex regex = MappingRegex();
 
         public override Type ExpectedType
         {
@@ -253,6 +256,9 @@ namespace ShaderCompiler
                 };
             }
         }
+
+        [GeneratedRegex(@"^\s*(?<key>[_a-zA-Z][_a-zA-Z0-9]*)\s*=>\s*(?<value>[_a-zA-Z][_a-zA-Z0-9]*)\s*$")]
+        private static partial Regex MappingRegex();
     }
 
     abstract class ParsableElement(Parser parser) : Element(parser)
@@ -260,9 +266,9 @@ namespace ShaderCompiler
         public abstract bool Parse(string[] lines, int lineIndex, out int nextLineIndex);
     }
 
-    class Params(Parser parser) : ParsableElement(parser)
+    partial class Params(Parser parser) : ParsableElement(parser)
     {
-        static readonly Regex startRegex = new(@"^#params\s+(?<name>[_a-zA-Z][_a-zA-Z0-9]*)\s+(?<value>.+)\s*$");
+        static readonly Regex startRegex = ParamsStartRegex();
 
         public string Name
         {
@@ -293,7 +299,7 @@ namespace ShaderCompiler
             return true;
         }
 
-        private Value ParseValue(string str, int index, char[] terminaters, out int nextIndex)
+        private static Value ParseValue(string str, int index, char[] terminaters, out int nextIndex)
         {
             nextIndex = -1;
             switch (str[index])
@@ -359,7 +365,7 @@ namespace ShaderCompiler
             }
         }
 
-        private string ReadASCIIOrNumber(string str, int index, char[] terminaters, out int nextIndex)
+        private static string ReadASCIIOrNumber(string str, int index, char[] terminaters, out int nextIndex)
         {
             var num = ReadNumber(str, index, terminaters, out nextIndex);
             if (num != null)
@@ -374,7 +380,7 @@ namespace ShaderCompiler
             throw new Exception(String.Format("Error\n{0}", str));
         }
 
-        private string ReadNumber(string str, int index, char[] terminaters, out int nextIndex)
+        private static string ReadNumber(string str, int index, char[] terminaters, out int nextIndex)
         {
             nextIndex = -1;
             var current = index;
@@ -414,7 +420,7 @@ namespace ShaderCompiler
             return str[index..nextIndex].Trim();
         }
 
-        private string ReadASCII(string str, int index, char[] terminaters, out int nextIndex)
+        private static string ReadASCII(string str, int index, char[] terminaters, out int nextIndex)
         {
             nextIndex = -1;
             var current = index;
@@ -453,12 +459,15 @@ namespace ShaderCompiler
             }
             return str[index..nextIndex].Trim();
         }
+
+        [GeneratedRegex(@"^#params\s+(?<name>[_a-zA-Z][_a-zA-Z0-9]*)\s+(?<value>.+)\s*$")]
+        private static partial Regex ParamsStartRegex();
     }
 
-    class Foreach(Parser parser) : ParsableElement(parser)
+    partial class Foreach(Parser parser) : ParsableElement(parser)
     {
-        static readonly Regex startRegex = new(@"^#foreach\s*\(\s*(?<arg>[_a-zA-Z][_a-zA-Z0-9]*)\s*,\s*(?<exp>.*)\s*\)\s*$");
-        static readonly Regex endRegex = new(@"^\s*#end\s*$");
+        static readonly Regex startRegex = ForeachStartRegex();
+        static readonly Regex endRegex = EndRegex();
 
         public Params Arg
         {
@@ -522,6 +531,11 @@ namespace ShaderCompiler
             }
             return String.Join("\n", strs);
         }
+
+        [GeneratedRegex(@"^#foreach\s*\(\s*(?<arg>[_a-zA-Z][_a-zA-Z0-9]*)\s*,\s*(?<exp>.*)\s*\)\s*$")]
+        private static partial Regex ForeachStartRegex();
+        [GeneratedRegex(@"^\s*#end\s*$")]
+        private static partial Regex EndRegex();
     }
 
     class Scope

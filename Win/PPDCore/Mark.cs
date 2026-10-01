@@ -661,7 +661,7 @@ namespace PPDCore
             colorMarkInfo.ColorMark.Position = vec;
         }
 
-        protected float GetAngle(Vector2 vec)
+        protected static float GetAngle(Vector2 vec)
         {
             var length = vec.Length();
 

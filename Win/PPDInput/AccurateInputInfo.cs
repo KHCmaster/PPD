@@ -37,9 +37,9 @@ namespace PPDInput
 
         public override int GetPressingFrame(ButtonType buttonType)
         {
-            if (lastPressInfos.ContainsKey(buttonType))
+            if (lastPressInfos.TryGetValue(buttonType, out InputAction value))
             {
-                return (int)((CurrentTime - lastPressInfos[buttonType].Time) * 60.0);
+                return (int)((CurrentTime - value.Time) * 60.0);
             }
 
             return 0;

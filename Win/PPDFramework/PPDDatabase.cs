@@ -261,7 +261,7 @@ namespace PPDFramework
             ReplaceInfo(deletedScoreInfo, addedScoreInfo);
         }
 
-        internal void RemoveUnconnectedLinks()
+        internal static void RemoveUnconnectedLinks()
         {
             foreach (LogicFolderInfomation info in LogicFolderInfomation.All)
             {
@@ -519,7 +519,7 @@ uservolume = @uservolume where scoreid = @newid", [
                 {
                     time = GetLastFileTime(Path.Combine(dir, "data.ini"));
                 }
-                bool shouldUpdate = (IsUpdatedDirectory(dir, time.ToString(CultureInfo.InvariantCulture), out bool IsExistDir) || forceUpdate) || (songInfos != null && songInfos.FirstOrDefault(s => s.DirectoryPath.ToLower() == dir.ToLower()) != null);
+                bool shouldUpdate = (IsUpdatedDirectory(dir, time.ToString(CultureInfo.InvariantCulture), out bool IsExistDir) || forceUpdate) || (songInfos != null && songInfos.FirstOrDefault(s => s.DirectoryPath.Equals(dir, StringComparison.CurrentCultureIgnoreCase)) != null);
                 if (!shouldUpdate)
                 {
                     return;
@@ -737,7 +737,7 @@ uservolume = @uservolume where scoreid = @newid", [
             }
         }
 
-        DateTime GetLastFileTime(string filePath)
+        static DateTime GetLastFileTime(string filePath)
         {
             DateTime dt1 = File.GetCreationTime(filePath), dt2 = File.GetLastWriteTime(filePath);
             return DateTime.Compare(dt1, dt2) > 0 ? dt1 : dt2;
@@ -771,9 +771,9 @@ uservolume = @uservolume where scoreid = @newid", [
             {
                 if (sb.Length > 0)
                 {
-                    sb.Append("|");
+                    sb.Append('|');
                 }
-                sb.Append(data.ToString());
+                sb.Append(data);
             }
             return sb.ToString();
         }
@@ -966,7 +966,7 @@ uservolume = @uservolume where scoreid = @newid", [
             ]);
         }
 
-        private string GetSQLColumn(Difficulty difficulty)
+        private static string GetSQLColumn(Difficulty difficulty)
         {
             return difficulty switch
             {
@@ -978,7 +978,7 @@ uservolume = @uservolume where scoreid = @newid", [
             };
         }
 
-        private bool IsHighScore(int newscore, int[] newcounts, int newmaxcombo, int bestscore, int[] bestcounts, int bestmaxcombo)
+        private static bool IsHighScore(int newscore, int[] newcounts, int newmaxcombo, int bestscore, int[] bestcounts, int bestmaxcombo)
         {
             if (newscore > bestscore) return true;
             else if (newscore == bestscore)

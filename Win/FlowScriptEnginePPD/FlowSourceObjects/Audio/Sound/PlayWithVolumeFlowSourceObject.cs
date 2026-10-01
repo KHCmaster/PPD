@@ -22,9 +22,9 @@ namespace FlowScriptEnginePPD.FlowSourceObjects.Audio.Sound
 
         protected override void OnInitialize()
         {
-            if (Manager.Items.ContainsKey("PlayRatio"))
+            if (Manager.Items.TryGetValue("PlayRatio", out object value))
             {
-                playRatio = (double)Manager.Items["PlayRatio"];
+                playRatio = (double)value;
             }
         }
 

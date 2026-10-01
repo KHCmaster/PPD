@@ -61,7 +61,7 @@ namespace PPDShareComponent
             Hidden = false;
         }
 
-        private string GetLatencyString(float latency)
+        private static string GetLatencyString(float latency)
         {
             return String.Format("<L:-> Latency:{1}{0:F3} <+:R>", latency, latency >= 0 ? "+" : "");
         }

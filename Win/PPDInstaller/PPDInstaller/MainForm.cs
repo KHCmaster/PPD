@@ -401,7 +401,7 @@ namespace PPDInstaller
             }
         }
 
-        void CreateDirectory(string path)
+        static void CreateDirectory(string path)
         {
             if (!Directory.Exists(path))
             {

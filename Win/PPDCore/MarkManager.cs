@@ -576,7 +576,7 @@ namespace PPDCore
             return CreateMark(ipdata, false, 0);
         }
 
-        private bool IsScratch(ButtonType buttonType, int sameTimingMarks)
+        private static bool IsScratch(ButtonType buttonType, int sameTimingMarks)
         {
             switch (buttonType)
             {
@@ -595,7 +595,7 @@ namespace PPDCore
             return false;
         }
 
-        private bool HasRLSameTiming(int sameTimingMarks)
+        private static bool HasRLSameTiming(int sameTimingMarks)
         {
             return ((sameTimingMarks >> (int)ButtonType.R) & 1) == 1 ||
                  ((sameTimingMarks >> (int)ButtonType.L) & 1) == 1;

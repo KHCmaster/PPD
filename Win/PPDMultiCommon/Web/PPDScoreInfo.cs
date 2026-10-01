@@ -85,7 +85,7 @@ namespace PPDMultiCommon.Web
             }
         }
 
-        private byte[] ParseString(string str)
+        private static byte[] ParseString(string str)
         {
             if (String.IsNullOrEmpty(str))
             {

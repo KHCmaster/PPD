@@ -256,7 +256,7 @@ namespace Effect2DEditor
                     {
                         Text = name,
                         Name = fileName.ToLower(),
-                        Checked = Path.GetFileName(fileName).ToLower() == String.Format("lang_{0}_{1}.ini", this.GetType().Assembly.GetName().Name, langFileISO).ToLower()
+                        Checked = Path.GetFileName(fileName).Equals(String.Format("lang_{0}_{1}.ini", this.GetType().Assembly.GetName().Name, langFileISO), StringComparison.CurrentCultureIgnoreCase)
                     };
                     tsmi.Click += Langtsmi_Click;
                     言語ToolStripMenuItem.DropDownItems.Add(tsmi);
@@ -269,7 +269,7 @@ namespace Effect2DEditor
             if (sender is ToolStripMenuItem tsmi)
             {
                 langFileName = tsmi.Name;
-                var m = Regex.Match(Path.GetFileName(langFileName), "^lang_\\w+_(?<ISO>\\w+).ini$");
+                var m = LangFileRegex().Match(Path.GetFileName(langFileName));
                 if (m.Success)
                 {
                     langFileISO = m.Groups["ISO"].Value;
@@ -1223,5 +1223,8 @@ namespace Effect2DEditor
         {
             Utility.ShowOrHideWindow(dockPanel1, timeLineDock, ModifierKeys);
         }
+
+        [GeneratedRegex("^lang_\\w+_(?<ISO>\\w+).ini$")]
+        private static partial Regex LangFileRegex();
     }
 }

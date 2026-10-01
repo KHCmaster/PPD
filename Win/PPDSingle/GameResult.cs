@@ -67,19 +67,19 @@ namespace PPDSingle
             }
             if (data != null)
             {
-                if (data.ContainsKey("Exp"))
+                if (data.TryGetValue("Exp", out string expValue))
                 {
-                    var exp = int.Parse(data["Exp"]);
+                    var exp = int.Parse(expValue);
                     GameHost.AddNotify(String.Format(Utility.Language["GotExp"], exp));
                 }
-                if (data.ContainsKey("Item"))
+                if (data.TryGetValue("Item", out string itemValue))
                 {
-                    var itemType = (ItemType)int.Parse(data["Item"]);
+                    var itemType = (ItemType)int.Parse(itemValue);
                     GameHost.AddNotify(String.Format(Utility.Language["GotItem"], Utility.Language[String.Format("Item{0}Name", itemType)]));
                 }
-                if (data.ContainsKey("LastLevel") && data.ContainsKey("Level"))
+                if (data.TryGetValue("LastLevel", out string lastLevelValue) && data.TryGetValue("Level", out string levelValue))
                 {
-                    int lastLevel = int.Parse(data["LastLevel"]), level = int.Parse(data["Level"]);
+                    int lastLevel = int.Parse(lastLevelValue), level = int.Parse(levelValue);
                     if (lastLevel != level)
                     {
                         GameHost.AddNotify(String.Format(Utility.Language["LevelUp"], lastLevel, level));

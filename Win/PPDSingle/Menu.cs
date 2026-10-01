@@ -634,7 +634,7 @@ namespace PPDSingle
             switch (lastPlayState)
             {
                 case LastPlayState.Play:
-                    if (param.ContainsKey("PerfectTrialSucceess") && (bool)param["PerfectTrialSucceess"])
+                    if (param.TryGetValue("PerfectTrialSucceess", out object value) && (bool)value)
                     {
                         var gameUtility = (PPDGameUtility)param["GameUtility"];
                         PerfectTrialCache.Instance.AddPerfectTrial(CryptographyUtility.Getx2Encoding(

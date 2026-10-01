@@ -11,7 +11,7 @@ using WeifenLuo.WinFormsUI.Docking;
 
 namespace PPDEditor
 {
-    public class PPDEditorSkin
+    public partial class PPDEditorSkin
     {
         public enum BackGroundDisplayMode
         {
@@ -128,8 +128,8 @@ namespace PPDEditor
             {
                 if (File.Exists(filename))
                 {
-                    var rgb = new Regex("(\\d+)\\s*,\\s*(\\d+)\\s*,\\s*(\\d+)");
-                    var argb = new Regex("(\\d+)\\s*,\\s*(\\d+)\\s*,\\s*(\\d+)\\s*,\\s*(\\d+)");
+                    var rgb = RgbRegex();
+                    var argb = ArgbRegex();
                     var sr = new StreamReader(filename);
                     var data = sr.ReadToEnd();
                     sr.Close();
@@ -278,25 +278,25 @@ namespace PPDEditor
                 MessageBox.Show(e.Message);
             }
         }
-        private SolidBrush GetBrush(Regex rgb, Regex argb, SettingReader setting, string exp, Color ErrorColor)
+        private static SolidBrush GetBrush(Regex rgb, Regex argb, SettingReader setting, string exp, Color ErrorColor)
         {
             return new SolidBrush(GetColor(rgb, argb, setting, exp, ErrorColor));
         }
-        private Color GetColor(Regex rgb, Regex argb, SettingReader setting, string exp)
+        private static Color GetColor(Regex rgb, Regex argb, SettingReader setting, string exp)
         {
             var color = setting.ReadString(exp);
             return GetColorFromString(rgb, argb, color);
         }
-        private Color GetColor(Regex rgb, Regex argb, SettingReader setting, string exp, Color ErrorColor)
+        private static Color GetColor(Regex rgb, Regex argb, SettingReader setting, string exp, Color ErrorColor)
         {
             var color = setting.ReadString(exp);
             return GetColorFromString(rgb, argb, color, ErrorColor);
         }
-        private Color GetColorFromString(Regex rgb, Regex argb, string data)
+        private static Color GetColorFromString(Regex rgb, Regex argb, string data)
         {
             return GetColorFromString(rgb, argb, data, SystemColors.Control);
         }
-        private Color GetColorFromString(Regex rgb, Regex argb, string data, Color ErrorColor)
+        private static Color GetColorFromString(Regex rgb, Regex argb, string data, Color ErrorColor)
         {
             Color ret = ErrorColor;
             var m = argb.Match(data);
@@ -317,7 +317,7 @@ namespace PPDEditor
             }
             return ret;
         }
-        private DockPanelGradient CreateDockPanelGradient(int sred, int sgreen, int sblue, int ered, int egreen, int eblue, LinearGradientMode gramode)
+        private static DockPanelGradient CreateDockPanelGradient(int sred, int sgreen, int sblue, int ered, int egreen, int eblue, LinearGradientMode gramode)
         {
             var gra = new DockPanelGradient
             {
@@ -327,7 +327,7 @@ namespace PPDEditor
             };
             return gra;
         }
-        private TabGradient CreateTabGradient(int sred, int sgreen, int sblue, int ered, int egreen, int eblue, LinearGradientMode gramode)
+        private static TabGradient CreateTabGradient(int sred, int sgreen, int sblue, int ered, int egreen, int eblue, LinearGradientMode gramode)
         {
             var tabgra = new TabGradient
             {
@@ -513,5 +513,10 @@ namespace PPDEditor
             x = holdx;
             y = holdy;
         }
+
+        [GeneratedRegex("(\\d+)\\s*,\\s*(\\d+)\\s*,\\s*(\\d+)")]
+        private static partial Regex RgbRegex();
+        [GeneratedRegex("(\\d+)\\s*,\\s*(\\d+)\\s*,\\s*(\\d+)\\s*,\\s*(\\d+)")]
+        private static partial Regex ArgbRegex();
     }
 }

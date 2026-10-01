@@ -87,7 +87,7 @@ namespace PPDEditor
             treeView1.ImageList.Images.Add("sound", PPDEditor.Properties.Resources.sound);
             treeView1.ImageList.Images.Add("others", PPDEditor.Properties.Resources.document);
 
-            NativeMethods.ImageList_SetOverlayImage(treeView1.ImageList.Handle, 1, 1);
+            _ = NativeMethods.ImageList_SetOverlayImage(treeView1.ImageList.Handle, 1, 1);
 
             CreateFolderNode(treeView1.Nodes, "Image");
             CreateFolderNode(treeView1.Nodes, "Effect");
@@ -154,7 +154,7 @@ namespace PPDEditor
             foreach (string filePath in Directory.GetFiles(dir))
             {
                 var extension = Path.GetExtension(filePath);
-                if (extension.ToLower() == ".etd")
+                if (extension.Equals(".etd", StringComparison.CurrentCultureIgnoreCase))
                 {
                     CreateNode(EffectNode.Nodes, Path.GetFileName(filePath), NodeType.Effect);
                 }
@@ -220,7 +220,7 @@ namespace PPDEditor
             return GetChildrenList(OthersNode);
         }
 
-        private string[] GetChildrenList(TreeNode node)
+        private static string[] GetChildrenList(TreeNode node)
         {
             var ret = new List<string>();
             foreach (TreeNode childNode in node.Nodes)
@@ -433,7 +433,7 @@ namespace PPDEditor
             CreateNode(OthersNode.Nodes, Path.GetFileName(filePath), NodeType.Others);
         }
 
-        private void CheckResourceDir()
+        private static void CheckResourceDir()
         {
             var dir = Path.Combine(WindowUtility.MainForm.CurrentProjectDir, "resource");
             if (!Directory.Exists(dir))
@@ -467,7 +467,7 @@ namespace PPDEditor
             無効化ToolStripMenuItem.Text = NativeMethods.GetTreeViewOverlay(treeView1.SelectedNode) == 0 ? Utility.Language["MakeInvalid"] : Utility.Language["MakeValid"];
         }
 
-        private bool EnabledNode(TreeNode node)
+        private static bool EnabledNode(TreeNode node)
         {
             return NativeMethods.GetTreeViewOverlay(node) == 0;
         }
@@ -485,7 +485,7 @@ namespace PPDEditor
                 File.Delete(path);
             }
 
-            if (Path.GetExtension(path).ToLower() == ".etd")
+            if (Path.GetExtension(path).Equals(".etd", StringComparison.CurrentCultureIgnoreCase))
             {
                 var dir = Path.Combine(WindowUtility.MainForm.CurrentProjectDir, Path.Combine(Path.GetDirectoryName(path), Path.GetFileName(path)));
                 if (Directory.Exists(dir))
@@ -508,7 +508,7 @@ namespace PPDEditor
             }
         }
 
-        private TreeNode CreateFolderNode(TreeNodeCollection nodes, string name)
+        private static TreeNode CreateFolderNode(TreeNodeCollection nodes, string name)
         {
             var node = nodes.Add("folder", name);
             node.ImageKey = "folder";
@@ -576,7 +576,7 @@ namespace PPDEditor
             }
         }
 
-        private void AddFolderInfo()
+        private static void AddFolderInfo()
         {
         }
 
@@ -635,7 +635,7 @@ namespace PPDEditor
             this.dataGridView1.Rows.Add(args);
         }
 
-        private string GetImageFormatString(ImageFormat format)
+        private static string GetImageFormatString(ImageFormat format)
         {
             if (format.Guid == ImageFormat.Bmp.Guid)
             {

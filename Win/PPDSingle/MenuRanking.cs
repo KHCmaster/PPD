@@ -169,7 +169,7 @@ namespace PPDSingle
             RankingInfo myRank = null;
             foreach (RankingInfo info in infos)
             {
-                if (info.ID.ToLower() == WebManager.Instance.CurrentAccountId.ToLower())
+                if (info.ID.Equals(WebManager.Instance.CurrentAccountId, StringComparison.CurrentCultureIgnoreCase))
                 {
                     myRank = info;
                 }

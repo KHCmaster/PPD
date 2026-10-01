@@ -20,7 +20,7 @@ namespace FlowScriptDrawControl.Model
             }
         }
 
-        public string Serialize(Selection selection)
+        public static string Serialize(Selection selection)
         {
             var document = new XmlDocument();
             var root = document.AppendChild(document.CreateElement("Root"));
@@ -174,7 +174,7 @@ namespace FlowScriptDrawControl.Model
             return attribute;
         }
 
-        private Selection DeserializeImpl(string xml, Func<string, Source> sourceGenerateFunc)
+        private static Selection DeserializeImpl(string xml, Func<string, Source> sourceGenerateFunc)
         {
             var document = new XmlDocument();
             document.LoadXml(xml);
@@ -287,7 +287,7 @@ namespace FlowScriptDrawControl.Model
                 node.Attributes["DestName"].Value);
         }
 
-        public Selection Deserialize(string xml, Func<string, Source> sourceGenerateFunc)
+        public static Selection Deserialize(string xml, Func<string, Source> sourceGenerateFunc)
         {
             try
             {

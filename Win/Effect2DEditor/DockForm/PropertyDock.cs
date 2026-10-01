@@ -21,7 +21,7 @@ namespace Effect2DEditor.DockForm
         public PropertyDock()
         {
             InitializeComponent();
-            foreach (var blendMode in (BlendMode[])Enum.GetValues(typeof(BlendMode)))
+            foreach (var blendMode in Enum.GetValues<BlendMode>())
             {
                 comboBox1.Items.Add(blendMode);
             }

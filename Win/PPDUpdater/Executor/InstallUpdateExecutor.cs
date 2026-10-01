@@ -126,7 +126,7 @@ namespace PPDUpdater.Executor
             }
         }
 
-        private void CopyFile(string src, string dest)
+        private static void CopyFile(string src, string dest)
         {
             var parentDir = Path.GetDirectoryName(dest);
             if (!Directory.Exists(parentDir))
@@ -141,7 +141,7 @@ namespace PPDUpdater.Executor
             }
         }
 
-        private bool CheckSame(string src, string dest)
+        private static bool CheckSame(string src, string dest)
         {
             if (!File.Exists(src) || !File.Exists(dest))
             {
@@ -169,12 +169,12 @@ namespace PPDUpdater.Executor
             return true;
         }
 
-        private void Unzip(string path, string unzipDir)
+        private static void Unzip(string path, string unzipDir)
         {
             Utility.FastZip.ExtractZip(path, unzipDir, Utility.ZipFilter);
         }
 
-        private VersionInfo GetVersionInfo(string path)
+        private static VersionInfo GetVersionInfo(string path)
         {
             try
             {

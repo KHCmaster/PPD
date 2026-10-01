@@ -17,7 +17,7 @@ namespace FlowScriptEngineSlimDX.TypeFormatters
         {
             value = null;
             Vortice.Mathematics.Color4 color;
-            if (str.StartsWith("#"))
+            if (str.StartsWith('#'))
             {
                 if (GetSharpColor(str[1..], out color))
                 {
@@ -47,7 +47,7 @@ namespace FlowScriptEngineSlimDX.TypeFormatters
             return false;
         }
 
-        private bool GetSharpColor(string str, out Vortice.Mathematics.Color4 color)
+        private static bool GetSharpColor(string str, out Vortice.Mathematics.Color4 color)
         {
             color = new Vortice.Mathematics.Color4();
             try

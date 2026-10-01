@@ -17,9 +17,9 @@ namespace FlowScriptEnginePPD.FlowSourceObjects.Resource
         {
             base.OnInitialize();
 
-            if (this.Manager.Items.ContainsKey("ResourceManager"))
+            if (this.Manager.Items.TryGetValue("ResourceManager", out object value))
             {
-                resourceManager = this.Manager.Items["ResourceManager"] as ScriptResourceManager;
+                resourceManager = value as ScriptResourceManager;
             }
         }
 

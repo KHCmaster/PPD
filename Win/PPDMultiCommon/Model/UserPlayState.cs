@@ -32,7 +32,7 @@ namespace PPDMultiCommon.Model
                 if (loaded != value)
                 {
                     loaded = value;
-                    OnPropertyChanged("Loaded");
+                    OnPropertyChanged(nameof(Loaded));
                 }
             }
         }
@@ -51,7 +51,7 @@ namespace PPDMultiCommon.Model
                 if (score != value)
                 {
                     score = value;
-                    OnPropertyChanged("Score");
+                    OnPropertyChanged(nameof(Score));
                 }
             }
         }
@@ -72,8 +72,8 @@ namespace PPDMultiCommon.Model
                 if (life != value)
                 {
                     life = value;
-                    OnPropertyChanged("Life");
-                    OnPropertyChanged("LifeAsFloat");
+                    OnPropertyChanged(nameof(Life));
+                    OnPropertyChanged(nameof(LifeAsFloat));
                 }
             }
         }
@@ -84,7 +84,7 @@ namespace PPDMultiCommon.Model
             set
             {
                 evaluate = value;
-                OnPropertyChanged("Evaluate");
+                OnPropertyChanged(nameof(Evaluate));
             }
         }
 
@@ -94,7 +94,7 @@ namespace PPDMultiCommon.Model
             set
             {
                 isStealth = value;
-                OnPropertyChanged("IsStealth");
+                OnPropertyChanged(nameof(IsStealth));
             }
         }
 

@@ -39,7 +39,7 @@ namespace PPDEditorCommon.Dialog
 
             // Change the extended window style to not show a window icon
             var extendedStyle = NativeMethods.GetWindowLong(hwnd, GWL_EXSTYLE);
-            NativeMethods.SetWindowLong(hwnd, GWL_EXSTYLE, extendedStyle | WS_EX_DLGMODALFRAME);
+            _ = NativeMethods.SetWindowLong(hwnd, GWL_EXSTYLE, extendedStyle | WS_EX_DLGMODALFRAME);
 
             // Update the window's non-client area to reflect the changes
             NativeMethods.SetWindowPos(hwnd, IntPtr.Zero, 0, 0, 0, 0, SWP_NOMOVE |

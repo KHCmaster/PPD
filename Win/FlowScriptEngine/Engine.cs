@@ -59,7 +59,7 @@ namespace FlowScriptEngine
             return manager;
         }
 
-        private KeyValuePair<FlowSourceObjectBase, KeyValuePair<string, string>[]>[] LoadSync(Stream stream, FlowSourceManager manager)
+        private static KeyValuePair<FlowSourceObjectBase, KeyValuePair<string, string>[]>[] LoadSync(Stream stream, FlowSourceManager manager)
         {
             var reader = XmlReader.Create(stream);
             KeyValuePair<FlowSourceObjectBase, KeyValuePair<string, string>[]>[] defaultValues = null;
@@ -85,7 +85,7 @@ namespace FlowScriptEngine
             return defaultValues;
         }
 
-        private KeyValuePair<FlowSourceObjectBase, KeyValuePair<string, string>[]>[] ReadSources(XmlReader reader, FlowSourceManager manager)
+        private static KeyValuePair<FlowSourceObjectBase, KeyValuePair<string, string>[]>[] ReadSources(XmlReader reader, FlowSourceManager manager)
         {
             var ret = new List<KeyValuePair<FlowSourceObjectBase, KeyValuePair<string, string>[]>>();
             while (reader.Read())
@@ -113,7 +113,7 @@ namespace FlowScriptEngine
             return [.. ret];
         }
 
-        private KeyValuePair<string, string>[] ReadValues(XmlReader reader)
+        private static KeyValuePair<string, string>[] ReadValues(XmlReader reader)
         {
             var ret = new List<KeyValuePair<string, string>>();
             while (reader.Read())
@@ -134,7 +134,7 @@ namespace FlowScriptEngine
             return [.. ret];
         }
 
-        private void ReadFlows(XmlReader reader, FlowSourceManager manager)
+        private static void ReadFlows(XmlReader reader, FlowSourceManager manager)
         {
             while (reader.Read())
             {
@@ -156,7 +156,7 @@ namespace FlowScriptEngine
             reader.Close();
         }
 
-        private void ReadScopes(XmlReader reader, FlowSourceManager manager)
+        private static void ReadScopes(XmlReader reader, FlowSourceManager manager)
         {
             while (reader.Read())
             {
@@ -177,7 +177,7 @@ namespace FlowScriptEngine
             reader.Close();
         }
 
-        private int ParseId(string idStr)
+        private static int ParseId(string idStr)
         {
             if (!int.TryParse(idStr, NumberStyles.Integer, CultureInfo.InvariantCulture, out int ret))
             {

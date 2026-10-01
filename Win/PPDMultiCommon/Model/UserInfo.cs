@@ -43,7 +43,7 @@ namespace PPDMultiCommon.Model
                 if (isLeader != value)
                 {
                     isLeader = value;
-                    OnPropertyChanged("IsLeader");
+                    OnPropertyChanged(nameof(IsLeader));
                 }
             }
         }
@@ -59,7 +59,7 @@ namespace PPDMultiCommon.Model
                 if (hasSong != value)
                 {
                     hasSong = value;
-                    OnPropertyChanged("HasSong");
+                    OnPropertyChanged(nameof(HasSong));
                 }
             }
         }
@@ -75,7 +75,7 @@ namespace PPDMultiCommon.Model
                 if (name != value)
                 {
                     name = value;
-                    OnPropertyChanged("Name");
+                    OnPropertyChanged(nameof(Name));
                 }
             }
         }
@@ -91,7 +91,7 @@ namespace PPDMultiCommon.Model
                 if (accountId != value)
                 {
                     accountId = value;
-                    OnPropertyChanged("AccountId");
+                    OnPropertyChanged(nameof(AccountId));
                 }
             }
         }
@@ -104,7 +104,7 @@ namespace PPDMultiCommon.Model
                 if (id != value)
                 {
                     id = value;
-                    OnPropertyChanged("ID");
+                    OnPropertyChanged(nameof(ID));
                 }
             }
         }
@@ -117,7 +117,7 @@ namespace PPDMultiCommon.Model
                 if (imagePath != value)
                 {
                     imagePath = value;
-                    OnPropertyChanged("ImagePath");
+                    OnPropertyChanged(nameof(ImagePath));
                 }
             }
         }
@@ -130,7 +130,7 @@ namespace PPDMultiCommon.Model
                 if (state != value)
                 {
                     state = value;
-                    OnPropertyChanged("CurrentState");
+                    OnPropertyChanged(nameof(CurrentState));
                 }
             }
         }
@@ -146,7 +146,7 @@ namespace PPDMultiCommon.Model
                 if (ping != value)
                 {
                     ping = value;
-                    OnPropertyChanged("Ping");
+                    OnPropertyChanged(nameof(Ping));
                 }
             }
         }

@@ -17,9 +17,9 @@ namespace FlowScriptEnginePPD.FlowSourceObjects
         {
             base.OnInitialize();
 
-            if (this.Manager.Items.ContainsKey("BPMManager"))
+            if (this.Manager.Items.TryGetValue("BPMManager", out object value))
             {
-                bpmManager = this.Manager.Items["BPMManager"] as BPMManager;
+                bpmManager = value as BPMManager;
             }
         }
 

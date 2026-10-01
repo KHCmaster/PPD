@@ -15,14 +15,8 @@ namespace PPDFramework
         /// <param name="render">毎フレーム呼ぶ処理。</param>
         public static void Run(Control control, Action render)
         {
-            if (control == null)
-            {
-                throw new ArgumentNullException(nameof(control));
-            }
-            if (render == null)
-            {
-                throw new ArgumentNullException(nameof(render));
-            }
+            ArgumentNullException.ThrowIfNull(control);
+            ArgumentNullException.ThrowIfNull(render);
 
             var alive = true;
             void disposed(object sender, EventArgs e) => alive = false;

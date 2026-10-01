@@ -72,32 +72,32 @@ namespace PPDEditor
 
             FlowDrawPanel.EnumerateClasses("dlls", ["FlowScriptEngineConsole"]);
             FlowDrawPanel.AddFilter(new NodeFilterInfo("PPD", [
-                new("^FlowScriptEngineBasic\\."),
-                new("^FlowScriptEngineBasicExtension\\."),
-                new("^FlowScriptEngineSlimDX\\."),
-                new("^FlowScriptEnginePPD\\."),
-                new("^FlowScriptEngineData\\.")],
+                NamespaceFilter("FlowScriptEngineBasic"),
+                NamespaceFilter("FlowScriptEngineBasicExtension"),
+                NamespaceFilter("FlowScriptEngineSlimDX"),
+                NamespaceFilter("FlowScriptEnginePPD"),
+                NamespaceFilter("FlowScriptEngineData")],
                 null));
             FlowDrawPanel.AddFilter(new NodeFilterInfo("PPD(Script)", [
-                new("^FlowScriptEngineBasic\\."),
-                new("^FlowScriptEngineBasicExtension\\."),
-                new("^FlowScriptEngineSlimDX\\."),
-                new("^FlowScriptEnginePPD\\."),
-                new("^FlowScriptEngineData\\.")],
-                null, null, [new("^PPD\\.Mod")]));
+                NamespaceFilter("FlowScriptEngineBasic"),
+                NamespaceFilter("FlowScriptEngineBasicExtension"),
+                NamespaceFilter("FlowScriptEngineSlimDX"),
+                NamespaceFilter("FlowScriptEnginePPD"),
+                NamespaceFilter("FlowScriptEngineData")],
+                null, null, [PPDModRegex()]));
             FlowDrawPanel.AddFilter(new NodeFilterInfo("PPD(Mod)", [
-                new("^FlowScriptEngineBasic\\."),
-                new("^FlowScriptEngineBasicExtension\\."),
-                new("^FlowScriptEngineSlimDX\\."),
-                new("^FlowScriptEnginePPD\\."),
-                new("^FlowScriptEngineData\\.")],
+                NamespaceFilter("FlowScriptEngineBasic"),
+                NamespaceFilter("FlowScriptEngineBasicExtension"),
+                NamespaceFilter("FlowScriptEngineSlimDX"),
+                NamespaceFilter("FlowScriptEnginePPD"),
+                NamespaceFilter("FlowScriptEngineData")],
                 null));
             FlowDrawPanel.AddFilter(new NodeFilterInfo("PPDEditor", [
-                new("^FlowScriptEngineBasic\\."),
-                new("^FlowScriptEngineBasicExtension\\."),
-                new("^FlowScriptEngineSlimDX\\."),
-                new("^FlowScriptEnginePPDEditor\\."),
-                new("^FlowScriptEngineData\\.")],
+                NamespaceFilter("FlowScriptEngineBasic"),
+                NamespaceFilter("FlowScriptEngineBasicExtension"),
+                NamespaceFilter("FlowScriptEngineSlimDX"),
+                NamespaceFilter("FlowScriptEnginePPDEditor"),
+                NamespaceFilter("FlowScriptEngineData")],
                 null));
 
             Load += ScriptManager_Load;
@@ -126,7 +126,7 @@ namespace PPDEditor
                 foreach (var flowDrawForm in FlowDrawForms)
                 {
                     var filePath = flowDrawForm.FilePath.ToLower();
-                    if (!IsUnderFunctions(flowDrawForm.FilePath) && filePath.IndexOf(scriptFilePath.ToLower()) >= 0)
+                    if (!IsUnderFunctions(flowDrawForm.FilePath) && filePath.Contains(scriptFilePath.ToLower(), StringComparison.CurrentCulture))
                     {
                         breakPoints = flowDrawForm.FlowDrawPanel.GetBreakPoints();
                         break;
@@ -187,7 +187,7 @@ namespace PPDEditor
 
         private FlowDrawDockForm GetFlowDrawDockForm(string fileName)
         {
-            return FlowDrawForms.FirstOrDefault(f => f.FilePath.ToLower().IndexOf(fileName.ToLower()) >= 0);
+            return FlowDrawForms.FirstOrDefault(f => f.FilePath.ToLower().Contains(fileName.ToLower(), StringComparison.CurrentCulture));
         }
 
         private void ToolStripButton1_Click(object sender, EventArgs e)
@@ -371,7 +371,7 @@ namespace PPDEditor
             {
                 return null;
             }
-            if ((drawForm = FlowDrawForms.FirstOrDefault(f => f.FilePath.ToLower() == filePath.ToLower())) != null)
+            if ((drawForm = FlowDrawForms.FirstOrDefault(f => f.FilePath.Equals(filePath, StringComparison.CurrentCultureIgnoreCase))) != null)
             {
                 drawForm.Activate();
                 return drawForm;
@@ -435,19 +435,19 @@ namespace PPDEditor
             }
         }
 
-        private bool IsUnderFunctions(string filePath)
+        private static bool IsUnderFunctions(string filePath)
         {
             return IsChildFolderOrFile(Path.Combine(Utility.AppDir, "Functions"), filePath);
         }
 
-        private bool IsUnderCommands(string filePath)
+        private static bool IsUnderCommands(string filePath)
         {
             return IsChildFolderOrFile(Path.Combine(Utility.AppDir, "Commands"), filePath);
         }
 
-        private bool IsChildFolderOrFile(string parent, string child)
+        private static bool IsChildFolderOrFile(string parent, string child)
         {
-            return child.ToLower().Contains(parent.ToLower());
+            return child.Contains(parent, StringComparison.CurrentCultureIgnoreCase);
         }
 
         void ScriptListForm_ScriptSelected(string obj)
@@ -470,7 +470,7 @@ namespace PPDEditor
                 // File Change
                 foreach (FlowDrawDockForm drawForm in FlowDrawForms)
                 {
-                    if (drawForm.FilePath.ToLower() == arg1.ToLower())
+                    if (drawForm.FilePath.Equals(arg1, StringComparison.CurrentCultureIgnoreCase))
                     {
                         drawForm.FilePath = arg2;
                     }
@@ -494,7 +494,7 @@ namespace PPDEditor
             var removeTargets = new List<FlowDrawDockForm>();
             foreach (FlowDrawDockForm drawForm in FlowDrawForms)
             {
-                if (drawForm.FilePath.ToLower() == obj.ToLower() || IsChildFolderOrFile(obj, drawForm.FilePath))
+                if (drawForm.FilePath.Equals(obj, StringComparison.CurrentCultureIgnoreCase) || IsChildFolderOrFile(obj, drawForm.FilePath))
                 {
                     removeTargets.Add(drawForm);
                 }
@@ -724,5 +724,13 @@ namespace PPDEditor
 
             CurrentFlowDrawForm.FlowDrawPanel.CollapseAll();
         }
+
+        private static Regex NamespaceFilter(string ns)
+        {
+            return new Regex("^" + Regex.Escape(ns) + "\\.");
+        }
+
+        [GeneratedRegex("^PPD\\.Mod")]
+        private static partial Regex PPDModRegex();
     }
 }

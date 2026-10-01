@@ -135,7 +135,7 @@ namespace PPD.Forms
             logingThread.Start();
         }
 
-        private void ShowErrorMessage(ErrorReason errorReason)
+        private static void ShowErrorMessage(ErrorReason errorReason)
         {
             string errorText = errorReason switch
             {

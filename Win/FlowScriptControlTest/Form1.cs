@@ -370,38 +370,38 @@ namespace FlowScriptControlTest
         {
             FlowDrawPanel.EnumerateClasses("dlls", []);
             FlowDrawPanel.AddFilter(new NodeFilterInfo("Console", [
-                new("^FlowScriptEngineBasic\\."),
-                new("^FlowScriptEngineBasicExtension\\."),
-                new("^FlowScriptEngineConsole\\."),
-                new("^FlowScriptEngineData\\.")],
+                NamespaceFilter("FlowScriptEngineBasic"),
+                NamespaceFilter("FlowScriptEngineBasicExtension"),
+                NamespaceFilter("FlowScriptEngineConsole"),
+                NamespaceFilter("FlowScriptEngineData")],
                 null));
             FlowDrawPanel.AddFilter(new NodeFilterInfo("PPD", [
-                new("^FlowScriptEngineBasic\\."),
-                new("^FlowScriptEngineBasicExtension\\."),
-                new("^FlowScriptEngineSlimDX\\."),
-                new("^FlowScriptEnginePPD\\."),
-                new("^FlowScriptEngineData\\.")],
+                NamespaceFilter("FlowScriptEngineBasic"),
+                NamespaceFilter("FlowScriptEngineBasicExtension"),
+                NamespaceFilter("FlowScriptEngineSlimDX"),
+                NamespaceFilter("FlowScriptEnginePPD"),
+                NamespaceFilter("FlowScriptEngineData")],
                 null));
             FlowDrawPanel.AddFilter(new NodeFilterInfo("PPD(Script)", [
-                new("^FlowScriptEngineBasic\\."),
-                new("^FlowScriptEngineBasicExtension\\."),
-                new("^FlowScriptEngineSlimDX\\."),
-                new("^FlowScriptEnginePPD\\."),
-                new("^FlowScriptEngineData\\.")],
-                null, null, [new("^PPD\\.Mod")]));
+                NamespaceFilter("FlowScriptEngineBasic"),
+                NamespaceFilter("FlowScriptEngineBasicExtension"),
+                NamespaceFilter("FlowScriptEngineSlimDX"),
+                NamespaceFilter("FlowScriptEnginePPD"),
+                NamespaceFilter("FlowScriptEngineData")],
+                null, null, [PPDModRegex()]));
             FlowDrawPanel.AddFilter(new NodeFilterInfo("PPD(Mod)", [
-                new("^FlowScriptEngineBasic\\."),
-                new("^FlowScriptEngineBasicExtension\\."),
-                new("^FlowScriptEngineSlimDX\\."),
-                new("^FlowScriptEnginePPD\\."),
-                new("^FlowScriptEngineData\\.")],
+                NamespaceFilter("FlowScriptEngineBasic"),
+                NamespaceFilter("FlowScriptEngineBasicExtension"),
+                NamespaceFilter("FlowScriptEngineSlimDX"),
+                NamespaceFilter("FlowScriptEnginePPD"),
+                NamespaceFilter("FlowScriptEngineData")],
                 null));
             FlowDrawPanel.AddFilter(new NodeFilterInfo("PPDEditor", [
-                new("^FlowScriptEngineBasic\\."),
-                new("^FlowScriptEngineBasicExtension\\."),
-                new("^FlowScriptEngineSlimDX\\."),
-                new("^FlowScriptEnginePPDEditor\\."),
-                new("^FlowScriptEngineData\\.")],
+                NamespaceFilter("FlowScriptEngineBasic"),
+                NamespaceFilter("FlowScriptEngineBasicExtension"),
+                NamespaceFilter("FlowScriptEngineSlimDX"),
+                NamespaceFilter("FlowScriptEnginePPDEditor"),
+                NamespaceFilter("FlowScriptEngineData")],
                 null));
             AddEmptyFlowDrawPanel();
             flowSearchPanel1.Searched += FlowSearchPanel1_Searched;
@@ -525,5 +525,13 @@ namespace FlowScriptControlTest
                 タブを閉じるToolStripMenuItem.Tag = null;
             }
         }
+
+        private static Regex NamespaceFilter(string ns)
+        {
+            return new Regex("^" + Regex.Escape(ns) + "\\.");
+        }
+
+        [GeneratedRegex("^PPD\\.Mod")]
+        private static partial Regex PPDModRegex();
     }
 }

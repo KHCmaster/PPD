@@ -84,7 +84,7 @@ namespace PPDEditor.DockForm.Script
             treeView1.ImageList.Images.Add("script", PPDEditor.Properties.Resources.document);
             treeView1.ImageList.Images.Add("disabled", PPDEditor.Properties.Resources.disabled);
 
-            NativeMethods.ImageList_SetOverlayImage(treeView1.ImageList.Handle, 2, 1);
+            _ = NativeMethods.ImageList_SetOverlayImage(treeView1.ImageList.Handle, 2, 1);
 
             treeView1.Nodes.Add("folder", "Commands").ContextMenuStrip = contextMenuStrip2;
             treeView1.Nodes.Add("folder", "Functions").ContextMenuStrip = contextMenuStrip2;
@@ -118,7 +118,7 @@ namespace PPDEditor.DockForm.Script
 
             foreach (char c in Path.GetInvalidFileNameChars())
             {
-                if (e.Label.IndexOf(c) >= 0)
+                if (e.Label.Contains(c))
                 {
                     e.CancelEdit = true;
                     return;
@@ -127,7 +127,7 @@ namespace PPDEditor.DockForm.Script
 
             foreach (char c in Path.GetInvalidPathChars())
             {
-                if (e.Label.IndexOf(c) >= 0)
+                if (e.Label.Contains(c))
                 {
                     e.CancelEdit = true;
                     return;
@@ -276,7 +276,7 @@ namespace PPDEditor.DockForm.Script
 
                 foreach (string childFile in Directory.GetFiles(dir))
                 {
-                    if (Path.GetExtension(childFile).ToLower() == ".fsml")
+                    if (Path.GetExtension(childFile).Equals(".fsml", StringComparison.CurrentCultureIgnoreCase))
                     {
                         CreateScriptNode(node.Nodes, Path.GetFileNameWithoutExtension(childFile));
                     }
@@ -336,7 +336,7 @@ namespace PPDEditor.DockForm.Script
 
             foreach (string childFilePath in Directory.GetFiles(dirPath))
             {
-                if (Path.GetExtension(childFilePath).ToLower() == ".fsml")
+                if (Path.GetExtension(childFilePath).Equals(".fsml", StringComparison.CurrentCultureIgnoreCase))
                 {
                     var name = Path.GetFileNameWithoutExtension(childFilePath);
                     var node = FindNodeByText(nodes, name);
@@ -374,7 +374,7 @@ namespace PPDEditor.DockForm.Script
             }
         }
 
-        private TreeNode FindNodeByText(TreeNodeCollection nodes, string text)
+        private static TreeNode FindNodeByText(TreeNodeCollection nodes, string text)
         {
             foreach (TreeNode node in nodes)
             {
@@ -413,7 +413,7 @@ namespace PPDEditor.DockForm.Script
             CreateNewFolder();
         }
 
-        private TreeNode GetRootNode(TreeNode node)
+        private static TreeNode GetRootNode(TreeNode node)
         {
             while (node.Parent != null)
             {
@@ -445,17 +445,17 @@ namespace PPDEditor.DockForm.Script
             OnModified(this, EventArgs.Empty);
         }
 
-        private bool IsFolder(TreeNode node)
+        private static bool IsFolder(TreeNode node)
         {
             return node.Name == "folder";
         }
 
-        private bool ContainAsChildOrSelf(TreeNode parent, TreeNode child)
+        private static bool ContainAsChildOrSelf(TreeNode parent, TreeNode child)
         {
             return parent == child || ContainAsChild(parent, child);
         }
 
-        private bool ContainAsChild(TreeNode parent, TreeNode child)
+        private static bool ContainAsChild(TreeNode parent, TreeNode child)
         {
             var queue = new Queue<TreeNode>();
             queue.Enqueue(parent);
@@ -505,7 +505,7 @@ namespace PPDEditor.DockForm.Script
             }
         }
 
-        private string GetSafeScriptName(string dirPath)
+        private static string GetSafeScriptName(string dirPath)
         {
             var newPath = Path.Combine(dirPath, String.Format("New Script.fsml"));
             int iter = 1;
@@ -517,7 +517,7 @@ namespace PPDEditor.DockForm.Script
             return newPath;
         }
 
-        private string GetSafeFolderName(string dirPath)
+        private static string GetSafeFolderName(string dirPath)
         {
             var newPath = Path.Combine(dirPath, String.Format("New Folder"));
             int iter = 1;
@@ -574,7 +574,7 @@ namespace PPDEditor.DockForm.Script
             NativeMethods.SetTreeViewOverlay(treeView1.SelectedNode, EnabledNode(treeView1.SelectedNode) ? (uint)1 : 0);
         }
 
-        private bool EnabledNode(TreeNode node)
+        private static bool EnabledNode(TreeNode node)
         {
             return NativeMethods.GetTreeViewOverlay(node) == 0;
         }

@@ -275,10 +275,7 @@ namespace PPDFramework.Mod
             var dict = new Dictionary<string, ModSetting>();
             foreach (ModSetting setting in settings)
             {
-                if (!dict.ContainsKey(setting.Key))
-                {
-                    dict.Add(setting.Key, setting);
-                }
+                dict.TryAdd(setting.Key, setting);
             }
             settings.Clear();
             settings.AddRange(dict.Values);
@@ -286,7 +283,7 @@ namespace PPDFramework.Mod
             var currentSettings = ModSettingDatabase.Setting.GetSetting(UniqueName);
             foreach (ModSetting modSetting in settings)
             {
-                if (!currentSettings.ContainsKey(modSetting.Key))
+                if (!currentSettings.TryGetValue(modSetting.Key, out object value))
                 {
                     currentSettings.Add(modSetting.Key, modSetting.Default);
                 }
@@ -294,7 +291,7 @@ namespace PPDFramework.Mod
                 {
                     try
                     {
-                        var str = modSetting.GetStringValue(currentSettings[modSetting.Key]);
+                        var str = modSetting.GetStringValue(value);
                         if (!modSetting.Validate(str, out object val))
                         {
                             throw new Exception("Validate Failed");
@@ -407,7 +404,7 @@ namespace PPDFramework.Mod
             return info.Details.FirstOrDefault(d => CompareArray(d.HashAsBytes, FileHash));
         }
 
-        private bool CompareArray(byte[] array1, byte[] array2)
+        private static bool CompareArray(byte[] array1, byte[] array2)
         {
             if (array1.Length != array2.Length)
             {
@@ -425,7 +422,7 @@ namespace PPDFramework.Mod
             return true;
         }
 
-        private string ReadString(PackReader reader, string key, string defaultValue = "")
+        private static string ReadString(PackReader reader, string key, string defaultValue = "")
         {
             using PPDPackStreamReader packReader = reader.Read(key);
             if (packReader == null)
@@ -437,7 +434,7 @@ namespace PPDFramework.Mod
             return Encoding.UTF8.GetString(bytes);
         }
 
-        private Version ReadVersion(PackReader reader, string key)
+        private static Version ReadVersion(PackReader reader, string key)
         {
             var str = ReadString(reader, key);
             if (String.IsNullOrEmpty(str))

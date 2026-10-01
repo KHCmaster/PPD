@@ -22,9 +22,9 @@ namespace FlowScriptEnginePPD.FlowSourceObjects.Mark
             base.OnInitialize();
 
 
-            if (this.Manager.Items.ContainsKey("MarkManager"))
+            if (this.Manager.Items.TryGetValue("MarkManager", out object value))
             {
-                markManager = this.Manager.Items["MarkManager"] as IMarkManager;
+                markManager = value as IMarkManager;
             }
         }
 

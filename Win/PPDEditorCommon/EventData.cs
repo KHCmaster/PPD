@@ -275,86 +275,86 @@ namespace PPDEditorCommon
         {
             var sb = new StringBuilder();
             sb.Append(MovieVolumePercent);
-            sb.Append(",");
+            sb.Append(',');
             sb.Append(SquareVolumePercent);
-            sb.Append(",");
+            sb.Append(',');
             sb.Append(CrossVolumePercent);
-            sb.Append(",");
+            sb.Append(',');
             sb.Append(CircleVolumePercent);
-            sb.Append(",");
+            sb.Append(',');
             sb.Append(TriangleVolumePercent);
-            sb.Append(",");
+            sb.Append(',');
             sb.Append(LeftVolumePercent);
-            sb.Append(",");
+            sb.Append(',');
             sb.Append(DownVolumePercent);
-            sb.Append(",");
+            sb.Append(',');
             sb.Append(RightVolumePercent);
-            sb.Append(",");
+            sb.Append(',');
             sb.Append(UpVolumePercent);
-            sb.Append(",");
+            sb.Append(',');
             sb.Append(RVolumePercent);
-            sb.Append(",");
+            sb.Append(',');
             sb.Append(LVolumePercent);
-            sb.Append(",");
+            sb.Append(',');
             sb.Append(BPM);
-            sb.Append(",");
+            sb.Append(',');
             sb.Append(BPMRapidChange ? "1" : "0");
-            sb.Append(",");
+            sb.Append(',');
             sb.Append(SquareKeepPlaying ? "1" : "0");
-            sb.Append(",");
+            sb.Append(',');
             sb.Append(CrossKeepPlaying ? "1" : "0");
-            sb.Append(",");
+            sb.Append(',');
             sb.Append(CircleKeepPlaying ? "1" : "0");
-            sb.Append(",");
+            sb.Append(',');
             sb.Append(TriangleKeepPlaying ? "1" : "0");
-            sb.Append(",");
+            sb.Append(',');
             sb.Append(LeftKeepPlaying ? "1" : "0");
-            sb.Append(",");
+            sb.Append(',');
             sb.Append(DownKeepPlaying ? "1" : "0");
-            sb.Append(",");
+            sb.Append(',');
             sb.Append(RightKeepPlaying ? "1" : "0");
-            sb.Append(",");
+            sb.Append(',');
             sb.Append(UpKeepPlaying ? "1" : "0");
-            sb.Append(",");
+            sb.Append(',');
             sb.Append(RKeepPlaying ? "1" : "0");
-            sb.Append(",");
+            sb.Append(',');
             sb.Append(LKeepPlaying ? "1" : "0");
-            sb.Append(",");
+            sb.Append(',');
             sb.Append(SquareReleaseSound ? "1" : "0");
-            sb.Append(",");
+            sb.Append(',');
             sb.Append(CrossReleaseSound ? "1" : "0");
-            sb.Append(",");
+            sb.Append(',');
             sb.Append(CircleReleaseSound ? "1" : "0");
-            sb.Append(",");
+            sb.Append(',');
             sb.Append(TriangleReleaseSound ? "1" : "0");
-            sb.Append(",");
+            sb.Append(',');
             sb.Append(LeftReleaseSound ? "1" : "0");
-            sb.Append(",");
+            sb.Append(',');
             sb.Append(DownReleaseSound ? "1" : "0");
-            sb.Append(",");
+            sb.Append(',');
             sb.Append(RightReleaseSound ? "1" : "0");
-            sb.Append(",");
+            sb.Append(',');
             sb.Append(UpReleaseSound ? "1" : "0");
-            sb.Append(",");
+            sb.Append(',');
             sb.Append(RReleaseSound ? "1" : "0");
-            sb.Append(",");
+            sb.Append(',');
             sb.Append(LReleaseSound ? "1" : "0");
-            sb.Append(",");
+            sb.Append(',');
             sb.Append(DisplayState);
-            sb.Append(",");
+            sb.Append(',');
             sb.Append(MoveState);
-            sb.Append(",");
+            sb.Append(',');
             sb.Append(NoteType);
-            sb.Append(",");
+            sb.Append(',');
             sb.Append(SlideScale);
-            sb.Append("\n");
+            sb.Append('\n');
 
             int iter = 0;
             foreach (ButtonType type in InitializeOrder)
             {
                 if (iter != 0)
                 {
-                    sb.Append(",");
+                    sb.Append(',');
                 }
                 sb.Append(type.ToString());
             }
@@ -396,7 +396,7 @@ namespace PPDEditorCommon
         public void Append(StringBuilder sb, params string[] datas)
         {
             sb.Append(string.Join(",", datas));
-            sb.Append("\n");
+            sb.Append('\n');
         }
     }
 }

@@ -26,7 +26,7 @@ namespace PPDEditor.Command.PPDSheet
             SafeAddMark(exmk, data[(int)typeIndex]);
         }
 
-        private void SafeAddMark(Mark mk, SortedList<float, Mark> data)
+        private static void SafeAddMark(Mark mk, SortedList<float, Mark> data)
         {
             if (!data.ContainsKey(mk.Time))
             {
@@ -34,12 +34,9 @@ namespace PPDEditor.Command.PPDSheet
             }
         }
 
-        private void SafeRemoveMark(float time, SortedList<float, Mark> data)
+        private static void SafeRemoveMark(float time, SortedList<float, Mark> data)
         {
-            if (data.ContainsKey(time))
-            {
-                data.Remove(time);
-            }
+            data.Remove(time);
         }
 
         public override CommandType CommandType

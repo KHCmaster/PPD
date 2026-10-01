@@ -217,10 +217,10 @@ namespace ColorCanvas
                 return basevalue;
             }
 
-            return colorCanvas.OnCoerceHexadecimalString(basevalue);
+            return OnCoerceHexadecimalString(basevalue);
         }
 
-        private object OnCoerceHexadecimalString(object newValue)
+        private static object OnCoerceHexadecimalString(object newValue)
         {
             var value = newValue as string;
             string retValue = value;

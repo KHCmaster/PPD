@@ -21,7 +21,7 @@ namespace PPDEditorCommon.Dialog.ViewModel
                 if (selectedItem != value)
                 {
                     selectedItem = value;
-                    OnPropertyChanged("SelectedItem");
+                    OnPropertyChanged(nameof(SelectedItem));
                 }
             }
         }
@@ -39,7 +39,7 @@ namespace PPDEditorCommon.Dialog.ViewModel
             {
                 selectedItem = setting.DefaultValue;
             }
-            else if (Items.Count() > 0)
+            else if (Items.Any())
             {
                 selectedItem = Items.First();
             }

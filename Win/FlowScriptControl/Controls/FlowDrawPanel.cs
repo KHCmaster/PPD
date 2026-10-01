@@ -230,9 +230,8 @@ namespace FlowScriptControl.Controls
 
         Source AreaControl_GetSource(string arg)
         {
-            if (toolStripDictionary.ContainsKey(arg))
+            if (toolStripDictionary.TryGetValue(arg, out CustomToolStripMenuItem ctsmi))
             {
-                CustomToolStripMenuItem ctsmi = toolStripDictionary[arg];
                 PreProcessDumper(ctsmi.Dumper);
                 var source = new Source(ctsmi.Dumper.AssemblyAndType)
                 {
@@ -300,7 +299,7 @@ namespace FlowScriptControl.Controls
             var types = new List<AssemblyAndType>();
             foreach (string dllFile in Directory.GetFiles(directoryPath, "*.dll"))
             {
-                if (exceptionFileList.Any(name => name.ToLower() == Path.GetFileNameWithoutExtension(dllFile).ToLower()))
+                if (exceptionFileList.Any(name => name.Equals(Path.GetFileNameWithoutExtension(dllFile), StringComparison.CurrentCultureIgnoreCase)))
                 {
                     continue;
                 }
@@ -344,7 +343,7 @@ namespace FlowScriptControl.Controls
             HideMenus(addNodeToolStripMenuItem.DropDownItems, FlowTreeView.SelectedFilter);
         }
 
-        private bool HideMenus(ToolStripItemCollection collection, NodeFilterInfoBase filterInfo)
+        private static bool HideMenus(ToolStripItemCollection collection, NodeFilterInfoBase filterInfo)
         {
             bool hasVisibleNodes = false;
             foreach (CustomToolStripMenuItem menuItem in collection)
@@ -376,7 +375,7 @@ namespace FlowScriptControl.Controls
             return hasVisibleNodes;
         }
 
-        private bool IsFilteredMenu(CustomToolStripMenuItem node, NodeFilterInfoBase filter)
+        private static bool IsFilteredMenu(CustomToolStripMenuItem node, NodeFilterInfoBase filter)
         {
             if (node.Dumper == null)
             {
@@ -476,7 +475,7 @@ namespace FlowScriptControl.Controls
             newMenu.Click += NewMenu_Click;
         }
 
-        private string CreateTextFromDumper(FlowSourceDumper dumper)
+        private static string CreateTextFromDumper(FlowSourceDumper dumper)
         {
             var ret = new StringBuilder();
             if (dumper.InProperties.Length > 0)
@@ -504,7 +503,7 @@ namespace FlowScriptControl.Controls
             contextMenuStrip1.Hide();
         }
 
-        private void PreProcessDumper(FlowSourceDumper dumper)
+        private static void PreProcessDumper(FlowSourceDumper dumper)
         {
             foreach (Item item in dumper.InEvents.Concat(dumper.OutEvents.Concat(dumper.InProperties.Concat(dumper.OutProperties))))
             {
@@ -526,7 +525,7 @@ namespace FlowScriptControl.Controls
             }
         }
 
-        private void RecursiveSortMenuItem(ToolStripMenuItem menuItem, ToolStripMenuItem parent)
+        private static void RecursiveSortMenuItem(ToolStripMenuItem menuItem, ToolStripMenuItem parent)
         {
             foreach (ToolStripMenuItem tsmi in menuItem.DropDownItems)
             {
@@ -545,7 +544,7 @@ namespace FlowScriptControl.Controls
             }
         }
 
-        private CustomToolStripMenuItem FindMenu(ToolStripMenuItem parent, string name)
+        private static CustomToolStripMenuItem FindMenu(ToolStripMenuItem parent, string name)
         {
             foreach (ToolStripMenuItem tsmi in parent.DropDownItems)
             {

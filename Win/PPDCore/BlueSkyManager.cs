@@ -67,7 +67,7 @@ namespace PPDCore
                     threads.RemoveAt(i);
                 }
             }
-            if (!hashTag.StartsWith(" "))
+            if (!hashTag.StartsWith(' '))
             {
                 hashTag = " " + hashTag;
             }

@@ -358,18 +358,18 @@ namespace PPDCore
             Update();
         }
 
-        private void DecreaseAlpha(IDrawable id)
+        private static void DecreaseAlpha(IDrawable id)
         {
             DecreaseAlpha(id, 0.1f);
         }
 
-        private void DecreaseAlpha(IDrawable id, float alpha)
+        private static void DecreaseAlpha(IDrawable id, float alpha)
         {
             id.Alpha -= alpha;
             if (id.Alpha <= 0) id.Alpha = 0;
         }
 
-        private void Show(IDrawable id)
+        private static void Show(IDrawable id)
         {
             id.Alpha = 1;
             id.Hidden = false;

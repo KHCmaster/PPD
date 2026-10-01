@@ -28,7 +28,7 @@ namespace FlowScriptDrawControl.Model
                 if (toolTip != value)
                 {
                     toolTip = value;
-                    OnPropertyChanged("ToolTip");
+                    OnPropertyChanged(nameof(ToolTip));
                 }
             }
         }
@@ -41,7 +41,7 @@ namespace FlowScriptDrawControl.Model
                 if (warning != value)
                 {
                     warning = value;
-                    OnPropertyChanged("Warning");
+                    OnPropertyChanged(nameof(Warning));
                 }
             }
         }
@@ -54,7 +54,7 @@ namespace FlowScriptDrawControl.Model
                 if (id != value)
                 {
                     id = value;
-                    OnPropertyChanged("Id");
+                    OnPropertyChanged(nameof(Id));
                 }
             }
         }
@@ -67,7 +67,7 @@ namespace FlowScriptDrawControl.Model
                 if (name != value)
                 {
                     name = value;
-                    OnPropertyChanged("Name");
+                    OnPropertyChanged(nameof(Name));
                 }
             }
         }
@@ -80,7 +80,7 @@ namespace FlowScriptDrawControl.Model
                 if (fullName != value)
                 {
                     fullName = value;
-                    OnPropertyChanged("FullName");
+                    OnPropertyChanged(nameof(FullName));
                 }
             }
         }
@@ -93,7 +93,7 @@ namespace FlowScriptDrawControl.Model
                 if (isCollapsed != value)
                 {
                     isCollapsed = value;
-                    OnPropertyChanged("IsCollapsed");
+                    OnPropertyChanged(nameof(IsCollapsed));
                 }
             }
         }
@@ -106,7 +106,7 @@ namespace FlowScriptDrawControl.Model
                 if (isBreakPointSet != value)
                 {
                     isBreakPointSet = value;
-                    OnPropertyChanged("IsBreakPointSet");
+                    OnPropertyChanged(nameof(IsBreakPointSet));
                 }
             }
         }
@@ -183,7 +183,7 @@ namespace FlowScriptDrawControl.Model
                 if (canChange != value)
                 {
                     canChange = value;
-                    OnPropertyChanged("CanChange");
+                    OnPropertyChanged(nameof(CanChange));
                 }
             }
         }
@@ -196,7 +196,7 @@ namespace FlowScriptDrawControl.Model
                 if (comment != value)
                 {
                     comment = value;
-                    OnPropertyChanged("Comment");
+                    OnPropertyChanged(nameof(Comment));
                 }
             }
         }

@@ -63,7 +63,7 @@ namespace PPDConfig
                     {
                         Text = name,
                         Name = fileName.ToLower(),
-                        Checked = Path.GetFileName(fileName).ToLower() == String.Format("lang_{0}_{1}.ini", this.GetType().Assembly.GetName().Name, langFileISO).ToLower()
+                        Checked = Path.GetFileName(fileName).Equals(String.Format("lang_{0}_{1}.ini", this.GetType().Assembly.GetName().Name, langFileISO), StringComparison.CurrentCultureIgnoreCase)
                     };
                     tsmi.Click += Tsmi_Click;
                     言語ToolStripMenuItem.DropDownItems.Add(tsmi);
@@ -76,7 +76,7 @@ namespace PPDConfig
             if (sender is ToolStripMenuItem tsmi)
             {
                 var langFileName = tsmi.Name;
-                var m = Regex.Match(Path.GetFileName(langFileName), "^lang_\\w+_(?<ISO>\\w+).ini$");
+                var m = LangFileRegex().Match(Path.GetFileName(langFileName));
                 if (m.Success)
                 {
                     langFileISO = m.Groups["ISO"].Value;
@@ -326,7 +326,7 @@ namespace PPDConfig
         {
             get
             {
-                int.TryParse(this.textBox8.Text, out int val);
+                _ = int.TryParse(this.textBox8.Text, out int val);
                 return val;
             }
             set
@@ -339,7 +339,7 @@ namespace PPDConfig
         {
             get
             {
-                float.TryParse(this.textBox1.Text, out float val);
+                _ = float.TryParse(this.textBox1.Text, out float val);
                 return val;
             }
             set
@@ -352,7 +352,7 @@ namespace PPDConfig
         {
             get
             {
-                float.TryParse(this.textBox10.Text, out float val);
+                _ = float.TryParse(this.textBox10.Text, out float val);
                 return val;
             }
             set
@@ -547,7 +547,7 @@ namespace PPDConfig
         {
             get
             {
-                int.TryParse(textBox4.Text, out int val);
+                _ = int.TryParse(textBox4.Text, out int val);
                 return val;
             }
             set
@@ -597,5 +597,8 @@ namespace PPDConfig
                 }
             }).Start();
         }
+
+        [GeneratedRegex("^lang_\\w+_(?<ISO>\\w+).ini$")]
+        private static partial Regex LangFileRegex();
     }
 }

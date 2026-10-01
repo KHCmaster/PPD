@@ -111,7 +111,7 @@ namespace PPDUpdater
                     {
                         Text = name,
                         Name = fileName.ToLower(),
-                        Checked = Path.GetFileName(fileName).ToLower() == String.Format("lang_{0}_{1}.ini", this.GetType().Assembly.GetName().Name, langFileISO).ToLower()
+                        Checked = Path.GetFileName(fileName).Equals(String.Format("lang_{0}_{1}.ini", this.GetType().Assembly.GetName().Name, langFileISO), StringComparison.CurrentCultureIgnoreCase)
                     };
                     tsmi.Click += Tsmi_Click;
                     言語ToolStripMenuItem.DropDownItems.Add(tsmi);
@@ -124,7 +124,7 @@ namespace PPDUpdater
             if (sender is ToolStripMenuItem tsmi)
             {
                 langFileName = tsmi.Name;
-                var m = Regex.Match(Path.GetFileName(langFileName), "^lang_\\w+_(?<ISO>\\w+).ini$");
+                var m = LangFileRegex().Match(Path.GetFileName(langFileName));
                 if (m.Success)
                 {
                     langFileISO = m.Groups["ISO"].Value;
@@ -355,12 +355,12 @@ namespace PPDUpdater
 
         }
 
-        private void WriteData(StreamWriter sw, string key, bool value)
+        private static void WriteData(StreamWriter sw, string key, bool value)
         {
             WriteData(sw, key, value ? "1" : "0");
         }
 
-        private void WriteData(StreamWriter sw, string key, string value)
+        private static void WriteData(StreamWriter sw, string key, string value)
         {
             sw.Write(String.Format("[{0}]{1}", key, value));
             sw.WriteLine();
@@ -584,5 +584,8 @@ namespace PPDUpdater
                 this.Close();
             }
         }
+
+        [GeneratedRegex("^lang_\\w+_(?<ISO>\\w+).ini$")]
+        private static partial Regex LangFileRegex();
     }
 }

@@ -60,10 +60,7 @@ namespace PPDExpansion.WeakEventing
         /// <param name="instance">Instance subscribing to the event.</param>
         public WeakEventListener(TInstance instance, TSource source)
         {
-            if (null == instance)
-            {
-                throw new ArgumentNullException(nameof(instance));
-            }
+            ArgumentNullException.ThrowIfNull(instance);
 
             _weakInstance = new WeakReference(instance);
             this._source = source ?? throw new ArgumentNullException(nameof(source));

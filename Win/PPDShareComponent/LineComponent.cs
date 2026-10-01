@@ -91,7 +91,7 @@ namespace PPDShareComponent
             vertices = device.GetModule<ShaderCommon>().CreateVertex(points.Length * 2);
         }
 
-        private Vector2 Solve(Vector2 a, Vector2 b, Vector2 c, Vector2 d)
+        private static Vector2 Solve(Vector2 a, Vector2 b, Vector2 c, Vector2 d)
         {
             float ad_bc = 1 / (-b.X * d.Y + d.X * b.Y);
             if (float.IsNaN(ad_bc) || ad_bc >= 1000)

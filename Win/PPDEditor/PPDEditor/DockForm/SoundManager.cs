@@ -209,14 +209,13 @@ namespace PPDEditor
         public string GetFormattedContent(float time)
         {
             string ret;
-            if (changedata.ContainsKey(time))
+            if (changedata.TryGetValue(time, out ushort[] indexes))
             {
-                ushort[] indexes = changedata[time];
                 var sb = new StringBuilder();
                 for (int i = 0; i < indexes.Length; i++)
                 {
                     sb.Append(comboBox11.Items[indexes[i]].ToString());
-                    sb.Append("\n");
+                    sb.Append('\n');
                 }
                 ret = sb.ToString();
             }
@@ -242,9 +241,8 @@ namespace PPDEditor
         public void ChangeTime(float previoustime, float newtime)
         {
             if (previoustime <= 0) return;
-            if (changedata.ContainsKey(previoustime) && !changedata.ContainsKey(newtime))
+            if (changedata.TryGetValue(previoustime, out ushort[] change) && !changedata.ContainsKey(newtime))
             {
-                ushort[] change = changedata[previoustime];
                 changedata.Remove(previoustime);
                 changedata.Add(newtime, change);
                 Updatedatagrid();
@@ -370,7 +368,7 @@ namespace PPDEditor
             }
             if (changeOtherDifficultySoundSetting)
             {
-                foreach (var diff in ((AvailableDifficulty[])Enum.GetValues(typeof(AvailableDifficulty))))
+                foreach (var diff in Enum.GetValues<AvailableDifficulty>())
                 {
                     if (diff == AvailableDifficulty.None || !WindowUtility.MainForm.AvailableDifficulty.HasFlag(diff) || WindowUtility.MainForm.CurrentDifficulty == diff)
                     {
@@ -383,7 +381,7 @@ namespace PPDEditor
             ContentChanged();
         }
 
-        private void ChangeDifficultySound(AvailableDifficulty difficulty, int removedIndex)
+        private static void ChangeDifficultySound(AvailableDifficulty difficulty, int removedIndex)
         {
             var path = Path.Combine(WindowUtility.MainForm.CurrentProjectDir, String.Format("{0}.scd", difficulty));
             if (!File.Exists(path))

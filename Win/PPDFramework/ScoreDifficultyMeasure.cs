@@ -12,7 +12,7 @@ namespace PPDFramework
     /// </summary>
     public class ScoreDifficultyMeasure
     {
-        private ScoreDifficultyMeasureResult MeasureNormal(string path)
+        private static ScoreDifficultyMeasureResult MeasureNormal(string path)
         {
             using FileStream stream = File.Open(path, FileMode.Open);
             return Measure(PPDReader.Read(stream));

@@ -17,9 +17,9 @@ namespace FlowScriptEnginePPD.FlowSourceObjects.Song
         {
             base.OnInitialize();
 
-            if (this.Manager.Items.ContainsKey("Lylics"))
+            if (this.Manager.Items.TryGetValue("Lylics", out object value))
             {
-                lylics = this.Manager.Items["Lylics"] as ILylics;
+                lylics = value as ILylics;
             }
         }
 

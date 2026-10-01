@@ -281,7 +281,7 @@ namespace PPDMulti
                 ChangeUserIconScale();
             }
 
-            private string ConvertRank(int rank)
+            private static string ConvertRank(int rank)
             {
                 return rank switch
                 {

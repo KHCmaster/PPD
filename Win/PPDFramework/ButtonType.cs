@@ -65,6 +65,6 @@ namespace PPDFramework
         /// <summary>
         /// ボタンの配列
         /// </summary>
-        public static ButtonType[] Array = (ButtonType[])Enum.GetValues(typeof(ButtonType));
+        public static readonly ButtonType[] Array = Enum.GetValues<ButtonType>();
     }
 }

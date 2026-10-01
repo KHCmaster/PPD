@@ -6,6 +6,11 @@ root = true
 dotnet_code_quality_unused_parameters = non_public
 # インスタンスのデータを使わないメンバーを static にする（CA1822）のは、非公開のメンバーだけを対象にする（公開メンバーを static にすると、呼び出し方が変わる）
 dotnet_code_quality.CA1822.api_surface = private, internal
+# P/Invoke の定義は DllImport のままにする（SYSLIB1054）。ネイティブ AOT は使っておらず、LibraryImport に書き換えると
+# StringBuilder や文字列を含む構造体のマーシャリングが変わる、またはできなくなるため
+dotnet_diagnostic.SYSLIB1054.severity = none
+# 引数や戻り値をインターフェイスや基底クラスで受けている箇所は、描画先やシェーダーの差し替えのための設計なので、具象型にしない（CA1859）
+dotnet_diagnostic.CA1859.severity = none
 
 # FlowScript のノードのクラスは、名前空間を含む完全な名前でスクリプト（.fsml）に保存されるので、名前空間をフォルダーに合わせない
 [FlowScriptEngine*/**.cs]
@@ -19,3 +24,12 @@ generated_code = true
 
 [WinFormsUI/**.cs]
 generated_code = true
+
+# DirectShow の COM 相互運用の定義
+# - SYSLIB1096: GeneratedComInterface（ComWrappers）に移すと、Marshal.GetObjectForIUnknown などで得る RCW と混在できなくなるため、ComImport のままにする
+# - CA1069: 列挙型の値は Windows SDK のヘッダーの定義（マスクや別名を含む）に合わせている
+# - CA1816: DSObject は、ラップした RCW に GC.SuppressFinalize を意図して呼んでいる
+[DirectShow/**.cs]
+dotnet_diagnostic.SYSLIB1096.severity = none
+dotnet_diagnostic.CA1069.severity = none
+dotnet_diagnostic.CA1816.severity = none

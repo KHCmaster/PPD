@@ -53,12 +53,12 @@ namespace PPD
             listSprite.AddChild(component);
         }
 
-        private string ConvertSecond(int second)
+        private static string ConvertSecond(int second)
         {
             return String.Format("{0:F1}", (float)second / 3600);
         }
 
-        public int GetPlayingSecond(GameLoader gameLoader)
+        public static int GetPlayingSecond(GameLoader gameLoader)
         {
             string lastValue = PPDGeneralSetting.Setting[gameLoader.GetFullName()];
             if (!int.TryParse(lastValue, out int value))

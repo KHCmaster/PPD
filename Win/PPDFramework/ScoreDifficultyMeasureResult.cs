@@ -61,7 +61,7 @@ namespace PPDFramework
             var prevs = new List<float>();
             foreach (KeyValuePair<int, float> pair in Data)
             {
-                Peak = Math.Max(Peak, (prevs.Sum() + pair.Value) / (prevs.Count() + 1));
+                Peak = Math.Max(Peak, (prevs.Sum() + pair.Value) / (prevs.Count + 1));
                 prevs.Add(pair.Value);
                 if (prevs.Count >= PeakSetCount)
                 {

@@ -503,7 +503,7 @@ namespace PPD
                 this.Alpha = Focused ? AnimationUtility.IncreaseAlpha(this.Alpha) : AnimationUtility.DecreaseAlpha(this.Alpha);
             }
 
-            private string GetTime(double time)
+            private static string GetTime(double time)
             {
                 var minute = (int)(time / 60);
                 var second = (int)(time - minute * 60);

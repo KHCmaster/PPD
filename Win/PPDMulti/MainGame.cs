@@ -497,7 +497,7 @@ namespace PPDMulti
             }
         }
 
-        private bool IsDisturbEffect(ItemType itemType)
+        private static bool IsDisturbEffect(ItemType itemType)
         {
             return itemType == ItemType.DoubleBPM
                 || itemType == ItemType.FogFilter

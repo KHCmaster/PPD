@@ -341,12 +341,12 @@ namespace PPD
             DisposeIDisposable(notifyControl);
         }
 
-        private void DisposeIDisposable(IDisposable dispo)
+        private static void DisposeIDisposable(IDisposable dispo)
         {
             dispo?.Dispose();
         }
 
-        private void DisposeScene(ISceneBase scene)
+        private static void DisposeScene(ISceneBase scene)
         {
             if (scene != null)
             {

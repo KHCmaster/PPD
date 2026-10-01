@@ -17,7 +17,7 @@ namespace PPDFramework.Mod
     /// <param name="name"></param>
     /// <param name="description"></param>
     /// <param name="defaultValue"></param>
-    public class Color4ModSetting(string key, string name, string description, Color4 defaultValue) : TemplateModSetting<Color4>(key, name, description, defaultValue)
+    public partial class Color4ModSetting(string key, string name, string description, Color4 defaultValue) : TemplateModSetting<Color4>(key, name, description, defaultValue)
     {
 
         /// <summary>
@@ -39,8 +39,8 @@ namespace PPDFramework.Mod
         /// <returns>バリデートの結果。</returns>
         public override bool Validate(string value, out object val)
         {
-            var regex = new Regex("^#([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})$");
-            var regex2 = new Regex("^#([0-9a-fA-F]{1})([0-9a-fA-F]{1})([0-9a-fA-F]{1})$");
+            var regex = ColorCodeRegex();
+            var regex2 = ShortColorCodeRegex();
             var match = regex.Match(value);
             if (!match.Success)
             {
@@ -59,5 +59,10 @@ namespace PPDFramework.Mod
             val = new Color4(r / 255f, g / 255f, b / 255f, 1f);
             return true;
         }
+
+        [GeneratedRegex("^#([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})$")]
+        private static partial Regex ColorCodeRegex();
+        [GeneratedRegex("^#([0-9a-fA-F]{1})([0-9a-fA-F]{1})([0-9a-fA-F]{1})$")]
+        private static partial Regex ShortColorCodeRegex();
     }
 }

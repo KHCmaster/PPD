@@ -106,7 +106,7 @@ namespace PPD
             }
         }
 
-        private void ReadKeySetting(XmlReader reader, KeyConfig keyConfig)
+        private static void ReadKeySetting(XmlReader reader, KeyConfig keyConfig)
         {
             while (reader.Read())
             {
@@ -129,7 +129,7 @@ namespace PPD
             reader.Close();
         }
 
-        private int FindIndex(string value)
+        private static int FindIndex(string value)
         {
             for (int i = 0; i < ButtonUtility.Array.Length; i++)
             {
@@ -184,7 +184,7 @@ namespace PPD
             writer.Close();
         }
 
-        private void WriteSetting(XmlWriter writer, KeyConfig keyConfig)
+        private static void WriteSetting(XmlWriter writer, KeyConfig keyConfig)
         {
             foreach (ButtonType buttonType in ButtonUtility.Array)
             {

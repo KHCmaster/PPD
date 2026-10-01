@@ -201,7 +201,7 @@ namespace Effect2DEditor.Command
                 islast = false;
             }
         }
-        private void GetDevidedBezierFromX(BezierControlPoint[] bcps, float ratio, out BezierControlPoint[] out1, out BezierControlPoint[] out2)
+        private static void GetDevidedBezierFromX(BezierControlPoint[] bcps, float ratio, out BezierControlPoint[] out1, out BezierControlPoint[] out2)
         {
             var ba = new BezierAnalyzer(bcps);
             float x = BezierRatioMaker.MaxLength * ratio;
@@ -224,7 +224,7 @@ namespace Effect2DEditor.Command
                 out2 = [bcp22, bcp3];
             }
         }
-        private void ScaleAt(PointF basepoint, PointF Scale, BezierControlPoint bcp)
+        private static void ScaleAt(PointF basepoint, PointF Scale, BezierControlPoint bcp)
         {
             var mat = new Matrix();
             mat.Translate(basepoint.X, basepoint.Y);
@@ -236,7 +236,7 @@ namespace Effect2DEditor.Command
             if (bcp.ValidFirst) bcp.First = temp[0];
             if (bcp.ValidThird) bcp.Third = temp[2];
         }
-        private EffectStateRatioSet GetSetFromFrameIndex(IEffect effect, int frameindex)
+        private static EffectStateRatioSet GetSetFromFrameIndex(IEffect effect, int frameindex)
         {
             if (effect.StartFrame > frameindex || frameindex > effect.StartFrame + effect.FrameLength) return null;
             float num = frameindex - effect.StartFrame;

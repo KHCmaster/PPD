@@ -108,7 +108,6 @@ namespace PPDEditor.Forms
         private bool CheckSameScore()
         {
             var hashs = new Dictionary<string, PPDEditor.AvailableDifficulty>();
-            using var sha256 = SHA256.Create();
             bool found = false;
             foreach (AvailableDifficulty difficulty in EditorForm.DifficultyArray)
             {
@@ -116,10 +115,10 @@ namespace PPDEditor.Forms
                 if ((PublishDifficulty & difficulty) == difficulty)
                 {
                     var filePath = Path.Combine(WindowUtility.MainForm.CurrentProjectDir, difficulty + ".ppd");
-                    var hash = CryptographyUtility.Getx2Encoding(sha256.ComputeHash(File.ReadAllBytes(filePath)));
-                    if (hashs.ContainsKey(hash))
+                    var hash = CryptographyUtility.Getx2Encoding(SHA256.HashData(File.ReadAllBytes(filePath)));
+                    if (hashs.TryGetValue(hash, out AvailableDifficulty value))
                     {
-                        MessageBox.Show(String.Format(Utility.Language["ScoreHashCollision"], hashs[hash], difficulty));
+                        MessageBox.Show(String.Format(Utility.Language["ScoreHashCollision"], value, difficulty));
                         found = true;
                     }
                     else

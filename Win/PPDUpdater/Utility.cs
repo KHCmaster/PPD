@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 namespace PPDUpdater
 {
-    static class Utility
+    static partial class Utility
     {
         static Utility()
         {
@@ -28,7 +28,7 @@ namespace PPDUpdater
         public static string LangDir = "Lang";
         public static string KHCDir;
         public static string Complete = "Complete";
-        public static Regex UpdateRegex = new("^PPDDiff(?<version>\\d+)", RegexOptions.IgnoreCase);
+        public static Regex UpdateRegex = UpdateFileRegex();
         public static string UpdateRegexGroup = "version";
 
 
@@ -43,5 +43,8 @@ namespace PPDUpdater
             }
             return path;
         }
+
+        [GeneratedRegex("^PPDDiff(?<version>\\d+)", RegexOptions.IgnoreCase)]
+        private static partial Regex UpdateFileRegex();
     }
 }

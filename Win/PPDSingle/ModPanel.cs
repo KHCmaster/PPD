@@ -215,7 +215,7 @@ namespace PPDSingle
             }
         }
 
-        private void LoadMod()
+        private static void LoadMod()
         {
             _ = ModManager.Instance;
         }

@@ -26,7 +26,7 @@ namespace FlowScriptDrawControl.Control
         private Color gridColor = Color.FromRgb(0x91, 0x91, 0x91);
         private int scale = 10;
 
-        private readonly Regex queryRegex = new(@"^@(\d+)\[(In|Out)\]\[(\w+)\]$", RegexOptions.IgnoreCase);
+        private readonly Regex queryRegex = QueryPatternRegex();
 
         private double currentScale = 1;
         private double currentShiftX;
@@ -126,7 +126,7 @@ namespace FlowScriptDrawControl.Control
             }
         }
 
-        private void ChangeScopeColor(ScopeControl scopeControl)
+        private static void ChangeScopeColor(ScopeControl scopeControl)
         {
             var dialog = new ColorDialog
             {
@@ -1186,7 +1186,7 @@ namespace FlowScriptDrawControl.Control
         {
             var selectedSources = GetAllSourceControls().Select(s => s.CurrentSource).Where(s => s.IsSelected).ToArray();
             var selectedComments = GetAllCommentControls().Select(c => c.CurrentComment).Where(c => c.IsSelected).ToArray();
-            return SelectionSerializer.Serializer.Serialize(new Selection(guid, selectedSources, selectedComments));
+            return SelectionSerializer.Serialize(new Selection(guid, selectedSources, selectedComments));
         }
 
         private void PasteImpl(Selection selection, bool connectArrows, Point point)
@@ -1539,14 +1539,14 @@ namespace FlowScriptDrawControl.Control
             return [.. GetAllSourceControls().Where(s => s.CurrentSource.IsBreakPointSet).Select(s => s.CurrentSource.Id)];
         }
 
-        private bool ContainsString(string str1, string str2)
+        private static bool ContainsString(string str1, string str2)
         {
             if (str1 == null || str2 == null)
             {
                 return false;
             }
 
-            return str1.ToLower().Contains(str2);
+            return str1.Contains(str2, StringComparison.CurrentCultureIgnoreCase);
         }
 
         public SearchResult Search(string query)
@@ -1727,7 +1727,7 @@ namespace FlowScriptDrawControl.Control
             try
             {
                 var xml = Clipboard.GetText();
-                return SelectionSerializer.Serializer.Deserialize(xml, OnGetSource);
+                return SelectionSerializer.Deserialize(xml, OnGetSource);
             }
             catch
             {
@@ -1861,7 +1861,7 @@ namespace FlowScriptDrawControl.Control
                 return null;
             }
             var id = int.Parse(match.Groups[1].Value);
-            var isOut = match.Groups[2].Value.ToLower() == "out";
+            var isOut = match.Groups[2].Value.Equals("out", StringComparison.CurrentCultureIgnoreCase);
             var propertyName = match.Groups[3].Value.ToLower();
 
             var source = GetAllSourceControls().FirstOrDefault(s => s.CurrentSource.Id == id);
@@ -1872,7 +1872,7 @@ namespace FlowScriptDrawControl.Control
             Source[] sources;
             if (isOut)
             {
-                var outItem = source.CurrentSource.OutItems.FirstOrDefault(i => i.Name.ToLower() == propertyName);
+                var outItem = source.CurrentSource.OutItems.FirstOrDefault(i => i.Name.Equals(propertyName, StringComparison.CurrentCultureIgnoreCase));
                 if (outItem == null)
                 {
                     return null;
@@ -1881,7 +1881,7 @@ namespace FlowScriptDrawControl.Control
             }
             else
             {
-                var inItem = source.CurrentSource.InItems.FirstOrDefault(i => i.Name.ToLower() == propertyName);
+                var inItem = source.CurrentSource.InItems.FirstOrDefault(i => i.Name.Equals(propertyName, StringComparison.CurrentCultureIgnoreCase));
                 if (inItem == null)
                 {
                     return null;
@@ -2115,5 +2115,8 @@ namespace FlowScriptDrawControl.Control
             }
             return false;
         }
+
+        [GeneratedRegex(@"^@(\d+)\[(In|Out)\]\[(\w+)\]$", RegexOptions.IgnoreCase)]
+        private static partial Regex QueryPatternRegex();
     }
 }

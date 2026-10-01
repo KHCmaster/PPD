@@ -83,7 +83,7 @@ namespace PPDExpansion.ViewModel
                 if (score != value)
                 {
                     score = value;
-                    OnPropertyChanged("Score");
+                    OnPropertyChanged(nameof(Score));
                 }
             }
         }
@@ -96,7 +96,7 @@ namespace PPDExpansion.ViewModel
                 if (coolCount != value)
                 {
                     coolCount = value;
-                    OnPropertyChanged("CoolCount");
+                    OnPropertyChanged(nameof(CoolCount));
                 }
             }
         }
@@ -109,7 +109,7 @@ namespace PPDExpansion.ViewModel
                 if (goodCount != value)
                 {
                     goodCount = value;
-                    OnPropertyChanged("GoodCount");
+                    OnPropertyChanged(nameof(GoodCount));
                 }
             }
         }
@@ -122,7 +122,7 @@ namespace PPDExpansion.ViewModel
                 if (safeCount != value)
                 {
                     safeCount = value;
-                    OnPropertyChanged("SafeCount");
+                    OnPropertyChanged(nameof(SafeCount));
                 }
             }
         }
@@ -135,7 +135,7 @@ namespace PPDExpansion.ViewModel
                 if (sadCount != value)
                 {
                     sadCount = value;
-                    OnPropertyChanged("SadCount");
+                    OnPropertyChanged(nameof(SadCount));
                 }
             }
         }
@@ -148,7 +148,7 @@ namespace PPDExpansion.ViewModel
                 if (worstCount != value)
                 {
                     worstCount = value;
-                    OnPropertyChanged("WorstCount");
+                    OnPropertyChanged(nameof(WorstCount));
                 }
             }
         }
@@ -161,7 +161,7 @@ namespace PPDExpansion.ViewModel
                 if (userHighScore != value)
                 {
                     userHighScore = value;
-                    OnPropertyChanged("UserHighScore");
+                    OnPropertyChanged(nameof(UserHighScore));
                 }
             }
         }
@@ -174,7 +174,7 @@ namespace PPDExpansion.ViewModel
                 if (webHighScore != value)
                 {
                     webHighScore = value;
-                    OnPropertyChanged("WebHighScore");
+                    OnPropertyChanged(nameof(WebHighScore));
                 }
             }
         }
@@ -187,7 +187,7 @@ namespace PPDExpansion.ViewModel
                 if (scores != value)
                 {
                     scores = value;
-                    OnPropertyChanged("Scores");
+                    OnPropertyChanged(nameof(Scores));
                 }
             }
         }
@@ -200,7 +200,7 @@ namespace PPDExpansion.ViewModel
                 if (bestScores != value)
                 {
                     bestScores = value;
-                    OnPropertyChanged("BestScores");
+                    OnPropertyChanged(nameof(BestScores));
                 }
             }
         }
@@ -231,7 +231,7 @@ namespace PPDExpansion.ViewModel
                 if (chartHeight != value)
                 {
                     PPDExpansionSetting.Setting.SinglePlayChartHeight = chartHeight = value;
-                    OnPropertyChanged("ChartHeight");
+                    OnPropertyChanged(nameof(ChartHeight));
                 }
             }
         }
@@ -244,7 +244,7 @@ namespace PPDExpansion.ViewModel
                 if (scoreName != value)
                 {
                     scoreName = value;
-                    OnPropertyChanged("ScoreName");
+                    OnPropertyChanged(nameof(ScoreName));
                 }
             }
         }
@@ -257,7 +257,7 @@ namespace PPDExpansion.ViewModel
                 if (difficulty != value)
                 {
                     difficulty = value;
-                    OnPropertyChanged("Difficulty");
+                    OnPropertyChanged(nameof(Difficulty));
                 }
             }
         }
@@ -270,7 +270,7 @@ namespace PPDExpansion.ViewModel
                 if (scorePercent != value)
                 {
                     scorePercent = value;
-                    OnPropertyChanged("ScorePercent");
+                    OnPropertyChanged(nameof(ScorePercent));
                 }
             }
         }
@@ -283,7 +283,7 @@ namespace PPDExpansion.ViewModel
                 if (scoreWhitePercent != value)
                 {
                     scoreWhitePercent = value;
-                    OnPropertyChanged("ScoreWhitePercent");
+                    OnPropertyChanged(nameof(ScoreWhitePercent));
                 }
             }
         }
@@ -296,7 +296,7 @@ namespace PPDExpansion.ViewModel
                 if (userHighScorePercent != value)
                 {
                     userHighScorePercent = value;
-                    OnPropertyChanged("UserHighScorePercent");
+                    OnPropertyChanged(nameof(UserHighScorePercent));
                 }
             }
         }
@@ -309,7 +309,7 @@ namespace PPDExpansion.ViewModel
                 if (userHighScoreWhitePercent != value)
                 {
                     userHighScoreWhitePercent = value;
-                    OnPropertyChanged("UserHighScoreWhitePercent");
+                    OnPropertyChanged(nameof(UserHighScoreWhitePercent));
                 }
             }
         }
@@ -322,7 +322,7 @@ namespace PPDExpansion.ViewModel
                 if (userHighScoreRealTimePercent != value)
                 {
                     userHighScoreRealTimePercent = value;
-                    OnPropertyChanged("UserHighScoreRealTimePercent");
+                    OnPropertyChanged(nameof(UserHighScoreRealTimePercent));
                 }
             }
         }
@@ -335,7 +335,7 @@ namespace PPDExpansion.ViewModel
                 if (userHighScoreRealTimeWhitePercent != value)
                 {
                     userHighScoreRealTimeWhitePercent = value;
-                    OnPropertyChanged("UserHighScoreRealTimeWhitePercent");
+                    OnPropertyChanged(nameof(UserHighScoreRealTimeWhitePercent));
                 }
             }
         }
@@ -348,7 +348,7 @@ namespace PPDExpansion.ViewModel
                 if (webHighScorePercent != value)
                 {
                     webHighScorePercent = value;
-                    OnPropertyChanged("WebHighScorePercent");
+                    OnPropertyChanged(nameof(WebHighScorePercent));
                 }
             }
         }
@@ -361,7 +361,7 @@ namespace PPDExpansion.ViewModel
                 if (webHighScoreWhitePercent != value)
                 {
                     webHighScoreWhitePercent = value;
-                    OnPropertyChanged("WebHighScoreWhitePercent");
+                    OnPropertyChanged(nameof(WebHighScoreWhitePercent));
                 }
             }
         }
@@ -374,7 +374,7 @@ namespace PPDExpansion.ViewModel
                 if (highScoreScoreDiff != value)
                 {
                     highScoreScoreDiff = value;
-                    OnPropertyChanged("HighScoreScoreDiff");
+                    OnPropertyChanged(nameof(HighScoreScoreDiff));
                 }
             }
         }
@@ -387,7 +387,7 @@ namespace PPDExpansion.ViewModel
                 if (isHighScoreScoreDiffNegative != value)
                 {
                     isHighScoreScoreDiffNegative = value;
-                    OnPropertyChanged("IsHighScoreScoreDiffNegative");
+                    OnPropertyChanged(nameof(IsHighScoreScoreDiffNegative));
                 }
             }
         }
@@ -400,7 +400,7 @@ namespace PPDExpansion.ViewModel
                 if (realTimeScoreDiff != value)
                 {
                     realTimeScoreDiff = value;
-                    OnPropertyChanged("RealTimeScoreDiff");
+                    OnPropertyChanged(nameof(RealTimeScoreDiff));
                 }
             }
         }
@@ -413,7 +413,7 @@ namespace PPDExpansion.ViewModel
                 if (isRealTimeScoreDiffNagative != value)
                 {
                     isRealTimeScoreDiffNagative = value;
-                    OnPropertyChanged("IsRealTimeScoreDiffNagative");
+                    OnPropertyChanged(nameof(IsRealTimeScoreDiffNagative));
                 }
             }
         }

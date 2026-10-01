@@ -24,7 +24,7 @@ namespace FlowScriptDrawControl.Model
                 {
                     position = value;
                     Transform = new TranslateTransform(position.X, position.Y);
-                    OnPropertyChanged("Position");
+                    OnPropertyChanged(nameof(Position));
                 }
             }
         }
@@ -37,7 +37,7 @@ namespace FlowScriptDrawControl.Model
                 if (transform != value)
                 {
                     transform = value;
-                    OnPropertyChanged("Transform");
+                    OnPropertyChanged(nameof(Transform));
                     OnPropertyChanged("Transform2");
                 }
             }

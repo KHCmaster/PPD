@@ -113,7 +113,7 @@ namespace PPDSingle
                 {
                     return 1;
                 }
-                int.TryParse(this["RivalGhostCount"], out int val);
+                _ = int.TryParse(this["RivalGhostCount"], out int val);
                 if (val < 0)
                 {
                     val = 1;

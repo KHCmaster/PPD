@@ -250,7 +250,7 @@ namespace Effect2DEditor
             }
             DrawTimeLine(g, itemcount);
         }
-        private bool IsKey(EffectStateRatioSet set)
+        private static bool IsKey(EffectStateRatioSet set)
         {
             return set[RatioType.X] is ConstantRatioMaker;
         }
@@ -282,7 +282,7 @@ namespace Effect2DEditor
                 g.DrawLine(Pens.Silver, 0, TimeLineAreaHeight + ItemHeight * i, this.Width, TimeLineAreaHeight + ItemHeight * i);
             }
         }
-        private void DrawKey(Point pos, Graphics g, bool selected, bool IsKey)
+        private static void DrawKey(Point pos, Graphics g, bool selected, bool IsKey)
         {
             var rec = new Rectangle(pos, new Size(KeyWidth, ItemHeight));
             if (selected) g.FillRectangle(Brushes.LightBlue, pos.X, pos.Y, KeyWidth, ItemHeight);

@@ -11,25 +11,26 @@ using System.Text.RegularExpressions;
 
 namespace ShaderCompiler
 {
-    /// <summary>
-    /// エフェクトファイル（.fx）のテクニックを解析し、各パスのシェーダーをコンパイルして 1 つのバイナリにまとめます。
-    /// Effects11（fx_5_0）を使わずに描画するためのものです。出力形式は PPDFramework.Effect.DX11.EffectData と対応しています。
-    ///
-    /// 前提:
-    /// - パラメーターは "Parameters" という名前の cbuffer（register(b0)）にまとめる
-    /// - テクスチャとサンプラーは register で明示的にスロットを指定する
-    /// - パスの中身は SetBlendState / SetVertexShader(CompileShader(...)) / SetPixelShader(CompileShader(...)) のみ
-    /// </summary>
-    class EffectCompiler
+    partial
+        /// <summary>
+        /// エフェクトファイル（.fx）のテクニックを解析し、各パスのシェーダーをコンパイルして 1 つのバイナリにまとめます。
+        /// Effects11（fx_5_0）を使わずに描画するためのものです。出力形式は PPDFramework.Effect.DX11.EffectData と対応しています。
+        ///
+        /// 前提:
+        /// - パラメーターは "Parameters" という名前の cbuffer（register(b0)）にまとめる
+        /// - テクスチャとサンプラーは register で明示的にスロットを指定する
+        /// - パスの中身は SetBlendState / SetVertexShader(CompileShader(...)) / SetPixelShader(CompileShader(...)) のみ
+        /// </summary>
+        class EffectCompiler
     {
         public const string Magic = "PPDFX";
         public const int Version = 1;
         const string ConstantBufferName = "Parameters";
 
-        static readonly Regex techniqueRegex = new(@"technique11\s+(?<name>\w+)\s*\{", RegexOptions.Compiled);
-        static readonly Regex passRegex = new(@"pass\s+(?<name>\w+)\s*\{(?<body>[^{}]*)\}", RegexOptions.Compiled);
-        static readonly Regex blendRegex = new(@"SetBlendState\(\s*(?<name>\w+)", RegexOptions.Compiled);
-        static readonly Regex shaderRegex = new(@"Set(?<stage>Vertex|Pixel)Shader\(\s*CompileShader\(\s*(?<profile>\w+)\s*,\s*(?<func>\w+)\s*\((?<args>[^()]*)\)\s*\)\s*\)", RegexOptions.Compiled);
+        static readonly Regex techniqueRegex = TechniqueRegex();
+        static readonly Regex passRegex = PassRegex();
+        static readonly Regex blendRegex = BlendStateRegex();
+        static readonly Regex shaderRegex = ShaderRegex();
 
         class ShaderCall
         {
@@ -53,7 +54,7 @@ namespace ShaderCompiler
             public List<PassInfo> Passes = [];
         }
 
-        public void Compile(string fxPath, string outputPath)
+        public static void Compile(string fxPath, string outputPath)
         {
             var directory = Path.GetDirectoryName(Path.GetFullPath(fxPath));
             var source = File.ReadAllText(fxPath);
@@ -371,5 +372,14 @@ namespace ShaderCompiler
                 stream.Dispose();
             }
         }
+
+        [GeneratedRegex(@"technique11\s+(?<name>\w+)\s*\{")]
+        private static partial Regex TechniqueRegex();
+        [GeneratedRegex(@"pass\s+(?<name>\w+)\s*\{(?<body>[^{}]*)\}")]
+        private static partial Regex PassRegex();
+        [GeneratedRegex(@"SetBlendState\(\s*(?<name>\w+)")]
+        private static partial Regex BlendStateRegex();
+        [GeneratedRegex(@"Set(?<stage>Vertex|Pixel)Shader\(\s*CompileShader\(\s*(?<profile>\w+)\s*,\s*(?<func>\w+)\s*\((?<args>[^()]*)\)\s*\)\s*\)")]
+        private static partial Regex ShaderRegex();
     }
 }

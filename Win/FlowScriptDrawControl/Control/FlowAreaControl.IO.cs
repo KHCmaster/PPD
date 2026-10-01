@@ -215,10 +215,7 @@ namespace FlowScriptDrawControl.Control
             foreach (KeyValuePair<ScopeControl, int> kvp in parentScopeIdList)
             {
                 var scopeNode = new ScopeNode { ScopeControl = kvp.Key };
-                if (!nodes.ContainsKey(kvp.Key.CurrentScope.Id))
-                {
-                    nodes.Add(kvp.Key.CurrentScope.Id, scopeNode);
-                }
+                nodes.TryAdd(kvp.Key.CurrentScope.Id, scopeNode);
             }
             foreach (KeyValuePair<ScopeControl, int> kvp in parentScopeIdList)
             {
@@ -231,7 +228,7 @@ namespace FlowScriptDrawControl.Control
             }
         }
 
-        private XmlNodeList SelectSingleNodeChildren(XmlDocument document, string xPath)
+        private static XmlNodeList SelectSingleNodeChildren(XmlDocument document, string xPath)
         {
             var node = document.DocumentElement.SelectSingleNode(xPath);
             return node == null ? document.DocumentElement.SelectNodes("//ablawuasdsdgkhasfodjjdfk") : node.ChildNodes;

@@ -80,11 +80,7 @@ namespace FlowScriptEngine
                 innerDict = [];
                 dict.Add(converter.From, innerDict);
             }
-            if (!innerDict.ContainsKey(converter.To))
-            {
-                innerDict.Add(converter.To, converter);
-            }
-            else
+            if (!innerDict.TryAdd(converter.To, converter))
             {
                 Console.WriteLine("Converter {0} is multiple defined.({1}->{2})", converter, converter.From, converter.To);
             }
@@ -92,11 +88,7 @@ namespace FlowScriptEngine
 
         internal static void AddConverter(TypeConverterFromBase converterFrom)
         {
-            if (!fromDict.ContainsKey(converterFrom.From))
-            {
-                fromDict.Add(converterFrom.From, converterFrom);
-            }
-            else
+            if (!fromDict.TryAdd(converterFrom.From, converterFrom))
             {
                 Console.WriteLine("Converter {0} is multiple defined.({1}->*)", converterFrom, converterFrom.From);
             }
@@ -104,11 +96,7 @@ namespace FlowScriptEngine
 
         internal static void AddConverter(TypeConverterToBase converterTo)
         {
-            if (!toDict.ContainsKey(converterTo.To))
-            {
-                toDict.Add(converterTo.To, converterTo);
-            }
-            else
+            if (!toDict.TryAdd(converterTo.To, converterTo))
             {
                 Console.WriteLine("Converter {0} is multiple defined.(*->{1})", converterTo, converterTo.To);
             }

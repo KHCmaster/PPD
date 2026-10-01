@@ -155,7 +155,7 @@ namespace PPDEditor
                 }
             }
         }
-        private Point GetPointFromDockPanel(DockPane pane)
+        private static Point GetPointFromDockPanel(DockPane pane)
         {
             var ret = new Point(0, 0);
             Control c = pane;

@@ -90,7 +90,7 @@ namespace PPDFramework
             storage = tempStorage.storage;
         }
 
-        private string GetKey(string key)
+        private static string GetKey(string key)
         {
             if (key == null)
             {

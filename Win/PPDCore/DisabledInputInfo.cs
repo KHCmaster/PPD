@@ -9,7 +9,7 @@ namespace PPDCore
         private readonly InputInfoBase inputInfo = inputInfo;
         private readonly InputManager inputManager = inputManager;
 
-        private bool IsNormalButton(ButtonType buttonType)
+        private static bool IsNormalButton(ButtonType buttonType)
         {
             return buttonType >= ButtonType.Square && buttonType <= ButtonType.L;
         }

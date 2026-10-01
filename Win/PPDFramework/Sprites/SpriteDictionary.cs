@@ -10,9 +10,9 @@ namespace PPDFramework.Sprites
     /// <summary>
     /// スプライト辞書のクラスです。
     /// </summary>
-    public class SpriteDictionary
+    public partial class SpriteDictionary
     {
-        static readonly Regex scaleRegex = new(@"\.\d+_\d+(\.\w+)$");
+        static readonly Regex scaleRegex = ScaleSuffixRegex();
 
         /// <summary>
         /// 画像のパスを取得します。
@@ -136,5 +136,8 @@ namespace PPDFramework.Sprites
             }
             doc.Save(imageXmlPath);
         }
+
+        [GeneratedRegex(@"\.\d+_\d+(\.\w+)$")]
+        private static partial Regex ScaleSuffixRegex();
     }
 }

@@ -347,7 +347,7 @@ namespace PPDFramework
             }
         }
 
-        private void DisposeScene(ISceneBase scene)
+        private static void DisposeScene(ISceneBase scene)
         {
             if (scene != null)
             {

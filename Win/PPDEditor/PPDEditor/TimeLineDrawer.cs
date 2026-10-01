@@ -9,7 +9,7 @@ namespace PPDEditor
     {
         public const int CircleWidth = 10;
 
-        public void Draw(TimeLineDrawParameter parameter)
+        public static void Draw(TimeLineDrawParameter parameter)
         {
             if (parameter == null)
             {
@@ -271,7 +271,7 @@ namespace PPDEditor
             }
         }
 
-        private void DrawChange(TimeLineDrawParameter parameter, float time, int offset, int rowCount, Image image)
+        private static void DrawChange(TimeLineDrawParameter parameter, float time, int offset, int rowCount, Image image)
         {
             parameter.Graphics.DrawImage(image, new Point((int)((time * parameter.BPM / 60 * parameter.Interval - parameter.LeftOffset) - 8),
                 PPDEditorSkin.Skin.TimeLineHeight + PPDEditorSkin.Skin.TimeLineRowHeight * rowCount + offset));

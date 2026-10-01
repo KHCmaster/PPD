@@ -109,9 +109,8 @@ namespace PPDEditor
         public string GetFormattedContent(float time)
         {
             string ret;
-            if (changeData.ContainsKey(time))
+            if (changeData.TryGetValue(time, out EventData evd))
             {
-                EventData evd = changeData[time];
                 ret = evd.GetFormattedContent();
             }
             else
@@ -149,9 +148,8 @@ namespace PPDEditor
         public void ChangeTime(float previoustime, float newtime)
         {
             if (previoustime < 0) return;
-            if (changeData.ContainsKey(previoustime) && !changeData.ContainsKey(newtime))
+            if (changeData.TryGetValue(previoustime, out EventData ed) && !changeData.ContainsKey(newtime))
             {
-                EventData ed = changeData[previoustime];
                 changeData.Remove(previoustime);
                 changeData.Add(newtime, ed);
                 UpdateDataGrid();

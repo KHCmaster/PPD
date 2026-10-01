@@ -30,9 +30,9 @@ namespace PPDCore
                 return;
             }
 
-            if (!String.IsNullOrEmpty(filename) && pools.ContainsKey(filename))
+            if (!String.IsNullOrEmpty(filename) && pools.TryGetValue(filename, out PPDEffectPool value))
             {
-                var eo = pools[filename].Use(pos);
+                var eo = value.Use(pos);
                 eo.Finish += Eo_Finish;
                 this.AddChild(eo);
             }

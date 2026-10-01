@@ -226,7 +226,7 @@ namespace PPDEditor.Forms
             }
         }
 
-        private bool IsNotSaved
+        private static bool IsNotSaved
         {
             get
             {
@@ -527,7 +527,7 @@ namespace PPDEditor.Forms
         {
             get
             {
-                return ((AvailableDifficulty[])Enum.GetValues(typeof(AvailableDifficulty))).Where(d => d != PPDEditor.AvailableDifficulty.None)
+                return Enum.GetValues<AvailableDifficulty>().Where(d => d != PPDEditor.AvailableDifficulty.None)
 #pragma warning disable RECS0002 // Convert anonymous method to method group
                     .Count(d => availabledifficulty.HasFlag(d));
 #pragma warning restore RECS0002 // Convert anonymous method to method group

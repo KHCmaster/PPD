@@ -41,10 +41,7 @@ namespace PPDFramework.Resource
         {
             lock (resources)
             {
-                if (!resources.ContainsKey(resourceName))
-                {
-                    resources.Add(resourceName, resource);
-                }
+                resources.TryAdd(resourceName, resource);
                 return resource;
             }
         }
@@ -101,9 +98,9 @@ namespace PPDFramework.Resource
             }
             lock (resources)
             {
-                if (resources.ContainsKey(resourceName))
+                if (resources.TryGetValue(resourceName, out ResourceBase value))
                 {
-                    resource = resources[resourceName] as T;
+                    resource = value as T;
                     return true;
                 }
             }

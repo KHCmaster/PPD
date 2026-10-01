@@ -42,7 +42,7 @@ namespace PPDFramework.Mod
             return Parse(setting);
         }
 
-        private Dictionary<string, object> Parse(string setting)
+        private static Dictionary<string, object> Parse(string setting)
         {
             var document = XDocument.Parse(setting);
             var query = from p in document.Root.Elements("Setting")
@@ -117,7 +117,7 @@ namespace PPDFramework.Mod
             this[key] = GetString(dict);
         }
 
-        private string GetString(Dictionary<string, object> dict)
+        private static string GetString(Dictionary<string, object> dict)
         {
             var document = new XDocument(new XElement("Root"));
             foreach (KeyValuePair<string, object> pair in dict)
@@ -172,7 +172,7 @@ namespace PPDFramework.Mod
             {
                 return false;
             }
-            bool.TryParse(setting, out bool ret);
+            _ = bool.TryParse(setting, out bool ret);
             return ret;
         }
 
@@ -181,7 +181,7 @@ namespace PPDFramework.Mod
             this[GetAppliedKey(key)] = value.ToString();
         }
 
-        private string GetAppliedKey(string key)
+        private static string GetAppliedKey(string key)
         {
             return String.Format("IsApplied::{0}", key);
         }

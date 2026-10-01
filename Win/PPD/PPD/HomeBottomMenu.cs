@@ -15,7 +15,7 @@ namespace PPD
             Game,
             Feed
         }
-        public static Mode[] ModeArray = Enum.GetValues(typeof(Mode)) as Mode[];
+        public static Mode[] ModeArray = Enum.GetValues<Mode>() as Mode[];
 
         Mode mode = Mode.Feed;
         readonly PPDFramework.Resource.ResourceManager resourceManager;

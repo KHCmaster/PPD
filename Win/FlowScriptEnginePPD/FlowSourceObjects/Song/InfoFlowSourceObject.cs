@@ -20,14 +20,14 @@ namespace FlowScriptEnginePPD.FlowSourceObjects.Song
         {
             base.OnInitialize();
 
-            if (this.Manager.Items.ContainsKey("PPDGameUtility"))
+            if (this.Manager.Items.TryGetValue("PPDGameUtility", out object gameUtilityValue))
             {
-                gameUtility = this.Manager.Items["PPDGameUtility"] as PPDGameUtility;
+                gameUtility = gameUtilityValue as PPDGameUtility;
             }
 
-            if (this.Manager.Items.ContainsKey("MarkManager"))
+            if (this.Manager.Items.TryGetValue("MarkManager", out object markManagerValue))
             {
-                markManager = this.Manager.Items["MarkManager"] as IMarkManager;
+                markManager = markManagerValue as IMarkManager;
             }
         }
 

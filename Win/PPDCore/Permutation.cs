@@ -12,7 +12,7 @@ namespace PPDCore
 
         private static IEnumerable<T[]> GetPermutations<T>(IEnumerable<T> perm, IEnumerable<T> nums)
         {
-            if (nums.Count() == 0)
+            if (!nums.Any())
             {
                 yield return perm.ToArray();
             }

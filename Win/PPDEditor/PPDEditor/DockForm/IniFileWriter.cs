@@ -253,7 +253,7 @@ namespace PPDEditor
         {
             get
             {
-                float.TryParse(this.dataGridView1[1, 2].Value.ToString(), out float ret);
+                _ = float.TryParse(this.dataGridView1[1, 2].Value.ToString(), out float ret);
                 return ret;
             }
         }
@@ -261,7 +261,7 @@ namespace PPDEditor
         {
             get
             {
-                float.TryParse(this.dataGridView1[1, 3].Value.ToString(), out float ret);
+                _ = float.TryParse(this.dataGridView1[1, 3].Value.ToString(), out float ret);
                 return ret;
             }
         }

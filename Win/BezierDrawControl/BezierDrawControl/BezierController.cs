@@ -332,7 +332,7 @@ namespace BezierDrawControl
             }
         }
 
-        private void DrawBezeier(PointF p1, PointF p2, PointF p3, PointF p4, IBezierDrawContext context)
+        private static void DrawBezeier(PointF p1, PointF p2, PointF p3, PointF p4, IBezierDrawContext context)
         {
             PointF lastbezeirpoint, bezeirpoint;
             lastbezeirpoint = p1;
@@ -346,35 +346,35 @@ namespace BezierDrawControl
             }
         }
 
-        private void FillSquare(PointF p, IBezierDrawContext context)
+        private static void FillSquare(PointF p, IBezierDrawContext context)
         {
             context.FillRectangle(Color.Black, p.X - 3, p.Y - 3, 6, 6);
         }
 
-        private void DrawSquare(PointF p, IBezierDrawContext context)
+        private static void DrawSquare(PointF p, IBezierDrawContext context)
         {
             context.DrawRectangle(Color.Black, p.X - 3, p.Y - 3, 6, 6);
         }
 
-        private PointF CreateDevisionPoint(PointF p1, PointF p2, float t)
+        private static PointF CreateDevisionPoint(PointF p1, PointF p2, float t)
         {
             float invt = 1 - t;
             return new PointF(p1.X * t + p2.X * invt, p1.Y * t + p2.Y * invt);
         }
 
-        private float GetLength(PointF p1)
+        private static float GetLength(PointF p1)
         {
             var length = (float)(Math.Sqrt(p1.X * p1.X + p1.Y * p1.Y));
             return length;
         }
 
-        private PointF GetNormalizePoint(PointF p1, PointF p2)
+        private static PointF GetNormalizePoint(PointF p1, PointF p2)
         {
             var temp = new PointF(p1.X + p2.X, p1.Y + p2.Y);
             return BezierCaliculate.GetNormalizePoint(temp);
         }
 
-        private bool IsInside(PointF target, PointF src)
+        private static bool IsInside(PointF target, PointF src)
         {
             if (target.X - 5 <= src.X && src.X <= target.X + 5)
             {
@@ -386,7 +386,7 @@ namespace BezierDrawControl
             return false;
         }
 
-        private bool IsInside(RectangleF target, PointF src)
+        private static bool IsInside(RectangleF target, PointF src)
         {
             if (target.X <= src.X && src.X <= target.X + target.Width)
             {
@@ -398,7 +398,7 @@ namespace BezierDrawControl
             return false;
         }
 
-        private bool IsInside(PointF p, PointF a, PointF b, PointF c)
+        private static bool IsInside(PointF p, PointF a, PointF b, PointF c)
         {
             if (Cross(new PointF(p.X - a.X, p.Y - a.Y), new PointF(b.X - a.X, b.Y - a.Y)) < 0.0) return false;
             if (Cross(new PointF(p.X - b.X, p.Y - b.Y), new PointF(c.X - b.X, c.Y - b.Y)) < 0.0) return false;
@@ -406,12 +406,12 @@ namespace BezierDrawControl
             return true;
         }
 
-        private bool IsInside(TransformRectangle target, PointF src)
+        private static bool IsInside(TransformRectangle target, PointF src)
         {
             return IsInside(src, target.TopLeft, target.BottomLeft, target.BottomRight) || IsInside(src, target.BottomRight, target.TopRight, target.TopLeft);
         }
 
-        private float Cross(PointF a, PointF b)
+        private static float Cross(PointF a, PointF b)
         {
             return a.X * b.Y - a.Y * b.X;
         }
@@ -676,12 +676,12 @@ namespace BezierDrawControl
             return ret;
         }
 
-        private float DotProduct(PointF p1, PointF p2)
+        private static float DotProduct(PointF p1, PointF p2)
         {
             return p1.X * p2.X + p1.Y * p2.Y;
         }
 
-        private bool OnStaraightLine(PointF p1, PointF p2, PointF c, out float outt)
+        private static bool OnStaraightLine(PointF p1, PointF p2, PointF c, out float outt)
         {
             bool found = false;
             outt = -1;
@@ -727,7 +727,7 @@ namespace BezierDrawControl
             return false;
         }
 
-        private bool CollisionLineAndCircle(PointF p1, PointF p2, PointF center, float radius)
+        private static bool CollisionLineAndCircle(PointF p1, PointF p2, PointF center, float radius)
         {
             var V = new PointF(p2.X - p1.X, p2.Y - p1.Y);
             var C = new PointF(center.X - p1.X, center.Y - p1.Y);
@@ -844,14 +844,14 @@ namespace BezierDrawControl
             }
         }
 
-        private Cursor GetCursor(PointF p1, PointF p2)
+        private static Cursor GetCursor(PointF p1, PointF p2)
         {
             var vec1 = BezierCaliculate.GetNormalizePoint(Substruct(p1, p2));
             var rotate = GetRotation(BezierCaliculate.GetNormalizePoint(vec1));
             return MyCursors.CreateArrowCursor((int)(rotate * 180 / Math.PI));
         }
 
-        private Cursor GetCursor(PointF p1, PointF p2, PointF p3)
+        private static Cursor GetCursor(PointF p1, PointF p2, PointF p3)
         {
             var vec1 = BezierCaliculate.GetNormalizePoint(Substruct(p1, p3));
             var vec2 = BezierCaliculate.GetNormalizePoint(Substruct(p2, p3));
@@ -987,7 +987,7 @@ namespace BezierDrawControl
             OnDrawRequired();
         }
 
-        private float GetRotation(PointF p)
+        private static float GetRotation(PointF p)
         {
             float ret = 0;
             if (p.Y < 0)
@@ -1002,22 +1002,22 @@ namespace BezierDrawControl
             return ret;
         }
 
-        private PointF Rotate(PointF p, float r)
+        private static PointF Rotate(PointF p, float r)
         {
             return new PointF((float)(Math.Cos(r) * p.X - Math.Sin(r) * p.Y), (float)(Math.Sin(r) * p.X + Math.Cos(r) * p.Y));
         }
 
-        private PointF Add(PointF p1, PointF p2)
+        private static PointF Add(PointF p1, PointF p2)
         {
             return new PointF(p1.X + p2.X, p1.Y + p2.Y);
         }
 
-        private PointF Substruct(PointF p1, PointF p2)
+        private static PointF Substruct(PointF p1, PointF p2)
         {
             return new PointF(p1.X - p2.X, p1.Y - p2.Y);
         }
 
-        private PointF Inverse(PointF p)
+        private static PointF Inverse(PointF p)
         {
             return new PointF(-p.X, -p.Y);
         }
@@ -1240,7 +1240,7 @@ namespace BezierDrawControl
             }
         }
 
-        private List<BezierControlPoint> Copy(List<BezierControlPoint> src)
+        private static List<BezierControlPoint> Copy(List<BezierControlPoint> src)
         {
             var ret = new List<BezierControlPoint>(src.Count);
             bool loop = (src.Count >= 3 && src[0].Serialize() == src[^1].Serialize());

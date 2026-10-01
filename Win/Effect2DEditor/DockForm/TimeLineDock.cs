@@ -246,7 +246,7 @@ namespace Effect2DEditor.DockForm
             }
         }
 
-        private bool CheckValidExtension(string extension)
+        private static bool CheckValidExtension(string extension)
         {
             extension = extension.ToLower();
             return extension == ".jpg" || extension == ".jpeg" || extension == ".gif" || extension == ".png" || extension == ".etd";

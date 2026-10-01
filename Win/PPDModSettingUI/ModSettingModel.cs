@@ -32,7 +32,7 @@ namespace PPDModSettingUI
                 if (name != value)
                 {
                     name = value;
-                    OnPropertyChanged("Name");
+                    OnPropertyChanged(nameof(Name));
                 }
             }
         }
@@ -45,7 +45,7 @@ namespace PPDModSettingUI
                 if (description != value)
                 {
                     description = value;
-                    OnPropertyChanged("Description");
+                    OnPropertyChanged(nameof(Description));
                 }
             }
         }
@@ -58,7 +58,7 @@ namespace PPDModSettingUI
                 if (defaultValue != value)
                 {
                     defaultValue = value;
-                    OnPropertyChanged("DefaultValue");
+                    OnPropertyChanged(nameof(DefaultValue));
                 }
             }
         }
@@ -71,7 +71,7 @@ namespace PPDModSettingUI
                 if (otherValues != value)
                 {
                     otherValues = value;
-                    OnPropertyChanged("OtherValues");
+                    OnPropertyChanged(nameof(OtherValues));
                 }
             }
         }
@@ -84,7 +84,7 @@ namespace PPDModSettingUI
                 if (newValue != value)
                 {
                     newValue = value;
-                    OnPropertyChanged("NewValue");
+                    OnPropertyChanged(nameof(NewValue));
                     Validate();
                 }
             }
@@ -98,7 +98,7 @@ namespace PPDModSettingUI
                 if (isOkEnabled != value)
                 {
                     isOkEnabled = value;
-                    OnPropertyChanged("IsOkEnabled");
+                    OnPropertyChanged(nameof(IsOkEnabled));
                 }
             }
         }
@@ -111,7 +111,7 @@ namespace PPDModSettingUI
                 if (availableValues != value)
                 {
                     availableValues = value;
-                    OnPropertyChanged("AvailableValues");
+                    OnPropertyChanged(nameof(AvailableValues));
                 }
             }
         }
@@ -124,7 +124,7 @@ namespace PPDModSettingUI
                 if (selectedIndex != value)
                 {
                     selectedIndex = value;
-                    OnPropertyChanged("SelectedIndex");
+                    OnPropertyChanged(nameof(SelectedIndex));
                     UpdateNewValueBySelectedIndex();
                 }
             }

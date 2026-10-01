@@ -81,7 +81,7 @@ namespace PPDFramework
             /// </summary>
             Extreme = 8
         }
-        static readonly AvailableDifficulty[] DifficultyArray = (AvailableDifficulty[])Enum.GetValues(typeof(AvailableDifficulty));
+        static readonly AvailableDifficulty[] DifficultyArray = Enum.GetValues<AvailableDifficulty>();
 
         string directoryname = "";
         string directorypath = "";
@@ -543,7 +543,7 @@ namespace PPDFramework
         /// </summary>
         public SongInformation()
         {
-            scores = new string[Enum.GetValues(typeof(Difficulty)).Length - 1];
+            scores = new string[Enum.GetValues<Difficulty>().Length - 1];
             difficultystring = new string[scores.Length];
             UserVolume = 100;
         }

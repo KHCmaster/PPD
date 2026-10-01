@@ -138,12 +138,12 @@ namespace PPDEditor
             for (int i = (int)Math.Floor(WindowUtility.IniFileWriter.StartTime); i <= (int)Math.Ceiling(WindowUtility.IniFileWriter.EndTime); i++)
             {
                 times.Add(i);
-                points.Add(stats.Result.Data.ContainsKey(i) ? stats.Result.Data[i] : 0);
+                points.Add(stats.Result.Data.TryGetValue(i, out float value) ? value : 0);
             }
             chart2.Series["Default"].Points.DataBindXY(times, points);
         }
 
-        private string GetButtonString(int i)
+        private static string GetButtonString(int i)
         {
             return Utility.Language[((ButtonType)i).ToString()];
         }

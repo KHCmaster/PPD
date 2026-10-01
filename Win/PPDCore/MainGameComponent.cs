@@ -578,8 +578,8 @@ namespace PPDCore
             };
             if (creator.CanCreate())
             {
-                creator.Progressed += Creator_Progressed;
-                var decorder = creator.Create();
+                SuperAutoCreator.Progressed += Creator_Progressed;
+                var decorder = SuperAutoCreator.Create();
                 if (isFreePass || WebManager.Instance.UseItem(autoItem))
                 {
                     recording = false;
@@ -1342,7 +1342,7 @@ namespace PPDCore
             }
         }
 
-        private MarkEvaluateType ConvertEffectTypeToMarkEvaluate(EffectType effectType)
+        private static MarkEvaluateType ConvertEffectTypeToMarkEvaluate(EffectType effectType)
         {
             return effectType switch
             {

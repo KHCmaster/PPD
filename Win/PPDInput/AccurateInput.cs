@@ -94,10 +94,7 @@ namespace PPDInput
                             }
                             lock (lastPressInfos)
                             {
-                                if (lastPressInfos.ContainsKey(buttonType))
-                                {
-                                    lastPressInfos.Remove(buttonType);
-                                }
+                                lastPressInfos.Remove(buttonType);
                             }
                         }
                     }

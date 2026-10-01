@@ -696,7 +696,7 @@ namespace PPDFramework.Web
             }
         }
 
-        private void ReadListInfo(XmlReader reader, ListInfo listInfo)
+        private static void ReadListInfo(XmlReader reader, ListInfo listInfo)
         {
             using (reader)
             {
@@ -1113,7 +1113,7 @@ namespace PPDFramework.Web
             return list;
         }
 
-        private WebSongInformation[] GetScores(Func<WebSongInformation, bool> filter)
+        private static WebSongInformation[] GetScores(Func<WebSongInformation, bool> filter)
         {
             var list = new List<WebSongInformation>();
             try
@@ -1146,7 +1146,7 @@ namespace PPDFramework.Web
             return [.. list];
         }
 
-        private void ParseDifficulty(XmlReader reader, WebSongInformation songInfo)
+        private static void ParseDifficulty(XmlReader reader, WebSongInformation songInfo)
         {
             while (reader.Read())
             {
@@ -1221,7 +1221,7 @@ namespace PPDFramework.Web
             return [.. list];
         }
 
-        private void ParseDetail(XmlReader reader, WebModInfo modInfo)
+        private static void ParseDetail(XmlReader reader, WebModInfo modInfo)
         {
             while (reader.Read())
             {
@@ -1404,12 +1404,12 @@ namespace PPDFramework.Web
             return [.. ret];
         }
 
-        private DateTime ParseDateString(string str)
+        private static DateTime ParseDateString(string str)
         {
             return DateTime.ParseExact(str, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
         }
 
-        private Request CreateRequest(string url, IDictionary<string, string> parameters)
+        private static Request CreateRequest(string url, IDictionary<string, string> parameters)
         {
             var paramList = new List<string>();
             foreach (KeyValuePair<string, string> kvp in parameters)
@@ -1419,12 +1419,12 @@ namespace PPDFramework.Web
             return CreateRequest(String.Format("{0}?{1}", url, String.Join("&", paramList.ToArray())));
         }
 
-        private Request CreateRequest(string url)
+        private static Request CreateRequest(string url)
         {
             return new Request(url, null);
         }
 
-        private string GetString(string url)
+        private static string GetString(string url)
         {
             var req = CreateRequest(url);
             using var response = req.GetResponse();
@@ -1432,7 +1432,7 @@ namespace PPDFramework.Web
             return reader.ReadToEnd();
         }
 
-        private Request CreatePostRequest(string url, IDictionary<string, string> param)
+        private static Request CreatePostRequest(string url, IDictionary<string, string> param)
         {
             var paramList = new List<string>();
             foreach (KeyValuePair<string, string> kvp in param)
@@ -1446,7 +1446,7 @@ namespace PPDFramework.Web
             return new Request(url, postDataBytes);
         }
 
-        private XmlReader GetXmlReader(HttpResponse res, bool dump = false)
+        private static XmlReader GetXmlReader(HttpResponse res, bool dump = false)
         {
             if (dump)
             {
@@ -1468,7 +1468,7 @@ namespace PPDFramework.Web
             }
         }
 
-        private XmlReader GetXmlReader(string text)
+        private static XmlReader GetXmlReader(string text)
         {
 
 #if DUMP

@@ -26,7 +26,7 @@ namespace PPDSingle
                 if (score != value)
                 {
                     score = value;
-                    OnPropertyChanged("Score");
+                    OnPropertyChanged(nameof(Score));
                 }
             }
         }
@@ -47,8 +47,8 @@ namespace PPDSingle
                 if (life != value)
                 {
                     life = value;
-                    OnPropertyChanged("Life");
-                    OnPropertyChanged("LifeAsFloat");
+                    OnPropertyChanged(nameof(Life));
+                    OnPropertyChanged(nameof(LifeAsFloat));
                 }
             }
         }
@@ -59,7 +59,7 @@ namespace PPDSingle
             set
             {
                 evaluate = value;
-                OnPropertyChanged("Evaluate");
+                OnPropertyChanged(nameof(Evaluate));
             }
         }
 
@@ -69,7 +69,7 @@ namespace PPDSingle
             set
             {
                 isMissPress = value;
-                OnPropertyChanged("IsMissPress");
+                OnPropertyChanged(nameof(IsMissPress));
             }
         }
 

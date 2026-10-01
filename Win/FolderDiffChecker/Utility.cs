@@ -31,7 +31,7 @@ namespace FolderDiffChecker
                 bool ok = true;
                 foreach (Regex regex in exceptFiles)
                 {
-                    if (regex.Match(filename).Success)
+                    if (regex.IsMatch(filename))
                     {
                         ok = false;
                         break;
@@ -51,7 +51,7 @@ namespace FolderDiffChecker
                 bool ok = true;
                 foreach (Regex regex in exceptFiles)
                 {
-                    if (regex.Match(dirName).Success)
+                    if (regex.IsMatch(dirName))
                     {
                         ok = false;
                         break;

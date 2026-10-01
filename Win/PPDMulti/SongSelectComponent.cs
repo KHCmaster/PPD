@@ -634,7 +634,7 @@ namespace PPDMulti
             modeString.Text = text;
         }
 
-        private SongInformation GetRandomSongInfo()
+        private static SongInformation GetRandomSongInfo()
         {
             var list = new List<SongInformation>();
             var folders = new Queue<SongInformation>();
@@ -666,7 +666,7 @@ namespace PPDMulti
             }
         }
 
-        private LogicFolderInfomation GetRandomLogicInfo()
+        private static LogicFolderInfomation GetRandomLogicInfo()
         {
             var list = new List<LogicFolderInfomation>();
             var folders = new Queue<LogicFolderInfomation>();
@@ -939,7 +939,7 @@ namespace PPDMulti
                 extremeTexts = [extremeText, extremePtText, extremeDifficultyText];
             }
 
-            private void UpdateColor(TextureString[] texts, Color4 color)
+            private static void UpdateColor(TextureString[] texts, Color4 color)
             {
                 foreach (var text in texts)
                 {

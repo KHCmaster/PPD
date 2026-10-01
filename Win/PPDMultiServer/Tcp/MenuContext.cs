@@ -291,7 +291,7 @@ namespace PPDMultiServer.Tcp
             }
         }
 
-        private bool CompareArray(byte[] array1, byte[] array2)
+        private static bool CompareArray(byte[] array1, byte[] array2)
         {
             if (array1.Length != array2.Length)
             {
@@ -309,7 +309,7 @@ namespace PPDMultiServer.Tcp
             return true;
         }
 
-        private string GetStringArray(byte[] array)
+        private static string GetStringArray(byte[] array)
         {
             return array.Select(b => b.ToString("X2")).Aggregate("", (s1, s2) => String.Format("{0}{1}", s1, s2));
         }

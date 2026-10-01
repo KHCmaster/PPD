@@ -46,7 +46,7 @@ namespace PPDEditorCommon.Dialog.ViewModel
                 if (isOkEnabled != value)
                 {
                     isOkEnabled = value;
-                    OnPropertyChanged("IsOkEnabled");
+                    OnPropertyChanged(nameof(IsOkEnabled));
                 }
             }
         }

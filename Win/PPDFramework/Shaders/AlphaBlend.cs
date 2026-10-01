@@ -151,13 +151,13 @@ namespace PPDFramework.Shaders
                 effect.SetValue(widthHeightHandle, new Vector2(device.Width, device.Height));
                 effect.SetValue(projectionHandle, device.Projection);
                 techniqueNames = [];
-                foreach (var blendMode in (BlendMode[])Enum.GetValues(typeof(BlendMode)))
+                foreach (var blendMode in Enum.GetValues<BlendMode>())
                 {
                     foreach (var isPA in new bool[] { true, false })
                     {
                         foreach (var isMasking in new bool[] { true, false })
                         {
-                            foreach (var filterType in (ColorFilterType[])Enum.GetValues(typeof(ColorFilterType)))
+                            foreach (var filterType in Enum.GetValues<ColorFilterType>())
                             {
                                 techniqueNames[new Tuple<BlendMode, bool, bool, ColorFilterType>(blendMode, isPA, isMasking, filterType)] =
                                     String.Format("{0}Blend{1}{2}{3}Filter",
@@ -171,7 +171,7 @@ namespace PPDFramework.Shaders
                     }
                 }
                 maskTechniqueNames = [];
-                foreach (var maskType in (MaskType[])Enum.GetValues(typeof(MaskType)))
+                foreach (var maskType in Enum.GetValues<MaskType>())
                 {
                     foreach (var isMasking in new bool[] { true, false })
                     {

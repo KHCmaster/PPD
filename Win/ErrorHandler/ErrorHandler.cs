@@ -73,7 +73,7 @@ namespace ErrorHandle
             writer.WriteLine("------------------------------------------------------------------");
         }
 
-        void WriteAssembly(Assembly assembly, TextWriter writer)
+        static void WriteAssembly(Assembly assembly, TextWriter writer)
         {
             writer.WriteLine("FullName:{0}", assembly.FullName);
             WriteBinaryInfo(assembly.Location, writer);
@@ -83,7 +83,7 @@ namespace ErrorHandle
             }
         }
 
-        void WriteBinaryInfo(string filePath, TextWriter writer)
+        static void WriteBinaryInfo(string filePath, TextWriter writer)
         {
             try
             {
@@ -98,7 +98,7 @@ namespace ErrorHandle
             }
         }
 
-        void WriteErrorImpl(Exception e, TextWriter writer)
+        static void WriteErrorImpl(Exception e, TextWriter writer)
         {
             writer.WriteLine(e.Data);
             writer.WriteLine(e.HelpLink);

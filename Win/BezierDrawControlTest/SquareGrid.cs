@@ -51,7 +51,7 @@ namespace BezierDrawControlTest
                 return Normalize(OffsetY, Height);
             }
         }
-        private int Normalize(int num, int basenum)
+        private static int Normalize(int num, int basenum)
         {
             int val = num % basenum;
             if (val < 0) val += basenum;

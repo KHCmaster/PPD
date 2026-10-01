@@ -63,7 +63,7 @@ namespace BezierDrawControl
                 return GetTransFormed(bottomRight);
             }
         }
-        private PointF GetMiddlePoint(PointF p1, PointF p2)
+        private static PointF GetMiddlePoint(PointF p1, PointF p2)
         {
             return new PointF((p1.X + p2.X) / 2, (p1.Y + p2.Y) / 2);
         }
@@ -145,7 +145,7 @@ namespace BezierDrawControl
                 moveY = value.Y;
             }
         }
-        private float NormalizeAngle(float rotation)
+        private static float NormalizeAngle(float rotation)
         {
             var val = Math.IEEERemainder(rotation, 360);
             if (val < 0) val += 360;

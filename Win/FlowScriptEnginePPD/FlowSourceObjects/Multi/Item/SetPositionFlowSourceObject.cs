@@ -18,9 +18,9 @@ namespace FlowScriptEnginePPD.FlowSourceObjects.Multi.Item
         {
             base.OnInitialize();
 
-            if (Manager.Items.ContainsKey("MultiItemComponent"))
+            if (Manager.Items.TryGetValue("MultiItemComponent", out object value))
             {
-                itemComponent = Manager.Items["MultiItemComponent"] as GameComponent;
+                itemComponent = value as GameComponent;
             }
         }
 

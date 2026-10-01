@@ -206,7 +206,7 @@ namespace PPD
                                             reader.MoveToElement();
                                             if (reader.LocalName == "br")
                                             {
-                                                sb.Append("\n");
+                                                sb.Append('\n');
                                             }
                                             shouldRead = true;
                                         }
@@ -225,7 +225,7 @@ namespace PPD
                                     reader.MoveToElement();
                                     if (reader.LocalName == "br")
                                     {
-                                        sb.Append("\n");
+                                        sb.Append('\n');
                                     }
                                 }
                             }

@@ -59,9 +59,9 @@ namespace PPDEditor
         public string GetFormattedContent(float time)
         {
             string ret;
-            if (changedata.ContainsKey(time))
+            if (changedata.TryGetValue(time, out string value))
             {
-                ret = changedata[time];
+                ret = value;
                 if (ret == "") ret = " ";
             }
             else
@@ -86,9 +86,8 @@ namespace PPDEditor
         public void ChangeTime(float previoustime, float newtime)
         {
             if (previoustime < 0) return;
-            if (changedata.ContainsKey(previoustime) && !changedata.ContainsKey(newtime))
+            if (changedata.TryGetValue(previoustime, out string kasi) && !changedata.ContainsKey(newtime))
             {
-                string kasi = changedata[previoustime];
                 changedata.Remove(previoustime);
                 changedata.Add(newtime, kasi);
                 Updatedatagrid();
@@ -153,19 +152,19 @@ namespace PPDEditor
             changedata.Clear();
             this.dataGridView1.RowCount = 0;
         }
-        private string Removeextra(string st)
+        private static string Removeextra(string st)
         {
-            var a = st.IndexOf("\t");
+            var a = st.IndexOf('\t');
             while (a != -1)
             {
                 st = st.Remove(a, 1);
-                a = st.IndexOf("\t");
+                a = st.IndexOf('\t');
             }
-            a = st.IndexOf("\r");
+            a = st.IndexOf('\r');
             while (a != -1)
             {
                 st = st.Remove(a, 1);
-                a = st.IndexOf("\r");
+                a = st.IndexOf('\r');
             }
             return st;
         }

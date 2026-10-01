@@ -100,7 +100,7 @@ namespace PPDFramework
             return Array.IndexOf(MovieExtensions, extension.Length == 0 ? "" : extension[1..]) >= 0;
         }
 
-        private float GetValue(string word, float errorvalue)
+        private static float GetValue(string word, float errorvalue)
         {
             if (!float.TryParse(word, NumberStyles.Float, CultureInfo.InvariantCulture, out float ret)) ret = errorvalue;
             return ret;

@@ -40,7 +40,7 @@ namespace PPDEditor.Forms
             }
         }
 
-        private void ReadScript(TreeNodeCollection nodes, string dir)
+        private static void ReadScript(TreeNodeCollection nodes, string dir)
         {
             foreach (var childDir in Directory.GetDirectories(dir))
             {
@@ -55,7 +55,7 @@ namespace PPDEditor.Forms
             }
             foreach (var childFile in Directory.GetFiles(dir))
             {
-                if (Path.GetExtension(childFile).ToLower() != ".fsml")
+                if (!Path.GetExtension(childFile).Equals(".fsml", StringComparison.CurrentCultureIgnoreCase))
                 {
                     continue;
                 }

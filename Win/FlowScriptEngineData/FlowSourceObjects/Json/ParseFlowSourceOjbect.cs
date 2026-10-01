@@ -40,7 +40,7 @@ namespace FlowScriptEngineData.FlowSourceObjects.Json
             }
         }
 
-        private object Convert(object obj)
+        private static object Convert(object obj)
         {
             if (obj is JObject @object)
             {

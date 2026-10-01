@@ -263,7 +263,7 @@ namespace PPDSingle
                 });
             }
 
-            private String GetInfoText(ModSetting modSetting)
+            private static String GetInfoText(ModSetting modSetting)
             {
                 return String.Format("{0}:{1}", Utility.Language["DefaultValue"], modSetting.GetStringValue(modSetting.Default));
             }

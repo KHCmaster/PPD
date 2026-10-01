@@ -74,14 +74,8 @@ namespace PPDFrameworkCore
         {
             lock (lockObject)
             {
-                if (list.ContainsKey(id))
-                {
-                    list.Remove(id);
-                }
-                if (onceList.ContainsKey(id))
-                {
-                    onceList.Remove(id);
-                }
+                list.Remove(id);
+                onceList.Remove(id);
             }
         }
 

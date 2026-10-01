@@ -14,6 +14,19 @@ namespace PPDReleaser
         private static string resourceDir;
         private static string currentReleaseDir;
         private static string x64Dir;
+        private static readonly string[] configFiles =
+        [
+            "Effect2DEditor.exe.config",
+            "FlowScriptControlTest.exe.config",
+            "KeyConfiger.exe.config",
+            "PPD.exe.config",
+            "PPDConfig.exe.config",
+            "PPDEditor.exe.config",
+            "PPDExpansion.exe.config",
+            "PPDMultiServerService.exe.config",
+            "MultiRoomInfo.xml",
+            "PPDUpdater.exe.config",
+        ];
 
         private static void Main()
         {
@@ -158,22 +171,11 @@ namespace PPDReleaser
             pdCopyInfo.CopyFiles(
             [
                 .. executables,
-                .. new string[]{
-                    "Effect2DEditor.exe.config",
-                    "FlowScriptControlTest.exe.config",
-                    "KeyConfiger.exe.config",
-                    "PPD.exe.config",
-                    "PPDConfig.exe.config",
-                    "PPDEditor.exe.config",
-                    "PPDExpansion.exe.config",
-                    "PPDMultiServerService.exe.config",
-                    "MultiRoomInfo.xml",
-                    "PPDUpdater.exe.config",
-                },
+                .. configFiles,
             ]);
 
             CopyFile("Items\\x64\\fmodex64.dll", Path.Combine(pdCopyInfo.Dir, "fmodex64.dll"));
-            executables = [.. executables, .. new string[] { "fmodex64.dll" }];
+            executables = [.. executables, "fmodex64.dll"];
 
             var prefixes = new string[] { "", "beta_" };
             foreach (var prefix in prefixes)

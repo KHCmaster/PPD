@@ -32,7 +32,7 @@ namespace PPDEditorCommon.Dialog.ViewModel
                 }
                 if (changed)
                 {
-                    OnPropertyChanged("Value");
+                    OnPropertyChanged(nameof(Value));
                 }
             }
         }
@@ -45,7 +45,7 @@ namespace PPDEditorCommon.Dialog.ViewModel
                 if (text != value)
                 {
                     text = value;
-                    OnPropertyChanged("Text");
+                    OnPropertyChanged(nameof(Text));
                 }
             }
         }
@@ -58,7 +58,7 @@ namespace PPDEditorCommon.Dialog.ViewModel
                 if (isSelected != value)
                 {
                     isSelected = value;
-                    OnPropertyChanged("IsSelected");
+                    OnPropertyChanged(nameof(IsSelected));
                 }
             }
         }

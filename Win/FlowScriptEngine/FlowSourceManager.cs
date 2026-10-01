@@ -194,7 +194,7 @@ namespace FlowScriptEngine
             }
         }
 
-        private FlowSourceObjectBase GetTargetSource(Delegate del)
+        private static FlowSourceObjectBase GetTargetSource(Delegate del)
         {
             var source = del.Target as FlowSourceObjectBase;
             if (source == null)
@@ -431,7 +431,7 @@ namespace FlowScriptEngine
             return null;
         }
 
-        internal string SerializeSource(FlowSourceObjectBase source)
+        internal static string SerializeSource(FlowSourceObjectBase source)
         {
             var serializer = new Serializer();
             serializer.Serialize(source);

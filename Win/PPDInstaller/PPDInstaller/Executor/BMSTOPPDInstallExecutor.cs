@@ -5,10 +5,10 @@ using System.Windows.Forms;
 
 namespace PPDInstaller.Executor
 {
-    class BMSTOPPDInstallExecutor(string dataDirectory, string installDirectory, Control control) : CExecutor(control)
+    partial class BMSTOPPDInstallExecutor(string dataDirectory, string installDirectory, Control control) : CExecutor(control)
     {
         readonly Regex[] BMSTOPPDIgnoreList = [
-          new("setting\\.ini",RegexOptions.IgnoreCase)
+          SettingIniRegex()
         ];
         readonly string dataDirectory = dataDirectory;
         readonly string installDirectory = installDirectory;
@@ -29,5 +29,8 @@ namespace PPDInstaller.Executor
             }
             OnFinish();
         }
+
+        [GeneratedRegex("setting\\.ini", RegexOptions.IgnoreCase)]
+        private static partial Regex SettingIniRegex();
     }
 }

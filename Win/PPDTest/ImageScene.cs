@@ -17,7 +17,7 @@ namespace PPDTest
         protected override void OnInitialize()
         {
             var pathManager = new PathManager(@"img\PPD\main_game");
-            foreach (var blendMode in (Effect2D.BlendMode[])Enum.GetValues(typeof(Effect2D.BlendMode)))
+            foreach (var blendMode in Enum.GetValues<Effect2D.BlendMode>())
             {
                 contentSprite.AddChild(new TextureString(device, blendMode.ToString(), 20, new Vortice.Mathematics.Color4(1, 1, 1, 1))
                 {

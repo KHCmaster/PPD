@@ -491,8 +491,16 @@ Phase 7  配布・更新の仕組みの対応、リリース
   - 設計上の理由で修正しないものは、理由を書いて `SuppressMessage` にした（GameComponent / DisposableComponent の `DisposeResource` による破棄など）
   - 修正の途中で見つけて直した不具合: Mod の設定画面の書式文字列の誤り（FormatException）、PPDEditor のタイムライン描画のたびの GDI オブジェクトのリーク、ブレークポイントで止まるたびのイベントハンドルのリーク、`static` なフラグを `lock (this)` で守っていた箇所、`Workspace` や文字のテクスチャなどの解放漏れ
 - [x] IDE の自動修正のうち、動作を変えないもの（null チェックの簡略化、パターンマッチング、`readonly`、`new()`、コレクションの初期化など）を `dotnet format` で適用した。
-  - 適用しなかったもの: 名前の変更（FlowScript のスクリプトやデザイナーが名前に依存する）、`using` 宣言（破棄のタイミングが変わる）、`switch` 式やプライマリコンストラクターなどの書き方だけの変更
+- [x] info レベルの診断（IDE のスタイル、CA / SYSLIB のアナライザー）をゼロにした（`dotnet format style` / `analyzers --severity info --verify-no-changes`）。
+  - スタイル: `switch` 式、プライマリコンストラクター、コレクション式、`using` 宣言（破棄のタイミングが変わらない箇所だけ）、`System.Threading.Lock`、名前の規則（IDE1006、844 件）、使われていない引数や値の削除、名前空間とフォルダーの一致
+  - 名前の変更は、FlowScript のノードのクラス名とプロパティ名（.fsml に保存される）、`override` / インターフェイスのメンバー、XAML から参照されるハンドラーを壊さないように、専用のツール（Roslyn の Renamer）で衝突を確認しながら行った。FlowScriptEngine* のフォルダーは名前空間をフォルダーに合わせない（`.editorconfig`）
+  - アナライザー: `static` 化（CA1822、非公開のメンバーだけ）、`TryGetValue` / `TryAdd` による二重の検索の解消、`GeneratedRegex`、1 文字の文字列の `char` 版への置き換え（ICU では `IndexOf("\r")` が `\r\n` の中で見つからないことがある）、大文字と小文字を区別しない比較、`ArgumentNullException.ThrowIfNull` など
+  - Mod から参照されうる公開の静的フィールドは、プロパティにするとバイナリ互換がなくなるので、`readonly` を付けるだけにした（CA2211）
+  - 理由を書いて `.editorconfig` で無効にしたもの: SYSLIB1054（`LibraryImport`。`StringBuilder` や文字列を含む構造体のマーシャリングが変わる）、CA1859（インターフェイスや基底クラスで受ける設計）、DirectShow の COM 相互運用の SYSLIB1096 / CA1069 / CA1816
+  - 修正の途中で見つけて直した不具合: Effect2DEditor のプレビューで、描画のたびに画像を読み込み直してリソースを登録していた（リーク）。PPDEditor の `WndProc` の到達しないコード
+  - 未修正で気になる点: `ExSound.ExPlay` は再生速度の引数（`playRatio`）を使っていない（引数は互換のため残し、`SuppressMessage` で理由を書いた）
 - 確認: 回帰テスト（シーン、PPD の終了、Mod）、MessagePack の通信互換、各アプリの起動
+  - [ ] info レベルの修正の後は、Mod の読み込みと MessagePack の通信互換だけ確認した。シーンの比較、PPD の終了、各アプリの起動はまだ（ほかのアプリが前面にあり、キー入力を送れなかったため）
 
 ### Phase 7: 配布・更新の仕組みとリリース
 

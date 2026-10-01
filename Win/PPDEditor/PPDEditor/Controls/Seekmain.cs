@@ -181,7 +181,7 @@ namespace PPDEditor.Controls
                 return;
             }
 
-            timeLineDrawer.Draw(new TimeLineDrawParameter(g, Width, Height, BackgroundImage, WindowUtility.LayerManager.SelectedPpdSheet,
+            TimeLineDrawer.Draw(new TimeLineDrawParameter(g, Width, Height, BackgroundImage, WindowUtility.LayerManager.SelectedPpdSheet,
                 bpm, bpmStart, defaultInterval, DisplayMode, Hsc.Value, (float)currentTime, BeatType));
         }
         public double Length
@@ -417,7 +417,7 @@ namespace PPDEditor.Controls
                 UpdateInfo();
             }
         }
-        private Point ChangePos(Point p)
+        private static Point ChangePos(Point p)
         {
             if (WindowUtility.MainForm.DisplayGrid)
             {
@@ -774,7 +774,7 @@ namespace PPDEditor.Controls
             }
             return -1;
         }
-        private void UpdateInfo()
+        private static void UpdateInfo()
         {
             PPDSheet ppdsheet = WindowUtility.LayerManager.SelectedPpdSheet;
             if (ppdsheet == null) return;
@@ -1166,7 +1166,7 @@ namespace PPDEditor.Controls
             Currenttime = ppdsheet.SelectedMark.Time - (2 / scale) * WindowUtility.MainForm.Farness;
             WindowUtility.MainForm.SeekMovie(currentTime);
         }
-        private int GetMove(ShortcutType shortcutType)
+        private static int GetMove(ShortcutType shortcutType)
         {
             return shortcutType switch
             {

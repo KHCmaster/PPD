@@ -37,7 +37,7 @@ namespace PPDFramework
         /// <summary>
         /// サイズ
         /// </summary>
-        public static int Size = Marshal.SizeOf(typeof(ColoredTexturedVertex));
+        public static readonly int Size = Marshal.SizeOf<ColoredTexturedVertex>();
 
         /// <summary>
         /// Gets or sets the position of the vertex.

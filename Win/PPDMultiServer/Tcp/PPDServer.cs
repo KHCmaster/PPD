@@ -190,9 +190,8 @@ namespace PPDMultiServer.Tcp
             foreach (ServerContextBase context in afterPopContexts)
             {
                 contexts.Remove(context);
-                if (contextChains.ContainsKey(context))
+                if (contextChains.TryGetValue(context, out ServerContextBase parent))
                 {
-                    ServerContextBase parent = contextChains[context];
                     parent.OnChildPoped();
                     contextChains.Remove(context);
                 }

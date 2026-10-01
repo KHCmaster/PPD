@@ -868,8 +868,8 @@ namespace DirectShow
 
             for (int i = 0; i < this.cElems; i++)
             {
-                var ptr = new IntPtr(this.pElems.ToInt64() + (Marshal.SizeOf(typeof(Guid)) * i));
-                retval[i] = (Guid)Marshal.PtrToStructure(ptr, typeof(Guid));
+                var ptr = new IntPtr(this.pElems.ToInt64() + (Marshal.SizeOf<Guid>() * i));
+                retval[i] = Marshal.PtrToStructure<Guid>(ptr);
             }
 
             return retval;
@@ -2178,7 +2178,7 @@ namespace DirectShow
         {
             if (mt.formatPtr != IntPtr.Zero && mt.formatSize != 0 && mt.formatType == FormatType.WaveEx)
             {
-                return (WaveFormatEx)Marshal.PtrToStructure(mt.formatPtr, typeof(WaveFormatEx));
+                return Marshal.PtrToStructure<WaveFormatEx>(mt.formatPtr);
             }
             return null;
         }
@@ -2187,7 +2187,7 @@ namespace DirectShow
         {
             if (mt.formatPtr != IntPtr.Zero && mt.formatSize != 0 && (mt.formatType == FormatType.VideoInfo || mt.formatType == FormatType.MpegVideo))
             {
-                return (VideoInfoHeader)Marshal.PtrToStructure(mt.formatPtr, typeof(VideoInfoHeader));
+                return Marshal.PtrToStructure<VideoInfoHeader>(mt.formatPtr);
             }
             return null;
         }
@@ -2196,7 +2196,7 @@ namespace DirectShow
         {
             if (mt.formatPtr != IntPtr.Zero && mt.formatSize != 0 && (mt.formatType == FormatType.VideoInfo2 || mt.formatType == FormatType.Mpeg2Video))
             {
-                return (VideoInfoHeader2)Marshal.PtrToStructure(mt.formatPtr, typeof(VideoInfoHeader2));
+                return Marshal.PtrToStructure<VideoInfoHeader2>(mt.formatPtr);
             }
             return null;
         }
@@ -3145,7 +3145,7 @@ namespace DirectShow
             Guid guidRet = Guid.Empty;
 
             // Memory to hold the returned guid
-            int iSize = Marshal.SizeOf(typeof(Guid));
+            int iSize = Marshal.SizeOf<Guid>();
             IntPtr ipOut = Marshal.AllocCoTaskMem(iSize);
 
             try
@@ -3162,7 +3162,7 @@ namespace DirectShow
                     DsError.ThrowExceptionForHR(hr);
 
                     // Marshal it to the return variable
-                    guidRet = (Guid)Marshal.PtrToStructure(ipOut, typeof(Guid));
+                    guidRet = Marshal.PtrToStructure<Guid>(ipOut);
                 }
             }
             finally

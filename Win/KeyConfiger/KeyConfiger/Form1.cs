@@ -116,7 +116,7 @@ namespace KeyConfiger
             this.設定ToolStripMenuItem.DropDownItems.Add(tsmi);
         }
 
-        private void ReadKeySetting(XmlReader reader, KeyConfig keyConfig)
+        private static void ReadKeySetting(XmlReader reader, KeyConfig keyConfig)
         {
             while (reader.Read())
             {
@@ -139,7 +139,7 @@ namespace KeyConfiger
             reader.Close();
         }
 
-        private int FindIndex(string value)
+        private static int FindIndex(string value)
         {
             for (int i = 0; i < ButtonUtility.Array.Length; i++)
             {
@@ -209,7 +209,7 @@ namespace KeyConfiger
                     {
                         Text = name,
                         Name = fileName.ToLower(),
-                        Checked = Path.GetFileName(fileName).ToLower() == String.Format("lang_{0}_{1}.ini", this.GetType().Assembly.GetName().Name, langFileISO).ToLower()
+                        Checked = Path.GetFileName(fileName).Equals(String.Format("lang_{0}_{1}.ini", this.GetType().Assembly.GetName().Name, langFileISO), StringComparison.CurrentCultureIgnoreCase)
                     };
                     tsmi.Click += Tsmi_Click;
                     言語ToolStripMenuItem.DropDownItems.Add(tsmi);
@@ -222,7 +222,7 @@ namespace KeyConfiger
             if (sender is ToolStripMenuItem tsmi)
             {
                 var langFileName = tsmi.Name;
-                var m = Regex.Match(Path.GetFileName(langFileName), "^lang_\\w+_(?<ISO>\\w+).ini$");
+                var m = LangFileRegex().Match(Path.GetFileName(langFileName));
                 if (m.Success)
                 {
                     langFileISO = m.Groups["ISO"].Value;
@@ -341,7 +341,7 @@ namespace KeyConfiger
             this.Close();
         }
 
-        private void WriteSetting(XmlWriter writer, KeyConfig keyConfig)
+        private static void WriteSetting(XmlWriter writer, KeyConfig keyConfig)
         {
             foreach (ButtonType buttonType in ButtonUtility.Array)
             {
@@ -403,7 +403,7 @@ namespace KeyConfiger
             }
         }
 
-        private void UncheckAllMenuItem(ToolStripMenuItem tsmi, int startIndex)
+        private static void UncheckAllMenuItem(ToolStripMenuItem tsmi, int startIndex)
         {
             for (int i = startIndex; i < tsmi.DropDownItems.Count; i++)
             {
@@ -474,5 +474,8 @@ namespace KeyConfiger
             mygame.Input.CurrentJoyStickIndex = index;
             tsmi.Checked = true;
         }
+
+        [GeneratedRegex("^lang_\\w+_(?<ISO>\\w+).ini$")]
+        private static partial Regex LangFileRegex();
     }
 }

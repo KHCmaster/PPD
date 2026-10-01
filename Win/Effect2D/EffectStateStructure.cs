@@ -200,7 +200,7 @@ namespace Effect2D
             return Matrix.Transformation2D(Vector2.Zero, 0, new Vector2(ScaleX, ScaleY), Vector2.Zero, (float)(Rotation / 180 * Math.PI), new Vector2(X, Y));
         }
 
-        private float GetDivision(float a, float b, float ratio)
+        private static float GetDivision(float a, float b, float ratio)
         {
             return a * ratio + b * (1 - ratio);
         }
@@ -229,25 +229,25 @@ namespace Effect2D
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append("{");
+            sb.Append('{');
             sb.Append("X:");
             sb.Append(X);
-            sb.Append(" ");
+            sb.Append(' ');
             sb.Append("Y:");
             sb.Append(Y);
-            sb.Append(" ");
+            sb.Append(' ');
             sb.Append("Alpha:");
             sb.Append(Alpha);
-            sb.Append(" ");
+            sb.Append(' ');
             sb.Append("Rotation:");
             sb.Append(Rotation);
-            sb.Append(" ");
+            sb.Append(' ');
             sb.Append("ScaleX:");
             sb.Append(ScaleX);
-            sb.Append(" ");
+            sb.Append(' ');
             sb.Append("ScaleY:");
             sb.Append(ScaleY);
-            sb.Append("}");
+            sb.Append('}');
             return sb.ToString();
         }
 

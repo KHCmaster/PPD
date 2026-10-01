@@ -10,9 +10,9 @@ namespace FlowScriptEnginePPD.FlowSourceObjects.GameResult
         {
             base.OnInitialize();
 
-            if (this.Manager.Items.ContainsKey("GameResultManager"))
+            if (this.Manager.Items.TryGetValue("GameResultManager", out object value))
             {
-                gameResultManager = this.Manager.Items["GameResultManager"] as GameResultManager;
+                gameResultManager = value as GameResultManager;
             }
         }
     }

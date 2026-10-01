@@ -38,7 +38,7 @@ namespace PPDFramework
             get { return Texture.Surface; }
         }
 
-        internal void Use()
+        internal static void Use()
         {
         }
 

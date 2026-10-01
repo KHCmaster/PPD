@@ -25,14 +25,14 @@ namespace PPDEditorCommon.Dialog
             IntPtr hwnd = new System.Windows.Interop.WindowInteropHelper(window).Handle;
             var currentStyle = NativeMethods.GetWindowLong(hwnd, GWL_STYLE);
 
-            NativeMethods.SetWindowLong(hwnd, GWL_STYLE, (currentStyle & ~WS_MAXIMIZEBOX & ~WS_MINIMIZEBOX));
+            _ = NativeMethods.SetWindowLong(hwnd, GWL_STYLE, (currentStyle & ~WS_MAXIMIZEBOX & ~WS_MINIMIZEBOX));
         }
 
         public static bool CheckValidFileName(string fileName)
         {
             foreach (Char c in Path.GetInvalidFileNameChars())
             {
-                if (fileName.IndexOf(c) >= 0)
+                if (fileName.Contains(c))
                 {
                     return false;
                 }

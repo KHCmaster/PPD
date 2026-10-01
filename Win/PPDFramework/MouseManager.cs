@@ -54,7 +54,7 @@ namespace PPDFramework
             return new Vector2((x - offset.X) / scale.X, (y - offset.Y) / scale.Y);
         }
 
-        private MouseEvent.MouseEventType ConvertToEventType(MouseButtons buttons)
+        private static MouseEvent.MouseEventType ConvertToEventType(MouseButtons buttons)
         {
             if ((buttons & MouseButtons.Left) == MouseButtons.Left)
             {

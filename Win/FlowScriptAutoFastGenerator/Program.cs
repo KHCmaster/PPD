@@ -11,7 +11,7 @@ using System.Xml;
 
 namespace FlowScriptAutoFastGenerator
 {
-    class Program
+    partial class Program
     {
         static readonly HashSet<ClassInfo> errorFiles = [];
 
@@ -151,7 +151,7 @@ namespace FlowScriptAutoFastGenerator
 
         private static string GetGenericClassName(string name)
         {
-            var backQuoteIndex = name.IndexOf("`");
+            var backQuoteIndex = name.IndexOf('`');
             if (backQuoteIndex < 0)
             {
                 return name;
@@ -190,7 +190,7 @@ namespace FlowScriptAutoFastGenerator
 
         static void HideAutoFastCs(string projectDir)
         {
-            var regex = new Regex("^\\w+\\.AutoFast\\.cs$");
+            var regex = AutoFastFileRegex();
             var autoFasts = new List<string>();
             var dirs = new Queue<string>();
             dirs.Enqueue(projectDir);
@@ -230,7 +230,7 @@ namespace FlowScriptAutoFastGenerator
                 {
                     string path = elem.Attributes["Include"].Value;
                     Console.WriteLine(path);
-                    if (regex.Match(Path.GetFileName(path)).Success)
+                    if (regex.IsMatch(Path.GetFileName(path)))
                     {
                         autoFasts.Remove(path);
                         while (elem.ChildNodes.Count > 0)
@@ -270,7 +270,7 @@ namespace FlowScriptAutoFastGenerator
 
         static string[] GetFileList(string projectDir)
         {
-            var regex = new Regex("^\\w+\\.cs$");
+            var regex = CsFileRegex();
             var ret = new List<string>();
             var queue = new Queue<string>();
             queue.Enqueue(projectDir);
@@ -284,7 +284,7 @@ namespace FlowScriptAutoFastGenerator
 
                 foreach (string childFile in Directory.GetFiles(dir))
                 {
-                    if (regex.Match(Path.GetFileName(childFile)).Success)
+                    if (regex.IsMatch(Path.GetFileName(childFile)))
                     {
                         ret.Add(childFile);
                     }
@@ -297,10 +297,10 @@ namespace FlowScriptAutoFastGenerator
         static Dictionary<string, ClassInfo> GetClassInfo(string[] fileList)
         {
             var ret = new Dictionary<string, ClassInfo>();
-            var classRegex = new Regex("public +(?<partial>partial)? *(?<abstract>abstract)? *class +(?<className>[\\w]+)");
-            var namespaceRegex = new Regex("namespace +(?<namespace>[\\w.]+)");
-            var setValueRegex1 = new Regex("SetValue\\(\"([a-zA-Z_][a-zA-Z0-9_]*)\"\\)");
-            var setValueRegex2 = new Regex("SetValue\\(nameof\\(([a-zA-Z_][a-zA-Z0-9_]*)\\)\\)");
+            var classRegex = ClassDeclarationRegex();
+            var namespaceRegex = NamespaceDeclarationRegex();
+            var setValueRegex1 = SetValueStringRegex();
+            var setValueRegex2 = SetValueNameofRegex();
 
             foreach (string filePath in fileList)
             {
@@ -416,5 +416,18 @@ namespace FlowScriptAutoFastGenerator
                 private set;
             } = warningText;
         }
+
+        [GeneratedRegex("^\\w+\\.AutoFast\\.cs$")]
+        private static partial Regex AutoFastFileRegex();
+        [GeneratedRegex("^\\w+\\.cs$")]
+        private static partial Regex CsFileRegex();
+        [GeneratedRegex("public +(?<partial>partial)? *(?<abstract>abstract)? *class +(?<className>[\\w]+)")]
+        private static partial Regex ClassDeclarationRegex();
+        [GeneratedRegex("namespace +(?<namespace>[\\w.]+)")]
+        private static partial Regex NamespaceDeclarationRegex();
+        [GeneratedRegex("SetValue\\(\"([a-zA-Z_][a-zA-Z0-9_]*)\"\\)")]
+        private static partial Regex SetValueStringRegex();
+        [GeneratedRegex("SetValue\\(nameof\\(([a-zA-Z_][a-zA-Z0-9_]*)\\)\\)")]
+        private static partial Regex SetValueNameofRegex();
     }
 }

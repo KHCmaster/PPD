@@ -261,7 +261,7 @@ namespace PPDMulti
                 valueText.Position = new Vector2(690 - valueText.Width, 0);
             }
 
-            private String GetInfoText(ModSetting modSetting)
+            private static String GetInfoText(ModSetting modSetting)
             {
                 return String.Format("{0}:{1}", Utility.Language["DefaultValue"], modSetting.GetStringValue(modSetting.Default));
             }

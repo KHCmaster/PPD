@@ -45,9 +45,8 @@ namespace FlowScriptDrawControl.Model
 
         public void RemoveSelect(Selectable selectable)
         {
-            if (selectedSelectables.Contains(selectable))
+            if (selectedSelectables.Remove(selectable))
             {
-                selectedSelectables.Remove(selectable);
                 selectable.IsSelected = false;
                 OnSelectionChanged();
             }

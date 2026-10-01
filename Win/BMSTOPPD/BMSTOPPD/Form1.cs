@@ -51,7 +51,7 @@ namespace BMSTOPPD
         }
         private void Analysis(string data)
         {
-            double.TryParse(this.textBox2.Text, out double timeoffset);
+            _ = double.TryParse(this.textBox2.Text, out double timeoffset);
             var bpmpos = data.IndexOf("#BPM");
             int zure = (this.checkBox1.Checked ? 1 : 0);
             if (bpmpos != -1)
@@ -80,7 +80,7 @@ namespace BMSTOPPD
                 if (data[i] == '#') anchor = i;
                 if (data[i] == ':')
                 {
-                    if (int.TryParse(data.Substring(anchor + 1, 3), out int a))
+                    if (int.TryParse(data.AsSpan(anchor + 1, 3), out int a))
                     {
                         int syousetu = a;
                         var channel = int.Parse(data.Substring(anchor + 4, 2), (this.checkBox1.Checked ? System.Globalization.NumberStyles.HexNumber : System.Globalization.NumberStyles.Integer));
@@ -172,7 +172,7 @@ namespace BMSTOPPD
             fs.Close();
             MessageBox.Show(path + "\nを生成しました");
         }
-        private double Calctime(SortedList<double, double> bpmchangedata, SortedList<int, double> scalechangedata, double syousetu)
+        private static double Calctime(SortedList<double, double> bpmchangedata, SortedList<int, double> scalechangedata, double syousetu)
         {
             double ret = 0;
             var numsyousetu = (int)syousetu;

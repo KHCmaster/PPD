@@ -25,7 +25,7 @@ namespace PPDInstaller
                 bool ok = true;
                 foreach (Regex regex in exceptFiles)
                 {
-                    if (regex.Match(filename).Success && File.Exists(destDirName + filename))
+                    if (regex.IsMatch(filename) && File.Exists(destDirName + filename))
                     {
                         ok = false;
                         break;

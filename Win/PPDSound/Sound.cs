@@ -200,7 +200,7 @@ namespace PPDSound
             }, null);
         }
 
-        private Stream GetStream(FMODEX.Sound sound)
+        private static Stream GetStream(FMODEX.Sound sound)
         {
             MemoryStream stream = null;
             try
@@ -439,7 +439,7 @@ namespace PPDSound
             GC.SuppressFinalize(this);
         }
 
-        private void CheckError(FMODEX.RESULT result)
+        private static void CheckError(FMODEX.RESULT result)
         {
             if (result != FMODEX.RESULT.OK)
             {

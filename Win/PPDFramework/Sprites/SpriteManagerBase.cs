@@ -204,7 +204,7 @@ namespace PPDFramework.Sprites
             doc.Save(MetaXmlPath);
         }
 
-        private PackInfo[] PackImpl(ImageInfo[] infos, int startIndex, out int nextIndex, out int size)
+        private static PackInfo[] PackImpl(ImageInfo[] infos, int startIndex, out int nextIndex, out int size)
         {
             size = infos.Skip(startIndex).Max(i => i.WidthPowerOfTwo);
             nextIndex = startIndex;
@@ -311,6 +311,16 @@ namespace PPDFramework.Sprites
             public readonly bool Equals(AvailableInfo other)
             {
                 return Position == other.Position && Width == other.Width;
+            }
+
+            public override readonly bool Equals(object obj)
+            {
+                return obj is AvailableInfo other && Equals(other);
+            }
+
+            public override readonly int GetHashCode()
+            {
+                return HashCode.Combine(Position, Width);
             }
         }
     }

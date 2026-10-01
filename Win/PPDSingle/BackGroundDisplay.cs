@@ -101,7 +101,7 @@ namespace PPDSingle
             }
         }
 
-        private Effect2D.EffectManager.PlayType ParsePlayType(string value)
+        private static Effect2D.EffectManager.PlayType ParsePlayType(string value)
         {
             return value switch
             {
@@ -113,7 +113,7 @@ namespace PPDSingle
             };
         }
 
-        private float ReadAttribute(XmlReader reader, string attribute, float defaultValue)
+        private static float ReadAttribute(XmlReader reader, string attribute, float defaultValue)
         {
             var value = reader.GetAttribute(attribute);
             if (!float.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture, out float ret))

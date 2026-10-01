@@ -32,7 +32,7 @@ namespace PPDEditorCommon.Dialog.ViewModel
                 if (isValidated != value)
                 {
                     isValidated = value;
-                    OnPropertyChanged("IsValidated");
+                    OnPropertyChanged(nameof(IsValidated));
                     if (isValidated)
                     {
                         ValidateErrorText = null;
@@ -49,7 +49,7 @@ namespace PPDEditorCommon.Dialog.ViewModel
                 if (validateErrorText != value)
                 {
                     validateErrorText = value;
-                    OnPropertyChanged("ValidateErrorText");
+                    OnPropertyChanged(nameof(ValidateErrorText));
                 }
             }
         }

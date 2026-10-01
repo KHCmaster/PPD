@@ -15,9 +15,9 @@ using System.Xml;
 
 namespace PPD.Update
 {
-    class Checker
+    static class Checker
     {
-        public bool CheckInstallInfo()
+        public static bool CheckInstallInfo()
         {
             try
             {
@@ -29,7 +29,7 @@ namespace PPD.Update
             }
         }
 
-        public bool CheckUpdate()
+        public static bool CheckUpdate()
         {
             try
             {
@@ -41,7 +41,7 @@ namespace PPD.Update
             }
         }
 
-        public bool CheckAssembly(out string errors)
+        public static bool CheckAssembly(out string errors)
         {
             errors = "";
             try
@@ -54,7 +54,7 @@ namespace PPD.Update
             }
         }
 
-        private bool CheckInstallInfoImpl()
+        private static bool CheckInstallInfoImpl()
         {
             if (!File.Exists("install.info"))
             {
@@ -70,7 +70,7 @@ namespace PPD.Update
             return true;
         }
 
-        private bool CheckUpdateImpl()
+        private static bool CheckUpdateImpl()
         {
             if (!NetworkInterface.GetIsNetworkAvailable())
             {
@@ -103,7 +103,7 @@ namespace PPD.Update
             return installVersion >= latestVersion;
         }
 
-        private bool CheckAssemblyImpl(out string errors)
+        private static bool CheckAssemblyImpl(out string errors)
         {
             errors = "";
             if (!NetworkInterface.GetIsNetworkAvailable())
@@ -214,7 +214,7 @@ namespace PPD.Update
                     errorFileNames.Add(String.Format("{0}:{1}", filePath, "File Not Found"));
                     continue;
                 }
-                var info = asms.FirstOrDefault(i => Path.GetFileName(file).ToLower() == i.FileName.ToLower());
+                var info = asms.FirstOrDefault(i => Path.GetFileName(file).Equals(i.FileName, StringComparison.CurrentCultureIgnoreCase));
                 if (info == null)
                 {
                     errorFileNames.Add(String.Format("{0}:{1}", filePath, "Assembly List Item Not Found"));
@@ -243,7 +243,7 @@ namespace PPD.Update
             return verionInfo.FileVersion;
         }
 
-        private string GetUrlContent(string url)
+        private static string GetUrlContent(string url)
         {
             return SyncHttpClient.GetString(url);
         }

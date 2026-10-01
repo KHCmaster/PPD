@@ -8,9 +8,9 @@ namespace PPDFramework.Sprites
     /// <summary>
     /// 画像の情報を表すクラスです。
     /// </summary>
-    public class ImageInfo
+    public partial class ImageInfo
     {
-        static readonly Regex scaleRegex = new(@"\.(\d+)_(\d+)\.\w+$");
+        static readonly Regex scaleRegex = ScaleRegex();
 
         readonly Func<Image> imageCallback;
 
@@ -151,7 +151,7 @@ namespace PPDFramework.Sprites
             Scale = new ImageScale(ScaleNumerator, ScaleDenominator);
         }
 
-        private int Gcd(int a, int b)
+        private static int Gcd(int a, int b)
         {
             while (a != 0 && b != 0)
             {
@@ -176,5 +176,8 @@ namespace PPDFramework.Sprites
         {
             return imageCallback();
         }
+
+        [GeneratedRegex(@"\.(\d+)_(\d+)\.\w+$")]
+        private static partial Regex ScaleRegex();
     }
 }

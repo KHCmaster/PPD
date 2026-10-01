@@ -79,7 +79,7 @@ namespace PPD
             updateCallCount++;
         }
 
-        private Size GetSize(string filePath)
+        private static Size GetSize(string filePath)
         {
             using Bitmap bitmap = new(filePath);
             return new Size(bitmap.Width, bitmap.Height);

@@ -25,7 +25,7 @@ namespace PPDFramework
                     PPDDatabase.DB.FindScore(resultIDs[i], out int score);
                     var sb = new StringBuilder();
                     sb.Append('0', Math.Max(0, 7 - score.ToString().Length));
-                    sb.Append(score.ToString());
+                    sb.Append(score);
                     ret[i] = sb.ToString();
                 }
                 else

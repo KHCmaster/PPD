@@ -40,7 +40,7 @@ namespace PPDExpansion.ViewModel
                 if (xMinimum != value)
                 {
                     xMinimum = value;
-                    OnPropertyChanged("XMinimum");
+                    OnPropertyChanged(nameof(XMinimum));
                 }
             }
         }
@@ -53,7 +53,7 @@ namespace PPDExpansion.ViewModel
                 if (xMaximum != value)
                 {
                     xMaximum = value;
-                    OnPropertyChanged("XMaximum");
+                    OnPropertyChanged(nameof(XMaximum));
                 }
             }
         }
@@ -66,7 +66,7 @@ namespace PPDExpansion.ViewModel
                 if (yMinimum != value)
                 {
                     yMinimum = value;
-                    OnPropertyChanged("YMinimum");
+                    OnPropertyChanged(nameof(YMinimum));
                 }
             }
         }
@@ -79,7 +79,7 @@ namespace PPDExpansion.ViewModel
                 if (yMaximum != value)
                 {
                     yMaximum = value;
-                    OnPropertyChanged("YMaximum");
+                    OnPropertyChanged(nameof(YMaximum));
                 }
             }
         }
@@ -250,7 +250,7 @@ namespace PPDExpansion.ViewModel
             YMaximum = YMinimum + panStartHeight;
         }
 
-        private bool IsPlotArea(DependencyObject dependencyObject, out EdgePanel edgePanel)
+        private static bool IsPlotArea(DependencyObject dependencyObject, out EdgePanel edgePanel)
         {
             edgePanel = null;
             while (dependencyObject != null)

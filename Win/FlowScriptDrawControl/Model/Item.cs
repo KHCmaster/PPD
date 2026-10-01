@@ -36,7 +36,7 @@ namespace FlowScriptDrawControl.Model
                 if (isMouseOver != value)
                 {
                     isMouseOver = value;
-                    OnPropertyChanged("IsMouseOver");
+                    OnPropertyChanged(nameof(IsMouseOver));
                 }
             }
         }
@@ -75,7 +75,7 @@ namespace FlowScriptDrawControl.Model
                 if (toolTip != value)
                 {
                     toolTip = value;
-                    OnPropertyChanged("ToolTip");
+                    OnPropertyChanged(nameof(ToolTip));
                 }
             }
         }
@@ -103,7 +103,7 @@ namespace FlowScriptDrawControl.Model
                 if (name != value)
                 {
                     name = value;
-                    OnPropertyChanged("Name");
+                    OnPropertyChanged(nameof(Name));
                 }
             }
         }
@@ -116,7 +116,7 @@ namespace FlowScriptDrawControl.Model
                 if (this.value != value)
                 {
                     this.value = value;
-                    OnPropertyChanged("Value");
+                    OnPropertyChanged(nameof(Value));
                     UpdateIsPropertyValueShown();
                     UpdateIsCollapsed();
                 }
@@ -131,7 +131,7 @@ namespace FlowScriptDrawControl.Model
                 if (type != value)
                 {
                     type = value;
-                    OnPropertyChanged("Type");
+                    OnPropertyChanged(nameof(Type));
                 }
             }
         }
@@ -144,7 +144,7 @@ namespace FlowScriptDrawControl.Model
                 if (typeText != value)
                 {
                     typeText = value;
-                    OnPropertyChanged("TypeText");
+                    OnPropertyChanged(nameof(TypeText));
                 }
             }
         }
@@ -157,7 +157,7 @@ namespace FlowScriptDrawControl.Model
                 if (typeColor != value)
                 {
                     typeColor = value;
-                    OnPropertyChanged("TypeColor");
+                    OnPropertyChanged(nameof(TypeColor));
                 }
             }
         }
@@ -170,7 +170,7 @@ namespace FlowScriptDrawControl.Model
                 if (isOut != value)
                 {
                     isOut = value;
-                    OnPropertyChanged("IsOut");
+                    OnPropertyChanged(nameof(IsOut));
                     UpdateIsCollapsed();
                 }
             }
@@ -184,7 +184,7 @@ namespace FlowScriptDrawControl.Model
                 if (isCollapsed != value)
                 {
                     isCollapsed = value;
-                    OnPropertyChanged("IsCollapsed");
+                    OnPropertyChanged(nameof(IsCollapsed));
                 }
             }
         }
@@ -197,7 +197,7 @@ namespace FlowScriptDrawControl.Model
                 if (isConnectable != value)
                 {
                     isConnectable = value;
-                    OnPropertyChanged("IsConnectable");
+                    OnPropertyChanged(nameof(IsConnectable));
                 }
             }
         }
@@ -210,7 +210,7 @@ namespace FlowScriptDrawControl.Model
                 if (propertyType != value)
                 {
                     propertyType = value;
-                    OnPropertyChanged("PropertyType");
+                    OnPropertyChanged(nameof(PropertyType));
                 }
             }
         }
@@ -223,7 +223,7 @@ namespace FlowScriptDrawControl.Model
                 if (isPropertyValueShown != value)
                 {
                     isPropertyValueShown = value;
-                    OnPropertyChanged("IsPropertyValueShown");
+                    OnPropertyChanged(nameof(IsPropertyValueShown));
                 }
             }
         }

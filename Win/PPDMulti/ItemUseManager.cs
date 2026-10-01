@@ -26,7 +26,7 @@ namespace PPDMulti
         private ItemUseManager()
         {
             autoUseItemTypes = [];
-            foreach (string split in SkinSetting.Setting.AutoUseItemTypes.Split(','))
+            foreach (string split in SkinSetting.AutoUseItemTypes.Split(','))
             {
                 if (int.TryParse(split, out int result))
                 {
@@ -43,7 +43,7 @@ namespace PPDMulti
                 array[i] = ((int)autoUseItemTypes[i]).ToString();
             }
 
-            SkinSetting.Setting.AutoUseItemTypes = String.Join(",", array);
+            SkinSetting.AutoUseItemTypes = String.Join(",", array);
         }
 
         public ItemType[] AutoUseItemTypes
@@ -56,9 +56,8 @@ namespace PPDMulti
 
         public void ToggleAutoUse(ItemType itemType)
         {
-            if (autoUseItemTypes.Contains(itemType))
+            if (autoUseItemTypes.Remove(itemType))
             {
-                autoUseItemTypes.Remove(itemType);
                 Save();
             }
             else

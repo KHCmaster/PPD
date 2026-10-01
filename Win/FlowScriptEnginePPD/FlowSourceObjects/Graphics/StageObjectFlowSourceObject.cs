@@ -18,9 +18,9 @@ namespace FlowScriptEnginePPD.FlowSourceObjects.Graphics
         protected override void OnInitialize()
         {
             base.OnInitialize();
-            if (this.Manager.Items.ContainsKey("StageManager"))
+            if (this.Manager.Items.TryGetValue("StageManager", out object value))
             {
-                stageManager = this.Manager.Items["StageManager"] as StageManager;
+                stageManager = value as StageManager;
             }
         }
 

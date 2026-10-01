@@ -248,7 +248,7 @@ namespace FlowScriptControl.Classes
             return [.. ret];
         }
 
-        private string GetToolTip<T>(ILanguageProvider language, CustomMemberInfo<T> memberInfo)
+        private static string GetToolTip<T>(ILanguageProvider language, CustomMemberInfo<T> memberInfo)
             where T : MemberInfo
         {
             if (language == null)
@@ -268,7 +268,7 @@ namespace FlowScriptControl.Classes
         }
 
 #if DEBUG
-        private void Write<T>(CustomMemberInfo<T> memberInfo)
+        private static void Write<T>(CustomMemberInfo<T> memberInfo)
             where T : MemberInfo
         {
             Write(memberInfo.ToolTipTextKey, memberInfo.ToolTipText);
@@ -276,12 +276,9 @@ namespace FlowScriptControl.Classes
 
         private static readonly Dictionary<string, string> dict = [];
 
-        private void Write(string key, string text)
+        private static void Write(string key, string text)
         {
-            if (!dict.ContainsKey(key))
-            {
-                dict.Add(key, text);
-            }
+            dict.TryAdd(key, text);
         }
 
         public static void WriteToText(string path)
@@ -351,9 +348,9 @@ namespace FlowScriptControl.Classes
                 typeTextTypeDict.Add(type.FullName, type);
             }
 
-            if (FlowDrawPanel.TypeAliasDictionary.ContainsKey(type.FullName))
+            if (FlowDrawPanel.TypeAliasDictionary.TryGetValue(type.FullName, out string value))
             {
-                return FlowDrawPanel.TypeAliasDictionary[type.FullName];
+                return value;
             }
             else
             {

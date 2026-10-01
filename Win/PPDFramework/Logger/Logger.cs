@@ -70,7 +70,7 @@ namespace PPDFramework.Logger
 
             lock (logs)
             {
-                logs.Enqueue(new LogInfo(log, Thread.CurrentThread.ManagedThreadId, DateTime.Now));
+                logs.Enqueue(new LogInfo(log, Environment.CurrentManagedThreadId, DateTime.Now));
             }
         }
 

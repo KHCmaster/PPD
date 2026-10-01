@@ -229,9 +229,9 @@ namespace PPDMulti
                     }
                     gameResultComponent.ClearResult();
 
-                    if (param != null && param.ContainsKey("Result") && param["Result"] != null)
+                    if (param != null && param.TryGetValue("Result", out object value) && value != null)
                     {
-                        var results = (param["Result"] as Tuple<int, Result>[])
+                        var results = (value as Tuple<int, Result>[])
                             .Select(t => new UserResult { User = FindUser(t.Item1), Result = t.Item2 })
                             .Where(r => r.User != null).ToArray();
                         focusManager.Focus(gameResultComponent);
@@ -409,14 +409,14 @@ namespace PPDMulti
             if (selfUser.IsHost)
             {
                 WebManager webManager = null;
-                if (this.Param.ContainsKey("WebManager"))
+                if (this.Param.TryGetValue("WebManager", out object webManagerValue))
                 {
-                    webManager = this.Param["WebManager"] as WebManager;
+                    webManager = webManagerValue as WebManager;
                 }
                 RoomInfo roomInfo = null;
-                if (this.Param.ContainsKey("RoomInfo"))
+                if (this.Param.TryGetValue("RoomInfo", out object roomInfoValue))
                 {
-                    roomInfo = this.Param["RoomInfo"] as RoomInfo;
+                    roomInfo = roomInfoValue as RoomInfo;
 
                 }
                 server = new PPDServer((int)Param["Port"], webManager, roomInfo, GameHost);
@@ -465,7 +465,7 @@ namespace PPDMulti
             }
 
             // load
-            SongInformation.All.ToArray();
+            _ = SongInformation.All;
             return true;
         }
 
@@ -773,11 +773,11 @@ namespace PPDMulti
 
         private void AddMessage(string text)
         {
-            if (text.StartsWith(":", StringComparison.Ordinal))
+            if (text.StartsWith(':'))
             {
                 ProcessCommand(text);
             }
-            else if (text.StartsWith("@", StringComparison.Ordinal))
+            else if (text.StartsWith('@'))
             {
                 ProcessPrivateMessage(text);
             }

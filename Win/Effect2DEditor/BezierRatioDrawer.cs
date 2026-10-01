@@ -60,7 +60,7 @@ namespace Effect2DEditor
             DrawAnchor(p1, g);
             DrawAnchor(p2, g);
         }
-        private void DrawBezeier(PointF p1, PointF p2, PointF p3, PointF p4, Graphics g)
+        private static void DrawBezeier(PointF p1, PointF p2, PointF p3, PointF p4, Graphics g)
         {
             PointF lastbezeirpoint, bezeirpoint;
             lastbezeirpoint = p1;
@@ -73,7 +73,7 @@ namespace Effect2DEditor
                 lastbezeirpoint = bezeirpoint;
             }
         }
-        private void DrawAnchor(BezierControlPoint bcp, Graphics g)
+        private static void DrawAnchor(BezierControlPoint bcp, Graphics g)
         {
             var pen = new Pen(Color.Blue, 2);
             if (bcp.ValidFirst)
@@ -88,7 +88,7 @@ namespace Effect2DEditor
             }
             pen.Dispose();
         }
-        private void FillSquare(PointF p, Graphics g)
+        private static void FillSquare(PointF p, Graphics g)
         {
             g.FillRectangle(Brushes.Black, p.X - 3, p.Y - 3, 6, 6);
         }
@@ -102,7 +102,7 @@ namespace Effect2DEditor
             Refresh();
         }
 
-        private bool IsInside(PointF target, PointF src)
+        private static bool IsInside(PointF target, PointF src)
         {
             if (target.X - 5 <= src.X && src.X <= target.X + 5)
             {
@@ -161,7 +161,7 @@ namespace Effect2DEditor
             }
         }
 
-        private float GetLength(PointF p1)
+        private static float GetLength(PointF p1)
         {
             return (float)(Math.Sqrt(p1.X * p1.X + p1.Y * p1.Y));
         }

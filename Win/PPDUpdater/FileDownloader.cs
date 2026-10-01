@@ -52,9 +52,9 @@ namespace PPDUpdater
                 long received = 0;
                 var lastPercentage = -1;
                 int read;
-                while ((read = await source.ReadAsync(buffer, 0, buffer.Length).ConfigureAwait(false)) > 0)
+                while ((read = await source.ReadAsync(buffer).ConfigureAwait(false)) > 0)
                 {
-                    await destination.WriteAsync(buffer, 0, read).ConfigureAwait(false);
+                    await destination.WriteAsync(buffer.AsMemory(0, read)).ConfigureAwait(false);
                     received += read;
                     var percentage = total > 0 ? (int)(received * 100 / total) : 0;
                     if (percentage != lastPercentage)

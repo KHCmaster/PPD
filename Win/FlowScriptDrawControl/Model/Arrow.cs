@@ -19,7 +19,7 @@ namespace FlowScriptDrawControl.Model
                 if (geometry != value)
                 {
                     geometry = value;
-                    OnPropertyChanged("Geometry");
+                    OnPropertyChanged(nameof(Geometry));
                 }
             }
         }
@@ -32,7 +32,7 @@ namespace FlowScriptDrawControl.Model
                 if (stroke != value)
                 {
                     stroke = value;
-                    OnPropertyChanged("Stroke");
+                    OnPropertyChanged(nameof(Stroke));
                 }
             }
         }
@@ -47,7 +47,7 @@ namespace FlowScriptDrawControl.Model
                     srcItem?.PropertyChanged -= SrcItem_PropertyChanged;
                     srcItem = value;
                     srcItem?.PropertyChanged += SrcItem_PropertyChanged;
-                    OnPropertyChanged("SrcItem");
+                    OnPropertyChanged(nameof(SrcItem));
                     UpdateStroke();
                 }
             }
@@ -63,7 +63,7 @@ namespace FlowScriptDrawControl.Model
                     destItem?.PropertyChanged -= DestItem_PropertyChanged;
                     destItem = value;
                     destItem?.PropertyChanged += DestItem_PropertyChanged;
-                    OnPropertyChanged("DestItem");
+                    OnPropertyChanged(nameof(DestItem));
                 }
             }
         }

@@ -21,7 +21,7 @@ namespace PPDCore
         /// <summary>
         /// 進捗を通知するイベントです（現在は通知していません）。
         /// </summary>
-        public event Action<int> Progressed
+        public static event Action<int> Progressed
         {
             add { }
             remove { }
@@ -98,7 +98,7 @@ namespace PPDCore
             return true;
         }
 
-        public PPDPlayDecorder Create()
+        public static PPDPlayDecorder Create()
         {
             return PPDPlayDecorder.FromInputs([]);
         }

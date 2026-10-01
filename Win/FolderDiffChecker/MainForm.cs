@@ -35,7 +35,7 @@ namespace FolderDiffChecker
 
             path = Path.Combine(path, "release\\releases");
             var dirs = new List<string>();
-            var regex = new Regex("\\d+\\.\\d+\\.\\d+\\.\\d+");
+            var regex = VersionRegex();
             foreach (string dir in Directory.GetDirectories(path))
             {
                 if (regex.IsMatch(Path.GetFileName(dir)))
@@ -82,9 +82,9 @@ namespace FolderDiffChecker
 
                 var df = new DiffFinder(this.textBox1.Text, this.textBox2.Text,
                     [
-                        new("thumbs\\.db", RegexOptions.IgnoreCase),
-                        new("PPDUpdater\\.exe", RegexOptions.IgnoreCase),
-                        new("PPDInstaller\\.exe", RegexOptions.IgnoreCase)
+                        ThumbsDbRegex(),
+                        PPDUpdaterExeRegex(),
+                        PPDInstallerExeRegex()
                     ],
                     [.. textBox3.Text.Split([":"], StringSplitOptions.RemoveEmptyEntries).Select(s => new Regex(Regex.Escape(s), RegexOptions.IgnoreCase))],
                     this);
@@ -153,7 +153,7 @@ namespace FolderDiffChecker
             }
         }
 
-        private void CopyFile(string src, string dest)
+        private static void CopyFile(string src, string dest)
         {
             var sep = dest.Split(Path.DirectorySeparatorChar);
             var dir = String.Format("{0}{1}{2}", sep[0], Path.DirectorySeparatorChar, sep[1]);
@@ -170,7 +170,7 @@ namespace FolderDiffChecker
 
         private void Button5_Click(object sender, EventArgs e)
         {
-            var regex = new Regex("(\\d+)\\.(\\d+)\\.(\\d+)\\.(\\d+)\\\\PPDInstaller\\(x(\\d{2})\\)");
+            var regex = InstallerWithArchitectureRegex();
             var m = regex.Match(textBox2.Text);
             if (m.Success)
             {
@@ -190,7 +190,7 @@ namespace FolderDiffChecker
 
         private void Button6_Click(object sender, EventArgs e)
         {
-            var regex = new Regex("(\\d+)\\.(\\d+)\\.(\\d+)\\.(\\d+)\\\\PPDInstaller");
+            var regex = InstallerRegex();
             var m = regex.Match(textBox2.Text);
             if (m.Success)
             {
@@ -207,7 +207,7 @@ namespace FolderDiffChecker
                     m.Groups[3].Value,
                     m.Groups[4].Value,
                     assemble);
-                    Utility.Zip(Path.Combine(dir, installerName), installerDir, [new("^Data$")]);
+                    Utility.Zip(Path.Combine(dir, installerName), installerDir, [DataFolderRegex()]);
                 }
 
                 // diff zip
@@ -231,7 +231,7 @@ namespace FolderDiffChecker
 
         private void Button7_Click(object sender, EventArgs e)
         {
-            var regex = new Regex("(\\d+)\\.(\\d+)\\.(\\d+)\\.(\\d+)\\\\PPDInstaller");
+            var regex = InstallerRegex();
             var m = regex.Match(textBox2.Text);
             if (m.Success)
             {
@@ -255,7 +255,7 @@ namespace FolderDiffChecker
 
         private void Button8_Click(object sender, EventArgs e)
         {
-            var regex = new Regex("(\\d+)\\.(\\d+)\\.(\\d+)\\.(\\d+)\\\\PPDInstaller\\(x(\\d{2})\\)");
+            var regex = InstallerWithArchitectureRegex();
             var m = regex.Match(textBox2.Text);
             if (!m.Success)
             {
@@ -302,7 +302,7 @@ namespace FolderDiffChecker
 
         private void Button9_Click(object sender, EventArgs e)
         {
-            var regex = new Regex("(\\d+)\\.(\\d+)\\.(\\d+)\\.(\\d+)\\\\PPDInstaller\\(x(\\d{2})\\)");
+            var regex = InstallerWithArchitectureRegex();
             var m = regex.Match(textBox2.Text);
             if (!m.Success)
             {
@@ -336,7 +336,7 @@ namespace FolderDiffChecker
             }
         }
 
-        private Session CreateSession()
+        private static Session CreateSession()
         {
             var userForm = new UserForm();
             if (userForm.ShowDialog() != DialogResult.OK)
@@ -347,7 +347,7 @@ namespace FolderDiffChecker
             return CreateSession(userForm.UserName);
         }
 
-        private Session CreateSession(string userName)
+        private static Session CreateSession(string userName)
         {
             if (!File.Exists(credentialsPpkFilePath))
             {
@@ -384,7 +384,7 @@ namespace FolderDiffChecker
             return null;
         }
 
-        private void SendFiles(UploadFileInfo[] uploadFiles, Session session)
+        private static void SendFiles(UploadFileInfo[] uploadFiles, Session session)
         {
             foreach (var uploadFile in uploadFiles)
             {
@@ -392,7 +392,7 @@ namespace FolderDiffChecker
             }
         }
 
-        private void SendFile(string filePath, string destDir, Session session)
+        private static void SendFile(string filePath, string destDir, Session session)
         {
             // Upload files
             var transferOptions = new TransferOptions
@@ -413,7 +413,7 @@ namespace FolderDiffChecker
             }
         }
 
-        private void ExecuteCommand(string command, Session session)
+        private static void ExecuteCommand(string command, Session session)
         {
             var result = session.ExecuteCommand(command);
             Console.WriteLine(result.Output);
@@ -444,5 +444,20 @@ namespace FolderDiffChecker
             }
             session.Dispose();
         }
+
+        [GeneratedRegex("\\d+\\.\\d+\\.\\d+\\.\\d+")]
+        private static partial Regex VersionRegex();
+        [GeneratedRegex("thumbs\\.db", RegexOptions.IgnoreCase)]
+        private static partial Regex ThumbsDbRegex();
+        [GeneratedRegex("PPDUpdater\\.exe", RegexOptions.IgnoreCase)]
+        private static partial Regex PPDUpdaterExeRegex();
+        [GeneratedRegex("PPDInstaller\\.exe", RegexOptions.IgnoreCase)]
+        private static partial Regex PPDInstallerExeRegex();
+        [GeneratedRegex("(\\d+)\\.(\\d+)\\.(\\d+)\\.(\\d+)\\\\PPDInstaller\\(x(\\d{2})\\)")]
+        private static partial Regex InstallerWithArchitectureRegex();
+        [GeneratedRegex("(\\d+)\\.(\\d+)\\.(\\d+)\\.(\\d+)\\\\PPDInstaller")]
+        private static partial Regex InstallerRegex();
+        [GeneratedRegex("^Data$")]
+        private static partial Regex DataFolderRegex();
     }
 }
