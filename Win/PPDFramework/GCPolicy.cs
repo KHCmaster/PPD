@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime;
@@ -24,8 +25,14 @@ namespace PPDFramework
         static bool logEnabled;
         static GCLatencyMode previousLatencyMode;
         static PlayStatistics playStart;
-        static long lastGCIndex;
         static TimeSpan maxPause;
+
+        // この時間以上止まった GC は、詳細をログに出す
+        static readonly TimeSpan longPauseThreshold = TimeSpan.FromMilliseconds(8);
+        // GC の種類ごとに直近の GC を調べる（フレームの間に同じ種類の GC が 2 回以上起きた場合は、最後の 1 回だけが見える）
+        static readonly GCKind[] gcKinds = [GCKind.Ephemeral, GCKind.FullBlocking, GCKind.Background];
+        static readonly long[] lastGCIndices = new long[gcKinds.Length];
+        static readonly List<string> longPauses = [];
 
         /// <summary>
         /// プレイ中かどうかを取得します。
@@ -97,19 +104,22 @@ namespace PPDFramework
         public static void EndPlay(string reason)
         {
             string log;
+            string[] pauses;
             lock (lockObject)
             {
                 if (!playing)
                 {
                     return;
                 }
+                // 最後のフレーム以降の GC も拾う（playing を下ろす前に呼ぶ）
+                Sample();
                 playing = false;
                 GCSettings.LatencyMode = previousLatencyMode;
                 if (!logEnabled)
                 {
                     return;
                 }
-                Sample();
+                pauses = [.. longPauses];
                 var end = PlayStatistics.Capture();
                 var seconds = playStopwatch.Elapsed.TotalSeconds;
                 var allocatedMB = (end.AllocatedBytes - playStart.AllocatedBytes) / 1024.0 / 1024.0;
@@ -120,10 +130,14 @@ namespace PPDFramework
                     GC.GetTotalMemory(false) / 1024.0 / 1024.0);
             }
             WriteLog(log);
+            foreach (var pause in pauses)
+            {
+                WriteLog(pause);
+            }
         }
 
         /// <summary>
-        /// プレイ中の最大の停止時間を計測します。ログが有効なときだけ、毎フレーム呼ばれることを想定しています。
+        /// プレイ中の GC の停止時間を計測します。ログが有効なときだけ、毎フレーム呼ばれることを想定しています。
         /// </summary>
         public static void Sample()
         {
@@ -131,17 +145,35 @@ namespace PPDFramework
             {
                 return;
             }
-            var info = GC.GetGCMemoryInfo(GCKind.Any);
-            if (info.Index == lastGCIndex)
+            for (var i = 0; i < gcKinds.Length; i++)
             {
-                return;
-            }
-            lastGCIndex = info.Index;
-            foreach (var pause in info.PauseDurations)
-            {
-                if (pause > maxPause)
+                var info = GC.GetGCMemoryInfo(gcKinds[i]);
+                if (info.Index == lastGCIndices[i])
                 {
-                    maxPause = pause;
+                    continue;
+                }
+                lastGCIndices[i] = info.Index;
+                var longest = TimeSpan.Zero;
+                foreach (var pause in info.PauseDurations)
+                {
+                    if (pause > longest)
+                    {
+                        longest = pause;
+                    }
+                }
+                if (longest > maxPause)
+                {
+                    maxPause = longest;
+                }
+                if (longest >= longPauseThreshold)
+                {
+                    // 背景 GC は止まる区間が 2 つある（開始時と終了時）ので、両方を出す
+                    var durations = info.PauseDurations;
+                    longPauses.Add(String.Format("  long pause at={0:F1}s pause={1:F1}ms ({2:F1}ms + {3:F1}ms) kind={4} gen={5} compacted={6} concurrent={7} promoted={8:F1}MB heap={9:F1}MB pauseTimePercentage={10:F1}%",
+                        playStopwatch.Elapsed.TotalSeconds, longest.TotalMilliseconds,
+                        durations.Length > 0 ? durations[0].TotalMilliseconds : 0, durations.Length > 1 ? durations[1].TotalMilliseconds : 0,
+                        gcKinds[i], info.Generation, info.Compacted, info.Concurrent,
+                        info.PromotedBytes / 1024.0 / 1024.0, info.HeapSizeBytes / 1024.0 / 1024.0, info.PauseTimePercentage));
                 }
             }
         }
@@ -150,8 +182,12 @@ namespace PPDFramework
         {
             playStart = PlayStatistics.Capture();
             playStopwatch.Restart();
-            lastGCIndex = GC.GetGCMemoryInfo(GCKind.Any).Index;
+            for (var i = 0; i < gcKinds.Length; i++)
+            {
+                lastGCIndices[i] = GC.GetGCMemoryInfo(gcKinds[i]).Index;
+            }
             maxPause = TimeSpan.Zero;
+            longPauses.Clear();
         }
 
         private static void WriteLog(string log)
