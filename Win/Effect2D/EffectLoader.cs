@@ -163,8 +163,7 @@ namespace Effect2D
                     switch (reader.Name)
                     {
                         case "Effects":
-                            float val;
-                            if (float.TryParse(reader.GetAttribute("FPS"), NumberStyles.Float, CultureInfo.InvariantCulture, out val))
+                            if (float.TryParse(reader.GetAttribute("FPS"), NumberStyles.Float, CultureInfo.InvariantCulture, out float val))
                             {
                                 manager.FPS = val;
                             }

@@ -93,7 +93,7 @@ namespace PPDFramework
 
         private bool IsKey(string str)
         {
-            return str.StartsWith("-") && !Double.TryParse(str, System.Globalization.NumberStyles.Float, CultureInfo.InvariantCulture, out double val);
+            return str.StartsWith("-") && !Double.TryParse(str, System.Globalization.NumberStyles.Float, CultureInfo.InvariantCulture, out _);
         }
 
         private void Initialize()

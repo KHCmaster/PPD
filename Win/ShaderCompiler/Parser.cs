@@ -23,8 +23,7 @@ namespace ShaderCompiler
             var lineIndex = 0;
             while (lineIndex < lines.Length)
             {
-                int nextLineIndex;
-                var foundElement = Parse(lines, lineIndex, out nextLineIndex);
+                var foundElement = Parse(lines, lineIndex, out int nextLineIndex);
                 elements.Add(foundElement);
                 lineIndex = nextLineIndex;
             }
@@ -103,9 +102,9 @@ namespace ShaderCompiler
 
         public override bool Equals(object obj)
         {
-            if (obj is Text)
+            if (obj is Text text1)
             {
-                return Value == ((Text)obj).Value;
+                return Value == text1.Value;
             }
 #pragma warning disable RECS0149 // Finds potentially erroneous calls to Object.Equals
             return base.Equals(obj);
@@ -288,7 +287,7 @@ namespace ShaderCompiler
             }
             Name = startMatch.Groups["name"].Value;
             var value = startMatch.Groups["value"].Value;
-            Value = ParseValue(value, 0, [], out int nextIndex);
+            Value = ParseValue(value, 0, [], out _);
             lineIndex++;
             nextLineIndex = lineIndex;
             return true;

@@ -12,7 +12,7 @@ namespace FlowScriptEngine
         public event Action<FlowExecutionException> Error;
 
         private readonly List<FlowSourceManager> managers = [];
-        private readonly FunctionScope globalScope = new FunctionScope(ScopeType.Global);
+        private readonly FunctionScope globalScope = new(ScopeType.Global);
 
         private readonly Dictionary<Guid, FunctionScope> contexts = [];
 
@@ -101,7 +101,7 @@ namespace FlowScriptEngine
                             var source = FlowSourceObjectManager.CreateSource(fullName) ?? throw new ArgumentException(String.Format("{0} not found", fullName));
                             source.Id = ID;
                             source.ScopeId = scopeId;
-                            var defaultValues = ReadValues(reader.ReadSubtree(), source);
+                            var defaultValues = ReadValues(reader.ReadSubtree());
                             ret.Add(new KeyValuePair<FlowSourceObjectBase, KeyValuePair<string, string>[]>(source, defaultValues));
                             manager.AddFlowSourceObject(source);
                             break;
@@ -113,7 +113,7 @@ namespace FlowScriptEngine
             return [.. ret];
         }
 
-        private KeyValuePair<string, string>[] ReadValues(XmlReader reader, FlowSourceObjectBase source)
+        private KeyValuePair<string, string>[] ReadValues(XmlReader reader)
         {
             var ret = new List<KeyValuePair<string, string>>();
             while (reader.Read())

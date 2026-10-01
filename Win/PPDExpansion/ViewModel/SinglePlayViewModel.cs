@@ -440,17 +440,17 @@ namespace PPDExpansion.ViewModel
 
         public override void ProcessData(PackableBase packable)
         {
-            if (packable is ScoreInfo)
+            if (packable is ScoreInfo info)
             {
-                SetScoreInfo((ScoreInfo)packable);
+                SetScoreInfo(info);
             }
-            else if (packable is UpdateInfo)
+            else if (packable is UpdateInfo info1)
             {
-                AddUpdateInfo((UpdateInfo)packable);
+                AddUpdateInfo(info1);
             }
-            else if (packable is ResultInfo)
+            else if (packable is ResultInfo info2)
             {
-                SetResultInfo((ResultInfo)packable);
+                SetResultInfo(info2);
             }
         }
 

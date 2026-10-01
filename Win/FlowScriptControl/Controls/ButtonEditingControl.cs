@@ -23,9 +23,9 @@ namespace FlowScriptControl.Controls
             }
             set
             {
-                if (value is string)
+                if (value is string v)
                 {
-                    this.Text = (string)value;
+                    this.Text = v;
                 }
             }
         }

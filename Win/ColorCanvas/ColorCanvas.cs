@@ -316,9 +316,9 @@ namespace ColorCanvas
         {
             base.OnKeyDown(e);
 
-            if (e.Key == Key.Enter && e.OriginalSource is CustomTextBox)
+            if (e.Key == Key.Enter && e.OriginalSource is CustomTextBox box)
             {
-                var textBox = (CustomTextBox)e.OriginalSource;
+                var textBox = box;
                 if (textBox.Name == PART_HexadecimalTextBox)
                 {
                     SetHexadecimalStringProperty(textBox.CustomText, true);

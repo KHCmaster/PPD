@@ -474,7 +474,7 @@ namespace DirectShow
                 int hr = m_FrameStep.Step(1, null);
                 if (hr < 0)
                 {
-                    hr = m_MediaSeeking.GetCurrentPosition(out long _time);
+                    _ = m_MediaSeeking.GetCurrentPosition(out long _time);
                     DsLong _stop = (long)0;
                     var _ts = new TimeSpan(0, 0, 1);
                     _time += _ts.Ticks / 20;
@@ -494,13 +494,14 @@ namespace DirectShow
                 {
                     Pause();
                 }
-                int hr = m_MediaSeeking.GetCurrentPosition(out long _time);
+
+                _ = m_MediaSeeking.GetCurrentPosition(out long _time);
                 DsLong _stop = (long)0;
                 var _ts = new TimeSpan(0, 0, 1);
                 _time -= _ts.Ticks / 20;
                 if (_time < 0) _time = 0;
                 DsLong _current = _time;
-                hr = m_MediaSeeking.SetPositions(_current, AMSeekingSeekingFlags.AbsolutePositioning, _stop, AMSeekingSeekingFlags.NoPositioning);
+                int hr = m_MediaSeeking.SetPositions(_current, AMSeekingSeekingFlags.AbsolutePositioning, _stop, AMSeekingSeekingFlags.NoPositioning);
                 return (HRESULT)hr;
             }
             return (HRESULT)E_POINTER;
@@ -539,9 +540,9 @@ namespace DirectShow
             }
             catch (Exception _exception)
             {
-                if (_exception is COMException)
+                if (_exception is COMException exception)
                 {
-                    hr = (HRESULT)((COMException)_exception).ErrorCode;
+                    hr = (HRESULT)exception.ErrorCode;
                 }
                 else
                 {

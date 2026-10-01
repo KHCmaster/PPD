@@ -205,11 +205,6 @@ namespace PPDSingle
 
         public TreeViewItem GetPrevious()
         {
-            return GetPrevious(null);
-        }
-
-        private TreeViewItem GetPrevious(TreeViewItem from)
-        {
             if (Parent == null) return null;
             var index = Parent.items.IndexOf(this);
             if (index < 0) return null;

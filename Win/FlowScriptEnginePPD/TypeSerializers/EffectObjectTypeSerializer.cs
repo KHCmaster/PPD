@@ -16,8 +16,8 @@ namespace FlowScriptEnginePPD.TypeSerializers
         {
             var effectObject = (EffectObject)value;
             Serialize(serializer, element, effectObject);
-            var alignmentElem = serializer.CreateElement("Alignment");
-            var playStateElem = serializer.CreateElement("PlayState");
+            _ = serializer.CreateElement("Alignment");
+            _ = serializer.CreateElement("PlayState");
         }
     }
 }

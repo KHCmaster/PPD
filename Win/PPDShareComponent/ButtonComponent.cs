@@ -10,8 +10,7 @@ namespace PPDShareComponent
 
         public ButtonComponent(PPDDevice device, PPDFramework.Resource.ResourceManager resourceManager, PathManager pathManager, string text) : base(device)
         {
-            TextureString str;
-            this.AddChild(str = new TextureString(device, text, 20, PPDColors.White)
+            this.AddChild(_ = new TextureString(device, text, 20, PPDColors.White)
             {
                 Position = new Vector2(30, 0)
             });

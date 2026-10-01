@@ -222,7 +222,7 @@ namespace PPDMulti
 
         private void LoadMod()
         {
-            var modManager = ModManager.Instance;
+            _ = ModManager.Instance;
         }
 
         private void Initialize()

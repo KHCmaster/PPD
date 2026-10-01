@@ -807,10 +807,10 @@ namespace PPDCore
             }
             movie.Seek(startTime);
             movie.TrimmingData = gameUtility.SongInformation.TrimmingData;
-            movie.Finished += M_Finished;
+            movie.Finished += Movie_Finished;
         }
 
-        void M_Finished(object sender, EventArgs e)
+        void Movie_Finished(object sender, EventArgs e)
         {
             movieFinishCalled = true;
         }

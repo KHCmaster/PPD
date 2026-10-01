@@ -43,7 +43,7 @@ namespace PPDFramework.Shaders
         {
             effect.SetTexture(filterTextureHandle, filterTexture);
             effect.SetTexture(lastRenderTargetFilterTextureHandle, lastRenderTargetTexture);
-            var passCount = effect.Begin();
+            _ = effect.Begin();
             effect.BeginPass(0);
             effect.CommitChanges();
             device.VertexDeclaration = effect.VertexDeclaration;

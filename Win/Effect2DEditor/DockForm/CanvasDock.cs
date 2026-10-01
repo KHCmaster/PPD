@@ -300,8 +300,6 @@ namespace Effect2DEditor.DockForm
         {
             if (state == null || state.Alpha <= 0 || state.ScaleX == 0 || state.ScaleY == 0) return;
 
-            var ir = bezierControl1.Drawer.ResourceManager.GetResource<ImageResourceBase>(filename);
-            ir ??= ImageResourceFactoryManager.Factory.Create(bezierControl1.Drawer.Device, filename, false);
             var obj = new CustomEffectObject(bezierControl1.Drawer.Device, bezierControl1.Drawer.ResourceManager, filename, state)
             {
                 Position = new System.Numerics.Vector2(bezierControl1.Width / 2, bezierControl1.Height / 2)
@@ -376,8 +374,16 @@ namespace Effect2DEditor.DockForm
             {
                 this.effestState = effectState;
                 this.resourceManager = resourceManager;
+                // 読み込んだ画像はリソースマネージャーに登録し、次からはそれを使う（リソースマネージャーと一緒に破棄される）
                 imageResource = resourceManager.GetResource<ImageResourceBase>(filename);
-                imageResource ??= ImageResourceFactoryManager.Factory.Create(device, filename, false);
+                if (imageResource == null)
+                {
+                    imageResource = ImageResourceFactoryManager.Factory.Create(device, filename, false);
+                    if (imageResource != null)
+                    {
+                        resourceManager.Add(filename, imageResource);
+                    }
+                }
             }
 
             /// <summary>

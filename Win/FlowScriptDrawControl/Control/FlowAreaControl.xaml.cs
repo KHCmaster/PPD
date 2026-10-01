@@ -1843,7 +1843,7 @@ namespace FlowScriptDrawControl.Control
 
         public bool CanFindLinkedItem(double x, double y)
         {
-            return GetSourceAndItem(x, y, out SourceControl source, out SourceItemControl item);
+            return GetSourceAndItem(x, y, out _, out _);
         }
 
         public string FindLinkedItemQuery(double x, double y)
@@ -1910,9 +1910,9 @@ namespace FlowScriptDrawControl.Control
             var target = (DependencyObject)source.InputHitTest(new Point(p.X - source.CurrentPositionable.Position.X, p.Y - source.CurrentPositionable.Position.Y));
             while (target != null)
             {
-                if (target is SourceItemControl)
+                if (target is SourceItemControl control)
                 {
-                    item = (SourceItemControl)target;
+                    item = control;
                     break;
                 }
                 target = VisualTreeHelper.GetParent(target);
@@ -2090,7 +2090,7 @@ namespace FlowScriptDrawControl.Control
 
         public bool CanGetNodeName(double x, double y)
         {
-            return GetSourceAt(x, y, out SourceControl source);
+            return GetSourceAt(x, y, out _);
         }
 
 

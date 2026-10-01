@@ -612,7 +612,7 @@ Enter  変形終了";
         private void BezierControl1_MouseMove(object sender, MouseEventArgs e)
         {
             hinttimergc.Stop();
-            var p = Getpoint();
+            _ = Getpoint();
             if (toolTip1.Active)
             {
                 toolTip1.Hide(Gettarget());

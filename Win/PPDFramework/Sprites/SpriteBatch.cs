@@ -157,7 +157,7 @@ namespace PPDFramework.Sprites
         {
             effect.SetTexture(textureHandle, batchInfo.SpriteInfo.Texture);
             effect.SetValue(overlayColorHandle, batchInfo.SpriteInfo.OverlayColor);
-            var passCount = effect.Begin();
+            _ = effect.Begin();
             effect.BeginPass(0);
             effect.CommitChanges();
             device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, batchInfo.VertexPos, batchInfo.VertexCount, batchInfo.IndexPos, batchInfo.IndexCount / 3);

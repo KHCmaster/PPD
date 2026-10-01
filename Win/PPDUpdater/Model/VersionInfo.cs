@@ -32,7 +32,7 @@ namespace PPDUpdater.Model
         public VersionInfo(string version)
         {
             var data = version.Split('.');
-            if (data.Length == 1 && int.TryParse(data[0], out int test))
+            if (data.Length == 1 && int.TryParse(data[0], out _))
             {
                 if (version.Length >= 1) Major = int.Parse(version[0].ToString());
                 if (version.Length >= 2) Minor = int.Parse(version[1].ToString());

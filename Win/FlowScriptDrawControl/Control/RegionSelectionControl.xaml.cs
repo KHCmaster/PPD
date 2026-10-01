@@ -39,9 +39,15 @@ namespace FlowScriptDrawControl.Control
                 StrokeThickness = 1,
                 Fill = new SolidColorBrush(Color.FromArgb(0x33, 0x44, 0xBB, 0xFF))
             };
-            var geo = new PathGeometry(new PathFigure[]{
-                new(topLeft, new LineSegment[]{
-                    new(new Point(bottomRight.X, topLeft.Y), true),                    new(new Point(bottomRight.X, bottomRight.Y), true),                    new(new Point(topLeft.X, bottomRight.Y), true)                },true)            });
+            var geo = new PathGeometry(
+            [
+                new PathFigure(topLeft,
+                [
+                    new LineSegment(new Point(bottomRight.X, topLeft.Y), true),
+                    new LineSegment(new Point(bottomRight.X, bottomRight.Y), true),
+                    new LineSegment(new Point(topLeft.X, bottomRight.Y), true)
+                ], true)
+            ]);
             path.Data = geo;
             mainGrid.Children.Add(path);
         }

@@ -102,9 +102,9 @@ namespace FlowScriptEngineBasic.FlowSourceObjects.HashSet
 
         private void Add(System.Collections.Generic.HashSet<object> hashSet, object value)
         {
-            if (IsExpanded && value is System.Collections.Generic.HashSet<object>)
+            if (IsExpanded && value is System.Collections.Generic.HashSet<object> set)
             {
-                foreach (object elem in (System.Collections.Generic.HashSet<object>)value)
+                foreach (object elem in set)
                 {
                     Add(hashSet, elem);
                 }

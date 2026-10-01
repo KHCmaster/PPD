@@ -60,7 +60,6 @@ namespace FlowScriptDrawControl
                     System.Windows.Media.Brushes.Black,
                     PixelsPerDip
                 );
-            var _textGeometry = formattedText.BuildGeometry(new System.Windows.Point(0, 0));
             var _textHighLightGeometry = formattedText.BuildHighlightGeometry(new System.Windows.Point(0, 0));
             return _textHighLightGeometry == null ? new Size(0, 0) : _textHighLightGeometry.Bounds.Size;
         }

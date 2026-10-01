@@ -16,7 +16,7 @@ namespace PPD
         private readonly PPDFramework.Resource.ResourceManager resourceManager = resourceManager;
         private readonly GameTimer gameTimer = gameTimer;
 
-        private readonly Queue<string> textQueue = new Queue<string>();
+        private readonly Queue<string> textQueue = new();
 
         public void AddNotify(string text)
         {

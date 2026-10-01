@@ -96,7 +96,7 @@ namespace Effect2DEditor.Command
                             var brm = set[type] as BezierRatioMaker;
                             GetDevidedBezierFromX(brm.Analyzer.BCPS, (float)(keyindex - 1 - set.StartFrame) / (set.EndFrame - set.StartFrame), out BezierControlPoint[] bcps1, out BezierControlPoint[] bcps2);
                             set[type] = new BezierRatioMaker(bcps1[0], bcps1[1]);
-                            GetDevidedBezierFromX(bcps2, (float)1 / (set.EndFrame - keyindex + 1), out bcps1, out BezierControlPoint[] bcps3);
+                            GetDevidedBezierFromX(bcps2, (float)1 / (set.EndFrame - keyindex + 1), out _, out BezierControlPoint[] bcps3);
                             newset2[type] = new BezierRatioMaker(bcps3[0], bcps3[1]);
                         }
                         newset1[type] = new ConstantRatioMaker();

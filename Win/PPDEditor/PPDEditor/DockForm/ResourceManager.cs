@@ -175,7 +175,6 @@ namespace PPDEditor
             Utility.RecursiveCreateFolder(dir);
             foreach (string filePath in Directory.GetFiles(dir))
             {
-                var extension = Path.GetExtension(filePath);
                 CreateNode(OthersNode.Nodes, Path.GetFileName(filePath), NodeType.Others);
             }
 

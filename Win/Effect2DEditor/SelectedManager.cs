@@ -46,13 +46,9 @@ namespace Effect2DEditor
             get { return selectedstate; }
             set
             {
-                int lastitemindex;
-                int laststateindex;
-                GetItemAndStateIndex(LastEffect, out lastitemindex, out laststateindex);
+                GetItemAndStateIndex(LastEffect, out int lastitemindex, out int laststateindex);
                 selectedstate = value;
-                int itemindex;
-                int stateindex;
-                GetItemAndStateIndex(Effect, out itemindex, out stateindex);
+                GetItemAndStateIndex(Effect, out int itemindex, out int stateindex);
                 if (StateChanged != null && !IgnoreEvent)
                 {
                     StateChanged.Invoke(this, new StateChangeEventArgs(lastitemindex, laststateindex, itemindex, stateindex));

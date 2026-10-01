@@ -41,7 +41,7 @@ namespace PPDSingle
 
         public void Update()
         {
-            var scores = WebManager.Instance.GetScores();
+            _ = WebManager.Instance.GetScores();
             var trialInfos = WebManager.Instance.GetPerfectTrials();
             foreach (var trialInfo in trialInfos)
             {

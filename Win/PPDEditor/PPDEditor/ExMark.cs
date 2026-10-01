@@ -31,7 +31,7 @@ namespace PPDEditor
         {
             this.endtime = endtime;
             this.circlepoints = circlepoints;
-            skin.GetLongNoteCircleInfo(out PathObject filename, out float a, out float b);
+            skin.GetLongNoteCircleInfo(out PathObject filename, out _, out _);
             outcircle = new PictureObject(device, resourceManager, filename, true)
             {
                 Position = new Vector2(x, y)
@@ -44,7 +44,7 @@ namespace PPDEditor
             {
                 Position = new Vector2(x, y)
             };
-            skin.GetHoldInfo(out filename, out a, out b);
+            skin.GetHoldInfo(out filename, out float a, out float b);
             hold = new PictureObject(device, resourceManager, filename, true)
             {
                 Position = new Vector2(x + a, y + b)
@@ -283,7 +283,7 @@ namespace PPDEditor
                 fwv[i * 2 + 1].TextureCoordinates = new Vector2(1.0f, 0.5f);
                 fwv[i * 2 + 1].Color = new Color4(alpha, 1, 1, 1).ToBgraInt();
             }
-            var t = trace.ImageResource.Texture;
+
         }
 
         protected override void UpdateMarkImage()

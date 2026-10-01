@@ -497,8 +497,6 @@ namespace PPDEditor.Controls
         }
         private void ChangeSeekPoint()
         {
-            float bpminterval = defaultInterval;
-            int offset = -(int)(bpmStart * bpminterval / bpm);
             int val = (int)(Currenttime * bpm / 60 * defaultInterval) - this.Width / 2;
             if (val > Hsc.Maximum)
             {
@@ -797,11 +795,11 @@ namespace PPDEditor.Controls
         {
             if ((e.Button & MouseButtons.Left) == MouseButtons.Left)
             {
-                ProcessMouseLeftUp(e);
+                ProcessMouseLeftUp();
             }
         }
 
-        private void ProcessMouseLeftUp(MouseEventArgs e)
+        private void ProcessMouseLeftUp()
         {
             timer1.Stop();
             timer2.Stop();

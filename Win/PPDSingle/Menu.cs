@@ -391,7 +391,6 @@ namespace PPDSingle
                 menuMovie.CheckLoopAvailable = true;
                 count = 0;
                 moviechanged = true;
-                SongInformation current = ssm.SelectedSongInformation.SongInfo;
                 sic.ChangeSongInfo(ssm.SelectedSongInformation);
             }
         }

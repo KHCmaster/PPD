@@ -35,7 +35,7 @@ namespace DirectShow
         public const int TIME_PERIODIC = 0x0001;
         public const object NULL = null;
 
-        public static void _TRACE(string _message) { if (!string.IsNullOrEmpty(_message)) Trace.WriteLine(_message); }
+        public static void TraceWriteLine(string _message) { if (!string.IsNullOrEmpty(_message)) Trace.WriteLine(_message); }
         public static void TRACE(string _message) { if (!string.IsNullOrEmpty(_message)) _message += "\n"; NativeMethods.OutputDebugString(_message); }
 
         public static void TRACE_ENTER()
@@ -45,7 +45,7 @@ namespace DirectShow
         }
         public static bool SUCCEEDED(int hr) { return (hr >= 0); }
         public static bool FAILED(int hr) { return (hr < 0); }
-        public static void ASSERT(object _object) { if (_object is BOOL) Debug.Assert((bool)_object); if (_object is HRESULT) Debug.Assert((bool)_object); else if (_object is bool) Debug.Assert((bool)_object); else Debug.Assert(_object != null); }
+        public static void ASSERT(object _object) { if (_object is BOOL) Debug.Assert((bool)_object); if (_object is HRESULT) Debug.Assert((bool)_object); else if (_object is bool v) Debug.Assert(v); else Debug.Assert(_object != null); }
         public static int HIWORD(int _value) { return ((_value >> 16) & 0xffff); }
         public static int LOWORD(int _value) { return (_value & 0xffff); }
         public const long MAX_LONG = 0x7FFFFFFFFFFFFFFF;
@@ -71,7 +71,9 @@ namespace DirectShow
 
         #region HRESULT
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "Win32 の HRESULT の名前に合わせる")]
         public static HRESULT S_OK { get { return (HRESULT)0; } }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "Win32 の HRESULT の名前に合わせる")]
         public static HRESULT S_FALSE { get { return (HRESULT)1; } }
         public static HRESULT NOERROR { get { return S_OK; } }
         public static HRESULT E_INVALIDARG { get { unchecked { return (HRESULT)0x80070057; } } }
@@ -184,9 +186,9 @@ namespace DirectShow
 
         public int CompareTo(object obj)
         {
-            if (obj is BOOL)
+            if (obj is BOOL bOOL)
             {
-                return m_Result.CompareTo(((BOOL)obj).m_Result);
+                return m_Result.CompareTo(bOOL.m_Result);
             }
             return m_Result.CompareTo(obj);
         }
@@ -206,9 +208,9 @@ namespace DirectShow
 
         public override bool Equals(object obj)
         {
-            if (obj is BOOL)
+            if (obj is BOOL bOOL)
             {
-                return m_Result.Equals(((BOOL)obj).m_Result);
+                return m_Result.Equals(bOOL.m_Result);
             }
             return m_Result.Equals(obj);
         }
@@ -367,9 +369,9 @@ namespace DirectShow
 
         public int CompareTo(object obj)
         {
-            if (obj is HRESULT)
+            if (obj is HRESULT hRESULT)
             {
-                return m_Result.CompareTo(((HRESULT)obj).m_Result);
+                return m_Result.CompareTo(hRESULT.m_Result);
             }
             return m_Result.CompareTo(obj);
         }
@@ -389,9 +391,9 @@ namespace DirectShow
 
         public override bool Equals(object obj)
         {
-            if (obj is HRESULT)
+            if (obj is HRESULT hRESULT)
             {
-                return m_Result.Equals(((HRESULT)obj).m_Result);
+                return m_Result.Equals(hRESULT.m_Result);
             }
             return m_Result.Equals(obj);
         }
@@ -629,9 +631,9 @@ namespace DirectShow
 
         public override bool Equals(object obj)
         {
-            if (obj is FOURCC)
+            if (obj is FOURCC fOURCC)
             {
-                return m_uiFourcc.Equals(((FOURCC)obj).m_uiFourcc);
+                return m_uiFourcc.Equals(fOURCC.m_uiFourcc);
             }
             return m_uiFourcc.Equals(obj);
         }
@@ -670,9 +672,9 @@ namespace DirectShow
 
         public int CompareTo(object obj)
         {
-            if (obj is FOURCC)
+            if (obj is FOURCC fOURCC)
             {
-                return m_uiFourcc.CompareTo(((FOURCC)obj).m_uiFourcc);
+                return m_uiFourcc.CompareTo(fOURCC.m_uiFourcc);
             }
             return m_uiFourcc.CompareTo(obj);
         }

@@ -91,9 +91,9 @@ namespace PPDFramework
         public event EventHandler IMEStarted;
 
         /// <summary>
-        /// 有効状態が変更された
+        /// テキストの編集状態（IsTextEditMode）が変更された
         /// </summary>
-        public event EventHandler _EnabledChanged;
+        public event EventHandler TextEditModeChanged;
 
         readonly TextBuffer buffer;
         TextBoxSelection selection;
@@ -427,7 +427,7 @@ namespace PPDFramework
                         lastIMEMode = ImeMode;
                         ImeMode = offModeIME;
                     }
-                    this._OnEnabledChanged();
+                    this.OnTextEditModeChanged();
                 }
             }
         }
@@ -455,11 +455,11 @@ namespace PPDFramework
         }
 
         /// <summary>
-        /// 有効状態が変更されたときの処理です
+        /// テキストの編集状態（IsTextEditMode）が変更されたときの処理です
         /// </summary>
-        protected void _OnEnabledChanged()
+        protected void OnTextEditModeChanged()
         {
-            _EnabledChanged?.Invoke(this, EventArgs.Empty);
+            TextEditModeChanged?.Invoke(this, EventArgs.Empty);
         }
 
         private void UpdateCaret()

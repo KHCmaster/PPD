@@ -132,7 +132,7 @@ namespace PPD
             }
             LoadCommon();
             TextEditableControl.IMEStarted += Control_IMEStarted;
-            TextEditableControl._EnabledChanged += Control_EnabledChanged;
+            TextEditableControl.TextEditModeChanged += Control_EnabledChanged;
         }
 
         private bool CheckExecuteMode(out string gamePath)
@@ -561,8 +561,6 @@ namespace PPD
 
         public void SetClipping(int x, int y, int width, int height)
         {
-            var ratio = new Vector2((float)device.Width / width, (float)device.Height / height);
-            var pos = new Vector2(x, y);
             device.SetScissorRect(new Vortice.Mathematics.RectI((int)(x * device.Scale.X + device.Offset.X), (int)(y * device.Scale.Y + device.Offset.Y),
                 (int)(width * device.Scale.X), (int)(height * device.Scale.Y)), true);
         }

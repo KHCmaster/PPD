@@ -31,7 +31,7 @@ namespace FlowScriptEngineBasic.FlowSourceObjects.HashSet
             SetValue(nameof(List));
             if (HashSet != null && List != null)
             {
-                Result = HashSet.IsProperSupersetOf(List.ToArray());
+                Result = HashSet.IsProperSupersetOf([.. List]);
                 OnSuccess();
             }
             else

@@ -14,7 +14,7 @@ namespace PPDMultiCommon.Tcp
         NetworkStream net = net;
         Thread readThread;
         Thread writeThread;
-        readonly Queue<byte[]> jobs = new Queue<byte[]>();
+        readonly Queue<byte[]> jobs = new();
 
         volatile bool disposed;
 

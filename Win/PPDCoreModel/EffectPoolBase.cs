@@ -9,7 +9,7 @@ namespace PPDCoreModel
     public abstract class EffectPoolBase(PPDDevice device, int count)
     {
         protected PPDDevice device = device;
-        readonly Queue<EffectObject> nonUsedList = new Queue<EffectObject>(count);
+        readonly Queue<EffectObject> nonUsedList = new(count);
 
         public int Count
         {

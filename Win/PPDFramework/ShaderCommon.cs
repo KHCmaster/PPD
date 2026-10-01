@@ -13,7 +13,7 @@ namespace PPDFramework
     /// <param name="device"></param>
     public class ShaderCommon(PPDDevice device) : DisposableComponent
     {
-        VertexManager vertexManager = new VertexManager(device);
+        VertexManager vertexManager = new(device);
         VertexInfo vertices;
 
         /// <summary>

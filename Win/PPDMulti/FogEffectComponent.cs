@@ -27,7 +27,8 @@ namespace PPDMulti
         private void CreateFog()
         {
             var random = new Random();
-            int number = random.Next(0, 10), x = random.Next(0, 800);
+            _ = random.Next(0, 10);
+            int x = random.Next(0, 800);
 
             PictureObject temp;
             this.AddChild(temp = new PictureObject(device, resourceManager, Utility.Path.Combine(String.Format("cloud{0}.png", new Random().Next(0, 10))), true)

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace FlowScriptControl
+namespace FlowScriptControl.Controls
 {
     class ExDataGridViewComboBoxCell : DataGridViewComboBoxCell
     {
@@ -28,9 +28,9 @@ namespace FlowScriptControl
         {
             var dgv = (DataGridView)sender;
             //該当するセルか調べる
-            if (dgv.CurrentCell.ColumnIndex == ColumnIndex && dgv.CurrentCell.RowIndex == RowIndex && dgv[e.ColumnIndex, e.RowIndex] is DataGridViewComboBoxCell)
+            if (dgv.CurrentCell.ColumnIndex == ColumnIndex && dgv.CurrentCell.RowIndex == RowIndex && dgv[e.ColumnIndex, e.RowIndex] is DataGridViewComboBoxCell cell)
             {
-                var cbc = (DataGridViewComboBoxCell)dgv[e.ColumnIndex, e.RowIndex];
+                var cbc = cell;
                 if (!cbc.Items.Contains(e.FormattedValue))
                 {
                     cbc.Items.Add(e.FormattedValue);
@@ -46,7 +46,7 @@ namespace FlowScriptControl
 
         void DataGridView_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
         {
-            if (e.Control is DataGridViewComboBoxEditingControl)
+            if (e.Control is DataGridViewComboBoxEditingControl control)
             {
                 //該当する列か調べる
                 var dgv = (DataGridView)sender;
@@ -54,11 +54,11 @@ namespace FlowScriptControl
                 {
                     //編集のために表示されているコントロールを取得
                     var cb =
-                        (DataGridViewComboBoxEditingControl)e.Control;
+                        control;
                     cb.DropDownStyle = ComboBoxStyle.DropDown;
                     //編集のために表示されているコントロールを取得
                     this.dataGridViewComboBox =
-                        (DataGridViewComboBoxEditingControl)e.Control;
+                        control;
                     //SelectedIndexChangedイベントハンドラを追加
                     this.dataGridViewComboBox.SelectedIndexChanged +=
 DataGridViewComboBox_SelectedIndexChanged;

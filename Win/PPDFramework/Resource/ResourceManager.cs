@@ -12,7 +12,7 @@ namespace PPDFramework.Resource
     /// <param name="parents"></param>
     public class ResourceManager(Tuple<ResourceManager, bool>[] parents) : DisposableComponent
     {
-        readonly Dictionary<string, ResourceBase> resources = new Dictionary<string, ResourceBase>(StringComparer.OrdinalIgnoreCase);
+        readonly Dictionary<string, ResourceBase> resources = new(StringComparer.OrdinalIgnoreCase);
         readonly Tuple<ResourceManager, bool>[] parents = parents;
 
         /// <summary>
@@ -124,7 +124,7 @@ namespace PPDFramework.Resource
         /// <returns></returns>
         public bool HasResource<T>(string resourceName) where T : ResourceBase
         {
-            return TryGetResource(resourceName, out T temp);
+            return TryGetResource(resourceName, out T _);
         }
 
         /// <summary>

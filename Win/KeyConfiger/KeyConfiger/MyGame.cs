@@ -40,14 +40,12 @@ namespace KeyConfiger
                 Form.MainForm.Close();
             }
 
-            Key k;
-            if (input.GetPressedKey(out k))
+            if (input.GetPressedKey(out Key k))
             {
                 form.SetNumber((int)k, true);
             }
 
-            int a;
-            if (input.GetPressedButton(out a))
+            if (input.GetPressedButton(out int a))
             {
                 form.SetNumber(a, false);
             }

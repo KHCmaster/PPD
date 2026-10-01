@@ -15,7 +15,7 @@ namespace PPDSingle
     {
         EffectObject anim;
         TextureString progressText;
-        readonly Queue<int> progressQueue = new Queue<int>();
+        readonly Queue<int> progressQueue = new();
 
         public override bool Load()
         {
@@ -78,11 +78,11 @@ namespace PPDSingle
             if (parameters.ContainsKey("Progress"))
             {
                 var val = parameters["Progress"];
-                if (val is int)
+                if (val is int v)
                 {
                     lock (progressQueue)
                     {
-                        progressQueue.Enqueue((int)val);
+                        progressQueue.Enqueue(v);
                     }
                 }
             }

@@ -103,9 +103,9 @@ namespace FlowScriptEngineBasic.FlowSourceObjects.ArrayList
 
         private void Add(List<object> list, object value)
         {
-            if (IsExpanded && value is List<object>)
+            if (IsExpanded && value is List<object> list1)
             {
-                var castedList = (List<object>)value;
+                var castedList = list1;
                 foreach (object elem in castedList)
                 {
                     Add(list, elem);

@@ -56,9 +56,9 @@ namespace FlowScriptEnginePPD.FlowSourceObjects.Mark
             get
             {
                 SetValue(nameof(Value));
-                if (Value != null && Value is ExMarkData)
+                if (Value != null && Value is ExMarkData data)
                 {
-                    return ((ExMarkData)Value).EndTime;
+                    return data.EndTime;
                 }
                 return 0;
             }

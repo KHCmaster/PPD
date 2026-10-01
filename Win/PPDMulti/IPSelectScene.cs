@@ -361,7 +361,6 @@ namespace PPDMulti
             oneFramePassedAfterRemoveFocus = false;
             if (sender is DxTextBox textBox)
             {
-                var errorString = textBox.Parent[2] as TextureString;
 
                 textBox.Parent.RemoveChild(textBox);
                 password = textBox.Text;
@@ -707,24 +706,11 @@ namespace PPDMulti
                 {
                     Position = new System.Numerics.Vector2(400, 0)
                 };
-                //textureString.MouseEnter += new MouseEventHandler(textureString_MouseEnter);
-                //textureString.MouseLeftClick += new MouseEventHandler(textureString_MouseLeftClick);
                 textSprite.AddChild(textureString);
                 modified = true;
                 menuEnabled.Add(true);
                 selectCount++;
                 currentIndex = 0;
-            }
-
-            void TextureString_MouseLeftClick(GameComponent sender, MouseEvent mouseEvent)
-            {
-                currentIndex = textSprite.IndexOf(sender);
-                Selected?.Invoke(this, EventArgs.Empty);
-            }
-
-            void TextureString_MouseEnter(GameComponent sender, MouseEvent mouseEvent)
-            {
-                currentIndex = textSprite.IndexOf(sender);
             }
 
             public void AddUserComponent(GameComponent gc)

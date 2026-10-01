@@ -596,7 +596,7 @@ namespace PPDEditor.Forms
                     {
                         menus.Enqueue(childMenu);
                     }
-                    if (menu.Tag is bool && (bool)menu.Tag && menu.Checked)
+                    if (menu.Tag is bool v && v && menu.Checked)
                     {
                         list.Add(GetModName(menu));
                     }

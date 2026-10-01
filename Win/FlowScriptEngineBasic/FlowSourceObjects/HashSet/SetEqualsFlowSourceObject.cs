@@ -31,7 +31,7 @@ namespace FlowScriptEngineBasic.FlowSourceObjects.HashSet
             SetValue(nameof(List));
             if (HashSet != null && List != null)
             {
-                Result = HashSet.SetEquals(List.ToArray());
+                Result = HashSet.SetEquals([.. List]);
                 OnSuccess();
             }
             else

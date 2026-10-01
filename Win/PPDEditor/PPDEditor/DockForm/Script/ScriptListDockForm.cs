@@ -691,7 +691,7 @@ namespace PPDEditor.DockForm.Script
             }
             treeView.SelectedNode = treeNode;
             treeView.Focus();
-            var effect = treeView.DoDragDrop(e.Item, DragDropEffects.Copy);
+            _ = treeView.DoDragDrop(e.Item, DragDropEffects.Copy);
         }
 
         private void TreeView1_DragOver(object sender, DragEventArgs e)

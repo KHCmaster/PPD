@@ -130,9 +130,9 @@ namespace Effect2DEditor.DockForm
         private void ComboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (ignoreInput) return;
-            if (this.comboBox1.SelectedItem is BlendMode)
+            if (this.comboBox1.SelectedItem is BlendMode mode)
             {
-                OnBlendModeChanged((BlendMode)this.comboBox1.SelectedItem);
+                OnBlendModeChanged(mode);
             }
         }
 

@@ -306,7 +306,7 @@ namespace PPDCore
 
         public virtual void Initialize(CreateMarkFunc createMark, GetScriptAllowedButtonsFunc getScriptAllowedButtons)
         {
-            createMark(this, out mark, out GameComponent colorMark, out axis, out GameComponent slideMark, out GameComponent slideColorMark, out PictureObject trace);
+            createMark(this, out mark, out GameComponent colorMark, out axis, out _, out _, out PictureObject trace);
             isMarkCreated = mark != null;
             mark ??= new PictureObject(device, resourceManager, filenames.GetMarkImagePath(GetButtonType()), true);
             mark.Scale = Vector2.Zero;
@@ -624,7 +624,7 @@ namespace PPDCore
         public virtual void UpdateColorPosition(float currentTime, float bpm)
         {
             var vec = CalculateColorPosition(colorMarkInfo, this, Time, currentTime, bpm);
-            UpdateColorMarkInfo(colorMarkInfo, this, Time, currentTime, bpm, vec);
+            UpdateColorMarkInfo(colorMarkInfo, Time, currentTime, bpm, vec);
         }
 
         public virtual Vector2 CalculateColorPosition(ColorMarkInfo colorMarkInfo, IMarkInfo markInfo, float markTime, float currentTime, float bpm)
@@ -634,7 +634,7 @@ namespace PPDCore
             return OnChangeColorPosition(markInfo, scale, timediff, currentTime, bpm);
         }
 
-        protected void UpdateColorMarkInfo(ColorMarkInfo colorMarkInfo, IMarkInfo markInfo, float markTime, float currentTime, float bpm, Vector2 vec)
+        protected void UpdateColorMarkInfo(ColorMarkInfo colorMarkInfo, float markTime, float currentTime, float bpm, Vector2 vec)
         {
             var scale = (float)bpm / DefaultBpm;
             var timediff = markTime - currentTime;

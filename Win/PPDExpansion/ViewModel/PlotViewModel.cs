@@ -202,7 +202,7 @@ namespace PPDExpansion.ViewModel
 
         private void ResetZoomCommand_Execute(MouseButtonEventArgs e)
         {
-            if (!IsPlotArea((DependencyObject)e.OriginalSource, out EdgePanel edgePanel))
+            if (!IsPlotArea((DependencyObject)e.OriginalSource, out _))
             {
                 return;
             }

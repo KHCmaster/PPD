@@ -136,7 +136,7 @@ namespace PPDFramework.Web
                     { "nonce", new Random().Next().ToString()},
                     { "token",currentAccount.Token}
                 };
-                var validateKey = CreateValidateKey(query);
+                var validateKey = CreateValidateKey();
                 query["validatekey"] = validateKey;
                 query.Remove("token");
                 var req = CreatePostRequest(url, query);
@@ -215,7 +215,7 @@ namespace PPDFramework.Web
                     { "token",currentAccount.Token},
                     { "scorehash",scoreHash},
                 };
-                var validateKey = CreateValidateKey(query);
+                var validateKey = CreateValidateKey();
                 query["validatekey"] = validateKey;
                 query.Remove("token");
                 var req = CreatePostRequest(url, query);
@@ -283,7 +283,7 @@ namespace PPDFramework.Web
                     { "scorehash",scoreHash},
                     { "maxcount",maxCount.ToString()}
                 };
-                var validateKey = CreateValidateKey(query);
+                var validateKey = CreateValidateKey();
                 query["validatekey"] = validateKey;
                 query.Remove("token");
                 var req = CreatePostRequest(url, query);
@@ -403,7 +403,7 @@ namespace PPDFramework.Web
                     { "starttime",startTime.ToString(CultureInfo.InvariantCulture)},
                     { "endtime",endTime.ToString(CultureInfo.InvariantCulture)}
                 };
-                var validateKey = CreateValidateKey(query);
+                var validateKey = CreateValidateKey();
                 query["validatekey"] = validateKey;
                 query.Remove("token");
                 query["perfecttrialtoken"] = perfectTrialToken;
@@ -526,7 +526,7 @@ namespace PPDFramework.Web
                     { "token",currentAccount.Token},
                     { "scoreid",scoreId}
                 };
-                var validateKey = CreateValidateKey(query);
+                var validateKey = CreateValidateKey();
                 query["validatekey"] = validateKey;
                 query.Remove("token");
                 var req = CreatePostRequest(url, query);
@@ -592,7 +592,7 @@ namespace PPDFramework.Web
                     { "nonce", new Random().Next().ToString()},
                     { "token",currentAccount.Token}
                 };
-                var validateKey = CreateValidateKey(query);
+                var validateKey = CreateValidateKey();
                 query["validatekey"] = validateKey;
                 query.Remove("token");
                 var req = CreatePostRequest(url, query);
@@ -655,7 +655,6 @@ namespace PPDFramework.Web
         /// <returns></returns>
         public ListInfo[] GetListInfos()
         {
-            var data = new Dictionary<string, string>();
             if (!currentAccount.IsValid)
             {
                 return [];
@@ -669,7 +668,7 @@ namespace PPDFramework.Web
                     { "nonce", new Random().Next().ToString()},
                     { "token",currentAccount.Token}
                 };
-                var validateKey = CreateValidateKey(query);
+                var validateKey = CreateValidateKey();
                 query["validatekey"] = validateKey;
                 query.Remove("token");
                 var req = CreatePostRequest(url, query);
@@ -733,7 +732,7 @@ namespace PPDFramework.Web
                     { "nonce", new Random().Next().ToString()},
                     { "token",currentAccount.Token}
                 };
-                var validateKey = CreateValidateKey(query);
+                var validateKey = CreateValidateKey();
                 query["validatekey"] = validateKey;
                 query.Remove("token");
                 var req = CreatePostRequest(url, query);
@@ -805,7 +804,6 @@ namespace PPDFramework.Web
         /// <returns>リプレイデータ。</returns>
         public byte[] GetReplayData(int resultId)
         {
-            var data = new Dictionary<string, string>();
             if (!currentAccount.IsValid)
             {
                 return null;
@@ -820,7 +818,7 @@ namespace PPDFramework.Web
                     { "token",currentAccount.Token},
                     { "resultid",resultId.ToString()}
                 };
-                var validateKey = CreateValidateKey(query);
+                var validateKey = CreateValidateKey();
                 query["validatekey"] = validateKey;
                 query.Remove("token");
                 var req = CreatePostRequest(url, query);
@@ -919,19 +917,11 @@ namespace PPDFramework.Web
             return null;
         }
 
-        private string CreateValidateKey(Dictionary<string, string> parameters)
-        {
-            var nonce = new Random().Next();
-            var p = new SortedDictionary<string, string>(parameters)
-            {
-                { "nonce", nonce.ToString() },
-                { "token", currentAccount.Token },
-                { "accountid", currentAccount.AccountId }
-            };
-            return CreateValidateKey(p);
-        }
-
-        private string CreateValidateKey(SortedDictionary<string, string> parameters)
+        /// <summary>
+        /// 送信データの検証キーを作ります。現在は検証キーを使っていないので、空の文字列を返します（送信する項目はそのまま残す）。
+        /// </summary>
+        /// <returns>検証キー。</returns>
+        private static string CreateValidateKey()
         {
             return "";
         }
@@ -956,7 +946,7 @@ namespace PPDFramework.Web
                     { "nonce", new Random().Next().ToString()},
                     { "token",currentAccount.Token}
                 };
-                var validateKey = CreateValidateKey(query);
+                var validateKey = CreateValidateKey();
                 query["validatekey"] = validateKey;
                 query.Remove("token");
                 var req = CreateRequest(url, query);
@@ -1011,7 +1001,7 @@ namespace PPDFramework.Web
                     { "token",currentAccount.Token},
                     { "id",itemInfo.ItemId.ToString()}
                 };
-                var validateKey = CreateValidateKey(query);
+                var validateKey = CreateValidateKey();
                 query["validatekey"] = validateKey;
                 query.Remove("token");
                 var req = CreatePostRequest(url, query);
@@ -1060,7 +1050,7 @@ namespace PPDFramework.Web
                     { "comment",comment},
                     { "score",score.ToString()}
                 };
-                var validateKey = CreateValidateKey(query);
+                var validateKey = CreateValidateKey();
                 query["validatekey"] = validateKey;
                 query.Remove("token");
                 var req = CreatePostRequest(url, query);

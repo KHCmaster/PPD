@@ -254,14 +254,14 @@ namespace PPDMulti
 
             this.AddChild(black);
 
-            shouldDisposeItem.AddRange(new GameComponent[]{
+            shouldDisposeItem.AddRange([
                 userScoreListComponent,
                 itemManagerComponent,
                 itemOverrayComponent,
                 mainGameComponent,
                 filterSprite,
                 pauseMenu
-            });
+            ]);
 
             ConnectExpansion();
 

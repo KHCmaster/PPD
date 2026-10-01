@@ -253,7 +253,7 @@ namespace PPDFramework.DX11
         /// <param name="dest"></param>
         internal override void StretchRectangle(WorkspaceTexture src, WorkspaceTexture dest)
         {
-            Context.CopyResource(((Texture.DX11.Texture)dest.Texture)._Texture, ((Texture.DX11.Texture)src.Texture)._Texture);
+            Context.CopyResource(((Texture.DX11.Texture)dest.Texture).D3DTexture, ((Texture.DX11.Texture)src.Texture).D3DTexture);
         }
 
         /// <summary>
@@ -300,7 +300,7 @@ namespace PPDFramework.DX11
             SpriteBatch.Flush();
             SpriteBatch.End();
             Context.UnsetRenderTargets();
-            Context.CopyResource(backBuffer, ((Texture.DX11.Texture)GetRenderTarget().Texture)._Texture);
+            Context.CopyResource(backBuffer, ((Texture.DX11.Texture)GetRenderTarget().Texture).D3DTexture);
         }
 
         /// <summary>

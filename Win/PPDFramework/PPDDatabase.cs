@@ -463,8 +463,8 @@ uservolume = @uservolume where scoreid = @newid", [
             foreach (object[] data in deleteIds)
             {
                 var id = (int)data[0];
-                var parentexist = (bool)data[1];
-                var parentpath = (string)data[2];
+                _ = (bool)data[1];
+                _ = (string)data[2];
                 ExecuteDataTable(@"delete from ScoreTable where scoreid == @scoreid;", [
                     new("@scoreid",id)
                 ]);
@@ -1019,7 +1019,7 @@ uservolume = @uservolume where scoreid = @newid", [
                 while (reader.Reader.Read())
                 {
                     var storageId = reader.Reader.GetInt32(0);
-                    var scoreId = reader.Reader.GetInt32(1);
+                    _ = reader.Reader.GetInt32(1);
                     var data = reader.Reader.GetString(2);
                     return new ScoreStorage(storageId, id, data);
                 }

@@ -68,8 +68,8 @@ namespace PPDEditor.Controls.Resource
             int prevSelect = toolStripComboBox2.SelectedIndex;
             ignore = true;
             toolStripComboBox2.Items.Clear();
-            toolStripComboBox2.Items.AddRange(new string[]{
-                Utility.Language["Default"],                Utility.Language["Black"],                Utility.Language["White"],                Utility.Language["Custom"]            });
+            toolStripComboBox2.Items.AddRange([
+                Utility.Language["Default"],                Utility.Language["Black"],                Utility.Language["White"],                Utility.Language["Custom"]            ]);
             toolStripComboBox2.SelectedIndex = prevSelect;
             ignore = false;
         }
@@ -307,26 +307,21 @@ namespace PPDEditor.Controls.Resource
         private void Play()
         {
             EffectManager.PlayType playType = Effect2D.EffectManager.PlayType.Once;
-            string tooltiptext;
             if (playToolStripMenuItem.Checked)
             {
                 playType = EffectManager.PlayType.Once;
-                tooltiptext = playToolStripMenuItem.Text;
             }
             else if (reversePlayToolStripMenuItem.Checked)
             {
                 playType = EffectManager.PlayType.ReverseOnce;
-                tooltiptext = reversePlayToolStripMenuItem.Text;
             }
             else if (loopPlayToolStripMenuItem.Checked)
             {
                 playType = EffectManager.PlayType.Loop;
-                tooltiptext = loopPlayToolStripMenuItem.Text;
             }
             else if (reverseLoopPlayToolStripMenuItem.Checked)
             {
                 playType = EffectManager.PlayType.ReverseLoop;
-                tooltiptext = reversePlayToolStripMenuItem.Text;
             }
             toolStripSplitButton1.Image = Properties.Resources.pause;
 

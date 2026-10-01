@@ -16,7 +16,7 @@ namespace PPDFramework.Chars
         readonly Dictionary<char, Dictionary<float, Dictionary<string, CharCacheInfo>>> cache = [];
         readonly Dictionary<float, Dictionary<string, SizeTextureManager>> sizeTextures = [];
         readonly PPDDevice device = device;
-        Direct2DImageEncoder encoder = new Direct2DImageEncoder(2048, 2048, 96);
+        Direct2DImageEncoder encoder = new(2048, 2048, 96);
 
         internal CharCacheInfo Get(float fontsize, string facename, char c)
         {

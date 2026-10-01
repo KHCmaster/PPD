@@ -53,7 +53,7 @@ namespace PPDEditorCommon.Dialog.ViewModel
 
         public void Initialize()
         {
-            Settings = settings.ToArray();
+            Settings = [.. settings];
             foreach (var setting in settings)
             {
                 setting.PropertyChanged += Setting_PropertyChanged;
@@ -69,29 +69,29 @@ namespace PPDEditorCommon.Dialog.ViewModel
             }
 
             SettingViewModelBase settingViewModel = null;
-            if (setting is BoolSetting)
+            if (setting is BoolSetting setting1)
             {
-                settingViewModel = new BoolSettingViewModel((BoolSetting)setting);
+                settingViewModel = new BoolSettingViewModel(setting1);
             }
-            else if (setting is DoubleSetting)
+            else if (setting is DoubleSetting setting2)
             {
-                settingViewModel = new DoubleSettingViewModel((DoubleSetting)setting);
+                settingViewModel = new DoubleSettingViewModel(setting2);
             }
-            else if (setting is EnumerableSetting)
+            else if (setting is EnumerableSetting setting3)
             {
-                settingViewModel = new EnumerableSettingViewModel((EnumerableSetting)setting);
+                settingViewModel = new EnumerableSettingViewModel(setting3);
             }
-            else if (setting is FloatSetting)
+            else if (setting is FloatSetting setting4)
             {
-                settingViewModel = new FloatSettingViewModel((FloatSetting)setting);
+                settingViewModel = new FloatSettingViewModel(setting4);
             }
-            else if (setting is IntSetting)
+            else if (setting is IntSetting setting5)
             {
-                settingViewModel = new IntSettingViewModel((IntSetting)setting);
+                settingViewModel = new IntSettingViewModel(setting5);
             }
-            else if (setting is StringSetting)
+            else if (setting is StringSetting setting6)
             {
-                settingViewModel = new StringSettingViewModel((StringSetting)setting);
+                settingViewModel = new StringSettingViewModel(setting6);
             }
             if (settingViewModel == null)
             {

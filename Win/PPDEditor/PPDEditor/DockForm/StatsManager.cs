@@ -57,11 +57,11 @@ namespace PPDEditor
             this.tabPage2.Text = Utility.Language["Visualization"];
             this.tabPage3.Text = Utility.Language["Difficulty"];
             this.comboBox1.Items.Clear();
-            this.comboBox1.Items.AddRange(new string[] {
+            this.comboBox1.Items.AddRange([
                 String.Format("{0}+{1}",Utility.Language["NormalMark"],Utility.Language["LongMark"]),
                 Utility.Language["NormalMark"],
                 Utility.Language["LongMark"]
-            });
+            ]);
             comboBox1.SelectedIndex = 0;
         }
 

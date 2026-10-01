@@ -14,15 +14,15 @@ namespace PPDExpansion.Converter
             {
                 val = false;
             }
-            else if (value is bool)
+            else if (value is bool v)
             {
-                val = (bool)value;
+                val = v;
             }
             else
             {
                 val = true;
             }
-            if (parameter is string && (string)parameter == "Invert")
+            if (parameter is string s && s == "Invert")
             {
                 val = !val;
             }

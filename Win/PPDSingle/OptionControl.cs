@@ -148,7 +148,7 @@ namespace PPDSingle
                             break;
                         case State.Speed:
                             this.AddChild(selectables[i] = new ListBoxComponent(device, resourceManager, Utility.Path, Utility.Language[langs[i]],
-                                speeds.Select(s => String.Format("x{0:F2}", s)).ToArray())
+                                [.. speeds.Select(s => String.Format("x{0:F2}", s))])
                             {
                                 Position = new Vector2(60, 80 + i * 30),
                                 SelectedIndex = 2
@@ -156,7 +156,7 @@ namespace PPDSingle
                             break;
                         case State.Profile:
                             this.AddChild(selectables[i] = new ListBoxComponent(device, resourceManager, Utility.Path, Utility.Language[langs[i]],
-                                ProfileManager.Instance.Profiles.Select(p => p.DisplayText).ToArray())
+                                [.. ProfileManager.Instance.Profiles.Select(p => p.DisplayText)])
                             {
                                 Position = new Vector2(60, 80 + i * 30)
                             });

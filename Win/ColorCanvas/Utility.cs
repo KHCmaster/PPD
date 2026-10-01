@@ -36,7 +36,6 @@ namespace ColorCanvas
                     System.Windows.Media.Brushes.Black,
                     PixelsPerDip
                 );
-            Geometry _textGeometry = formattedText.BuildGeometry(new System.Windows.Point(0, 0));
             Geometry _textHighLightGeometry = formattedText.BuildHighlightGeometry(new System.Windows.Point(0, 0));
             return _textHighLightGeometry == null ? new Size(0, 0) : _textHighLightGeometry.Bounds.Size;
         }

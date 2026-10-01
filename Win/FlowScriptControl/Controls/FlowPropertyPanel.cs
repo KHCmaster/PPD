@@ -127,7 +127,7 @@ namespace FlowScriptControl.Controls
                 }
                 else
                 {
-                    if (formatter != null && formatter.Format(dataGridView1[1, e.RowIndex].Value == null ? "" : dataGridView1[1, e.RowIndex].Value.ToString(), out object temp))
+                    if (formatter != null && formatter.Format(dataGridView1[1, e.RowIndex].Value == null ? "" : dataGridView1[1, e.RowIndex].Value.ToString(), out _))
                     {
                         currentFlowDrawPanel.ChangeCurrentSourceProperty(dataGridView1[0, e.RowIndex].Value.ToString(),
                             dataGridView1[1, e.RowIndex].Value?.ToString());

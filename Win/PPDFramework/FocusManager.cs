@@ -114,7 +114,6 @@ namespace PPDFramework
         public void ProcessInput(InputInfoBase inputInfo)
         {
             IFocusable temp = CurrentFocusObject;
-            int current = stack.Count;
             for (int i = stack.Count - 1; i >= 0; i--)
             {
                 if (i >= stack.Count)

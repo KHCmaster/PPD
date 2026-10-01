@@ -116,8 +116,7 @@ namespace PPDSingle
         private float ReadAttribute(XmlReader reader, string attribute, float defaultValue)
         {
             var value = reader.GetAttribute(attribute);
-            float ret;
-            if (!float.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture, out ret))
+            if (!float.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture, out float ret))
             {
                 ret = defaultValue;
             }

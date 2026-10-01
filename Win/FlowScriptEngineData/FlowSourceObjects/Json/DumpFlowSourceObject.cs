@@ -43,83 +43,83 @@ namespace FlowScriptEngineData.FlowSourceObjects.Json
 
         public JToken Convert(object obj)
         {
-            if (obj is IDictionary<object, object>)
+            if (obj is IDictionary<object, object> dictionary)
             {
                 var ret = new JObject();
-                foreach (var p in (IDictionary<object, object>)obj)
+                foreach (var p in dictionary)
                 {
                     ret.Add(p.Key.ToString(), Convert(p.Value));
                 }
                 return ret;
             }
-            else if (obj is IEnumerable<object>)
+            else if (obj is IEnumerable<object> enumerable)
             {
                 var ret = new JArray();
-                foreach (var o in (IEnumerable<object>)obj)
+                foreach (var o in enumerable)
                 {
                     ret.Add(Convert(o));
                 }
                 return ret;
             }
-            else if (obj is bool)
+            else if (obj is bool v)
             {
-                return new JValue((bool)obj);
+                return new JValue(v);
             }
-            else if (obj is char)
+            else if (obj is char v1)
             {
-                return new JValue((char)obj);
+                return new JValue(v1);
             }
-            else if (obj is DateTime)
+            else if (obj is DateTime time)
             {
-                return new JValue((DateTime)obj);
+                return new JValue(time);
             }
-            else if (obj is DateTimeOffset)
+            else if (obj is DateTimeOffset offset)
             {
-                return new JValue((DateTimeOffset)obj);
+                return new JValue(offset);
             }
-            else if (obj is decimal)
+            else if (obj is decimal v2)
             {
-                return new JValue((decimal)obj);
+                return new JValue(v2);
             }
-            else if (obj is double)
+            else if (obj is double v3)
             {
-                return new JValue((double)obj);
+                return new JValue(v3);
             }
-            else if (obj is float)
+            else if (obj is float v4)
             {
-                return new JValue((float)obj);
+                return new JValue(v4);
             }
-            else if (obj is Guid)
+            else if (obj is Guid guid)
             {
-                return new JValue((Guid)obj);
+                return new JValue(guid);
             }
-            else if (obj is long)
+            else if (obj is long v5)
             {
-                return new JValue((long)obj);
+                return new JValue(v5);
             }
-            else if (obj is int)
+            else if (obj is int v6)
             {
-                return new JValue((int)obj);
+                return new JValue(v6);
             }
-            else if (obj is string)
+            else if (obj is string v7)
             {
-                return new JValue((string)obj);
+                return new JValue(v7);
             }
-            else if (obj is TimeSpan)
+            else if (obj is TimeSpan span)
             {
-                return new JValue((TimeSpan)obj);
+                return new JValue(span);
             }
-            else if (obj is ulong)
+            else if (obj is ulong v8)
             {
-                return new JValue((ulong)obj);
+                return new JValue(v8);
             }
-            else if (obj is uint)
+            else if (obj is uint v9)
             {
-                return new JValue((uint)obj);
+                return new JValue(v9);
             }
-            else if (obj is Uri)
+            else if (obj is Uri uri)
             {
-                return new JValue((Uri)obj);
+                return new JValue(uri);
             }
             else
             {

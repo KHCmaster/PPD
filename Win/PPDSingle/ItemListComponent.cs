@@ -215,16 +215,16 @@ namespace PPDSingle
         {
             var baseDialog = sender as GeneralDialogBase;
             ItemType itemType = ItemType.None;
-            if (baseDialog is GeneralDialog && ((GeneralDialog)baseDialog).OK)
+            if (baseDialog is GeneralDialog dialog && dialog.OK)
             {
                 UseItem = ((ItemsComponent)mainSprite.GetChildAt(selection)).Items[0];
                 stackObject.Hidden = false;
                 itemType = UseItem.ItemType;
             }
-            else if (baseDialog is SuperAutoDialog && ((SuperAutoDialog)baseDialog).OK)
+            else if (baseDialog is SuperAutoDialog dialog1 && dialog1.OK)
             {
                 UseItem = ((ItemsComponent)mainSprite.GetChildAt(selection)).Items[0];
-                itemType = (ItemType)(((SuperAutoDialog)baseDialog).Result + 1);
+                itemType = (ItemType)(dialog1.Result + 1);
                 UseItem["SubItemType"] = itemType;
                 stackObject.Hidden = false;
             }
@@ -234,17 +234,6 @@ namespace PPDSingle
             }
             this.RemoveChild(baseDialog);
             baseDialog.Dispose();
-        }
-
-        void Dialog_LostFocused(IFocusable sender, FocusEventArgs args)
-        {
-            var dialog = sender as GeneralDialog;
-            if (dialog.OK)
-            {
-                UseItem["AllowAllButton"] = true;
-            }
-            this.RemoveChild(dialog);
-            dialog.Dispose();
         }
 
         private void Load()

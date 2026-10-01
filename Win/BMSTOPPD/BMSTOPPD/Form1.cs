@@ -105,7 +105,7 @@ namespace BMSTOPPD
                                 }
                             }
                         }
-                        double bittime = 60 / bpm * 4;
+
                         if ((!this.checkBox1.Checked && channel >= 11 && channel <= 19) || (this.checkBox1.Checked && channel >= 11 && channel <= 26))
                         {
                             for (int j = 0; j * 2 < sdata.Length; j++)

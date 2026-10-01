@@ -35,8 +35,8 @@ namespace FlowScriptControl.Controls
                 return;
             }
 
-            listBox1.Items.AddRange(searchResult.Sources.Select(s => new SearchResultItem(searchResult, s)).ToArray());
-            listBox1.Items.AddRange(searchResult.Comments.Select(c => new SearchResultItem(searchResult, c)).ToArray());
+            listBox1.Items.AddRange([.. searchResult.Sources.Select(s => new SearchResultItem(searchResult, s))]);
+            listBox1.Items.AddRange([.. searchResult.Comments.Select(c => new SearchResultItem(searchResult, c))]);
 
 
             using Graphics g = listBox1.CreateGraphics();

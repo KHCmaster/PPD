@@ -123,7 +123,6 @@ namespace PPD
             if (GameHost is MyGame myGame && myGame.Input.JoyStickCount > 0)
             {
                 PPDGeneralSetting.Setting[String.Format("{0}_config", myGame.Input.JoyStickNames[myGame.Input.CurrentJoyStickIndex])] = myGame.KeyConfigManager.CurrentConfig.Name;
-                string configName = PPDGeneralSetting.Setting[String.Format("{0}_config", myGame.Input.JoyStickNames[myGame.Input.CurrentJoyStickIndex])];
             }
         }
 

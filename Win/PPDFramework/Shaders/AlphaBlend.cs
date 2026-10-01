@@ -101,7 +101,7 @@ namespace PPDFramework.Shaders
                 return handler;
             }
 
-            private void EndMaskGeneration(MaskHandler handler)
+            private void EndMaskGeneration()
             {
                 maskHandlers.Pop();
             }
@@ -118,7 +118,7 @@ namespace PPDFramework.Shaders
 
                 protected override void DisposeResource()
                 {
-                    alphaBlend.EndMaskGeneration(this);
+                    alphaBlend.EndMaskGeneration();
                 }
             }
         }

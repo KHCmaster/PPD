@@ -123,7 +123,7 @@ namespace PPDEditor
         {
             if (sender is TextBox tb)
             {
-                if (!int.TryParse(tb.Text, out int result))
+                if (!int.TryParse(tb.Text, out _))
                 {
                     tb.Text = "0";
                     MessageBox.Show(invalidnumber);

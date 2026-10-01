@@ -85,7 +85,6 @@ namespace FlowScriptEngine
             element.Add(valueElem);
             if (type.IsArray && value != null)
             {
-                var elemType = type = type.GetElementType();
                 var array = (Array)value;
                 for (var i = 0; i < array.Length; i++)
                 {

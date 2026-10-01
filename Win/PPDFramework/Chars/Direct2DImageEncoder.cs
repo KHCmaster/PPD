@@ -12,7 +12,7 @@ namespace PPDFramework.Chars
 {
     class Direct2DImageEncoder(int imageWidth, int imageHeight, int imageDpi) : IDisposable
     {
-        private readonly Direct2DFactoryManager factoryManager = new Direct2DFactoryManager();
+        private readonly Direct2DFactoryManager factoryManager = new();
 
         private readonly int imageWidth = imageWidth, imageHeight = imageHeight, imageDpi = imageDpi;
 

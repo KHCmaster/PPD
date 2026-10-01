@@ -24,11 +24,11 @@ namespace PPDEditor.FlowScript
                 {
                     SelectedMark = marks.FirstOrDefault(m => m.Mark == selectedMark);
                 }
-                SelectedMarks = new EditorMarkInfo[0];
+                SelectedMarks = [];
             }
             else
             {
-                SelectedMarks = marks.Where(m => selectedMarks.Contains(m.Mark)).ToArray();
+                SelectedMarks = [.. marks.Where(m => selectedMarks.Contains(m.Mark))];
             }
             Marks = marks;
 

@@ -9,9 +9,9 @@ namespace PPDEditorCommon.Dialog.Converter
 
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            if (parameter is bool)
+            if (parameter is bool v)
             {
-                return !((bool)parameter);
+                return !v;
             }
             return parameter;
         }

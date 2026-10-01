@@ -301,8 +301,7 @@ namespace PPDEditor.Forms
 
         private ShortcutInfo GetShortcutInfo(string str, ShortcutType shortcutType)
         {
-            Keys key;
-            GetModifiers(str, out key, out bool ctrl, out bool shift, out bool alt);
+            GetModifiers(str, out Keys key, out bool ctrl, out bool shift, out bool alt);
 
             if (key != Keys.None)
             {
@@ -314,8 +313,7 @@ namespace PPDEditor.Forms
 
         private ShortcutInfo GetCustomShortcutInfo(string str, string scriptPath)
         {
-            Keys key;
-            GetModifiers(str, out key, out bool ctrl, out bool shift, out bool alt);
+            GetModifiers(str, out Keys key, out bool ctrl, out bool shift, out bool alt);
 
             if (key != Keys.NoName)
             {

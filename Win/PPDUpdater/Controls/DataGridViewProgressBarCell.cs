@@ -82,8 +82,8 @@ namespace PPDUpdater.Controls
         {
             //値を決定する
             int intValue = 0;
-            if (value is int)
-                intValue = (int)value;
+            if (value is int v)
+                intValue = v;
             if (intValue < this.mimimumValue)
                 intValue = this.mimimumValue;
             if (intValue > this.maximumValue)

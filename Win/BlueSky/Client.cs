@@ -9,7 +9,7 @@ namespace BlueSky
     {
         private readonly string id = id;
         private readonly string password = password;
-        private readonly HttpClient client = new HttpClient();
+        private readonly HttpClient client = new();
         private readonly JsonSerializerSettings jsonSerializerSettings = new()
         {
             MetadataPropertyHandling = MetadataPropertyHandling.Ignore,

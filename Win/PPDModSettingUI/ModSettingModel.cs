@@ -273,7 +273,7 @@ namespace PPDModSettingUI
 
         private void Validate()
         {
-            IsOkEnabled = modSetting.Validate(NewValue, out object val);
+            IsOkEnabled = modSetting.Validate(NewValue, out _);
         }
     }
 }

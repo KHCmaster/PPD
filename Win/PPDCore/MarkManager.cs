@@ -199,7 +199,7 @@ namespace PPDCore
             pathes.Add(imagepathes.GetClockAxisImagePath());
             imagepathes.GetLongNoteCircleInfo(out PathObject fn, out float inner, out float outer);
             pathes.Add(fn);
-            imagepathes.GetHoldInfo(out fn, out float x, out float y);
+            imagepathes.GetHoldInfo(out fn, out _, out _);
             pathes.Add(fn);
             CreateCirclePoints(inner, outer);
 
@@ -836,9 +836,9 @@ namespace PPDCore
                 }
                 if (remove)
                 {
-                    if (exmk is SlideExMark && ((SlideExMark)exmk).IsMaxSlide)
+                    if (exmk is SlideExMark mark && mark.IsMaxSlide)
                     {
-                        var slideExMark = ((SlideExMark)exmk);
+                        var slideExMark = mark;
                         var score = 1000 + 10 * slideExMark.ExCount;
                         var position = slideExMark.GetPressedSlidePosition(slideExMark.ExCount);
                         MaxSlide?.Invoke(slideExMark, position, score, exmk.IsRight);

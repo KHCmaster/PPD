@@ -42,19 +42,19 @@ namespace FlowScriptEngineData.FlowSourceObjects.Json
 
         private object Convert(object obj)
         {
-            if (obj is JObject)
+            if (obj is JObject @object)
             {
                 var ret = new Dictionary<object, object>();
-                foreach (var p in (JObject)obj)
+                foreach (var p in @object)
                 {
                     ret[p.Key] = Convert(p.Value);
                 }
                 return ret;
             }
-            else if (obj is JArray)
+            else if (obj is JArray array)
             {
                 var ret = new List<object>();
-                foreach (var o in (JArray)obj)
+                foreach (var o in array)
                 {
                     ret.Add(Convert(o));
                 }

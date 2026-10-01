@@ -57,7 +57,7 @@ namespace PPDEditor
                 stateMask = NativeMethods.TVIS_OVERLAYMASK,
                 state = 0
             };
-            var ret = NativeMethods.SendMessage(node.TreeView.Handle, NativeMethods.TVM_GETITEMW, 0, ref tvi);
+            _ = NativeMethods.SendMessage(node.TreeView.Handle, NativeMethods.TVM_GETITEMW, 0, ref tvi);
             return tvi.state >> 8;
         }
 
@@ -82,7 +82,5 @@ namespace PPDEditor
         [DllImport("user32.dll")]
         internal static extern bool RemoveMenu(IntPtr hMenu, uint uPosition, uint uFlags);
 
-        [DllImport("user32.dll")]
-        internal static extern int GetWindowRect(IntPtr hWnd, ref Vortice.Mathematics.RectI lpRect);
     }
 }

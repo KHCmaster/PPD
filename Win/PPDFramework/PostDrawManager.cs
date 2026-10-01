@@ -19,7 +19,7 @@ namespace PPDFramework
             public int Depth { get; set; }
         }
 
-        readonly Queue<Context> contexts = new Queue<Context>();
+        readonly Queue<Context> contexts = new();
 
         /// <summary>
         /// 追加します。

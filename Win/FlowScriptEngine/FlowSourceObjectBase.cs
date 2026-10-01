@@ -97,11 +97,11 @@ namespace FlowScriptEngine
             var attributes = type.GetCustomAttributes(true);
             foreach (Object attribute in attributes)
             {
-                if (attribute is IToolTipText)
+                if (attribute is IToolTipText text)
                 {
-                    summary = ((IToolTipText)attribute).Summary;
-                    flowToolTipText = ((IToolTipText)attribute).Text;
-                    flowToolTipTextKey = ((IToolTipText)attribute).TextKey;
+                    summary = text.Summary;
+                    flowToolTipText = text.Text;
+                    flowToolTipTextKey = text.TextKey;
 #if DEBUG
                     attributeFound = true;
                     if (String.IsNullOrEmpty(flowToolTipText))
@@ -110,10 +110,10 @@ namespace FlowScriptEngine
                     }
 #endif
                 }
-                else if (attribute is IWarning)
+                else if (attribute is IWarning warning1)
                 {
-                    warningKey = ((IWarning)attribute).TextKey;
-                    warning = ((IWarning)attribute).Text;
+                    warningKey = warning1.TextKey;
+                    warning = warning1.Text;
                 }
             }
 

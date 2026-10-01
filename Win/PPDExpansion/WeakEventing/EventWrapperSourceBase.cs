@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
-namespace PPDExpansion
+namespace PPDExpansion.WeakEventing
 {
 
     /// <summary>

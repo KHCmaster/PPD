@@ -56,7 +56,7 @@ namespace PPDCore
             int currentDiff = IsRight ? ExMarkPosDiffStart : -ExMarkPosDiffStart;
             for (int i = 0; i < exMarks.Length; i++)
             {
-                createMark(this, out GameComponent mark, out GameComponent colorMark, out GameComponent axis, out GameComponent slide, out GameComponent slideColor, out PictureObject trace);
+                createMark(this, out _, out _, out _, out GameComponent slide, out GameComponent slideColor, out PictureObject trace);
                 exMarks[i] = slide ?? new PictureObject(device, resourceManager, filenames.GetMarkImagePath(GetButtonType() + 2), true);
                 exMarks[i].Position = new Vector2(currentDiff, 0);
                 colorExMarkInfos[i] = new SlideColorMarkInfo(
@@ -353,7 +353,7 @@ namespace PPDCore
                         break;
                 }
                 var vec = CalculateColorPosition(colorExMarkInfos[i], colorExMarkInfos[i].SlideMarkInfo, colorExMarkInfos[i].MarkTime, currentTime, bpm);
-                UpdateColorMarkInfo(colorExMarkInfos[i], colorExMarkInfos[i].SlideMarkInfo, colorExMarkInfos[i].MarkTime, currentTime, bpm, vec);
+                UpdateColorMarkInfo(colorExMarkInfos[i], colorExMarkInfos[i].MarkTime, currentTime, bpm, vec);
                 var prevVisible = !colorExMarkInfos[i].ColorMark.Hidden;
                 colorExMarkInfos[i].DrawTrace = exState < ExState.Pressed || currentTime < colorExMarkInfos[i].MarkTime;
                 colorExMarkInfos[i].ColorMark.Hidden = exMarks[i].Hidden = !colorExMarkInfos[i].DrawTrace;

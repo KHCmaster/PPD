@@ -275,12 +275,12 @@ namespace PPDFramework
         public static void SetImeWindowPos(IntPtr window, Point screenPos)
         {
             var imContext = ImmGetContext(window);
-            SetImeWindowPos(imContext, window, screenPos);
+            SetImeContextWindowPos(imContext, screenPos);
             ImmReleaseContext(window, imContext);
         }
 
         /// <summary>Sets location of the IME composition window (pre-edit window) </summary>
-        public static void SetImeWindowPos(IntPtr imContext, IntPtr window, Point screenPos)
+        public static void SetImeContextWindowPos(IntPtr imContext, Point screenPos)
         {
             const int CFS_POINT = 0x0002;
             var compForm = new COMPOSITIONFORM
@@ -305,8 +305,7 @@ namespace PPDFramework
         public static void GetImeWindowPos(IntPtr window)
         {
             var imContext = ImmGetContext(window);
-            var compForm = new COMPOSITIONFORM();
-            ImmGetCompositionWindow(imContext, out compForm);
+            ImmGetCompositionWindow(imContext, out COMPOSITIONFORM compForm);
             Console.WriteLine(compForm.area.left - compForm.area.right);
             ImmReleaseContext(window, imContext);
         }

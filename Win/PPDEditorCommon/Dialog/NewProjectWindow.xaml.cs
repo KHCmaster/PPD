@@ -113,12 +113,12 @@ namespace PPDEditorCommon.Dialog
                 return;
             }
 
-            if (elem is FrameworkElement)
+            if (elem is FrameworkElement element)
             {
-                ((FrameworkElement)elem).Focus();
-                if (elem is TextBox)
+                element.Focus();
+                if (elem is TextBox box)
                 {
-                    ((TextBox)elem).SelectAll();
+                    box.SelectAll();
                 }
             }
         }

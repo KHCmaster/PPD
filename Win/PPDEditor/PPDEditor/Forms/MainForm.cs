@@ -1469,7 +1469,7 @@ namespace PPDEditor.Forms
             scm.SaveAll();
             var pw = new PackWriter(Path.Combine(projectdir, headdot + "ppd"));
             var packFileList = new List<string>(scm.GetEnabledScriptList());
-            packFileList.AddRange(new string[] { "ppd", "evd" });
+            packFileList.AddRange(["ppd", "evd"]);
             foreach (PPDPackStreamWriter ppdpsw in pw.Write([.. packFileList]))
             {
                 switch (ppdpsw.Filename)
@@ -2167,8 +2167,7 @@ namespace PPDEditor.Forms
                 iter++;
             }
 
-            int selectedlayerindex;
-            if (!int.TryParse(setting.ReadString(headdot + "selectedlayerindex"), NumberStyles.Integer, CultureInfo.InvariantCulture, out selectedlayerindex))
+            if (!int.TryParse(setting.ReadString(headdot + "selectedlayerindex"), NumberStyles.Integer, CultureInfo.InvariantCulture, out int selectedlayerindex))
             {
                 selectedlayerindex = -1;
             }
@@ -3236,17 +3235,6 @@ namespace PPDEditor.Forms
             {
                 // WM_NCMOUSEMOVE
                 case 0xA0:
-                    int x, y;
-                    var windowRect = new Rectangle();
-                    NativeMethods.GetWindowRect(m.HWnd, ref windowRect);
-                    // Extract the least significant 16 bits
-                    x = ((int)m.LParam << 16) >> 16;
-                    // Extract the most significant 16 bits
-                    y = (int)m.LParam >> 16;
-
-                    x -= windowRect.Left;
-                    y -= windowRect.Top;
-
                     base.WndProc(ref m);
                     if (!toolStripContainer1.TopToolStripPanelVisible)
                     {

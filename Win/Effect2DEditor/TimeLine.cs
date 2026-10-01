@@ -407,7 +407,7 @@ namespace Effect2DEditor
                         DrawAndRefresh();
                         break;
                     case KeyOperationMode.FixMove:
-                        if (keyindex < 0) keyindex = 0;
+                        if (keyindex < 0) _ = 0;
                         if (SelectedManager.Set.StartState == SelectedManager.State)
                         {
                             keyopmode = KeyOperationMode.RightMoveOnly;

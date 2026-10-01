@@ -23,8 +23,7 @@ namespace PPDShareComponent
                 Scale = new Vector2(0.5f),
                 Alpha = 0
             });
-            TextureString str;
-            this.AddChild(str = new TextureString(device, text, 20, PPDColors.White)
+            this.AddChild(_ = new TextureString(device, text, 20, PPDColors.White)
             {
                 Position = new Vector2(30, 0)
             });

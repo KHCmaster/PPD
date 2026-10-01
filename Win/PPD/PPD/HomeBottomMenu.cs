@@ -69,7 +69,7 @@ namespace PPD
                 {
                     mode = ModeArray[^1];
                 }
-                OnModeChanged(mode);
+                OnModeChanged();
                 sound.Play(PPDSetting.DefaultSounds[3], -1000);
                 drawCount = 0;
             }
@@ -81,13 +81,13 @@ namespace PPD
                 {
                     mode = ModeArray[0];
                 }
-                OnModeChanged(mode);
+                OnModeChanged();
                 sound.Play(PPDSetting.DefaultSounds[3], -1000);
                 drawCount = 0;
             }
         }
 
-        private void OnModeChanged(Mode mode)
+        private void OnModeChanged()
         {
             ModeChanged?.Invoke(this, EventArgs.Empty);
         }

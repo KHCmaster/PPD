@@ -68,7 +68,7 @@ namespace PPDEditor
             {
                 var index = cbs[i].SelectedIndex;
                 cbs[i].Items.Clear();
-                cbs[i].Items.AddRange(data.Select(s => Path.GetFileNameWithoutExtension(s)).ToArray());
+                cbs[i].Items.AddRange([.. data.Select(s => Path.GetFileNameWithoutExtension(s))]);
                 cbs[i].SelectedIndex = index;
             }
             for (int i = 0; i < cbs.Length; i++)

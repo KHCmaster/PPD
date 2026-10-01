@@ -99,7 +99,7 @@ namespace Effect2D
             if (set.IsBezierPosition)
             {
                 var bratio = set.GetRatio(RatioType.BezierPosition, parentframe);
-                set.BAnalyzer.GetPoint(BezierCaliculator.BezierAnalyzer.MaxRatio * (1 - bratio), out PointF outp, out PointF outdir);
+                set.BAnalyzer.GetPoint(BezierCaliculator.BezierAnalyzer.MaxRatio * (1 - bratio), out PointF outp, out _);
                 CurrentState.X = outp.X;
                 CurrentState.Y = outp.Y;
             }

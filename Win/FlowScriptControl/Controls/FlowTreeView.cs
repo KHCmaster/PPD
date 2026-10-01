@@ -324,9 +324,9 @@ namespace FlowScriptControl.Controls
         {
             if (e.Button == MouseButtons.Left)
             {
-                if (e.Item is CustomTreeNode treeNode)
+                if (e.Item is CustomTreeNode)
                 {
-                    var dde = treeView1.DoDragDrop(e.Item, DragDropEffects.Copy);
+                    _ = treeView1.DoDragDrop(e.Item, DragDropEffects.Copy);
                 }
             }
         }

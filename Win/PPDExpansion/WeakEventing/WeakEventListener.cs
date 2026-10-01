@@ -14,7 +14,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 
-namespace PPDExpansion
+namespace PPDExpansion.WeakEventing
 {
     /// <summary>
     /// Implements a weak event listener that allows the owner to be garbage

@@ -120,7 +120,7 @@ namespace PPDCore
             ProcessAllowedButtonsManager = new ProcessAllowedButtonsManager(engine);
             InputManager = new InputManager();
             PauseManager = new PauseManager(engine);
-            priorityManagers.AddRange(new IPriorityManager[]{
+            priorityManagers.AddRange([
                 UpdateManager,
                 CalculatePositionManager,
                 ProcessEvaluateManager,
@@ -128,7 +128,7 @@ namespace PPDCore
                 ProcessMarkBPMManager,
                 ProcessMissPressManager,
                 ProcessAllowedButtonsManager,
-            });
+            ]);
             GameResultManager = new GameResultManager();
             StageManager = new StageManager(device);
             afterLoadList = [];

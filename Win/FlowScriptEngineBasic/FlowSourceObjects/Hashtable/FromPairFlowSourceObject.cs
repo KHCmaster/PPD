@@ -103,9 +103,9 @@ namespace FlowScriptEngineBasic.FlowSourceObjects.Hashtable
 
         private void Add(Dictionary<object, object> hashtable, KeyValuePair<object, object> pair)
         {
-            if (IsExpanded && pair.Value is Dictionary<object, object>)
+            if (IsExpanded && pair.Value is Dictionary<object, object> dictionary)
             {
-                var castedDict = (Dictionary<object, object>)pair.Value;
+                var castedDict = dictionary;
                 foreach (var p in castedDict)
                 {
                     Add(hashtable, p);

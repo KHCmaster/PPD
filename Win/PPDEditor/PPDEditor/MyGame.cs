@@ -74,7 +74,7 @@ namespace PPDEditor
             sm = this.Window.SoundManager;
             sm.SetSound(this.sound);
             this.Window.ResourceManager.SetSound(sound);
-            mg = new MainGame(device, this, resourceManager, Window.Grid);
+            mg = new MainGame(device, resourceManager, Window.Grid);
             mg.Dummy.Drawing += Dummy_Drawing;
             Utility.Device = device;
             Utility.ResourceManager = resourceManager;
@@ -107,7 +107,7 @@ namespace PPDEditor
             PPDEditorSkin.Skin.GetLongNoteCircleInfo(out PathObject fn, out float inner, out float outer);
             pathes.Add(fn);
             CreateCirclePoints(inner, outer);
-            PPDEditorSkin.Skin.GetHoldInfo(out fn, out inner, out outer);
+            PPDEditorSkin.Skin.GetHoldInfo(out fn, out _, out _);
             pathes.Add(fn);
         }
         private void CreateCirclePoints(float smallrad, float bigrad)
@@ -147,7 +147,7 @@ namespace PPDEditor
             playing = false;
         }
 
-        void M_Finished(object sender, EventArgs e)
+        void Movie_Finished(object sender, EventArgs e)
         {
             if (playing)
             {
@@ -216,7 +216,7 @@ namespace PPDEditor
             try
             {
                 mg.InitializeMovie(fileName);
-                mg.Movie.Finished += M_Finished;
+                mg.Movie.Finished += Movie_Finished;
             }
             catch (Exception ex)
             {

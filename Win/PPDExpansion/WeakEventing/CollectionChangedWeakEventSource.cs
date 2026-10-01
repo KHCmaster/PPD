@@ -1,6 +1,6 @@
 ﻿using System.Collections.Specialized;
 
-namespace PPDExpansion
+namespace PPDExpansion.WeakEventing
 {
     /// <summary>
     /// Default CollectionChanged weak-event wrapper for INotifyCollectionChanged event source.

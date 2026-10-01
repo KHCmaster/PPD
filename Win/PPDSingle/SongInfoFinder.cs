@@ -32,7 +32,7 @@ namespace PPDSingle
             private set;
         }
 
-        readonly Queue<SongInformation> queue = new Queue<SongInformation>();
+        readonly Queue<SongInformation> queue = new();
         Thread t;
         public bool Find()
         {

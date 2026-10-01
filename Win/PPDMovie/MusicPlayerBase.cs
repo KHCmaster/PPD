@@ -50,7 +50,7 @@ namespace PPDMovie
                     var innerVolumeRatio = (innerVolume - VolumeSilence) / (float)-VolumeSilence;
                     var userVolumeRatio = userVolume / 100f;
                     var volume = Math.Min(0, SoundMasterControl.Instance.GetVolume((int)(innerVolumeRatio * userVolumeRatio * 10000 + VolumeSilence), SoundType.Movie));
-                    var hr = this.basicAudio.Put_Volume(volume);
+                    _ = this.basicAudio.Put_Volume(volume);
                 }
             }
         }
@@ -138,7 +138,7 @@ namespace PPDMovie
         private void DumpFilterLog()
         {
             //グラフを解析してプリント
-            var hr = this.graphBuilder2.EnumFilters(out IEnumFilters fils);
+            _ = this.graphBuilder2.EnumFilters(out IEnumFilters fils);
             IBaseFilter[] fil = new IBaseFilter[1];
             IntPtr ptr = IntPtr.Zero;
             using StreamWriter sw = new(Path.Combine(Utility.AppDir, "filterinfo.log"));
@@ -146,7 +146,7 @@ namespace PPDMovie
             {
                 while (true)
                 {
-                    hr = fils.Next(1, fil, ptr);
+                    int hr = fils.Next(1, fil, ptr);
                     DsError.ThrowExceptionForHR(hr);
                     var fi = new FilterInfo();
                     hr = fil[0].QueryFilterInfo(fi);

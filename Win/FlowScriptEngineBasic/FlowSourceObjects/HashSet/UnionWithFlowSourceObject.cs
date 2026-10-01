@@ -24,7 +24,7 @@ namespace FlowScriptEngineBasic.FlowSourceObjects.HashSet
             SetValue(nameof(List));
             if (HashSet != null && List != null)
             {
-                HashSet.UnionWith(List.ToArray());
+                HashSet.UnionWith([.. List]);
                 OnSuccess();
             }
             else

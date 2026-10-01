@@ -336,7 +336,7 @@ namespace PPDEditor
 
         public static Dictionary<string, string> GetCommonParameters(Mark[] marks)
         {
-            return GetCommonParameters(marks, out string[] temp);
+            return GetCommonParameters(marks, out _);
         }
 
         public static Dictionary<string, string> GetCommonParameters(Mark[] marks, out string[] existKeys)

@@ -49,7 +49,7 @@ namespace PPDEditor
             get { return dummy; }
         }
 
-        public MainGame(PPDDevice device, MyGame mygame, PPDFramework.Resource.ResourceManager resourceManager, SquareGrid squareGrid) : base(device)
+        public MainGame(PPDDevice device, PPDFramework.Resource.ResourceManager resourceManager, SquareGrid squareGrid) : base(device)
         {
             this.resourceManager = resourceManager;
             AddChild(mpd = new MarkPointDrawer(device, resourceManager));
@@ -164,10 +164,6 @@ namespace PPDEditor
         {
             var v = new Vector2((float)Math.Cos(r), -(float)Math.Sin(r));
             var p2 = new Vector2(v.X * 920 + p1.X, v.Y * 920 + p1.Y);
-            var dir = new Vector2(p2.X - p1.X, p2.Y - p1.Y);
-            dir = MathCompat.NormalizeSharpDX(dir);
-            var v1 = new Vector2(-dir.Y, dir.X);
-            var v2 = new Vector2(-v1.X, -v1.Y);
             angleLine.Points = [p1, p2];
             angleLine.Hidden = false;
         }

@@ -103,7 +103,7 @@ namespace PPDMultiServer.Tcp
         {
             Logger?.AddLog("Start");
             host.Start();
-            var menuContext = new MenuContext(null, this);
+            var menuContext = new MenuContext(this);
             InitializeServerContext(menuContext);
             contexts.Add(menuContext);
             menuContext.Start();
@@ -162,11 +162,11 @@ namespace PPDMultiServer.Tcp
                     currentContext = context;
                     context.Process(networkData);
                 }
-                if (networkData is AddUserNetworkData)
+                if (networkData is AddUserNetworkData data)
                 {
                     lock (userLastUpdatedAt)
                     {
-                        userLastUpdatedAt[((AddUserNetworkData)networkData).Id] = DateTime.Now;
+                        userLastUpdatedAt[data.Id] = DateTime.Now;
                     }
                 }
                 else if (networkData is OldProtocolNetworkData)

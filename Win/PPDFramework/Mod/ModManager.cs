@@ -210,7 +210,6 @@ namespace PPDFramework.Mod
         /// <param name="directoryPath">フォルダパス。</param>
         public void EnumerateClasses(string directoryPath)
         {
-            var types = new List<AssemblyAndType>();
             foreach (string dllFile in Directory.GetFiles(directoryPath, "*.dll"))
             {
                 if (!includeDlls.Contains(Path.GetFileName(dllFile)))
@@ -218,9 +217,9 @@ namespace PPDFramework.Mod
                     continue;
                 }
 
-                foreach (AssemblyAndType asm in FlowSourceEnumerator.EnumerateFromFile(dllFile, []))
+                // 列挙すると型が読み込まれる（結果は使わない）
+                foreach (var _ in FlowSourceEnumerator.EnumerateFromFile(dllFile, []))
                 {
-
                 }
             }
         }

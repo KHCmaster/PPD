@@ -31,7 +31,7 @@ namespace FlowScriptEngineBasic.FlowSourceObjects.HashSet
             SetValue(nameof(List));
             if (HashSet != null && List != null)
             {
-                Result = HashSet.Overlaps(List.ToArray());
+                Result = HashSet.Overlaps([.. List]);
                 OnSuccess();
             }
             else

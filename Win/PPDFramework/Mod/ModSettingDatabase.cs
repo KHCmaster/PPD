@@ -149,10 +149,10 @@ namespace PPDFramework.Mod
                     type = "Boolean";
                     value = ((bool)pair.Value).ToString(CultureInfo.InvariantCulture);
                 }
-                else if (pair.Value is Color4)
+                else if (pair.Value is Color4 color)
                 {
                     type = "Color4";
-                    value = ((Color4)pair.Value).ToRgbaInt().ToString(CultureInfo.InvariantCulture);
+                    value = color.ToRgbaInt().ToString(CultureInfo.InvariantCulture);
                 }
                 else
                 {

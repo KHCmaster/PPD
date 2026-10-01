@@ -576,7 +576,7 @@ namespace FlowScriptControl.Controls
             var canCopyNodeName = areaControl.CanGetNodeName(areaControl.MouseRightDownPos.X, areaControl.MouseRightDownPos.Y);
             ノード名をコピーToolStripMenuItem.Visible = canCopyNodeName;
             var canCopyPropertyName = areaControl.GetNodeAndPropertyName(areaControl.MouseRightDownPos.X,
-                    areaControl.MouseRightDownPos.Y, out string nodeName, out string propertyName, out string propertyValue);
+                    areaControl.MouseRightDownPos.Y, out _, out _, out _);
             プロパティ名をコピーToolStripMenuItem.Visible = canCopyPropertyName;
             toolStripSeparator3.Visible = canCopyNodeName || canCopyPropertyName;
         }

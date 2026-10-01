@@ -353,7 +353,7 @@ namespace PPDEditor.Forms
         }
         private void TextBox2_TextChanged(object sender, EventArgs e)
         {
-            if (!float.TryParse(this.textBox2.Text, out float temp))
+            if (!float.TryParse(this.textBox2.Text, out _))
             {
                 this.pictureBox1.Show();
             }

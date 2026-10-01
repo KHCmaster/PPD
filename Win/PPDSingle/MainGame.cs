@@ -157,11 +157,10 @@ namespace PPDSingle
 
         protected override bool OnInitializeError(Exception e)
         {
-            if (e is PPDException && ((PPDException)e).ExceptionType == PPDExceptionType.CannotOpenMovie)
+            if (e is PPDException exception && exception.ExceptionType == PPDExceptionType.CannotOpenMovie)
             {
-                var ppde = (PPDException)e;
+                var ppde = exception;
                 var message = PPDFramework.PPDExceptionContentProvider.Provider.GetContent(ppde.ExceptionType);
-                string content = ppde.Detail;
                 GameHost.AddNotify(message);
                 return true;
             }

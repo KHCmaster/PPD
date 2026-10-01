@@ -64,7 +64,7 @@ namespace PPDFramework
         ISceneBase previousScene;
         Thread loadingThread;
         readonly Dictionary<Type, Dictionary<string, object>> globalPool = [];
-        readonly Stack<ISceneBase> sceneStack = new Stack<ISceneBase>();
+        readonly Stack<ISceneBase> sceneStack = new();
         bool previousSceneResourceUsing;
 
         float lastTime;

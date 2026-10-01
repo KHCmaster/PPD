@@ -86,7 +86,7 @@ namespace PPDSingle
             float height = 0;
             foreach (ModSetting modSetting in modInfo.Settings)
             {
-                var component = new ModSettingComponent(device, resourceManager, modSetting,
+                var component = new ModSettingComponent(device, modSetting,
                     modSetting.GetStringValue(modInfo.ModSettingManager[modSetting.Key]))
                 {
                     Position = new Vector2(0, height)
@@ -122,7 +122,7 @@ namespace PPDSingle
             else if (args.InputInfo.IsPressed(ButtonType.Circle))
             {
                 var window = new PPDModSettingUI.ModSettingWindow();
-                var helper = new WindowInteropHelper(window)
+                _ = new WindowInteropHelper(window)
                 {
                     Owner = gameHost.WindowHandle
                 };
@@ -240,7 +240,7 @@ namespace PPDSingle
                 }
             }
 
-            public ModSettingComponent(PPDDevice device, PPDFramework.Resource.ResourceManager resourceManager,
+            public ModSettingComponent(PPDDevice device,
                 ModSetting modSetting, string currentValue) : base(device)
             {
                 this.AddChild(nameText = new TextureString(device, modSetting.Name, 24, 500, PPDColors.White)

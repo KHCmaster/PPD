@@ -14,7 +14,7 @@ namespace FlowScriptControlTest
         public event Action Finished;
         private readonly ExecuteInfo[] executeInfos = executeInfos;
         private readonly string stdinText = stdinText;
-        private readonly DebugController controller = new DebugController();
+        private readonly DebugController controller = new();
         private Thread thread;
         private Thread workingThread;
         private readonly Dictionary<FlowSourceManager, ExecuteInfo> dict = [];

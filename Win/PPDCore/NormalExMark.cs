@@ -21,7 +21,7 @@ namespace PPDCore
         public override void Initialize(CreateMarkFunc createMark, GetScriptAllowedButtonsFunc getScriptAllowedButtons)
         {
             base.Initialize(createMark, getScriptAllowedButtons);
-            filenames.GetLongNoteCircleInfo(out PathObject fn, out float a, out float b);
+            filenames.GetLongNoteCircleInfo(out PathObject fn, out _, out _);
             outCircle = new PictureObject(device, resourceManager, fn, true);
             outAxis = new PictureObject(device, resourceManager, filenames.GetCircleAxisImagePath(), true);
             outCircle.Scale = outAxis.Scale = Vector2.Zero;

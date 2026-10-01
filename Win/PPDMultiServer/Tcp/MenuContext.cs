@@ -51,7 +51,7 @@ namespace PPDMultiServer.Tcp
             }
         }
 
-        public MenuContext(ServerContextBase previousContext, PPDServer server)
+        public MenuContext(PPDServer server)
         {
             this.server = server;
             version = FileVersionInfo.GetVersionInfo(Assembly.GetAssembly(this.GetType()).Location).FileVersion;

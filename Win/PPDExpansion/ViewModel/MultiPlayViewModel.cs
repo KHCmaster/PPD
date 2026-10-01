@@ -201,21 +201,21 @@ namespace PPDExpansion.ViewModel
 
         public override void ProcessData(PackableBase packable)
         {
-            if (packable is ScoreInfo)
+            if (packable is ScoreInfo info)
             {
-                SetScoreInfo((ScoreInfo)packable);
+                SetScoreInfo(info);
             }
-            else if (packable is PlayerInfo)
+            else if (packable is PlayerInfo info1)
             {
-                AddPlayerInfo((PlayerInfo)packable);
+                AddPlayerInfo(info1);
             }
-            else if (packable is UpdateInfo)
+            else if (packable is UpdateInfo info2)
             {
-                AddUpdateInfo((UpdateInfo)packable);
+                AddUpdateInfo(info2);
             }
-            else if (packable is ItemInfo)
+            else if (packable is ItemInfo info3)
             {
-                AddItemInfo((ItemInfo)packable);
+                AddItemInfo(info3);
             }
         }
 

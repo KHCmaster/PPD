@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PPDExpansion.WeakEventing;
+using System;
 using System.Collections;
 using System.Collections.Specialized;
 using System.Windows;

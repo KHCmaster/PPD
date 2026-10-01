@@ -161,8 +161,7 @@ namespace PPDMovie
             while (true)
             {
                 enumPins.Next(1, pin, ptr);
-                var pinInfo = new PinInfo();
-                pin[0].QueryPinInfo(out pinInfo);
+                pin[0].QueryPinInfo(out PinInfo pinInfo);
                 if (pinInfo.name == name)
                 {
                     return pin[0];

@@ -22,10 +22,10 @@ namespace PPDEditor.FlowScript
             Angle = mark.Rotation;
             Time = mark.Time;
             Type = (MarkType)mark.Type;
-            if (mark is ExMark)
+            if (mark is ExMark mark1)
             {
                 IsLong = true;
-                ReleaseTime = ((ExMark)mark).EndTime;
+                ReleaseTime = mark1.EndTime;
             }
             else
             {

@@ -84,7 +84,7 @@ namespace PPDFramework.Sprites
         /// </summary>
         public void Initialize()
         {
-            Dicts = GetDicts(out string version);
+            Dicts = GetDicts(out _);
         }
 
         /// <summary>
@@ -97,7 +97,7 @@ namespace PPDFramework.Sprites
             if (!CheckUpdate(infos) || version != Version)
             {
                 Write(infos);
-                Dicts = GetDicts(out version);
+                Dicts = GetDicts(out _);
                 OnPacked();
             }
         }

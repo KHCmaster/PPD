@@ -57,7 +57,7 @@ namespace FlowScriptDrawControl.Model
                 selectables.Add(pair.Key.CurrentSource);
                 tempPositions.Add(pair.Value);
             }
-            var command = new Command.MovePositionablesCommand(selectables.ToArray(), [.. tempPositions]);
+            var command = new Command.MovePositionablesCommand([.. selectables], [.. tempPositions]);
             commandManager.AddCommand(command);
         }
 

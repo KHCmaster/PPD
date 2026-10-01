@@ -52,7 +52,7 @@ namespace PPDFramework.Texture.DX11
             get { return Width * BytesPerPixel; }
         }
 
-        public ID3D11Texture2D _Texture
+        public ID3D11Texture2D D3DTexture
         {
             get;
             private set;
@@ -75,7 +75,7 @@ namespace PPDFramework.Texture.DX11
             this.device = device;
             this.pa = pa;
             this.cpuData = cpuData;
-            _Texture = texture;
+            D3DTexture = texture;
             Width = (int)texture.Description.Width;
             Height = (int)texture.Description.Height;
             var d3dDevice = (ID3D11Device)device.Device;
@@ -94,8 +94,8 @@ namespace PPDFramework.Texture.DX11
             ShaderResourceView = null;
             RenderTargetView?.Dispose();
             RenderTargetView = null;
-            _Texture?.Dispose();
-            _Texture = null;
+            D3DTexture?.Dispose();
+            D3DTexture = null;
             Surface?.Dispose();
             Surface = null;
             cpuData = null;
@@ -207,7 +207,7 @@ namespace PPDFramework.Texture.DX11
             }
             lock (cpuDataLock)
             {
-                if (cpuData == null || _Texture == null || dirtyBottom <= dirtyTop)
+                if (cpuData == null || D3DTexture == null || dirtyBottom <= dirtyTop)
                 {
                     return;
                 }
@@ -215,7 +215,7 @@ namespace PPDFramework.Texture.DX11
                 try
                 {
                     var ptr = handle.AddrOfPinnedObject() + dirtyTop * Pitch;
-                    context.UpdateSubresource(_Texture, 0, new Box(0, dirtyTop, 0, Width, dirtyBottom, 1), ptr, (uint)Pitch, 0);
+                    context.UpdateSubresource(D3DTexture, 0, new Box(0, dirtyTop, 0, Width, dirtyBottom, 1), ptr, (uint)Pitch, 0);
                 }
                 finally
                 {
@@ -227,7 +227,7 @@ namespace PPDFramework.Texture.DX11
 
         private void EnsureCpuData()
         {
-            cpuData ??= ReadPixels(((PPDFramework.DX11.PPDDevice)device).Context, _Texture);
+            cpuData ??= ReadPixels(((PPDFramework.DX11.PPDDevice)device).Context, D3DTexture);
         }
 
         private void MarkDirty(int top, int bottom)
@@ -253,7 +253,7 @@ namespace PPDFramework.Texture.DX11
                     return (byte[])cpuData.Clone();
                 }
             }
-            return ReadPixels(((PPDFramework.DX11.PPDDevice)device).Context, _Texture);
+            return ReadPixels(((PPDFramework.DX11.PPDDevice)device).Context, D3DTexture);
         }
 
         private System.Drawing.Bitmap ToBitmap()

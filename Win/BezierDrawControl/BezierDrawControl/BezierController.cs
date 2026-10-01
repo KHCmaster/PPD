@@ -685,8 +685,6 @@ namespace BezierDrawControl
         {
             bool found = false;
             outt = -1;
-            var evector = new PointF(p2.X - p1.X, p2.Y - p1.Y);
-            var cvector = new PointF(c.X - p1.X, c.Y - p1.Y);
             if (CollisionLineAndCircle(p1, p2, c, 2))
             {
                 found = true;
@@ -923,7 +921,7 @@ namespace BezierDrawControl
             }
             else
             {
-                if (IsOnLine(mousePos, out BezierControlPoint previous, out float t))
+                if (IsOnLine(mousePos, out _, out _))
                 {
                     return MyCursors.AnchorPlus;
                 }

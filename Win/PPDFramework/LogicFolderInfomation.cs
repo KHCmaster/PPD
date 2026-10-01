@@ -520,8 +520,6 @@ namespace PPDFramework
         private static void ChangeIndex(LogicFolderInfomation info, int index)
         {
             StaticBeforeChangeIndex?.Invoke(info, EventArgs.Empty);
-            var currentIndex = Array.IndexOf(info.Parent.Children, info);
-            LogicFolderInfomation tempParent = info.Parent;
             info.Parent.children.Remove(info);
             info.Parent.children.Insert(index, info);
             var temp = info.Parent.Children[0].ID.ToString();

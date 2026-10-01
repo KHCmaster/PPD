@@ -143,7 +143,7 @@ namespace PPDInput
                     {
                         joystick.Acquire().CheckError();
                         joystick.Poll().CheckError();
-                        var state = joystick.GetCurrentJoystickState();
+                        _ = joystick.GetCurrentJoystickState();
                         joystick.GetBufferedJoystickData();
                     }
 
@@ -151,7 +151,7 @@ namespace PPDInput
                     {
                         keyboard.Acquire().CheckError();
                         keyboard.Poll().CheckError();
-                        var bufferedData = keyboard.GetBufferedKeyboardData();
+                        _ = keyboard.GetBufferedKeyboardData();
                     }
                 }
             }

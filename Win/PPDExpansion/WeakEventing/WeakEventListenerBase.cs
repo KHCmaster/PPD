@@ -1,4 +1,4 @@
-﻿namespace PPDExpansion
+﻿namespace PPDExpansion.WeakEventing
 {
     /// <summary>
     /// Provides a non-generic base class for the WeakEventListener implementation.

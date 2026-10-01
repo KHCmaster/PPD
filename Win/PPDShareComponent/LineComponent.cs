@@ -100,7 +100,6 @@ namespace PPDShareComponent
             }
             float c_a_x = c.X - a.X, c_a_y = c.Y - a.Y;
             float alpha = ad_bc * (-d.Y * c_a_x - b.Y * c_a_y);
-            float beta = ad_bc * (d.X * c_a_x + b.X * c_a_y);
             return a + alpha * b;
         }
 

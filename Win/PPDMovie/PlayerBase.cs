@@ -123,8 +123,6 @@ namespace PPDMovie
             vertices ??= device.GetModule<ShaderCommon>().CreateVertex(4);
             float width = MovieDisplayWidth;
             float height = MovieDisplayHeight;
-            float textureWidth = MovieDisplayWidth;
-            float textureHeight = MovieDisplayHeight;
             var scale = new Vector2(MovieDisplayWidth / 800, MovieDisplayHeight / 450);
             var left = trimmingdata.GetLeftTrimming(MovieWidth);
             var right = trimmingdata.GetRightTrimming(MovieWidth);

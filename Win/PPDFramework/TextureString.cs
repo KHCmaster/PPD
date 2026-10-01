@@ -246,7 +246,6 @@ namespace PPDFramework
                     {
                         chars[i].Position = new Vector2((size.Width - tempx) / 2 + chars[i].Position.X, chars[i].Position.Y);
                     }
-                    startIndex = iter + 1;
                 }
 
                 MultiLineHeight = tempy + (int)(characterHeight * 1.3f);
