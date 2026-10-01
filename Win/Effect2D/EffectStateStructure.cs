@@ -170,6 +170,21 @@ namespace Effect2D
         }
 
         /// <summary>
+        /// 途中の状態を、このインスタンスに書き込みます（毎フレームの更新で新しいインスタンスを作らないため）。
+        /// </summary>
+        /// <param name="start">開始の状態（ブレンドモードもこちらを使う）</param>
+        /// <param name="ratios">比（RatioType の値の順）</param>
+        /// <param name="end">終了の状態</param>
+        internal void SetMixedState(EffectStateStructure start, ReadOnlySpan<float> ratios, EffectStateStructure end)
+        {
+            BlendMode = start.BlendMode;
+            for (var i = 0; i < data.Length; i++)
+            {
+                data[i] = GetDivision(start.data[i], end.data[i], ratios[i]);
+            }
+        }
+
+        /// <summary>
         /// 合成します。
         /// </summary>
         /// <param name="parent"></param>
@@ -177,14 +192,15 @@ namespace Effect2D
         public void Compose(EffectStateStructure parent)
         {
             var matrix = GetMatrix();
-            if (parent.ComposedMatrices != null)
+            var parentLength = parent.ComposedMatrices?.Length ?? 0;
+            // 前のフレームの配列の長さが同じなら使い回す（要素はすべて書き直す）
+            if (ComposedMatrices == null || ComposedMatrices.Length != parentLength + 1)
             {
-                ComposedMatrices = new Matrix[parent.ComposedMatrices.Length + 1];
-                Array.Copy(parent.ComposedMatrices, ComposedMatrices, parent.ComposedMatrices.Length);
+                ComposedMatrices = new Matrix[parentLength + 1];
             }
-            else
+            if (parentLength > 0)
             {
-                ComposedMatrices = new Matrix[1];
+                Array.Copy(parent.ComposedMatrices, ComposedMatrices, parentLength);
             }
             ComposedMatrices[^1] = matrix;
             ComposedAlpha = Alpha *= parent.Alpha;

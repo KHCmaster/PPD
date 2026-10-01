@@ -23,6 +23,11 @@ namespace Effect2D
     /// </summary>
     public class EffectManager : IEffect
     {
+        // 子のエフェクトがこの数以上のときだけ並列に更新する（少ないときは並列化のコストと確保のほうが大きい）
+        const int ParallelUpdateThreshold = 16;
+        static readonly ParallelOptions parallelOptions = new() { MaxDegreeOfParallelism = Environment.ProcessorCount };
+        Action<IEffect> updateEffect;
+
         /// <summary>
         /// 終了イベント
         /// </summary>
@@ -275,12 +280,29 @@ namespace Effect2D
         private void InnerUpdate()
         {
             EffectStateRatioSet set = Sets.Values[BinaryFinder.FindNearest(Sets.Keys, ref currentFrame)];
-            CurrentState = set.StartState.GetMixedState(set.GetRatios(CurrentFrame), set.EndState);
-            Parallel.ForEach(Effects, new ParallelOptions { MaxDegreeOfParallelism = Environment.ProcessorCount }, effect =>
+            // 毎フレームの確保を避けるため、比は stackalloc で、状態は前のフレームのインスタンスに書き込む
+            Span<float> ratios = stackalloc float[Utility.RatioTypeArray.Length];
+            set.GetRatios(CurrentFrame, ratios);
+            CurrentState ??= new EffectStateStructure();
+            CurrentState.SetMixedState(set.StartState, ratios, set.EndState);
+            if (Effects.Count >= ParallelUpdateThreshold)
             {
-                if (effect.Effects.Count == 0) effect.Update(currentFrame, CurrentState);
-                else effect.Update(currentFrame * effect.FPS / FPS, CurrentState);
-            });
+                updateEffect ??= UpdateEffect;
+                Parallel.ForEach(Effects, parallelOptions, updateEffect);
+            }
+            else
+            {
+                foreach (var effect in Effects)
+                {
+                    UpdateEffect(effect);
+                }
+            }
+        }
+
+        private void UpdateEffect(IEffect effect)
+        {
+            if (effect.Effects.Count == 0) effect.Update(currentFrame, CurrentState);
+            else effect.Update(currentFrame * effect.FPS / FPS, CurrentState);
         }
 
         private static float NormalizeValue(float val, float baseval)
