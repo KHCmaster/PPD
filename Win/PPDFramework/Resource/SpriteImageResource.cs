@@ -9,8 +9,8 @@ namespace PPDFramework.Resource
     class SpriteImageResource : ImageResourceBase
     {
         VertexInfo vertices;
-        ImageResourceBase imageResource;
-        SpriteInfo spriteInfo;
+        readonly ImageResourceBase imageResource;
+        readonly SpriteInfo spriteInfo;
         ImageScale imageScale;
         Vector2 uv;
         Vector2 uvSize;
@@ -124,11 +124,8 @@ namespace PPDFramework.Resource
         protected override void DisposeResource()
         {
             base.DisposeResource();
-            if (vertices != null)
-            {
-                vertices.Dispose();
-                vertices = null;
-            }
+            vertices?.Dispose();
+            vertices = null;
         }
     }
 }

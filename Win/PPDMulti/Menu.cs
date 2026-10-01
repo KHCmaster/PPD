@@ -23,7 +23,7 @@ namespace PPDMulti
 {
     public class Menu : NetworkSceneBase
     {
-        private readonly object syncRoot = new object();
+        private readonly object syncRoot = new();
         enum LastPlayState
         {
             TryToPlayGame = 0,
@@ -71,7 +71,7 @@ namespace PPDMulti
         bool removeFocusToChatComponent;
         bool canPlayMovie;
 
-        GameRule currentRule = new GameRule();
+        GameRule currentRule = new();
 
         Logger logger;
 
@@ -107,10 +107,7 @@ namespace PPDMulti
             AddProcessor<ChangeUserStateNetworkData>(networkData =>
             {
                 var user = FindUser(networkData.Id);
-                if (user != null)
-                {
-                    user.CurrentState = networkData.State;
-                }
+                user?.CurrentState = networkData.State;
             });
             AddProcessor<GoToPlayNetworkData>(networkData =>
             {
@@ -169,10 +166,7 @@ namespace PPDMulti
             AddProcessor<HasSongNetworkData>(networkData =>
             {
                 var user = FindUser(networkData.Id);
-                if (user != null)
-                {
-                    user.HasSong = true;
-                }
+                user?.HasSong = true;
             });
             AddProcessor<ChangeLeaderNetworkData>(networkData =>
             {
@@ -196,10 +190,7 @@ namespace PPDMulti
             AddProcessor<PingUserNetworkData>(networkData =>
             {
                 var user = FindUser(networkData.Id);
-                if (user != null)
-                {
-                    user.Ping = networkData.Ping;
-                }
+                user?.Ping = networkData.Ping;
             });
             AddProcessor<GoToPlayPrepareNetworkData>(networkData =>
             {
@@ -346,7 +337,7 @@ namespace PPDMulti
 
             version = FileVersionInfo.GetVersionInfo(Assembly.GetAssembly(this.GetType()).Location).FileVersion;
 
-            userList = new ChangableList<User>();
+            userList = [];
             userList.ItemChanged += userList_ItemChanged;
 
             movieManager = new MovieManager(device, GameHost);
@@ -454,10 +445,7 @@ namespace PPDMulti
             byteReader = new TcpByteReader();
             byteReader.ByteReaded += TcpByteReader_ByteReaded;
 
-            if (server != null)
-            {
-                server.Start();
-            }
+            server?.Start();
             client.Start();
 
             if (client.HasConnection)
@@ -676,7 +664,7 @@ namespace PPDMulti
         private void ProcessCommand(string text)
         {
             var splits = text.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries);
-            var command = splits[0].Substring(1);
+            var command = splits[0][1..];
             string[] args = new string[splits.Length - 1];
             Array.Copy(splits, 1, args, 0, args.Length);
             switch (command)
@@ -768,7 +756,7 @@ namespace PPDMulti
         private void ProcessPrivateMessage(string text)
         {
             var split = text.Split(new string[] { " " }, StringSplitOptions.None);
-            var target = split[0].Substring(1);
+            var target = split[0][1..];
             var message = string.Join(" ", split, 1, split.Length - 1);
             var user = userList.Find(u => u.AccountId == target);
             if (user != null)
@@ -867,10 +855,7 @@ namespace PPDMulti
 
             ProcessNetworkData();
             focusManager.ProcessInput(inputInfo);
-            if (movieManager.Movie != null)
-            {
-                movieManager.Movie.Update();
-            }
+            movieManager.Movie?.Update();
             if (waitingGoToPlay && !fadeOutCalled && DateTime.Now - goToPlayPrepareTime >= TimeSpan.FromSeconds(4.8))
             {
                 movieManager.FadeOut(0.5f);
@@ -1052,16 +1037,10 @@ namespace PPDMulti
         protected override void DisposeResource()
         {
             Sound.DeleteSound(notifySoundPath);
-            if (timer != null)
-            {
-                timer.Dispose();
-                timer = null;
-            }
-            if (server != null)
-            {
-                server.Close();
-                server = null;
-            }
+            timer?.Dispose();
+            timer = null;
+            server?.Close();
+            server = null;
             client.Close();
             client.Closed -= client_Closed;
             client.Read -= client_Read;

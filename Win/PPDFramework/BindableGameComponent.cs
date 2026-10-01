@@ -8,7 +8,7 @@ namespace PPDFramework
     /// </summary>
     public abstract class BindableGameComponent : GameComponent
     {
-        List<Binding> bindings;
+        readonly List<Binding> bindings;
 
         /// <summary>
         /// コンストラクタです。
@@ -16,7 +16,7 @@ namespace PPDFramework
         /// <param name="device"></param>
         protected BindableGameComponent(PPDDevice device) : base(device)
         {
-            bindings = new List<Binding>();
+            bindings = [];
         }
 
         /// <summary>

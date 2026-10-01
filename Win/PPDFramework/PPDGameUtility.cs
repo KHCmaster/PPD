@@ -12,7 +12,7 @@ namespace PPDFramework
     /// </summary>
     public class PPDGameUtility
     {
-        List<ItemInfo> items;
+        readonly List<ItemInfo> items;
         ModInfo[] appliedMods;
 
         /// <summary>
@@ -20,7 +20,7 @@ namespace PPDFramework
         /// </summary>
         public PPDGameUtility()
         {
-            items = new List<ItemInfo>();
+            items = [];
         }
 
         /// <summary>

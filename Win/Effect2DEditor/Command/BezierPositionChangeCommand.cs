@@ -11,7 +11,7 @@ namespace Effect2DEditor.Command
         bool lastbcpsavailable;
         BezierControlPoint[] lastbcps;
         BezierControlPoint[] bcps;
-        SelectedManager SManager;
+        readonly SelectedManager SManager;
         public BezierPositionChangeCommand(EffectManager manager, string exp, SelectedManager SManager, BezierControlPoint[] bcps)
             : base(manager, exp)
         {
@@ -57,16 +57,16 @@ namespace Effect2DEditor.Command
             SManager.Set.BAnalyzer = new BezierAnalyzer(bcps);
             SManager.Set.StartState.X = bcps[0].Second.X;
             SManager.Set.StartState.Y = bcps[0].Second.Y;
-            SManager.Set.EndState.X = bcps[bcps.Length - 1].Second.X;
-            SManager.Set.EndState.Y = bcps[bcps.Length - 1].Second.Y;
+            SManager.Set.EndState.X = bcps[^1].Second.X;
+            SManager.Set.EndState.Y = bcps[^1].Second.Y;
         }
         public void SpecialExecute()
         {
             SManager.Set.BAnalyzer = new BezierAnalyzer(bcps);
             SManager.Set.StartState.X = bcps[0].Second.X;
             SManager.Set.StartState.Y = bcps[0].Second.Y;
-            SManager.Set.EndState.X = bcps[bcps.Length - 1].Second.X;
-            SManager.Set.EndState.Y = bcps[bcps.Length - 1].Second.Y;
+            SManager.Set.EndState.X = bcps[^1].Second.X;
+            SManager.Set.EndState.Y = bcps[^1].Second.Y;
         }
     }
 }

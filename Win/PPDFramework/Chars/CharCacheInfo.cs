@@ -103,18 +103,12 @@ namespace PPDFramework.Chars
             base.DisposeResource();
             if (PPDSetting.Setting.CharacterTexturePackingDisabled)
             {
-                if (Texture != null)
-                {
-                    Texture.Dispose();
-                    Texture = null;
-                }
+                Texture?.Dispose();
+                Texture = null;
             }
             else
             {
-                if (availableSpace != null)
-                {
-                    availableSpace.Dispose();
-                }
+                availableSpace?.Dispose();
             }
         }
 

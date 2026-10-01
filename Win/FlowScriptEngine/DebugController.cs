@@ -6,7 +6,7 @@ namespace FlowScriptEngine
     public class DebugController : IDisposable
     {
         private OperationType operationType;
-        private readonly ManualResetEvent resetEvent = new ManualResetEvent(false);
+        private readonly ManualResetEvent resetEvent = new(false);
         private FlowSourceManager currentFlowSourceManager;
 
         public event Action<string, FlowSourceManager> SourceChanged;

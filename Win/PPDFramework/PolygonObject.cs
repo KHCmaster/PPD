@@ -10,8 +10,8 @@ namespace PPDFramework
     /// </summary>
     public class PolygonObject : GameComponent
     {
-        ImageResourceBase imageResource;
-        Vertex.VertexInfo vertex;
+        readonly ImageResourceBase imageResource;
+        readonly Vertex.VertexInfo vertex;
 
         /// <summary>
         /// コンストラクタです。

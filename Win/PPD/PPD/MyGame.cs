@@ -33,7 +33,7 @@ namespace PPD
         TimerManager timerManager;
 
         KeyConfigManager keyConfigManager;
-        GaussianFilter gaussianFilter = new GaussianFilter();
+        readonly GaussianFilter gaussianFilter = new();
 
         NotifyControl notifyControl;
 
@@ -156,7 +156,7 @@ namespace PPD
             currentOverray = new CloseOverlay(device);
             SetPropertyToScene(currentOverray);
             currentOverray.ResourceManager = new PPDFramework.Resource.ResourceManager(new Tuple<PPDFramework.Resource.ResourceManager, bool>[] {
-                new Tuple<PPDFramework.Resource.ResourceManager, bool>( homeResourceManager,false)
+                new( homeResourceManager,false)
             });
             currentOverray.Load();
             currentOverray.PreScreenFilters.Add(gaussianFilter);
@@ -210,18 +210,12 @@ namespace PPD
 
         void control_EnabledChanged(object sender, EventArgs e)
         {
-            if (TextBoxEnabledChanged != null)
-            {
-                TextBoxEnabledChanged.Invoke(this, EventArgs.Empty);
-            }
+            TextBoxEnabledChanged?.Invoke(this, EventArgs.Empty);
         }
 
         void control_IMEStarted(object sender, EventArgs e)
         {
-            if (IMEStarted != null)
-            {
-                IMEStarted.Invoke(this, EventArgs.Empty);
-            }
+            IMEStarted?.Invoke(this, EventArgs.Empty);
         }
 
         private void SetPropertyToScene(ISceneBase scene)
@@ -254,10 +248,7 @@ namespace PPD
                 input.GetInput(KeyConfigManager.CurrentConfig.Keys,
                     KeyConfigManager.CurrentConfig.Buttons, out inputInfo);
             }
-            if (inputInfo == null)
-            {
-                inputInfo = EmptyInputInfo.Instance;
-            }
+            inputInfo ??= EmptyInputInfo.Instance;
             if (ignoreInputCount < 30)
             {
                 inputInfo = EmptyInputInfo.Instance;
@@ -288,10 +279,7 @@ namespace PPD
                 else
                 {
                     sceneManager.Update(EmptyInputInfo.Instance, MouseInfo.Empty, sound);
-                    if (currentOverray != null)
-                    {
-                        currentOverray.Update(Form.IsFirstCloseRequierd, inputInfo, mouseInfo);
-                    }
+                    currentOverray?.Update(Form.IsFirstCloseRequierd, inputInfo, mouseInfo);
                     gaussianFilter.Disperson += 1;
                     if (gaussianFilter.Disperson >= 100)
                     {
@@ -328,10 +316,7 @@ namespace PPD
                 sceneManager.Draw();
                 if (Form.IsCloseRequired)
                 {
-                    if (currentOverray != null)
-                    {
-                        currentOverray.Draw();
-                    }
+                    currentOverray?.Draw();
                 }
             }
             notifyControl.Draw();
@@ -358,10 +343,7 @@ namespace PPD
 
         private void DisposeIDisposable(IDisposable dispo)
         {
-            if (dispo != null)
-            {
-                dispo.Dispose();
-            }
+            dispo?.Dispose();
         }
 
         private void DisposeScene(ISceneBase scene)
@@ -369,10 +351,7 @@ namespace PPD
             if (scene != null)
             {
                 scene.Dispose();
-                if (scene.ResourceManager != null)
-                {
-                    scene.ResourceManager.Dispose();
-                }
+                scene.ResourceManager?.Dispose();
             }
         }
 

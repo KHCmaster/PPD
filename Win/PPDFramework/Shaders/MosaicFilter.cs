@@ -84,41 +84,20 @@ namespace PPDFramework.Shaders
         /// </summary>
         protected override void DisposeResource()
         {
-            if (effect != null)
-            {
-                effect.Dispose();
-                effect = null;
-            }
-            if (filterTextureHandle != null)
-            {
-                filterTextureHandle.Dispose();
-                filterTextureHandle = null;
-            }
-            if (lastRenderTargetTextureHandle != null)
-            {
-                lastRenderTargetTextureHandle.Dispose();
-                lastRenderTargetTextureHandle = null;
-            }
-            if (xTextureHandle != null)
-            {
-                xTextureHandle.Dispose();
-                xTextureHandle = null;
-            }
-            if (projectionHandle != null)
-            {
-                projectionHandle.Dispose();
-                projectionHandle = null;
-            }
-            if (sizeHandle != null)
-            {
-                sizeHandle.Dispose();
-                sizeHandle = null;
-            }
-            if (widthHeightHandle != null)
-            {
-                widthHeightHandle.Dispose();
-                widthHeightHandle = null;
-            }
+            effect?.Dispose();
+            effect = null;
+            filterTextureHandle?.Dispose();
+            filterTextureHandle = null;
+            lastRenderTargetTextureHandle?.Dispose();
+            lastRenderTargetTextureHandle = null;
+            xTextureHandle?.Dispose();
+            xTextureHandle = null;
+            projectionHandle?.Dispose();
+            projectionHandle = null;
+            sizeHandle?.Dispose();
+            sizeHandle = null;
+            widthHeightHandle?.Dispose();
+            widthHeightHandle = null;
         }
     }
 }

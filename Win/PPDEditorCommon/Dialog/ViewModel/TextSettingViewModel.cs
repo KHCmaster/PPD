@@ -25,8 +25,8 @@ namespace PPDEditorCommon.Dialog.ViewModel
         {
             get
             {
-                return changedCommand ?? (changedCommand = new RelayCommand(
-                    ChangedCommand_Execute));
+                return changedCommand ??= new RelayCommand(
+                    ChangedCommand_Execute);
             }
         }
 

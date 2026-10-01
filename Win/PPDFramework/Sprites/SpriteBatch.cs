@@ -13,19 +13,19 @@ namespace PPDFramework.Sprites
 {
     class SpriteBatch : DisposableComponent
     {
-        ColoredTexturedVertex[] _vertices = new ColoredTexturedVertex[1024 * 32];
-        int[] _indices = new int[1024 * 32 * 3];
+        readonly ColoredTexturedVertex[] _vertices = new ColoredTexturedVertex[1024 * 32];
+        readonly int[] _indices = new int[1024 * 32 * 3];
 
-        PPDDevice device;
+        readonly PPDDevice device;
         VertexBufferBase vertices;
         IndexBufferBase indices;
-        List<SpriteInfo> spriteInfos;
-        List<ScissorRectState> scissorRectStates;
+        readonly List<SpriteInfo> spriteInfos;
+        readonly List<ScissorRectState> scissorRectStates;
         Effect.EffectBase effect;
         Effect.EffectHandleBase textureHandle;
         Effect.EffectHandleBase overlayColorHandle;
         Effect.EffectHandleBase projectionHandle;
-        Dictionary<bool, string> techniques;
+        readonly Dictionary<bool, string> techniques;
 
         public SpriteBatch(PPDDevice device)
         {
@@ -38,8 +38,8 @@ namespace PPDFramework.Sprites
 
             vertices = Vertex.VertexBufferFactoryManager.Factory.Create(device, _vertices.Length * ColoredTexturedVertex.Size);
             indices = Vertex.IndexBufferFactoryManager.Factory.Create(device, _indices.Length * sizeof(int));
-            spriteInfos = new List<SpriteInfo>();
-            scissorRectStates = new List<ScissorRectState>();
+            spriteInfos = [];
+            scissorRectStates = [];
             techniques = new Dictionary<bool, string>
             {
                 {false, "BasicEffectPADisabled"},
@@ -103,7 +103,7 @@ namespace PPDFramework.Sprites
                 }
             }
             WriteToVertex(spriteIndex, spriteInfos.Count - spriteIndex, ref vertexEndPos, ref indexEndPos);
-            batches.Add(new BatchInfo(spriteInfos[spriteInfos.Count - 1], vertexPos, vertexEndPos - vertexPos, indexPos, indexEndPos - indexPos, lastScissorRectIndex));
+            batches.Add(new BatchInfo(spriteInfos[^1], vertexPos, vertexEndPos - vertexPos, indexPos, indexEndPos - indexPos, lastScissorRectIndex));
             PrepareBatchDraw(vertexEndPos, indexEndPos, batches[0].PA);
             SetScissorImpl(0);
             lastScissorRectIndex = 0;
@@ -212,36 +212,18 @@ namespace PPDFramework.Sprites
         protected override void DisposeResource()
         {
             base.DisposeResource();
-            if (textureHandle != null)
-            {
-                textureHandle.Dispose();
-                textureHandle = null;
-            }
-            if (overlayColorHandle != null)
-            {
-                overlayColorHandle.Dispose();
-                overlayColorHandle = null;
-            }
-            if (projectionHandle != null)
-            {
-                projectionHandle.Dispose();
-                projectionHandle = null;
-            }
-            if (effect != null)
-            {
-                effect.Dispose();
-                effect = null;
-            }
-            if (vertices != null)
-            {
-                vertices.Dispose();
-                vertices = null;
-            }
-            if (indices != null)
-            {
-                indices.Dispose();
-                indices = null;
-            }
+            textureHandle?.Dispose();
+            textureHandle = null;
+            overlayColorHandle?.Dispose();
+            overlayColorHandle = null;
+            projectionHandle?.Dispose();
+            projectionHandle = null;
+            effect?.Dispose();
+            effect = null;
+            vertices?.Dispose();
+            vertices = null;
+            indices?.Dispose();
+            indices = null;
         }
 
         class SpriteInfo

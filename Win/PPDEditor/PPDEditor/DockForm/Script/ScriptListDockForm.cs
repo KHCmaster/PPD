@@ -332,10 +332,7 @@ namespace PPDEditor.DockForm.Script
             {
                 var name = Path.GetFileNameWithoutExtension(childDirPath);
                 var node = FindNodeByText(nodes, name);
-                if (node == null)
-                {
-                    node = CreateFolderNode(nodes, name);
-                }
+                node ??= CreateFolderNode(nodes, name);
                 ReadNodes(node.Nodes, childDirPath);
             }
 

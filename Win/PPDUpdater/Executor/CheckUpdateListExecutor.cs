@@ -10,7 +10,7 @@ namespace PPDUpdater.Executor
     class CheckUpdateListExecutor : CExecutor
     {
         // HttpWebRequest と同じく Cookie は保持しない
-        private static readonly HttpClient client = new HttpClient(new HttpClientHandler { UseCookies = false });
+        private static readonly HttpClient client = new(new HttpClientHandler { UseCookies = false });
 
         public string Url
         {
@@ -28,7 +28,7 @@ namespace PPDUpdater.Executor
             : base(control)
         {
             this.Url = url;
-            UpdateInfos = new List<UpdateInfo>();
+            UpdateInfos = [];
         }
 
         public override void Execute()

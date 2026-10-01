@@ -13,7 +13,7 @@ namespace FlowScriptAutoFastGenerator
 {
     class Program
     {
-        static HashSet<ClassInfo> errorFiles = new HashSet<ClassInfo>();
+        static readonly HashSet<ClassInfo> errorFiles = [];
 
 
 #if DEBUG
@@ -88,7 +88,7 @@ namespace FlowScriptAutoFastGenerator
                         if (!classInfo.HasPartial)
                         {
                             string content;
-                            using (StreamReader sr = new StreamReader(classInfo.FilePath, Encoding.UTF8))
+                            using (StreamReader sr = new(classInfo.FilePath, Encoding.UTF8))
                             {
                                 content = sr.ReadToEnd();
                             }
@@ -97,7 +97,7 @@ namespace FlowScriptAutoFastGenerator
                             var m = classRegex.Match(content);
                             if (m.Success)
                             {
-                                content = content.Substring(0, m.Groups[0].Index) + "public partial class " + classInfo.ClassName + content.Substring(m.Groups[0].Index + m.Groups[0].Length);
+                                content = content[..m.Groups[0].Index] + "public partial class " + classInfo.ClassName + content[(m.Groups[0].Index + m.Groups[0].Length)..];
                                 UpdateContent(content, classInfo.FilePath);
                             }
                         }
@@ -156,7 +156,7 @@ namespace FlowScriptAutoFastGenerator
             {
                 return name;
             }
-            return name.Substring(0, backQuoteIndex);
+            return name[..backQuoteIndex];
         }
 
         static void UpdateContent(string content, string filePath)
@@ -179,7 +179,7 @@ namespace FlowScriptAutoFastGenerator
                     return;
                 }
             }
-            using (StreamWriter sw = new StreamWriter(filePath, false, encoding))
+            using (StreamWriter sw = new(filePath, false, encoding))
             {
                 sw.Write(content);
             }
@@ -187,7 +187,7 @@ namespace FlowScriptAutoFastGenerator
 
         static string GetRelativePath(string dir, string filePath)
         {
-            return filePath.Substring(dir.Length + 1);
+            return filePath[(dir.Length + 1)..];
         }
 
         static void HideAutoFastCs(string projectDir)
@@ -261,11 +261,11 @@ namespace FlowScriptAutoFastGenerator
                     compileElem.AppendChild(newElem);
                 }
 
-                using (MemoryStream stream = new MemoryStream())
+                using (MemoryStream stream = new())
                 {
                     doc.Save(stream);
                     var content = Encoding.UTF8.GetString(stream.ToArray());
-                    content = content.Substring(1);
+                    content = content[1..];
                     UpdateContent(content, filePath, false);
                 }
                 break;
@@ -308,7 +308,7 @@ namespace FlowScriptAutoFastGenerator
 
             foreach (string filePath in fileList)
             {
-                using (StreamReader sr = new StreamReader(filePath, Encoding.UTF8))
+                using (StreamReader sr = new(filePath, Encoding.UTF8))
                 {
                     var content = sr.ReadToEnd();
                     Match classMatch = classRegex.Match(content),
@@ -346,8 +346,8 @@ namespace FlowScriptAutoFastGenerator
 
         class ClassInfo
         {
-            List<string> errors;
-            HashSet<string> setValues;
+            readonly List<string> errors;
+            readonly HashSet<string> setValues;
 
             public string[] Errors
             {
@@ -364,8 +364,8 @@ namespace FlowScriptAutoFastGenerator
 
             public ClassInfo()
             {
-                errors = new List<string>();
-                setValues = new HashSet<string>();
+                errors = [];
+                setValues = [];
             }
 
             public string FilePath

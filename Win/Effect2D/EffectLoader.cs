@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Xml;
 
 namespace Effect2D
@@ -26,7 +27,7 @@ namespace Effect2D
     /// </summary>
     public static class EffectLoader
     {
-        static Hashtable table = new Hashtable(128);
+        static readonly Hashtable table = new(128);
         /// <summary>
         /// エフェクトを読み込む
         /// </summary>
@@ -126,7 +127,7 @@ namespace Effect2D
 
         private static void CallReadResourceCallback(IEffect em, ReadResourceCallBack callback)
         {
-            foreach (BaseEffect effect in em.Effects)
+            foreach (BaseEffect effect in em.Effects.Cast<BaseEffect>())
             {
                 if (effect.Effects.Count == 0)
                 {

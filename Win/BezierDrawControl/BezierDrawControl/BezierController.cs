@@ -54,7 +54,7 @@ namespace BezierDrawControl
         }
 
         Mode mode = Mode.None;
-        DrawMode dmode = DrawMode.Anchor | DrawMode.Line;
+        readonly DrawMode dmode = DrawMode.Anchor | DrawMode.Line;
         TransformMode tmode = TransformMode.None;
         bool fixAspect;
         TransformBezierControlPoints transBeziers;
@@ -63,8 +63,8 @@ namespace BezierDrawControl
 
         private bool changedFlag;
         private bool mouseDown;
-        private RingBuffer<List<BezierControlPoint>> bufferData = new RingBuffer<List<BezierControlPoint>>(100);
-        private List<BezierControlPoint> data = new List<BezierControlPoint>();
+        private readonly RingBuffer<List<BezierControlPoint>> bufferData = new(100);
+        private List<BezierControlPoint> data = [];
         private BezierControlPoint selectedPoint;
 
         private BezierControlPoint SelectedPoint
@@ -142,10 +142,7 @@ namespace BezierDrawControl
             }
             set
             {
-                if (transBeziers != null)
-                {
-                    transBeziers.TransformRectange.Scale = value;
-                }
+                transBeziers?.TransformRectange.Scale = value;
             }
         }
 
@@ -157,10 +154,7 @@ namespace BezierDrawControl
             }
             set
             {
-                if (transBeziers != null)
-                {
-                    transBeziers.TransformRectange.Rotation = value;
-                }
+                transBeziers?.TransformRectange.Rotation = value;
             }
         }
 
@@ -172,10 +166,7 @@ namespace BezierDrawControl
             }
             set
             {
-                if (transBeziers != null)
-                {
-                    transBeziers.TransformRectange.Move = value;
-                }
+                transBeziers?.TransformRectange.Move = value;
             }
         }
 
@@ -587,7 +578,7 @@ namespace BezierDrawControl
                 BezierControlPoint next = null;
                 if (IsOnLine(downpos, out BezierControlPoint previous, out float t))
                 {
-                    if (data.Count >= 2 && previous == data[0] && data[0] != data[data.Count - 1] && t >= 0.95)
+                    if (data.Count >= 2 && previous == data[0] && data[0] != data[^1] && t >= 0.95)
                     {
                         //loop
                         SelectedPoint = previous;
@@ -1241,9 +1232,9 @@ namespace BezierDrawControl
                     data[iter] = bcp;
                     iter++;
                 }
-                if (data.Count >= 3 && data[0].Serialize() == data[data.Count - 1].Serialize())
+                if (data.Count >= 3 && data[0].Serialize() == data[^1].Serialize())
                 {
-                    data[data.Count - 1] = data[0];
+                    data[^1] = data[0];
                 }
                 bufferData.Add(Copy(data));
                 OnEdited(EditType.TransformEnd);
@@ -1254,14 +1245,14 @@ namespace BezierDrawControl
         private List<BezierControlPoint> Copy(List<BezierControlPoint> src)
         {
             var ret = new List<BezierControlPoint>(src.Count);
-            bool loop = (src.Count >= 3 && src[0].Serialize() == src[src.Count - 1].Serialize());
+            bool loop = (src.Count >= 3 && src[0].Serialize() == src[^1].Serialize());
             foreach (BezierControlPoint bcp in src)
             {
                 ret.Add(bcp.Clone());
             }
             if (loop)
             {
-                ret[ret.Count - 1] = ret[0];
+                ret[^1] = ret[0];
             }
             return ret;
         }
@@ -1285,18 +1276,12 @@ namespace BezierDrawControl
 
         private void OnBeforePaint(IBezierDrawContext context)
         {
-            if (BeforePaint != null)
-            {
-                BeforePaint.Invoke(this, new UserPaintEventArgs(context));
-            }
+            BeforePaint?.Invoke(this, new UserPaintEventArgs(context));
         }
 
         private void OnAfterPaint(IBezierDrawContext context)
         {
-            if (AfterPaint != null)
-            {
-                AfterPaint.Invoke(this, new UserPaintEventArgs(context));
-            }
+            AfterPaint?.Invoke(this, new UserPaintEventArgs(context));
         }
 
         private void OnEdited(EditType editType)

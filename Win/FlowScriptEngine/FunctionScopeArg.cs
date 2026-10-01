@@ -4,7 +4,7 @@ namespace FlowScriptEngine
 {
     public class FunctionScopeArg
     {
-        private Action<FunctionScopeArg> action;
+        private readonly Action<FunctionScopeArg> action;
 
         public string EventName
         {
@@ -33,10 +33,7 @@ namespace FlowScriptEngine
 
         public void OnEndInvoked()
         {
-            if (action != null)
-            {
-                action.Invoke(this);
-            }
+            action?.Invoke(this);
         }
     }
 }

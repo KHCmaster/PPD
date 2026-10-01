@@ -11,7 +11,7 @@ namespace PPDFramework.Vertex.DX11
     /// </summary>
     class VertexBuffer : VertexBufferBase
     {
-        readonly object writeLock = new object();
+        readonly object writeLock = new();
         int dirtyStart;
         int dirtyEnd;
 
@@ -78,11 +78,8 @@ namespace PPDFramework.Vertex.DX11
 
         protected override void DisposeResource()
         {
-            if (_Buffer != null)
-            {
-                _Buffer.Dispose();
-                _Buffer = null;
-            }
+            _Buffer?.Dispose();
+            _Buffer = null;
         }
     }
 }

@@ -69,11 +69,8 @@ namespace PPDFramework.Shaders
         /// </summary>
         protected override void DisposeResource()
         {
-            if (alphaBlend != null)
-            {
-                alphaBlend.Dispose();
-                alphaBlend = null;
-            }
+            alphaBlend?.Dispose();
+            alphaBlend = null;
         }
 
         abstract class AlphaBlendBase : DisposableComponent
@@ -88,7 +85,7 @@ namespace PPDFramework.Shaders
                 get { return maskHandlers.Peek().MaskType; }
             }
 
-            Stack<MaskHandler> maskHandlers;
+            readonly Stack<MaskHandler> maskHandlers;
 
             protected AlphaBlendBase()
             {
@@ -116,7 +113,7 @@ namespace PPDFramework.Shaders
 
             class MaskHandler : DisposableComponent
             {
-                AlphaBlendBase alphaBlend;
+                readonly AlphaBlendBase alphaBlend;
 
                 public MaskType MaskType
                 {
@@ -139,7 +136,7 @@ namespace PPDFramework.Shaders
 
         class AlphaBlendShading : AlphaBlendBase
         {
-            PPDDevice device;
+            readonly PPDDevice device;
             EffectBase effect;
             EffectHandleBase lastRenderTargetTextureHandle;
             EffectHandleBase textureHandle;
@@ -148,8 +145,8 @@ namespace PPDFramework.Shaders
             EffectHandleBase widthHeightHandle;
             EffectHandleBase projectionHandle;
             EffectHandleBase filterInfoHandle;
-            Dictionary<Tuple<BlendMode, bool, bool, ColorFilterType>, string> techniqueNames;
-            Dictionary<Tuple<MaskType, bool>, string> maskTechniqueNames;
+            readonly Dictionary<Tuple<BlendMode, bool, bool, ColorFilterType>, string> techniqueNames;
+            readonly Dictionary<Tuple<MaskType, bool>, string> maskTechniqueNames;
 
             public AlphaBlendShading(PPDDevice device)
             {
@@ -164,7 +161,7 @@ namespace PPDFramework.Shaders
                 filterInfoHandle = effect.GetParameter("FilterInfo");
                 effect.SetValue(widthHeightHandle, new Vector2(device.Width, device.Height));
                 effect.SetValue(projectionHandle, device.Projection);
-                techniqueNames = new Dictionary<Tuple<BlendMode, bool, bool, ColorFilterType>, string>();
+                techniqueNames = [];
                 foreach (var blendMode in (BlendMode[])Enum.GetValues(typeof(BlendMode)))
                 {
                     foreach (var isPA in new bool[] { true, false })
@@ -184,7 +181,7 @@ namespace PPDFramework.Shaders
 
                     }
                 }
-                maskTechniqueNames = new Dictionary<Tuple<MaskType, bool>, string>();
+                maskTechniqueNames = [];
                 foreach (var maskType in (MaskType[])Enum.GetValues(typeof(MaskType)))
                 {
                     foreach (var isMasking in new bool[] { true, false })
@@ -394,46 +391,22 @@ namespace PPDFramework.Shaders
 
             protected override void DisposeResource()
             {
-                if (effect != null)
-                {
-                    effect.Dispose();
-                    effect = null;
-                }
-                if (lastRenderTargetTextureHandle != null)
-                {
-                    lastRenderTargetTextureHandle.Dispose();
-                    lastRenderTargetTextureHandle = null;
-                }
-                if (textureHandle != null)
-                {
-                    textureHandle.Dispose();
-                    textureHandle = null;
-                }
-                if (maskTextureHandle != null)
-                {
-                    maskTextureHandle.Dispose();
-                    maskTextureHandle = null;
-                }
-                if (drawInfoHandle != null)
-                {
-                    drawInfoHandle.Dispose();
-                    drawInfoHandle = null;
-                }
-                if (widthHeightHandle != null)
-                {
-                    widthHeightHandle.Dispose();
-                    widthHeightHandle = null;
-                }
-                if (projectionHandle != null)
-                {
-                    projectionHandle.Dispose();
-                    projectionHandle = null;
-                }
-                if (filterInfoHandle != null)
-                {
-                    filterInfoHandle.Dispose();
-                    filterInfoHandle = null;
-                }
+                effect?.Dispose();
+                effect = null;
+                lastRenderTargetTextureHandle?.Dispose();
+                lastRenderTargetTextureHandle = null;
+                textureHandle?.Dispose();
+                textureHandle = null;
+                maskTextureHandle?.Dispose();
+                maskTextureHandle = null;
+                drawInfoHandle?.Dispose();
+                drawInfoHandle = null;
+                widthHeightHandle?.Dispose();
+                widthHeightHandle = null;
+                projectionHandle?.Dispose();
+                projectionHandle = null;
+                filterInfoHandle?.Dispose();
+                filterInfoHandle = null;
             }
         }
     }

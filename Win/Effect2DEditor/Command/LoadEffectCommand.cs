@@ -6,9 +6,9 @@ namespace Effect2DEditor.Command
 {
     class LoadEffectCommand : CommandBase
     {
-        int insertindex;
-        string filename;
-        SortedList<string, Image> ImagePool;
+        readonly int insertindex;
+        readonly string filename;
+        readonly SortedList<string, Image> ImagePool;
         public LoadEffectCommand(EffectManager manager, string exp, int insertindex, string filename, SortedList<string, Image> ImagePool)
             : base(manager, exp)
         {

@@ -26,7 +26,7 @@ namespace FlowScriptDrawControl.Control
         private Color gridColor = Color.FromRgb(0x91, 0x91, 0x91);
         private int scale = 10;
 
-        private Regex queryRegex = new Regex(@"^@(\d+)\[(In|Out)\]\[(\w+)\]$", RegexOptions.IgnoreCase);
+        private readonly Regex queryRegex = new(@"^@(\d+)\[(In|Out)\]\[(\w+)\]$", RegexOptions.IgnoreCase);
 
         private double currentScale = 1;
         private double currentShiftX;
@@ -43,16 +43,16 @@ namespace FlowScriptDrawControl.Control
         private KeyValuePair<SourceItemControl, ArrowControl>[] currentDestItems;
         private ItemPositionManager itemPositionManager;
 
-        private SelectableManager selectableManager;
-        private Command.CommandManager commandManager;
-        private IdManager idManager;
+        private readonly SelectableManager selectableManager;
+        private readonly Command.CommandManager commandManager;
+        private readonly IdManager idManager;
 
         public event Action<string, Dictionary<string, string>> SelectionChanged;
         public event Func<string, string, bool> CanConvert;
         public event Action Modified;
         public event Func<string, Source> GetSource;
 
-        private Guid guid = Guid.NewGuid();
+        private readonly Guid guid = Guid.NewGuid();
 
         Timer autoFocusTimer;
         Timer moveTimer;
@@ -249,11 +249,8 @@ namespace FlowScriptDrawControl.Control
             }
             finally
             {
-                if (currentItem != null)
-                {
-                    currentItem.CurrentItem.IsConnectable = false;
-                    currentItem = null;
-                }
+                currentItem?.CurrentItem.IsConnectable = false;
+                currentItem = null;
                 itemPositionManager = null;
                 DisableIsConnectable(true);
                 DisableMove();
@@ -365,11 +362,8 @@ namespace FlowScriptDrawControl.Control
         }
         private void DisableConnect()
         {
-            if (currentItem != null)
-            {
-                currentItem.CurrentItem.IsConnectable = false;
-                currentItem = null;
-            }
+            currentItem?.CurrentItem.IsConnectable = false;
+            currentItem = null;
             if (currentArrow != null)
             {
                 currentArrow.SrcItem = null;
@@ -906,8 +900,7 @@ namespace FlowScriptDrawControl.Control
             var scopes = new HashSet<Scope>();
             foreach (Selectable selectable in selectableManager.SelectedSelectables)
             {
-                var scopeChild = selectable as ScopeChild;
-                if (scopeChild == null)
+                if (selectable is not ScopeChild scopeChild)
                 {
                     continue;
                 }
@@ -1783,8 +1776,7 @@ namespace FlowScriptDrawControl.Control
                     return null;
                 }
 
-                var source = selectableManager.SelectedSelectables[0] as Source;
-                if (source == null)
+                if (selectableManager.SelectedSelectables[0] is not Source source)
                 {
                     return null;
                 }

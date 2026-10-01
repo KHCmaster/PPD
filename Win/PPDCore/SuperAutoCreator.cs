@@ -27,18 +27,18 @@ namespace PPDCore
             remove { }
         }
 
-        private MarkManager markManager;
-        private EventManager eventManager;
-        private FlowScriptManager scriptManager;
-        private float startTime;
-        private float endTime;
-        private int[] evaPoint;
-        private float safeCoolArea;
-        private float safeGoodArea;
-        private bool includeFine;
-        private ButtonType[] buttons;
-        private ItemType autoType;
-        private ISceneBase scene;
+        private readonly MarkManager markManager;
+        private readonly EventManager eventManager;
+        private readonly FlowScriptManager scriptManager;
+        private readonly float startTime;
+        private readonly float endTime;
+        private readonly int[] evaPoint;
+        private readonly float safeCoolArea;
+        private readonly float safeGoodArea;
+        private readonly bool includeFine;
+        private readonly ButtonType[] buttons;
+        private readonly ItemType autoType;
+        private readonly ISceneBase scene;
 
         public bool AllowAllButtons
         {

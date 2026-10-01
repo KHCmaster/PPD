@@ -28,7 +28,7 @@ namespace Effect2DEditor.DockForm
         public event EventHandler BezierEdited;
         public event EventHandler BezierReset;
 
-        Timer timer;
+        readonly Timer timer;
         string checkBackPath;
 
         const int checksize = 8;
@@ -108,7 +108,7 @@ namespace Effect2DEditor.DockForm
 
         public CanvasDock()
         {
-            ImagePool = new SortedList<string, Image>();
+            ImagePool = [];
             BackGroundColor = Color.White;
 
             InitializeComponent();
@@ -179,10 +179,7 @@ namespace Effect2DEditor.DockForm
 
         void bezierControl1_Edited(object sender, BezierDrawControl.BezierControlPointEditEventArgs e)
         {
-            if (BezierEdited != null)
-            {
-                BezierEdited.Invoke(this, EventArgs.Empty);
-            }
+            BezierEdited?.Invoke(this, EventArgs.Empty);
         }
 
         public void RefreshCanvas()
@@ -235,10 +232,7 @@ namespace Effect2DEditor.DockForm
         {
             var context = ((DXBezierControl.Context)e.Context);
             DrawBack(context.Drawer);
-            if (EffectManager != null)
-            {
-                EffectManager.Draw(Draw);
-            }
+            EffectManager?.Draw(Draw);
             DrawCenter(context);
             DrawBezierMark(context);
         }
@@ -294,7 +288,7 @@ namespace Effect2DEditor.DockForm
             if (bezierControl1.Controller.BCPS != null && bezierControl1.Controller.BCPS.Length >= 2)
             {
                 context.DrawString("S", Color.Black, Font.Height, bezierControl1.Controller.BCPS[0].Second);
-                context.DrawString("T", Color.Black, Font.Height, bezierControl1.Controller.BCPS[bezierControl1.Controller.BCPS.Length - 1].Second);
+                context.DrawString("T", Color.Black, Font.Height, bezierControl1.Controller.BCPS[^1].Second);
             }
         }
 
@@ -309,10 +303,7 @@ namespace Effect2DEditor.DockForm
             if (state == null || state.Alpha <= 0 || state.ScaleX == 0 || state.ScaleY == 0) return;
 
             var ir = bezierControl1.Drawer.ResourceManager.GetResource<ImageResourceBase>(filename);
-            if (ir == null)
-            {
-                ir = ImageResourceFactoryManager.Factory.Create(bezierControl1.Drawer.Device, filename, false);
-            }
+            ir ??= ImageResourceFactoryManager.Factory.Create(bezierControl1.Drawer.Device, filename, false);
             var obj = new CustomEffectObject(bezierControl1.Drawer.Device, bezierControl1.Drawer.ResourceManager, filename, state)
             {
                 Position = new System.Numerics.Vector2(bezierControl1.Width / 2, bezierControl1.Height / 2)
@@ -351,10 +342,7 @@ namespace Effect2DEditor.DockForm
 
         private void リセットするToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (BezierReset != null)
-            {
-                BezierReset.Invoke(this, EventArgs.Empty);
-            }
+            BezierReset?.Invoke(this, EventArgs.Empty);
         }
 
         private void contextMenuStrip1_Opening(object sender, CancelEventArgs e)
@@ -377,9 +365,9 @@ namespace Effect2DEditor.DockForm
         /// </summary>
         public class CustomEffectObject : GameComponent
         {
-            ResourceManager resourceManager;
-            EffectStateStructure effestState;
-            ImageResourceBase imageResource;
+            readonly ResourceManager resourceManager;
+            readonly EffectStateStructure effestState;
+            readonly ImageResourceBase imageResource;
 
             /// <summary>
             /// コンストラクタ
@@ -391,10 +379,7 @@ namespace Effect2DEditor.DockForm
                 this.effestState = effectState;
                 this.resourceManager = resourceManager;
                 imageResource = resourceManager.GetResource<ImageResourceBase>(filename);
-                if (imageResource == null)
-                {
-                    imageResource = ImageResourceFactoryManager.Factory.Create(device, filename, false);
-                }
+                imageResource ??= ImageResourceFactoryManager.Factory.Create(device, filename, false);
             }
 
             /// <summary>

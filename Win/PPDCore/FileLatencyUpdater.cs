@@ -6,7 +6,7 @@ namespace PPDCore
 {
     class FileLatencyUpdater : LatencyUpdaterBase
     {
-        PPDGameUtility ppdGameUtility;
+        readonly PPDGameUtility ppdGameUtility;
         public FileLatencyUpdater(PPDGameUtility ppdGameUtility) :
             base(GetLatency(ppdGameUtility))
         {

@@ -9,7 +9,7 @@ namespace FlowScriptDrawControl.Model
     class ItemPositionManager
     {
         private Point mouseScreenPos;
-        private SourceControl[] sources;
+        private readonly SourceControl[] sources;
         private PositionInfo[] poses;
         private int current = -1;
 

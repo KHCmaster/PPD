@@ -7,7 +7,7 @@ namespace PPDSingle
     {
         class TreeViewItemComparer : IComparer<TreeViewItem>
         {
-            static TreeViewItemComparer comparer = new TreeViewItemComparer();
+            static readonly TreeViewItemComparer comparer = new();
 
             public static TreeViewItemComparer Comparer
             {
@@ -48,10 +48,10 @@ namespace PPDSingle
             #endregion
         }
 
-        List<TreeViewItem> items;
+        readonly List<TreeViewItem> items;
         protected TreeViewItem()
         {
-            items = new List<TreeViewItem>();
+            items = [];
         }
 
         public TreeViewItem Parent
@@ -114,10 +114,7 @@ namespace PPDSingle
         {
             SetInfo(item);
             items.Add(item);
-            if (item.TreeView != null)
-            {
-                item.TreeView.Select(item);
-            }
+            item.TreeView?.Select(item);
         }
 
         public void AddRange(TreeViewItem[] item)
@@ -127,10 +124,7 @@ namespace PPDSingle
                 SetInfo(tvi);
             }
             items.AddRange(item);
-            if (item[item.Length - 1].TreeView != null)
-            {
-                item[item.Length - 1].TreeView.Select(item[item.Length - 1]);
-            }
+            item[^1].TreeView?.Select(item[^1]);
         }
 
         public void Remove()

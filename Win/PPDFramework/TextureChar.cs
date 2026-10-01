@@ -17,9 +17,9 @@ namespace PPDFramework
         CharCacheInfo cci;
         char c;
 
-        PPDDevice device;
-        string facename;
-        bool isSpace;
+        readonly PPDDevice device;
+        readonly string facename;
+        readonly bool isSpace;
         float widthScale = 1;
         VertexInfo vertices;
         float prevStartX;
@@ -154,16 +154,10 @@ namespace PPDFramework
         /// </summary>
         protected override void DisposeResource()
         {
-            if (cci != null)
-            {
-                cci.Decrement();
-                cci = null;
-            }
-            if (vertices != null)
-            {
-                vertices.Dispose();
-                vertices = null;
-            }
+            cci?.Decrement();
+            cci = null;
+            vertices?.Dispose();
+            vertices = null;
         }
 
         /// <summary>

@@ -19,10 +19,7 @@
         {
             base.In(e);
             SetValue(nameof(Default));
-            if (modSettingManager != null)
-            {
-                modSettingManager.AddInt32Setting(Key, DisplayName, Description, Default);
-            }
+            modSettingManager?.AddInt32Setting(Key, DisplayName, Description, Default);
         }
     }
 }

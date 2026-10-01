@@ -11,12 +11,12 @@ namespace PPDSingle
     class MultiSelectableText : FocusableGameComponent
     {
         const int FramePerMenu = 60;
-        IGameHost gameHost;
-        PPDFramework.Resource.ResourceManager resourceManager;
-        RectangleComponent rectangle;
-        TextureString startTextString;
-        TextureString[] menuTextStrings;
-        int fontHeight;
+        readonly IGameHost gameHost;
+        readonly PPDFramework.Resource.ResourceManager resourceManager;
+        readonly RectangleComponent rectangle;
+        readonly TextureString startTextString;
+        readonly TextureString[] menuTextStrings;
+        readonly int fontHeight;
         int pressingCount;
 
         private float MaxMenuWidth

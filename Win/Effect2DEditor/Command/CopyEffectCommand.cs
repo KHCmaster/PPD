@@ -4,7 +4,7 @@ namespace Effect2DEditor.Command
 {
     class CopyEffectCommand : CommandBase
     {
-        SelectedManager SManager;
+        readonly SelectedManager SManager;
         public CopyEffectCommand(EffectManager manager, string exp, SelectedManager SManager)
             : base(manager, exp)
         {

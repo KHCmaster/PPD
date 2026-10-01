@@ -11,8 +11,8 @@ namespace PPDFramework
     /// </summary>
     public class ColorTextureAllcator : DisposableComponent
     {
-        PPDDevice device;
-        Dictionary<Color4, TextureBase> cache = new Dictionary<Color4, TextureBase>();
+        readonly PPDDevice device;
+        readonly Dictionary<Color4, TextureBase> cache = [];
 
         /// <summary>
         /// コンストラクタです。

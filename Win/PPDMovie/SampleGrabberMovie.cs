@@ -184,10 +184,7 @@ namespace PPDMovie
                     {
                         foreach (var texture in _textures)
                         {
-                            if (texture != null)
-                            {
-                                texture.Dispose();
-                            }
+                            texture?.Dispose();
                         }
                     }
                 })

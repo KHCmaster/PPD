@@ -12,7 +12,7 @@ namespace PPDFramework
     public abstract class DataBase : IDisposable
     {
         SQLiteConnection connection;
-        readonly object lockObject = new object();
+        readonly object lockObject = new();
 
         /// <summary>
         /// データベースの名前、例えばHoge

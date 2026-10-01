@@ -12,7 +12,7 @@ namespace PPDExpansion.ViewModel
     abstract class PlotViewModel : PlayViewModel
     {
         protected readonly Dispatcher dispatcher;
-        protected readonly DateTime baseTime = new DateTime(2000, 1, 1);
+        protected readonly DateTime baseTime = new(2000, 1, 1);
 
         protected ScoreInfo currentScoreInfo;
 
@@ -90,8 +90,8 @@ namespace PPDExpansion.ViewModel
         {
             get
             {
-                return zoomCommand ?? (zoomCommand = new RelayCommand<MouseWheelEventArgs>(
-                    ZoomCommand_Execute));
+                return zoomCommand ??= new RelayCommand<MouseWheelEventArgs>(
+                    ZoomCommand_Execute);
             }
         }
 
@@ -99,8 +99,8 @@ namespace PPDExpansion.ViewModel
         {
             get
             {
-                return resetZoomCommand ?? (resetZoomCommand = new RelayCommand<MouseButtonEventArgs>(
-                    ResetZoomCommand_Execute));
+                return resetZoomCommand ??= new RelayCommand<MouseButtonEventArgs>(
+                    ResetZoomCommand_Execute);
             }
         }
 
@@ -108,8 +108,8 @@ namespace PPDExpansion.ViewModel
         {
             get
             {
-                return panStartCommand ?? (panStartCommand = new RelayCommand<MouseButtonEventArgs>(
-                    PanStartCommand_Execute));
+                return panStartCommand ??= new RelayCommand<MouseButtonEventArgs>(
+                    PanStartCommand_Execute);
             }
         }
 
@@ -117,8 +117,8 @@ namespace PPDExpansion.ViewModel
         {
             get
             {
-                return panCommand ?? (panCommand = new RelayCommand<MouseEventArgs>(
-                    PanCommand_Execute));
+                return panCommand ??= new RelayCommand<MouseEventArgs>(
+                    PanCommand_Execute);
             }
         }
 
@@ -135,10 +135,7 @@ namespace PPDExpansion.ViewModel
             {
                 return;
             }
-            if (YMaximum == null)
-            {
-                YMaximum = ActualYMaximum;
-            }
+            YMaximum ??= ActualYMaximum;
             var pos = e.GetPosition(edgePanel);
             var ratio = new Point(pos.X / edgePanel.ActualWidth, 1 - pos.Y / edgePanel.ActualHeight);
             int h = YMaximum.Value - YMinimum.Value;
@@ -232,10 +229,7 @@ namespace PPDExpansion.ViewModel
             if (e.ChangedButton == MouseButton.Left && e.ButtonState == MouseButtonState.Pressed)
             {
                 panStartPoint = e.GetPosition(edgePanel);
-                if (YMaximum == null)
-                {
-                    YMaximum = ActualYMaximum;
-                }
+                YMaximum ??= ActualYMaximum;
                 panStartX = XMinimum.ToBinary();
                 panStartY = YMinimum.Value;
                 panStartHeight = YMaximum.Value - YMinimum.Value;
@@ -256,10 +250,7 @@ namespace PPDExpansion.ViewModel
             }
 
             var pos = e.GetPosition(edgePanel);
-            if (YMaximum == null)
-            {
-                YMaximum = ActualYMaximum;
-            }
+            YMaximum ??= ActualYMaximum;
             XMinimum = DateTime.FromBinary(panStartX + (long)(panStartWidth * (-pos.X + panStartPoint.X) / edgePanel.ActualWidth));
             YMinimum = panStartY + (int)(panStartHeight * (pos.Y - panStartPoint.Y) / edgePanel.ActualHeight);
             XMaximum = DateTime.FromBinary(xMinimum.ToBinary() + panStartWidth);

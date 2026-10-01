@@ -7,7 +7,7 @@ namespace FlowScriptEnginePPDEditor
 {
     public class TypeColors : TypeColorBase
     {
-        Dictionary<Type, Color> dictionary;
+        readonly Dictionary<Type, Color> dictionary;
         public TypeColors()
         {
             dictionary = new Dictionary<Type, Color>

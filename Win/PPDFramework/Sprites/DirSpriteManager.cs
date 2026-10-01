@@ -10,7 +10,7 @@ namespace PPDFramework.Sprites
     /// </summary>
     public class DirSpriteManager : SpriteManagerBase
     {
-        string dir;
+        readonly string dir;
 
         /// <summary>
         /// コンストラクタです。

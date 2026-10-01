@@ -26,7 +26,7 @@ namespace PPDFramework
         protected PPDDevice device;
 
         double nextframe;
-        float wait = 1000 / 60f;
+        readonly float wait = 1000 / 60f;
         double lastPresentEndTime;
         double presentStartTime;
         int presentCount;
@@ -356,16 +356,11 @@ namespace PPDFramework
                 }
                 blackRectangles = null;
             }
-            if (resourceManager != null)
-            {
-                resourceManager.Dispose();
-                resourceManager = null;
-            }
-            if (device != null)
-            {
-                device.Dispose();
-                device = null;
-            }
+
+            resourceManager?.Dispose();
+            resourceManager = null;
+            device?.Dispose();
+            device = null;
             ComDiagnostics.ReportActiveObjects("Active COM objects after GameCoreBase.Dispose");
         }
     }

@@ -197,7 +197,7 @@ namespace FlowScriptControlTest
 
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                using (StreamReader sr = new StreamReader(openFileDialog1.FileName))
+                using (StreamReader sr = new(openFileDialog1.FileName))
                 {
                     CurrentFlowDrawPanel.LoadXML(sr.BaseStream);
                     CurrentFlowDrawTab.FilePath = openFileDialog1.FileName;
@@ -214,7 +214,7 @@ namespace FlowScriptControlTest
 
             if (saveFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                using (StreamWriter writer = new StreamWriter(saveFileDialog1.FileName))
+                using (StreamWriter writer = new(saveFileDialog1.FileName))
                 {
                     CurrentFlowDrawPanel.SaveXML(writer.BaseStream);
                 }
@@ -283,10 +283,7 @@ namespace FlowScriptControlTest
         void Controller_OperationWaited(FlowSourceManager obj)
         {
             var executeInfo = currentExecutor.GetExecuteInfo(obj);
-            if (executeInfo != null)
-            {
-                executeInfo.FlowDrawTab.FlowDrawPanel.SelectionChanged += FlowDrawPanel_SelectionChanged;
-            }
+            executeInfo?.FlowDrawTab.FlowDrawPanel.SelectionChanged += FlowDrawPanel_SelectionChanged;
             this.Invoke((Action)(() =>
             {
                 toolStripButton2.Enabled = toolStripButton4.Enabled = true;
@@ -296,10 +293,7 @@ namespace FlowScriptControlTest
         void Controller_OperationAccepted(FlowSourceManager obj)
         {
             var executeInfo = currentExecutor.GetExecuteInfo(obj);
-            if (executeInfo != null)
-            {
-                executeInfo.FlowDrawTab.FlowDrawPanel.SelectionChanged -= FlowDrawPanel_SelectionChanged;
-            }
+            executeInfo?.FlowDrawTab.FlowDrawPanel.SelectionChanged -= FlowDrawPanel_SelectionChanged;
             this.Invoke((Action)(() =>
             {
                 toolStripButton2.Enabled = toolStripButton4.Enabled = false;
@@ -341,11 +335,8 @@ namespace FlowScriptControlTest
             {
                 toolStripButton1.Enabled = true;
                 toolStrip2.Visible = false;
-                if (consoleWriter != null)
-                {
-                    consoleWriter.Close();
-                    consoleWriter = null;
-                }
+                consoleWriter?.Close();
+                consoleWriter = null;
             }));
         }
 
@@ -354,11 +345,8 @@ namespace FlowScriptControlTest
             this.Invoke((Action)(() =>
             {
                 MessageBox.Show("スクリプトのプロセスが終了しなかったためKillしました。");
-                if (consoleWriter != null)
-                {
-                    consoleWriter.Stop();
-                    consoleWriter = null;
-                }
+                consoleWriter?.Stop();
+                consoleWriter = null;
             }));
         }
 
@@ -386,38 +374,38 @@ namespace FlowScriptControlTest
         {
             FlowDrawPanel.EnumerateClasses("dlls", new string[0]);
             FlowDrawPanel.AddFilter(new NodeFilterInfo("Console", new Regex[] {
-                new Regex("^FlowScriptEngineBasic\\."),
-                new Regex("^FlowScriptEngineBasicExtension\\."),
-                new Regex("^FlowScriptEngineConsole\\."),
-                new Regex("^FlowScriptEngineData\\.")},
+                new("^FlowScriptEngineBasic\\."),
+                new("^FlowScriptEngineBasicExtension\\."),
+                new("^FlowScriptEngineConsole\\."),
+                new("^FlowScriptEngineData\\.")},
                 null));
             FlowDrawPanel.AddFilter(new NodeFilterInfo("PPD", new Regex[] {
-                new Regex("^FlowScriptEngineBasic\\."),
-                new Regex("^FlowScriptEngineBasicExtension\\."),
-                new Regex("^FlowScriptEngineSlimDX\\."),
-                new Regex("^FlowScriptEnginePPD\\."),
-                new Regex("^FlowScriptEngineData\\.")},
+                new("^FlowScriptEngineBasic\\."),
+                new("^FlowScriptEngineBasicExtension\\."),
+                new("^FlowScriptEngineSlimDX\\."),
+                new("^FlowScriptEnginePPD\\."),
+                new("^FlowScriptEngineData\\.")},
                 null));
             FlowDrawPanel.AddFilter(new NodeFilterInfo("PPD(Script)", new Regex[] {
-                new Regex("^FlowScriptEngineBasic\\."),
-                new Regex("^FlowScriptEngineBasicExtension\\."),
-                new Regex("^FlowScriptEngineSlimDX\\."),
-                new Regex("^FlowScriptEnginePPD\\."),
-                new Regex("^FlowScriptEngineData\\.")},
-                null, null, new Regex[] { new Regex("^PPD\\.Mod") }));
+                new("^FlowScriptEngineBasic\\."),
+                new("^FlowScriptEngineBasicExtension\\."),
+                new("^FlowScriptEngineSlimDX\\."),
+                new("^FlowScriptEnginePPD\\."),
+                new("^FlowScriptEngineData\\.")},
+                null, null, new Regex[] { new("^PPD\\.Mod") }));
             FlowDrawPanel.AddFilter(new NodeFilterInfo("PPD(Mod)", new Regex[] {
-                new Regex("^FlowScriptEngineBasic\\."),
-                new Regex("^FlowScriptEngineBasicExtension\\."),
-                new Regex("^FlowScriptEngineSlimDX\\."),
-                new Regex("^FlowScriptEnginePPD\\."),
-                new Regex("^FlowScriptEngineData\\.")},
+                new("^FlowScriptEngineBasic\\."),
+                new("^FlowScriptEngineBasicExtension\\."),
+                new("^FlowScriptEngineSlimDX\\."),
+                new("^FlowScriptEnginePPD\\."),
+                new("^FlowScriptEngineData\\.")},
                 null));
             FlowDrawPanel.AddFilter(new NodeFilterInfo("PPDEditor", new Regex[] {
-                new Regex("^FlowScriptEngineBasic\\."),
-                new Regex("^FlowScriptEngineBasicExtension\\."),
-                new Regex("^FlowScriptEngineSlimDX\\."),
-                new Regex("^FlowScriptEnginePPDEditor\\."),
-                new Regex("^FlowScriptEngineData\\.")},
+                new("^FlowScriptEngineBasic\\."),
+                new("^FlowScriptEngineBasicExtension\\."),
+                new("^FlowScriptEngineSlimDX\\."),
+                new("^FlowScriptEnginePPDEditor\\."),
+                new("^FlowScriptEngineData\\.")},
                 null));
             AddEmptyFlowDrawPanel();
             flowSearchPanel1.Searched += flowSearchPanel1_Searched;
@@ -495,18 +483,12 @@ namespace FlowScriptControlTest
 
         private void 全て展開ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (CurrentFlowDrawPanel != null)
-            {
-                CurrentFlowDrawPanel.ExpandAll();
-            }
+            CurrentFlowDrawPanel?.ExpandAll();
         }
 
         private void 全て縮小ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (CurrentFlowDrawPanel != null)
-            {
-                CurrentFlowDrawPanel.CollapseAll();
-            }
+            CurrentFlowDrawPanel?.CollapseAll();
         }
 
         private void 標準入力ToolStripMenuItem_Click(object sender, EventArgs e)

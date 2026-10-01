@@ -4,7 +4,7 @@ namespace PPDTest
 {
     class TestSetting : SettingDataBase
     {
-        private static TestSetting setting = new TestSetting();
+        private static readonly TestSetting setting = new();
         public override string Name
         {
             get { return "Test.setting"; }

@@ -77,7 +77,7 @@ namespace PPDUpdater.Model
             return String.Format("{0}.{1}.{2}.{3}", Major, Minor, Build, Revision);
         }
 
-        public static VersionInfo Zero = new VersionInfo("0.0.0.0");
+        public static VersionInfo Zero = new("0.0.0.0");
 
         #region IComparable<VersionInfo> メンバ
 

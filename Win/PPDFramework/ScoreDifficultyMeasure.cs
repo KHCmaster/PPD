@@ -29,7 +29,7 @@ namespace PPDFramework
         {
             if (ppdData == null || ppdData.Length == 0)
             {
-                return new ScoreDifficultyMeasureResult(new SortedDictionary<int, float>());
+                return new ScoreDifficultyMeasureResult([]);
             }
             return MeasureImpl(ppdData);
         }
@@ -43,7 +43,7 @@ namespace PPDFramework
         {
             if (ppdData.Length == 0)
             {
-                return new ScoreDifficultyMeasureResult(new SortedDictionary<int, float>());
+                return new ScoreDifficultyMeasureResult([]);
             }
 
             var previousPresses = new List<bool[]>();

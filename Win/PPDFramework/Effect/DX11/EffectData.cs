@@ -93,8 +93,11 @@ namespace PPDFramework.Effect.DX11
                 Techniques = new Dictionary<string, Technique>(techniqueCount);
                 for (var i = 0; i < techniqueCount; i++)
                 {
-                    var technique = new Technique { Name = reader.ReadString() };
-                    technique.Passes = new Pass[reader.ReadInt32()];
+                    var technique = new Technique
+                    {
+                        Name = reader.ReadString(),
+                        Passes = new Pass[reader.ReadInt32()]
+                    };
                     for (var j = 0; j < technique.Passes.Length; j++)
                     {
                         technique.Passes[j] = new Pass

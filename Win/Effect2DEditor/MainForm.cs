@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
@@ -20,10 +21,10 @@ namespace Effect2DEditor
 
         bool Saved = true;
 
-        private static CanvasDock canvasDock = new CanvasDock();
-        private static HistoryDock historyDock = new HistoryDock();
-        private static PropertyDock propertyDock = new PropertyDock();
-        private static TimeLineDock timeLineDock = new TimeLineDock();
+        private static readonly CanvasDock canvasDock = new();
+        private static readonly HistoryDock historyDock = new();
+        private static readonly PropertyDock propertyDock = new();
+        private static readonly TimeLineDock timeLineDock = new();
 
         string openfilename = "";
         string asksave = "未保存のデータがあります。保存しますか？";
@@ -209,10 +210,7 @@ namespace Effect2DEditor
             if (canvasDock.SelectedManager.State != null)
             {
                 ChangeStateParameter(arg1, arg2);
-                if (canvasDock.EffectManager != null)
-                {
-                    canvasDock.EffectManager.Update(timeLineDock.CurrentFrame, null);
-                }
+                canvasDock.EffectManager?.Update(timeLineDock.CurrentFrame, null);
                 RefreshCanvas();
             }
         }
@@ -222,10 +220,7 @@ namespace Effect2DEditor
             if (canvasDock.SelectedManager.State != null)
             {
                 ChangeBlendMode(obj);
-                if (canvasDock.EffectManager != null)
-                {
-                    canvasDock.EffectManager.Update(timeLineDock.CurrentFrame, null);
-                }
+                canvasDock.EffectManager?.Update(timeLineDock.CurrentFrame, null);
                 RefreshCanvas();
             }
         }
@@ -659,7 +654,7 @@ namespace Effect2DEditor
                     canvasDock.BezierControl.Controller.BCPS = canvasDock.SelectedManager.Set.BAnalyzer.BCPS;
                     canvasDock.BezierControl.Controller.AllowMouseOperation = true;
                 }
-                else if (!(canvasDock.SelectedManager.Set[RatioType.X] is ConstantRatioMaker))
+                else if (canvasDock.SelectedManager.Set[RatioType.X] is not ConstantRatioMaker)
                 {
                     var bcp = new BezierControlPoint();
                     var bcp2 = new BezierControlPoint();
@@ -698,7 +693,7 @@ namespace Effect2DEditor
             var fn = Path.GetFileNameWithoutExtension(filename);
             string dir = Path.GetDirectoryName(filename) + "/" + fn;
             if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
-            foreach (BaseEffect be in canvasDock.EffectManager.Effects)
+            foreach (BaseEffect be in canvasDock.EffectManager.Effects.Cast<BaseEffect>())
             {
                 if (be.Effects.Count != 0) continue;
                 var resourcefname = Path.GetFileName(be.Filename);
@@ -1053,14 +1048,14 @@ namespace Effect2DEditor
             setting.ReplaceOrAdd("CanvasBackGroundColor", ColorTranslator.ToHtml(canvasDock.BackGroundColor));
             setting.ReplaceOrAdd("CanvasBackGroundImage", canvasDock.BackImageFileName);
             setting.ReplaceOrAdd("Language", langFileISO);
-            using (SettingWriter sw = new SettingWriter(iniFileName, false))
+            using (SettingWriter sw = new(iniFileName, false))
             {
                 foreach (KeyValuePair<string, string> kvp in setting.Dictionary)
                 {
                     sw.Write(kvp.Key, kvp.Value);
                 }
             }
-            using (StreamWriter sw = new StreamWriter(recentUsedFileName))
+            using (StreamWriter sw = new(recentUsedFileName))
             {
                 foreach (ToolStripMenuItem tsmi in this.最近使用したファイルToolStripMenuItem.DropDownItems)
                 {
@@ -1118,7 +1113,7 @@ namespace Effect2DEditor
                 }
                 if (File.Exists(recentUsedFileName))
                 {
-                    using (StreamReader sr = new StreamReader(recentUsedFileName))
+                    using (StreamReader sr = new(recentUsedFileName))
                     {
                         while (!sr.EndOfStream)
                         {

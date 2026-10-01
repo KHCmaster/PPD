@@ -269,7 +269,7 @@ namespace PPDCore
             this.displayState = dState;
             this.NoteType = noteType;
             this.ID = md.ID;
-            Parameters = new Dictionary<object, object>();
+            Parameters = [];
             foreach (var parameter in parameters)
             {
                 Parameters[parameter.Key] = parameter.Value;
@@ -308,10 +308,10 @@ namespace PPDCore
         {
             createMark(this, out mark, out GameComponent colorMark, out axis, out GameComponent slideMark, out GameComponent slideColorMark, out PictureObject trace);
             isMarkCreated = mark != null;
-            mark = mark ?? new PictureObject(device, resourceManager, filenames.GetMarkImagePath(GetButtonType()), true);
+            mark ??= new PictureObject(device, resourceManager, filenames.GetMarkImagePath(GetButtonType()), true);
             mark.Scale = Vector2.Zero;
-            colorMark = colorMark ?? new PictureObject(device, resourceManager, filenames.GetMarkColorImagePath(GetButtonType()), true);
-            axis = axis ?? new PictureObject(device, resourceManager, filenames.GetClockAxisImagePath(), true);
+            colorMark ??= new PictureObject(device, resourceManager, filenames.GetMarkColorImagePath(GetButtonType()), true);
+            axis ??= new PictureObject(device, resourceManager, filenames.GetClockAxisImagePath(), true);
             this.trace = trace ?? new PictureObject(device, resourceManager, filenames.GetTraceImagePath(GetButtonType()), false);
             colorMarkInfo = new ColorMarkInfo(device, colorMark, Vector2.Zero, this.trace);
             colorMark.PostDrawManager = postDrawManager;
@@ -618,10 +618,7 @@ namespace PPDCore
                 }
             }
 
-            if (effectcallback != null)
-            {
-                effectcallback.Invoke(effectType, position);
-            }
+            effectcallback?.Invoke(effectType, position);
         }
 
         public virtual void UpdateColorPosition(float currentTime, float bpm)

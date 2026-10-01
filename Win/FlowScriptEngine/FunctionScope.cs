@@ -8,9 +8,9 @@ namespace FlowScriptEngine
     {
         public event Action<FunctionScopeArg> EventInvoked;
         public event Action<FunctionScopeArg> PreviewEventInvoked;
-        Dictionary<string, object> dict;
+        readonly Dictionary<string, object> dict;
 
-        private List<FunctionScope> childScopes;
+        private readonly List<FunctionScope> childScopes;
 
         public ScopeType ScopeType
         {
@@ -21,8 +21,8 @@ namespace FlowScriptEngine
         public FunctionScope(ScopeType scopeType)
         {
             ScopeType = scopeType;
-            childScopes = new List<FunctionScope>();
-            dict = new Dictionary<string, object>();
+            childScopes = [];
+            dict = [];
         }
 
         internal int Id
@@ -142,10 +142,7 @@ namespace FlowScriptEngine
                         {
                             var scopeArg2 = new FunctionScopeArg(eventName, arg, (e2) =>
                             {
-                                if (allEnd != null)
-                                {
-                                    allEnd.Invoke(anyHandled | e2.Handled);
-                                }
+                                allEnd?.Invoke(anyHandled | e2.Handled);
                             });
                             OnEventInvoked(scopeArg2);
                         }

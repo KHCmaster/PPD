@@ -9,10 +9,10 @@ namespace FlowScriptControl
         private static LoadingForm _form;
         private static Form _mainForm;
         private static Thread _thread;
-        private static readonly object syncObject = new object();
+        private static readonly object syncObject = new();
 
         private static bool closeRequired;
-        System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer();
+        readonly System.Windows.Forms.Timer timer = new();
 
         public static LoadingForm Form
         {
@@ -29,10 +29,7 @@ namespace FlowScriptControl
             closeRequired = false;
 
             _mainForm = mainForm;
-            if (_mainForm != null)
-            {
-                _mainForm.Activated += _mainForm_Activated;
-            }
+            _mainForm?.Activated += _mainForm_Activated;
 
             _thread = new System.Threading.Thread(new System.Threading.ThreadStart(StartThread))
             {

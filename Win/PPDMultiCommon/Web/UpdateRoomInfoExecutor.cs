@@ -2,8 +2,8 @@
 {
     public class UpdateRoomInfoExecutor : HostExecutorBase
     {
-        private int playerCount;
-        private string currentScoreHash;
+        private readonly int playerCount;
+        private readonly string currentScoreHash;
 
         public UpdateRoomInfoExecutor(WebManager webManager, int playerCount, string currentScoreHash)
             : base(webManager)

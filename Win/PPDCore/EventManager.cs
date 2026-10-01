@@ -16,13 +16,13 @@ namespace PPDCore
         IEVDData[] data;
         bool initialized;
         int iter;
-        int[] volumePercents = new int[10];
-        bool[] keepPlayings = new bool[10];
-        bool[] releaseSounds = new bool[10];
+        readonly int[] volumePercents = new int[10];
+        readonly bool[] keepPlayings = new bool[10];
+        readonly bool[] releaseSounds = new bool[10];
 
         float defaultbpm;
         FlowScriptManager scriptManager;
-        List<float[]> stoplist = new List<float[]>();
+        readonly List<float[]> stoplist = [];
         SortedList<float, DisplayState> displayStateCache;
         SortedList<float, NoteType> noteTypeCache;
         SortedList<float, ButtonType[]> initializeOrderCache;
@@ -58,10 +58,10 @@ namespace PPDCore
             BPMManager.CurrentBPM = defaultbpm;
             BPMManager.TargetBPM = defaultbpm;
 
-            displayStateCache = new SortedList<float, DisplayState>();
-            noteTypeCache = new SortedList<float, NoteType>();
-            initializeOrderCache = new SortedList<float, ButtonType[]>();
-            slideScaleCache = new SortedList<float, float>();
+            displayStateCache = [];
+            noteTypeCache = [];
+            initializeOrderCache = [];
+            slideScaleCache = [];
             defaultInitializeOrder = new ButtonType[10];
             for (int i = 0; i < 10; i++)
             {
@@ -153,7 +153,7 @@ namespace PPDCore
         public void Retry()
         {
             iter = 0;
-            if (ChangeMovieVolume != null) ChangeMovieVolume.Invoke(-1000);
+            ChangeMovieVolume?.Invoke(-1000);
             for (int i = 0; i < volumePercents.Length; i++)
             {
                 volumePercents[i] = 90;
@@ -190,7 +190,7 @@ namespace PPDCore
                         var cve = evddata as ChangeVolumeEvent;
                         if (cve.Channel == 0)
                         {
-                            if (ChangeMovieVolume != null) ChangeMovieVolume.Invoke(-100 * (100 - cve.Volume));
+                            ChangeMovieVolume?.Invoke(-100 * (100 - cve.Volume));
                         }
                         else if (cve.Channel > 0 && cve.Channel <= 10)
                         {

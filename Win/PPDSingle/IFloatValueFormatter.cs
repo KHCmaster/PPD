@@ -9,7 +9,7 @@ namespace PPDSingle
 
     class FloatToFloatFormatter : IFloatValueFormatter
     {
-        static FloatToFloatFormatter formatter = new FloatToFloatFormatter();
+        static readonly FloatToFloatFormatter formatter = new();
         public static FloatToFloatFormatter Formatter
         {
             get
@@ -29,7 +29,7 @@ namespace PPDSingle
 
     class FloatToIntFormatter : IFloatValueFormatter
     {
-        static FloatToIntFormatter formatter = new FloatToIntFormatter();
+        static readonly FloatToIntFormatter formatter = new();
         public static FloatToIntFormatter Formatter
         {
             get
@@ -49,7 +49,7 @@ namespace PPDSingle
 
     class FloatToTimeFormatter : IFloatValueFormatter
     {
-        static FloatToTimeFormatter formatter = new FloatToTimeFormatter();
+        static readonly FloatToTimeFormatter formatter = new();
         public static FloatToTimeFormatter Formatter
         {
             get

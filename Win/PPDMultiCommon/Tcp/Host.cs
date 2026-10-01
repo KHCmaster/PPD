@@ -12,7 +12,7 @@ namespace PPDMultiCommon.Tcp
     {
         public event ReadClientEventHandler ReadClient;
         public event ClosedEventHandler Closed;
-        private ConnectionManager manager;
+        private readonly ConnectionManager manager;
         private TcpListener _listener;
 
         public int ConnectionCount
@@ -53,15 +53,9 @@ namespace PPDMultiCommon.Tcp
 
         public void Stop()
         {
-            if (_listener != null)
-            {
-                _listener.Dispose();
-            }
+            _listener?.Dispose();
 
-            if (manager != null)
-            {
-                manager.Close();
-            }
+            manager?.Close();
         }
 
         private void DoAcceptTcpClient(IAsyncResult result)
@@ -91,18 +85,12 @@ namespace PPDMultiCommon.Tcp
 
         void connection_Closed(int id)
         {
-            if (Closed != null)
-            {
-                Closed.Invoke(id);
-            }
+            Closed?.Invoke(id);
         }
 
         void connection_ReadClient(byte[] data, int id)
         {
-            if (ReadClient != null)
-            {
-                ReadClient.Invoke(data, id);
-            }
+            ReadClient?.Invoke(data, id);
         }
 
         public void Write(byte[] data)
@@ -137,7 +125,7 @@ namespace PPDMultiCommon.Tcp
 
         class ConnectionManager
         {
-            SortedList<int, Connection> connections;
+            readonly SortedList<int, Connection> connections;
 
             public int ConnectionCount
             {
@@ -163,7 +151,7 @@ namespace PPDMultiCommon.Tcp
 
             public ConnectionManager()
             {
-                connections = new SortedList<int, Connection>();
+                connections = [];
             }
 
             public void Add(Connection connection)
@@ -271,8 +259,7 @@ namespace PPDMultiCommon.Tcp
                 {
                     try
                     {
-                        var c = connection as Connection;
-                        if (c == null)
+                        if (connection is not Connection c)
                         {
                             return;
                         }
@@ -296,7 +283,7 @@ namespace PPDMultiCommon.Tcp
             public static int _id;
             public event ReadClientEventHandler ReadClient;
             public event ClosedEventHandler Closed;
-            private int id;
+            private readonly int id;
 
             public int ID
             {
@@ -327,10 +314,7 @@ namespace PPDMultiCommon.Tcp
 
             protected override void OnClose()
             {
-                if (Closed != null)
-                {
-                    Closed.Invoke(id);
-                }
+                Closed?.Invoke(id);
             }
         }
 

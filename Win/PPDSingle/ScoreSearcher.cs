@@ -8,15 +8,15 @@ namespace PPDSingle
 {
     class ScoreSearcher : FocusableGameComponent
     {
-        DxTextBox textBox;
-        PictureObject back;
-        LineRectangleComponent border;
-        SongSelectFilter filter;
+        readonly DxTextBox textBox;
+        readonly PictureObject back;
+        readonly LineRectangleComponent border;
+        readonly SongSelectFilter filter;
 
-        SongInfoFinder sif;
+        readonly SongInfoFinder sif;
         bool mustcheck;
 
-        TextureString[] results;
+        readonly TextureString[] results;
 
         int selection = -1;
 

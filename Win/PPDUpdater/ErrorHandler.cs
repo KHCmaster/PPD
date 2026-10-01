@@ -47,7 +47,7 @@ namespace PPDUpdater
         {
             try
             {
-                using (StreamWriter writer = new StreamWriter("error.log", true))
+                using (StreamWriter writer = new("error.log", true))
                 {
                     writer.WriteLine("------------------------------------------------------------------");
                     writer.WriteLine(String.Format("{0}", DateTime.Now));

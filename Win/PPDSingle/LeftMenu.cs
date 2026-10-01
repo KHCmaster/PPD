@@ -29,24 +29,24 @@ namespace PPDSingle
         public event Action<RandomSelectType> RandomSelected;
         public event Action FilterChanged;
 
-        IGameHost gameHost;
-        PPDFramework.Resource.ResourceManager resourceManager;
-        ISound sound;
-        DxTextBox textBox;
+        readonly IGameHost gameHost;
+        readonly PPDFramework.Resource.ResourceManager resourceManager;
+        readonly ISound sound;
+        readonly DxTextBox textBox;
         PictureObject back;
         ScoreManager sm;
         PlayRecord pr;
-        SelectSongManager ssm;
+        readonly SelectSongManager ssm;
         ModPanel mp;
         FilterControl fc;
         UpdateScoreControl usc;
         ItemListComponent ilc;
         ReplayListComponent rlc;
 
-        PictureObject scoreUpdateCountBack;
-        NumberPictureObject scoreUpdateCount;
-        PictureObject modUpdateCountBack;
-        NumberPictureObject modUpdateCount;
+        readonly PictureObject scoreUpdateCountBack;
+        readonly NumberPictureObject scoreUpdateCount;
+        readonly PictureObject modUpdateCountBack;
+        readonly NumberPictureObject modUpdateCount;
         TextureString updateScore;
         TextureString filter;
         MultiSelectableText randomSelect;
@@ -226,9 +226,9 @@ namespace PPDSingle
 
                 select = new EffectObject(device, resourceManager, Utility.Path.Combine("greenflare.etd"))
                 {
-                    Position = new Vector2(15, scoreManage.Position.Y + selectDiffY)
+                    Position = new Vector2(15, scoreManage.Position.Y + selectDiffY),
+                    PlayType = Effect2D.EffectManager.PlayType.ReverseLoop
                 };
-                select.PlayType = Effect2D.EffectManager.PlayType.ReverseLoop;
                 select.Play();
                 select.Alignment = EffectObject.EffectAlignment.Center;
                 select.Scale = new Vector2(0.4f, 0.4f);
@@ -388,10 +388,7 @@ namespace PPDSingle
 
         private void OnRandomSelected(RandomSelectType randomSelectType)
         {
-            if (RandomSelected != null)
-            {
-                RandomSelected.Invoke(randomSelectType);
-            }
+            RandomSelected?.Invoke(randomSelectType);
         }
 
         void Instance_Updated()

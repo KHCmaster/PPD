@@ -9,7 +9,7 @@ namespace FlowScriptEngineBasic
 {
     public class TypeAlias : TypeAliasBase
     {
-        Dictionary<Type, string> dictionary;
+        readonly Dictionary<Type, string> dictionary;
         public TypeAlias()
         {
             dictionary = new Dictionary<Type, string>

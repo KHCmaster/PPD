@@ -15,9 +15,9 @@ namespace PPDUpdater
         /// </summary>
         public bool disposed;
 
-        private bool iniformat;
-        private string filepath;
-        private Dictionary<string, Dictionary<string, string>> inipool = new Dictionary<string, Dictionary<string, string>>();
+        private readonly bool iniformat;
+        private readonly string filepath;
+        private readonly Dictionary<string, Dictionary<string, string>> inipool = [];
         StreamWriter sw;
 
         /// <summary>
@@ -114,7 +114,7 @@ namespace PPDUpdater
             }
             else
             {
-                pool = new Dictionary<string, string>();
+                pool = [];
                 inipool.Add(section, pool);
             }
             if (!pool.ContainsKey(key))

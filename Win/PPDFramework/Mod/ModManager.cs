@@ -17,7 +17,7 @@ namespace PPDFramework.Mod
     {
         private bool initialized;
         private bool loading;
-        private HashSet<string> includeDlls;
+        private readonly HashSet<string> includeDlls;
         private static ModManager instance;
 
         /// <summary>
@@ -27,10 +27,7 @@ namespace PPDFramework.Mod
         {
             get
             {
-                if (instance == null)
-                {
-                    instance = new ModManager();
-                }
+                instance ??= new ModManager();
                 return instance;
             }
         }

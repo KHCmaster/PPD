@@ -7,7 +7,7 @@ namespace PPDCore
 {
     class SameTimingMarks : IEnumerable<MarkDataBase>
     {
-        private List<MarkDataBase> marks;
+        private readonly List<MarkDataBase> marks;
 
         public int SameTimings
         {
@@ -33,7 +33,7 @@ namespace PPDCore
 
         public SameTimingMarks()
         {
-            marks = new List<MarkDataBase>();
+            marks = [];
         }
 
         public void Add(MarkDataBase mark)
@@ -87,7 +87,7 @@ namespace PPDCore
 
         class MarkComparer : IComparer<MarkDataBase>
         {
-            public static MarkComparer Comparer = new MarkComparer();
+            public static MarkComparer Comparer = new();
             #region IComparer<IPPDData> メンバ
 
             public int Compare(MarkDataBase x, MarkDataBase y)

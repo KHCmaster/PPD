@@ -5,12 +5,12 @@ namespace PPDFramework
 {
     class AlphaBlendContextCache : DisposableComponent
     {
-        List<AlphaBlendContext> allContexts;
+        readonly List<AlphaBlendContext> allContexts;
         int gotIndex;
 
         public AlphaBlendContextCache(int initialCount)
         {
-            allContexts = new List<AlphaBlendContext>();
+            allContexts = [];
             for (var i = 0; i < initialCount; i++)
             {
                 allContexts.Add(new AlphaBlendContext());

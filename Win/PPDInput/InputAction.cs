@@ -5,7 +5,7 @@ namespace PPDInput
 {
     class InputAction : InputActionBase
     {
-        private Stopwatch stopwatch;
+        private readonly Stopwatch stopwatch;
 
         public InputAction(ButtonType buttonType, double time, bool isPressed, Stopwatch stopwatch)
             : base(buttonType, time, isPressed)

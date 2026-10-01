@@ -15,7 +15,7 @@ namespace PPDCore
         private TcpListener listener;
         private TcpClient client;
         private Thread thread;
-        private Dictionary<string, int[]> infos;
+        private readonly Dictionary<string, int[]> infos;
 
         public event Action<string, string> SourceChanged;
         public event Action<string> OperationWaited;
@@ -58,18 +58,10 @@ namespace PPDCore
         {
             // .NET では Thread.Abort が使えない。受信のスレッドは、接続を閉じると Read が終わるので止まる
             thread = null;
-
-            if (client != null)
-            {
-                client.Close();
-                client = null;
-            }
-
-            if (listener != null)
-            {
-                listener.Dispose();
-                listener = null;
-            }
+            client?.Close();
+            client = null;
+            listener?.Dispose();
+            listener = null;
         }
 
         public void Continue()
@@ -188,8 +180,8 @@ namespace PPDCore
         {
             try
             {
-                using (MemoryStream stream = new MemoryStream(bytes))
-                using (PackReader reader = new PackReader(stream))
+                using (MemoryStream stream = new(bytes))
+                using (PackReader reader = new(stream))
                 {
                     var now = DateTime.Now;
                     var methodName = ParseString(reader, MethodName);

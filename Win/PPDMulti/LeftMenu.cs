@@ -38,15 +38,15 @@ namespace PPDMulti
         public event Action<User> ChangeLeader;
         public event Action<User> KickUser;
 
-        IGameHost gameHost;
-        PPDFramework.Resource.ResourceManager resourceManager;
-        ISound sound;
-        MovieManager movieManager;
-        ChangableList<User> users;
-        AllowedModList allowedModList;
+        readonly IGameHost gameHost;
+        readonly PPDFramework.Resource.ResourceManager resourceManager;
+        readonly ISound sound;
+        readonly MovieManager movieManager;
+        readonly ChangableList<User> users;
+        readonly AllowedModList allowedModList;
 
-        PictureObject back;
-        EffectObject select;
+        readonly PictureObject back;
+        readonly EffectObject select;
         Mode mode = Mode.SongSelect;
         const int selectX = 15;
         const int selectDiffY = 10;
@@ -56,15 +56,15 @@ namespace PPDMulti
         ItemSettingComponent itemSettingComponent;
         UserSelectComponent userSelectComponent;
         ModPanel modPanel;
-        SpriteObject leftSprite;
-        SpriteObject songSelectSprite;
-        SpriteObject userSelectSprite;
-        SpriteObject itemSettingSprite;
-        SpriteObject gameRuleSprite;
-        SpriteObject modSprite;
+        readonly SpriteObject leftSprite;
+        readonly SpriteObject songSelectSprite;
+        readonly SpriteObject userSelectSprite;
+        readonly SpriteObject itemSettingSprite;
+        readonly SpriteObject gameRuleSprite;
+        readonly SpriteObject modSprite;
 
-        User user;
-        bool[] enables;
+        readonly User user;
+        readonly bool[] enables;
 
         public SongInformation SongInformation
         {
@@ -198,9 +198,9 @@ namespace PPDMulti
 
             select = new EffectObject(device, resourceManager, Utility.Path.Combine("greenflare.etd"))
             {
-                Position = new Vector2(15, back[(int)mode].Position.Y + selectDiffY)
+                Position = new Vector2(15, back[(int)mode].Position.Y + selectDiffY),
+                PlayType = Effect2D.EffectManager.PlayType.ReverseLoop
             };
-            select.PlayType = Effect2D.EffectManager.PlayType.ReverseLoop;
             select.Play();
             select.Alignment = EffectObject.EffectAlignment.Center;
             select.Scale = new Vector2(0.4f, 0.4f);
@@ -296,17 +296,11 @@ namespace PPDMulti
                         break;
                     case Mode.ShowResult:
                         sound.Play(PPDSetting.DefaultSounds[1], -1000);
-                        if (ShowResult != null)
-                        {
-                            ShowResult.Invoke(this, EventArgs.Empty);
-                        }
+                        ShowResult?.Invoke(this, EventArgs.Empty);
                         break;
                     case Mode.UpdateDB:
                         sound.Play(PPDSetting.DefaultSounds[1], -1000);
-                        if (UpdateScoreDB != null)
-                        {
-                            UpdateScoreDB.Invoke(this, EventArgs.Empty);
-                        }
+                        UpdateScoreDB?.Invoke(this, EventArgs.Empty);
                         break;
                     case Mode.Mod:
                         if (modPanel == null)
@@ -378,10 +372,7 @@ namespace PPDMulti
 
         void gameRuleComponent_RuleChanged(object sender, EventArgs e)
         {
-            if (RuleChanged != null)
-            {
-                RuleChanged.Invoke(gameRuleComponent.GameRule);
-            }
+            RuleChanged?.Invoke(gameRuleComponent.GameRule);
         }
 
         void songSelectComponent_SongSelected(object sender, EventArgs e)
@@ -408,10 +399,7 @@ namespace PPDMulti
 
         private void OnClose()
         {
-            if (Closed != null)
-            {
-                Closed.Invoke(this, EventArgs.Empty);
-            }
+            Closed?.Invoke(this, EventArgs.Empty);
         }
 
         private void OnTryToPlayGame()

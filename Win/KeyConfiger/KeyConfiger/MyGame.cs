@@ -7,7 +7,7 @@ namespace KeyConfiger
     public class MyGame : Game
     {
         Input input;
-        Form1 form;
+        readonly Form1 form;
 
 
         public MyGame(PPDExecuteArg args) : base(args, new Form1())
@@ -55,11 +55,8 @@ namespace KeyConfiger
 
         protected override void DisposeResource()
         {
-            if (input != null)
-            {
-                input.Dispose();
-                input = null;
-            }
+            input?.Dispose();
+            input = null;
             base.DisposeResource();
         }
     }

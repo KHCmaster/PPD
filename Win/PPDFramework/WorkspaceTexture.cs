@@ -59,21 +59,15 @@ namespace PPDFramework
             }
             else
             {
-                if (Texture != null)
-                {
-                    Texture.Dispose();
-                    Texture = null;
-                }
+                Texture?.Dispose();
+                Texture = null;
             }
         }
 
         internal void DisposeInternal()
         {
-            if (Texture != null)
-            {
-                Texture.Dispose();
-                Texture = null;
-            }
+            Texture?.Dispose();
+            Texture = null;
         }
     }
 }

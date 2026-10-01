@@ -6,7 +6,7 @@ namespace PPDEditorCommon.Dialog.Model
 {
     public class EventManagerInfo
     {
-        SortedList<float, Event> events;
+        readonly SortedList<float, Event> events;
 
         public KeyValuePair<float, Event>[] Events
         {
@@ -18,7 +18,7 @@ namespace PPDEditorCommon.Dialog.Model
 
         public EventManagerInfo()
         {
-            events = new SortedList<float, Event>();
+            events = [];
         }
 
         public void Add(float time, Event e)

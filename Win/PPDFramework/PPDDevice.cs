@@ -168,8 +168,8 @@ namespace PPDFramework
                 Offset = new Vector2(0, (float)(_height - Scale.X * expectedHeight) / 2);
             }
             World = Matrix.AffineTransformation2D(Scale.X, Vector2.Zero, 0, Offset);
-            modules = new Dictionary<Type, DisposableComponent>();
-            resettableComponents = new HashSet<ResettableComponent>();
+            modules = [];
+            resettableComponents = [];
         }
 
         /// <summary>
@@ -177,11 +177,8 @@ namespace PPDFramework
         /// </summary>
         internal void InitializeWorkspace()
         {
-            if (Workspace != null)
-            {
-                Workspace.Dispose();
-                Workspace = null;
-            }
+            Workspace?.Dispose();
+            Workspace = null;
             Workspace = new Workspace(this);
         }
 
@@ -200,10 +197,7 @@ namespace PPDFramework
         /// <returns></returns>
         internal WorkspaceTexture GetRenderTarget()
         {
-            if (renderTarget == null)
-            {
-                renderTarget = Workspace.Get();
-            }
+            renderTarget ??= Workspace.Get();
             return renderTarget;
         }
 
@@ -360,16 +354,10 @@ namespace PPDFramework
         /// </summary>
         protected override void DisposeResource()
         {
-            if (SpriteBatch != null)
-            {
-                SpriteBatch.Dispose();
-                SpriteBatch = null;
-            }
-            if (Workspace != null)
-            {
-                Workspace.Dispose();
-                Workspace = null;
-            }
+            SpriteBatch?.Dispose();
+            SpriteBatch = null;
+            Workspace?.Dispose();
+            Workspace = null;
             foreach (var module in modules.Values)
             {
                 module.Dispose();

@@ -51,8 +51,8 @@ namespace FolderDiffChecker
             });
             if (dirs.Count >= 2)
             {
-                textBox1.Text = Path.Combine(path, Path.Combine(dirs[dirs.Count - 2], "PPDInstaller(x64)"));
-                textBox2.Text = Path.Combine(path, Path.Combine(dirs[dirs.Count - 1], "PPDInstaller(x64)"));
+                textBox1.Text = Path.Combine(path, Path.Combine(dirs[^2], "PPDInstaller(x64)"));
+                textBox2.Text = Path.Combine(path, Path.Combine(dirs[^1], "PPDInstaller(x64)"));
             }
             outPath = folderBrowserDialog1.SelectedPath = path;
         }
@@ -82,9 +82,9 @@ namespace FolderDiffChecker
 
                 var df = new DiffFinder(this.textBox1.Text, this.textBox2.Text,
                     new Regex[]{
-                        new Regex("thumbs\\.db", RegexOptions.IgnoreCase),
-                        new Regex("PPDUpdater\\.exe", RegexOptions.IgnoreCase),
-                        new Regex("PPDInstaller\\.exe", RegexOptions.IgnoreCase)
+                        new("thumbs\\.db", RegexOptions.IgnoreCase),
+                        new("PPDUpdater\\.exe", RegexOptions.IgnoreCase),
+                        new("PPDInstaller\\.exe", RegexOptions.IgnoreCase)
                     },
                     textBox3.Text.Split(new string[] { ":" }, StringSplitOptions.RemoveEmptyEntries).Select(s => new Regex(Regex.Escape(s), RegexOptions.IgnoreCase)).ToArray(),
                     this);
@@ -141,7 +141,7 @@ namespace FolderDiffChecker
             for (int i = 0; i < dataGridView1.RowCount; i++)
             {
                 var model = dataGridView1[0, i].Value as DiffModel;
-                var path = Path.Combine(outDir, model.FilePath.Substring(srcDir.Length));
+                var path = Path.Combine(outDir, model.FilePath[srcDir.Length..]);
                 if (model.IsFile)
                 {
                     CopyFile(model.FilePath, path);
@@ -207,7 +207,7 @@ namespace FolderDiffChecker
                     m.Groups[3].Value,
                     m.Groups[4].Value,
                     assemble);
-                    Utility.Zip(Path.Combine(dir, installerName), installerDir, new Regex[] { new Regex("^Data$") });
+                    Utility.Zip(Path.Combine(dir, installerName), installerDir, new Regex[] { new("^Data$") });
                 }
 
                 // diff zip
@@ -278,23 +278,19 @@ namespace FolderDiffChecker
             using (session)
             {
                 SendFiles(new UploadFileInfo[]{
-                    new UploadFileInfo
-                    {
+                    new() {
                         FilePath = Path.Combine(dir, String.Format("PPDInstaller{0}(x64).zip",version)),
                         DestDir = "installer/"
                     },
-                    new UploadFileInfo
-                    {
+                    new() {
                         FilePath = Path.Combine(outPath, String.Format("PPDDiff{0}_x64", version), String.Format("PPDDiff{0}_x64.zip", version)),
                         DestDir = "update/"
                     },
-                    new UploadFileInfo
-                    {
+                    new() {
                         FilePath = Path.Combine(dir, "beta_assembly_x64.xml"),
                         DestDir = "update/"
                     },
-                    new UploadFileInfo
-                    {
+                    new() {
                         FilePath = Path.Combine(dir, "beta_updatelist.xml"),
                         DestDir = "update/"
                     }
@@ -328,13 +324,11 @@ namespace FolderDiffChecker
                         m.Groups[3].Value,
                         m.Groups[4].Value));
                 SendFiles(new UploadFileInfo[]{
-                    new UploadFileInfo
-                    {
+                    new() {
                         FilePath = Path.Combine(dir, "updatelist.xml"),
                         DestDir = "update/"
                     },
-                    new UploadFileInfo
-                    {
+                    new() {
                         FilePath = Path.Combine(dir, "assembly_x64.xml"),
                         DestDir = "update/"
                     }                }, session);

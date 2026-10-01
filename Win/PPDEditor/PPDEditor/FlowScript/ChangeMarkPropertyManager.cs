@@ -9,7 +9,7 @@ namespace PPDEditor.FlowScript
 {
     class ChangeMarkPropertyManager : IChangeMarkPropertyManager
     {
-        private List<TaskBase> tasks;
+        private readonly List<TaskBase> tasks;
 
         public PPDSheet Sheet
         {
@@ -31,7 +31,7 @@ namespace PPDEditor.FlowScript
 
         public ChangeMarkPropertyManager(PPDSheet sheet, Layer layer, IDProvider idProvider)
         {
-            tasks = new List<TaskBase>();
+            tasks = [];
             Sheet = sheet;
             Layer = layer;
             IDProvider = idProvider;

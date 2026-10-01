@@ -6,7 +6,7 @@ namespace FlowScriptEngine
 {
     public class Serializer
     {
-        XDocument document;
+        readonly XDocument document;
 
 
         public Serializer()

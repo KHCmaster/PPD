@@ -6,7 +6,7 @@ namespace PPDFramework
 {
     class ResultInfoComparer : IComparer<ResultInfo>
     {
-        static ResultInfoComparer comparer = new ResultInfoComparer();
+        static readonly ResultInfoComparer comparer = new();
         public static ResultInfoComparer Comparer
         {
             get

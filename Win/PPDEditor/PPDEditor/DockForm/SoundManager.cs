@@ -14,9 +14,9 @@ namespace PPDEditor
     public partial class SoundManager : ScrollableForm
     {
         Sound sou;
-        List<string> data = new List<string>(100);
-        ComboBox[] cbs = new ComboBox[11];
-        SortedList<float, UInt16[]> changedata = new SortedList<float, UInt16[]>();
+        List<string> data = new(100);
+        readonly ComboBox[] cbs = new ComboBox[11];
+        readonly SortedList<float, UInt16[]> changedata = [];
         int currentnum;
         string nosound = "無音";
         string wavefilter = "サウンドファイル(*.wav;*ogg)|*.wav;*ogg|すべてのファイル(*.*)|*.*";

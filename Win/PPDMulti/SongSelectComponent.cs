@@ -27,13 +27,13 @@ namespace PPDMulti
         const int ScrollBarY = 80;
 
 
-        PPDFramework.Resource.ResourceManager resourceManager;
-        ISound sound;
+        readonly PPDFramework.Resource.ResourceManager resourceManager;
+        readonly ISound sound;
 
-        PictureObject back;
-        SpriteObject songInfoSprite;
-        RectangleComponent scrollBar;
-        TextureString modeString;
+        readonly PictureObject back;
+        readonly SpriteObject songInfoSprite;
+        readonly RectangleComponent scrollBar;
+        readonly TextureString modeString;
 
         SongInformation currentSong;
         LogicFolderInfomation currentLogic;
@@ -47,20 +47,20 @@ namespace PPDMulti
             public int scrollIndex;
         }
 
-        Stack<SelectStructure> songStack;
-        Stack<SelectStructure> logicStack;
-        Stack<SelectStructure> commonSongStack;
+        readonly Stack<SelectStructure> songStack;
+        readonly Stack<SelectStructure> logicStack;
+        readonly Stack<SelectStructure> commonSongStack;
 
         Mode mode = Mode.SongInformation;
 
-        private LeftMenu leftMenu;
-        private MovieManager movieManager;
+        private readonly LeftMenu leftMenu;
+        private readonly MovieManager movieManager;
 
         private MovieComponent movie;
         private bool isWaitingMovieChange;
         private int waitingMovieChangeCount;
 
-        SongDetailComponent songDetail;
+        readonly SongDetailComponent songDetail;
 
         private SongInformationComponent CurrentComponent
         {
@@ -260,10 +260,7 @@ namespace PPDMulti
                 scrollIndex = 0;
             }
 
-            if (CurrentComponent != null)
-            {
-                CurrentComponent.Selected = true;
-            }
+            CurrentComponent?.Selected = true;
             AdjustScrollBar();
             UpdateMovieWaitingCount();
             UpdateSongDetail();
@@ -595,10 +592,7 @@ namespace PPDMulti
         {
             if (movie != null && !isWaitingMovieChange)
             {
-                if (movie.Movie != null)
-                {
-                    movie.Movie.FadeOut();
-                }
+                movie.Movie?.FadeOut();
             }
             isWaitingMovieChange = true;
             waitingMovieChangeCount = 0;
@@ -716,10 +710,7 @@ namespace PPDMulti
                 sound.Play(PPDSetting.DefaultSounds[1], -1000);
                 SongInformation = dialog.SongInformation;
                 Difficulty = dialog.Difficulty;
-                if (SongSelected != null)
-                {
-                    SongSelected.Invoke(this, EventArgs.Empty);
-                }
+                SongSelected?.Invoke(this, EventArgs.Empty);
             }
 
             this.RemoveChild(dialog);
@@ -727,7 +718,7 @@ namespace PPDMulti
 
         void SongSelectComponent_GotFocused(IFocusable sender, FocusEventArgs args)
         {
-            if (!(args.FocusObject is DifficultyDialog))
+            if (args.FocusObject is not DifficultyDialog)
             {
                 back.Position = new System.Numerics.Vector2(0, 50);
                 Alpha = 0;
@@ -760,11 +751,11 @@ namespace PPDMulti
 
         class SongInformationComponent : GameComponent
         {
-            PPDFramework.Resource.ResourceManager resourceManager;
+            readonly PPDFramework.Resource.ResourceManager resourceManager;
             bool selected;
 
-            TextureString songName;
-            RectangleComponent rectangle;
+            readonly TextureString songName;
+            readonly RectangleComponent rectangle;
 
             public SongInformationComponent(PPDDevice device, PPDFramework.Resource.ResourceManager resourceManager, SongInformation songInformation, LogicFolderInfomation logicFolderInformation) : base(device)
             {
@@ -772,10 +763,7 @@ namespace PPDMulti
                 SongInformation = songInformation;
                 LogicFolderInformation = logicFolderInformation;
 
-                if (SongInformation == null)
-                {
-                    SongInformation = SongInformation.FindSongInformationByID(logicFolderInformation.ScoreID);
-                }
+                SongInformation ??= SongInformation.FindSongInformationByID(logicFolderInformation.ScoreID);
 
                 if (SongInformation != null && SongInformation.IsPPDSong)
                 {
@@ -847,25 +835,25 @@ namespace PPDMulti
 
         class SongDetailComponent : FocusableGameComponent
         {
-            PPDFramework.Resource.ResourceManager resourceManager;
-            TextureString authorText;
-            TextureString authorNameText;
-            TextureString easyText;
-            TextureString normalText;
-            TextureString hardText;
-            TextureString extremeText;
-            TextureString easyDifficultyText;
-            TextureString normalDifficultyText;
-            TextureString hardDifficultyText;
-            TextureString extremeDifficultyText;
-            TextureString easyPtText;
-            TextureString normalPtText;
-            TextureString hardPtText;
-            TextureString extremePtText;
-            TextureString[] easyTexts;
-            TextureString[] normalTexts;
-            TextureString[] hardTexts;
-            TextureString[] extremeTexts;
+            readonly PPDFramework.Resource.ResourceManager resourceManager;
+            readonly TextureString authorText;
+            readonly TextureString authorNameText;
+            readonly TextureString easyText;
+            readonly TextureString normalText;
+            readonly TextureString hardText;
+            readonly TextureString extremeText;
+            readonly TextureString easyDifficultyText;
+            readonly TextureString normalDifficultyText;
+            readonly TextureString hardDifficultyText;
+            readonly TextureString extremeDifficultyText;
+            readonly TextureString easyPtText;
+            readonly TextureString normalPtText;
+            readonly TextureString hardPtText;
+            readonly TextureString extremePtText;
+            readonly TextureString[] easyTexts;
+            readonly TextureString[] normalTexts;
+            readonly TextureString[] hardTexts;
+            readonly TextureString[] extremeTexts;
 
             DifficultyMeasureWorker worker;
 
@@ -964,11 +952,8 @@ namespace PPDMulti
 
             public void SetInfo(SongInformation songInfo)
             {
-                if (worker != null)
-                {
-                    worker.Stop();
-                    worker = null;
-                }
+                worker?.Stop();
+                worker = null;
 
                 if (songInfo == null)
                 {
@@ -1110,14 +1095,14 @@ namespace PPDMulti
 
         class DifficultyDialog : FocusableGameComponent
         {
-            PPDFramework.Resource.ResourceManager resourceManager;
-            ISound sound;
-            SongInformation songInfo;
-            SpriteObject textSprite;
+            readonly PPDFramework.Resource.ResourceManager resourceManager;
+            readonly ISound sound;
+            readonly SongInformation songInfo;
+            readonly SpriteObject textSprite;
 
-            RectangleComponent selectRectangle;
+            readonly RectangleComponent selectRectangle;
 
-            PictureObject back;
+            readonly PictureObject back;
 
             int index;
 

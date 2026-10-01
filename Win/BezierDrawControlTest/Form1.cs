@@ -9,10 +9,10 @@ namespace BezierDrawControlTest
 {
     public partial class Form1 : Form
     {
-        PointF[] poses = new PointF[10];
-        PointF[] dirs = new PointF[10];
+        readonly PointF[] poses = new PointF[10];
+        readonly PointF[] dirs = new PointF[10];
 
-        SquareGrid grid = new SquareGrid
+        readonly SquareGrid grid = new()
         {
             Width = 50,
             Height = 50,

@@ -5,12 +5,12 @@ namespace PPDEditor.Command.PPDSheet
 {
     class FusionMarkCommand : Command
     {
-        private SortedList<float, Mark>[] data;
-        private Mark mk1;
-        private Mark mk2;
-        private ExMark exmk;
+        private readonly SortedList<float, Mark>[] data;
+        private readonly Mark mk1;
+        private readonly Mark mk2;
+        private readonly ExMark exmk;
 
-        ButtonType typeIndex;
+        readonly ButtonType typeIndex;
         public FusionMarkCommand(SortedList<float, Mark>[] data, Mark mk1, Mark mk2, ExMark exmk)
         {
             this.data = data;

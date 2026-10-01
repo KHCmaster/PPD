@@ -8,7 +8,7 @@ namespace FlowScriptControlTest
     public class FlowDrawTab : TabPage
     {
         private string filePath;
-        FlowDrawPanel flowDrawPanel;
+        readonly FlowDrawPanel flowDrawPanel;
 
         public FlowDrawPanel FlowDrawPanel
         {

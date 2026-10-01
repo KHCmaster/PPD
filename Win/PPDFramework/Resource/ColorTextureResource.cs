@@ -11,8 +11,8 @@ namespace PPDFramework.Resource
     /// </summary>
     public class ColorTextureResource : ColorTextureResourceBase
     {
-        TextureBase texture;
-        Color4 color;
+        readonly TextureBase texture;
+        readonly Color4 color;
 
         /// <summary>
         /// テクスチャを取得します

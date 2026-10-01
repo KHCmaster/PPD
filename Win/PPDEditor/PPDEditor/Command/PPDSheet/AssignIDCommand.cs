@@ -2,9 +2,9 @@
 {
     class AssignIDCommand : Command
     {
-        uint newID;
-        uint prevID;
-        Mark mark;
+        readonly uint newID;
+        readonly uint prevID;
+        readonly Mark mark;
 
         public AssignIDCommand(Mark mark, uint id)
         {

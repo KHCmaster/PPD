@@ -7,8 +7,8 @@ namespace PPDFramework.Web
     /// </summary>
     public class ItemInfo
     {
-        private ItemType[] availableItems = { ItemType.Auto1, ItemType.Auto2, ItemType.Auto3, ItemType.Auto4, ItemType.AutoFreePass };
-        private Dictionary<string, object> parameters;
+        private readonly ItemType[] availableItems = { ItemType.Auto1, ItemType.Auto2, ItemType.Auto3, ItemType.Auto4, ItemType.AutoFreePass };
+        private readonly Dictionary<string, object> parameters;
 
         /// <summary>
         /// アイテムのIDを取得します。
@@ -68,7 +68,7 @@ namespace PPDFramework.Web
         {
             ItemId = itemId;
             ItemType = itemType;
-            parameters = new Dictionary<string, object>();
+            parameters = [];
         }
 
         /// <summary>

@@ -7,7 +7,7 @@ namespace PPDFramework.Logger
     /// </summary>
     public class LogManager
     {
-        private static LogManager instance = new LogManager();
+        private static readonly LogManager instance = new();
 
         /// <summary>
         /// インスタンスを取得します。

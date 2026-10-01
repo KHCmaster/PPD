@@ -9,11 +9,11 @@ namespace PPDCore
     /// </summary>
     class GameInterfaceBottom : GameComponent
     {
-        PictureObject bottom;
-        PictureObject bottomdanger;
-        LifeGage lg;
-        TemporaryEvaluate te;
-        TextureString kasi;
+        readonly PictureObject bottom;
+        readonly PictureObject bottomdanger;
+        readonly LifeGage lg;
+        readonly TemporaryEvaluate te;
+        readonly TextureString kasi;
         bool _danger;
 
         public bool Danger

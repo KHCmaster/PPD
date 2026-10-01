@@ -167,7 +167,7 @@ namespace PPDMultiCommon.Web
             var req = CreateRequest(url);
             using (var response = req.GetResponse())
             {
-                using (StreamReader reader = new StreamReader(response.GetResponseStream()))
+                using (StreamReader reader = new(response.GetResponseStream()))
                 {
                     return reader.ReadToEnd();
                 }

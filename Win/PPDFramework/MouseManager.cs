@@ -10,11 +10,11 @@ namespace PPDFramework
     /// </summary>
     public class MouseManager
     {
-        private Control control;
+        private readonly Control control;
         private Vector2 offset;
         private Vector2 scale;
-        private List<MouseEvent> mouseEvents;
-        private Queue<MouseInfo> mouseInfos;
+        private readonly List<MouseEvent> mouseEvents;
+        private readonly Queue<MouseInfo> mouseInfos;
 
         /// <summary>
         /// コンストラクタ
@@ -27,7 +27,7 @@ namespace PPDFramework
             this.control = control;
             this.offset = offset;
             this.scale = scale;
-            mouseEvents = new List<MouseEvent>();
+            mouseEvents = [];
             mouseInfos = new Queue<MouseInfo>();
             control.MouseDown += control_MouseDown;
             control.MouseUp += control_MouseUp;

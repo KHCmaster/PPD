@@ -44,7 +44,7 @@
 
         CustomList<T> head;
         CustomList<T> tail;
-        int maximumSize;
+        readonly int maximumSize;
         int currentSize;
         int index = -1;
 

@@ -10,7 +10,6 @@ namespace FlowScriptDrawControl.Converter
 
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            var param = parameter as string;
             bool val;
             if (value is bool)
             {
@@ -24,7 +23,7 @@ namespace FlowScriptDrawControl.Converter
             {
                 val = value != null;
             }
-            if (param != null && param == "Invert")
+            if (parameter is string param && param == "Invert")
             {
                 val = !val;
             }

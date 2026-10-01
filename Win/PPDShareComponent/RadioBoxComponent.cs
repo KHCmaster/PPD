@@ -7,8 +7,8 @@ namespace PPDShareComponent
 {
     public class RadioBoxComponent : SelectableComponent
     {
-        private PictureObject check;
-        private PictureObject checkBox;
+        private readonly PictureObject check;
+        private readonly PictureObject checkBox;
 
         public RadioBoxComponent(PPDDevice device, PPDFramework.Resource.ResourceManager resourceManager, PathManager pathManager, string text) : base(device)
         {

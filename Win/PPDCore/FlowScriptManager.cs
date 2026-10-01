@@ -13,7 +13,7 @@ namespace PPDCore
 {
     public class FlowScriptManager : DisposableComponent
     {
-        Engine engine;
+        readonly Engine engine;
 
         public BPMManager BPMManager
         {
@@ -98,16 +98,16 @@ namespace PPDCore
             get { return scriptList.Select(s => s.Value.ResourceManager).ToArray(); }
         }
 
-        Dictionary<string, object> afterLoadList;
-        List<KeyValuePair<MemoryStream, ScriptInfo>> scriptList;
-        List<IPriorityManager> priorityManagers;
+        readonly Dictionary<string, object> afterLoadList;
+        readonly List<KeyValuePair<MemoryStream, ScriptInfo>> scriptList;
+        readonly List<IPriorityManager> priorityManagers;
 
         private TcpDebugControllerClient controllerClient;
         private DebugController debugController;
 
         public FlowScriptManager(PPDDevice device, ISound sound)
         {
-            priorityManagers = new List<IPriorityManager>();
+            priorityManagers = [];
             engine = new Engine();
             engine.Error += engine_Error;
             BPMManager = new BPMManager();
@@ -131,9 +131,9 @@ namespace PPDCore
             });
             GameResultManager = new GameResultManager();
             StageManager = new StageManager(device);
-            afterLoadList = new Dictionary<string, object>();
+            afterLoadList = [];
 
-            scriptList = new List<KeyValuePair<MemoryStream, ScriptInfo>>();
+            scriptList = [];
             ModManager.Instance.WaitForLoadFinish();
             if (!ModManager.Instance.Initialized)
             {
@@ -311,21 +311,13 @@ namespace PPDCore
             base.DisposeResource();
             foreach (KeyValuePair<MemoryStream, ScriptInfo> kvp in scriptList)
             {
-                if (kvp.Value.ResourceManager != null)
-                {
-                    kvp.Value.ResourceManager.Dispose();
-                }
+                kvp.Value.ResourceManager?.Dispose();
             }
-            if (controllerClient != null)
-            {
-                controllerClient.Dispose();
-                controllerClient = null;
-            }
-            if (debugController != null)
-            {
-                debugController.Dispose();
-                debugController = null;
-            }
+
+            controllerClient?.Dispose();
+            controllerClient = null;
+            debugController?.Dispose();
+            debugController = null;
         }
     }
 }

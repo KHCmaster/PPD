@@ -11,11 +11,11 @@ namespace PPDInput
     public abstract class InputBase : IDisposable
     {
         protected Form window;
-        IDirectInput8 di;
+        readonly IDirectInput8 di;
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2213:Disposable fields should be disposed", Justification = "Dispose から呼ばれる ReleaseObjects で破棄する")]
         protected IDirectInputDevice8 keyboard;
-        List<IDirectInputDevice8> joysticks;
-        List<string> joystickNames;
+        readonly List<IDirectInputDevice8> joysticks;
+        readonly List<string> joystickNames;
         bool disposed;
         protected const int threshold = 500;
         int currentJoyStickIndex = -1;
@@ -26,8 +26,8 @@ namespace PPDInput
         protected InputBase(Form window)
         {
             this.window = window;
-            joysticks = new List<IDirectInputDevice8>();
-            joystickNames = new List<string>();
+            joysticks = [];
+            joystickNames = [];
             //DirectInput の初期化
             di = DInput.DirectInput8Create();
         }

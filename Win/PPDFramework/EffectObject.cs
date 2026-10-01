@@ -49,7 +49,7 @@ namespace PPDFramework
         /// </summary>
         public event EventHandler Finish;
 
-        Resource.ResourceManager resourceManager;
+        readonly Resource.ResourceManager resourceManager;
         EffectManager manager;
 
         /// <summary>
@@ -127,7 +127,7 @@ namespace PPDFramework
 
         void manager_Finish(object sender, EventArgs e)
         {
-            if (Finish != null) Finish.Invoke(this, EventArgs.Empty);
+            Finish?.Invoke(this, EventArgs.Empty);
         }
 
         /// <summary>
@@ -212,11 +212,8 @@ namespace PPDFramework
         protected override void DisposeResource()
         {
             base.DisposeResource();
-            if (manager != null)
-            {
-                manager.Finish -= manager_Finish;
-                manager = null;
-            }
+            manager?.Finish -= manager_Finish;
+            manager = null;
         }
     }
 }

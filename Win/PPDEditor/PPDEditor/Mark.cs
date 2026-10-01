@@ -37,7 +37,7 @@ namespace PPDEditor
             this.time = time;
             this.skin = skin;
             this.resourceManager = resourceManager;
-            parameters = new Dictionary<string, string>();
+            parameters = [];
             mark = new PictureObject(device, resourceManager, skin.GetMarkImagePath(type), true)
             {
                 Position = new Vector2(x, y)

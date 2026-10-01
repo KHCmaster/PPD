@@ -52,7 +52,7 @@ namespace PPDInstaller.Controls
 
         private void button1_Click(object sender, EventArgs e)
         {
-            while (!(PanelManager.CurrentPanel is ConfirmPanel))
+            while (PanelManager.CurrentPanel is not ConfirmPanel)
             {
                 PanelManager.Next();
             }

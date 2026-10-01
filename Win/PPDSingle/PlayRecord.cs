@@ -23,43 +23,43 @@ namespace PPDSingle
             FinishTime = 7
         }
 
-        string[] graphNameStrings;
+        readonly string[] graphNameStrings;
 
         GraphDrawType graphDrawType = GraphDrawType.Score;
 
-        PictureObject back;
-        RectangleComponent black;
-        PictureObject top;
-        PictureObject bottom;
-        PictureObject triangle;
+        readonly PictureObject back;
+        readonly RectangleComponent black;
+        readonly PictureObject top;
+        readonly PictureObject bottom;
+        readonly PictureObject triangle;
 
-        TextureString difficulty;
-        string[] difficultyStrings = { "Easy", "Normal", "Hard", "Extreme" };
+        readonly TextureString difficulty;
+        readonly string[] difficultyStrings = { "Easy", "Normal", "Hard", "Extreme" };
         Difficulty selectedDifficulty;
         SongInformation selectedSongInformation;
 
-        GraphDrawer gd;
+        readonly GraphDrawer gd;
         PPDFramework.ResultInfo[] results;
-        List<PPDFramework.ResultInfo> currentDifficultyRecults = new List<PPDFramework.ResultInfo>();
-        ISound sound;
-        PPDFramework.Resource.ResourceManager resourceManager;
+        readonly List<PPDFramework.ResultInfo> currentDifficultyRecults = [];
+        readonly ISound sound;
+        readonly PPDFramework.Resource.ResourceManager resourceManager;
 
-        TextureString cool;
-        TextureString good;
-        TextureString safe;
-        TextureString sad;
-        TextureString worst;
-        TextureString maxCombo;
+        readonly TextureString cool;
+        readonly TextureString good;
+        readonly TextureString safe;
+        readonly TextureString sad;
+        readonly TextureString worst;
+        readonly TextureString maxCombo;
 
-        TextureString songname;
+        readonly TextureString songname;
 
-        LineRectangleComponent rectangle;
+        readonly LineRectangleComponent rectangle;
 
         int selectedIndex = -1;
 
-        SpriteObject sprite;
+        readonly SpriteObject sprite;
 
-        EffectObject cursor;
+        readonly EffectObject cursor;
 
         const int contentHeight = 19;
         const int maxContentNum = 14;

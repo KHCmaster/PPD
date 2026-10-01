@@ -10,7 +10,7 @@ namespace PPDConfiguration
     /// </summary>
     public class SettingReader
     {
-        Dictionary<string, string> dictionary;
+        readonly Dictionary<string, string> dictionary;
 
         /// <summary>
         /// iniフォーマットかどうか

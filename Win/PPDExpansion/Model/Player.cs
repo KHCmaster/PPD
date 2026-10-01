@@ -36,7 +36,7 @@ namespace PPDExpansion.Model
 
         public Player(PlayerInfo playerInfo)
         {
-            Scores = new ObservableCollection<KeyValuePair<DateTime, int>>();
+            Scores = [];
             PlayerInfo = playerInfo;
             Image = new BitmapImage(new Uri(String.Format(@"http://projectdxxx.me/api/get-avator/s/16/id/{0}", playerInfo.AcccountId)));
             Brush = new SolidColorBrush(Color.FromRgb(playerInfo.R, playerInfo.G, playerInfo.B));

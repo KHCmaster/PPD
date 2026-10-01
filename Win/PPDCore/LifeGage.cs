@@ -22,16 +22,16 @@ namespace PPDCore
 
         State state = State.Normal;
 
-        SpriteObject flareSprite;
-        SpriteObject backSprite;
-        SpriteObject overraySprite;
-        SpriteObject onpuSprite;
+        readonly SpriteObject flareSprite;
+        readonly SpriteObject backSprite;
+        readonly SpriteObject overraySprite;
+        readonly SpriteObject onpuSprite;
 
-        PictureObject frame;
-        PictureObject black;
-        List<OnpuObject> onpus;
+        readonly PictureObject frame;
+        readonly PictureObject black;
+        readonly List<OnpuObject> onpus;
         float currentlife = 50;
-        PPDFramework.Resource.ResourceManager resourceManager;
+        readonly PPDFramework.Resource.ResourceManager resourceManager;
 
 
         public LifeGage(PPDDevice device, PPDFramework.Resource.ResourceManager resourceManager) : base(device)
@@ -72,9 +72,9 @@ namespace PPDCore
                 }
                 var flare = new EffectObject(device, resourceManager, Utility.Path.Combine("lifegage", String.Format("{0}{1}", content, "flare.etd")))
                 {
-                    Position = new Vector2(56, 11)
+                    Position = new Vector2(56, 11),
+                    PlayType = Effect2D.EffectManager.PlayType.ReverseLoop
                 };
-                flare.PlayType = Effect2D.EffectManager.PlayType.ReverseLoop;
                 flare.Play();
                 flareSprite.AddChild(flare);
                 backSprite.AddChild(new PictureObject(device, resourceManager, Utility.Path.Combine("lifegage", String.Format("{0}{1}", content, "back.png")))
@@ -90,7 +90,7 @@ namespace PPDCore
 
             flareSprite[(int)state].Hidden = overraySprite[(int)state].Hidden = backSprite[(int)state].Hidden = false;
 
-            onpus = new List<OnpuObject>();
+            onpus = [];
             CurrentLife = 50;
 
             InitializeComponentPosition();

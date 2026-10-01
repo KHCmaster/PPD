@@ -59,9 +59,7 @@ namespace PPDEditor.Forms
             {
                 return;
             }
-            var temp = rows[rowIndex - 1];
-            rows[rowIndex - 1] = rows[rowIndex];
-            rows[rowIndex] = temp;
+            (rows[rowIndex], rows[rowIndex - 1]) = (rows[rowIndex - 1], rows[rowIndex]);
             dataGridView1.Invalidate();
             dataGridView1.Rows[rowIndex - 1].Selected = true;
         }
@@ -78,9 +76,7 @@ namespace PPDEditor.Forms
             {
                 return;
             }
-            var temp = rows[rowIndex + 1];
-            rows[rowIndex + 1] = rows[rowIndex];
-            rows[rowIndex] = temp;
+            (rows[rowIndex], rows[rowIndex + 1]) = (rows[rowIndex + 1], rows[rowIndex]);
             dataGridView1.Invalidate();
             dataGridView1.Rows[rowIndex + 1].Selected = true;
         }

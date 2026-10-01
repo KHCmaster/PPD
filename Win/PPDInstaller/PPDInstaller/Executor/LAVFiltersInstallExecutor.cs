@@ -5,10 +5,10 @@ namespace PPDInstaller.Executor
 {
     class LAVFiltersInstallExecutor : CExecutor
     {
-        public static Uri lavFiltersUri = new Uri("http://lavfilters.googlecode.com/files/LAVFilters-0.58.2.exe");
-        FileDownloader downloadClient = new FileDownloader();
+        public static Uri lavFiltersUri = new("http://lavfilters.googlecode.com/files/LAVFilters-0.58.2.exe");
+        readonly FileDownloader downloadClient = new();
 
-        private string filePath;
+        private readonly string filePath;
         public LAVFiltersInstallExecutor(string filePath, Control control)
             : base(control)
         {

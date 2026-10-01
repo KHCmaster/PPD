@@ -9,9 +9,9 @@ namespace PPDFramework.Chars
     /// </summary>
     public class CharCacheManager : DisposableComponent
     {
-        Dictionary<char, Dictionary<float, Dictionary<string, CharCacheInfo>>> cache;
-        Dictionary<float, Dictionary<string, SizeTextureManager>> sizeTextures;
-        PPDDevice device;
+        readonly Dictionary<char, Dictionary<float, Dictionary<string, CharCacheInfo>>> cache;
+        readonly Dictionary<float, Dictionary<string, SizeTextureManager>> sizeTextures;
+        readonly PPDDevice device;
         Direct2DImageEncoder encoder;
 
         /// <summary>
@@ -21,8 +21,8 @@ namespace PPDFramework.Chars
         public CharCacheManager(PPDDevice device)
         {
             this.device = device;
-            cache = new Dictionary<char, Dictionary<float, Dictionary<string, CharCacheInfo>>>();
-            sizeTextures = new Dictionary<float, Dictionary<string, SizeTextureManager>>();
+            cache = [];
+            sizeTextures = [];
             encoder = new Direct2DImageEncoder(2048, 2048, 96);
         }
 
@@ -42,7 +42,7 @@ namespace PPDFramework.Chars
             {
                 if (!cache.TryGetValue(c, out sizeCache))
                 {
-                    sizeCache = new Dictionary<float, Dictionary<string, CharCacheInfo>>();
+                    sizeCache = [];
                     cache[c] = sizeCache;
                 }
             }
@@ -50,7 +50,7 @@ namespace PPDFramework.Chars
             {
                 if (!sizeCache.TryGetValue(fontSize, out faceCache))
                 {
-                    faceCache = new Dictionary<string, CharCacheInfo>();
+                    faceCache = [];
                     sizeCache[fontSize] = faceCache;
                 }
             }
@@ -79,7 +79,7 @@ namespace PPDFramework.Chars
             {
                 if (!sizeTextures.TryGetValue(fontSize, out faceTextures))
                 {
-                    faceTextures = new Dictionary<string, SizeTextureManager>();
+                    faceTextures = [];
                     sizeTextures[fontSize] = faceTextures;
                 }
             }
@@ -160,11 +160,9 @@ namespace PPDFramework.Chars
                 }
                 sizeTextures.Clear();
             }
-            if (encoder != null)
-            {
-                encoder.Dispose();
-                encoder = null;
-            }
+
+            encoder?.Dispose();
+            encoder = null;
         }
     }
 }

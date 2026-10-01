@@ -27,14 +27,14 @@ namespace PPDSingle
             Profile,
         }
 
-        PPDFramework.Resource.ResourceManager resourceManager;
-        ISound sound;
-        float[] speeds = { 0.5f, 0.75f, 1.0f, 1.25f, 1.5f, 1.75f, 2.0f };
-        PictureObject back;
-        SelectableComponent[] selectables;
+        readonly PPDFramework.Resource.ResourceManager resourceManager;
+        readonly ISound sound;
+        readonly float[] speeds = { 0.5f, 0.75f, 1.0f, 1.25f, 1.5f, 1.75f, 2.0f };
+        readonly PictureObject back;
+        readonly SelectableComponent[] selectables;
         State state = State.Auto;
 
-        private float width;
+        private readonly float width;
 
         public AutoMode AutoMode
         {

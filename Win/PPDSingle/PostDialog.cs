@@ -8,22 +8,22 @@ namespace PPDSingle
 {
     class PostDialog : FocusableGameComponent
     {
-        EffectObject back;
+        readonly EffectObject back;
         int selection;
 
-        TextureString message;
-        TextureString content;
-        TextureString processing;
-        TextureString failedString;
+        readonly TextureString message;
+        readonly TextureString content;
+        readonly TextureString processing;
+        readonly TextureString failedString;
 
         int failedStringShowCount;
 
-        RectangleComponent black;
+        readonly RectangleComponent black;
 
-        Button[] buttons;
+        readonly Button[] buttons;
 
-        ISound Sound;
-        IBlueSkyManager BlueSkyManager;
+        readonly ISound Sound;
+        readonly IBlueSkyManager BlueSkyManager;
         bool postWaiting;
         bool opening;
 
@@ -73,10 +73,10 @@ namespace PPDSingle
                 }
                 buttons[i] = new Button(device, resourceManager, Utility.Path, text)
                 {
-                    Position = new Vector2(300 + i * 200, 315)
+                    Position = new Vector2(300 + i * 200, 315),
+                    Selected = false,
+                    Hidden = true
                 };
-                buttons[i].Selected = false;
-                buttons[i].Hidden = true;
                 this.AddChild(buttons[i]);
             }
 

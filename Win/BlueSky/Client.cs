@@ -10,7 +10,7 @@ namespace BlueSky
         private readonly string id;
         private readonly string password;
         private readonly HttpClient client;
-        private readonly JsonSerializerSettings jsonSerializerSettings = new JsonSerializerSettings()
+        private readonly JsonSerializerSettings jsonSerializerSettings = new()
         {
             MetadataPropertyHandling = MetadataPropertyHandling.Ignore,
         };
@@ -69,8 +69,7 @@ namespace BlueSky
                         Type = "app.bsky.embed.images",
                         Images = new RecordImage[]
                         {
-                            new RecordImage
-                            {
+                            new() {
                                 Alt = "",
                                 Image = uploadResponse.Blob,
                             }

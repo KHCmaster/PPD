@@ -5,10 +5,10 @@ namespace PPDEditor.Command.PPDSheet
 {
     class ChangeMarkTypeCommand : Command
     {
-        SortedList<float, Mark>[] data;
-        Mark mk;
-        ButtonType newType;
-        ButtonType prevType;
+        readonly SortedList<float, Mark>[] data;
+        readonly Mark mk;
+        readonly ButtonType newType;
+        readonly ButtonType prevType;
         public ChangeMarkTypeCommand(SortedList<float, Mark>[] data, Mark mk, ButtonType newType)
         {
             this.data = data;

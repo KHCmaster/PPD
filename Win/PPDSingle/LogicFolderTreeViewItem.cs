@@ -8,7 +8,7 @@ namespace PPDSingle
     {
         class LogicFolderTreeViewItemComparer : IComparer<TreeViewItem>
         {
-            static LogicFolderTreeViewItemComparer comparer = new LogicFolderTreeViewItemComparer();
+            static readonly LogicFolderTreeViewItemComparer comparer = new();
 
             public static LogicFolderTreeViewItemComparer Comparer
             {

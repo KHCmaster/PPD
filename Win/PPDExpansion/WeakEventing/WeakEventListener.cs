@@ -32,13 +32,13 @@ namespace PPDExpansion
         /// <summary>
         /// WeakReference to the rootInstance listening for the event.
         /// </summary>
-        private WeakReference _weakInstance;
+        private readonly WeakReference _weakInstance;
 
         /// <summary>
         /// To hold a reference to source object. With this instance the WeakEventListener 
         /// // can guarantee that the handler get unregistered when listener is released.
         /// </summary>
-        private TSource _source;
+        private readonly TSource _source;
 
         /// <summary>
         /// Delegate to the method to call when the event fires.
@@ -65,11 +65,8 @@ namespace PPDExpansion
                 throw new ArgumentNullException(nameof(instance));
             }
 
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-
             _weakInstance = new WeakReference(instance);
-            this._source = source;
+            this._source = source ?? throw new ArgumentNullException(nameof(source));
         }
 
         #endregion

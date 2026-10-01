@@ -7,11 +7,11 @@ namespace PPDInstaller.Executor
 {
     class BMSTOPPDInstallExecutor : CExecutor
     {
-        Regex[] BMSTOPPDIgnoreList = {
-          new Regex("setting\\.ini",RegexOptions.IgnoreCase)
+        readonly Regex[] BMSTOPPDIgnoreList = {
+          new("setting\\.ini",RegexOptions.IgnoreCase)
         };
-        string dataDirectory;
-        string installDirectory;
+        readonly string dataDirectory;
+        readonly string installDirectory;
         public BMSTOPPDInstallExecutor(string dataDirectory, string installDirectory, Control control)
             : base(control)
         {

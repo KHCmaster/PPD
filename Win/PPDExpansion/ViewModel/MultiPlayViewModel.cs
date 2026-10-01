@@ -22,7 +22,7 @@ namespace PPDExpansion.ViewModel
         private string scoreName;
         private Difficulty difficulty;
 
-        private Dictionary<int, Player> dict;
+        private readonly Dictionary<int, Player> dict;
 
         public override PlayType PlayType
         {
@@ -122,7 +122,7 @@ namespace PPDExpansion.ViewModel
                     {
                         if (player.Scores.Count > 0)
                         {
-                            max = Math.Max(max, player.Scores[player.Scores.Count - 1].Value);
+                            max = Math.Max(max, player.Scores[^1].Value);
                         }
                     }
                 }
@@ -184,9 +184,9 @@ namespace PPDExpansion.ViewModel
         public MultiPlayViewModel(MainWindowViewModel mainWindowViewModel)
             : base(mainWindowViewModel)
         {
-            Players = new ObservableCollection<Player>();
-            Items = new ObservableCollection<Item>();
-            dict = new Dictionary<int, Player>();
+            Players = [];
+            Items = [];
+            dict = [];
             ChartHeight = PPDExpansionSetting.Setting.MultiPlayChartHeight;
             SetScoreInfo(new ScoreInfo
             {

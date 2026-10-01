@@ -28,7 +28,7 @@ namespace PPDUpdater
         public static string LangDir = "Lang";
         public static string KHCDir;
         public static string Complete = "Complete";
-        public static Regex UpdateRegex = new Regex("^PPDDiff(?<version>\\d+)", RegexOptions.IgnoreCase);
+        public static Regex UpdateRegex = new("^PPDDiff(?<version>\\d+)", RegexOptions.IgnoreCase);
         public static string UpdateRegexGroup = "version";
 
 
@@ -38,7 +38,7 @@ namespace PPDUpdater
             {
                 var index = path.IndexOf(Path.DirectorySeparatorChar);
                 if (index < 0) return "";
-                path = path.Substring(index + 1);
+                path = path[(index + 1)..];
                 level--;
             }
             return path;

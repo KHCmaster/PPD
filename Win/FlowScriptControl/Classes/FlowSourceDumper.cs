@@ -13,11 +13,11 @@ namespace FlowScriptControl.Classes
 {
     public class FlowSourceDumper : IToolTipText
     {
-        private static Hashtable typeTextTypeDict = new Hashtable();
-        private static List<Type> propertyTypes = new List<Type>();
+        private static readonly Hashtable typeTextTypeDict = [];
+        private static readonly List<Type> propertyTypes = [];
 
-        FlowSourceObjectBase flowSourceObject;
-        AssemblyAndType asmAndType;
+        readonly FlowSourceObjectBase flowSourceObject;
+        readonly AssemblyAndType asmAndType;
         bool initialized;
 
         private string sourceName;
@@ -280,7 +280,7 @@ namespace FlowScriptControl.Classes
             Write(memberInfo.ToolTipTextKey, memberInfo.ToolTipText);
         }
 
-        private static Dictionary<string, string> dict = new Dictionary<string, string>();
+        private static readonly Dictionary<string, string> dict = [];
 
         private void Write(string key, string text)
         {
@@ -292,7 +292,7 @@ namespace FlowScriptControl.Classes
 
         public static void WriteToText(string path)
         {
-            using (StreamWriter writer = new StreamWriter(path, false, Encoding.UTF8))
+            using (StreamWriter writer = new(path, false, Encoding.UTF8))
             {
                 var list = new List<string>();
                 foreach (KeyValuePair<string, string> kvp in dict)

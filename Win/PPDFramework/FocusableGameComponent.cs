@@ -127,10 +127,7 @@ namespace PPDFramework
         /// <param name="focusObject"></param>
         protected virtual void OnFocus(IFocusable focusObject)
         {
-            if (GotFocused != null)
-            {
-                GotFocused.Invoke(this, new FocusEventArgs(focusObject));
-            }
+            GotFocused?.Invoke(this, new FocusEventArgs(focusObject));
         }
 
         /// <summary>
@@ -139,10 +136,7 @@ namespace PPDFramework
         /// <param name="focusObject"></param>
         protected virtual void OnLostFocus(IFocusable focusObject)
         {
-            if (LostFocused != null)
-            {
-                LostFocused.Invoke(this, new FocusEventArgs(focusObject));
-            }
+            LostFocused?.Invoke(this, new FocusEventArgs(focusObject));
         }
 
         /// <summary>

@@ -9,8 +9,8 @@ namespace PPDCore
     public class PPDEffectManager : GameComponent
     {
         const int defaulteffectnum = 10;
-        PPDFramework.Resource.ResourceManager resourceManager;
-        Dictionary<string, PPDEffectPool> pools;
+        readonly PPDFramework.Resource.ResourceManager resourceManager;
+        readonly Dictionary<string, PPDEffectPool> pools;
 
         public bool SuspendAdd
         {
@@ -21,7 +21,7 @@ namespace PPDCore
         public PPDEffectManager(PPDDevice device, PPDFramework.Resource.ResourceManager resourceManager) : base(device)
         {
             this.resourceManager = resourceManager;
-            pools = new Dictionary<string, PPDEffectPool>();
+            pools = [];
         }
         public void CreateEffect(PathObject filename)
         {

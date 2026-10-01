@@ -23,7 +23,7 @@ namespace PPDInstaller.Controls
         [DefaultValue("")]
         public string InstallVersion { get; private set; }
 
-        bool fontinstalled;
+        readonly bool fontinstalled;
 
         public InstallComponentPanel()
         {

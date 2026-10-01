@@ -13,13 +13,13 @@ namespace PPDEditor.Controls.Resource
         const int checksize = 10;
 
         private Bitmap CheckBack;
-        private Color backColor = Color.White;
+        private readonly Color backColor = Color.White;
         private EffectManager effectManager;
         private Dictionary<string, Image> dict;
-        private Timer timer;
+        private readonly Timer timer;
         private Matrix moveMatrix;
 
-        private Dictionary<int, int> sizeDict = new Dictionary<int, int>
+        private readonly Dictionary<int, int> sizeDict = new()
         {
             {0,256},
             {1,384},
@@ -95,14 +95,14 @@ namespace PPDEditor.Controls.Resource
                     e.Graphics.FillRectangle(Brushes.White, new Rectangle(e.Bounds.X + 2, e.Bounds.Y + 2, 16, 16));
                     break;
                 case 3:
-                    using (SolidBrush brush = new SolidBrush(PPDStaticSetting.CustomCanvasBackColor))
+                    using (SolidBrush brush = new(PPDStaticSetting.CustomCanvasBackColor))
                     {
                         e.Graphics.FillRectangle(brush, new Rectangle(e.Bounds.X + 2, e.Bounds.Y + 2, 16, 16));
                     }
                     break;
             }
             e.Graphics.DrawRectangle(Pens.Black, new Rectangle(e.Bounds.X + 2, e.Bounds.Y + 2, 16, 16));
-            using (SolidBrush brush = new SolidBrush(e.ForeColor))
+            using (SolidBrush brush = new(e.ForeColor))
             {
                 e.Graphics.DrawString(toolStripComboBox2.Items[e.Index].ToString(), e.Font, brush,
                     new Point(e.Bounds.X + 20, e.Bounds.Y));
@@ -178,11 +178,8 @@ namespace PPDEditor.Controls.Resource
 
         private void CreateCheckBack(int width)
         {
-            if (CheckBack != null)
-            {
-                CheckBack.Dispose();
-                CheckBack = null;
-            }
+            CheckBack?.Dispose();
+            CheckBack = null;
             CheckBack = new Bitmap(width, checksize * 2);
             using (Graphics g = Graphics.FromImage(CheckBack))
             {
@@ -200,13 +197,10 @@ namespace PPDEditor.Controls.Resource
         {
             DrawBack(e.Graphics);
             e.Graphics.Transform = moveMatrix;
-            if (effectManager != null)
-            {
-                effectManager.Draw((fn, state) =>
+            effectManager?.Draw((fn, state) =>
                     {
                         Draw(e.Graphics, fn, state);
                     });
-            }
             DrawCenter(e.Graphics);
         }
         private void DrawBack(Graphics g)

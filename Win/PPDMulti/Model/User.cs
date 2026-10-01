@@ -13,7 +13,7 @@ namespace PPDMulti.Model
     {
         private Color4 color;
 
-        private static User systemUser = new User
+        private static readonly User systemUser = new()
         {
             Name = "",
             Color = PPDColors.White

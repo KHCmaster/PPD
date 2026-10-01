@@ -19,9 +19,9 @@ namespace FlowScriptDrawControl.Model
         private Point areaShift;
         private MoveInfo[] moveInfos;
 
-        private PositionableControl[] controls;
+        private readonly PositionableControl[] controls;
         private FlowAreaControl areaControl;
-        private Command.CommandManager commandManager;
+        private readonly Command.CommandManager commandManager;
         private MovePositionablesCommand command;
 
         public PositionableControl[] Controls

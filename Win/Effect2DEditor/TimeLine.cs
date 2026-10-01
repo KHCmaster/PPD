@@ -70,8 +70,8 @@ namespace Effect2DEditor
                 if (currentframe != value)
                 {
                     currentframe = value;
-                    if (EffectManager != null) EffectManager.Update(currentframe, null);
-                    if (MainForm != null) MainForm.RefreshCanvas();
+                    EffectManager?.Update(currentframe, null);
+                    MainForm?.RefreshCanvas();
                     DrawAndRefresh();
                 }
             }

@@ -48,8 +48,7 @@ namespace PPDFramework.PPDStructure
                 fdata = System.BitConverter.GetBytes(markData[i].Angle);
                 stream.Write(fdata, 0, fdata.Length);
                 var offset = (byte)(markData[i].ID != 0 ? 40 : 0);
-                var exmkData = markData[i] as ExMarkData;
-                if (exmkData == null)
+                if (markData[i] is not ExMarkData exmkData)
                 {
                     stream.WriteByte((byte)(markData[i].ButtonType + offset));
                 }

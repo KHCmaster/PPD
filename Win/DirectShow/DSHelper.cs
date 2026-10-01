@@ -153,7 +153,7 @@ namespace DirectShow
     {
         #region Variables
 
-        private bool m_Result = false;
+        private readonly bool m_Result = false;
 
         #endregion
 
@@ -165,7 +165,7 @@ namespace DirectShow
 
         public BOOL(int _value)
         {
-            m_Result = _value == 0 ? false : true;
+            m_Result = _value != 0;
         }
 
         public BOOL(bool _value)
@@ -322,7 +322,7 @@ namespace DirectShow
     {
         #region Variables
 
-        private int m_Result = 0;
+        private readonly int m_Result = 0;
 
         #endregion
 
@@ -534,7 +534,7 @@ namespace DirectShow
 
         #region Variables
 
-        private uint m_uiFourcc = 0;
+        private readonly uint m_uiFourcc = 0;
 
         #endregion
 
@@ -1131,10 +1131,7 @@ namespace DirectShow
             get
             {
                 Guid _guid = Guid.Empty;
-                if (m_pUnknown != null)
-                {
-                    m_pUnknown.GetClassID(out _guid);
-                }
+                m_pUnknown?.GetClassID(out _guid);
                 return _guid;
 
             }
@@ -1150,10 +1147,7 @@ namespace DirectShow
             get
             {
                 string _out = "";
-                if (m_pUnknown != null)
-                {
-                    m_pUnknown.GetDisplayName(null, null, out _out);
-                }
+                m_pUnknown?.GetDisplayName(null, null, out _out);
                 return _out;
             }
         }
@@ -1265,7 +1259,7 @@ namespace DirectShow
     {
         #region Variabless
 
-        protected List<T> m_Objects = new List<T>();
+        protected List<T> m_Objects = [];
         protected IEnumMoniker m_pEnumMoniker = null;
         protected Guid m_Category = Guid.Empty;
 
@@ -2658,11 +2652,8 @@ namespace DirectShow
         protected override void Dispose(bool disposing)
         {
             m_SampleGrabber = (ISampleGrabber)QueryInterface(typeof(ISampleGrabber));
-            if (m_SampleGrabber != null)
-            {
-                m_SampleGrabber.SetCallback(null, 0);
-                m_SampleGrabber = null;
-            }
+            m_SampleGrabber?.SetCallback(null, 0);
+            m_SampleGrabber = null;
             base.Dispose(disposing);
         }
 

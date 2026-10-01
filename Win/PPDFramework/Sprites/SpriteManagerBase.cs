@@ -213,7 +213,7 @@ namespace PPDFramework.Sprites
                 var packInfos = new List<PackInfo>();
                 var availables = new List<AvailableInfo>
                 {
-                    new AvailableInfo { Position = Vector2.Zero, Width = size }
+                    new() { Position = Vector2.Zero, Width = size }
                 };
                 bool overflow = false;
                 var i = startIndex;
@@ -308,7 +308,7 @@ namespace PPDFramework.Sprites
             public Vector2 Position;
             public float Width;
 
-            public bool Equals(AvailableInfo other)
+            public readonly bool Equals(AvailableInfo other)
             {
                 return Position == other.Position && Width == other.Width;
             }

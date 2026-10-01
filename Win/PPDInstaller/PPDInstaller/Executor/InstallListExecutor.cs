@@ -7,9 +7,9 @@ namespace PPDInstaller.Executor
 {
     class InstallListExecutor : CExecutor
     {
-        public static Uri directshowliburi = new Uri("http://projectdxxx.me/installer/InstallURL.txt");
-        FileDownloader downloadClient = new FileDownloader();
-        string filePath = "./InstallURL.txt";
+        public static Uri directshowliburi = new("http://projectdxxx.me/installer/InstallURL.txt");
+        readonly FileDownloader downloadClient = new();
+        readonly string filePath = "./InstallURL.txt";
         public InstallListExecutor(Control control)
             : base(control)
         {
@@ -41,7 +41,7 @@ namespace PPDInstaller.Executor
             {
                 downloadClient.ProgressChanged -= InstallListDownloadProgressChanged;
                 downloadClient.Completed -= InstallListDownloadFileCompleted;
-                using (StreamReader sr = new StreamReader(filePath))
+                using (StreamReader sr = new(filePath))
                 {
                     var setting = new SettingReader(sr.ReadToEnd());
                     IPAFontInstallExecutor.ipafonturi = new Uri(setting["IPAFont"]);

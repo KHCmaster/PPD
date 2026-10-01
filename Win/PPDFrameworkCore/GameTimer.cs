@@ -7,7 +7,7 @@ namespace PPDFrameworkCore
     /// </summary>
     public class GameTimer
     {
-        private Stopwatch stopwatch;
+        private readonly Stopwatch stopwatch;
 
         /// <summary>
         /// 経過した時間を取得します。

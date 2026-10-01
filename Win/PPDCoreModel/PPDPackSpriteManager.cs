@@ -7,7 +7,7 @@ namespace PPDCoreModel
 {
     class PPDPackSpriteManager : PPDPackSpriteManagerBase
     {
-        DateTime lastWriteTime;
+        readonly DateTime lastWriteTime;
 
         public PPDPackSpriteManager(PackReader packReader, string[] imageNames, string spriteDirName, DateTime lastWriteTime)
             : base(packReader, imageNames, spriteDirName)

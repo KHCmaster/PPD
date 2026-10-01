@@ -4,8 +4,8 @@ namespace FlowScriptEngine
 {
     public abstract class EnumTypeFormatterBase<T> : TypeFormatterBase where T : struct
     {
-        private string[] allowed;
-        private T[] values;
+        private readonly string[] allowed;
+        private readonly T[] values;
         protected EnumTypeFormatterBase()
         {
             values = (T[])Enum.GetValues(typeof(T));

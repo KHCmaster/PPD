@@ -21,10 +21,10 @@ namespace PPDMultiServer.Tcp
         }
 
         State state = State.NotReady;
-        List<UserInfo> userList;
-        List<UserPlayState> userPlayStateList;
-        List<PPDMultiServer.Model.UserResult> resultList;
-        Stopwatch stopWatch;
+        readonly List<UserInfo> userList;
+        readonly List<UserPlayState> userPlayStateList;
+        readonly List<PPDMultiServer.Model.UserResult> resultList;
+        readonly Stopwatch stopWatch;
         long waitStartTime;
         long finishWaitStartTime;
 
@@ -32,14 +32,14 @@ namespace PPDMultiServer.Tcp
             : base(previousContext)
         {
             stopWatch = new Stopwatch();
-            userList = new List<UserInfo>();
-            userPlayStateList = new List<UserPlayState>();
+            userList = [];
+            userPlayStateList = [];
             foreach (UserInfo userInfo in (previousContext as MenuContext).UserList)
             {
                 userList.Add(userInfo);
                 userPlayStateList.Add(new UserPlayState { User = userInfo });
             }
-            resultList = new List<PPDMultiServer.Model.UserResult>();
+            resultList = [];
 
             stopWatch.Start();
             waitStartTime = stopWatch.ElapsedMilliseconds;
@@ -234,19 +234,13 @@ namespace PPDMultiServer.Tcp
                     {
                         Results = resultList.Select(r => new Tuple<int, Result>(r.User.ID, r.Result)).ToArray()
                     }));
-                    if (ContextManager.Logger != null)
-                    {
-                        ContextManager.Logger.AddLog(SerializeResult());
-                    }
+                    ContextManager.Logger?.AddLog(SerializeResult());
                     ContextManager.PopContext();
                 }
             }
             else if (userList.Count == 0)
             {
-                if (ContextManager.Logger != null)
-                {
-                    ContextManager.Logger.AddLog("No playing user. Back to menu.");
-                }
+                ContextManager.Logger?.AddLog("No playing user. Back to menu.");
                 ContextManager.PopContext();
             }
         }

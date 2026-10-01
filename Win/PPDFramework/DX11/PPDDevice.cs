@@ -32,7 +32,7 @@ namespace PPDFramework.DX11
         ID3D11RasterizerState scissorDisabledState;
         ID3D11Buffer fanIndexBuffer;
         Dictionary<string, ID3D11BlendState> blendStates;
-        Dictionary<PrimitiveType, PrimitiveTopology> primitiveTypeMap = new Dictionary<PrimitiveType, PrimitiveTopology>
+        readonly Dictionary<PrimitiveType, PrimitiveTopology> primitiveTypeMap = new()
         {
             { PrimitiveType.PointList, PrimitiveTopology.PointList },
             { PrimitiveType.LineList, PrimitiveTopology.LineList },
@@ -460,11 +460,9 @@ namespace PPDFramework.DX11
                 Context.ClearState();
                 Context.Flush();
             }
-            if (fanIndexBuffer != null)
-            {
-                fanIndexBuffer.Dispose();
-                fanIndexBuffer = null;
-            }
+
+            fanIndexBuffer?.Dispose();
+            fanIndexBuffer = null;
             if (blendStates != null)
             {
                 foreach (var blendState in blendStates.Values)
@@ -473,43 +471,23 @@ namespace PPDFramework.DX11
                 }
                 blendStates = null;
             }
-            if (LinearSampler != null)
-            {
-                LinearSampler.Dispose();
-                LinearSampler = null;
-            }
-            if (scissorEnabledState != null)
-            {
-                scissorEnabledState.Dispose();
-                scissorEnabledState = null;
-            }
-            if (scissorDisabledState != null)
-            {
-                scissorDisabledState.Dispose();
-                scissorDisabledState = null;
-            }
-            if (backBuffer != null)
-            {
-                backBuffer.Dispose();
-                backBuffer = null;
-            }
-            if (swapChain != null)
-            {
-                swapChain.Dispose();
-                swapChain = null;
-            }
-            if (Context != null)
-            {
-                Context.Dispose();
-                Context = null;
-            }
+
+            LinearSampler?.Dispose();
+            LinearSampler = null;
+            scissorEnabledState?.Dispose();
+            scissorEnabledState = null;
+            scissorDisabledState?.Dispose();
+            scissorDisabledState = null;
+            backBuffer?.Dispose();
+            backBuffer = null;
+            swapChain?.Dispose();
+            swapChain = null;
+            Context?.Dispose();
+            Context = null;
             ReportLiveDeviceObjects();
             ComDiagnostics.ReportTrackedObjects("Textures not disposed");
-            if (device != null)
-            {
-                device.Dispose();
-                device = null;
-            }
+            device?.Dispose();
+            device = null;
         }
 
         /// <summary>

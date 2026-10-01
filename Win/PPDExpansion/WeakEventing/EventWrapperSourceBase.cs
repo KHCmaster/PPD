@@ -60,10 +60,7 @@ namespace PPDExpansion
 
             if (eventSource is TSource eventObject)
             {
-                var weakListener = CreateWeakEventListenerInternal(eventObject);
-
-                if (weakListener == null)
-                    throw new InvalidOperationException("The method CreateWeakEventListener must return a value.");
+                var weakListener = CreateWeakEventListenerInternal(eventObject) ?? throw new InvalidOperationException("The method CreateWeakEventListener must return a value.");
 
                 // store the weak-listener as weak reference (for Detach method only)
                 _weakListener = new WeakReference(weakListener);

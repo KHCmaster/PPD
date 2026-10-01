@@ -12,7 +12,7 @@ namespace PPDFrameworkCore.Web
 #pragma warning restore RECS0014 // If all fields, properties and methods members are static, the class can be made static.
     {
         private static string baseUrl;
-        private static object baseUrlLock = new object();
+        private static readonly object baseUrlLock = new();
 
         /// <summary>
         /// 既定のURLです。

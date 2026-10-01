@@ -8,13 +8,13 @@ namespace ShaderCompiler
 {
     class Parser
     {
-        List<Element> elements;
-        Type[] parsableElementTypes = { typeof(Params), typeof(Foreach) };
-        Type[] parsableExpTypes = { typeof(ArrayExp), typeof(HashExp) };
+        readonly List<Element> elements;
+        readonly Type[] parsableElementTypes = { typeof(Params), typeof(Foreach) };
+        readonly Type[] parsableExpTypes = { typeof(ArrayExp), typeof(HashExp) };
 
         public Parser()
         {
-            elements = new List<Element>();
+            elements = [];
         }
 
         public void Parse(string filePath)
@@ -173,8 +173,8 @@ namespace ShaderCompiler
 
     class TextElement : Element
     {
-        string text;
-        Regex replaceRegex = new Regex(@"\$\((?<key>[_a-zA-Z0-9][_a-zA-Z0-9]*)\)");
+        readonly string text;
+        readonly Regex replaceRegex = new(@"\$\((?<key>[_a-zA-Z0-9][_a-zA-Z0-9]*)\)");
 
         public TextElement(Parser parser, string text) : base(parser)
         {
@@ -228,14 +228,14 @@ namespace ShaderCompiler
             var array = (Array)value;
             foreach (var v in array.Values)
             {
-                yield return new KeyValuePair<string, Value>[] { new KeyValuePair<string, Value>(Name, v) };
+                yield return new KeyValuePair<string, Value>[] { new(Name, v) };
             }
         }
     }
 
     class HashExp : Exp
     {
-        static Regex regex = new Regex(@"^\s*(?<key>[_a-zA-Z][_a-zA-Z0-9]*)\s*=>\s*(?<value>[_a-zA-Z][_a-zA-Z0-9]*)\s*$");
+        static readonly Regex regex = new(@"^\s*(?<key>[_a-zA-Z][_a-zA-Z0-9]*)\s*=>\s*(?<value>[_a-zA-Z][_a-zA-Z0-9]*)\s*$");
 
         public override Type ExpectedType
         {
@@ -274,8 +274,8 @@ namespace ShaderCompiler
             foreach (var p in hash.Values)
             {
                 yield return new KeyValuePair<string, Value>[] {
-                    new KeyValuePair<string, Value>(Key, p.Key),
-                    new KeyValuePair<string, Value>(Value, p.Value)
+                    new(Key, p.Key),
+                    new(Value, p.Value)
                 };
             }
         }
@@ -293,7 +293,7 @@ namespace ShaderCompiler
 
     class Params : ParsableElement
     {
-        static Regex startRegex = new Regex(@"^#params\s+(?<name>[_a-zA-Z][_a-zA-Z0-9]*)\s+(?<value>.+)\s*$");
+        static readonly Regex startRegex = new(@"^#params\s+(?<name>[_a-zA-Z][_a-zA-Z0-9]*)\s+(?<value>.+)\s*$");
 
         public string Name
         {
@@ -447,7 +447,7 @@ namespace ShaderCompiler
                 first = false;
                 current++;
             }
-            return str.Substring(index, nextIndex - index).Trim();
+            return str[index..nextIndex].Trim();
         }
 
         private string ReadASCII(string str, int index, char[] terminaters, out int nextIndex)
@@ -487,14 +487,14 @@ namespace ShaderCompiler
                 first = false;
                 current++;
             }
-            return str.Substring(index, nextIndex - index).Trim();
+            return str[index..nextIndex].Trim();
         }
     }
 
     class Foreach : ParsableElement
     {
-        static Regex startRegex = new Regex(@"^#foreach\s*\(\s*(?<arg>[_a-zA-Z][_a-zA-Z0-9]*)\s*,\s*(?<exp>.*)\s*\)\s*$");
-        static Regex endRegex = new Regex(@"^\s*#end\s*$");
+        static readonly Regex startRegex = new(@"^#foreach\s*\(\s*(?<arg>[_a-zA-Z][_a-zA-Z0-9]*)\s*,\s*(?<exp>.*)\s*\)\s*$");
+        static readonly Regex endRegex = new(@"^\s*#end\s*$");
 
         public Params Arg
         {
@@ -567,8 +567,8 @@ namespace ShaderCompiler
 
     class Scope
     {
-        Dictionary<string, Value> values;
-        Scope parent;
+        readonly Dictionary<string, Value> values;
+        readonly Scope parent;
 
         public Scope()
         {

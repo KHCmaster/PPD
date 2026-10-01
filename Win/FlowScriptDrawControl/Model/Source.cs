@@ -10,21 +10,21 @@ namespace FlowScriptDrawControl.Model
         private int id;
         private string name;
         private string fullName;
-        private List<Item> items;
+        private readonly List<Item> items;
         private bool isCollapsed;
         private string toolTip;
         private string warning;
         private Comment comment;
         private bool canChange;
         private bool isBreakPointSet;
-        private List<AssemblyAndType> sameNameSources;
-        private AssemblyAndType currentAsm;
+        private readonly List<AssemblyAndType> sameNameSources;
+        private readonly AssemblyAndType currentAsm;
 
         public Source(AssemblyAndType currentAsm)
         {
             this.currentAsm = currentAsm;
-            items = new List<Item>();
-            sameNameSources = new List<AssemblyAndType>();
+            items = [];
+            sameNameSources = [];
         }
 
         public string ToolTip

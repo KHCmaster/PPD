@@ -29,7 +29,7 @@ namespace FlowScriptEnginePPD.FlowSourceObjects
             get { return bpmManager != null ? bpmManager.CurrentBPM : 0; }
             set
             {
-                if (bpmManager != null) { bpmManager.CurrentBPM = value; }
+                bpmManager?.CurrentBPM = value;
             }
         }
 
@@ -39,7 +39,7 @@ namespace FlowScriptEnginePPD.FlowSourceObjects
             get { return bpmManager != null ? bpmManager.TargetBPM : 0; }
             set
             {
-                if (bpmManager != null) { bpmManager.TargetBPM = value; }
+                bpmManager?.TargetBPM = value;
             }
         }
 

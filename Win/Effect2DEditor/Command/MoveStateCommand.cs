@@ -5,10 +5,10 @@ namespace Effect2DEditor.Command
 {
     class MoveStateCommand : CommandBase
     {
-        int beforeframe;
-        int newframe;
-        TimeLine.KeyOperationMode opmode;
-        SelectedManager selectedmanager;
+        readonly int beforeframe;
+        readonly int newframe;
+        readonly TimeLine.KeyOperationMode opmode;
+        readonly SelectedManager selectedmanager;
         public MoveStateCommand(EffectManager manager, string exp, int beforeframe, int newframe, TimeLine.KeyOperationMode opmode, SelectedManager selectedmanager)
             : base(manager, exp)
         {

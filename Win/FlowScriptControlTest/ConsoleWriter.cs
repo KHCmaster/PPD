@@ -9,9 +9,9 @@ namespace FlowScriptControlTest
     {
         public event Action<string> Output;
 
-        private static TextWriter original;
+        private static readonly TextWriter original;
         private Thread thread;
-        private ManualResetEvent resetEvent;
+        private readonly ManualResetEvent resetEvent;
 
         public override Encoding Encoding
         {
@@ -67,7 +67,7 @@ namespace FlowScriptControlTest
                     if (builder.Length > lastLength)
                     {
                         var str = builder.ToString();
-                        var subStr = str.Substring(lastLength, str.Length - lastLength);
+                        var subStr = str[lastLength..];
                         original.Write(subStr);
                         OnOutput(subStr);
                         lastLength = str.Length;

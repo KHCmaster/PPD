@@ -5,13 +5,13 @@ namespace FlowScriptDrawControl.Model
 {
     public class SelectableManager
     {
-        List<Selectable> selectedSelectables;
+        readonly List<Selectable> selectedSelectables;
 
         public event Action SelectionChanged;
 
         public SelectableManager()
         {
-            selectedSelectables = new List<Selectable>();
+            selectedSelectables = [];
         }
 
         public Selectable[] SelectedSelectables

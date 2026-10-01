@@ -21,7 +21,7 @@ namespace PPDUnpack
             }
 
             var baseDir = Path.GetFileNameWithoutExtension(args[0]);
-            using (PackReader reader = new PackReader(args[0]))
+            using (PackReader reader = new(args[0]))
             {
                 foreach (var name in reader.FileList)
                 {

@@ -3,7 +3,7 @@
     class FlowSourceFolder : IToolTipText
     {
         private string toolTipText = "";
-        private string toolTipTextKey = "";
+        private readonly string toolTipTextKey = "";
 
         public FlowSourceFolder(string toolTipTextKey)
         {

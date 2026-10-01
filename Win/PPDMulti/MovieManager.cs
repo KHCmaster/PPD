@@ -8,8 +8,8 @@ namespace PPDMulti
         MovieComponent movie;
         SongInformation currentSongInformation;
         SongInformation lastSongInformation;
-        PPDDevice device;
-        IGameHost gameHost;
+        readonly PPDDevice device;
+        readonly IGameHost gameHost;
 
         public MovieComponent Movie
         {
@@ -58,11 +58,8 @@ namespace PPDMulti
         {
             if (songInfo != null && (reload || currentSongInformation != songInfo))
             {
-                if (movie != null)
-                {
-                    movie.Dispose();
-                    movie = null;
-                }
+                movie?.Dispose();
+                movie = null;
 
                 if (!songInfo.IsPPDSong)
                 {
@@ -97,10 +94,7 @@ namespace PPDMulti
 
         public void FadeOut(float fadeStep)
         {
-            if (movie != null)
-            {
-                movie.Movie.FadeOut(fadeStep);
-            }
+            movie?.Movie.FadeOut(fadeStep);
         }
 
         private void OnMovieChanged()

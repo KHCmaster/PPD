@@ -5,7 +5,7 @@ namespace PPDMulti
 {
     class StripeEffectComponent : GameComponent
     {
-        PPDFramework.Resource.ResourceManager resourceManager;
+        readonly PPDFramework.Resource.ResourceManager resourceManager;
 
         int updateCount;
 

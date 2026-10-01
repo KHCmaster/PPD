@@ -5,7 +5,7 @@ namespace PPDShareComponent
 {
     class PauseMenuInputInfo : InputInfoBase
     {
-        private InputInfoBase baseInputInfo;
+        private readonly InputInfoBase baseInputInfo;
 
         public PauseMenuInputInfo(InputInfoBase inputInfo) :
             base(inputInfo.Accurate)

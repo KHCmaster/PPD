@@ -11,12 +11,12 @@ namespace PPDEditor.Command.PPDSheet
             Rotation = 1
         }
 
-        private Mark mk;
-        private TransType transType;
+        private readonly Mark mk;
+        private readonly TransType transType;
         private Vector2 position;
         private float rotation;
         private Vector2 lastPosition;
-        private float lastRotation;
+        private readonly float lastRotation;
 
         public ChangeMarkPosOrAngleCommand(Mark mk, TransType transType, Vector2 position, float rotation)
         {

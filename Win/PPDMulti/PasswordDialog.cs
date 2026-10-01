@@ -12,8 +12,8 @@ namespace PPDMulti
         public event EventHandler Processed;
 
         bool shouldFocusTextBox;
-        DxTextBox textBox;
-        RoomInfo roomInfo;
+        readonly DxTextBox textBox;
+        readonly RoomInfo roomInfo;
 
         public bool IsValid
         {
@@ -66,10 +66,7 @@ namespace PPDMulti
             IsValid = roomInfo.PasswordHash == WebManager.GetPasswordHash(text);
 
             textBox.Parent.RemoveChild(textBox);
-            if (Processed != null)
-            {
-                Processed.Invoke(this, EventArgs.Empty);
-            }
+            Processed?.Invoke(this, EventArgs.Empty);
 
             if (!IsValid)
             {

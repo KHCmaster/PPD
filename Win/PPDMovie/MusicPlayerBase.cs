@@ -68,10 +68,7 @@ namespace PPDMovie
             }
             set
             {
-                if (mediaSeeking != null)
-                {
-                    mediaSeeking.SetRate(value);
-                }
+                mediaSeeking?.SetRate(value);
             }
         }
 
@@ -149,7 +146,7 @@ namespace PPDMovie
             var hr = this.graphBuilder2.EnumFilters(out IEnumFilters fils);
             IBaseFilter[] fil = new IBaseFilter[1];
             IntPtr ptr = IntPtr.Zero;
-            using (StreamWriter sw = new StreamWriter(Path.Combine(Utility.AppDir, "filterinfo.log")))
+            using (StreamWriter sw = new(Path.Combine(Utility.AppDir, "filterinfo.log")))
             {
                 try
                 {
@@ -246,11 +243,8 @@ namespace PPDMovie
             // Failing to call put_Owner can lead to assert failures within
             // the video renderer, as it still assumes that it has a valid
             // parent window.
-            if (mediaeventEx != null)
-            {
-                mediaeventEx.SetNotifyWindow(IntPtr.Zero, WM_GRAPHNOTIFY, IntPtr.Zero);
-                mediaeventEx = null;
-            }
+            mediaeventEx?.SetNotifyWindow(IntPtr.Zero, WM_GRAPHNOTIFY, IntPtr.Zero);
+            mediaeventEx = null;
 
             if (mediaControl != null)
             {

@@ -8,16 +8,16 @@ namespace PPDInstaller.Executor
     class PPDInstallExecutor : CExecutor
     {
 
-        Regex[] PPDIgnoreList = {
-        new Regex("PPD\\.ini",RegexOptions.IgnoreCase),        new Regex("keyconfig\\.ini",RegexOptions.IgnoreCase)            /*"0.profile",
+        readonly Regex[] PPDIgnoreList = {
+        new("PPD\\.ini",RegexOptions.IgnoreCase),        new("keyconfig\\.ini",RegexOptions.IgnoreCase)            /*"0.profile",
             "1.profile",
             "2.profile",
             "3.profile",
             "4.profile"*/
         };
 
-        string dataDirectory;
-        string installDirectory;
+        readonly string dataDirectory;
+        readonly string installDirectory;
         public PPDInstallExecutor(string dataDirectory, string installDirectory, Control control)
             : base(control)
         {

@@ -15,7 +15,7 @@ namespace PPDSingle
     {
         EffectObject anim;
         TextureString progressText;
-        Queue<int> progressQueue;
+        readonly Queue<int> progressQueue;
 
         public LoadingScene(PPDDevice device) : base(device)
         {
@@ -26,18 +26,18 @@ namespace PPDSingle
         {
             anim = new EffectObject(device, ResourceManager, Utility.Path.Combine("Loading.etd"))
             {
-                Position = new Vector2(700, 420)
+                Position = new Vector2(700, 420),
+                PlayType = Effect2D.EffectManager.PlayType.Loop
             };
-            anim.PlayType = Effect2D.EffectManager.PlayType.Loop;
             anim.Play();
             progressText = new TextureString(device, "", 20, PPDColors.White)
             {
-                Position = new Vector2(10, 420)
-            };
-            progressText.Border = new Border
-            {
-                Color = PPDColors.Black,
-                Thickness = 1
+                Position = new Vector2(10, 420),
+                Border = new Border
+                {
+                    Color = PPDColors.Black,
+                    Thickness = 1
+                }
             };
             AddChild(anim);
             AddChild(progressText);

@@ -25,8 +25,8 @@ namespace PPDPack
         private void InnerStruct(Stream stream)
         {
             this.stream = stream;
-            headerpos = new List<int>();
-            sizes = new List<int>();
+            headerpos = [];
+            sizes = [];
         }
 
         private void WriteHeader(string[] filenames)
@@ -38,7 +38,7 @@ namespace PPDPack
                 string filename = filenames[i];
                 while (Encoding.UTF8.GetByteCount(filename.ToCharArray()) > byte.MaxValue)
                 {
-                    filename = filename.Substring(0, filename.Length - 1);
+                    filename = filename[..^1];
                 }
                 var bytestring = Encoding.UTF8.GetBytes(filename.ToCharArray());
                 bytestrings.Add(bytestring);
@@ -92,11 +92,8 @@ namespace PPDPack
             {
                 if (disposing)
                 {
-                    if (stream != null)
-                    {
-                        stream.Close();
-                        stream = null;
-                    }
+                    stream?.Close();
+                    stream = null;
                 }
             }
             disposed = true;

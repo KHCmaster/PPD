@@ -7,7 +7,7 @@ namespace PPDEditor.Forms
 {
     public class ScrollableForm : ChangableDockContent
     {
-        Timer timer;
+        readonly Timer timer;
         public ScrollableForm()
         {
             InitializeComponent();
@@ -103,7 +103,7 @@ namespace PPDEditor.Forms
         {
             var ret = new Point(0, 0);
             Control c = pane;
-            while (c != null && !(c is DockPanel))
+            while (c != null && c is not WeifenLuo.WinFormsUI.Docking.DockPanel)
             {
                 ret = new Point(ret.X + c.Location.X, ret.Y + c.Location.Y);
                 c = c.Parent;

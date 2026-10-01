@@ -5,7 +5,7 @@
     /// </summary>
     public class PathObject
     {
-        string path;
+        readonly string path;
 
         /// <summary>
         /// コンストラクタです。

@@ -13,7 +13,7 @@ namespace PPDEditor
         }
 
         State state = State.downing;
-        PictureObject bottom;
+        readonly PictureObject bottom;
 
         public MainGameBottom(PPDDevice device, PPDFramework.Resource.ResourceManager resourceManager) : base(device)
         {

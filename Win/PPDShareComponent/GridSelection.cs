@@ -8,8 +8,8 @@ namespace PPDShareComponent
 {
     public class GridSelection
     {
-        private List<KeyValuePair<float, List<float>>> data;
-        private int[] current = new int[2];
+        private readonly List<KeyValuePair<float, List<float>>> data;
+        private readonly int[] current = new int[2];
         private int stickeyX = -1;
 
         public int Current
@@ -20,7 +20,7 @@ namespace PPDShareComponent
 
         public GridSelection()
         {
-            data = new List<KeyValuePair<float, List<float>>>();
+            data = [];
         }
 
         private List<float> Find(float y)
@@ -54,7 +54,7 @@ namespace PPDShareComponent
             var list = Find(pos.Y);
             if (list == null)
             {
-                list = new List<float>();
+                list = [];
                 data.Add(new KeyValuePair<float, List<float>>(pos.Y, list));
             }
             list.Add(pos.X);

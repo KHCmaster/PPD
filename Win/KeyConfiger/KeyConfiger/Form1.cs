@@ -14,7 +14,7 @@ namespace KeyConfiger
         const string iniFileName = "KeyConfiger.ini";
         const string keyConfigFileName = "keyconfig.ini";
         bool waitinginput;
-        List<KeyConfig> keyConfigs = new List<KeyConfig>();
+        readonly List<KeyConfig> keyConfigs = [];
         int currentConfigIndex;
 
         MyGame mygame;
@@ -359,7 +359,7 @@ namespace KeyConfiger
             var setting = new SettingReader(sr.ReadToEnd());
             sr.Close();
             setting.ReplaceOrAdd("Language", langFileISO);
-            using (SettingWriter sw = new SettingWriter(iniFileName, false))
+            using (SettingWriter sw = new(iniFileName, false))
             {
                 foreach (KeyValuePair<string, string> kvp in setting.Dictionary)
                 {

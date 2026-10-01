@@ -6,7 +6,7 @@ namespace PPDExpansion
 {
     class ExpansionDatabase : DataBase
     {
-        private static ExpansionDatabase instance = new ExpansionDatabase();
+        private static readonly ExpansionDatabase instance = new();
 
         public override string Name
         {
@@ -43,7 +43,7 @@ data blob
         public Result FindResult(string hash)
         {
             using (var reader = ExecuteReader("select * from ResultTable where hash = @hash;", new SQLiteParameter[]{
-                new SQLiteParameter("@hash", hash)
+                new("@hash", hash)
             }))
             {
                 while (reader.Reader.Read())
@@ -70,17 +70,17 @@ data blob
                                    @score,
                                    @data);",
                                            new SQLiteParameter[]{
-                                       new SQLiteParameter("@hash",result.Hash),
-                                       new SQLiteParameter("@score",result.Score),
-                                       new SQLiteParameter("@data",result.DataAsByte)});
+                                       new("@hash",result.Hash),
+                                       new("@score",result.Score),
+                                       new("@data",result.DataAsByte)});
             }
             else
             {
                 ExecuteDataTable(@"update ResultTable set score = @score, data = @data where hash = @hash;",
                                            new SQLiteParameter[]{
-                                       new SQLiteParameter("@hash",result.Hash),
-                                       new SQLiteParameter("@score",result.Score),
-                                       new SQLiteParameter("@data",result.DataAsByte)});
+                                       new("@hash",result.Hash),
+                                       new("@score",result.Score),
+                                       new("@data",result.DataAsByte)});
             }
         }
     }

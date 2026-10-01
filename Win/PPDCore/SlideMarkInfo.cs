@@ -6,8 +6,8 @@ namespace PPDCore
 {
     class SlideMarkInfo : IMarkInfo
     {
-        SlideExMark mark;
-        SlideColorMarkInfo slideColorMarkInfo;
+        readonly SlideExMark mark;
+        readonly SlideColorMarkInfo slideColorMarkInfo;
 
         public SlideMarkInfo(SlideExMark mark, SlideColorMarkInfo slideColorMarkInfo)
         {

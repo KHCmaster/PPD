@@ -14,7 +14,7 @@ namespace PPDFramework
     /// </summary>
     public class NumberPictureObject : GameComponent
     {
-        ImageResourceBase imageResource;
+        readonly ImageResourceBase imageResource;
         Alignment alignment;
         int maxDigit;
         uint numValue;
@@ -94,10 +94,7 @@ namespace PPDFramework
         public NumberPictureObject(PPDDevice device, Resource.ResourceManager resourceManager, PathObject filename) : base(device)
         {
             imageResource = resourceManager.GetResource<ImageResourceBase>(filename);
-            if (imageResource == null)
-            {
-                imageResource = (ImageResourceBase)resourceManager.Add(filename, ImageResourceFactoryManager.Factory.Create(device, filename, false));
-            }
+            imageResource ??= (ImageResourceBase)resourceManager.Add(filename, ImageResourceFactoryManager.Factory.Create(device, filename, false));
             UpdateResource();
         }
 
@@ -159,7 +156,7 @@ namespace PPDFramework
             }
             else if (valueString.Length >= maxDigit)
             {
-                valueString = valueString.Substring(valueString.Length - maxDigit);
+                valueString = valueString[^maxDigit..];
                 verticesCount = valueString.Length;
             }
             if (numberVertices == null || numberVertices.Length != verticesCount)
@@ -168,10 +165,7 @@ namespace PPDFramework
                 {
                     foreach (var vertices in numberVertices)
                     {
-                        if (vertices != null)
-                        {
-                            vertices.Dispose();
-                        }
+                        vertices?.Dispose();
                     }
                 }
                 numberVertices = new VertexInfo[verticesCount];
@@ -212,10 +206,7 @@ namespace PPDFramework
             {
                 foreach (var vertices in numberVertices)
                 {
-                    if (vertices != null)
-                    {
-                        vertices.Dispose();
-                    }
+                    vertices?.Dispose();
                 }
                 numberVertices = null;
             }

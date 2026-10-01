@@ -8,7 +8,7 @@ namespace PPDCore
 {
     class PPDPlayRecorder
     {
-        private List<PPDPlayInput> inputs;
+        private readonly List<PPDPlayInput> inputs;
 
         public PPDPlayInput[] Inputs
         {
@@ -20,7 +20,7 @@ namespace PPDCore
 
         public PPDPlayRecorder()
         {
-            inputs = new List<PPDPlayInput>();
+            inputs = [];
         }
 
         public void Update(float time, long currentTime, int[] presscount, bool[] pressed, bool[] released)
@@ -45,8 +45,8 @@ namespace PPDCore
 
         public byte[] GetBytes()
         {
-            using (MemoryStream memoryStream = new MemoryStream())
-            using (PackWriter writer = new PackWriter(memoryStream))
+            using (MemoryStream memoryStream = new())
+            using (PackWriter writer = new(memoryStream))
             {
                 foreach (PPDPackStreamWriter streamWriter in writer.Write(new string[] { "Version", "Data" }))
                 {
@@ -67,7 +67,7 @@ namespace PPDCore
 
         private byte[] GetBytesImpl()
         {
-            using (MemoryStream stream = new MemoryStream())
+            using (MemoryStream stream = new())
             {
                 GetData(stream);
                 return stream.ToArray();
@@ -76,7 +76,7 @@ namespace PPDCore
 
         private void GetData(Stream stream)
         {
-            using (GZipStream compStream = new GZipStream(stream, CompressionMode.Compress))
+            using (GZipStream compStream = new(stream, CompressionMode.Compress))
             {
                 byte[] bytes;
                 foreach (PPDPlayInput input in inputs)

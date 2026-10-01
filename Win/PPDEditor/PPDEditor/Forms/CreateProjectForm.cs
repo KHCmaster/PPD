@@ -105,8 +105,8 @@ namespace PPDEditor.Forms
         }
 
         private string done = "完了";
-        string openmoviefilter = "すべてのファイル(*.*)|*.*";
-        string wavefilter = "サウンドファイル(*.wav;*ogg)|*.wav;*ogg|すべてのファイル(*.*)|*.*";
+        readonly string openmoviefilter = "すべてのファイル(*.*)|*.*";
+        readonly string wavefilter = "サウンドファイル(*.wav;*ogg)|*.wav;*ogg|すべてのファイル(*.*)|*.*";
 
         public CreateProjectForm()
         {

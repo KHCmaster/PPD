@@ -14,7 +14,7 @@ namespace PPDFramework
     /// </summary>
     public class RectangleComponent : GameComponent
     {
-        PPDFramework.Resource.ResourceManager resourceManager;
+        readonly PPDFramework.Resource.ResourceManager resourceManager;
         ColorTextureResource resource;
         float rectangleWidth;
         float rectangleHeight;
@@ -162,11 +162,8 @@ namespace PPDFramework
         protected override void DisposeResource()
         {
             base.DisposeResource();
-            if (vertices != null)
-            {
-                vertices.Dispose();
-                vertices = null;
-            }
+            vertices?.Dispose();
+            vertices = null;
         }
     }
 }

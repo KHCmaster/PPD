@@ -16,14 +16,14 @@ namespace PPDSingle
         const int SpriteY = 90;
         const int ItemHeight = 50;
 
-        IGameHost gameHost;
-        PPDFramework.Resource.ResourceManager resourceManager;
-        ISound sound;
+        readonly IGameHost gameHost;
+        readonly PPDFramework.Resource.ResourceManager resourceManager;
+        readonly ISound sound;
         ReplayInfo[] replays;
-        LineRectangleComponent rectangle;
+        readonly LineRectangleComponent rectangle;
 
-        SpriteObject mainSprite;
-        SpriteObject waitSprite;
+        readonly SpriteObject mainSprite;
+        readonly SpriteObject waitSprite;
         bool loading;
         int selection;
 
@@ -286,7 +286,7 @@ namespace PPDSingle
 
         class ReplayComponent : GameComponent
         {
-            private PPDFramework.Resource.ResourceManager resourceManager;
+            private readonly PPDFramework.Resource.ResourceManager resourceManager;
 
             public ReplayInfo Replay
             {

@@ -29,10 +29,7 @@ namespace FlowScriptEngineBasic.FlowSourceObjects.ArrayList
             SetArrayList();
             SetValue(nameof(StartIndex));
             SetValue(nameof(Count));
-            if (ArrayList != null)
-            {
-                ArrayList.Reverse(StartIndex, Count);
-            }
+            ArrayList?.Reverse(StartIndex, Count);
         }
     }
 }

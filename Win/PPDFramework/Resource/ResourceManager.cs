@@ -8,8 +8,8 @@ namespace PPDFramework.Resource
     /// </summary>
     public class ResourceManager : DisposableComponent
     {
-        Dictionary<string, ResourceBase> resources;
-        Tuple<ResourceManager, bool>[] parents;
+        readonly Dictionary<string, ResourceBase> resources;
+        readonly Tuple<ResourceManager, bool>[] parents;
 
         /// <summary>
         /// コンストラクタ

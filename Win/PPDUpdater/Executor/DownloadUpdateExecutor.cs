@@ -7,7 +7,7 @@ namespace PPDUpdater.Executor
 {
     class DownloadUpdateExecutor : CExecutor
     {
-        private FileDownloader downloadClient;
+        private readonly FileDownloader downloadClient;
 
         public UpdateInfo UpdateInfo
         {
@@ -50,7 +50,7 @@ namespace PPDUpdater.Executor
             {
                 Directory.CreateDirectory(Dir);
             }
-            FilePath = Path.Combine(Dir, URL.Segments[URL.Segments.Length - 1]);
+            FilePath = Path.Combine(Dir, URL.Segments[^1]);
             updateInfo.FilePath = FilePath;
             downloadClient = new FileDownloader();
             downloadClient.ProgressChanged += downloadClient_DownloadProgressChanged;

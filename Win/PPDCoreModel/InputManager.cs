@@ -6,7 +6,7 @@ namespace PPDCoreModel
     public class InputManager
     {
         bool forceEnabled;
-        bool[] disabled;
+        readonly bool[] disabled;
 
         public bool Modified
         {

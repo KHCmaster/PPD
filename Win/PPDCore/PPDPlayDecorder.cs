@@ -9,7 +9,7 @@ namespace PPDCore
 {
     class PPDPlayDecorder
     {
-        private List<PPDPlayInput> inputs;
+        private readonly List<PPDPlayInput> inputs;
         private int iter;
 
         public bool IsEnd
@@ -32,7 +32,7 @@ namespace PPDCore
 
         private PPDPlayDecorder()
         {
-            inputs = new List<PPDPlayInput>();
+            inputs = [];
         }
 
         public void Reset()
@@ -58,8 +58,8 @@ namespace PPDCore
         {
             int version = 0;
             PPDPlayDecorder ret = null;
-            using (MemoryStream stream = new MemoryStream(bytes))
-            using (PackReader reader = new PackReader(stream))
+            using (MemoryStream stream = new(bytes))
+            using (PackReader reader = new(stream))
             {
                 foreach (string name in reader.FileList)
                 {
@@ -112,7 +112,7 @@ namespace PPDCore
         public static PPDPlayDecorder FromStream(Stream stream)
         {
             var ret = new PPDPlayDecorder();
-            using (GZipStream compStream = new GZipStream(stream, CompressionMode.Decompress))
+            using (GZipStream compStream = new(stream, CompressionMode.Decompress))
             {
                 int readSize = 0;
                 byte[] bytes2 = new byte[2];

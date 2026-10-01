@@ -8,9 +8,9 @@ namespace FlowScriptDrawControl.Model
 {
     class PositionAdjuster
     {
-        private SourceControl[] sources;
-        private Dictionary<Source, SourceControl> sourceDict;
-        private Command.CommandManager commandManager;
+        private readonly SourceControl[] sources;
+        private readonly Dictionary<Source, SourceControl> sourceDict;
+        private readonly Command.CommandManager commandManager;
 
         public PositionAdjuster(SourceControl[] sources, Command.CommandManager commandManager)
         {
@@ -32,7 +32,7 @@ namespace FlowScriptDrawControl.Model
             {
                 if (!pointList.TryGetValue(pair.Value, out List<SourceControl> srcs))
                 {
-                    srcs = new List<SourceControl>();
+                    srcs = [];
                     pointList.Add(pair.Value, srcs);
                 }
                 srcs.Add(pair.Key);
@@ -48,7 +48,7 @@ namespace FlowScriptDrawControl.Model
         private void Reverse(SourceControl source, Dictionary<SourceControl, Point> positions)
         {
             var widths = new Dictionary<int, double>();
-            Reverse(0, source, new HashSet<SourceControl>(), widths, new Dictionary<int, double>(), positions);
+            Reverse(0, source, [], widths, [], positions);
             var posXs = new Dictionary<int, double>();
             double sum = 0;
             foreach (KeyValuePair<int, double> pair in widths.OrderBy(p => p.Key))
@@ -56,7 +56,7 @@ namespace FlowScriptDrawControl.Model
                 posXs[pair.Key] = sum;
                 sum += pair.Value + 30;
             }
-            SetWidth(0, source, new HashSet<SourceControl>(), posXs, positions);
+            SetWidth(0, source, [], posXs, positions);
             var selectables = new List<Selectable>();
             var tempPositions = new List<Point>();
             foreach (KeyValuePair<SourceControl, Point> pair in positions)
@@ -151,7 +151,7 @@ namespace FlowScriptDrawControl.Model
 
         private void IncrementPoint(Dictionary<SourceControl, int> points, SourceControl source)
         {
-            IncrementPoint(points, source, new HashSet<SourceControl>());
+            IncrementPoint(points, source, []);
         }
 
         private void IncrementPoint(Dictionary<SourceControl, int> points, SourceControl source, HashSet<SourceControl> usedList)

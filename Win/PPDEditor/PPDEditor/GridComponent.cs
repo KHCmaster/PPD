@@ -9,9 +9,9 @@ namespace PPDEditor
 {
     class GridComponent : GameComponent
     {
-        SquareGrid savedGrid;
-        SquareGrid grid;
-        PPDFramework.Resource.ResourceManager resourceManager;
+        readonly SquareGrid savedGrid;
+        readonly SquareGrid grid;
+        readonly PPDFramework.Resource.ResourceManager resourceManager;
 
         public GridComponent(PPDDevice device, PPDFramework.Resource.ResourceManager resourceManager, SquareGrid grid) : base(device)
         {

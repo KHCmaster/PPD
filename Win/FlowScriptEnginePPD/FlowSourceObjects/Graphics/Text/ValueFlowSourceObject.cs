@@ -70,10 +70,7 @@ namespace FlowScriptEnginePPD.FlowSourceObjects.Graphics.Text
             SetValue(nameof(Text));
             SetValue(nameof(Color));
 
-            if (Text == null)
-            {
-                Text = "";
-            }
+            Text ??= "";
 
             if (resourceManager != null)
             {

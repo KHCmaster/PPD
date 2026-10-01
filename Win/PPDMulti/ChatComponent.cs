@@ -13,15 +13,15 @@ namespace PPDMulti
 {
     class ChatComponent : FocusableGameComponent
     {
-        SpriteObject messageSprite;
-        PictureObject back;
-        PictureObject scrollBar;
+        readonly SpriteObject messageSprite;
+        readonly PictureObject back;
+        readonly PictureObject scrollBar;
 
         int scrollIndex;
         const int scrollBarHeight = 361;
 
-        PPDFramework.Resource.ResourceManager resourceManager;
-        IGameHost gameHost;
+        readonly PPDFramework.Resource.ResourceManager resourceManager;
+        readonly IGameHost gameHost;
 
         public ChatComponent(PPDDevice device, PPDFramework.Resource.ResourceManager resourceManager, IGameHost gameHost) : base(device)
         {
@@ -115,10 +115,10 @@ namespace PPDMulti
 
         class SystemMessageComponent : BindableGameComponent
         {
-            PPDFramework.Resource.ResourceManager resourceManager;
+            readonly PPDFramework.Resource.ResourceManager resourceManager;
 
-            TextureString messageString;
-            PictureObject back;
+            readonly TextureString messageString;
+            readonly PictureObject back;
 
             public SystemMessageComponent(PPDDevice device, PPDFramework.Resource.ResourceManager resourceManager, Message message) : base(device)
             {
@@ -158,13 +158,13 @@ namespace PPDMulti
 
         class MessageComponent : BindableGameComponent
         {
-            PPDFramework.Resource.ResourceManager resourceManager;
+            readonly PPDFramework.Resource.ResourceManager resourceManager;
 
-            TextureString userName;
+            readonly TextureString userName;
             PictureObject userIcon;
-            TextureString messageString;
-            PictureObject back;
-            Message message;
+            readonly TextureString messageString;
+            readonly PictureObject back;
+            readonly Message message;
 
             private string currentUserIconPath = Utility.Path.Combine("noimage_icon.png");
 

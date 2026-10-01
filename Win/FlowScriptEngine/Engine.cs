@@ -11,10 +11,10 @@ namespace FlowScriptEngine
     {
         public event Action<FlowExecutionException> Error;
 
-        private List<FlowSourceManager> managers;
-        private FunctionScope globalScope;
+        private readonly List<FlowSourceManager> managers;
+        private readonly FunctionScope globalScope;
 
-        private Dictionary<Guid, FunctionScope> contexts;
+        private readonly Dictionary<Guid, FunctionScope> contexts;
 
         public TextReader ConsoleReader
         {
@@ -30,9 +30,9 @@ namespace FlowScriptEngine
         public Engine(TextReader consoleReader)
         {
             ConsoleReader = consoleReader;
-            managers = new List<FlowSourceManager>();
+            managers = [];
             globalScope = new FunctionScope(ScopeType.Global);
-            contexts = new Dictionary<Guid, FunctionScope>();
+            contexts = [];
         }
 
         public FlowSourceManager Load(Stream stream, bool debugMode)
@@ -106,11 +106,7 @@ namespace FlowScriptEngine
                             var fullName = reader.GetAttribute("FullName");
                             var ID = int.Parse(reader.GetAttribute("ID"), CultureInfo.InvariantCulture);
                             var scopeId = ParseId(reader.GetAttribute("ScopeID"));
-                            var source = FlowSourceObjectManager.CreateSource(fullName);
-                            if (source == null)
-                            {
-                                throw new ArgumentException(String.Format("{0} not found", fullName));
-                            }
+                            var source = FlowSourceObjectManager.CreateSource(fullName) ?? throw new ArgumentException(String.Format("{0} not found", fullName));
                             source.Id = ID;
                             source.ScopeId = scopeId;
                             var defaultValues = ReadValues(reader.ReadSubtree(), source);

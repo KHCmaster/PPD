@@ -7,7 +7,7 @@ namespace PPDCoreModel
 {
     public class EffectPool : EffectPoolBase
     {
-        ScriptResourceManager scriptResourceManager;
+        readonly ScriptResourceManager scriptResourceManager;
 
         public string FileName
         {

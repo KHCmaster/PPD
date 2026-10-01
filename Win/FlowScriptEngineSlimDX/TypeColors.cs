@@ -10,7 +10,7 @@ namespace FlowScriptEngineSlimDX
 {
     public class TypeColors : TypeColorBase
     {
-        Dictionary<Type, System.Drawing.Color> dictionary;
+        readonly Dictionary<Type, System.Drawing.Color> dictionary;
         public TypeColors()
         {
             dictionary = new Dictionary<Type, System.Drawing.Color>

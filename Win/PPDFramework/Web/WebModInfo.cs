@@ -7,7 +7,7 @@ namespace PPDFramework.Web
     /// </summary>
     public class WebModInfo
     {
-        List<WebModInfoDetail> details;
+        readonly List<WebModInfoDetail> details;
 
         /// <summary>
         /// 名前を取得します。
@@ -55,7 +55,7 @@ namespace PPDFramework.Web
         /// <param name="revision">リビジョン。</param>
         public WebModInfo(string name, string id, int revision)
         {
-            details = new List<WebModInfoDetail>();
+            details = [];
             Name = name;
             Id = id;
             Revision = revision;

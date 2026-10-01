@@ -11,12 +11,12 @@ namespace PPD
         private const int RectMargin = 6;
         private const int RectHeight = 35;
 
-        MyGame myGame;
-        PPDFramework.Resource.ResourceManager resourceManager;
+        readonly MyGame myGame;
+        readonly PPDFramework.Resource.ResourceManager resourceManager;
         SongInformation lastSongInformation;
 
-        TextureString volumeText;
-        RectangleComponent[] rects;
+        readonly TextureString volumeText;
+        readonly RectangleComponent[] rects;
 
         int timerId = -1;
         int showCount;

@@ -74,31 +74,16 @@ namespace PPDFramework.ScreenFilters.Impl
         /// </summary>
         protected override void DisposeResource()
         {
-            if (effect != null)
-            {
-                effect.Dispose();
-                effect = null;
-            }
-            if (widthHeightHandle != null)
-            {
-                widthHeightHandle.Dispose();
-                widthHeightHandle = null;
-            }
-            if (projectionHandle != null)
-            {
-                projectionHandle.Dispose();
-                projectionHandle = null;
-            }
-            if (weightsHandle != null)
-            {
-                weightsHandle.Dispose();
-                weightsHandle = null;
-            }
-            if (textureHandle != null)
-            {
-                textureHandle.Dispose();
-                textureHandle = null;
-            }
+            effect?.Dispose();
+            effect = null;
+            widthHeightHandle?.Dispose();
+            widthHeightHandle = null;
+            projectionHandle?.Dispose();
+            projectionHandle = null;
+            weightsHandle?.Dispose();
+            weightsHandle = null;
+            textureHandle?.Dispose();
+            textureHandle = null;
         }
     }
 }

@@ -17,10 +17,10 @@ namespace PPDFramework
     public class PictureObject : GameComponent
     {
         private RectangleF rec;
-        private ImageResourceBase imageResource;
+        private readonly ImageResourceBase imageResource;
         private VertexInfo vertices;
         private Color4[] edgeColors;
-        private bool center;
+        private readonly bool center;
         private bool useCustomVertices;
 
         /// <summary>
@@ -112,10 +112,7 @@ namespace PPDFramework
         public PictureObject(PPDDevice device, Resource.ResourceManager resourceManager, PathObject filename, bool center) : base(device)
         {
             imageResource = resourceManager.GetResource<ImageResourceBase>(filename);
-            if (imageResource == null)
-            {
-                imageResource = (ImageResourceBase)resourceManager.Add(filename, ImageResourceFactoryManager.Factory.Create(device, filename, false));
-            }
+            imageResource ??= (ImageResourceBase)resourceManager.Add(filename, ImageResourceFactoryManager.Factory.Create(device, filename, false));
             if (center)
             {
                 RotationCenter = ScaleCenter = new Vector2(imageResource.Width / 2, imageResource.Height / 2);
@@ -159,10 +156,7 @@ namespace PPDFramework
             useCustomVertices = rec.X != 0 || rec.Y != 0 || rec.Width != imageResource.Width || rec.Height != imageResource.Height || (edgeColors != null && edgeColors.Length == 4);
             if (useCustomVertices)
             {
-                if (vertices == null)
-                {
-                    vertices = device.GetModule<ShaderCommon>().CreateVertex(4);
-                }
+                vertices ??= device.GetModule<ShaderCommon>().CreateVertex(4);
                 var textureSize = new Size2F(imageResource.Width, imageResource.Height);
                 var colors = edgeColors != null && edgeColors.Length == 4 ? edgeColors : new[] { PPDColors.White, PPDColors.White, PPDColors.White, PPDColors.White };
                 var rect = imageResource.GetActualUVRectangle(
@@ -202,11 +196,8 @@ namespace PPDFramework
         protected override void DisposeResource()
         {
             base.DisposeResource();
-            if (vertices != null)
-            {
-                vertices.Dispose();
-                vertices = null;
-            }
+            vertices?.Dispose();
+            vertices = null;
         }
     }
 }

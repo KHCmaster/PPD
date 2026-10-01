@@ -13,7 +13,7 @@ namespace PPDTest
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            using (MyGame game = new MyGame(new PPDFramework.PPDExecuteArg(new string[0])))
+            using (MyGame game = new(new PPDFramework.PPDExecuteArg(new string[0])))
             {
                 game.Run();
             }

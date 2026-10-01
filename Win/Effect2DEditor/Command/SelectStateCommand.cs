@@ -4,11 +4,11 @@ namespace Effect2DEditor.Command
 {
     class SelectStateCommand : CommandBase
     {
-        int lastitemindex;
-        int itemindex;
-        int laststateindex;
-        int stateindex;
-        SelectedManager selectedmanager;
+        readonly int lastitemindex;
+        readonly int itemindex;
+        readonly int laststateindex;
+        readonly int stateindex;
+        readonly SelectedManager selectedmanager;
         public SelectStateCommand(EffectManager manager, string exp, SelectedManager selectedmanager, int lastitemindex, int itemindex, int laststateindex, int stateindex)
             : base(manager, exp)
         {

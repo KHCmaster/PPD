@@ -4,7 +4,7 @@ namespace Effect2DEditor.Command
 {
     class StateBlendModeChangeCommand : CommandBase
     {
-        SelectedManager SManager;
+        readonly SelectedManager SManager;
         BlendMode previousBlend;
         BlendMode blendMode;
 

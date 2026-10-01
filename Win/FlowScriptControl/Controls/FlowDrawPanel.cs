@@ -20,13 +20,13 @@ namespace FlowScriptControl.Controls
         public event EventHandler Modified;
         public event Action<string> SearchRequired;
 
-        private static List<AssemblyAndType> flowSources;
-        private static Dictionary<string, Color> colorDictionary;
-        private static Dictionary<string, string> typeAliasDictionary;
+        private static readonly List<AssemblyAndType> flowSources;
+        private static readonly Dictionary<string, Color> colorDictionary;
+        private static readonly Dictionary<string, string> typeAliasDictionary;
         private static bool initialized;
-        private List<Classes.IToolTipText> toolTipTexts;
-        private Dictionary<string, CustomToolStripMenuItem> toolStripDictionary;
-        private static List<NodeFilterInfoBase> filters;
+        private readonly List<Classes.IToolTipText> toolTipTexts;
+        private readonly Dictionary<string, CustomToolStripMenuItem> toolStripDictionary;
+        private static readonly List<NodeFilterInfoBase> filters;
         private static Dictionary<string, AssemblyAndTypeAndSource[]> sourceCache;
 
         public bool IsControlFocused
@@ -45,7 +45,7 @@ namespace FlowScriptControl.Controls
             }
         }
 
-        ToolTip tooltip;
+        readonly ToolTip tooltip;
         FlowAreaControl areaControl;
 
         public static string EmptyFileString
@@ -68,22 +68,22 @@ namespace FlowScriptControl.Controls
 
         static FlowDrawPanel()
         {
-            flowSources = new List<AssemblyAndType>();
+            flowSources = [];
             colorDictionary = new Dictionary<string, Color>
             {
                 { "event", Color.FromArgb(0, 255, 0) }
             };
-            typeAliasDictionary = new Dictionary<string, string>();
-            filters = new List<NodeFilterInfoBase>
-            {
+            typeAliasDictionary = [];
+            filters =
+            [
                 NodeFilterInfo.DefaultFilter
-            };
+            ];
         }
 
         public FlowDrawPanel()
         {
-            toolTipTexts = new List<Classes.IToolTipText>();
-            toolStripDictionary = new Dictionary<string, CustomToolStripMenuItem>();
+            toolTipTexts = [];
+            toolStripDictionary = [];
             tooltip = new ToolTip();
             InitializeComponent();
         }
@@ -92,7 +92,7 @@ namespace FlowScriptControl.Controls
         {
             if (sourceCache == null)
             {
-                sourceCache = new Dictionary<string, AssemblyAndTypeAndSource[]>();
+                sourceCache = [];
                 foreach (IGrouping<string, AssemblyAndTypeAndSource> ss in flowSources.Select(a => new AssemblyAndTypeAndSource(a)).GroupBy(a => a.Source.Name).ToArray())
                 {
                     var sources = ss.ToArray();
@@ -264,10 +264,7 @@ namespace FlowScriptControl.Controls
 
         private void ChangeProperty()
         {
-            if (FlowPropertyPanel != null)
-            {
-                FlowPropertyPanel.MakeEmpty();
-            }
+            FlowPropertyPanel?.MakeEmpty();
         }
 
         private void ChangeProperty(string fullName, Dictionary<string, string> properties)
@@ -451,11 +448,11 @@ namespace FlowScriptControl.Controls
                 }
                 addTarget = tsmi;
             }
-            var existingMenuItem = FindMenu(addTarget, nameSplits[nameSplits.Length - 1]);
+            var existingMenuItem = FindMenu(addTarget, nameSplits[^1]);
             CustomToolStripMenuItem newMenu;
             if (existingMenuItem == null)
             {
-                newMenu = new CustomToolStripMenuItem(source.Dumper, this, tooltip, nameSplits[nameSplits.Length - 1]);
+                newMenu = new CustomToolStripMenuItem(source.Dumper, this, tooltip, nameSplits[^1]);
                 addTarget.DropDownItems.Add(newMenu);
             }
             else
@@ -465,7 +462,7 @@ namespace FlowScriptControl.Controls
                     var text = CreateTextFromDumper(existingMenuItem.Dumper);
                     var cloneMenu = new CustomToolStripMenuItem(existingMenuItem.Dumper, this, tooltip, text)
                     {
-                        Name = nameSplits[nameSplits.Length - 1]
+                        Name = nameSplits[^1]
                     };
                     cloneMenu.Click += newMenu_Click;
                     existingMenuItem.DropDownItems.Add(cloneMenu);
@@ -475,7 +472,7 @@ namespace FlowScriptControl.Controls
                 existingMenuItem.DropDownItems.Add(newMenu);
             }
             toolStripDictionary.Add(source.AssemblyAndType.Type.FullName, newMenu);
-            newMenu.Name = nameSplits[nameSplits.Length - 1];
+            newMenu.Name = nameSplits[^1];
             newMenu.Click += newMenu_Click;
         }
 
@@ -586,90 +583,57 @@ namespace FlowScriptControl.Controls
 
         public void AddCommentAt(double x, double y)
         {
-            if (areaControl != null)
-            {
-                areaControl.AddCommentAt(x, y);
-            }
+            areaControl?.AddCommentAt(x, y);
         }
 
         public void Undo()
         {
-            if (areaControl != null)
-            {
-                areaControl.Undo();
-            }
+            areaControl?.Undo();
         }
 
         public void Redo()
         {
-            if (areaControl != null)
-            {
-                areaControl.Redo();
-            }
+            areaControl?.Redo();
         }
 
         public void Cut()
         {
-            if (areaControl != null)
-            {
-                areaControl.Cut();
-            }
+            areaControl?.Cut();
         }
 
         public void Copy()
         {
-            if (areaControl != null)
-            {
-                areaControl.Copy();
-            }
+            areaControl?.Copy();
         }
 
         public void PasteAt(double x, double y)
         {
-            if (areaControl != null)
-            {
-                areaControl.PasteAt(x, y);
-            }
+            areaControl?.PasteAt(x, y);
         }
 
         public void PasteWithLinksAt(double x, double y)
         {
-            if (areaControl != null)
-            {
-                areaControl.PasteWithLinksAt(x, y);
-            }
+            areaControl?.PasteWithLinksAt(x, y);
         }
 
         public void Delete()
         {
-            if (areaControl != null)
-            {
-                areaControl.RemoveSelected();
-            }
+            areaControl?.RemoveSelected();
         }
 
         public void FitToView()
         {
-            if (areaControl != null)
-            {
-                areaControl.FitToView();
-            }
+            areaControl?.FitToView();
         }
 
         public void AdjustPosition()
         {
-            if (areaControl != null)
-            {
-                areaControl.AdjustPosition();
-            }
+            areaControl?.AdjustPosition();
         }
 
         public void SaveXML(Stream stream)
         {
-            if (areaControl != null)
-            {
-                areaControl.Save(stream);
-            }
+            areaControl?.Save(stream);
         }
 
         public Source[] GetSources()
@@ -741,18 +705,12 @@ namespace FlowScriptControl.Controls
 
         public void Select(Selectable selectable)
         {
-            if (areaControl != null)
-            {
-                areaControl.Select(selectable);
-            }
+            areaControl?.Select(selectable);
         }
 
         public void Select(int id)
         {
-            if (areaControl != null)
-            {
-                areaControl.Select(id);
-            }
+            areaControl?.Select(id);
         }
 
         public int[] GetSelectedSourceId()
@@ -766,74 +724,47 @@ namespace FlowScriptControl.Controls
 
         public void Focus(Selectable selectable)
         {
-            if (areaControl != null)
-            {
-                areaControl.Focus(selectable);
-            }
+            areaControl?.Focus(selectable);
         }
 
         public void Focus(int id)
         {
-            if (areaControl != null)
-            {
-                areaControl.Focus(id);
-            }
+            areaControl?.Focus(id);
         }
 
         public void ShowError(int id, string text)
         {
-            if (areaControl != null)
-            {
-                areaControl.ShowError(id, text);
-            }
+            areaControl?.ShowError(id, text);
         }
 
         public void AddScopeAt(double x, double y)
         {
-            if (areaControl != null)
-            {
-                areaControl.AddScopeAt(x, y);
-            }
+            areaControl?.AddScopeAt(x, y);
         }
 
         public void RemoveScopeAt(double x, double y)
         {
-            if (areaControl != null)
-            {
-                areaControl.RemoveScopeAt(x, y);
-            }
+            areaControl?.RemoveScopeAt(x, y);
         }
 
         public void SelectInScope(double x, double y)
         {
-            if (areaControl != null)
-            {
-                areaControl.SelectSourceAndCommentInScopeAt(x, y, false);
-            }
+            areaControl?.SelectSourceAndCommentInScopeAt(x, y, false);
         }
 
         public void SelectAllInScope(double x, double y)
         {
-            if (areaControl != null)
-            {
-                areaControl.SelectSourceAndCommentInScopeAt(x, y, true);
-            }
+            areaControl?.SelectSourceAndCommentInScopeAt(x, y, true);
         }
 
         public void SetBreakPoint()
         {
-            if (areaControl != null)
-            {
-                areaControl.SetBreakPoint();
-            }
+            areaControl?.SetBreakPoint();
         }
 
         public void UnsetBreakPoint()
         {
-            if (areaControl != null)
-            {
-                areaControl.UnsetBreakPoint();
-            }
+            areaControl?.UnsetBreakPoint();
         }
 
         public void FindLinkedNode()
@@ -1023,26 +954,17 @@ namespace FlowScriptControl.Controls
 
         public void ChangeCurrentSourceProperty(string name, string value)
         {
-            if (areaControl != null)
-            {
-                areaControl.ChangeSelectedSourcePropertyValue(name, value);
-            }
+            areaControl?.ChangeSelectedSourcePropertyValue(name, value);
         }
 
         public void ExpandAll()
         {
-            if (areaControl != null)
-            {
-                areaControl.ExpandAll();
-            }
+            areaControl?.ExpandAll();
         }
 
         public void CollapseAll()
         {
-            if (areaControl != null)
-            {
-                areaControl.CollapseAll();
-            }
+            areaControl?.CollapseAll();
         }
 
         void areaControl_Drop(object sender, System.Windows.DragEventArgs e)
@@ -1070,7 +992,7 @@ namespace FlowScriptControl.Controls
 
     class ToolStripItemComparer : System.Collections.IComparer
     {
-        private static ToolStripItemComparer comparer = new ToolStripItemComparer();
+        private static readonly ToolStripItemComparer comparer = new();
 
         public static ToolStripItemComparer Comparer
         {

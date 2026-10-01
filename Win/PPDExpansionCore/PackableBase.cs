@@ -15,11 +15,11 @@ namespace PPDExpansionCore
             get;
         }
 
-        private static Dictionary<DataType, Type> packableDict;
+        private static readonly Dictionary<DataType, Type> packableDict;
 
         static PackableBase()
         {
-            packableDict = new Dictionary<DataType, Type>();
+            packableDict = [];
             foreach (Type type in Assembly.GetExecutingAssembly().GetTypes())
             {
                 if (type.IsPublic && !type.IsAbstract && type.IsSubclassOf(typeof(PackableBase)))
@@ -153,7 +153,7 @@ namespace PPDExpansionCore
 
         protected string ParseString(PPDPackStreamReader packStreamReader)
         {
-            using (StreamReader streamReader = new StreamReader(packStreamReader, Encoding.UTF8))
+            using (StreamReader streamReader = new(packStreamReader, Encoding.UTF8))
             {
                 var ret = streamReader.ReadToEnd();
                 return ret;

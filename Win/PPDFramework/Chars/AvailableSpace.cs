@@ -7,7 +7,7 @@ namespace PPDFramework.Chars
 {
     class AvailableSpace : ReturnableComponent
     {
-        SizeTexture sizeTexture;
+        readonly SizeTexture sizeTexture;
 
         public Point Position
         {

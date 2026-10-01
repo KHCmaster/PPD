@@ -4,9 +4,9 @@ namespace FlowScriptDrawControl.Command
 {
     abstract class BoundCommentCommandBase : CommandBase
     {
-        private FlowAreaControl areaControl;
-        private SourceControl sourceControl;
-        private BoundCommentControl commentControl;
+        private readonly FlowAreaControl areaControl;
+        private readonly SourceControl sourceControl;
+        private readonly BoundCommentControl commentControl;
 
         public BoundCommentControl CommentControl
         {

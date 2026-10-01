@@ -150,7 +150,7 @@ namespace PPDFrameworkCore
         /// <returns></returns>
         public Stream GetResponseStream()
         {
-            return stream ?? (stream = message.Content.ReadAsStream());
+            return stream ??= message.Content.ReadAsStream();
         }
 
         /// <summary>

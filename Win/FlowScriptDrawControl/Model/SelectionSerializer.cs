@@ -10,7 +10,7 @@ namespace FlowScriptDrawControl.Model
 {
     class SelectionSerializer
     {
-        private static SelectionSerializer serializer = new SelectionSerializer();
+        private static readonly SelectionSerializer serializer = new();
 
         public static SelectionSerializer Serializer
         {

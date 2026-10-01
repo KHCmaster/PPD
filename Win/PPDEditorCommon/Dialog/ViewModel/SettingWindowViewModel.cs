@@ -7,7 +7,7 @@ namespace PPDEditorCommon.Dialog.ViewModel
     public class SettingWindowViewModel : ObservableObject
     {
         private bool isOkEnabled;
-        private List<SettingViewModelBase> settings;
+        private readonly List<SettingViewModelBase> settings;
 
         public object this[string key]
         {
@@ -54,7 +54,7 @@ namespace PPDEditorCommon.Dialog.ViewModel
         public SettingWindowViewModel(string title)
         {
             Title = title;
-            settings = new List<SettingViewModelBase>();
+            settings = [];
         }
 
         public void Initialize()

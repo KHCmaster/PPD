@@ -61,7 +61,7 @@ namespace PPDEditor.Controls
             if (propertyName.Contains("Time") && propertyType == typeof(float))
             {
                 return ShowSuggest(new KeyValuePair<string, string>[] {
-                    new KeyValuePair<string,string>(Utility.Language["CurrentMovieTime"], ((float)WindowUtility.MainForm.CurrentTime).ToString())                });
+                    new(Utility.Language["CurrentMovieTime"], ((float)WindowUtility.MainForm.CurrentTime).ToString())                });
             }
             if (sourceName.Contains("ByID") && propertyType == typeof(int))
             {
@@ -69,7 +69,7 @@ namespace PPDEditor.Controls
                 if (mark != null)
                 {
                     return ShowSuggest(new KeyValuePair<string, string>[] {
-                        new KeyValuePair<string,string>(Utility.Language["SelectedMarkID"], mark.ID.ToString())                    });
+                        new(Utility.Language["SelectedMarkID"], mark.ID.ToString())                    });
                 }
             }
             if ((sourceName.Contains("Effect.Value") && propertyName == "Path") ||

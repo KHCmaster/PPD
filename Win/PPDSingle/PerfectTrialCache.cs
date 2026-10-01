@@ -7,8 +7,8 @@ namespace PPDSingle
 {
     class PerfectTrialCache
     {
-        private static PerfectTrialCache instance = new PerfectTrialCache();
-        Dictionary<string, List<PerfectTrialInfo>> trials = new Dictionary<string, List<PerfectTrialInfo>>();
+        private static readonly PerfectTrialCache instance = new();
+        readonly Dictionary<string, List<PerfectTrialInfo>> trials = [];
 
         public static PerfectTrialCache Instance
         {
@@ -32,7 +32,7 @@ namespace PPDSingle
 
             if (!trials.TryGetValue(webSongInfo.Hash, out List<PerfectTrialInfo> trialList))
             {
-                trialList = new List<PerfectTrialInfo>();
+                trialList = [];
                 trials[webSongInfo.Hash] = trialList;
             }
             var diff = webSongInfo.Difficulties.FirstOrDefault(d => d.Hash == scoreHash);
@@ -47,7 +47,7 @@ namespace PPDSingle
             {
                 if (!trials.TryGetValue(trialInfo.ScoreLibraryId, out List<PerfectTrialInfo> trialList))
                 {
-                    trialList = new List<PerfectTrialInfo>();
+                    trialList = [];
                     trials[trialInfo.ScoreLibraryId] = trialList;
                 }
                 trialList.Add(trialInfo);

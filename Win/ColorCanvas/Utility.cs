@@ -19,10 +19,7 @@ namespace ColorCanvas
 
         public static Size MeasureSize(string text, FontFamily fontFamily, double fontSize)
         {
-            if (text == null)
-            {
-                text = "";
-            }
+            text ??= "";
 
             System.Windows.FontStyle fontStyle = FontStyles.Normal;
             FontWeight fontWeight = FontWeights.Medium;
@@ -83,7 +80,7 @@ namespace ColorCanvas
                 h *= 60;
                 if (h < 0.0)
                 {
-                    h = h + 360;
+                    h += 360;
                 }
             }
 
@@ -116,7 +113,7 @@ namespace ColorCanvas
                 }
                 else
                 {
-                    h = h / 60;
+                    h /= 60;
                 }
 
                 i = (int)Math.Truncate(h);

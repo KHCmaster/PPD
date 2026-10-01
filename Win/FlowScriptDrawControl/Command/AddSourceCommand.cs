@@ -4,7 +4,7 @@ namespace FlowScriptDrawControl.Command
 {
     class AddSourceCommand : CommandBase
     {
-        private FlowAreaControl areaControl;
+        private readonly FlowAreaControl areaControl;
 
         public SourceControl SourceControl
         {

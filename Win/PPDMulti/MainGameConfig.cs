@@ -6,7 +6,7 @@ namespace PPDMulti
 {
     class MainGameConfig : MainGameConfigBase
     {
-        ItemManagerComponent itemManager;
+        readonly ItemManagerComponent itemManager;
         float speedScale = 1;
 
 

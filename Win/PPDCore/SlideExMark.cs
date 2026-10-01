@@ -19,7 +19,7 @@ namespace PPDCore
         GameComponent[] exMarks;
         SlideColorMarkInfo[] colorExMarkInfos;
         float lastPressedTime = float.MaxValue;
-        float slideScale;
+        readonly float slideScale;
 
         public ColorMarkInfo FirstSlideColorMarkInfo
         {
@@ -41,7 +41,7 @@ namespace PPDCore
                 {
                     return colorMarkInfo;
                 }
-                return colorExMarkInfos[colorExMarkInfos.Length - 1];
+                return colorExMarkInfos[^1];
             }
         }
 

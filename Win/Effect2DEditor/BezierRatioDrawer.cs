@@ -7,8 +7,8 @@ namespace Effect2DEditor
 {
     public partial class BezierRatioDrawer : UserControl
     {
-        private BufferedGraphics grafx;
-        private BufferedGraphicsContext context;
+        private readonly BufferedGraphics grafx;
+        private readonly BufferedGraphicsContext context;
         private BezierControlPoint selected;
         private BezierControlPoint[] bcps;
         public BezierRatioDrawer()

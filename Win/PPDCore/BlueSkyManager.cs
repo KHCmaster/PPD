@@ -32,9 +32,9 @@ namespace PPDCore
             private set;
         }
 
-        private List<Thread> threads = new List<Thread>();
+        private readonly List<Thread> threads = [];
 
-        private static BlueSkyManager manager = new BlueSkyManager();
+        private static readonly BlueSkyManager manager = new();
         private BlueSkyManager()
         {
             if (File.Exists("PPD.ini"))
@@ -73,7 +73,7 @@ namespace PPDCore
             }
             if (status.Length >= 112 - hashTag.Length)
             {
-                status = status.Substring(0, 112 - hashTag.Length) + hashTag;
+                status = status[..(112 - hashTag.Length)] + hashTag;
             }
             else
             {

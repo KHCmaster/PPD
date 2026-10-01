@@ -74,7 +74,7 @@ namespace PPDFramework
             get
             {
                 string ret = null;
-                using (var reader = ExecuteReader("select * from SettingTable where key = @key;", new SQLiteParameter[] { new SQLiteParameter("@key", key) }))
+                using (var reader = ExecuteReader("select * from SettingTable where key = @key;", new SQLiteParameter[] { new("@key", key) }))
                 {
                     while (reader.Reader.Read())
                     {
@@ -89,15 +89,15 @@ namespace PPDFramework
                 if (this[key] != null)
                 {
                     ExecuteDataTable("Update SettingTable set value = @value where key = @key;", new SQLiteParameter[] {
-                        new SQLiteParameter("@key", key),
-                        new SQLiteParameter("@value", value)
+                        new("@key", key),
+                        new("@value", value)
                     });
                 }
                 else
                 {
                     ExecuteDataTable("Insert into SettingTable(key, value) values(@key, @value);", new SQLiteParameter[] {
-                        new SQLiteParameter("@key", key),
-                        new SQLiteParameter("@value", value)
+                        new("@key", key),
+                        new("@value", value)
                     });
                 }
             }

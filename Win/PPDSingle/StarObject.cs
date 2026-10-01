@@ -4,8 +4,8 @@ namespace PPDSingle
 {
     class StarObject : GameComponent
     {
-        PictureObject star;
-        PictureObject disableStar;
+        readonly PictureObject star;
+        readonly PictureObject disableStar;
 
         public bool Enabled
         {

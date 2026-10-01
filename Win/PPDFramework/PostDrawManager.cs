@@ -15,7 +15,7 @@ namespace PPDFramework
             public int Depth { get; set; }
         }
 
-        Queue<Context> contexts;
+        readonly Queue<Context> contexts;
 
         /// <summary>
         /// コンストラクタです。

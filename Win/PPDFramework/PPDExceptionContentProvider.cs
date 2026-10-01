@@ -10,11 +10,11 @@ namespace PPDFramework
     /// </summary>
     public class PPDExceptionContentProvider
     {
-        private static PPDExceptionContentProvider provider = new PPDExceptionContentProvider();
-        Dictionary<PPDExceptionType, string> dictionary;
+        private static readonly PPDExceptionContentProvider provider = new();
+        readonly Dictionary<PPDExceptionType, string> dictionary;
         private PPDExceptionContentProvider()
         {
-            dictionary = new Dictionary<PPDExceptionType, string>();
+            dictionary = [];
             var types = (PPDExceptionType[])Enum.GetValues(typeof(PPDExceptionType));
             var langFilePath = Path.Combine("Lang", String.Format("lang_{0}_{1}.ini", "PPD", PPDSetting.Setting.LangISO));
             if (File.Exists(langFilePath))

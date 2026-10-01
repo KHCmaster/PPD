@@ -157,8 +157,7 @@ namespace PPDEditor
                             {
                                 continue;
                             }
-                            var exmk = mk as ExMark;
-                            if (exmk == null)
+                            if (mk is not ExMark exmk)
                             {
                                 if (f >= drawstarttime && f <= drawendtime)
                                 {

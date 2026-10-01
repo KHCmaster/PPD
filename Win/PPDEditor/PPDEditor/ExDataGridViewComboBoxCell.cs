@@ -39,11 +39,9 @@ namespace PPDEditor
                 //セルの値を設定しないと、元に戻ってしまう
                 dgv[e.ColumnIndex, e.RowIndex].Value = e.FormattedValue;
             }
-            if (this.dataGridViewComboBox != null)
-            {
-                this.dataGridViewComboBox.SelectedIndexChanged -= dataGridViewComboBox_SelectedIndexChanged;
-                this.dataGridViewComboBox = null;
-            }
+
+            this.dataGridViewComboBox?.SelectedIndexChanged -= dataGridViewComboBox_SelectedIndexChanged;
+            this.dataGridViewComboBox = null;
         }
 
         void DataGridView_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)

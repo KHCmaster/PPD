@@ -26,7 +26,7 @@ namespace PPDShareComponent
         Button[] buttons;
         TextureString latencyString;
         PauseType pauseType = PauseType.Resume;
-        PathManager pathManager;
+        readonly PathManager pathManager;
 
         public PauseMenu(PPDDevice device, PathManager pathManager) : base(device)
         {
@@ -41,9 +41,9 @@ namespace PPDShareComponent
             {
                 buttons[i] = new Button(device, ResourceManager, pathManager, names[i])
                 {
-                    Position = new Vector2(400, 160 + 40 * i + 5)
+                    Position = new Vector2(400, 160 + 40 * i + 5),
+                    Selected = false
                 };
-                buttons[i].Selected = false;
                 this.AddChild(buttons[i]);
             }
             buttons[0].Selected = true;

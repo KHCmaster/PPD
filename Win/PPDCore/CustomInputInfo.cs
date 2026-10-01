@@ -4,10 +4,10 @@ namespace PPDCore
 {
     class CustomInputInfo : InputInfoBase
     {
-        private int[] pressCount;
-        private bool[] pressed;
-        private bool[] released;
-        private InputInfoBase baseInputInfo;
+        private readonly int[] pressCount;
+        private readonly bool[] pressed;
+        private readonly bool[] released;
+        private readonly InputInfoBase baseInputInfo;
 
         public CustomInputInfo(int[] pressCount, bool[] pressed, bool[] released, InputInfoBase inputInfo)
             : base(false)

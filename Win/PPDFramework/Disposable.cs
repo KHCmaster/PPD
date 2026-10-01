@@ -8,7 +8,7 @@ namespace PPDFramework
     public sealed class Disposable : IDisposable
     {
         bool disposed;
-        Action disposedCallback;
+        readonly Action disposedCallback;
 
         /// <summary>
         /// コンストラクタです。

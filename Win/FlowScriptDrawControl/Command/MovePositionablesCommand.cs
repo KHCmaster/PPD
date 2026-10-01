@@ -6,8 +6,8 @@ namespace FlowScriptDrawControl.Command
 {
     class MovePositionablesCommand : CommandBase
     {
-        Positionable[] positionables;
-        Point[] oldPoses;
+        readonly Positionable[] positionables;
+        readonly Point[] oldPoses;
 
         public Point[] NewPoses
         {

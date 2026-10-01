@@ -232,7 +232,7 @@ namespace PPDConfig
             var setting = new SettingReader(sr.ReadToEnd());
             sr.Close();
             setting.ReplaceOrAdd("Language", langFileISO);
-            using (SettingWriter sw = new SettingWriter(iniFileName, false))
+            using (SettingWriter sw = new(iniFileName, false))
             {
                 foreach (KeyValuePair<string, string> kvp in setting.Dictionary)
                 {

@@ -4,8 +4,8 @@ namespace Effect2DEditor.Command
 {
     class ChangeIndexCommand : CommandBase
     {
-        int beforeindex;
-        int index;
+        readonly int beforeindex;
+        readonly int index;
         public ChangeIndexCommand(EffectManager manager, string exp, int index, int beforeindex)
             : base(manager, exp)
         {

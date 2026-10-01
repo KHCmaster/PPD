@@ -13,10 +13,7 @@ namespace PPDEditor.Controls
 
         private void button1_Click(object sender, EventArgs e)
         {
-            if (ButtonPressed != null)
-            {
-                ButtonPressed.Invoke(this, EventArgs.Empty);
-            }
+            ButtonPressed?.Invoke(this, EventArgs.Empty);
         }
 
         public int ProjectVersion

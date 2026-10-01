@@ -8,8 +8,8 @@ namespace PPDSingle
 {
     class MenuRanking : GameComponent
     {
-        MenuRankingBoard globalRanking;
-        MenuRankingBoard rivalRanking;
+        readonly MenuRankingBoard globalRanking;
+        readonly MenuRankingBoard rivalRanking;
         Difficulty currentDifficulty = Difficulty.Normal;
 
         public Difficulty CurrentDifficulty
@@ -51,16 +51,16 @@ namespace PPDSingle
 
     class MenuRankingBoard : GameComponent
     {
-        PPDFramework.Resource.ResourceManager resourceManager;
+        readonly PPDFramework.Resource.ResourceManager resourceManager;
         Ranking currentRanking;
         Difficulty currentDifficulty = Difficulty.Normal;
         Ranking ranking;
         bool findFinished;
 
-        RankingChild[] ranks;
+        readonly RankingChild[] ranks;
 
-        TextureString yourRankText;
-        TextureString rankKindText;
+        readonly TextureString yourRankText;
+        readonly TextureString rankKindText;
 
         public Difficulty CurrentDifficulty
         {
@@ -187,10 +187,10 @@ namespace PPDSingle
         {
             private int rank;
 
-            private PictureObject gold;
-            private PictureObject silver;
-            private PictureObject bronze;
-            private TextureString text;
+            private readonly PictureObject gold;
+            private readonly PictureObject silver;
+            private readonly PictureObject bronze;
+            private readonly TextureString text;
 
             public string Text
             {

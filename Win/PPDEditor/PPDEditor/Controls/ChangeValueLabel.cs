@@ -7,7 +7,7 @@ namespace PPDEditor.Controls
     public class ChangeValueLabel : Label
     {
         public event ValueChangeEventHandler ValueChange;
-        Timer timer;
+        readonly Timer timer;
         Point lastpos;
         public ChangeValueLabel()
         {

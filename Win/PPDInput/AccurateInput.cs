@@ -18,8 +18,8 @@ namespace PPDInput
         private Stopwatch stopwatch;
         private Queue<InputAction> queue;
         private Dictionary<ButtonType, InputAction> lastPressInfos;
-        private readonly object settingLock = new object();
-        private int sleepTime;
+        private readonly object settingLock = new();
+        private readonly int sleepTime;
 
         public AccurateInput(Form form, int sleepTime)
             : base(form)
@@ -30,7 +30,7 @@ namespace PPDInput
         public override void Load()
         {
             base.Load();
-            lastPressInfos = new Dictionary<ButtonType, InputAction>();
+            lastPressInfos = [];
             queue = new Queue<InputAction>();
             stopwatch = new Stopwatch();
             stopwatch.Start();
@@ -44,17 +44,11 @@ namespace PPDInput
             if (loaded)
             {
                 finish = true;
-                if (thread != null)
-                {
-                    // 通常は finish で止まる。止まらなかった場合もバックグラウンドスレッドなのでプロセスの終了は妨げない
-                    thread.Join(1000);
-                    thread = null;
-                }
-                if (stopwatch != null)
-                {
-                    stopwatch.Stop();
-                    stopwatch = null;
-                }
+                // 通常は finish で止まる。止まらなかった場合もバックグラウンドスレッドなのでプロセスの終了は妨げない
+                thread?.Join(1000);
+                thread = null;
+                stopwatch?.Stop();
+                stopwatch = null;
             }
             base.ReleaseObjects();
         }
@@ -125,14 +119,8 @@ namespace PPDInput
         {
             lock (settingLock)
             {
-                if (this.keys == null)
-                {
-                    this.keys = new Key[keys.Length];
-                }
-                if (this.buttons == null)
-                {
-                    this.buttons = new int[buttons.Length];
-                }
+                this.keys ??= new Key[keys.Length];
+                this.buttons ??= new int[buttons.Length];
 
                 this.keys = new Key[keys.Length];
                 Array.Copy(keys, this.keys, keys.Length);
@@ -148,7 +136,7 @@ namespace PPDInput
             }
             lock (lastPressInfos)
             {
-                lastPress = new Dictionary<ButtonType, InputAction>();
+                lastPress = [];
                 foreach (KeyValuePair<ButtonType, InputAction> kvp in lastPressInfos)
                 {
                     lastPress[kvp.Key] = kvp.Value;

@@ -6,7 +6,7 @@ namespace PPDEditor.Forms
 {
     public partial class GridSettingForm : Form
     {
-        string selectcolor = "...";
+        readonly string selectcolor = "...";
         delegate int Func(int val);
 
         public GridSettingForm()

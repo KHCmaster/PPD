@@ -18,12 +18,12 @@ namespace PPD
         public static Mode[] ModeArray = Enum.GetValues(typeof(Mode)) as Mode[];
 
         Mode mode = Mode.Feed;
-        PPDFramework.Resource.ResourceManager resourceManager;
-        ISound sound;
+        readonly PPDFramework.Resource.ResourceManager resourceManager;
+        readonly ISound sound;
 
-        PictureObject back;
-        PictureObject[] icons;
-        TextureString[] strings;
+        readonly PictureObject back;
+        readonly PictureObject[] icons;
+        readonly TextureString[] strings;
 
         int drawCount;
         bool operated;
@@ -67,7 +67,7 @@ namespace PPD
                 mode--;
                 if (mode < 0)
                 {
-                    mode = ModeArray[ModeArray.Length - 1];
+                    mode = ModeArray[^1];
                 }
                 OnModeChanged(mode);
                 sound.Play(PPDSetting.DefaultSounds[3], -1000);
@@ -89,10 +89,7 @@ namespace PPD
 
         private void OnModeChanged(Mode mode)
         {
-            if (ModeChanged != null)
-            {
-                ModeChanged.Invoke(this, EventArgs.Empty);
-            }
+            ModeChanged?.Invoke(this, EventArgs.Empty);
         }
 
         protected override void UpdateImpl()

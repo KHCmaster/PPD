@@ -33,16 +33,16 @@ namespace PPDCore
         public event Action<ErrorReason> PerfectTrialError;
         public event Action<int, int> PerfectTrialStart;
 
-        PPDFramework.Resource.ResourceManager resourceManager;
-        ISound sound;
-        ISceneBase scene;
+        readonly PPDFramework.Resource.ResourceManager resourceManager;
+        readonly ISound sound;
+        readonly ISceneBase scene;
 
         const float defaultbpm = 130;
         const int maxMovieTimesCount = 180;
         const double AprilFoolPlayRate1 = 1.25;
         const double AprilFoolPlayRate2 = 0.8;
 
-        double playRatio = 1;
+        readonly double playRatio = 1;
         float aprilFoolMovieLatency;
 
         enum State
@@ -69,29 +69,29 @@ namespace PPDCore
         FlowScriptManager scriptManager;
         ScoreStorage scoreStorage;
         Combo combo;
-        int[] evaPoint = new int[5];
+        readonly int[] evaPoint = new int[5];
         long lastTime;
         float tempLastTime;
-        PPDGameUtility gameUtility;
+        readonly PPDGameUtility gameUtility;
         PPDPlayRecorder playRecorder;
         PPDPlayDecorder playDecorder;
         bool recording = true;
         float endTime;
-        RandomChangeManager randomChangeManager = new RandomChangeManager();
+        readonly RandomChangeManager randomChangeManager = new();
         bool mistake;
 
         LatencyUpdaterBase latencyUpdater;
         LatencyFixer latencyFixer;
 
-        float startTime;
-        float markStartTime;
+        readonly float startTime;
+        readonly float markStartTime;
 
-        IGameHost gameHost;
-        GameInterfaceBase gameInterface;
-        MarkImagePathsBase markImagePath;
-        GameResultBase gameResult;
-        PauseMenuBase pauseMenu;
-        MainGameConfigBase config;
+        readonly IGameHost gameHost;
+        readonly GameInterfaceBase gameInterface;
+        readonly MarkImagePathsBase markImagePath;
+        readonly GameResultBase gameResult;
+        readonly PauseMenuBase pauseMenu;
+        readonly MainGameConfigBase config;
         List<float> movieTimes;
 
         bool movieFinishCalled;
@@ -217,7 +217,7 @@ namespace PPDCore
         public void Initialize(bool play = true, bool isGhost = false, Dictionary<string, object> scriptItems = null)
         {
             StartRecord();
-            movieTimes = new List<float>();
+            movieTimes = [];
             switch (gameUtility.LatencyType)
             {
                 case LatencyType.Db:
@@ -284,7 +284,7 @@ namespace PPDCore
             else
             {
                 var path = Path.Combine(gameUtility.SongInformation.DirectoryPath, DifficultyUtility.ConvertDifficulty(gameUtility.Difficulty) + ".ppd");
-                using (PackReader reader = new PackReader(path))
+                using (PackReader reader = new(path))
                 {
                     foreach (string content in reader.FileList)
                     {
@@ -558,7 +558,7 @@ namespace PPDCore
                 var slideScale = eventManager.GetSlideScale(g.First().Time);
                 foreach (var mk in g)
                 {
-                    if (!(mk is ExMarkData))
+                    if (mk is not ExMarkData)
                     {
                         continue;
                     }
@@ -646,7 +646,7 @@ namespace PPDCore
                     continue;
                 }
                 var tempResourceManager = new ScriptResourceManager(device, sound, modInfo.ModPath, Path.Combine("mods", String.Join("", modInfo.UniqueName.Split(Path.GetInvalidPathChars()))));
-                using (PackReader reader = new PackReader(modInfo.ModPath))
+                using (PackReader reader = new(modInfo.ModPath))
                 {
                     foreach (string content in reader.FileList)
                     {
@@ -678,19 +678,13 @@ namespace PPDCore
 
         protected void OnPause()
         {
-            if (Paused != null)
-            {
-                Paused.Invoke(this, EventArgs.Empty);
-            }
+            Paused?.Invoke(this, EventArgs.Empty);
         }
 
         protected void OnFinish()
         {
             finishCalled = true;
-            if (Finished != null)
-            {
-                Finished.Invoke(this, EventArgs.Empty);
-            }
+            Finished?.Invoke(this, EventArgs.Empty);
         }
 
         public void SaveLatency()
@@ -700,10 +694,7 @@ namespace PPDCore
 
         float pd_LatencyChanged(int sign)
         {
-            if (latencyFixer != null)
-            {
-                latencyFixer.Enabled = false;
-            }
+            latencyFixer?.Enabled = false;
             int lastCount = latencyUpdater.LatencyCount;
             latencyUpdater.LatencyCount += sign;
             if (lastCount != latencyUpdater.LatencyCount)
@@ -802,10 +793,7 @@ namespace PPDCore
             }
             else
             {
-                if (playDecorder != null)
-                {
-                    playDecorder.Reset();
-                }
+                playDecorder?.Reset();
             }
         }
 
@@ -914,19 +902,10 @@ namespace PPDCore
             state = State.Playing;
             combo.Retry();
             scoreStorage.Reload();
-            if (gameInterface != null)
-            {
-                gameInterface.Retry();
-            }
+            gameInterface?.Retry();
             effectManager.Retry();
-            if (gameResult != null)
-            {
-                gameResult.Retry();
-            }
-            if (pauseMenu != null)
-            {
-                pauseMenu.Retry(Replaying);
-            }
+            gameResult?.Retry();
+            pauseMenu?.Retry(Replaying);
             GameResultManager.Retry(Replaying);
             holdManager.Retry();
             slideManager.Retry();
@@ -959,18 +938,12 @@ namespace PPDCore
 
         public void MovieFadeOut()
         {
-            if (movie != null)
-            {
-                movie.FadeOut();
-            }
+            movie?.FadeOut();
         }
 
         public void MovieStop()
         {
-            if (movie != null)
-            {
-                movie.Stop();
-            }
+            movie?.Stop();
         }
 
         private bool CheckFinish(float movieTime)
@@ -1066,10 +1039,7 @@ namespace PPDCore
             {
                 inputInfo = new DisabledInputInfo(inputInfo, scriptManager.InputManager);
             }
-            if (movie != null)
-            {
-                movie.Update();
-            }
+            movie?.Update();
 
             bool[] b = new bool[10];
             bool[] released = new bool[10];
@@ -1144,10 +1114,7 @@ namespace PPDCore
                         {
                             pressCount[i] = inputInfo.GetPressingFrame((ButtonType)i);
                         }
-                        if (playRecorder != null)
-                        {
-                            playRecorder.Update(time - PPDSetting.Setting.AdjustGapTime, currentTime, pressCount, b, released);
-                        }
+                        playRecorder?.Update(time - PPDSetting.Setting.AdjustGapTime, currentTime, pressCount, b, released);
                         int currentScore = GameResultManager.CurrentScore;
                         int currentLife = GameResultManager.CurrentLife;
                         bool[] tempb = new bool[b.Length];
@@ -1177,21 +1144,12 @@ namespace PPDCore
                         }
                         if (currentScore != GameResultManager.CurrentScore)
                         {
-                            if (ScoreChanged != null)
-                            {
-                                ScoreChanged.Invoke(GameResultManager.CurrentScore);
-                            }
-                            if (gameInterface != null)
-                            {
-                                gameInterface.ChangeScore(GameResultManager.CurrentScore);
-                            }
+                            ScoreChanged?.Invoke(GameResultManager.CurrentScore);
+                            gameInterface?.ChangeScore(GameResultManager.CurrentScore);
                         }
                         if (currentLife != GameResultManager.CurrentLife)
                         {
-                            if (LifeChanged != null)
-                            {
-                                LifeChanged.Invoke(GameResultManager.CurrentLife);
-                            }
+                            LifeChanged?.Invoke(GameResultManager.CurrentLife);
                         }
                         if (!dontUpdateExtraProcess)
                         {
@@ -1304,10 +1262,7 @@ namespace PPDCore
                 markManager.Draw();
                 scriptManager.StageManager.Draw(LayerType.AfterMark);
                 OnDrawTiming(LayerType.AfterMark);
-                if (gameInterface != null)
-                {
-                    gameInterface.Draw();
-                }
+                gameInterface?.Draw();
                 scriptManager.StageManager.Draw(LayerType.AfterInterface);
                 combo.Draw();
                 OnDrawTiming(LayerType.AfterInterface);
@@ -1351,10 +1306,7 @@ namespace PPDCore
 
         void km_KasiChanged(string kasi)
         {
-            if (gameInterface != null)
-            {
-                gameInterface.ChangeKasi(kasi);
-            }
+            gameInterface?.ChangeKasi(kasi);
         }
 
         void mm_ChangeCombo(bool gain, Vector2 pos)
@@ -1371,10 +1323,7 @@ namespace PPDCore
             {
                 combo.ChangeCombo(GameResultManager.CurrentCombo, pos);
             }
-            if (gameInterface != null)
-            {
-                gameInterface.ChangeCombo(pos, GameResultManager.CurrentCombo);
-            }
+            gameInterface?.ChangeCombo(pos, GameResultManager.CurrentCombo);
             OnComboChanged(GameResultManager.CurrentCombo, pos);
         }
 
@@ -1397,10 +1346,7 @@ namespace PPDCore
             var ratio = ((float)(GameResultManager.CoolCount + GameResultManager.GoodCount) / GameResultManager.EvaluateSum - 0.7f) / 0.3f;
             if (ratio <= 0) ratio = 0;
             if (ratio >= 1) ratio = 1;
-            if (gameInterface != null)
-            {
-                gameInterface.ChangeEvaluate(markEvaluate, isMissPress, GameResultManager.CurrentLifeAsFloat, ratio, GameResultManager.ResultEvaluateType);
-            }
+            gameInterface?.ChangeEvaluate(markEvaluate, isMissPress, GameResultManager.CurrentLifeAsFloat, ratio, GameResultManager.ResultEvaluateType);
             if (!dontUpdateExtraProcess)
             {
                 combo.ChangeState(markEvaluate, isMissPress);
@@ -1442,18 +1388,12 @@ namespace PPDCore
 
         private void OnEvaluateChanged(MarkEvaluateType evaType, bool missPress)
         {
-            if (EvaluateChanged != null)
-            {
-                EvaluateChanged.Invoke(evaType, missPress);
-            }
+            EvaluateChanged?.Invoke(evaType, missPress);
         }
 
         private void OnComboChanged(int combo, Vector2 pos)
         {
-            if (ComboChanged != null)
-            {
-                ComboChanged.Invoke(combo, pos);
-            }
+            ComboChanged?.Invoke(combo, pos);
         }
 
         bool mm_PressingButton(ButtonType buttonType, bool pressing)
@@ -1488,63 +1428,24 @@ namespace PPDCore
 
         protected void OnDrawTiming(LayerType layerType)
         {
-            if (Drawed != null)
-            {
-                Drawed.Invoke(layerType);
-            }
+            Drawed?.Invoke(layerType);
         }
 
         protected override void DisposeResource()
         {
             base.DisposeResource();
-            if (movie != null)
-            {
-                movie.Dispose();
-            }
-            if (soundManager != null)
-            {
-                soundManager.Dispose();
-            }
-            if (gameInterface != null)
-            {
-                gameInterface.Dispose();
-            }
-            if (eventManager != null)
-            {
-                eventManager.Dispose();
-            }
-            if (markManager != null)
-            {
-                markManager.Dispose();
-            }
-            if (pauseMenu != null)
-            {
-                pauseMenu.Dispose();
-            }
-            if (effectManager != null)
-            {
-                effectManager.Dispose();
-            }
-            if (gameResult != null)
-            {
-                gameResult.Dispose();
-            }
-            if (holdManager != null)
-            {
-                holdManager.Dispose();
-            }
-            if (scriptManager != null)
-            {
-                scriptManager.Dispose();
-            }
-            if (combo != null)
-            {
-                combo.Dispose();
-            }
-            if (slideManager != null)
-            {
-                slideManager.Dispose();
-            }
+            movie?.Dispose();
+            soundManager?.Dispose();
+            gameInterface?.Dispose();
+            eventManager?.Dispose();
+            markManager?.Dispose();
+            pauseMenu?.Dispose();
+            effectManager?.Dispose();
+            gameResult?.Dispose();
+            holdManager?.Dispose();
+            scriptManager?.Dispose();
+            combo?.Dispose();
+            slideManager?.Dispose();
         }
     }
 }

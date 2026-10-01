@@ -51,7 +51,7 @@ namespace Effect2DEditor.DockForm
 
         public void Initialize()
         {
-            if (!(toolStrip1.Renderer is CustomToolStripRenderer))
+            if (toolStrip1.Renderer is not CustomToolStripRenderer)
             {
                 this.toolStrip1.Renderer = new CustomToolStripRenderer();
             }
@@ -97,26 +97,17 @@ namespace Effect2DEditor.DockForm
 
         private void toolStripButton2_Click(object sender, EventArgs e)
         {
-            if (EffectDeleted != null)
-            {
-                EffectDeleted.Invoke();
-            }
+            EffectDeleted?.Invoke();
         }
 
         private void toolStripButton3_Click(object sender, EventArgs e)
         {
-            if (EffectReversed != null)
-            {
-                EffectReversed.Invoke();
-            }
+            EffectReversed?.Invoke();
         }
 
         private void toolStripButton4_Click(object sender, EventArgs e)
         {
-            if (EffectCopyed != null)
-            {
-                EffectCopyed.Invoke();
-            }
+            EffectCopyed?.Invoke();
         }
 
         private void toolStripButton5_Click(object sender, EventArgs e)
@@ -232,10 +223,7 @@ namespace Effect2DEditor.DockForm
         {
             if (float.TryParse(toolStripTextBox1.Text, out float val))
             {
-                if (FpsChanged != null)
-                {
-                    FpsChanged.Invoke(val);
-                }
+                FpsChanged?.Invoke(val);
             }
         }
 
@@ -266,10 +254,7 @@ namespace Effect2DEditor.DockForm
 
         private void OnEffectLoaded(string fileName)
         {
-            if (EffectLoaded != null)
-            {
-                EffectLoaded.Invoke(fileName);
-            }
+            EffectLoaded?.Invoke(fileName);
         }
     }
 }

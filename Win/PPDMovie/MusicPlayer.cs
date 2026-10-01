@@ -51,11 +51,8 @@ namespace PPDMovie
                 return;
             }
 
-            if (resource != null)
-            {
-                resource.Dispose();
-                resource = null;
-            }
+            resource?.Dispose();
+            resource = null;
             base.releaseCOM();
         }
 

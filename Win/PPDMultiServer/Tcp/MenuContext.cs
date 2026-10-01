@@ -21,15 +21,15 @@ namespace PPDMultiServer.Tcp
         }
         State state = State.None;
 
-        PPDServer server;
+        readonly PPDServer server;
         SongInfo currentSong;
-        List<string> kickedIPs;
-        List<UserInfo> userList;
+        readonly List<string> kickedIPs;
+        readonly List<UserInfo> userList;
         GameRule currentRule;
-        string version;
+        readonly string version;
         int updateTimerID;
         int pingTimerID;
-        Stopwatch stopWatch;
+        readonly Stopwatch stopWatch;
         long prepareStartTime;
         bool forceStart;
 
@@ -57,8 +57,8 @@ namespace PPDMultiServer.Tcp
             this.server = server;
             version = FileVersionInfo.GetVersionInfo(Assembly.GetAssembly(this.GetType()).Location).FileVersion;
 
-            kickedIPs = new List<string>();
-            userList = new List<UserInfo>();
+            kickedIPs = [];
+            userList = [];
             currentRule = new GameRule();
 
             stopWatch = new Stopwatch();
@@ -109,10 +109,7 @@ namespace PPDMultiServer.Tcp
                     State = user.CurrentState,
                 }), user.ID);
                 Host.Write(MessagePackSerializer.Serialize(new ChangeLeaderNetworkData { UserId = Leader.ID }), user.ID);
-                if (ContextManager.Logger != null)
-                {
-                    ContextManager.Logger.AddLog(String.Format("{0}({1}) joined", user.Name, user.AccountId));
-                }
+                ContextManager.Logger?.AddLog(String.Format("{0}({1}) joined", user.Name, user.AccountId));
             });
             AddProcessor<DeleteUserNetworkData>(networkData =>
             {
@@ -122,10 +119,7 @@ namespace PPDMultiServer.Tcp
                     DeleteUser(user);
                     Host.Write(MessagePackSerializer.Serialize(new DeleteUserNetworkData { Id = user.ID }));
                     SendCommonSongInfo();
-                    if (ContextManager.Logger != null)
-                    {
-                        ContextManager.Logger.AddLog(String.Format("{0}({1}) leaved", user.Name, user.AccountId));
-                    }
+                    ContextManager.Logger?.AddLog(String.Format("{0}({1}) leaved", user.Name, user.AccountId));
                 }
             });
             AddProcessor<AddMessageNetworkData>(networkData =>
@@ -134,10 +128,7 @@ namespace PPDMultiServer.Tcp
                 if (user != null)
                 {
                     Host.WriteExceptID(MessagePackSerializer.Serialize(new AddMessageNetworkData { Message = networkData.Message, Id = user.ID }), user.ID);
-                    if (ContextManager.Logger != null)
-                    {
-                        ContextManager.Logger.AddLog(String.Format("{0}({1}) said '{2}'", user.Name, user.AccountId, networkData.Message));
-                    }
+                    ContextManager.Logger?.AddLog(String.Format("{0}({1}) said '{2}'", user.Name, user.AccountId, networkData.Message));
                 }
             });
             AddProcessor<AddPrivateMessageNetworkData>(networkData =>
@@ -152,11 +143,8 @@ namespace PPDMultiServer.Tcp
                         Id = networkData.Id,
                         UserId = networkData.UserId
                     }), networkData.UserId);
-                    if (ContextManager.Logger != null)
-                    {
-                        ContextManager.Logger.AddLog(String.Format("{0}({1}) said to {2}({3}) '{4}'", user.Name, user.AccountId,
+                    ContextManager.Logger?.AddLog(String.Format("{0}({1}) said to {2}({3}) '{4}'", user.Name, user.AccountId,
                             targetUser.Name, targetUser.AccountId, networkData.Message));
-                    }
                 }
             });
             AddProcessor<ChangeUserStateNetworkData>(networkData =>
@@ -180,10 +168,7 @@ namespace PPDMultiServer.Tcp
             AddProcessor<FailedToCreateRoomNetworkData>(networkData =>
             {
                 ContextManager.OnFailedToCreateRoom();
-                if (ContextManager.Logger != null)
-                {
-                    ContextManager.Logger.AddLog("Failed to create room");
-                }
+                ContextManager.Logger?.AddLog("Failed to create room");
             });
             AddProcessor<ChangeGameRuleNetworkData>(networkData =>
             {
@@ -194,10 +179,7 @@ namespace PPDMultiServer.Tcp
                     {
                         currentRule = networkData.GameRule;
                         Host.Write(MessagePackSerializer.Serialize(new ChangeGameRuleNetworkData { GameRule = currentRule }));
-                        if (ContextManager.Logger != null)
-                        {
-                            ContextManager.Logger.AddLog(String.Format("Rule was changed to {0}", currentRule));
-                        }
+                        ContextManager.Logger?.AddLog(String.Format("Rule was changed to {0}", currentRule));
                     }
                 }
             });
@@ -214,11 +196,8 @@ namespace PPDMultiServer.Tcp
                             u.HasSong = false;
                         }
                         Host.Write(MessagePackSerializer.Serialize(new ChangeSongNetworkData { Hash = networkData.Hash, Difficulty = networkData.Difficulty }));
-                        if (ContextManager.Logger != null)
-                        {
-                            ContextManager.Logger.AddLog(String.Format("Song was changed {0}({1})",
+                        ContextManager.Logger?.AddLog(String.Format("Song was changed {0}({1})",
                                GetStringArray(currentSong.Hash), currentSong.Difficulty));
-                        }
                     }
                 }
             });
@@ -255,10 +234,7 @@ namespace PPDMultiServer.Tcp
                     Host.WriteExceptID(MessagePackSerializer.Serialize(new KickUserNetworkData { UserId = targetUser.ID }), targetUser.ID);
                     DeleteUser(targetUser);
                     SendCommonSongInfo();
-                    if (ContextManager.Logger != null)
-                    {
-                        ContextManager.Logger.AddLog(String.Format("{0}({1}) was kicked", targetUser.Name, targetUser.AccountId));
-                    }
+                    ContextManager.Logger?.AddLog(String.Format("{0}({1}) was kicked", targetUser.Name, targetUser.AccountId));
                 }
             });
             AddProcessor<ChangeLeaderNetworkData>(networkData =>
@@ -270,10 +246,7 @@ namespace PPDMultiServer.Tcp
                     Host.Write(MessagePackSerializer.Serialize(new ChangeLeaderNetworkData { UserId = targetUser.ID }));
                     user.IsLeader = false;
                     targetUser.IsLeader = true;
-                    if (ContextManager.Logger != null)
-                    {
-                        ContextManager.Logger.AddLog(String.Format("Leader was changed to {0}({1})", targetUser.Name, targetUser.AccountId));
-                    }
+                    ContextManager.Logger?.AddLog(String.Format("Leader was changed to {0}({1})", targetUser.Name, targetUser.AccountId));
                 }
             });
         }
@@ -383,10 +356,7 @@ namespace PPDMultiServer.Tcp
                     var leader = userList[0];
                     userList[0].IsLeader = true;
                     Host.Write(MessagePackSerializer.Serialize(new ChangeLeaderNetworkData { UserId = leader.ID }), leader.ID);
-                    if (ContextManager.Logger != null)
-                    {
-                        ContextManager.Logger.AddLog(String.Format("Leader was changed to {0}({1})", leader.Name, leader.AccountId));
-                    }
+                    ContextManager.Logger?.AddLog(String.Format("Leader was changed to {0}({1})", leader.Name, leader.AccountId));
                 }
             }
         }
@@ -447,10 +417,7 @@ namespace PPDMultiServer.Tcp
                     Host.Write(MessagePackSerializer.Serialize(new GoToPlayNetworkData { PlayerIds = ids }), userInfo.ID);
                 }
                 ContextManager.PushContext(new MainGameContext(this));
-                if (ContextManager.Logger != null)
-                {
-                    ContextManager.Logger.AddLog("Main game started");
-                }
+                ContextManager.Logger?.AddLog("Main game started");
             }
         }
 

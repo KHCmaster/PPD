@@ -4,9 +4,9 @@ namespace PPDFramework.Texture.DX11
 {
     class TextureData : TextureDataBase
     {
-        Texture texture;
+        readonly Texture texture;
         GCHandle handle;
-        DataStream dataStream;
+        readonly DataStream dataStream;
 
         public override DataStream DataStream
         {

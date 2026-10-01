@@ -10,7 +10,7 @@ namespace PPDEditor.Forms
             changed = false;
             if (this.TabText.StartsWith("*") && this.TabText.Length > 1)
             {
-                this.TabText = this.TabText.Substring(1);
+                this.TabText = this.TabText[1..];
             }
         }
         public void ContentChanged()

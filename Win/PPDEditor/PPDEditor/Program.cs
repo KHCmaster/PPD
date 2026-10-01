@@ -70,11 +70,8 @@ namespace PPDEditor
             }
             finally
             {
-                if (game != null)
-                {
-                    game.Dispose();
-                    game = null;
-                }
+                game?.Dispose();
+                game = null;
             }
         }
     }

@@ -7,9 +7,9 @@ namespace PPDEditorCommon
 {
     public class EventData
     {
-        int[] volpercents = new int[11];
-        bool[] keepplayings = new bool[11];
-        bool[] releasesounds = new bool[11];
+        readonly int[] volpercents = new int[11];
+        readonly bool[] keepplayings = new bool[11];
+        readonly bool[] releasesounds = new bool[11];
         public EventData()
         {
             InitializeOrder = new ButtonType[10];

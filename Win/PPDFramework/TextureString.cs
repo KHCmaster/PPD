@@ -20,7 +20,7 @@ namespace PPDFramework
         string text = "";
         int characterHeight;
         Size2F size;
-        string facename;
+        readonly string facename;
         bool multiline;
         Color4 color;
         TextureChar[] chars = new TextureChar[0];
@@ -28,10 +28,10 @@ namespace PPDFramework
         TextureChar sparechar;
 
         float justwidth;
-        float maxwidth;
+        readonly float maxwidth;
         float width;
         bool allowScroll;
-        bool scrollable;
+        readonly bool scrollable;
         int scrollCount;
         int wait;
 
@@ -413,19 +413,13 @@ namespace PPDFramework
             {
                 foreach (TextureChar c in chars)
                 {
-                    if (c != null)
-                    {
-                        c.Dispose();
-                    }
+                    c?.Dispose();
                 }
                 chars = null;
             }
 
-            if (sparechar != null)
-            {
-                sparechar.Dispose();
-                sparechar = null;
-            }
+            sparechar?.Dispose();
+            sparechar = null;
         }
 
         /// <summary>
@@ -491,10 +485,7 @@ namespace PPDFramework
                 {
                     c.Hidden = value;
                 }
-                if (sparechar != null)
-                {
-                    sparechar.Hidden = value;
-                }
+                sparechar?.Hidden = value;
             }
         }
 

@@ -36,7 +36,7 @@ namespace PPDEditor.Forms
         public EditParameterForm()
         {
             InitializeComponent();
-            existKeys = new HashSet<string>();
+            existKeys = [];
         }
 
         private Dictionary<string, string> GetParametersExceptRow(int rowIndex)

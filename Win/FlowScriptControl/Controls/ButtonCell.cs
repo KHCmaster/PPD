@@ -65,10 +65,7 @@ namespace FlowScriptControl.Controls
         {
             if (IsInEditMode)
             {
-                if (ButtonClick != null)
-                {
-                    ButtonClick.Invoke(this, EventArgs.Empty);
-                }
+                ButtonClick?.Invoke(this, EventArgs.Empty);
             }
         }
 

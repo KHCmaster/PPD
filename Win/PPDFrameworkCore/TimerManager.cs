@@ -6,20 +6,20 @@ namespace PPDFrameworkCore
     public class TimerManager : ITimerManager
     {
         int iter = 1;
-        SortedList<int, TimerInfo> list;
-        SortedList<int, TimerInfo> onceList;
-        Dictionary<int, TimerInfo> afterAddList;
-        Dictionary<int, TimerInfo> afterOnceAddList;
-        GameTimer gameTimer;
-        private readonly object lockObject = new object();
+        readonly SortedList<int, TimerInfo> list;
+        readonly SortedList<int, TimerInfo> onceList;
+        readonly Dictionary<int, TimerInfo> afterAddList;
+        readonly Dictionary<int, TimerInfo> afterOnceAddList;
+        readonly GameTimer gameTimer;
+        private readonly object lockObject = new();
 
         public TimerManager(GameTimer gameTimer)
         {
             this.gameTimer = gameTimer;
-            list = new SortedList<int, TimerInfo>();
-            onceList = new SortedList<int, TimerInfo>();
-            afterAddList = new Dictionary<int, TimerInfo>();
-            afterOnceAddList = new Dictionary<int, TimerInfo>();
+            list = [];
+            onceList = [];
+            afterAddList = [];
+            afterOnceAddList = [];
         }
 
         public void Update()

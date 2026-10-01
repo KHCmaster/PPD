@@ -6,9 +6,9 @@ namespace PPDMulti
 {
     class ItemUseManager
     {
-        private List<ItemType> autoUseItemTypes;
+        private readonly List<ItemType> autoUseItemTypes;
 
-        private static ItemUseManager manager;
+        private static readonly ItemUseManager manager;
 
         public static ItemUseManager Manager
         {
@@ -25,7 +25,7 @@ namespace PPDMulti
 
         private ItemUseManager()
         {
-            autoUseItemTypes = new List<ItemType>();
+            autoUseItemTypes = [];
             foreach (string split in SkinSetting.Setting.AutoUseItemTypes.Split(','))
             {
                 if (int.TryParse(split, out int result))

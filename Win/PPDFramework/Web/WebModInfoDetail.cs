@@ -34,10 +34,7 @@ namespace PPDFramework.Web
         {
             get
             {
-                if (hashAsBytes == null)
-                {
-                    hashAsBytes = CryptographyUtility.Parsex2String(Hash);
-                }
+                hashAsBytes ??= CryptographyUtility.Parsex2String(Hash);
                 return hashAsBytes;
             }
         }

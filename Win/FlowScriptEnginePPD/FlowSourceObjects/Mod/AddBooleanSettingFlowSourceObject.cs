@@ -19,10 +19,7 @@
         {
             base.In(e);
             SetValue(nameof(Default));
-            if (modSettingManager != null)
-            {
-                modSettingManager.AddBooleanSetting(Key, DisplayName, Description, Default);
-            }
+            modSettingManager?.AddBooleanSetting(Key, DisplayName, Description, Default);
         }
     }
 }

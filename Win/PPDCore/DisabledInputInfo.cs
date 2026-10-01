@@ -6,8 +6,8 @@ namespace PPDCore
 {
     class DisabledInputInfo : InputInfoBase
     {
-        private InputInfoBase inputInfo;
-        private InputManager inputManager;
+        private readonly InputInfoBase inputInfo;
+        private readonly InputManager inputManager;
 
         public DisabledInputInfo(InputInfoBase inputInfo, InputManager inputManager)
             : base(inputInfo.Accurate)

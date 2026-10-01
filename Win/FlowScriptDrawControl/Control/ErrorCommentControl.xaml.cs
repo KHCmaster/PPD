@@ -132,10 +132,7 @@ namespace FlowScriptDrawControl.Control
         private void CloseButton_Click(object sender, RoutedEventArgs e)
         {
             var canvas = Utility.GetParent<Canvas>(this);
-            if (canvas != null)
-            {
-                canvas.Children.Remove(this);
-            }
+            canvas?.Children.Remove(this);
         }
 
         private void CopyButton_Click(object sender, RoutedEventArgs e)

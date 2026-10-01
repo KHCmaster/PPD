@@ -9,7 +9,7 @@ namespace PPDUpdater.Executor
 
         public event EventHandler Finished;
         public event EventHandler Progressed;
-        Control control;
+        readonly Control control;
 
         public bool Success
         {
@@ -46,10 +46,7 @@ namespace PPDUpdater.Executor
                 control.Invoke(new VoidDelegate(OnFinish));
                 return;
             }
-            if (Finished != null)
-            {
-                Finished.Invoke(this, EventArgs.Empty);
-            }
+            Finished?.Invoke(this, EventArgs.Empty);
         }
 
         protected void OnProgress()
@@ -59,10 +56,7 @@ namespace PPDUpdater.Executor
                 control.Invoke(new VoidDelegate(OnProgress));
                 return;
             }
-            if (Progressed != null)
-            {
-                Progressed.Invoke(this, EventArgs.Empty);
-            }
+            Progressed?.Invoke(this, EventArgs.Empty);
         }
     }
 }

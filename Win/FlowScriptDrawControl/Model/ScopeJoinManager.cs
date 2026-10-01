@@ -8,10 +8,10 @@ namespace FlowScriptDrawControl.Model
 {
     class ScopeJoinManager
     {
-        private FlowAreaControl flowAreaControl;
-        private MoveManager moveManager;
-        private Command.CommandManager commandManager;
-        private CommandSet commandSet;
+        private readonly FlowAreaControl flowAreaControl;
+        private readonly MoveManager moveManager;
+        private readonly Command.CommandManager commandManager;
+        private readonly CommandSet commandSet;
 
         public ScopeJoinManager(FlowAreaControl flowAreaControl, Command.CommandManager commandManager, MoveManager moveManager)
         {
@@ -65,8 +65,7 @@ namespace FlowScriptDrawControl.Model
         {
             foreach (PositionableControl control in moveManager.Controls)
             {
-                var scopeChild = control.CurrentPositionable as ScopeChild;
-                if (scopeChild == null || scopeChild.Scope == null)
+                if (control.CurrentPositionable is not ScopeChild scopeChild || scopeChild.Scope == null)
                 {
                     continue;
                 }

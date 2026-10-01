@@ -12,9 +12,9 @@ namespace PPDFramework
     /// </summary>
     public class PPDSetting
     {
-        string settingFileName = "PPD.ini";
+        readonly string settingFileName = "PPD.ini";
         static PPDSetting setting;
-        static string[] defaultsounds = { "sounds\\cursor1.wav", "sounds\\cursor2.wav", "sounds\\cursor3.wav", "sounds\\cursor4.wav" };
+        static readonly string[] defaultsounds = { "sounds\\cursor1.wav", "sounds\\cursor2.wav", "sounds\\cursor3.wav", "sounds\\cursor4.wav" };
         private PPDSetting(bool isDebug, string songDir, string langIso, bool disableExpansion)
         {
             SongDir = "songs";
@@ -97,7 +97,7 @@ namespace PPDFramework
         public bool IsMovie(string path)
         {
             var extension = Path.GetExtension(path).ToLower();
-            return Array.IndexOf(MovieExtensions, extension.Length == 0 ? "" : extension.Substring(1)) >= 0;
+            return Array.IndexOf(MovieExtensions, extension.Length == 0 ? "" : extension[1..]) >= 0;
         }
 
         private float GetValue(string word, float errorvalue)

@@ -5,8 +5,8 @@
     /// </summary>
     public class SpaceObject : SpriteObject
     {
-        float width;
-        float height;
+        readonly float width;
+        readonly float height;
 
         /// <summary>
         /// 幅を取得します。

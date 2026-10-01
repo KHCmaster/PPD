@@ -5,7 +5,7 @@ namespace PPDEditor.Forms
 {
     public partial class WriteDoneForm : Form
     {
-        private Timer timer;
+        private readonly Timer timer;
         private int tickCount;
         public WriteDoneForm()
         {

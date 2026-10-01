@@ -59,11 +59,8 @@
         /// </summary>
         protected override void DisposeResource()
         {
-            if (VertexBucket != null)
-            {
-                VertexBucket.Deallocate(this);
-                VertexBucket = null;
-            }
+            VertexBucket?.Deallocate(this);
+            VertexBucket = null;
             base.DisposeResource();
         }
     }

@@ -16,7 +16,7 @@ namespace PPDPack
             private set;
         }
 
-        private long startpos;
+        private readonly long startpos;
 
         public PPDPackStreamWriter(Stream stream, string filename)
         {

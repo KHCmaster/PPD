@@ -18,13 +18,13 @@ namespace PPDMulti
 
         int scrollIndex;
 
-        PPDFramework.Resource.ResourceManager resourceManager;
-        ISound sound;
-        IGameHost gameHost;
+        readonly PPDFramework.Resource.ResourceManager resourceManager;
+        readonly ISound sound;
+        readonly IGameHost gameHost;
 
-        PictureObject back;
-        SpriteObject resultSprite;
-        RectangleComponent scrollBar;
+        readonly PictureObject back;
+        readonly SpriteObject resultSprite;
+        readonly RectangleComponent scrollBar;
 
         public GameResultComponent(PPDDevice device, IGameHost gameHost, PPDFramework.Resource.ResourceManager resourceManager, ISound sound) : base(device)
         {
@@ -198,7 +198,7 @@ namespace PPDMulti
 
         class ResultComponent : BindableGameComponent
         {
-            PPDFramework.Resource.ResourceManager resourceManager;
+            readonly PPDFramework.Resource.ResourceManager resourceManager;
             PictureObject userIcon;
 
             private string currentUserIconPath = Utility.Path.Combine("noimage_icon.png");

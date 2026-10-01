@@ -40,8 +40,8 @@ namespace PPDUpdater
 
         string updatefinished = "アップデートが正常に終了しました";
 
-        InstallInfo installInfo = new InstallInfo();
-        List<string> updatelist = new List<string>();
+        readonly InstallInfo installInfo = new();
+        readonly List<string> updatelist = [];
         string channel;
 
         private string langFileName = "";
@@ -337,7 +337,7 @@ namespace PPDUpdater
 
         private void WriteInstallInfo()
         {
-            using (StreamWriter sw = new StreamWriter(installinfofile))
+            using (StreamWriter sw = new(installinfofile))
             {
                 WriteData(sw, "PPD", installInfo.PPD);
                 WriteData(sw, "SharpDX", installInfo.SharpDX);
@@ -560,7 +560,7 @@ namespace PPDUpdater
                     File.Delete(logfile);
                 }
             }
-            using (StreamWriter sw = new StreamWriter(logfile, true))
+            using (StreamWriter sw = new(logfile, true))
             {
                 sw.WriteLine(DateTime.Now);
                 sw.WriteLine(this.textBox1.Text);
@@ -570,7 +570,7 @@ namespace PPDUpdater
             var setting = new SettingReader(sr.ReadToEnd());
             sr.Close();
             setting.ReplaceOrAdd("Language", langFileISO);
-            using (SettingWriter sw = new SettingWriter(iniFileName, false))
+            using (SettingWriter sw = new(iniFileName, false))
             {
                 foreach (KeyValuePair<string, string> kvp in setting.Dictionary)
                 {

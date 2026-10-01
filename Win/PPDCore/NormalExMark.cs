@@ -15,7 +15,7 @@ namespace PPDCore
         PictureObject outCircle;
         PictureObject outAxis;
         NormalExMarkGage gage;
-        Vector2[] circlePoints;
+        readonly Vector2[] circlePoints;
 
         public NormalExMark(PPDDevice device, PPDFramework.Resource.ResourceManager resourceManager, MarkImagePathsBase filenames, ExMarkData emd, ButtonType type, float[] eval,
             float gap, Vector2[] circlepoints, DisplayState dState, NoteType noteType, int sameTimingMarks, KeyValuePair<string, string>[] parameters, PostDrawManager postDrawManager)

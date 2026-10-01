@@ -6,8 +6,8 @@ namespace PPDFramework.Vertex
     {
         const int BucketSize = 1024 * 32;
         int restCount;
-        Dictionary<int, Stack<int>> deallocatedSpaces;
-        readonly object restCountLock = new object();
+        readonly Dictionary<int, Stack<int>> deallocatedSpaces;
+        readonly object restCountLock = new();
 
         internal VertexBufferBase VertexBuffer
         {
@@ -19,7 +19,7 @@ namespace PPDFramework.Vertex
         {
             VertexBuffer = VertexBufferFactoryManager.Factory.Create(device, BucketSize * ColoredTexturedVertex.Size);
             restCount = BucketSize;
-            deallocatedSpaces = new Dictionary<int, Stack<int>>();
+            deallocatedSpaces = [];
         }
 
         public VertexInfo Allocate(int count)
@@ -66,11 +66,8 @@ namespace PPDFramework.Vertex
 
         protected override void DisposeResource()
         {
-            if (VertexBuffer != null)
-            {
-                VertexBuffer.Dispose();
-                VertexBuffer = null;
-            }
+            VertexBuffer?.Dispose();
+            VertexBuffer = null;
         }
     }
 }

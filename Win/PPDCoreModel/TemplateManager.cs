@@ -10,7 +10,7 @@ namespace PPDCoreModel
 
         public TemplateManager(Engine engine)
         {
-            list = new List<T>();
+            list = [];
             this.engine = engine;
         }
 

@@ -4,10 +4,10 @@ namespace Effect2DEditor.Command
 {
     class SetRatioMakerChangeCommand : CommandBase
     {
-        SelectedManager SManager;
-        RatioType type;
+        readonly SelectedManager SManager;
+        readonly RatioType type;
         IRatioMaker previousmaker;
-        IRatioMaker maker;
+        readonly IRatioMaker maker;
         public SetRatioMakerChangeCommand(EffectManager manager, string exp, SelectedManager SManager, RatioType type, IRatioMaker maker)
             : base(manager, exp)
         {

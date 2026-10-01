@@ -9,11 +9,11 @@ namespace PPDEditor
 {
     public class KeyConfigManager
     {
-        List<KeyConfig> keyConfigs;
+        readonly List<KeyConfig> keyConfigs;
         int currentConfigIndex;
         public KeyConfigManager()
         {
-            keyConfigs = new List<KeyConfig>();
+            keyConfigs = [];
             currentConfigIndex = 0;
         }
 
@@ -211,8 +211,8 @@ namespace PPDEditor
 
     public class KeyConfig
     {
-        Dictionary<ButtonType, Key> keyMap;
-        Dictionary<ButtonType, int> buttonMap;
+        readonly Dictionary<ButtonType, Key> keyMap;
+        readonly Dictionary<ButtonType, int> buttonMap;
 
         Key[] keys;
         int[] buttons;
@@ -222,8 +222,8 @@ namespace PPDEditor
 
         public KeyConfig()
         {
-            buttonMap = new Dictionary<ButtonType, int>();
-            keyMap = new Dictionary<ButtonType, Key>();
+            buttonMap = [];
+            keyMap = [];
             foreach (ButtonType type in ButtonUtility.Array)
             {
                 buttonMap.Add(type, -1);

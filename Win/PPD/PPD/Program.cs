@@ -116,7 +116,7 @@ namespace PPD
                 }
             }
             RunExpansion();
-            using (MyGame game = new MyGame(arg))
+            using (MyGame game = new(arg))
             {
                 try
                 {

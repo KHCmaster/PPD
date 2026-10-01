@@ -2,9 +2,9 @@
 {
     class RemoveParameterCommand : Command
     {
-        private Mark mk;
-        private string key;
-        private string prevValue;
+        private readonly Mark mk;
+        private readonly string key;
+        private readonly string prevValue;
         public RemoveParameterCommand(Mark mk, string key)
         {
             this.mk = mk;

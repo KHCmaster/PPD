@@ -2,12 +2,13 @@
 using PPDFramework;
 using PPDMulti.Model;
 using PPDShareComponent;
+using System.Linq;
 
 namespace PPDMulti
 {
     class UserListComponent : GameComponent
     {
-        PPDFramework.Resource.ResourceManager resourceManager;
+        readonly PPDFramework.Resource.ResourceManager resourceManager;
         int nameAnimCount;
         float nameAlpha = 1;
         float idAlpha;
@@ -66,7 +67,7 @@ namespace PPDMulti
         public void RemoveUser(User user)
         {
             MenuUserIcon found = null;
-            foreach (MenuUserIcon menuUser in this.Children)
+            foreach (MenuUserIcon menuUser in Children.Cast<MenuUserIcon>())
             {
                 if (menuUser.User == user)
                 {

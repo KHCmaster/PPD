@@ -4,9 +4,9 @@ namespace FlowScriptDrawControl.Command
 {
     class ChangeValueCommand : CommandBase
     {
-        private string newValue;
+        private readonly string newValue;
         private string oldValue;
-        private Item item;
+        private readonly Item item;
 
         public ChangeValueCommand(Item item, string newValue)
         {

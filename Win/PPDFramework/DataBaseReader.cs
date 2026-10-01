@@ -9,7 +9,7 @@ namespace PPDFramework
     public class DataBaseReader : DisposableComponent
     {
         private object lockObject;
-        private bool lockTaken;
+        private readonly bool lockTaken;
 
         /// <summary>
         /// 結果を読み取るリーダーを取得します。
@@ -47,11 +47,9 @@ namespace PPDFramework
                 }
                 lockObject = null;
             }
-            if (Reader != null)
-            {
-                Reader.Dispose();
-                Reader = null;
-            }
+
+            Reader?.Dispose();
+            Reader = null;
         }
     }
 }

@@ -47,8 +47,8 @@ namespace FlowScriptDrawControl.Model
         {
             get
             {
-                return sizeChangedCommand ?? (sizeChangedCommand = new RelayCommand(
-                    SizeChangedCommand_Execute));
+                return sizeChangedCommand ??= new RelayCommand(
+                    SizeChangedCommand_Execute);
             }
         }
 

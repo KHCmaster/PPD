@@ -10,9 +10,9 @@ namespace PPDCore
     class SoundManager : UpdatableGameComponent, ISoundManager
     {
         const string soundsetname = "soundset.txt";
-        ExSound sou;
-        int[] buttonsound = new int[10];
-        int[] pressingbuttonsound = new int[10];
+        readonly ExSound sou;
+        readonly int[] buttonsound = new int[10];
+        readonly int[] pressingbuttonsound = new int[10];
         SCDData[] data;
         int iter;
         bool initialized = true;

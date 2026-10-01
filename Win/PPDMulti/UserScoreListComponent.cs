@@ -11,8 +11,8 @@ namespace PPDMulti
         const int ItemHeight = 45;
         const int MaxDisplayCount = 8;
 
-        SpriteObject iconSprite;
-        PPDFramework.Resource.ResourceManager resourceManager;
+        readonly SpriteObject iconSprite;
+        readonly PPDFramework.Resource.ResourceManager resourceManager;
 
         public UserScoreListComponent(PPDDevice device, PPDFramework.Resource.ResourceManager resourceManager) : base(device)
         {
@@ -47,7 +47,7 @@ namespace PPDMulti
         public void DeleteUser(UserPlayState userPlayState)
         {
             PlayUserIcon found = null;
-            foreach (PlayUserIcon playUserIcon in iconSprite.Children)
+            foreach (PlayUserIcon playUserIcon in iconSprite.Children.Cast<PlayUserIcon>())
             {
                 if (playUserIcon.UserPlayState == userPlayState)
                 {

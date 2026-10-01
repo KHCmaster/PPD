@@ -11,17 +11,17 @@ namespace PPDCore
         public delegate void KasiChangeEventHandler(string kasi);
         public event KasiChangeEventHandler KasiChanged;
         float nexttime = float.MaxValue;
-        float starttime = float.MaxValue;
-        SortedList<float, string> pool = new SortedList<float, string>();
+        readonly float starttime = float.MaxValue;
+        readonly SortedList<float, string> pool = [];
         int index;
-        bool initialized;
+        readonly bool initialized;
         string kasi;
         public KasiManager(PPDGameUtility ppdgameutility)
         {
             var path = Path.Combine(ppdgameutility.SongInformation.DirectoryPath, "kasi.txt");
             if (File.Exists(path))
             {
-                using (StreamReader sr = new StreamReader(path))
+                using (StreamReader sr = new(path))
                 {
                     var data = sr.ReadToEnd();
                     sr.Close();
@@ -59,7 +59,7 @@ namespace PPDCore
             set
             {
                 kasi = value;
-                if (KasiChanged != null) KasiChanged.Invoke(kasi);
+                KasiChanged?.Invoke(kasi);
             }
         }
 

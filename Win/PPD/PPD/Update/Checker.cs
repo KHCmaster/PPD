@@ -79,7 +79,7 @@ namespace PPD.Update
 
             var installVersion = new Version(Settings.Setting.Install["InstallVersion"]);
             var splits = Settings.Setting.Updater["UrlList"].Split('/').Select(s => s.Replace("{0}", "")).ToArray();
-            splits[splits.Length - 1] = Settings.Setting.Updater["Channel"] + splits[splits.Length - 1];
+            splits[^1] = Settings.Setting.Updater["Channel"] + splits[^1];
             var url = new Uri(String.Join("/", splits));
             var latestVersion = new Version("0.0.0.0");
             using (var res = SyncHttpClient.Get(url.AbsoluteUri))
@@ -117,7 +117,7 @@ namespace PPD.Update
 
             var content = GetUrlContent(url);
             var asms = new List<AssemblyInfo>();
-            using (MemoryStream stream = new MemoryStream())
+            using (MemoryStream stream = new())
             {
                 var byteContent = Encoding.ASCII.GetBytes(content);
                 stream.Write(byteContent, 0, byteContent.Length);

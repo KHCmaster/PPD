@@ -210,18 +210,12 @@ namespace PPDSingle
 
         void mainGameComponent_LifeChanged(int obj)
         {
-            if (selfPlayState != null)
-            {
-                selfPlayState.Life = obj;
-            }
+            selfPlayState?.Life = obj;
         }
 
         void mainGameComponent_ScoreChanged(int obj)
         {
-            if (selfPlayState != null)
-            {
-                selfPlayState.Score = obj;
-            }
+            selfPlayState?.Score = obj;
         }
 
         void mainGameComponent_Drawed(LayerType layerType)
@@ -248,8 +242,8 @@ namespace PPDSingle
 
         class GhostPlayInfo
         {
-            UserPlayState userPlayState;
-            GhostFrame[] ghostFrames;
+            readonly UserPlayState userPlayState;
+            readonly GhostFrame[] ghostFrames;
             int index;
 
             public GhostPlayInfo(UserPlayState userPlayState, GhostFrame[] ghostFrames)

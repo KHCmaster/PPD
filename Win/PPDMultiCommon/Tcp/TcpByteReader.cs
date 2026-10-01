@@ -10,11 +10,11 @@ namespace PPDMultiCommon.Tcp
 
     public class TcpByteReader
     {
-        static byte[] PPDPACK = { (byte)'P', (byte)'P', (byte)'D', (byte)'P', (byte)'A', (byte)'C', (byte)'K' };
+        static readonly byte[] PPDPACK = { (byte)'P', (byte)'P', (byte)'D', (byte)'P', (byte)'A', (byte)'C', (byte)'K' };
 
         public event ByteReadedEventHandler ByteReaded;
-        private Dictionary<int, byte[]> lastArrayDictionary = new Dictionary<int, byte[]>();
-        private object lockObject = new object();
+        private readonly Dictionary<int, byte[]> lastArrayDictionary = [];
+        private readonly object lockObject = new();
 
         public void Read(byte[] data, int id)
         {
@@ -47,10 +47,7 @@ namespace PPDMultiCommon.Tcp
                     {
                         var networkData = Parser.Parse(data, out byte[] rest);
                         data = rest;
-                        if (ByteReaded != null)
-                        {
-                            ByteReaded.Invoke(new ReadInfo(networkData), id);
-                        }
+                        ByteReaded?.Invoke(new ReadInfo(networkData), id);
                     }
                     catch (ThreadAbortException)
                     {

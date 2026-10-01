@@ -17,8 +17,8 @@ namespace PPDFramework.Mod
         /// </summary>
         public const string MODSTART = "PPD_MOD_START";
 
-        Dictionary<string, object> settings;
-        List<ModSetting> modSettings;
+        readonly Dictionary<string, object> settings;
+        readonly List<ModSetting> modSettings;
 
         /// <summary>
         /// MODの設定値を取得、設定します。
@@ -64,8 +64,8 @@ namespace PPDFramework.Mod
         /// </summary>
         public ModSettingManager()
         {
-            settings = new Dictionary<string, object>();
-            modSettings = new List<ModSetting>();
+            settings = [];
+            modSettings = [];
         }
 
         /// <summary>

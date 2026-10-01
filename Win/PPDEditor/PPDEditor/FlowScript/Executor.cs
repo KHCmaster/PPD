@@ -10,11 +10,11 @@ namespace PPDEditor.FlowScript
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1001:Types that own disposable fields should be disposable", Justification = "止まらなかったスクリプトのスレッドが DebugController を使い続ける可能性があるので破棄しない（イベントのハンドルは GC で解放される）")]
     class Executor
     {
-        private Dictionary<string, object> items;
+        private readonly Dictionary<string, object> items;
         private Thread thread;
         private volatile bool killed;
-        private DebugController debugController;
-        private TcpDebugControllerClient controllerClient;
+        private readonly DebugController debugController;
+        private readonly TcpDebugControllerClient controllerClient;
 
         public string ScriptFilePath
         {
@@ -56,7 +56,7 @@ namespace PPDEditor.FlowScript
             Layers = layers;
             debugController = new DebugController();
             controllerClient = new TcpDebugControllerClient(debugController);
-            items = new Dictionary<string, object>();
+            items = [];
             AddItem("AllLayers", layers);
         }
 
@@ -119,10 +119,7 @@ namespace PPDEditor.FlowScript
             }
             finally
             {
-                if (controllerClient != null)
-                {
-                    controllerClient.Close();
-                }
+                controllerClient?.Close();
             }
             if (killed)
             {

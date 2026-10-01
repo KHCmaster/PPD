@@ -12,9 +12,9 @@ namespace PPDFramework.Resource.DX11
     /// </summary>
     class ImageResource : ImageResourceBase
     {
-        int width;
-        int height;
-        string filename;
+        readonly int width;
+        readonly int height;
+        readonly string filename;
         Texture.DX11.Texture texture;
         VertexInfo vertices;
         Vector2 halfPixel;
@@ -182,16 +182,10 @@ namespace PPDFramework.Resource.DX11
         /// </summary>
         protected override void DisposeResource()
         {
-            if (texture != null)
-            {
-                texture.Dispose();
-                texture = null;
-            }
-            if (vertices != null)
-            {
-                vertices.Dispose();
-                vertices = null;
-            }
+            texture?.Dispose();
+            texture = null;
+            vertices?.Dispose();
+            vertices = null;
         }
     }
 }

@@ -4,18 +4,19 @@ using System.Numerics;
 using PPDMath;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace PPDSingle
 {
     class ScoreManager : FocusableGameComponent
     {
-        private string createlinkmenu;
-        private string createfoldermenu;
-        private string cutmenu;
-        private string copymenu;
-        private string pastemenu;
-        private string deletemenu;
-        private string renamemenu;
+        private readonly string createlinkmenu;
+        private readonly string createfoldermenu;
+        private readonly string cutmenu;
+        private readonly string copymenu;
+        private readonly string pastemenu;
+        private readonly string deletemenu;
+        private readonly string renamemenu;
 
         enum FocusPanel
         {
@@ -31,20 +32,20 @@ namespace PPDSingle
 
         FocusPanel focusPanel = FocusPanel.Left;
 
-        ISound sound;
-        DxTextBox textBox;
-        SongSelectFilter filter;
+        readonly ISound sound;
+        readonly DxTextBox textBox;
+        readonly SongSelectFilter filter;
 
-        PictureObject back;
-        RectangleComponent black;
-        PictureObject folder;
-        PictureObject score;
-        PictureObject Lw;
-        PictureObject Rw;
-        PictureObject Lb;
-        PictureObject Rb;
-        RectangleComponent songInfoSelection;
-        RectangleComponent logicInfoSelection;
+        readonly PictureObject back;
+        readonly RectangleComponent black;
+        readonly PictureObject folder;
+        readonly PictureObject score;
+        readonly PictureObject Lw;
+        readonly PictureObject Rw;
+        readonly PictureObject Lb;
+        readonly PictureObject Rb;
+        readonly RectangleComponent songInfoSelection;
+        readonly RectangleComponent logicInfoSelection;
 
         const int siStartX = 35;
         const int siStartY = 85;
@@ -64,7 +65,7 @@ namespace PPDSingle
         TreeView siTreeView;
         TreeView lfTreeView;
 
-        ContextMenu cm;
+        readonly ContextMenu cm;
 
         LogicFolderTreeViewItem cutOrCopylftvi;
         bool cut;
@@ -235,7 +236,7 @@ namespace PPDSingle
 
         private void RecursiveCopy(SongInfoTreeViewItem sitvi, LogicFolderTreeViewItem lftvi)
         {
-            foreach (SongInfoTreeViewItem childsitvi in sitvi.Items)
+            foreach (SongInfoTreeViewItem childsitvi in sitvi.Items.Cast<SongInfoTreeViewItem>())
             {
                 if (!childsitvi.SongInformation.IsPPDSong)
                 {
@@ -286,18 +287,14 @@ namespace PPDSingle
                     string newText = this.textBox.Text;
                     lftvi.LogicFolderInfo.Rename(newText);
                     lftvi.TextureString.Text = newText;
-                    if (lftvi.Parent != null)
-                    {
-                        lftvi.Parent.Sort();
-                    }
+                    lftvi.Parent?.Sort();
                 }
             }
         }
 
         private void Delete()
         {
-            var lftvi = lfTreeView.SelectedItem as LogicFolderTreeViewItem;
-            if (lftvi == null) return;
+            if (lfTreeView.SelectedItem is not LogicFolderTreeViewItem lftvi) return;
 
             lftvi.Remove();
             lftvi.LogicFolderInfo.Remove();
@@ -305,8 +302,7 @@ namespace PPDSingle
 
         private void Rename()
         {
-            var lftvi = lfTreeView.SelectedItem as LogicFolderTreeViewItem;
-            if (lftvi == null) return;
+            if (lfTreeView.SelectedItem is not LogicFolderTreeViewItem lftvi) return;
 
             textBox.LostFocused += RenameEvent;
             ShowTextBox(lftvi);
@@ -362,7 +358,7 @@ namespace PPDSingle
                 var newFolder = dest.LogicFolderInfo.AddFolder(src.LogicFolderInfo.Name);
                 var newlftvi = CreateAndAdd(newFolder, dest);
                 dest.Sort();
-                foreach (LogicFolderTreeViewItem childlftvi in src.Items)
+                foreach (LogicFolderTreeViewItem childlftvi in src.Items.Cast<LogicFolderTreeViewItem>())
                 {
                     Copy(childlftvi, newlftvi);
                 }
@@ -433,10 +429,7 @@ namespace PPDSingle
                     string newText = this.textBox.Text;
                     lftvi.LogicFolderInfo.Rename(newText);
                     lftvi.TextureString.Text = newText;
-                    if (lftvi.Parent != null)
-                    {
-                        lftvi.Parent.Sort();
-                    }
+                    lftvi.Parent?.Sort();
                 }
             }
         }
@@ -491,7 +484,7 @@ namespace PPDSingle
                     {
                         if (cm.CheckPositionY(pos) >= 0)
                         {
-                            pos.X = pos.X + cm.CheckPositionX(pos);
+                            pos.X += cm.CheckPositionX(pos);
                         }
                         else
                         {
@@ -724,14 +717,12 @@ namespace PPDSingle
 
         void lfTreeView_SelectionChanged(object sender, SelectionEventArgs args)
         {
-            var prev = args.Prev as LogicFolderTreeViewItem;
-            var news = args.New as LogicFolderTreeViewItem;
-            if (prev != null)
+            if (args.Prev is LogicFolderTreeViewItem prev)
             {
                 prev.TextureString.Color = PPDColors.White;
                 prev.TextureString.AllowScroll = false;
             }
-            if (news != null)
+            if (args.New is LogicFolderTreeViewItem news)
             {
                 news.TextureString.Color = PPDColors.Black;
                 news.TextureString.AllowScroll = true;
@@ -740,7 +731,7 @@ namespace PPDSingle
 
         private void LFRecursiveUpdate(List<TreeViewItem> sis, ref int iter)
         {
-            foreach (LogicFolderTreeViewItem child in sis)
+            foreach (LogicFolderTreeViewItem child in sis.Cast<LogicFolderTreeViewItem>())
             {
                 if (child == lfTreeView.SelectedItem)
                 {
@@ -786,7 +777,7 @@ namespace PPDSingle
 
         private bool LFRecursiveDraw(List<TreeViewItem> sis, ref int iter)
         {
-            foreach (LogicFolderTreeViewItem child in sis)
+            foreach (LogicFolderTreeViewItem child in sis.Cast<LogicFolderTreeViewItem>())
             {
                 TextureString ts = child.TextureString;
                 if (iter >= 0)
@@ -837,7 +828,7 @@ namespace PPDSingle
 
         private void LFRecursiveDispose(List<TreeViewItem> sis)
         {
-            foreach (LogicFolderTreeViewItem child in sis)
+            foreach (LogicFolderTreeViewItem child in sis.Cast<LogicFolderTreeViewItem>())
             {
                 child.TextureString.Dispose();
                 child.TextureString = null;
@@ -853,14 +844,12 @@ namespace PPDSingle
 
         void treeview_SelectionChanged(object sender, SelectionEventArgs args)
         {
-            var prev = args.Prev as SongInfoTreeViewItem;
-            var news = args.New as SongInfoTreeViewItem;
-            if (prev != null)
+            if (args.Prev is SongInfoTreeViewItem prev)
             {
                 prev.TextureString.Color = PPDColors.White;
                 prev.TextureString.AllowScroll = false;
             }
-            if (news != null)
+            if (args.New is SongInfoTreeViewItem news)
             {
                 news.TextureString.Color = PPDColors.Black;
                 news.TextureString.AllowScroll = true;
@@ -869,7 +858,7 @@ namespace PPDSingle
 
         private void RecursiveUpdate(List<TreeViewItem> sis, ref int iter)
         {
-            foreach (SongInfoTreeViewItem child in sis)
+            foreach (SongInfoTreeViewItem child in sis.Cast<SongInfoTreeViewItem>())
             {
                 if (child == siTreeView.SelectedItem)
                 {
@@ -908,7 +897,7 @@ namespace PPDSingle
 
         private bool RecursiveDraw(List<TreeViewItem> sis, ref int iter)
         {
-            foreach (SongInfoTreeViewItem child in sis)
+            foreach (SongInfoTreeViewItem child in sis.Cast<SongInfoTreeViewItem>())
             {
                 TextureString ts = child.TextureString;
                 if (iter >= 0)
@@ -953,7 +942,7 @@ namespace PPDSingle
 
         private void RecursiveDispose(List<TreeViewItem> sis)
         {
-            foreach (SongInfoTreeViewItem child in sis)
+            foreach (SongInfoTreeViewItem child in sis.Cast<SongInfoTreeViewItem>())
             {
                 child.TextureString.Dispose();
                 child.TextureString = null;
@@ -1010,9 +999,9 @@ namespace PPDSingle
 
         class SongInfoComponent : GameComponent
         {
-            PictureObject folder;
-            PictureObject score;
-            RectangleComponent selection;
+            readonly PictureObject folder;
+            readonly PictureObject score;
+            readonly RectangleComponent selection;
             TextureString text;
             int depth;
 
@@ -1079,10 +1068,7 @@ namespace PPDSingle
 
                 folder.Hidden = songInformation.IsPPDSong;
                 score.Hidden = !songInformation.IsPPDSong;
-                if (text != null)
-                {
-                    text.Text = songInformation.DirectoryName;
-                }
+                text?.Text = songInformation.DirectoryName;
             }
 
             private void UpdateDepth()

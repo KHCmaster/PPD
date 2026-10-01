@@ -16,8 +16,8 @@ namespace Effect2D
         /// </summary>
         public BaseEffect()
         {
-            Effects = new List<IEffect>();
-            Sets = new SortedList<int, EffectStateRatioSet>();
+            Effects = [];
+            Sets = [];
         }
 
         /// <summary>

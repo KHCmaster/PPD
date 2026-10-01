@@ -30,12 +30,12 @@ namespace PPDShareComponent
 
         bool enabled;
         DrawingMode drawMode;
-        TextureString stringObj;
-        RectangleComponent back;
-        RectangleComponent selection;
-        LineRectangleComponent border;
-        RectangleComponent caret;
-        IGameHost host;
+        readonly TextureString stringObj;
+        readonly RectangleComponent back;
+        readonly RectangleComponent selection;
+        readonly LineRectangleComponent border;
+        readonly RectangleComponent caret;
+        readonly IGameHost host;
         int count;
         int scrollIndex;
         int lastCaretIndex;
@@ -118,7 +118,7 @@ namespace PPDShareComponent
             {
                 if (host.TextBoxText.Length >= MaxTextLength)
                 {
-                    host.TextBoxText = host.TextBoxText.Substring(0, MaxTextLength);
+                    host.TextBoxText = host.TextBoxText[..MaxTextLength];
                     text = host.TextBoxText;
                 }
                 OnTextChanged();
@@ -140,7 +140,7 @@ namespace PPDShareComponent
                         scrollIndex = 0;
                     }
 
-                    stringObj.Text = text.Substring(scrollIndex);
+                    stringObj.Text = text[scrollIndex..];
                     stringObj.Update();
                 }
                 else
@@ -150,7 +150,7 @@ namespace PPDShareComponent
                     do
                     {
                         scrollIndex++;
-                        stringObj.Text = text.Substring(scrollIndex);
+                        stringObj.Text = text[scrollIndex..];
                         stringObj.Update();
                         tempWidth = stringObj.GetWidthToIndex(host.TextBoxCaretIndex - scrollIndex);
                     } while (tempWidth >= TextBoxWidth);
@@ -198,10 +198,7 @@ namespace PPDShareComponent
 
         protected void OnTextChanged()
         {
-            if (TextChanged != null)
-            {
-                TextChanged.Invoke(this, EventArgs.Empty);
-            }
+            TextChanged?.Invoke(this, EventArgs.Empty);
         }
 
         public bool Enabled

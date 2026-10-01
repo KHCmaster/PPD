@@ -97,51 +97,24 @@ namespace PPDFramework.Shaders
         /// </summary>
         protected override void DisposeResource()
         {
-            if (effect != null)
-            {
-                effect.Dispose();
-                effect = null;
-            }
-            if (filterTextureHandle != null)
-            {
-                filterTextureHandle.Dispose();
-                filterTextureHandle = null;
-            }
-            if (lastRenderTargetTextureHandle != null)
-            {
-                lastRenderTargetTextureHandle.Dispose();
-                lastRenderTargetTextureHandle = null;
-            }
-            if (projectionHandle != null)
-            {
-                projectionHandle.Dispose();
-                projectionHandle = null;
-            }
-            if (thicknessHandle != null)
-            {
-                thicknessHandle.Dispose();
-                thicknessHandle = null;
-            }
-            if (thickness2Handle != null)
-            {
-                thickness2Handle.Dispose();
-                thickness2Handle = null;
-            }
-            if (actualThicknessHandle != null)
-            {
-                actualThicknessHandle.Dispose();
-                actualThicknessHandle = null;
-            }
-            if (widthHeightHandle != null)
-            {
-                widthHeightHandle.Dispose();
-                widthHeightHandle = null;
-            }
-            if (colorHandle != null)
-            {
-                colorHandle.Dispose();
-                colorHandle = null;
-            }
+            effect?.Dispose();
+            effect = null;
+            filterTextureHandle?.Dispose();
+            filterTextureHandle = null;
+            lastRenderTargetTextureHandle?.Dispose();
+            lastRenderTargetTextureHandle = null;
+            projectionHandle?.Dispose();
+            projectionHandle = null;
+            thicknessHandle?.Dispose();
+            thicknessHandle = null;
+            thickness2Handle?.Dispose();
+            thickness2Handle = null;
+            actualThicknessHandle?.Dispose();
+            actualThicknessHandle = null;
+            widthHeightHandle?.Dispose();
+            widthHeightHandle = null;
+            colorHandle?.Dispose();
+            colorHandle = null;
         }
     }
 }

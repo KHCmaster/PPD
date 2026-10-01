@@ -15,10 +15,10 @@ namespace PPDConfiguration
         /// </summary>
         public const string mainLangIso = "en";
 
-        SettingReader mainAnalyzer;
-        SettingReader analyzer;
-        SettingReader[] appendedAnalyzers;
-        SettingReader[] appendedMainAnalyzers;
+        readonly SettingReader mainAnalyzer;
+        readonly SettingReader analyzer;
+        readonly SettingReader[] appendedAnalyzers;
+        readonly SettingReader[] appendedMainAnalyzers;
 
         /// <summary>
         /// コンストラクタ

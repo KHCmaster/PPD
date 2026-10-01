@@ -11,10 +11,10 @@ namespace PPDEditor
     {
         SortedList<float, EventData> changeData;
         int currentnum;
-        int[] Volpercents = new int[10];
-        bool[] ReleaseSounds = new bool[10];
+        readonly int[] Volpercents = new int[10];
+        readonly bool[] ReleaseSounds = new bool[10];
         DisplayState dstate = DisplayState.Normal;
-        List<float[]> stopList;
+        readonly List<float[]> stopList;
         string alreadyadded = "すでにこの時間にイベントが設定されています。削除してからもう一度追加してください";
         string confirmdelete = "削除してもよろしいですか？";
         string confirm = "確認";
@@ -22,8 +22,8 @@ namespace PPDEditor
         public EventManager()
         {
             InitializeComponent();
-            changeData = new SortedList<float, EventData>();
-            stopList = new List<float[]>();
+            changeData = [];
+            stopList = [];
             for (int i = 0; i < Volpercents.Length; i++)
             {
                 Volpercents[i] = 90;

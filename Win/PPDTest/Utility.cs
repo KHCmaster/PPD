@@ -8,10 +8,7 @@ namespace PPDTest
         public static IntPtr window;
         public static void OnGraphNotify()
         {
-            if (GraphNotify != null)
-            {
-                GraphNotify.Invoke(null, EventArgs.Empty);
-            }
+            GraphNotify?.Invoke(null, EventArgs.Empty);
         }
     }
 }

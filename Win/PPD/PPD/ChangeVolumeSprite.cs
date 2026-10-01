@@ -9,14 +9,14 @@ namespace PPD
         private const float RectStartX = 120;
         private const float RectWidth = 400;
 
-        PPDFramework.Resource.ResourceManager resourceManager;
-        MyGame myGame;
-        ISound sound;
+        readonly PPDFramework.Resource.ResourceManager resourceManager;
+        readonly MyGame myGame;
+        readonly ISound sound;
 
-        TextureString[] texts;
-        RectangleComponent[] rects;
-        PictureObject[] spheres;
-        PictureObject select;
+        readonly TextureString[] texts;
+        readonly RectangleComponent[] rects;
+        readonly PictureObject[] spheres;
+        readonly PictureObject select;
         int currentIndex;
         bool modified;
 
@@ -133,10 +133,7 @@ namespace PPD
             }
             else if (args.InputInfo.IsPressed(ButtonType.Cross))
             {
-                if (FocusManager != null)
-                {
-                    FocusManager.RemoveFocus();
-                }
+                FocusManager?.RemoveFocus();
             }
             else if (args.InputInfo.IsPressed(ButtonType.Left))
             {

@@ -30,10 +30,7 @@ namespace FlowScriptDrawControl.Command
         protected virtual void Connect(SourceItemControl srcItem, SourceItemControl destItem, ArrowControl arrowControl)
         {
             arrowControl.SrcItem = srcItem;
-            if (srcItem != null)
-            {
-                srcItem.CurrentItem.AddOutConnection(new Connection { Target = destItem.CurrentItem });
-            }
+            srcItem?.CurrentItem.AddOutConnection(new Connection { Target = destItem.CurrentItem });
 
             arrowControl.SrcItem = srcItem;
             arrowControl.DestItem = destItem;

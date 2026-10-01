@@ -150,7 +150,7 @@ namespace FlowScriptEngine.AutoFastGenerator
             {
                 return name;
             }
-            return name.Substring(0, backQuoteIndex);
+            return name[..backQuoteIndex];
         }
 
         private static void WriteData(StringBuilder sb, string value, int level)

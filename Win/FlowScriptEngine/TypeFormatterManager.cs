@@ -5,10 +5,10 @@ namespace FlowScriptEngine
 {
     public static class TypeFormatterManager
     {
-        private static Dictionary<Type, TypeFormatterBase> dict;
+        private static readonly Dictionary<Type, TypeFormatterBase> dict;
         static TypeFormatterManager()
         {
-            dict = new Dictionary<Type, TypeFormatterBase>();
+            dict = [];
         }
 
         public static TypeFormatterBase GetFormatter(Type type)

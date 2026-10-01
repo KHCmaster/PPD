@@ -2,7 +2,7 @@
 {
     abstract class LatencyUpdaterBase
     {
-        private float baseLatency;
+        private readonly float baseLatency;
 
         public int BaseLantencyCount
         {

@@ -13,11 +13,11 @@ namespace PPDCore
 {
     public class TcpDebugControllerClient : TcpDebugControllerBase, IDisposable
     {
-        private DebugController debugController;
+        private readonly DebugController debugController;
         private TcpClient tcpClient;
         private bool connected;
-        private Dictionary<string, int[]> breakPoints;
-        private Dictionary<string, FlowSourceManager> dict;
+        private readonly Dictionary<string, int[]> breakPoints;
+        private readonly Dictionary<string, FlowSourceManager> dict;
         private Thread asyncReadThread;
 
         public bool Connected
@@ -39,8 +39,8 @@ namespace PPDCore
         public TcpDebugControllerClient(DebugController debugController)
         {
             this.debugController = debugController;
-            breakPoints = new Dictionary<string, int[]>();
-            dict = new Dictionary<string, FlowSourceManager>();
+            breakPoints = [];
+            dict = [];
 
             debugController.OperationWaited += debugController_OperationWaited;
             debugController.OperationAccepted += debugController_OperationAccepted;
@@ -92,8 +92,8 @@ namespace PPDCore
                 Send(bytes);
                 bytes = Read(tcpClient.GetStream());
                 string[] fileNames;
-                using (MemoryStream stream = new MemoryStream(bytes))
-                using (PackReader reader = new PackReader(stream))
+                using (MemoryStream stream = new(bytes))
+                using (PackReader reader = new(stream))
                 {
                     var ret = ParseString(reader, Return);
                     fileNames = ret.Split(',');
@@ -115,8 +115,8 @@ namespace PPDCore
                     });
                     Send(bytes);
                     bytes = Read(tcpClient.GetStream());
-                    using (MemoryStream stream = new MemoryStream(bytes))
-                    using (PackReader reader = new PackReader(stream))
+                    using (MemoryStream stream = new(bytes))
+                    using (PackReader reader = new(stream))
                     {
                         var ret = ParseString(reader, Return);
                         if (!String.IsNullOrEmpty(ret))
@@ -232,8 +232,8 @@ namespace PPDCore
             Send(bytes);
             AsyncRead(b =>
             {
-                using (MemoryStream stream = new MemoryStream(b))
-                using (PackReader reader = new PackReader(stream))
+                using (MemoryStream stream = new(b))
+                using (PackReader reader = new(stream))
                 {
                     var methodName = ParseString(reader, MethodName);
                     switch (methodName)

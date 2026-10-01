@@ -78,8 +78,8 @@ namespace PPDEditor.Forms
         string asksave = "保存されていないデータが有ります。保存しますか？";
         string confirm = "確認";
         string existcopybuffer = "コピーバッファがあります";
-        string noproject = "プロジェクトがありません。プロジェクトとして保存してください";
-        string noppdexe = "適切なPPD.exeの参照がありません";
+        readonly string noproject = "プロジェクトがありません。プロジェクトとして保存してください";
+        readonly string noppdexe = "適切なPPD.exeの参照がありません";
         string nosoundfile = "が存在しません。";
         string rebootnecessary = "再起動が必要です";
         string oldprojectdetected = "古いバージョンのプロジェクトです。変換しますか？";
@@ -325,7 +325,7 @@ namespace PPDEditor.Forms
 
         private void SaveShortcut()
         {
-            using (StreamWriter writer = new StreamWriter(Path.Combine(Utility.AppDir, shortcutFileName)))
+            using (StreamWriter writer = new(Path.Combine(Utility.AppDir, shortcutFileName)))
             {
                 foreach (ShortcutInfo info in WindowUtility.Seekmain.ShortcutManager.Shortcuts)
                 {
@@ -601,9 +601,8 @@ namespace PPDEditor.Forms
             {
                 for (int index = dockPanel1.Contents.Count - 1; index >= 0; index--)
                 {
-                    if (dockPanel1.Contents[index] is IDockContent)
+                    if (dockPanel1.Contents[index] is IDockContent content)
                     {
-                        var content = (IDockContent)dockPanel1.Contents[index];
                         content.DockHandler.Close();
                     }
                 }
@@ -857,7 +856,7 @@ namespace PPDEditor.Forms
             }
             else if (s.Length < 5)
             {
-                ret = s.Substring(2);
+                ret = s[2..];
                 while (ret.Length < 3)
                 {
                     ret += "0";
@@ -1107,13 +1106,13 @@ namespace PPDEditor.Forms
             this.saveFileDialog1.FileName = "soundset.txt";
             if (saveFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                if (saveFileDialog1.FileName.Substring(saveFileDialog1.FileName.Length - 4) != ".txt")
+                if (saveFileDialog1.FileName[^4..] != ".txt")
                 {
                     string fn = saveFileDialog1.FileName;
                     var a = fn.IndexOf(".");
                     if (a != -1)
                     {
-                        fn = fn.Substring(0, a);
+                        fn = fn[..a];
                     }
                     fn += ".txt";
                     saveFileDialog1.FileName = fn;
@@ -1128,7 +1127,7 @@ namespace PPDEditor.Forms
 
         private void SaveSoundSet(string filename)
         {
-            using (StreamWriter sw = new StreamWriter(filename))
+            using (StreamWriter sw = new(filename))
             {
                 sw.Write(sm.savesoundset());
                 sw.Close();
@@ -1143,13 +1142,13 @@ namespace PPDEditor.Forms
             this.saveFileDialog1.FileName = "new.scd";
             if (saveFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                if (saveFileDialog1.FileName.Substring(saveFileDialog1.FileName.Length - 4) != ".txt")
+                if (saveFileDialog1.FileName[^4..] != ".txt")
                 {
                     string fn = saveFileDialog1.FileName;
                     var a = fn.IndexOf(".");
                     if (a != -1)
                     {
-                        fn = fn.Substring(0, a);
+                        fn = fn[..a];
                     }
                     fn += ".scd";
                     saveFileDialog1.FileName = fn;
@@ -1178,13 +1177,13 @@ namespace PPDEditor.Forms
             this.saveFileDialog1.FileName = "NewFile.ppd";
             if (saveFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                if (saveFileDialog1.FileName.Substring(saveFileDialog1.FileName.Length - 4) != ".ppd")
+                if (saveFileDialog1.FileName[^4..] != ".ppd")
                 {
                     string fn = saveFileDialog1.FileName;
                     var a = fn.IndexOf(".");
                     if (a != -1)
                     {
-                        fn = fn.Substring(0, a);
+                        fn = fn[..a];
                     }
                     fn += ".ppd";
                     saveFileDialog1.FileName = fn;
@@ -1218,13 +1217,13 @@ namespace PPDEditor.Forms
             this.saveFileDialog1.FileName = "kasi.txt";
             if (saveFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                if (saveFileDialog1.FileName.Substring(saveFileDialog1.FileName.Length - 4) != ".txt")
+                if (saveFileDialog1.FileName[^4..] != ".txt")
                 {
                     string fn = saveFileDialog1.FileName;
                     var a = fn.IndexOf(".");
                     if (a != -1)
                     {
-                        fn = fn.Substring(0, a);
+                        fn = fn[..a];
                     }
                     fn += ".txt";
                     saveFileDialog1.FileName = fn;
@@ -1239,7 +1238,7 @@ namespace PPDEditor.Forms
 
         private void SaveKasi(string filename)
         {
-            using (StreamWriter sw = new StreamWriter(filename))
+            using (StreamWriter sw = new(filename))
             {
                 sw.Write(ke.savedata());
                 sw.Close();
@@ -1254,13 +1253,13 @@ namespace PPDEditor.Forms
             this.saveFileDialog1.FileName = "data.ini";
             if (saveFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                if (saveFileDialog1.FileName.Substring(saveFileDialog1.FileName.Length - 4) != ".ini")
+                if (saveFileDialog1.FileName[^4..] != ".ini")
                 {
                     string fn = saveFileDialog1.FileName;
                     var a = fn.IndexOf(".");
                     if (a != -1)
                     {
-                        fn = fn.Substring(0, a);
+                        fn = fn[..a];
                     }
                     fn += ".ini";
                     saveFileDialog1.FileName = fn;
@@ -1287,13 +1286,13 @@ namespace PPDEditor.Forms
             this.saveFileDialog1.RestoreDirectory = true;
             this.saveFileDialog1.FileName = "NewFile.evd"; if (saveFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                if (saveFileDialog1.FileName.Substring(saveFileDialog1.FileName.Length - 4) != ".evd")
+                if (saveFileDialog1.FileName[^4..] != ".evd")
                 {
                     string fn = saveFileDialog1.FileName;
                     var a = fn.IndexOf(".");
                     if (a != -1)
                     {
-                        fn = fn.Substring(0, a);
+                        fn = fn[..a];
                     }
                     fn += ".evd";
                     saveFileDialog1.FileName = fn;
@@ -1358,13 +1357,13 @@ namespace PPDEditor.Forms
             ret = saveFileDialog1.ShowDialog();
             if (ret == DialogResult.OK)
             {
-                if (saveFileDialog1.FileName.Substring(saveFileDialog1.FileName.Length - 8) != ".ppdproj")
+                if (saveFileDialog1.FileName[^8..] != ".ppdproj")
                 {
                     string fn = saveFileDialog1.FileName;
                     var a = fn.IndexOf(".");
                     if (a != -1)
                     {
-                        fn = fn.Substring(0, a);
+                        fn = fn[..a];
                     }
                     fn += ".ppdproj";
                     saveFileDialog1.FileName = fn;
@@ -1602,7 +1601,7 @@ namespace PPDEditor.Forms
 
         private void ReadKasi(string filename)
         {
-            using (StreamReader sr = new StreamReader(filename))
+            using (StreamReader sr = new(filename))
             {
                 ke.setdata(sr.ReadToEnd());
                 sr.Close();
@@ -1624,7 +1623,7 @@ namespace PPDEditor.Forms
         {
             try
             {
-                using (PackReader reader = new PackReader(filename))
+                using (PackReader reader = new(filename))
                 {
                     var ppdpsr = reader.Read("ppd");
                     ReadPpd(ppdpsr);
@@ -1682,7 +1681,7 @@ namespace PPDEditor.Forms
 
         private void ReadIni(string filename)
         {
-            using (StreamReader sr = new StreamReader(filename))
+            using (StreamReader sr = new(filename))
             {
                 var s = sr.ReadToEnd();
                 sr.Close();
@@ -1718,15 +1717,15 @@ namespace PPDEditor.Forms
 
         private void ReadSoundSet(string filename)
         {
-            using (StreamReader sr = new StreamReader(filename))
+            using (StreamReader sr = new(filename))
             {
                 var insidedirectory = Path.GetDirectoryName(filename);
                 var s = sr.ReadToEnd().Replace("\r\n", "\r").Replace("\r", "\n");
                 sr.Close();
                 if (s.Length == 0) return;
-                if (s[s.Length - 1] == '\n')
+                if (s[^1] == '\n')
                 {
-                    s = s.Substring(0, s.Length - 1);
+                    s = s[..^1];
                 }
                 var pathes = s.Split('\n');
                 for (int i = 0; i < pathes.Length; i++)
@@ -1867,7 +1866,7 @@ namespace PPDEditor.Forms
         {
             try
             {
-                using (PackReader reader = new PackReader(filename))
+                using (PackReader reader = new(filename))
                 {
                     var ppdpsr = reader.Read("evd");
                     ReadEvd(ppdpsr);
@@ -1966,7 +1965,7 @@ namespace PPDEditor.Forms
             {
                 Directory.CreateDirectory(copydir);
             }
-            Utility.CopyDirectory(Path.Combine(parentdirectory, filename), copydir, new Regex[] { new Regex("^movie\\.\\w+$") });
+            Utility.CopyDirectory(Path.Combine(parentdirectory, filename), copydir, new Regex[] { new("^movie\\.\\w+$") });
         }
 
         private void ConvertProject(string path, int version)
@@ -2638,7 +2637,7 @@ namespace PPDEditor.Forms
 
         private void SaveRecentUsedProject()
         {
-            using (StreamWriter sw = new StreamWriter(Path.Combine(Utility.AppDir, projectcache)))
+            using (StreamWriter sw = new(Path.Combine(Utility.AppDir, projectcache)))
             {
                 foreach (ToolStripMenuItem tsmi in this.最近使用したプロジェクトToolStripMenuItem.DropDownItems)
                 {
@@ -2675,7 +2674,7 @@ namespace PPDEditor.Forms
                 setting.ReplaceOrAdd(String.Format("Move{0}", i), PPDStaticSetting.Moves[i]);
                 setting.ReplaceOrAdd(String.Format("Angle{0}", i), PPDStaticSetting.Angles[i]);
             }
-            using (SettingWriter sw = new SettingWriter(path, false))
+            using (SettingWriter sw = new(path, false))
             {
                 foreach (KeyValuePair<string, string> kvp in setting.Dictionary)
                 {
@@ -3468,7 +3467,7 @@ namespace PPDEditor.Forms
             {
                 var path = Path.Combine(mpf.PublishFolder, mpf.ModFileName);
                 path = Path.ChangeExtension(path, "mod");
-                using (PackWriter writer = new PackWriter(path))
+                using (PackWriter writer = new(path))
                 {
                     var dict = new Dictionary<string, string>
                     {
@@ -3526,7 +3525,7 @@ namespace PPDEditor.Forms
             SortedList<float, EventData> data = null;
             try
             {
-                using (PackReader reader = new PackReader(filePath))
+                using (PackReader reader = new(filePath))
                 {
                     var ppdpsr = reader.Read("evd");
                     data = ReadEvdAsEventData(ppdpsr);
@@ -3632,24 +3631,15 @@ namespace PPDEditor.Forms
 
         public void PlayMovie()
         {
-            if (MyGame.Movie != null)
-            {
-                MyGame.Movie.Play();
-            }
+            MyGame.Movie?.Play();
         }
         public void StopMovie()
         {
-            if (MyGame.Movie != null)
-            {
-                MyGame.Movie.Stop();
-            }
+            MyGame.Movie?.Stop();
         }
         public void PauseMovie()
         {
-            if (MyGame.Movie != null)
-            {
-                MyGame.Movie.Pause();
-            }
+            MyGame.Movie?.Pause();
         }
 
         private void ReadCommands()

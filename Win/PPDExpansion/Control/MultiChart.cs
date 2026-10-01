@@ -9,7 +9,7 @@ namespace PPDExpansion.Control
 {
     public class MultiChart : Chart
     {
-        private CollectionChangedWeakEventSource _sourceChanged;
+        private readonly CollectionChangedWeakEventSource _sourceChanged;
 
         public MultiChart()
         {

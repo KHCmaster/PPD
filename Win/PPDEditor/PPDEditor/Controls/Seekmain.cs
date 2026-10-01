@@ -35,9 +35,9 @@ namespace PPDEditor.Controls
         private float speedScale = 1.0f;
         private float bpm = 100;
         private float bpmStart;
-        HScrollBar Hsc;
+        readonly HScrollBar Hsc;
         MarkData[] copyBuffer;
-        TimeLineDrawer timeLineDrawer;
+        readonly TimeLineDrawer timeLineDrawer;
 
         public Seekmain()
         {
@@ -858,7 +858,7 @@ namespace PPDEditor.Controls
                                         ppdsheet.AddExMark(addtime, addtime + exmk.EndTime - exmk.Time, exmk.Position.X, exmk.Position.Y,
                                             exmk.Rotation, addnum, moveMarkState == MoveMarkState.MoveToOther ? marks[i].ID : ppdsheet.GetCorrectID(marks[i]), parameters);
                                     }
-                                    else if (marks[i] is Mark)
+                                    else if (marks[i] is not null)
                                     {
                                         ppdsheet.AddMark(addtime, marks[i].Position.X, marks[i].Position.Y,
                                             marks[i].Rotation, addnum, moveMarkState == MoveMarkState.MoveToOther ? marks[i].ID : ppdsheet.GetCorrectID(marks[i]), parameters);
@@ -890,7 +890,7 @@ namespace PPDEditor.Controls
                             ppdsheet.AddExMark(time, time + exmk.EndTime - exmk.Time, exmk.Position.X, exmk.Position.Y, exmk.Rotation,
                                 num, moveMarkState == MoveMarkState.MoveToOther ? mark.ID : ppdsheet.GetCorrectID(mark), parameters);
                         }
-                        else if (mark is Mark)
+                        else if (mark is not null)
                         {
                             ppdsheet.AddMark(time, mark.Position.X, mark.Position.Y, mark.Rotation, num,
                                 moveMarkState == MoveMarkState.MoveToOther ? mark.ID : ppdsheet.GetCorrectID(mark), parameters);
@@ -1006,14 +1006,11 @@ namespace PPDEditor.Controls
                                     var exmk = copyBuffer[i] as ExMarkData;
                                     newMk = ppdsheet.AddExMark(addtime, addtime + exmk.EndTime - exmk.Time, exmk.X, exmk.Y, exmk.Angle, addnum, ppdsheet.GetCorrectID(copyBuffer[i]));
                                 }
-                                else if (copyBuffer[i] is MarkData)
+                                else if (copyBuffer[i] is not null)
                                 {
                                     newMk = ppdsheet.AddMark(addtime, copyBuffer[i].X, copyBuffer[i].Y, copyBuffer[i].Angle, addnum, ppdsheet.GetCorrectID(copyBuffer[i]));
                                 }
-                                if (newMk != null)
-                                {
-                                    newMk.CopyParameters(copyBuffer[i]);
-                                }
+                                newMk?.CopyParameters(copyBuffer[i]);
                             }
                         }
                         ppdsheet.EndGroupCommand();
@@ -1127,10 +1124,9 @@ namespace PPDEditor.Controls
             var times = new Dictionary<Mark, float[]>();
             foreach (var mark in marks)
             {
-                var exmk = mark as ExMark;
                 var t = AdjusttimeWhenFixed(mark.Time);
                 float[] ts;
-                if (exmk != null)
+                if (mark is ExMark exmk)
                 {
                     ts = new float[] { t, exmk.EndTime - exmk.Time + t };
                 }

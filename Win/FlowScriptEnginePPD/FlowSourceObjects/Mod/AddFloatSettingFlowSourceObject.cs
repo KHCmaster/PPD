@@ -19,10 +19,7 @@
         {
             base.In(e);
             SetValue(nameof(Default));
-            if (modSettingManager != null)
-            {
-                modSettingManager.AddFloatSetting(Key, DisplayName, Description, Default);
-            }
+            modSettingManager?.AddFloatSetting(Key, DisplayName, Description, Default);
         }
     }
 }

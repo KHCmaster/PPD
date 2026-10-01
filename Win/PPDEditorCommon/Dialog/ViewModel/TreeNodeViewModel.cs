@@ -104,7 +104,7 @@ namespace PPDEditorCommon.Dialog.ViewModel
 
         public TreeNodeViewModel()
         {
-            Children = new ObservableCollection<TreeNodeViewModel<T>>();
+            Children = [];
         }
     }
 }

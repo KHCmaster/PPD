@@ -13,9 +13,9 @@ namespace PPDFramework
         const string fileName = "Preset_{0}.txt";
 
 
-        private static ReviewManager reviewManager = new ReviewManager();
+        private static readonly ReviewManager reviewManager = new();
 
-        private string[] presets;
+        private readonly string[] presets;
 
         /// <summary>
         /// レビューマネージャーのインスタンスです。

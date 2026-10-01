@@ -10,7 +10,7 @@ namespace PPDFramework
     /// </remarks>
     public class MenuInputInfo : InputInfoBase
     {
-        private InputInfoBase baseInputInfo;
+        private readonly InputInfoBase baseInputInfo;
 
         /// <summary>
         /// コンストラクタです。

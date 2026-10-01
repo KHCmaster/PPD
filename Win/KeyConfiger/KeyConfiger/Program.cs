@@ -16,7 +16,7 @@ namespace KeyConfiger
             errorHandler.Initialize();
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            using (MyGame game = new MyGame(new PPDExecuteArg(new string[] { })))
+            using (MyGame game = new(new PPDExecuteArg(new string[] { })))
             {
                 try
                 {

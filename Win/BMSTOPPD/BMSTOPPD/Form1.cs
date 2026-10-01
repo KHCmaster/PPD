@@ -10,7 +10,7 @@ namespace BMSTOPPD
     public partial class Form1 : Form
     {
         double bpm = 130;
-        static Form2 setting = new Form2();
+        static readonly Form2 setting = new();
         public Form1()
         {
             InitializeComponent();
@@ -89,7 +89,7 @@ namespace BMSTOPPD
                         {
                             i++;
                         }
-                        var sdata = data.Substring(start, i - start);
+                        var sdata = data[start..i];
                         double scale = 1;
                         if (channel == 2)
                         {

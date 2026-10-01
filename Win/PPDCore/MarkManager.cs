@@ -37,14 +37,14 @@ namespace PPDCore
         const float defaultbpm = 130;
 
         int simtype = 1;
-        List<int> simpiclist = new List<int>();
+        readonly List<int> simpiclist = [];
 
-        string[] effectfilenames = new string[(int)EffectType.MaxSlide + 1];
+        readonly string[] effectfilenames = new string[(int)EffectType.MaxSlide + 1];
         MarkDataBase[] ppdat;
         int iter;
-        float sametimeing = 0.01f;
-        HashSet<Mark> removeMarks = new HashSet<Mark>();
-        Dictionary<float, SameTimingMarks> markgroups = new Dictionary<float, SameTimingMarks>();
+        readonly float sametimeing = 0.01f;
+        readonly HashSet<Mark> removeMarks = [];
+        Dictionary<float, SameTimingMarks> markgroups = [];
         bool initialized;
 
         PPDGameUtility gameutility;
@@ -57,18 +57,18 @@ namespace PPDCore
         MarkImagePathsBase imagepathes;
         MainGameConfigBase config;
 
-        ExMarkBase[] ACPressing = new ExMarkBase[10];
+        readonly ExMarkBase[] ACPressing = new ExMarkBase[10];
         PPDFramework.Resource.ResourceManager resourceManager;
         MarkConnectionCommon markConnectionCommon;
         List<MarkData> externalMarks;
 
         int allMarkCount;
         int allLongMarkCount;
-        int[] markCounts = new int[10];
+        readonly int[] markCounts = new int[10];
 
         int currentAllMarkCount;
         int currentAllLongMarkCount;
-        int[] currentMarkCounts = new int[10];
+        readonly int[] currentMarkCounts = new int[10];
         PostDrawManager postDrawManager;
 
         public SpriteObject MarkLayer
@@ -146,7 +146,7 @@ namespace PPDCore
             this.resourceManager = resourceManager;
             this.config = config;
             this.scriptManager = scriptManager;
-            externalMarks = new List<MarkData>();
+            externalMarks = [];
 
             evals = new float[] { PPDSetting.Setting.CoolArea, PPDSetting.Setting.GoodArea, PPDSetting.Setting.SafeArea, PPDSetting.Setting.SadArea };
             Logger.Instance.AddLog("CoolArea:{0}", PPDSetting.Setting.CoolArea);
@@ -328,7 +328,7 @@ namespace PPDCore
                     if (group.Count > 1)
                     {
                         ret.Add(lastTime, group);
-                        group = new SameTimingMarks();
+                        group = [];
                     }
                     else
                     {
@@ -603,9 +603,8 @@ namespace PPDCore
 
         private Mark CreateMark(MarkDataBase ipdata, bool hasSameTimingMark, int sameTimingMarks)
         {
-            var emd = ipdata as ExMarkData;
             Mark mk = null;
-            if (emd != null)
+            if (ipdata is ExMarkData emd)
             {
                 var noteType = EventManager.GetNoteType(ipdata.Time);
                 var displayState = EventManager.GetCorrectDisplaystate(ipdata.Time);
@@ -677,7 +676,7 @@ namespace PPDCore
             ReadExternalPpdData(time);
             Logger.Instance.AddLog("Time:{0}, pressed:{1}, released:{2}", time, String.Join(",", b.Select(v => v ? "1" : "0").ToArray()),
                 String.Join(",", released.Select(v => v ? "1" : "0").ToArray()));
-            foreach (Mark mk in MarkLayer.Children.Reverse())
+            foreach (Mark mk in MarkLayer.Children.Reverse().Cast<Mark>())
             {
                 if (removeMarks.Contains(mk))
                 {
@@ -710,12 +709,12 @@ namespace PPDCore
                         if (soundType >= 0 && soundType < 10)
                         {
                             var index = randomChangeManager.Invert(soundType);
-                            if (PlaySound != null) PlaySound.Invoke(index, true);
+                            PlaySound?.Invoke(index, true);
                         }
                         else if (soundType >= 10)
                         {
                             var index = randomChangeManager.Invert(soundType - 10);
-                            if (StopSound != null) StopSound.Invoke(index, false);
+                            StopSound?.Invoke(index, false);
                             if (EventManager.GetReleaseSound(index) && PlaySound != null) PlaySound.Invoke(index, false);
                         }
                     }
@@ -725,7 +724,7 @@ namespace PPDCore
                         if (exmk.IsScratch && exmk.IsLong && soundType >= 0 && soundType < 10)
                         {
                             var index = randomChangeManager.Invert(soundType);
-                            if (PlaySound != null) PlaySound.Invoke(index, false);
+                            PlaySound?.Invoke(index, false);
                         }
                         else
                         {
@@ -747,7 +746,7 @@ namespace PPDCore
                         if (soundType != -1)
                         {
                             var index = randomChangeManager.Invert(soundType);
-                            if (PlaySound != null) PlaySound.Invoke(index, false);
+                            PlaySound?.Invoke(index, false);
                         }
                     }
                 }
@@ -765,7 +764,7 @@ namespace PPDCore
                         }
                         Array.Clear(ACPressing, 0, ACPressing.Length);
                     }
-                    if (ChangeCombo != null) ChangeCombo.Invoke(true, mk.Position);
+                    ChangeCombo?.Invoke(true, mk.Position);
                 }
                 if (results[EffectType.Pressing])
                 {
@@ -828,18 +827,12 @@ namespace PPDCore
                 }
                 if (results[EffectType.Safe] || results[EffectType.Sad] || results[EffectType.Worst])
                 {
-                    if (ChangeCombo != null)
-                    {
-                        ChangeCombo.Invoke(false, mk.Position);
-                    }
+                    ChangeCombo?.Invoke(false, mk.Position);
                 }
                 if (results[EffectType.Cool] || results[EffectType.Fine] || results[EffectType.Safe] || results[EffectType.Sad]
                     || results[EffectType.Worst])
                 {
-                    if (EvaluateCount != null)
-                    {
-                        EvaluateCount.Invoke(results.First, false);
-                    }
+                    EvaluateCount?.Invoke(results.First, false);
                 }
                 if (remove)
                 {
@@ -928,7 +921,7 @@ namespace PPDCore
         {
             if (!gameutility.Connect && !gameutility.Profile.Connect) return;
             MarkConnection foundmc = null;
-            foreach (MarkConnection mc in ConnectLayer.Children)
+            foreach (MarkConnection mc in ConnectLayer.Children.Cast<MarkConnection>())
             {
                 if (mc.Contains(mk))
                 {

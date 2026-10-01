@@ -47,10 +47,7 @@ namespace FlowScriptDrawControl.Command
             {
                 command.Undo();
             }
-            if (removeSelectablesCommand != null)
-            {
-                removeSelectablesCommand.Undo();
-            }
+            removeSelectablesCommand?.Undo();
         }
     }
 }

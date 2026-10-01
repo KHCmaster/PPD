@@ -108,26 +108,17 @@ namespace PPDSingle
 
         void grs_Returned(object sender, EventArgs e)
         {
-            if (this.Returned != null)
-            {
-                this.Returned.Invoke(this, EventArgs.Empty);
-            }
+            this.Returned?.Invoke(this, EventArgs.Empty);
         }
 
         void grs_Retryed(object sender, EventArgs e)
         {
-            if (this.Retryed != null)
-            {
-                this.Retryed.Invoke(this, EventArgs.Empty);
-            }
+            this.Retryed?.Invoke(this, EventArgs.Empty);
         }
 
         void grs_Replayed(object sender, EventArgs e)
         {
-            if (this.Replayed != null)
-            {
-                this.Replayed.Invoke(this, EventArgs.Empty);
-            }
+            this.Replayed?.Invoke(this, EventArgs.Empty);
         }
 
         /// <summary>

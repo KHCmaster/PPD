@@ -66,18 +66,10 @@ namespace PPDExpansionCore.Tcp
             closed = true;
             // .NET では Thread.Abort が使えない。受信のスレッドは、接続を閉じると Read が終わるので止まる
             thread = null;
-
-            if (client != null)
-            {
-                client.Close();
-                client = null;
-            }
-
-            if (listener != null)
-            {
-                listener.Dispose();
-                listener = null;
-            }
+            client?.Close();
+            client = null;
+            listener?.Dispose();
+            listener = null;
         }
 
         private void Work()
@@ -125,8 +117,8 @@ namespace PPDExpansionCore.Tcp
         {
             try
             {
-                using (MemoryStream stream = new MemoryStream(bytes))
-                using (PPDPack.V2.PackReader reader = new PPDPack.V2.PackReader(stream))
+                using (MemoryStream stream = new(bytes))
+                using (PPDPack.V2.PackReader reader = new(stream))
                 {
                     var dataType = (DataType)ParseInt(reader, "DataType");
                     var packable = PackableBase.Create(dataType);

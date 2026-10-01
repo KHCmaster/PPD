@@ -15,7 +15,7 @@ namespace PPDSingle
         {
             public int Index;
 
-            private static SelectInfo zero = new SelectInfo();
+            private static readonly SelectInfo zero = new();
             public static SelectInfo Zero
             {
                 get
@@ -61,9 +61,9 @@ namespace PPDSingle
         LogicFolderInfomation currentLogicRoot;
         ListInfo currentList;
 
-        ContestInfo contestInfo;
-        WebSongInformation[] activeScores;
-        ListInfo[] listInfos;
+        readonly ContestInfo contestInfo;
+        readonly WebSongInformation[] activeScores;
+        readonly ListInfo[] listInfos;
 
         bool updateFlag;
 
@@ -223,18 +223,15 @@ namespace PPDSingle
 
         private void OnSongChanged(SongChangeMode songChangeMode)
         {
-            if (SongChanged != null)
-            {
-                SongChanged.Invoke(songChangeMode);
-            }
+            SongChanged?.Invoke(songChangeMode);
         }
         private void OnDirectoryChanged()
         {
-            if (DirectoryChanged != null) DirectoryChanged.Invoke(this, EventArgs.Empty);
+            DirectoryChanged?.Invoke(this, EventArgs.Empty);
         }
         private void OnModeChanged()
         {
-            if (ModeChanged != null) ModeChanged.Invoke(this, EventArgs.Empty);
+            ModeChanged?.Invoke(this, EventArgs.Empty);
         }
 
         public SongInformation CurrentRoot

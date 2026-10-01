@@ -24,7 +24,7 @@ namespace PPDUpdater.Controls
             set
             {
                 //DataGridViewProgressBarCell以外はホストしない
-                if (!(value is DataGridViewProgressBarCell))
+                if (value is not DataGridViewProgressBarCell)
                 {
                     throw new InvalidCastException(
                         "DataGridViewProgressBarCellオブジェクトを" +

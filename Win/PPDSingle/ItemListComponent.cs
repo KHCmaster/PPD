@@ -23,17 +23,17 @@ namespace PPDSingle
         const int ClipHeight = 330;
         const int SpriteY = 90;
         const int ItemHeight = 70;
-        IGameHost gameHost;
-        PPDFramework.Resource.ResourceManager resourceManager;
-        ISound sound;
+        readonly IGameHost gameHost;
+        readonly PPDFramework.Resource.ResourceManager resourceManager;
+        readonly ISound sound;
 
-        SpriteObject mainSprite;
-        SpriteObject waitSprite;
+        readonly SpriteObject mainSprite;
+        readonly SpriteObject waitSprite;
         bool loading;
         ItemInfo[] items;
-        LineRectangleComponent rectangle;
+        readonly LineRectangleComponent rectangle;
         int selection;
-        StackObject stackObject;
+        readonly StackObject stackObject;
         DialogState dialogState = DialogState.None;
 
         public ItemInfo UseItem
@@ -390,7 +390,7 @@ namespace PPDSingle
 
         class ItemsComponent : GameComponent
         {
-            private PPDFramework.Resource.ResourceManager resourceManager;
+            private readonly PPDFramework.Resource.ResourceManager resourceManager;
 
             public ItemInfo[] Items
             {

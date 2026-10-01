@@ -21,8 +21,8 @@ namespace PPDEditor
         PPDFramework.Resource.ResourceManager resourceManager;
         KeyConfigManager keyConfigManager;
         SoundManager sm;
-        Vector2 mousepos = new Vector2(-1, -1);
-        float[] eval = { 0.05f, 0.1f, 0.15f, 0.2f };
+        Vector2 mousepos = new(-1, -1);
+        readonly float[] eval = { 0.05f, 0.1f, 0.15f, 0.2f };
         Vector2[] circlepoints;
 
         public IMovie Movie
@@ -174,10 +174,7 @@ namespace PPDEditor
             {
                 var shouldbecheck = input.GetInput(keyConfigManager.CurrentConfig.Keys,
                     keyConfigManager.CurrentConfig.Buttons, out InputInfoBase inputInfo);
-                if (inputInfo == null)
-                {
-                    inputInfo = EmptyInputInfo.Instance;
-                }
+                inputInfo ??= EmptyInputInfo.Instance;
                 if (shouldbecheck)
                 {
                     double movietime = Window.CurrentTime;
@@ -237,21 +234,13 @@ namespace PPDEditor
                 mg.Dispose();
                 mg = null;
             }
-            if (sound != null)
-            {
-                sound.Dispose();
-                sound = null;
-            }
-            if (input != null)
-            {
-                input.Dispose();
-                input = null;
-            }
-            if (resourceManager != null)
-            {
-                resourceManager.Dispose();
-                resourceManager = null;
-            }
+
+            sound?.Dispose();
+            sound = null;
+            input?.Dispose();
+            input = null;
+            resourceManager?.Dispose();
+            resourceManager = null;
         }
     }
 }

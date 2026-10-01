@@ -5,7 +5,7 @@ namespace FlowScriptEngineBasic
 {
     class CallbackComparer : Comparer<object>
     {
-        private Comparison<object> comparison;
+        private readonly Comparison<object> comparison;
 
         public CallbackComparer(Comparison<object> comparison)
         {

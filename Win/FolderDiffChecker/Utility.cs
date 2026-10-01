@@ -20,8 +20,8 @@ namespace FolderDiffChecker
             }
 
             //コピー先のディレクトリ名の末尾に"\"をつける
-            if (destDirName[destDirName.Length - 1] != Path.DirectorySeparatorChar)
-                destDirName = destDirName + Path.DirectorySeparatorChar;
+            if (destDirName[^1] != Path.DirectorySeparatorChar)
+                destDirName += Path.DirectorySeparatorChar;
 
             //コピー元のディレクトリにあるファイルをコピー
             var files = Directory.GetFiles(sourceDirName);

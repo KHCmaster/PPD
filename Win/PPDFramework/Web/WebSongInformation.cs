@@ -7,7 +7,7 @@ namespace PPDFramework.Web
     /// </summary>
     public class WebSongInformation
     {
-        private List<WebSongInformationDifficulty> difficulties;
+        private readonly List<WebSongInformationDifficulty> difficulties;
 
         /// <summary>
         /// 譜面名を取得します。
@@ -83,7 +83,7 @@ namespace PPDFramework.Web
         /// <param name="revision"></param>
         public WebSongInformation(string title, string hash, string movieUrl, int revision)
         {
-            difficulties = new List<WebSongInformationDifficulty>();
+            difficulties = [];
             Title = title;
             Hash = hash;
             MovieUrl = movieUrl;

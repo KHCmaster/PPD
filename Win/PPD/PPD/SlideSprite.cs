@@ -10,14 +10,14 @@ namespace PPD
     {
         public event EventHandler Selected;
 
-        PPDFramework.Resource.ResourceManager resourceManager;
-        ISound sound;
+        readonly PPDFramework.Resource.ResourceManager resourceManager;
+        readonly ISound sound;
 
-        SpriteObject textSprite;
-        SpriteObject userSprite;
-        PictureObject select;
+        readonly SpriteObject textSprite;
+        readonly SpriteObject userSprite;
+        readonly PictureObject select;
         bool modified;
-        List<bool> menuEnabled = new List<bool>();
+        readonly List<bool> menuEnabled = [];
 
         int currentIndex = -1;
         int selectCount;
@@ -103,10 +103,7 @@ namespace PPD
             {
                 if (selectCount > 0)
                 {
-                    if (Selected != null)
-                    {
-                        Selected.Invoke(this, EventArgs.Empty);
-                    }
+                    Selected?.Invoke(this, EventArgs.Empty);
                 }
             }
             else if (args.InputInfo.IsPressed(ButtonType.Cross))
@@ -136,10 +133,7 @@ namespace PPD
         void textureString_MouseLeftClick(GameComponent sender, MouseEvent mouseEvent)
         {
             currentIndex = textSprite.IndexOf(sender);
-            if (Selected != null)
-            {
-                Selected.Invoke(this, EventArgs.Empty);
-            }
+            Selected?.Invoke(this, EventArgs.Empty);
         }
 
         void textureString_MouseEnter(GameComponent sender, MouseEvent mouseEvent)

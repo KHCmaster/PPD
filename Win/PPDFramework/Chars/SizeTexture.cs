@@ -10,9 +10,9 @@ namespace PPDFramework.Chars
     class SizeTexture : DisposableComponent
     {
         const int Size = 1024;
-        PPDDevice device;
-        List<AvailableSpace> availableSpaces;
-        List<AvailableSpace> onceUsedSpaces;
+        readonly PPDDevice device;
+        readonly List<AvailableSpace> availableSpaces;
+        readonly List<AvailableSpace> onceUsedSpaces;
 
         public Vector2 HalfPixel
         {
@@ -29,11 +29,11 @@ namespace PPDFramework.Chars
         {
             this.device = device;
             Texture = TextureFactoryManager.Factory.Create(device, Size, Size, 1, true);
-            availableSpaces = new List<AvailableSpace>
-            {
-                new AvailableSpace(this, Point.Zero, new Size2(Size, Size))
-            };
-            onceUsedSpaces = new List<AvailableSpace>();
+            availableSpaces =
+            [
+                new(this, Point.Zero, new Size2(Size, Size))
+            ];
+            onceUsedSpaces = [];
         }
 
         public bool Write(TextureBase texture, int width, int height, out Vector2 uv, out Vector2 uvSize, out AvailableSpace usingAvailableSpace)
@@ -115,11 +115,8 @@ namespace PPDFramework.Chars
         protected override void DisposeResource()
         {
             base.DisposeResource();
-            if (Texture != null)
-            {
-                Texture.Dispose();
-                Texture = null;
-            }
+            Texture?.Dispose();
+            Texture = null;
         }
     }
 }

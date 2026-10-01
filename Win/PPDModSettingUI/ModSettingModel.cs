@@ -11,8 +11,8 @@ namespace PPDModSettingUI
 {
     public class ModSettingModel : ObservableObject
     {
-        private ModSetting modSetting;
-        private LanguageReader language;
+        private readonly ModSetting modSetting;
+        private readonly LanguageReader language;
 
         private string name;
         private string description;
@@ -134,8 +134,8 @@ namespace PPDModSettingUI
         {
             get
             {
-                return setDefaultCommand ?? (setDefaultCommand = new RelayCommand(
-                    SetDefaultCommand_Execute));
+                return setDefaultCommand ??= new RelayCommand(
+                    SetDefaultCommand_Execute);
             }
         }
 
@@ -192,36 +192,32 @@ namespace PPDModSettingUI
                 UpdateSelectedIndexByNewValue();
             }
 
-            if (modSetting is Int32ModSetting)
+            if (modSetting is Int32ModSetting int32ModSetting)
             {
-                var int32ModSetting = (Int32ModSetting)modSetting;
                 var otherValues = GetOtherValues(int32ModSetting);
                 if (!String.IsNullOrEmpty(otherValues))
                 {
                     OtherValues = otherValues;
                 }
             }
-            else if (modSetting is FloatModSetting)
+            else if (modSetting is FloatModSetting floatModSetting)
             {
-                var floatModSetting = (FloatModSetting)modSetting;
                 var otherValues = GetOtherValues(floatModSetting);
                 if (!String.IsNullOrEmpty(otherValues))
                 {
                     OtherValues = otherValues;
                 }
             }
-            else if (modSetting is DoubleModSetting)
+            else if (modSetting is DoubleModSetting doubleModSetting)
             {
-                var doubleModSetting = (DoubleModSetting)modSetting;
                 var otherValues = GetOtherValues(doubleModSetting);
                 if (!String.IsNullOrEmpty(otherValues))
                 {
                     OtherValues = otherValues;
                 }
             }
-            else if (modSetting is StringModSetting)
+            else if (modSetting is StringModSetting stringModSetting)
             {
-                var stringModSetting = (StringModSetting)modSetting;
                 if (!stringModSetting.IsMaxLengthClassMaxLength)
                 {
                     OtherValues = String.Format("{0}:{1}", language["MaxLength"], stringModSetting.MaxLength);

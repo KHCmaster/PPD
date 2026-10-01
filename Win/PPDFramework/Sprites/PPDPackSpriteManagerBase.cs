@@ -8,8 +8,8 @@ namespace PPDFramework.Sprites
     /// </summary>
     public abstract class PPDPackSpriteManagerBase : SpriteManagerBase
     {
-        string[] imageNames;
-        PackReader packReader;
+        readonly string[] imageNames;
+        readonly PackReader packReader;
 
         /// <summary>
         /// コンストラクタです。

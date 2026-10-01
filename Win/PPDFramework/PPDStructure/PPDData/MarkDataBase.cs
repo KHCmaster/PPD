@@ -8,7 +8,7 @@ namespace PPDFramework.PPDStructure.PPDData
     /// </summary>
     public abstract class MarkDataBase
     {
-        private Dictionary<string, string> parameters;
+        private readonly Dictionary<string, string> parameters;
 
         /// <summary>
         /// コンストラクタ
@@ -27,7 +27,7 @@ namespace PPDFramework.PPDStructure.PPDData
             Time = time;
             ButtonType = buttontype;
             ID = id;
-            parameters = new Dictionary<string, string>();
+            parameters = [];
         }
 
         /// <summary>

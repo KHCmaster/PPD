@@ -10,7 +10,7 @@ namespace PPDCore
     {
         const float alpha = 0.7f;
         VertexInfo vertices;
-        PictureObject trace;
+        readonly PictureObject trace;
 
         public int DisplayCount
         {
@@ -48,11 +48,8 @@ namespace PPDCore
 
         protected override void DisposeResource()
         {
-            if (vertices != null)
-            {
-                vertices.Dispose();
-                vertices = null;
-            }
+            vertices?.Dispose();
+            vertices = null;
         }
     }
 }

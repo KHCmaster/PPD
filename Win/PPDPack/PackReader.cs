@@ -22,7 +22,7 @@ namespace PPDPack
         List<string> filenames;
         List<int> sizes;
         int headeroffset;
-        bool fileOpened;
+        readonly bool fileOpened;
 
         public List<string> FileList
         {
@@ -56,8 +56,8 @@ namespace PPDPack
         private void InnerStruct(Stream stream)
         {
             this.stream = stream;
-            filenames = new List<string>();
-            sizes = new List<int>();
+            filenames = [];
+            sizes = [];
             AnalyzeHeader();
         }
 
@@ -155,11 +155,8 @@ namespace PPDPack
             {
                 if (disposing)
                 {
-                    if (stream != null)
-                    {
-                        stream.Close();
-                        stream = null;
-                    }
+                    stream?.Close();
+                    stream = null;
                 }
             }
             disposed = true;

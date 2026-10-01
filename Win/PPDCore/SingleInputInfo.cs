@@ -4,9 +4,9 @@ namespace PPDCore
 {
     class SingleInputInfo : InputInfoBase
     {
-        private ButtonType buttonType;
-        private bool isPressed;
-        private int pressingFrame;
+        private readonly ButtonType buttonType;
+        private readonly bool isPressed;
+        private readonly int pressingFrame;
 
         public SingleInputInfo(ButtonType buttonType, bool isPressed, int pressingFrame)
             : base(false)

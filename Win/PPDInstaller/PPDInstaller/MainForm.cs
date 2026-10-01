@@ -17,7 +17,7 @@ namespace PPDInstaller
         string askfinishtext = "インストールを終了してもよろしいですか？";
         string askfinishcaption = "終了確認";
 
-        string cachefolder = "Cache\\";
+        readonly string cachefolder = "Cache\\";
 
         string NoDataFile = "Dataファイルが存在しないのでインストールを行うことができません。";
 
@@ -29,7 +29,7 @@ namespace PPDInstaller
         string langFileISO = "jp";
         string fontName = "IPAGothic";
 
-        private List<PanelBase> panels;
+        private readonly List<PanelBase> panels;
         private int currentIndex;
 
         public string DataDirectory
@@ -62,7 +62,7 @@ namespace PPDInstaller
         public MainForm()
         {
             InitializeComponent();
-            panels = new List<PanelBase>();
+            panels = [];
 
             if (!Directory.Exists(cachefolder))
             {
@@ -275,7 +275,7 @@ namespace PPDInstaller
             {
                 if (File.Exists(path))
                 {
-                    using (StreamReader reader = new StreamReader(path))
+                    using (StreamReader reader = new(path))
                     {
                         var setting = new SettingReader(reader.ReadToEnd());
                         foreach (string key in InstallInfo.InstallationInfoData)
@@ -345,7 +345,7 @@ namespace PPDInstaller
                 var setting = new SettingReader(sr.ReadToEnd());
                 sr.Close();
                 setting.ReplaceOrAdd("Language", langFileISO);
-                using (SettingWriter sw = new SettingWriter(path, false))
+                using (SettingWriter sw = new(path, false))
                 {
                     foreach (KeyValuePair<string, string> kvp in setting.Dictionary)
                     {
@@ -363,7 +363,7 @@ namespace PPDInstaller
                 var setting = new SettingReader(sr.ReadToEnd());
                 sr.Close();
                 setting.ReplaceOrAdd("fontname", fontName);
-                using (SettingWriter sw = new SettingWriter(path, false))
+                using (SettingWriter sw = new(path, false))
                 {
                     foreach (KeyValuePair<string, string> kvp in setting.Dictionary)
                     {

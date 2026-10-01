@@ -11,15 +11,15 @@ namespace PPDSingle
 {
     class WebSongInformationManager
     {
-        private static WebSongInformationManager instance = new WebSongInformationManager();
+        private static readonly WebSongInformationManager instance = new();
 
         private Thread updateWorkerThread;
         private volatile bool stopRequested;
         private Thread updateScoreWorkerThread;
 
         private WebSongInformation[] informations;
-        private Dictionary<string, WebSongInformation> webSongInfoHashDict = new Dictionary<string, WebSongInformation>();
-        private Dictionary<string, WebSongInformation> webSongInfoIDDict = new Dictionary<string, WebSongInformation>();
+        private readonly Dictionary<string, WebSongInformation> webSongInfoHashDict = [];
+        private readonly Dictionary<string, WebSongInformation> webSongInfoIDDict = [];
 
         public static WebSongInformationManager Instance
         {

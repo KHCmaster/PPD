@@ -19,13 +19,13 @@ namespace PPDFramework.Effect.DX11
     {
         const int MaxTextureSlots = 8;
 
-        EffectData data;
-        ID3D11VertexShader[] vertexShaders;
-        ID3D11PixelShader[] pixelShaders;
+        readonly EffectData data;
+        readonly ID3D11VertexShader[] vertexShaders;
+        readonly ID3D11PixelShader[] pixelShaders;
         ID3D11Buffer constantBuffer;
-        byte[] constants;
+        readonly byte[] constants;
         bool constantsDirty = true;
-        ID3D11ShaderResourceView[] textures = new ID3D11ShaderResourceView[MaxTextureSlots];
+        readonly ID3D11ShaderResourceView[] textures = new ID3D11ShaderResourceView[MaxTextureSlots];
         string technique;
         EffectData.Technique currentTechnique;
         EffectData.Pass currentPass;
@@ -92,29 +92,20 @@ namespace PPDFramework.Effect.DX11
         protected override void DisposeResource()
         {
             base.DisposeResource();
-            if (vertexDeclaration != null)
-            {
-                vertexDeclaration.Dispose();
-                vertexDeclaration = null;
-            }
+            vertexDeclaration?.Dispose();
+            vertexDeclaration = null;
             DisposeAll(vertexShaders);
             DisposeAll(pixelShaders);
-            if (constantBuffer != null)
-            {
-                constantBuffer.Dispose();
-                constantBuffer = null;
-            }
+            constantBuffer?.Dispose();
+            constantBuffer = null;
         }
 
         private static void DisposeAll<T>(T[] objects) where T : class, IDisposable
         {
             for (var i = 0; i < objects.Length; i++)
             {
-                if (objects[i] != null)
-                {
-                    objects[i].Dispose();
-                    objects[i] = null;
-                }
+                objects[i]?.Dispose();
+                objects[i] = null;
             }
         }
 

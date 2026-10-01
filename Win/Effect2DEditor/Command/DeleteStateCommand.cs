@@ -4,8 +4,8 @@ namespace Effect2DEditor.Command
 {
     class DeleteStateCommand : CommandBase
     {
-        int itemindex;
-        int keyindex;
+        readonly int itemindex;
+        readonly int keyindex;
         int insertindex;
         EffectStateRatioSet previousset1;
         EffectStateRatioSet previousset2;

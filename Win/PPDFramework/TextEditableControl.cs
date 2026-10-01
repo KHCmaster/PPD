@@ -36,7 +36,7 @@ namespace PPDFramework
         /// <summary>
         /// 長さ
         /// </summary>
-        public int Length
+        public readonly int Length
         {
             get
             {
@@ -71,7 +71,7 @@ namespace PPDFramework
         /// </summary>
         /// <param name="obj"></param>
         /// <returns></returns>
-        public override bool Equals(object obj)
+        public override readonly bool Equals(object obj)
         {
             return base.Equals(obj);
         }
@@ -80,7 +80,7 @@ namespace PPDFramework
         /// ハッシュコードを取得する
         /// </summary>
         /// <returns></returns>
-        public override int GetHashCode()
+        public override readonly int GetHashCode()
         {
             return base.GetHashCode();
         }
@@ -101,11 +101,11 @@ namespace PPDFramework
         /// </summary>
         public event EventHandler _EnabledChanged;
 
-        TextBuffer buffer;
+        readonly TextBuffer buffer;
         TextBoxSelection selection;
         int caretIndex;
         bool isTextEditMode;
-        Dictionary<Keys, Action> actionList;
+        readonly Dictionary<Keys, Action> actionList;
         ImeMode lastIMEMode;
         ImeMode offModeIME;
 
@@ -135,10 +135,7 @@ namespace PPDFramework
         void TextEditableControl_ParentChanged(object sender, EventArgs e)
         {
             var form = FindForm();
-            if (form != null)
-            {
-                form.InputLanguageChanged += form_InputLanguageChanged;
-            }
+            form?.InputLanguageChanged += form_InputLanguageChanged;
         }
 
         void form_InputLanguageChanged(object sender, InputLanguageChangedEventArgs e)
@@ -468,10 +465,7 @@ namespace PPDFramework
         /// </summary>
         protected void _OnEnabledChanged()
         {
-            if (_EnabledChanged != null)
-            {
-                _EnabledChanged.Invoke(this, EventArgs.Empty);
-            }
+            _EnabledChanged?.Invoke(this, EventArgs.Empty);
         }
 
         private void UpdateCaret()
@@ -541,18 +535,15 @@ namespace PPDFramework
         /// </summary>
         protected void OnIMEStart()
         {
-            if (IMEStarted != null)
-            {
-                IMEStarted.Invoke(this, EventArgs.Empty);
-            }
+            IMEStarted?.Invoke(this, EventArgs.Empty);
         }
 
         internal class TextBuffer
         {
-            private List<char> str;
+            private readonly List<char> str;
             public TextBuffer()
             {
-                str = new List<char>();
+                str = [];
             }
 
             public void AppendString(string st)

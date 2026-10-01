@@ -11,7 +11,7 @@
         }
         public float X
         {
-            get
+            readonly get
             {
                 return x;
             }
@@ -22,7 +22,7 @@
         }
         public int Y
         {
-            get
+            readonly get
             {
                 return y;
             }

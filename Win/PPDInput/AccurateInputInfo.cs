@@ -7,9 +7,9 @@ namespace PPDInput
 {
     class AccurateInputInfo : InputInfoBase
     {
-        private InputAction[] actions;
-        private Stopwatch stopwatch;
-        private Dictionary<ButtonType, InputAction> lastPressInfos;
+        private readonly InputAction[] actions;
+        private readonly Stopwatch stopwatch;
+        private readonly Dictionary<ButtonType, InputAction> lastPressInfos;
 
         public double CurrentTime
         {

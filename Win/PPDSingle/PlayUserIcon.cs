@@ -7,23 +7,23 @@ namespace PPDSingle
 {
     class PlayUserIcon : BindableGameComponent
     {
-        PPDFramework.Resource.ResourceManager resourceManager;
+        readonly PPDFramework.Resource.ResourceManager resourceManager;
 
         PictureObject userIcon;
-        TextureString userNameString;
-        NumberPictureObject scorePicture;
-        UserPlayState userPlayState;
+        readonly TextureString userNameString;
+        readonly NumberPictureObject scorePicture;
+        readonly UserPlayState userPlayState;
         MarkEvaluateType evaluate;
         bool isMissPress;
-        LifeGage lifeGage;
-        PictureObject[] evals;
+        readonly LifeGage lifeGage;
+        readonly PictureObject[] evals;
 
         int trueScore;
         int score;
         int drawCount;
-        bool showScore;
-        bool showEvaluate;
-        bool showLife;
+        readonly bool showScore;
+        readonly bool showEvaluate;
+        readonly bool showLife;
 
         private string currentUserIconPath = Utility.Path.Combine("noimage_icon.png");
 
@@ -247,7 +247,7 @@ namespace PPDSingle
         class LifeGage : GameComponent
         {
             const int MaxWidth = 76;
-            RectangleComponent rectangle;
+            readonly RectangleComponent rectangle;
 
             float gageWidth;
 

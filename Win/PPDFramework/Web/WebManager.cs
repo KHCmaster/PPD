@@ -18,8 +18,8 @@ namespace PPDFramework.Web
     {
         private const int Version = 6;
 
-        private static WebManager webManager = new WebManager();
-        private static AccountInfo currentAccount = new AccountInfo();
+        private static readonly WebManager webManager = new();
+        private static AccountInfo currentAccount = new();
 
         /// <summary>
         /// インスタンスを取得します。
@@ -207,7 +207,7 @@ namespace PPDFramework.Web
         /// <returns></returns>
         public ErrorReason PerfectTrialPrepare(string scoreHash, out Dictionary<string, string> data)
         {
-            data = new Dictionary<string, string>();
+            data = [];
             if (!currentAccount.IsValid)
             {
                 return ErrorReason.AuthFailed;
@@ -360,7 +360,7 @@ namespace PPDFramework.Web
         public ErrorReason PlayResult(byte[] scoreHash, int score, int coolCount, int goodCount, int safeCount, int sadCount, int worstCount,
             int maxCombo, float startTime, float endTime, byte[] inputs, int retryCount, string perfectTrialToken, out Dictionary<string, string> data)
         {
-            data = new Dictionary<string, string>();
+            data = [];
             ErrorReason reason = ErrorReason.OK;
             int tryCount = 0;
             while (tryCount <= retryCount)
@@ -395,7 +395,7 @@ namespace PPDFramework.Web
         public ErrorReason PlayResult(string scoreHash, int score, int coolCount, int goodCount, int safeCount, int sadCount, int worstCount, int maxCombo,
             float startTime, float endTime, string inputs, string perfectTrialToken, out Dictionary<string, string> data)
         {
-            data = new Dictionary<string, string>();
+            data = [];
             if (!currentAccount.IsValid)
             {
                 return ErrorReason.AuthFailed;
@@ -1351,7 +1351,7 @@ namespace PPDFramework.Web
                 var req = CreateRequest(url);
                 using (var res = req.GetResponse())
                 {
-                    using (MemoryStream memoryStream = new MemoryStream())
+                    using (MemoryStream memoryStream = new())
                     {
                         byte[] buffer = new byte[1024];
                         using (Stream stream = res.GetResponseStream())
@@ -1535,7 +1535,7 @@ namespace PPDFramework.Web
             var req = CreateRequest(url);
             using (var response = req.GetResponse())
             {
-                using (StreamReader reader = new StreamReader(response.GetResponseStream()))
+                using (StreamReader reader = new(response.GetResponseStream()))
                 {
                     return reader.ReadToEnd();
                 }
@@ -1561,7 +1561,7 @@ namespace PPDFramework.Web
             if (dump)
             {
                 string text = null;
-                using (StreamReader reader = new StreamReader(res.GetResponseStream()))
+                using (StreamReader reader = new(res.GetResponseStream()))
                 {
                     text = reader.ReadToEnd();
                     Console.WriteLine(text);

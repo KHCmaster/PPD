@@ -7,7 +7,7 @@ namespace PPDMulti
 {
     class FogEffectComponent : GameComponent
     {
-        PPDFramework.Resource.ResourceManager resourceManager;
+        readonly PPDFramework.Resource.ResourceManager resourceManager;
 
         int updateCount;
 

@@ -9,12 +9,12 @@ namespace PPDInput
     public class Input : InputBase
     {
         int[] keyCount;
-        List<int[]> buttonCount;
+        readonly List<int[]> buttonCount;
 
         public Input(Form window)
             : base(window)
         {
-            buttonCount = new List<int[]>();
+            buttonCount = [];
         }
 
         public override void Load()
@@ -34,10 +34,7 @@ namespace PPDInput
                 {
                     Array.Clear(keyCount, 0, keyCount.Length);
                 }
-                if (buttonCount != null)
-                {
-                    buttonCount.Clear();
-                }
+                buttonCount?.Clear();
             }
             base.ReleaseObjects();
         }
@@ -59,10 +56,7 @@ namespace PPDInput
             released = new bool[keys.Length];
             try
             {
-                if (keyCount == null)
-                {
-                    keyCount = new int[keys.Length];
-                }
+                keyCount ??= new int[keys.Length];
                 if (keyboard == null || AssignMode) return false;
                 this.keyboard.Acquire().CheckError();
                 this.keyboard.Poll().CheckError();

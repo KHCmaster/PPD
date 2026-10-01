@@ -68,7 +68,7 @@ namespace PPDCore
             {
                 using (PPDPackStreamReader packStreamReader = reader.Read(keyName))
                 {
-                    using (StreamReader streamReader = new StreamReader(packStreamReader, Encoding.UTF8))
+                    using (StreamReader streamReader = new(packStreamReader, Encoding.UTF8))
                     {
                         var ret = streamReader.ReadToEnd();
                         return ret;
@@ -97,7 +97,7 @@ namespace PPDCore
 
         protected byte[] Read(Stream stream)
         {
-            using (MemoryStream ms = new MemoryStream())
+            using (MemoryStream ms = new())
             {
                 byte[] buffer = new byte[1024 * 1024];
                 try
@@ -121,7 +121,7 @@ namespace PPDCore
 
         protected byte[] GetBytes(string[] keys, Action<PPDPackStreamWriter> writeCallback)
         {
-            using (MemoryStream stream = new MemoryStream())
+            using (MemoryStream stream = new())
             {
                 var packWriter = new PackWriter(stream);
                 foreach (PPDPackStreamWriter writer in packWriter.Write(keys))

@@ -15,11 +15,8 @@
 
         protected override void DisposeResource()
         {
-            if (_InputLayout != null)
-            {
-                _InputLayout.Dispose();
-                _InputLayout = null;
-            }
+            _InputLayout?.Dispose();
+            _InputLayout = null;
         }
     }
 }

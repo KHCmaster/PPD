@@ -18,7 +18,7 @@ namespace PPDMulti
 {
     class MainGame : NetworkSceneBase
     {
-        private readonly object syncRoot = new object();
+        private readonly object syncRoot = new();
         enum FadeOutAction
         {
             None,
@@ -57,10 +57,10 @@ namespace PPDMulti
         int lastLife;
         int lastScore;
         System.Numerics.Vector2 lastMarkPos;
-        Random r = new Random();
+        readonly Random r = new();
         PPDGameUtility gameutility;
 
-        List<GameComponent> shouldDisposeItem = new List<GameComponent>();
+        readonly List<GameComponent> shouldDisposeItem = [];
 
         public override string SpriteDir
         {
@@ -102,26 +102,17 @@ namespace PPDMulti
             AddProcessor<ChangeScoreNetworkData>(networkData =>
             {
                 var userPlayState = FindUserPlayState(networkData.Id);
-                if (userPlayState != null)
-                {
-                    userPlayState.Score = networkData.Score;
-                }
+                userPlayState?.Score = networkData.Score;
             });
             AddProcessor<ChangeLifeNetworkData>(networkData =>
             {
                 var userPlayState = FindUserPlayState(networkData.Id);
-                if (userPlayState != null)
-                {
-                    userPlayState.Life = networkData.Life;
-                }
+                userPlayState?.Life = networkData.Life;
             });
             AddProcessor<ChangeEvaluateNetworkData>(networkData =>
             {
                 var userPlayState = FindUserPlayState(networkData.Id);
-                if (userPlayState != null)
-                {
-                    userPlayState.Evaluate = networkData.Evaluate;
-                }
+                userPlayState?.Evaluate = networkData.Evaluate;
             });
             AddProcessor<GoToMenuNetworkData>(networkData =>
             {
@@ -142,10 +133,7 @@ namespace PPDMulti
             AddProcessor<MainGameLoadedNetworkData>(networkData =>
             {
                 var userPlayState = FindUserPlayState(networkData.Id);
-                if (userPlayState != null)
-                {
-                    userPlayState.Loaded = true;
-                }
+                userPlayState?.Loaded = true;
             });
         }
 
@@ -165,7 +153,7 @@ namespace PPDMulti
             var allowedModList = (AllowedModList)Param["AllowedModList"];
             selfUser = Param["Self"] as User;
 
-            userPlayStateList = new ChangableList<UserPlayState>();
+            userPlayStateList = [];
             userPlayStateList.ItemChanged += userPlayStateList_ItemChanged;
             userScoreListComponent = new UserScoreListComponent(device, ResourceManager)
             {
@@ -610,10 +598,7 @@ namespace PPDMulti
 
             if (paused)
             {
-                if (pauseMenu != null)
-                {
-                    pauseMenu.Update(inputInfo);
-                }
+                pauseMenu?.Update(inputInfo);
             }
             else
             {
@@ -739,15 +724,12 @@ namespace PPDMulti
                 itemManagerComponent.AddEffect(itemEffect);
             }
 
-            if (expansionClient != null)
-            {
-                expansionClient.Send(new ItemInfo
+            expansionClient?.Send(new ItemInfo
                 {
                     CurrentTime = mainGameComponent.MoviePosition,
                     ItemType = itemType,
                     PlayerId = selfUser.ID
                 });
-            }
         }
 
         private void AddEffect(ItemType itemType, int userID)
@@ -829,10 +811,7 @@ namespace PPDMulti
                     case ItemType.Stealth:
                         itemEffect = new StealthEffect();
                         var userPlayState = FindUserPlayState(userID);
-                        if (userPlayState != null)
-                        {
-                            userPlayState.IsStealth = true;
-                        }
+                        userPlayState?.IsStealth = true;
                         itemEffect.Removed += (sender, e) =>
                         {
                             userPlayState.IsStealth = false;
@@ -848,15 +827,12 @@ namespace PPDMulti
                 itemManagerComponent.AddEffect(itemEffect);
             }
 
-            if (expansionClient != null)
-            {
-                expansionClient.Send(new ItemInfo
+            expansionClient?.Send(new ItemInfo
                 {
                     CurrentTime = mainGameComponent.MoviePosition,
                     ItemType = itemType,
                     PlayerId = userID
                 });
-            }
         }
 
         public override void Draw()
@@ -882,19 +858,12 @@ namespace PPDMulti
         {
             client.Closed -= client_Closed;
             byteReader.ByteReaded -= TcpByteReader_ByteReaded;
-
-            if (expansionClient != null)
-            {
-                expansionClient.Close();
-                expansionClient = null;
-            }
+            expansionClient?.Close();
+            expansionClient = null;
 
             foreach (GameComponent gc in shouldDisposeItem)
             {
-                if (gc != null)
-                {
-                    gc.Dispose();
-                }
+                gc?.Dispose();
             }
             shouldDisposeItem.Clear();
 

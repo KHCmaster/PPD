@@ -30,7 +30,7 @@ namespace PPDEditor
         BlackBar bb;
         int movecount;
 
-        List<LayerDisplay> layers;
+        readonly List<LayerDisplay> layers;
 
         IDProvider idProvider;
 
@@ -39,7 +39,7 @@ namespace PPDEditor
             InitializeComponent();
 
             idProvider = new IDProvider(0);
-            layers = new List<LayerDisplay>();
+            layers = [];
         }
         public void Initialize()
         {
@@ -122,10 +122,7 @@ namespace PPDEditor
 
         void PPDData_CommandChanged(object sender, EventArgs e)
         {
-            if (WindowUtility.TimeLineForm != null)
-            {
-                WindowUtility.TimeLineForm.ContentChanged();
-            }
+            WindowUtility.TimeLineForm?.ContentChanged();
         }
 
         void ld_MouseUp(object sender, MouseEventArgs e)
@@ -319,10 +316,7 @@ namespace PPDEditor
             if (layers.Count != 0)
             {
                 LayerDisplay ld = layers[index];
-                if (ld != null)
-                {
-                    ld.SelectedWithEvent = true;
-                }
+                ld?.SelectedWithEvent = true;
             }
             WindowUtility.Seekmain.DrawAndRefresh();
             ContentChanged();
@@ -357,7 +351,7 @@ namespace PPDEditor
             SortedList<float, MarkData>[] dest = new SortedList<float, MarkData>[10];
             for (int i = 0; i < dest.Length; i++)
             {
-                dest[i] = new SortedList<float, MarkData>();
+                dest[i] = [];
             }
 
             foreach (var layer in layers)
@@ -369,10 +363,9 @@ namespace PPDEditor
                     {
                         foreach (Mark mk in source[j].Values)
                         {
-                            var exmk = mk as ExMark;
                             if (!dest[j].ContainsKey(mk.Time))
                             {
-                                if (exmk != null)
+                                if (mk is ExMark exmk)
                                 {
                                     dest[j].Add(exmk.Time, exmk.Convert());
                                 }
@@ -399,7 +392,7 @@ namespace PPDEditor
         {
             if (layers.Count > 0)
             {
-                layers[layers.Count - 1].SelectedWithEvent = true;
+                layers[^1].SelectedWithEvent = true;
             }
         }
 
@@ -486,10 +479,7 @@ namespace PPDEditor
             set
             {
                 LayerDisplay sld = SelectedLayer;
-                if (sld != null)
-                {
-                    sld.PPDData.BPMStart = value;
-                }
+                sld?.PPDData.BPMStart = value;
             }
         }
         public int DisplayWidth
@@ -497,10 +487,7 @@ namespace PPDEditor
             set
             {
                 LayerDisplay sld = SelectedLayer;
-                if (sld != null)
-                {
-                    sld.PPDData.DisplayWidth = value;
-                }
+                sld?.PPDData.DisplayWidth = value;
             }
         }
         public DisplayLineMode DisplayMode
@@ -508,10 +495,7 @@ namespace PPDEditor
             set
             {
                 LayerDisplay sld = SelectedLayer;
-                if (sld != null)
-                {
-                    sld.PPDData.DisplayMode = value;
-                }
+                sld?.PPDData.DisplayMode = value;
             }
         }
         public DisplayBeatType BeatType
@@ -519,10 +503,7 @@ namespace PPDEditor
             set
             {
                 LayerDisplay sld = SelectedLayer;
-                if (sld != null)
-                {
-                    sld.PPDData.BeatType = value;
-                }
+                sld?.PPDData.BeatType = value;
             }
         }
     }

@@ -8,10 +8,10 @@ namespace PPDEditor
     {
         const int FontHeight = 16;
         bool drawAngle;
-        SpriteObject positionSprite;
-        SpriteObject angleSprite;
+        readonly SpriteObject positionSprite;
+        readonly SpriteObject angleSprite;
 
-        PPDFramework.Resource.ResourceManager resourceManager;
+        readonly PPDFramework.Resource.ResourceManager resourceManager;
 
         public bool DrawAngle
         {

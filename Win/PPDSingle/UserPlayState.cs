@@ -87,10 +87,7 @@ namespace PPDSingle
 
         protected void OnPropertyChanged(string propertyName)
         {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged.Invoke(propertyName);
-            }
+            PropertyChanged?.Invoke(propertyName);
         }
 
         #region IPropertyChanged メンバ

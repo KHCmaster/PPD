@@ -10,7 +10,7 @@ namespace PPDFramework.Web
         /// <summary>
         /// 譜面の情報一覧です。
         /// </summary>
-        private List<ListScoreInfo> scoreInfos;
+        private readonly List<ListScoreInfo> scoreInfos;
 
         /// <summary>
         /// 名前を取得します。
@@ -50,7 +50,7 @@ namespace PPDFramework.Web
         {
             Title = title;
             IsWatch = isWatch;
-            scoreInfos = new List<ListScoreInfo>();
+            scoreInfos = [];
         }
 
         /// <summary>

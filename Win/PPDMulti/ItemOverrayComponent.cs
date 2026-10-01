@@ -10,8 +10,8 @@ namespace PPDMulti
     {
         public event Action ItemSet;
 
-        PPDFramework.Resource.ResourceManager resourceManager;
-        ItemManagerComponent itemManagerComponent;
+        readonly PPDFramework.Resource.ResourceManager resourceManager;
+        readonly ItemManagerComponent itemManagerComponent;
 
         public ItemOverrayComponent(PPDDevice device, PPDFramework.Resource.ResourceManager resourceManager, ItemManagerComponent itemManagerComponent) : base(device)
         {
@@ -40,10 +40,7 @@ namespace PPDMulti
                 if (lastPos == gc.Position)
                 {
                     this.RemoveChild(gc);
-                    if (ItemSet != null)
-                    {
-                        ItemSet.Invoke();
-                    }
+                    ItemSet?.Invoke();
                 }
             }
         }

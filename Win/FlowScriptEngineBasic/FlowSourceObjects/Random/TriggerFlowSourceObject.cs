@@ -32,7 +32,7 @@ namespace FlowScriptEngineBasic.FlowSourceObjects.Random
         {
             base.OnInitialize();
 
-            triggers = new List<FlowEventHandler>();
+            triggers = [];
             if (IsConnected("Out0", false))
             {
                 triggers.Add(Out0);

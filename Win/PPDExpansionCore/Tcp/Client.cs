@@ -60,9 +60,9 @@ namespace PPDExpansionCore.Tcp
             }
             try
             {
-                using (MemoryStream stream = new MemoryStream())
+                using (MemoryStream stream = new())
                 {
-                    using (PPDPack.V2.PackWriter writer = new PPDPack.V2.PackWriter(stream))
+                    using (PPDPack.V2.PackWriter writer = new(stream))
                     {
                         packable.Write(writer);
                     }

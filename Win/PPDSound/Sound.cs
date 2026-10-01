@@ -14,10 +14,10 @@ namespace PPDSound
     {
         private const int CHUNKSIZE = 4096;
         private IDirectSound soundDevice;
-        private Form window;
+        private readonly Form window;
 
-        private Dictionary<string, BufferInfo> sounds;
-        private Dictionary<string, SoundPlayingInfo> playingSounds;
+        private readonly Dictionary<string, BufferInfo> sounds;
+        private readonly Dictionary<string, SoundPlayingInfo> playingSounds;
         protected FMODEX.System system;
 
         bool enabled = true;
@@ -26,8 +26,8 @@ namespace PPDSound
         public Sound(Form window)
         {
             this.window = window;
-            sounds = new Dictionary<string, BufferInfo>();
-            playingSounds = new Dictionary<string, SoundPlayingInfo>();
+            sounds = [];
+            playingSounds = [];
             SoundMasterControl.Instance.SeVolumeChanged += Instance_SeVolumeChanged;
         }
 

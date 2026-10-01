@@ -220,8 +220,8 @@ namespace PPDEditor
             {
                 for (int i = 0; i < infos.Length; i++)
                 {
-                    Vector2 position = infos[i].Position.HasValue ? infos[i].Position.Value : Vector2.Zero;
-                    float angle = infos[i].Rotation.HasValue ? infos[i].Rotation.Value : 0;
+                    Vector2 position = infos[i].Position ?? Vector2.Zero;
+                    float angle = infos[i].Rotation ?? 0;
                     displayPositions[i] = position;
                     if (hasAngle)
                     {
@@ -234,8 +234,8 @@ namespace PPDEditor
                 var point = new Vector2(float.Parse(this.textBox1.Text), float.Parse(this.textBox2.Text));
                 for (int i = 0; i < infos.Length; i++)
                 {
-                    Vector2 position = infos[i].Position.HasValue ? infos[i].Position.Value : Vector2.Zero;
-                    float angle = infos[i].Rotation.HasValue ? infos[i].Rotation.Value : 0;
+                    Vector2 position = infos[i].Position ?? Vector2.Zero;
+                    float angle = infos[i].Rotation ?? 0;
                     displayPositions[i] = new Vector2(position.X + 2 * (point.X - position.X), position.Y + 2 * (point.Y - position.Y));
                     if (hasAngle)
                     {
@@ -257,8 +257,8 @@ namespace PPDEditor
                 var basicvec = MathCompat.NormalizeSharpDX(new Vector2(x2 - x1, y2 - y1));
                 for (int i = 0; i < infos.Length; i++)
                 {
-                    Vector2 position = infos[i].Position.HasValue ? infos[i].Position.Value : Vector2.Zero;
-                    float angle = infos[i].Rotation.HasValue ? infos[i].Rotation.Value : 0;
+                    Vector2 position = infos[i].Position ?? Vector2.Zero;
+                    float angle = infos[i].Rotation ?? 0;
                     var targetvec = new Vector2(position.X - x1, position.Y - y1);
                     var targetvecnormal = MathCompat.NormalizeSharpDX(targetvec);
                     var bitweenangle = Vector2.Dot(basicvec, targetvecnormal);
@@ -286,10 +286,7 @@ namespace PPDEditor
                 displayPositions[i] = MathCompat.ClampSharpDX(displayPositions[i], Vector2.Zero, new Vector2(800, 450));
                 displayAngles[i] = NormalizeAngle(displayAngles[i]);
             }
-            if (WindowUtility.MainForm != null)
-            {
-                WindowUtility.MainForm.ChangeData(displayPositions, displayAngles);
-            }
+            WindowUtility.MainForm?.ChangeData(displayPositions, displayAngles);
         }
 
         private double GetNormalAngle(double angle)

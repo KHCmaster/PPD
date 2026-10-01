@@ -8,7 +8,7 @@ namespace PPDCore
     class ExSound
     {
         int count = 1;
-        ISound sound;
+        readonly ISound sound;
         public ExSound(ISound sound)
         {
             this.sound = sound;

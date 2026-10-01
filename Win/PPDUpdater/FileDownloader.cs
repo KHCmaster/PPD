@@ -12,7 +12,7 @@ namespace PPDUpdater
     /// </summary>
     sealed class FileDownloader
     {
-        private static readonly HttpClient client = new HttpClient(new HttpClientHandler { UseCookies = false })
+        private static readonly HttpClient client = new(new HttpClientHandler { UseCookies = false })
         {
             Timeout = Timeout.InfiniteTimeSpan
         };

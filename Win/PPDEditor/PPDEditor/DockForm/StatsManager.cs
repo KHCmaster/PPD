@@ -20,7 +20,7 @@ namespace PPDEditor
         }
 
         private LayerStats[] currentStats;
-        private Dictionary<ButtonType, Color> colorDict = new Dictionary<ButtonType, Color>
+        private readonly Dictionary<ButtonType, Color> colorDict = new()
         {
             {ButtonType.Square, Color.FromArgb(231,75,245)},            {ButtonType.Cross, Color.FromArgb(100,185,239)},            {ButtonType.Circle, Color.FromArgb(238,54,80)},            {ButtonType.Triangle, Color.FromArgb(24,208,37)},            {ButtonType.Left, Color.FromArgb(255,65,221)},            {ButtonType.Down, Color.FromArgb(65,208,255)},            {ButtonType.Right, Color.FromArgb(255,65,98)},            {ButtonType.Up, Color.FromArgb(66,254,77)},            {ButtonType.R, Color.FromArgb(181,245,251)},            {ButtonType.L, Color.FromArgb(75,231,245)}        };
 
@@ -253,8 +253,8 @@ namespace PPDEditor
 
         class LayerStats
         {
-            int[] normalCounts;
-            int[] longCounts;
+            readonly int[] normalCounts;
+            readonly int[] longCounts;
 
             public LayerStats(string name, ScoreDifficultyMeasureResult result)
             {

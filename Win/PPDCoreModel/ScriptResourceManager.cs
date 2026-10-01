@@ -21,8 +21,8 @@ namespace PPDCoreModel
     /// </summary>
     public class ScriptResourceManager : DisposableComponent
     {
-        private PPDDevice device;
-        private ISound sound;
+        private readonly PPDDevice device;
+        private readonly ISound sound;
         private PPDFramework.Resource.SpriteResourceManager resourceManager;
         private PPDFramework.PathManager pathManager;
         private bool initialized;
@@ -52,16 +52,16 @@ namespace PPDCoreModel
 
         private void Initialize(string resourceFilePath, string spriteDirName)
         {
-            soundDict = new Dictionary<string, byte[]>();
-            othersDict = new Dictionary<string, byte[]>();
-            createdVertices = new List<VertexInfo>();
+            soundDict = [];
+            othersDict = [];
+            createdVertices = [];
             pathManager = new PathManager("");
 
             if (File.Exists(resourceFilePath))
             {
                 try
                 {
-                    using (PackReader packReader = new PackReader(resourceFilePath))
+                    using (PackReader packReader = new(resourceFilePath))
                     {
                         UnPackAll(packReader, spriteDirName, File.GetLastWriteTime(resourceFilePath));
                     }
@@ -102,7 +102,7 @@ namespace PPDCoreModel
                 var key = Path.Combine("Effect", effectName, normalizedEffectImageName);
                 if (!effectImageList.TryGetValue(key, out List<string> effectImageNames))
                 {
-                    effectImageNames = new List<string>();
+                    effectImageNames = [];
                     effectImageList.Add(key, effectImageNames);
                 }
                 effectImageNames.Add(fileName);
@@ -200,10 +200,7 @@ namespace PPDCoreModel
                     case ResourceKind.Polygon:
                         var filename = pathManager.Combine("Image", resourceName);
                         var imageResource = resourceManager.GetResource<ImageResourceBase>(filename);
-                        if (imageResource == null)
-                        {
-                            imageResource = (ImageResourceBase)resourceManager.Add(filename, ImageResourceFactoryManager.Factory.Create(device, filename, false));
-                        }
+                        imageResource ??= (ImageResourceBase)resourceManager.Add(filename, ImageResourceFactoryManager.Factory.Create(device, filename, false));
                         var primitiveType = (PrimitiveType)param["PrimitiveType"];
                         var primitiveCount = (int)param["PrimitiveCount"];
                         var startIndex = (int)param["StartIndex"];
@@ -224,11 +221,8 @@ namespace PPDCoreModel
         protected override void DisposeResource()
         {
             base.DisposeResource();
-            if (resourceManager != null)
-            {
-                resourceManager.Dispose();
-                resourceManager = null;
-            }
+            resourceManager?.Dispose();
+            resourceManager = null;
             foreach (var vertex in createdVertices)
             {
                 vertex.Dispose();

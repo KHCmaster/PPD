@@ -65,11 +65,11 @@ namespace PPDExpansion.ViewModel
                 }
                 if (Scores != null && Scores.Count > 0)
                 {
-                    max = Math.Max(max, Scores[Scores.Count - 1].Value);
+                    max = Math.Max(max, Scores[^1].Value);
                 }
                 if (BestScores != null && BestScores.Count > 0)
                 {
-                    max = Math.Max(max, BestScores[BestScores.Count - 1].Value);
+                    max = Math.Max(max, BestScores[^1].Value);
                 }
                 return max;
             }
@@ -421,10 +421,10 @@ namespace PPDExpansion.ViewModel
         public SinglePlayViewModel(MainWindowViewModel mainWindowViewModel)
             : base(mainWindowViewModel)
         {
-            Scores = new ObservableCollection<KeyValuePair<DateTime, int>>();
-            HighScores = new ObservableCollection<KeyValuePair<DateTime, int>>();
-            WebHighScores = new ObservableCollection<KeyValuePair<DateTime, int>>();
-            Results = new ObservableCollection<ResultInfo>();
+            Scores = [];
+            HighScores = [];
+            WebHighScores = [];
+            Results = [];
             ChartHeight = PPDExpansionSetting.Setting.SinglePlayChartHeight;
             SetScoreInfo(new ScoreInfo
             {
@@ -491,7 +491,7 @@ namespace PPDExpansion.ViewModel
                         BestScores = Scores;
                         bestResultInfo = currentResultInfo;
                     }
-                    Scores = new ObservableCollection<KeyValuePair<DateTime, int>>();
+                    Scores = [];
                 }
                 isBestScore = false;
                 UpdateScorePercent();

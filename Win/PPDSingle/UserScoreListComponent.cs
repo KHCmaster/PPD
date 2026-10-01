@@ -3,6 +3,7 @@ using PPDFramework;
 using PPDShareComponent;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace PPDSingle
 {
@@ -10,8 +11,8 @@ namespace PPDSingle
     {
         const int ItemHeight = 45;
 
-        List<PlayUserIcon> list;
-        PPDFramework.Resource.ResourceManager resourceManager;
+        readonly List<PlayUserIcon> list;
+        readonly PPDFramework.Resource.ResourceManager resourceManager;
 
         public PlayUserIcon[] Players
         {
@@ -22,7 +23,7 @@ namespace PPDSingle
         {
             this.resourceManager = resourceManager;
 
-            list = new List<PlayUserIcon>();
+            list = [];
         }
 
         public void AddUser(UserPlayState userPlayState, bool showScore, bool showEvaluate, bool showLife)
@@ -51,7 +52,7 @@ namespace PPDSingle
         public void DeleteUser(UserPlayState userPlayState)
         {
             PlayUserIcon found = null;
-            foreach (PlayUserIcon playUserIcon in Children)
+            foreach (PlayUserIcon playUserIcon in Children.Cast<PlayUserIcon>())
             {
                 if (playUserIcon.UserPlayState == userPlayState)
                 {

@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Data.SQLite;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Windows.Forms;
 
@@ -80,7 +81,7 @@ namespace PPDFramework
             /// </summary>
             Extreme = 8
         }
-        static AvailableDifficulty[] DifficultyArray = (AvailableDifficulty[])Enum.GetValues(typeof(AvailableDifficulty));
+        static readonly AvailableDifficulty[] DifficultyArray = (AvailableDifficulty[])Enum.GetValues(typeof(AvailableDifficulty));
 
         string directoryname = "";
         string directorypath = "";
@@ -760,7 +761,7 @@ namespace PPDFramework
             }
 
             var list = new List<SongInformation>(10);
-            using (var reader = PPDDatabase.DB.ExecuteReader("select * from ScoreTable where parentpath = @parentpath", new SQLiteParameter[] { new SQLiteParameter("@parentpath", directory) }))
+            using (var reader = PPDDatabase.DB.ExecuteReader("select * from ScoreTable where parentpath = @parentpath", new SQLiteParameter[] { new("@parentpath", directory) }))
             {
                 while (reader.Reader.Read())
                 {
@@ -872,10 +873,7 @@ namespace PPDFramework
         {
             root = null;
             PPDDatabase.DB.Update(false, songInformations);
-            if (Updated != null)
-            {
-                Updated.Invoke(null, EventArgs.Empty);
-            }
+            Updated?.Invoke(null, EventArgs.Empty);
         }
 
         /// <summary>
@@ -899,7 +897,7 @@ namespace PPDFramework
             if (File.Exists(Path.Combine(directory, "extreme.ppd"))) ret.Difficulty |= AvailableDifficulty.Extreme;
             if (File.Exists(Path.Combine(directory, "data.ini")))
             {
-                using (StreamReader sr = new StreamReader(Path.Combine(directory, "data.ini")))
+                using (StreamReader sr = new(Path.Combine(directory, "data.ini")))
                 {
                     var ss = sr.ReadToEnd();
                     var setting = new SettingReader(ss);
@@ -1088,7 +1086,7 @@ namespace PPDFramework
                     data = EVDReader.Read(pppsr);
                     pr.Close();
                 }
-                foreach (ChangeVolumeEvent evddata in Array.FindAll(data, (evd) => (evd is ChangeVolumeEvent)))
+                foreach (ChangeVolumeEvent evddata in Array.FindAll(data, (evd) => (evd is ChangeVolumeEvent)).Cast<ChangeVolumeEvent>())
                 {
                     if (evddata.Channel == 0 && evddata.Time == 0)
                     {
@@ -1096,7 +1094,7 @@ namespace PPDFramework
                         break;
                     }
                 }
-                foreach (ChangeNoteTypeEvent evddata in Array.FindAll(data, (evd) => (evd is ChangeNoteTypeEvent)))
+                foreach (ChangeNoteTypeEvent evddata in Array.FindAll(data, (evd) => (evd is ChangeNoteTypeEvent)).Cast<ChangeNoteTypeEvent>())
                 {
                     if (evddata.NoteType == NoteType.AC || evddata.NoteType == NoteType.ACFT)
                     {
@@ -1316,7 +1314,7 @@ namespace PPDFramework
             {
                 try
                 {
-                    using (PackReader pr = new PackReader(path))
+                    using (PackReader pr = new(path))
                     {
                         var pppsr = pr.Read("ppd");
                         data = PPDReader.Read(pppsr);

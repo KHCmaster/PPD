@@ -142,7 +142,7 @@ namespace PPDEditor.Forms
                 {
 
                     var filePath = Path.Combine(WindowUtility.MainForm.CurrentProjectDir, difficulty + ".ppd");
-                    using (PackReader reader = new PackReader(filePath))
+                    using (PackReader reader = new(filePath))
                     {
                         if (reader.FileList.Contains("ppd"))
                         {
@@ -153,7 +153,7 @@ namespace PPDEditor.Forms
                             {
                                 if (!timeDatas.TryGetValue(d.ButtonType, out SortedSet<float> set))
                                 {
-                                    set = new SortedSet<float>();
+                                    set = [];
                                     timeDatas.Add(d.ButtonType, set);
                                 }
                                 foreach (var setVal in set)

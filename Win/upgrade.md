@@ -482,6 +482,18 @@ Phase 7  配布・更新の仕組みの対応、リリース
 
 **規模の目安**: 中。
 
+### コード分析の警告の修正（2026-10-01、Phase 6 の後）
+
+- [x] ビルドの警告（Debug / Release とも）をゼロにした。修正前は 6,392 件（うち 6,093 件は CA1416）。
+  - CA1416: `GenerateAssemblyInfo=false` のため自動生成されていなかった `[assembly: SupportedOSPlatform("windows")]` を、全プロジェクトに `Shared/SupportedPlatform.cs` で加えた
+  - 古い API: `WebRequest` / `WebClient` → `HttpClient`（`PPDFrameworkCore.SyncHttpClient`、インストーラーとアップデーターは `FileDownloader`）。`RijndaelManaged` → `Aes` など（保存済みの設定と同じ暗号文になることを確認した）
+  - 外部から取り込んだコード（FMOD のラッパー、DockPanel Suite）は `.editorconfig` でアナライザーの対象外にした
+  - 設計上の理由で修正しないものは、理由を書いて `SuppressMessage` にした（GameComponent / DisposableComponent の `DisposeResource` による破棄など）
+  - 修正の途中で見つけて直した不具合: Mod の設定画面の書式文字列の誤り（FormatException）、PPDEditor のタイムライン描画のたびの GDI オブジェクトのリーク、ブレークポイントで止まるたびのイベントハンドルのリーク、`static` なフラグを `lock (this)` で守っていた箇所、`Workspace` や文字のテクスチャなどの解放漏れ
+- [x] IDE の自動修正のうち、動作を変えないもの（null チェックの簡略化、パターンマッチング、`readonly`、`new()`、コレクションの初期化など）を `dotnet format` で適用した。
+  - 適用しなかったもの: 名前の変更（FlowScript のスクリプトやデザイナーが名前に依存する）、`using` 宣言（破棄のタイミングが変わる）、`switch` 式やプライマリコンストラクターなどの書き方だけの変更
+- 確認: 回帰テスト（シーン、PPD の終了、Mod）、MessagePack の通信互換、各アプリの起動
+
 ### Phase 7: 配布・更新の仕組みとリリース
 
 - [ ] 配布形態（D3: 現状のまま、フレームワーク依存）に合わせて `dotnet publish` の設定を作り、インストーラーに .NET 10 Desktop Runtime の確認・案内を追加する。

@@ -11,12 +11,12 @@ namespace PPDEditor
 {
     class PPDStaticSetting
     {
-        static Regex rgb = new Regex("(\\d+)\\s*,\\s*(\\d+)\\s*,\\s*(\\d+)");
-        static Regex argb = new Regex("(\\d+)\\s*,\\s*(\\d+)\\s*,\\s*(\\d+)\\s*,\\s*(\\d+)");
+        static readonly Regex rgb = new("(\\d+)\\s*,\\s*(\\d+)\\s*,\\s*(\\d+)");
+        static readonly Regex argb = new("(\\d+)\\s*,\\s*(\\d+)\\s*,\\s*(\\d+)\\s*,\\s*(\\d+)");
 
         public static FormWindowState LastWindowState = FormWindowState.Normal;
-        public static Size LastWindowSize = new Size(800, 600);
-        public static Point LastWindowLocation = new Point(0, 0);
+        public static Size LastWindowSize = new(800, 600);
+        public static Point LastWindowLocation = new(0, 0);
         public static string AuthorName = "";
         public static float MovieLatency;
         public static string langFileISO = "";

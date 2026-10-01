@@ -4,8 +4,8 @@ namespace PPDEditor.Command.PPDSheet
 {
     class AddMarkCommand : Command
     {
-        private SortedList<float, Mark>[] data;
-        private Mark mk;
+        private readonly SortedList<float, Mark>[] data;
+        private readonly Mark mk;
         public AddMarkCommand(SortedList<float, Mark>[] data, Mark mk)
         {
             this.data = data;

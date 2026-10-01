@@ -220,10 +220,7 @@ namespace Effect2DEditor.DockForm
 
         private void OnStateValueChanged(RatioType ratioType, float value)
         {
-            if (StateValueChanged != null)
-            {
-                StateValueChanged.Invoke(ratioType, value);
-            }
+            StateValueChanged?.Invoke(ratioType, value);
         }
 
         private void OnBlendModeChanged(BlendMode blendMode)
@@ -268,10 +265,7 @@ namespace Effect2DEditor.DockForm
 
         private void OnSetRatio(RatioType type)
         {
-            if (SetRatio != null)
-            {
-                SetRatio.Invoke(type);
-            }
+            SetRatio?.Invoke(type);
         }
     }
 }

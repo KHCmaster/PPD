@@ -12,10 +12,10 @@ namespace FlowScriptControl.Controls
         private const string flowSourceKey = "FLOWSOURCE";
         private const string folderKey = "FOLDER";
 
-        private ToolTip tooltip;
-        private Timer timer;
+        private readonly ToolTip tooltip;
+        private readonly Timer timer;
         private CustomTreeNode lastHoverNode;
-        private List<RemovedTreeNode> removedNodes = new List<RemovedTreeNode>();
+        private readonly List<RemovedTreeNode> removedNodes = [];
 
         public NodeFilterInfoBase SelectedFilter
         {
@@ -269,8 +269,7 @@ namespace FlowScriptControl.Controls
                 return true;
             }
 
-            var customTreeNode = node as CustomTreeNode;
-            if (customTreeNode == null || customTreeNode.Dumper == null)
+            if (node is not CustomTreeNode customTreeNode || customTreeNode.Dumper == null)
             {
                 return false;
             }

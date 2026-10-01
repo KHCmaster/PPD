@@ -3,6 +3,7 @@ using PPDShareComponent;
 using System.Numerics;
 using PPDMath;
 using System;
+using System.Linq;
 
 namespace PPD
 {
@@ -12,8 +13,8 @@ namespace PPD
         GameList gameList;
         SpriteObject listSprite;
         LineRectangleComponent select;
-        PPDFramework.Resource.ResourceManager resourceManager;
-        ISound sound;
+        readonly PPDFramework.Resource.ResourceManager resourceManager;
+        readonly ISound sound;
 
         int currentIndex;
         int scrollIndex;
@@ -74,7 +75,7 @@ namespace PPD
 
         public void UpdatePlayingTime(GameLoader gameLoader, int time)
         {
-            foreach (GameInfoComponent gameInfoComponent in listSprite.Children)
+            foreach (GameInfoComponent gameInfoComponent in listSprite.Children.Cast<GameInfoComponent>())
             {
                 if (gameInfoComponent.GameLoader == gameLoader)
                 {
@@ -124,7 +125,7 @@ namespace PPD
 
         class GameInfoComponent : GameComponent
         {
-            TextureString playingTimeText;
+            readonly TextureString playingTimeText;
             public GameInfoComponent(PPDDevice device, PPDFramework.Resource.ResourceManager resourceManager, GameLoader gameLoader) : base(device)
             {
                 this.GameLoader = gameLoader;

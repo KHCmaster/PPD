@@ -27,7 +27,7 @@ namespace PPDExpansionCore.Tcp
 
         protected byte[] Read(NetworkStream stream)
         {
-            using (MemoryStream ms = new MemoryStream())
+            using (MemoryStream ms = new())
             {
                 byte[] buffer = new byte[1024 * 1024];
                 try

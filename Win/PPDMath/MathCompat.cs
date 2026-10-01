@@ -384,14 +384,14 @@ namespace PPDMath
                 return m.M11 * (m.M22 * a - m.M23 * b + m.M24 * c) - m.M12 * (m.M21 * a - m.M23 * d + m.M24 * e) + m.M13 * (m.M21 * b - m.M22 * d + m.M24 * f) - m.M14 * (m.M21 * c - m.M22 * e + m.M23 * f);
             }
 
-            public Vector4 Row1 => new Vector4(m.M11, m.M12, m.M13, m.M14);
-            public Vector4 Row2 => new Vector4(m.M21, m.M22, m.M23, m.M24);
-            public Vector4 Row3 => new Vector4(m.M31, m.M32, m.M33, m.M34);
-            public Vector4 Row4 => new Vector4(m.M41, m.M42, m.M43, m.M44);
-            public Vector4 Column1 => new Vector4(m.M11, m.M21, m.M31, m.M41);
-            public Vector4 Column2 => new Vector4(m.M12, m.M22, m.M32, m.M42);
-            public Vector4 Column3 => new Vector4(m.M13, m.M23, m.M33, m.M43);
-            public Vector4 Column4 => new Vector4(m.M14, m.M24, m.M34, m.M44);
+            public Vector4 Row1 => new(m.M11, m.M12, m.M13, m.M14);
+            public Vector4 Row2 => new(m.M21, m.M22, m.M23, m.M24);
+            public Vector4 Row3 => new(m.M31, m.M32, m.M33, m.M34);
+            public Vector4 Row4 => new(m.M41, m.M42, m.M43, m.M44);
+            public Vector4 Column1 => new(m.M11, m.M21, m.M31, m.M41);
+            public Vector4 Column2 => new(m.M12, m.M22, m.M32, m.M42);
+            public Vector4 Column3 => new(m.M13, m.M23, m.M33, m.M43);
+            public Vector4 Column4 => new(m.M14, m.M24, m.M34, m.M44);
         }
 
         extension(Vector2)

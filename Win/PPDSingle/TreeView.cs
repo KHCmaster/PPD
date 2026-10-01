@@ -28,7 +28,7 @@ namespace PPDSingle
     public class TreeView
     {
         public event SelectionEventHandler SelectionChanged;
-        TreeViewItem root;
+        readonly TreeViewItem root;
         public TreeView(TreeViewItem root)
         {
             this.root = root;
@@ -132,10 +132,7 @@ namespace PPDSingle
 
         protected void OnSelectionChanged(TreeViewItem prevItem, TreeViewItem newItem)
         {
-            if (SelectionChanged != null)
-            {
-                SelectionChanged.Invoke(this, new SelectionEventArgs(prevItem, newItem));
-            }
+            SelectionChanged?.Invoke(this, new SelectionEventArgs(prevItem, newItem));
         }
     }
 }

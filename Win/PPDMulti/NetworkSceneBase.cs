@@ -9,11 +9,11 @@ namespace PPDMulti
 {
     public abstract class NetworkSceneBase : SceneBase
     {
-        Dictionary<Type, Tuple<object, MethodInfo>> processors;
+        readonly Dictionary<Type, Tuple<object, MethodInfo>> processors;
 
         protected NetworkSceneBase(PPDDevice device) : base(device)
         {
-            processors = new Dictionary<Type, Tuple<object, MethodInfo>>();
+            processors = [];
         }
 
         protected void AddProcessor<T>(Action<T> processor) where T : NetworkData

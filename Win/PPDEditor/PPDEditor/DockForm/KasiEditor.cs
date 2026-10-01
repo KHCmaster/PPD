@@ -8,7 +8,7 @@ namespace PPDEditor
 {
     public partial class KasiEditor : ScrollableForm
     {
-        SortedList<float, string> changedata = new SortedList<float, string>(100);
+        readonly SortedList<float, string> changedata = new(100);
         string alreadyadd = "すでにこの時間にはテキストが指定されています";
         string noselectedline = "選択された行が存在しません";
         public KasiEditor()

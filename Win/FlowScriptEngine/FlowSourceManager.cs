@@ -13,28 +13,28 @@ namespace FlowScriptEngine
         public const string START = "FlowScriptEngine.Start";
         public delegate void FlowCallEventHandler(object[] values);
 
-        Dictionary<string, List<FlowCallEventHandler>> callBackDictionary;
-        EventQueue eventQueue;
+        readonly Dictionary<string, List<FlowCallEventHandler>> callBackDictionary;
+        readonly EventQueue eventQueue;
         EventQueue currentQueue;
 
-        Dictionary<int, FlowSourceObjectBase> sources;
-        List<FlowInfo> flowInfos;
+        readonly Dictionary<int, FlowSourceObjectBase> sources;
+        readonly List<FlowInfo> flowInfos;
 
-        Engine engine;
-        FunctionScope scope;
-        FunctionScope contextScope;
-        FunctionScope globalScope;
+        readonly Engine engine;
+        readonly FunctionScope scope;
+        readonly FunctionScope contextScope;
+        readonly FunctionScope globalScope;
 
-        bool debugMode;
+        readonly bool debugMode;
         bool initialized;
         KeyValuePair<FlowSourceObjectBase, KeyValuePair<string, string>[]>[] defaultValues;
 
-        List<FunctionScope> scopes;
-        HashSet<int> breakPoints;
-        private readonly object breakPointLock = new object();
+        readonly List<FunctionScope> scopes;
+        readonly HashSet<int> breakPoints;
+        private readonly object breakPointLock = new();
 
         private bool evaluating;
-        private DebugController debugController;
+        private readonly DebugController debugController;
         private OperationType nextOperation;
         private FlowSourceObjectBase lastEvaluateSource;
 
@@ -62,18 +62,18 @@ namespace FlowScriptEngine
             this.globalScope = globalScope;
             this.debugController = debugController;
 
-            callBackDictionary = new Dictionary<string, List<FlowCallEventHandler>>();
-            sources = new Dictionary<int, FlowSourceObjectBase>();
-            flowInfos = new List<FlowInfo>();
+            callBackDictionary = [];
+            sources = [];
+            flowInfos = [];
             eventQueue = new EventQueue();
             currentQueue = eventQueue;
 
             scope = new FunctionScope(ScopeType.Default);
             contextScope.AddChild(scope);
-            scopes = new List<FunctionScope>();
-            breakPoints = new HashSet<int>();
+            scopes = [];
+            breakPoints = [];
 
-            Items = new Dictionary<string, object>();
+            Items = [];
         }
 
         internal void AddScope(FunctionScope scope)
@@ -90,7 +90,7 @@ namespace FlowScriptEngine
         {
             if (!callBackDictionary.TryGetValue(callBackName, out List<FlowCallEventHandler> callBacks))
             {
-                callBacks = new List<FlowCallEventHandler>();
+                callBacks = [];
                 callBackDictionary.Add(callBackName, callBacks);
             }
             callBacks.Add(func);
@@ -100,10 +100,7 @@ namespace FlowScriptEngine
         {
             if (callBackDictionary.TryGetValue(callBackName, out List<FlowCallEventHandler> callBacks))
             {
-                if (args == null)
-                {
-                    args = new object[0];
-                }
+                args ??= new object[0];
                 foreach (FlowCallEventHandler callBack in callBacks)
                 {
                     var source = GetTargetSource(callBack);
@@ -160,14 +157,14 @@ namespace FlowScriptEngine
             {
                 if (!doContinuously)
                 {
-                    foreach (FlowEventHandler dele in eventHandler.GetInvocationList())
+                    foreach (FlowEventHandler dele in eventHandler.GetInvocationList().Cast<FlowEventHandler>())
                     {
                         currentQueue.AddEventSet(new EventSet { EventHandler = dele, Source = source, IsLoopEnd = isLoopEnd });
                     }
                 }
                 else
                 {
-                    foreach (FlowEventHandler dele in eventHandler.GetInvocationList())
+                    foreach (FlowEventHandler dele in eventHandler.GetInvocationList().Cast<FlowEventHandler>())
                     {
                         currentQueue.AddEventSetToDepth(new EventSet { EventHandler = dele, Source = source, IsLoopEnd = isLoopEnd });
                     }

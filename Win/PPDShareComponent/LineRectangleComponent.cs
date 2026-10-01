@@ -12,7 +12,7 @@ namespace PPDShareComponent
 {
     public class LineRectangleComponent : GameComponent
     {
-        PPDFramework.Resource.ResourceManager resourceManager;
+        readonly PPDFramework.Resource.ResourceManager resourceManager;
         ColorTextureResourceBase resource;
         float borderThickness;
         float rectangleHeight;
@@ -130,11 +130,8 @@ namespace PPDShareComponent
         protected override void DisposeResource()
         {
             base.DisposeResource();
-            if (vertices != null)
-            {
-                vertices.Dispose();
-                vertices = null;
-            }
+            vertices?.Dispose();
+            vertices = null;
         }
     }
 }

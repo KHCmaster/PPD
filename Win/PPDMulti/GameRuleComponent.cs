@@ -12,26 +12,26 @@ namespace PPDMulti
     {
         public event EventHandler RuleChanged;
 
-        PPDFramework.Resource.ResourceManager resourceManager;
-        ISound sound;
-        PictureObject back;
+        readonly PPDFramework.Resource.ResourceManager resourceManager;
+        readonly ISound sound;
+        readonly PictureObject back;
 
-        SpriteObject ruleSprite;
-        SpriteObject itemSupplyTypeSprite;
-        GridSelection gridSelection;
-        SelectableComponent[] selectList;
+        readonly SpriteObject ruleSprite;
+        readonly SpriteObject itemSupplyTypeSprite;
+        readonly GridSelection gridSelection;
+        readonly SelectableComponent[] selectList;
 
-        ListBoxComponent resultSort;
-        CheckBoxComponent itemAvailable;
-        RadioBoxComponent comboSupply;
-        RadioBoxComponent rankSupply;
-        ListBoxComponent comboSupplyCount;
-        ListBoxComponent worstSupplyCount;
-        ListBoxComponent maxItemCount;
-        ButtonComponent okButton;
-        ButtonComponent cancelButton;
+        readonly ListBoxComponent resultSort;
+        readonly CheckBoxComponent itemAvailable;
+        readonly RadioBoxComponent comboSupply;
+        readonly RadioBoxComponent rankSupply;
+        readonly ListBoxComponent comboSupplyCount;
+        readonly ListBoxComponent worstSupplyCount;
+        readonly ListBoxComponent maxItemCount;
+        readonly ButtonComponent okButton;
+        readonly ButtonComponent cancelButton;
 
-        GameRule gameRule = new GameRule();
+        readonly GameRule gameRule = new();
 
         private SelectableComponent CurrentSelectedComponent
         {
@@ -209,10 +209,7 @@ namespace PPDMulti
                 if (CurrentSelectedComponent == okButton)
                 {
                     SetRule();
-                    if (RuleChanged != null)
-                    {
-                        RuleChanged.Invoke(this, EventArgs.Empty);
-                    }
+                    RuleChanged?.Invoke(this, EventArgs.Empty);
                     sound.Play(PPDSetting.DefaultSounds[1], -1000);
                 }
                 else if (CurrentSelectedComponent == cancelButton)

@@ -21,8 +21,8 @@ namespace FlowScriptDrawControl.Control
             }
         }
 
-        private List<ScopeControl> childScopes;
-        private List<PositionableControl> controls;
+        private readonly List<ScopeControl> childScopes;
+        private readonly List<PositionableControl> controls;
 
         public ScopeControl[] ChildScopes
         {
@@ -44,8 +44,8 @@ namespace FlowScriptDrawControl.Control
 
         public ScopeControl()
         {
-            childScopes = new List<ScopeControl>();
-            controls = new List<PositionableControl>();
+            childScopes = [];
+            controls = [];
 
             InitializeComponent();
 

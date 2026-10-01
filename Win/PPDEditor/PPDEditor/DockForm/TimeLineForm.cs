@@ -9,8 +9,8 @@ namespace PPDEditor
 {
     public partial class TimeLineForm : ChangableDockContent
     {
-        Timer timer;
-        TimeLineRowManager rowManager = new TimeLineRowManager();
+        readonly Timer timer;
+        readonly TimeLineRowManager rowManager = new();
         DateTime presetsLoadTime;
 
         public TimeLineRowManager RowManager
@@ -159,7 +159,7 @@ namespace PPDEditor
         {
             var ret = new Point(0, 0);
             Control c = pane;
-            while (c != null && !(c is DockPanel))
+            while (c != null && c is not WeifenLuo.WinFormsUI.Docking.DockPanel)
             {
                 ret = new Point(ret.X + c.Location.X, ret.Y + c.Location.Y);
                 c = c.Parent;
@@ -169,12 +169,12 @@ namespace PPDEditor
 
         private void TimeLineForm_DockStateChanged(object sender, EventArgs e)
         {
-            if (timer != null) timer.Start();
+            timer?.Start();
         }
 
         private void TimeLineForm_SizeChanged(object sender, EventArgs e)
         {
-            if (timer != null) timer.Start();
+            timer?.Start();
         }
 
         private void TimeLineForm_BackgroundImageChanged(object sender, EventArgs e)

@@ -8,8 +8,8 @@ namespace PPDFramework
     public class Workspace : DisposableComponent
     {
         WorkspaceTexture primal;
-        Stack<WorkspaceTexture> textures;
-        HashSet<WorkspaceTexture> usingTextures;
+        readonly Stack<WorkspaceTexture> textures;
+        readonly HashSet<WorkspaceTexture> usingTextures;
 
         /// <summary>
         /// PPDデバイスを取得します。
@@ -41,7 +41,7 @@ namespace PPDFramework
             {
                 textures.Push(new WorkspaceTexture(device, this));
             }
-            usingTextures = new HashSet<WorkspaceTexture>();
+            usingTextures = [];
         }
 
         /// <summary>
@@ -108,11 +108,8 @@ namespace PPDFramework
                 texture.DisposeInternal();
             }
             usingTextures.Clear();
-            if (primal != null)
-            {
-                primal.DisposeInternal();
-                primal = null;
-            }
+            primal?.DisposeInternal();
+            primal = null;
         }
     }
 }

@@ -59,7 +59,7 @@ namespace PPDFramework
             Write(title, objects.ToArray());
         }
 
-        static readonly System.Collections.Generic.Dictionary<object, string> trackedObjects = new System.Collections.Generic.Dictionary<object, string>();
+        static readonly System.Collections.Generic.Dictionary<object, string> trackedObjects = [];
 
         /// <summary>
         /// 作成した場所（スタックトレース）を記録します。

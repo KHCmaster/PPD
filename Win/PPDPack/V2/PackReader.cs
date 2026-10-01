@@ -12,7 +12,7 @@ namespace PPDPack.V2
         Stream stream;
         Dictionary<string, FileInfo> files;
         int headerOffset;
-        bool fileOpened;
+        readonly bool fileOpened;
 
         public string[] Files
         {
@@ -46,7 +46,7 @@ namespace PPDPack.V2
         private void InnerStruct(Stream stream)
         {
             this.stream = stream;
-            files = new Dictionary<string, FileInfo>();
+            files = [];
             AnalyzeHeader();
         }
 
@@ -138,11 +138,8 @@ namespace PPDPack.V2
             {
                 if (disposing)
                 {
-                    if (stream != null)
-                    {
-                        stream.Close();
-                        stream = null;
-                    }
+                    stream?.Close();
+                    stream = null;
                 }
             }
             disposed = true;

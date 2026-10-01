@@ -6,7 +6,7 @@ namespace PPDCoreModel
 {
     public class StageManager : GameComponent
     {
-        SpriteObject[] sprites;
+        readonly SpriteObject[] sprites;
 
         public PPDFramework.Resource.ResourceManager ResourceManager
         {

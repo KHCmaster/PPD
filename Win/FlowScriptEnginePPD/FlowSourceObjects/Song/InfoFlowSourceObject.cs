@@ -247,10 +247,7 @@ namespace FlowScriptEnginePPD.FlowSourceObjects.Song
                 {
                     return 0;
                 }
-                if (result == null)
-                {
-                    result = markManager.ScoreDifficultyMeasureResult;
-                }
+                result ??= markManager.ScoreDifficultyMeasureResult;
                 return result != null ? result.Average : 0;
             }
         }
@@ -264,10 +261,7 @@ namespace FlowScriptEnginePPD.FlowSourceObjects.Song
                 {
                     return 0;
                 }
-                if (result == null)
-                {
-                    result = markManager.ScoreDifficultyMeasureResult;
-                }
+                result ??= markManager.ScoreDifficultyMeasureResult;
                 return result != null ? result.Peak : 0;
             }
         }

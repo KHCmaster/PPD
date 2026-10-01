@@ -23,26 +23,26 @@ namespace PPDCore
         public event Action<HoldInfo> HoldEnd;
         public event Action<HoldInfo> HoldMaxHold;
 
-        bool[] pressingButtons;
-        PressInfo[] pressingInfos;
+        readonly bool[] pressingButtons;
+        readonly PressInfo[] pressingInfos;
 
 
-        PictureObject[] numbers;
-        PictureObject[] bonuses;
-        PictureObject[] marks;
-        PictureObject holdback;
-        PictureObject maxback;
-        PictureObject holdplus;
-        PictureObject maxplus;
-        PictureObject holdbonus;
-        NumberPictureObject holdnumber;
-        NumberPictureObject maxnumber;
+        readonly PictureObject[] numbers;
+        readonly PictureObject[] bonuses;
+        readonly PictureObject[] marks;
+        readonly PictureObject holdback;
+        readonly PictureObject maxback;
+        readonly PictureObject holdplus;
+        readonly PictureObject maxplus;
+        readonly PictureObject holdbonus;
+        readonly NumberPictureObject holdnumber;
+        readonly NumberPictureObject maxnumber;
 
-        EffectObject holdeffect;
-        EffectObject maxeffect;
+        readonly EffectObject holdeffect;
+        readonly EffectObject maxeffect;
 
         int notMaxBonusCount;
-        int[] checkindex = { 9, 7, 4, 5, 6, 3, 0, 1, 2, 8 };
+        readonly int[] checkindex = { 9, 7, 4, 5, 6, 3, 0, 1, 2, 8 };
 
         bool isDrawn;
         int maxHoldFrames;
@@ -387,10 +387,7 @@ namespace PPDCore
 
         private void GainScore(int gain)
         {
-            if (ScoreGained != null)
-            {
-                ScoreGained.Invoke(gain);
-            }
+            ScoreGained?.Invoke(gain);
         }
 
         public void Retry()

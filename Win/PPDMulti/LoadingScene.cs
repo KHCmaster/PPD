@@ -21,9 +21,9 @@ namespace PPDMulti
         {
             anim = new EffectObject(device, ResourceManager, Utility.Path.Combine("Loading.etd"))
             {
-                Position = new System.Numerics.Vector2(700, 420)
+                Position = new System.Numerics.Vector2(700, 420),
+                PlayType = Effect2D.EffectManager.PlayType.Loop
             };
-            anim.PlayType = Effect2D.EffectManager.PlayType.Loop;
             anim.Play();
             AddChild(anim);
 

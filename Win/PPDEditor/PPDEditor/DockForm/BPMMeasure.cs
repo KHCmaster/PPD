@@ -8,7 +8,7 @@ namespace PPDEditor
 {
     public partial class BPMMeasure : ScrollableForm
     {
-        ArrayList data;
+        readonly ArrayList data;
         public BPMMeasure()
         {
             InitializeComponent();
@@ -31,8 +31,8 @@ namespace PPDEditor
         private void updateText()
         {
             if (data.Count <= 1) return;
-            long tempdata = (long)data[data.Count - 1] - (long)data[0];
-            this.label3.Text = ((long)data[data.Count - 1] - (long)data[data.Count - 2]).ToString();
+            long tempdata = (long)data[^1] - (long)data[0];
+            this.label3.Text = ((long)data[^1] - (long)data[^2]).ToString();
             this.label4.Text = (60f / (tempdata / 1000f) * data.Count).ToString();
         }
 

@@ -5,8 +5,8 @@ namespace FlowScriptControlTest
 {
     class FlowScriptLanguageProvider : ILanguageProvider
     {
-        private SettingReader lang;
-        private SettingReader flowLang;
+        private readonly SettingReader lang;
+        private readonly SettingReader flowLang;
 
         public FlowScriptLanguageProvider(SettingReader lang, SettingReader flowLang)
         {

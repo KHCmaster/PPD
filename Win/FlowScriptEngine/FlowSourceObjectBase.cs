@@ -7,7 +7,7 @@ namespace FlowScriptEngine
 {
     public abstract class FlowSourceObjectBase
     {
-        private static Dictionary<Type, InnerData> dataDictionary;
+        private static readonly Dictionary<Type, InnerData> dataDictionary;
 
         class InnerData
         {
@@ -43,23 +43,23 @@ namespace FlowScriptEngine
         private Dictionary<string, string> replacedOutPropertyNames;
         private Dictionary<string, string> replacedMethodNames;
         private Dictionary<string, string> replacedEventNames;
-        private Dictionary<string, FlowObject> inFlowList;
-        private Dictionary<string, bool> inIsConnected;
-        private Dictionary<string, bool> outIsConnected;
+        private readonly Dictionary<string, FlowObject> inFlowList;
+        private readonly Dictionary<string, bool> inIsConnected;
+        private readonly Dictionary<string, bool> outIsConnected;
 
         InnerData innerData;
         protected FlowSourceObjectBase()
         {
-            inFlowList = new Dictionary<string, FlowObject>();
-            inIsConnected = new Dictionary<string, bool>();
-            outIsConnected = new Dictionary<string, bool>();
+            inFlowList = [];
+            inIsConnected = [];
+            outIsConnected = [];
 
             SetDefaultInfos();
         }
 
         static FlowSourceObjectBase()
         {
-            dataDictionary = new Dictionary<Type, InnerData>();
+            dataDictionary = [];
         }
 
         private void SetDefaultInfos()

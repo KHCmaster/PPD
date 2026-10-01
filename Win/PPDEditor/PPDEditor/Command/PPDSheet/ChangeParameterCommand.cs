@@ -2,10 +2,10 @@
 {
     class ChangeParameterCommand : Command
     {
-        private Mark mk;
-        private string key;
-        private string value;
-        private string prevValue;
+        private readonly Mark mk;
+        private readonly string key;
+        private readonly string value;
+        private readonly string prevValue;
         public ChangeParameterCommand(Mark mk, string key, string value)
         {
             this.mk = mk;

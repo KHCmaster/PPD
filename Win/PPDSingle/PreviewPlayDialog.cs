@@ -8,28 +8,28 @@ namespace PPDSingle
 {
     class PreviewPlayDialog : FocusableGameComponent
     {
-        EffectObject back;
+        readonly EffectObject back;
         int selection;
 
-        TextureString message;
-        TextureString songname;
-        TextureString difficulty;
-        TextureString startTime;
-        TextureString diffTime;
+        readonly TextureString message;
+        readonly TextureString songname;
+        readonly TextureString difficulty;
+        readonly TextureString startTime;
+        readonly TextureString diffTime;
 
-        TextureString songnameContent;
-        TextureString difficultyContent;
-        TextureString startTimeContent;
-        TextureString diffTimeContent;
+        readonly TextureString songnameContent;
+        readonly TextureString difficultyContent;
+        readonly TextureString startTimeContent;
+        readonly TextureString diffTimeContent;
 
 
-        SpriteObject sprite;
+        readonly SpriteObject sprite;
 
-        RectangleComponent black;
+        readonly RectangleComponent black;
 
-        Button[] buttons;
+        readonly Button[] buttons;
 
-        ISound Sound;
+        readonly ISound Sound;
 
         int diffCount;
 
@@ -141,9 +141,9 @@ namespace PPDSingle
                 }
                 buttons[i] = new Button(device, resourceManager, Utility.Path, text)
                 {
-                    Position = new Vector2(300 + i * 200, 315)
+                    Position = new Vector2(300 + i * 200, 315),
+                    Selected = false
                 };
-                buttons[i].Selected = false;
                 sprite.AddChild(buttons[i]);
             }
 

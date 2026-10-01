@@ -4,7 +4,7 @@ namespace PPDEditor
 {
     class SameTimingMarks : IEnumerable<Mark>
     {
-        private List<Mark> marks;
+        private readonly List<Mark> marks;
 
         public int SameTimings
         {
@@ -22,7 +22,7 @@ namespace PPDEditor
 
         public SameTimingMarks()
         {
-            marks = new List<Mark>();
+            marks = [];
         }
 
         public void Add(Mark mark)

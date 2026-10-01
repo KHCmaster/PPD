@@ -444,10 +444,7 @@ namespace PPDEditor.Forms
             }
 
             textBox3.Text = GetReadableShortcut(new ShortcutInfo(e.KeyCode, e.Shift, e.Control, e.Alt, ShortcutType.None));
-            if (dataGridView1.CurrentRow != null)
-            {
-                dataGridView1.CurrentRow.Cells[1].Value = textBox3.Text;
-            }
+            dataGridView1.CurrentRow?.Cells[1].Value = textBox3.Text;
         }
 
         private void textBox3_KeyPress(object sender, KeyPressEventArgs e)

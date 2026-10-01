@@ -24,14 +24,14 @@ namespace FlowScriptDrawControl.Model
 
         private Connection inConnection;
 
-        private List<Connection> outConnections;
+        private readonly List<Connection> outConnections;
 
         public event EventHandler ConnectionChanged;
 
         public Item(string[] replacedNames)
         {
             ReplacedNames = replacedNames;
-            outConnections = new List<Connection>();
+            outConnections = [];
         }
 
         public bool IsMouseOver
@@ -93,15 +93,9 @@ namespace FlowScriptDrawControl.Model
             {
                 if (source != value)
                 {
-                    if (source != null)
-                    {
-                        source.PropertyChanged -= source_PropertyChanged;
-                    }
+                    source?.PropertyChanged -= source_PropertyChanged;
                     source = value;
-                    if (source != null)
-                    {
-                        source.PropertyChanged += source_PropertyChanged;
-                    }
+                    source?.PropertyChanged += source_PropertyChanged;
                     UpdateIsCollapsed();
                 }
             }

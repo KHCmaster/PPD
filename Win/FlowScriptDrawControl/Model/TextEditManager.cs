@@ -10,9 +10,9 @@ namespace FlowScriptDrawControl.Model
         private bool isMouseDown;
         private bool isInEdit;
 
-        private UserControl ownerControl;
-        private TextBlock textBlock;
-        private TextBox textBox;
+        private readonly UserControl ownerControl;
+        private readonly TextBlock textBlock;
+        private readonly TextBox textBox;
 
         public event Func<object, bool> EnterEdit;
 

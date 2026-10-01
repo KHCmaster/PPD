@@ -8,9 +8,9 @@ namespace Effect2DEditor.Command
 {
     class AddEffectCommand : CommandBase
     {
-        int insertindex;
-        string filename;
-        SortedList<string, Image> imagepool;
+        readonly int insertindex;
+        readonly string filename;
+        readonly SortedList<string, Image> imagepool;
         public AddEffectCommand(EffectManager manager, string exp, int insertindex, string filename, SortedList<string, Image> imagepool)
             : base(manager, exp)
         {

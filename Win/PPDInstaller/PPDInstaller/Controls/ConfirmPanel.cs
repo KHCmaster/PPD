@@ -17,10 +17,10 @@ namespace PPDInstaller.Controls
         const string NotOK = "notok";
         const string Progress = "progress";
 
-        string cachefolder = "Cache\\";
+        readonly string cachefolder = "Cache\\";
 
-        string ipafontname = "ipag00302.zip";
-        string lavFiltersName = "lavFilters.exe";
+        readonly string ipafontname = "ipag00302.zip";
+        readonly string lavFiltersName = "lavFilters.exe";
 
         string necessary = "必須";
         string optional = "任意";
@@ -33,7 +33,7 @@ namespace PPDInstaller.Controls
         string ipaFont = "IPA Font";
         string bmsToPpd = "BMSTOPPD";
         string effect2DEditor = "Effect2DEditor";
-        string lavFilters = "LAVFilters";
+        readonly string lavFilters = "LAVFilters";
 
         InstallInfo installInfo;
 
@@ -160,7 +160,7 @@ namespace PPDInstaller.Controls
                 }
                 label7.Text = String.Format("{0} {1} {2}%", executor.ProgressText, executor.Name, executor.Progress);
                 var node = GetNodeFromText(targetNode, targetText);
-                if (node != null) node.ImageKey = Progress;
+                node?.ImageKey = Progress;
                 executor.Progressed += executor_Progressed;
                 executor.Finished += executor_Finished;
 
@@ -169,10 +169,7 @@ namespace PPDInstaller.Controls
                 return;
             }
             IsInstallFinishsd = true;
-            if (InstallFinished != null)
-            {
-                InstallFinished.Invoke(this, EventArgs.Empty);
-            }
+            InstallFinished?.Invoke(this, EventArgs.Empty);
         }
 
         void executor_Finished(object sender, EventArgs e)
@@ -204,13 +201,13 @@ namespace PPDInstaller.Controls
         void SetOk(TreeNode Node, string targetText)
         {
             var node = GetNodeFromText(Node, targetText);
-            if (node != null) node.ImageKey = OK;
+            node?.ImageKey = OK;
         }
 
         void SetNotOk(TreeNode Node, string targetText)
         {
             var node = GetNodeFromText(Node, targetText);
-            if (node != null) node.ImageKey = NotOK;
+            node?.ImageKey = NotOK;
         }
 
         TreeNode GetNodeFromText(TreeNode node, string text)

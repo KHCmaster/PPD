@@ -9,27 +9,27 @@ namespace PPD
     class StartPanel : FocusableGameComponent
     {
         public event EventHandler SettingFinished;
-        PPDFramework.Resource.ResourceManager resourceManager;
+        readonly PPDFramework.Resource.ResourceManager resourceManager;
 
-        SpriteObject contentSprite;
-        FadableButton right;
-        FadableButton left;
+        readonly SpriteObject contentSprite;
+        readonly FadableButton right;
+        readonly FadableButton left;
 
-        MyGame myGame;
+        readonly MyGame myGame;
 
-        TextureString controllerNameText;
-        FadableButton reload;
-        FadableButton up;
-        FadableButton down;
+        readonly TextureString controllerNameText;
+        readonly FadableButton reload;
+        readonly FadableButton up;
+        readonly FadableButton down;
 
-        FocusManager focusManager;
+        readonly FocusManager focusManager;
 
         TextButton clickedTextButton;
 
-        KeyConfig keyConfig = new KeyConfig();
+        readonly KeyConfig keyConfig = new();
 
-        TextureString[] keys;
-        TextureString[] buttons;
+        readonly TextureString[] keys;
+        readonly TextureString[] buttons;
 
         int currentPageIndex;
 
@@ -138,10 +138,7 @@ namespace PPD
         void textButton_MouseLeftDown(GameComponent sender, MouseEvent mouseEvent)
         {
             myGame.Input.AssignMode = true;
-            if (clickedTextButton != null)
-            {
-                clickedTextButton.Text = Utility.Language["Change"];
-            }
+            clickedTextButton?.Text = Utility.Language["Change"];
             clickedTextButton = sender as TextButton;
             clickedTextButton.Text = Utility.Language["Waiting"];
         }
@@ -196,10 +193,7 @@ namespace PPD
             }
             else
             {
-                if (SettingFinished != null)
-                {
-                    SettingFinished.Invoke(this, EventArgs.Empty);
-                }
+                SettingFinished?.Invoke(this, EventArgs.Empty);
                 AcceptMouseOperation = false;
             }
         }
@@ -300,7 +294,7 @@ namespace PPD
 
     class TextButton : GameComponent
     {
-        TextureString textString;
+        readonly TextureString textString;
         public TextButton(PPDDevice device, PPDFramework.Resource.ResourceManager resourceManager) : base(device)
         {
             this.AddChild((textString = new TextureString(device, "", 12, true, PPDColors.White)));

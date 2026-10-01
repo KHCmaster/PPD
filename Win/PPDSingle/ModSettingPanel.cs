@@ -14,18 +14,18 @@ namespace PPDSingle
         const int ClipHeight = 330;
         const int SpriteY = 80;
 
-        IGameHost gameHost;
-        ISound sound;
-        PPDFramework.Resource.ResourceManager resourceManager;
+        readonly IGameHost gameHost;
+        readonly ISound sound;
+        readonly PPDFramework.Resource.ResourceManager resourceManager;
 
         int currentIndex;
-        ModInfo modInfo;
+        readonly ModInfo modInfo;
 
-        RectangleComponent black;
-        PictureObject back;
-        SpriteObject settingSprite;
-        SpriteObject settingListSprite;
-        LineRectangleComponent rectangle;
+        readonly RectangleComponent black;
+        readonly PictureObject back;
+        readonly SpriteObject settingSprite;
+        readonly SpriteObject settingListSprite;
+        readonly LineRectangleComponent rectangle;
 
         private ModSettingComponent CurrentComponent
         {
@@ -217,10 +217,10 @@ namespace PPDSingle
         class ModSettingComponent : GameComponent
         {
             bool isSelected;
-            TextureString nameText;
-            TextureString descriptionText;
-            TextureString valueText;
-            TextureString infoText;
+            readonly TextureString nameText;
+            readonly TextureString descriptionText;
+            readonly TextureString valueText;
+            readonly TextureString infoText;
 
             public string CurrentValue
             {

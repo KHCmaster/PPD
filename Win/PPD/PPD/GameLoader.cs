@@ -8,8 +8,8 @@ namespace PPD
 {
     class GameLoader
     {
-        static ClassType[] classTypeList = Enum.GetValues(typeof(ClassType)) as ClassType[];
-        static Dictionary<Type, ClassType> typeDictionary;
+        static readonly ClassType[] classTypeList = Enum.GetValues(typeof(ClassType)) as ClassType[];
+        static readonly Dictionary<Type, ClassType> typeDictionary;
         enum ClassType
         {
             LoadingBase = 0,
@@ -27,7 +27,7 @@ namespace PPD
             private set;
         }
 
-        Dictionary<ClassType, string> Names;
+        readonly Dictionary<ClassType, string> Names;
         private Assembly assembly;
         private FileVersionInfo fileVersionInfo;
 
@@ -41,7 +41,7 @@ namespace PPD
         public GameLoader(string path)
         {
             Path = path;
-            Names = new Dictionary<ClassType, string>();
+            Names = [];
         }
         public bool Load()
         {

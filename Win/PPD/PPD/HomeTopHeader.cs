@@ -7,10 +7,10 @@ namespace PPD
 {
     class HomeTopHeader : FocusableGameComponent
     {
-        PPDFramework.Resource.ResourceManager resourceManager;
-        HomeBottomMenu hbm;
+        readonly PPDFramework.Resource.ResourceManager resourceManager;
+        readonly HomeBottomMenu hbm;
 
-        TextureString[] strings;
+        readonly TextureString[] strings;
         int drawCount;
         bool operated;
 
@@ -24,9 +24,9 @@ namespace PPD
             {
                 strings[i] = new TextureString(device, Utility.Language[HomeBottomMenu.ModeArray[i].ToString()], 18, true, PPDColors.White)
                 {
-                    Position = new System.Numerics.Vector2(400, 5)
+                    Position = new System.Numerics.Vector2(400, 5),
+                    Alpha = 0
                 };
-                strings[i].Alpha = 0;
                 this.AddChild(strings[i]);
             }
 

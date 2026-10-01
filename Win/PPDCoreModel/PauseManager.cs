@@ -7,7 +7,7 @@ namespace PPDCoreModel
         public const string PausedCallbackName = "PPD_Pause_Paused";
         public const string ResumedCallbackName = "PPD_Pause_Resumed";
 
-        private Engine engine;
+        private readonly Engine engine;
 
         public bool IsPaused
         {

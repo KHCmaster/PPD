@@ -32,10 +32,10 @@ namespace PPDSingle
             private set;
         }
 
-        Queue<SongInformation> queue;
+        readonly Queue<SongInformation> queue;
         public SongInfoFinder(SongSelectFilter filter)
         {
-            Result = new List<SongInformation>();
+            Result = [];
             queue = new Queue<SongInformation>();
             this.Filter = filter;
         }

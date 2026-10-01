@@ -128,7 +128,7 @@ namespace PPDUpdater.Controls
             if ((paintParts & DataGridViewPaintParts.Background) ==
                 DataGridViewPaintParts.Background)
             {
-                using (SolidBrush backBrush = new SolidBrush(bkColor))
+                using (SolidBrush backBrush = new(bkColor))
                 {
                     graphics.FillRectangle(backBrush, paintRect);
                 }

@@ -4,7 +4,7 @@ namespace PPDFramework.RenderMask
 {
     class BorderMask : RenderMaskBase
     {
-        Border border;
+        readonly Border border;
 
         public override bool Enabled
         {

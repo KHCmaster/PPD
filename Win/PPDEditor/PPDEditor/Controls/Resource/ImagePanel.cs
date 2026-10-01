@@ -48,11 +48,8 @@ namespace PPDEditor.Controls.Resource
 
         private void DisposeImage()
         {
-            if (image != null)
-            {
-                image.Dispose();
-                image = null;
-            }
+            image?.Dispose();
+            image = null;
         }
 
         public void OpenFile(string filePath)

@@ -10,8 +10,8 @@ namespace PPDCore
     /// </summary>
     class TemporaryEvaluate : GameComponent
     {
-        PictureObject[] gages;
-        PictureObject movieposdraw;
+        readonly PictureObject[] gages;
+        readonly PictureObject movieposdraw;
 
         int currentdraw = 4;
 

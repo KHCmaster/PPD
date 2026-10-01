@@ -12,11 +12,11 @@ namespace PPDMulti
 {
     class UserSelectComponent : FocusableGameComponent
     {
-        PPDFramework.Resource.ResourceManager resourceManager;
-        ISound sound;
-        PictureObject back;
+        readonly PPDFramework.Resource.ResourceManager resourceManager;
+        readonly ISound sound;
+        readonly PictureObject back;
 
-        SpriteObject userSprite;
+        readonly SpriteObject userSprite;
         int index = -1;
 
         public event EventHandler ChangeLeader;
@@ -122,7 +122,7 @@ namespace PPDMulti
 
         void ItemSettingComponent_GotFocused(IFocusable sender, FocusEventArgs args)
         {
-            if (!(args.FocusObject is UserMenuDialog))
+            if (args.FocusObject is not UserMenuDialog)
             {
                 back.Position = new System.Numerics.Vector2(0, 50);
                 Alpha = 0;
@@ -172,10 +172,7 @@ namespace PPDMulti
 
         private void ChangeSelectedUserIndex(int offset)
         {
-            if (CurrentUser != null)
-            {
-                CurrentUser.IsSelected = false;
-            }
+            CurrentUser?.IsSelected = false;
             index += offset;
             if (index < 0)
             {
@@ -185,10 +182,7 @@ namespace PPDMulti
             {
                 index = 0;
             }
-            if (CurrentUser != null)
-            {
-                CurrentUser.IsSelected = true;
-            }
+            CurrentUser?.IsSelected = true;
             sound.Play(PPDSetting.DefaultSounds[0], -1000);
         }
 
@@ -231,11 +225,11 @@ namespace PPDMulti
         class UserComponent : BindableGameComponent
         {
             PictureObject userIcon;
-            TextureString userNameString;
-            RectangleComponent rectangle;
+            readonly TextureString userNameString;
+            readonly RectangleComponent rectangle;
             bool isSelected;
 
-            PPDFramework.Resource.ResourceManager resourceManager;
+            readonly PPDFramework.Resource.ResourceManager resourceManager;
 
             private string currentUserIconPath = Utility.Path.Combine("noimage_icon.png");
 
@@ -338,11 +332,11 @@ namespace PPDMulti
                 Kick,
             }
 
-            PPDFramework.Resource.ResourceManager resourceManager;
-            SpriteObject textSprite;
+            readonly PPDFramework.Resource.ResourceManager resourceManager;
+            readonly SpriteObject textSprite;
 
-            RectangleComponent selectRectangle;
-            PictureObject back;
+            readonly RectangleComponent selectRectangle;
+            readonly PictureObject back;
             int index;
 
             public UserMenuDialog(PPDDevice device, PPDFramework.Resource.ResourceManager resourceManager) : base(device)

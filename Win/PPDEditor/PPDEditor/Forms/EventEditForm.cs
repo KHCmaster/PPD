@@ -9,7 +9,7 @@ namespace PPDEditor.Forms
 {
     public partial class EventEditForm : Form
     {
-        ButtonType[] normalInitializeOrder = {
+        readonly ButtonType[] normalInitializeOrder = {
             ButtonType.Square,
             ButtonType.Cross,
             ButtonType.Circle,
@@ -21,7 +21,7 @@ namespace PPDEditor.Forms
             ButtonType.R,
             ButtonType.L
         };
-        ButtonType[] ACInitializeOrder = {
+        readonly ButtonType[] ACInitializeOrder = {
             ButtonType.Triangle,
             ButtonType.Square,
             ButtonType.Cross,

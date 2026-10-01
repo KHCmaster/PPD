@@ -6,7 +6,7 @@ namespace PPDTest
 {
     abstract class TestSceneBase : SceneBase
     {
-        TestSceneManager testSceneManager;
+        readonly TestSceneManager testSceneManager;
         protected SpriteObject contentSprite;
 
         protected abstract string Title

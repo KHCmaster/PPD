@@ -11,9 +11,8 @@ namespace FlowScriptDrawControl.Converter
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
             var color = (Color)value;
-            var param = parameter as string;
             double alpha = 0.5;
-            if (param != null && !double.TryParse(param, out alpha))
+            if (parameter is string param && !double.TryParse(param, out alpha))
             {
                 alpha = 0.5;
             }

@@ -27,11 +27,8 @@ namespace PPDMultiServer.Tcp
 
         public void Close()
         {
-            if (writer != null)
-            {
-                writer.Close();
-                writer = null;
-            }
+            writer?.Close();
+            writer = null;
         }
 
         /// <summary>

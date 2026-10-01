@@ -23,7 +23,7 @@ namespace PPDEditor
         Vector2[] poses = new Vector2[0];
         Vector2[] dirs = new Vector2[0];
 
-        Timer hinttimergc;
+        readonly Timer hinttimergc;
         string gchintnormal = @"クリック  アンカー追加
 Ctrl+クリック  アンカー選択
 Ctrl+ドラッグ  アンカー,ハンドル移動
@@ -91,7 +91,7 @@ Enter  変形終了";
             float ret = 0;
             if (data.EndsWith(enddata))
             {
-                var temp = data.Substring(0, data.Length - enddata.Length);
+                var temp = data[..^enddata.Length];
                 if (!float.TryParse(temp, out ret)) ret = 0;
             }
             else
@@ -166,7 +166,7 @@ Enter  変形終了";
             var graphics = ((BezierControl.Context)e.Context).Graphics;
             if (SquareGrid != null && SquareGridEnabled)
             {
-                using (Pen pen = new Pen(SquareGrid.GridColor))
+                using (Pen pen = new(SquareGrid.GridColor))
                 {
                     for (int i = (-SquareGrid.NormalizedOffsetX - StartX) / SquareGrid.Width; i <= bezierControl1.Width / SquareGrid.Width; i++)
                     {
@@ -255,7 +255,7 @@ Enter  変形終了";
             {
                 if (radioButton8.Checked)
                 {
-                    float all = mks[mks.Length - 1].Time - mks[0].Time;
+                    float all = mks[^1].Time - mks[0].Time;
                     if (all == 0)
                     {
                         poses = new Vector2[0];

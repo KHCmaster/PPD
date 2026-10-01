@@ -2,7 +2,7 @@
 {
     class PPDFrameworkSetting : SettingDataBase
     {
-        private static PPDFrameworkSetting setting = new PPDFrameworkSetting();
+        private static readonly PPDFrameworkSetting setting = new();
         public override string Name
         {
             get { return "PPDFramework.setting"; }

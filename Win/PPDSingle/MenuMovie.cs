@@ -112,11 +112,8 @@ namespace PPDSingle
 
         protected override void DisposeResource()
         {
-            if (movie != null)
-            {
-                movie.Dispose();
-                movie = null;
-            }
+            movie?.Dispose();
+            movie = null;
         }
 
         #region IMovie メンバ
@@ -203,10 +200,7 @@ namespace PPDSingle
             get { return movie != null ? movie.Volume : 0; }
             set
             {
-                if (movie != null)
-                {
-                    movie.Volume = value;
-                }
+                movie?.Volume = value;
             }
         }
 
@@ -280,7 +274,7 @@ namespace PPDSingle
             }
             set
             {
-                if (movie != null) movie.MaximumVolume = value;
+                movie?.MaximumVolume = value;
             }
         }
 
@@ -305,10 +299,7 @@ namespace PPDSingle
             }
             set
             {
-                if (movie != null)
-                {
-                    movie.PlayRate = value;
-                }
+                movie?.PlayRate = value;
             }
         }
 

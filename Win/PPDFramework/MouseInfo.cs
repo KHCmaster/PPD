@@ -9,8 +9,8 @@ namespace PPDFramework
     public class MouseInfo
     {
         Vector2 position;
-        MouseEvent[] events;
-        static MouseInfo empty = new MouseInfo(Vector2.Zero, new MouseEvent[0]);
+        readonly MouseEvent[] events;
+        static readonly MouseInfo empty = new(Vector2.Zero, new MouseEvent[0]);
 
         /// <summary>
         /// コンストラクタ

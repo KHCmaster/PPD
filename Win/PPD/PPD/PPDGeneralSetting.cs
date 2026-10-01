@@ -7,7 +7,7 @@ namespace PPD
 {
     class PPDGeneralSetting : SettingDataBase
     {
-        private static PPDGeneralSetting setting = new PPDGeneralSetting();
+        private static readonly PPDGeneralSetting setting = new();
         public override string Name
         {
             get { return "PPDGeneral.setting"; }
@@ -90,7 +90,7 @@ namespace PPD
 
 
         #region Encrypt & Decrypt
-        string password = "i@w8ewgh8faot9aasPIJ(Y8y0ghio";
+        readonly string password = "i@w8ewgh8faot9aasPIJ(Y8y0ghio";
 
         private string EncryptString(string sourceString)
         {

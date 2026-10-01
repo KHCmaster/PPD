@@ -9,23 +9,23 @@ namespace PPDMultiServer.Tcp
 {
     public class PPDServer : IContextManager, IDisposable
     {
-        private readonly object syncRoot = new object();
-        static byte[] PPDPackV2DisconnectBytes = { 80, 80, 68, 80, 65, 67, 75, 86, 50, 51, 0, 0, 0, 23, 0, 0, 0, 7, 0, 0, 0, 0, 0, 10, 0, 77, 101, 116, 104, 111, 100, 84, 121, 112, 101, 2, 0, 0, 0, 6, 0, 82, 101, 97, 115, 111, 110, 4, 0, 0, 0 };
+        private readonly object syncRoot = new();
+        static readonly byte[] PPDPackV2DisconnectBytes = { 80, 80, 68, 80, 65, 67, 75, 86, 50, 51, 0, 0, 0, 23, 0, 0, 0, 7, 0, 0, 0, 0, 0, 10, 0, 77, 101, 116, 104, 111, 100, 84, 121, 112, 101, 2, 0, 0, 0, 6, 0, 82, 101, 97, 115, 111, 110, 4, 0, 0, 0 };
 
         public event EventHandler FailedToCreateRoom;
 
-        List<ServerContextBase> contexts;
-        List<ServerContextBase> afterPushContexts;
-        List<ServerContextBase> afterPopContexts;
-        Dictionary<ServerContextBase, ServerContextBase> contextChains;
+        readonly List<ServerContextBase> contexts;
+        readonly List<ServerContextBase> afterPushContexts;
+        readonly List<ServerContextBase> afterPopContexts;
+        readonly Dictionary<ServerContextBase, ServerContextBase> contextChains;
         ServerContextBase currentContext;
 
-        Queue<NetworkData> hostHandledData;
-        Dictionary<int, DateTime> userLastUpdatedAt;
-        Dictionary<int, DateTime> delayedDisconnects;
-        TcpByteReader byteReader;
+        readonly Queue<NetworkData> hostHandledData;
+        readonly Dictionary<int, DateTime> userLastUpdatedAt;
+        readonly Dictionary<int, DateTime> delayedDisconnects;
+        readonly TcpByteReader byteReader;
         Host host;
-        static readonly Object updateLock = new object();
+        static readonly Object updateLock = new();
 
         public WebManager WebManager
         {
@@ -81,13 +81,13 @@ namespace PPDMultiServer.Tcp
             {
                 Logger = new Logger(logDir, String.Format("{0}.log", port));
             }
-            contexts = new List<ServerContextBase>();
-            afterPushContexts = new List<ServerContextBase>();
-            afterPopContexts = new List<ServerContextBase>();
+            contexts = [];
+            afterPushContexts = [];
+            afterPopContexts = [];
             hostHandledData = new Queue<NetworkData>();
-            contextChains = new Dictionary<ServerContextBase, ServerContextBase>();
-            userLastUpdatedAt = new Dictionary<int, DateTime>();
-            delayedDisconnects = new Dictionary<int, DateTime>();
+            contextChains = [];
+            userLastUpdatedAt = [];
+            delayedDisconnects = [];
             byteReader = new TcpByteReader();
             byteReader.ByteReaded += byteReader_ByteReaded;
             host = new Host
@@ -100,10 +100,7 @@ namespace PPDMultiServer.Tcp
 
         public void Start()
         {
-            if (Logger != null)
-            {
-                Logger.AddLog("Start");
-            }
+            Logger?.AddLog("Start");
             host.Start();
             var menuContext = new MenuContext(null, this);
             InitializeServerContext(menuContext);

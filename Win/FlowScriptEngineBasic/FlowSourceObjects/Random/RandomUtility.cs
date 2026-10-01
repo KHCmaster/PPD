@@ -2,7 +2,7 @@
 {
     class RandomUtility
     {
-        private static System.Random rand;
+        private static readonly System.Random rand;
         static RandomUtility()
         {
             rand = new System.Random();

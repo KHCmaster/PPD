@@ -5,9 +5,9 @@ namespace PPDEditor.Command.PPDSheet
 {
     class SwapLineCommand : Command
     {
-        private SortedList<float, Mark>[] data;
-        private ButtonType first;
-        private ButtonType second;
+        private readonly SortedList<float, Mark>[] data;
+        private readonly ButtonType first;
+        private readonly ButtonType second;
         public SwapLineCommand(SortedList<float, Mark>[] data, ButtonType first, ButtonType second)
         {
             this.data = data;

@@ -6,13 +6,13 @@ namespace PPDEditor.Command.PPDSheet
 {
     class SetDataInSelectionCommand : Command
     {
-        float[][] lastInfo;
-        Vector2[] positions;
-        float[] angles;
-        bool reverse;
-        bool withAngle;
+        readonly float[][] lastInfo;
+        readonly Vector2[] positions;
+        readonly float[] angles;
+        readonly bool reverse;
+        readonly bool withAngle;
 
-        Mark[] mks;
+        readonly Mark[] mks;
 
         public SetDataInSelectionCommand(Mark[] mks, Vector2[] positions, float[] angles, bool reverse, bool withAngle)
         {

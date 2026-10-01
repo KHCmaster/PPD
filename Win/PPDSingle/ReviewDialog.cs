@@ -8,26 +8,26 @@ namespace PPDSingle
 {
     class ReviewDialog : FocusableGameComponent
     {
-        EffectObject back;
+        readonly EffectObject back;
         int selection;
 
-        TextureString processing;
-        TextureString rate;
-        TextureString content;
-        TextureString review;
+        readonly TextureString processing;
+        readonly TextureString rate;
+        readonly TextureString content;
+        readonly TextureString review;
 
-        RectangleComponent black;
+        readonly RectangleComponent black;
 
-        Button[] buttons;
-        StarObject[] stars;
+        readonly Button[] buttons;
+        readonly StarObject[] stars;
 
-        EffectObject select;
+        readonly EffectObject select;
 
-        ISound Sound;
-        IReviewManager ReviewManager;
+        readonly ISound Sound;
+        readonly IReviewManager ReviewManager;
         bool reviewWaiting;
 
-        GameComponent[] hiddenList;
+        readonly GameComponent[] hiddenList;
 
         int reviewSelection = -1;
         bool opening;
@@ -67,9 +67,9 @@ namespace PPDSingle
             select = new EffectObject(device, resourceManager, Utility.Path.Combine("greenflare.etd"))
             {
                 Position = new Vector2(235, 140),
-                Scale = new Vector2(0.5f, 0.5f)
+                Scale = new Vector2(0.5f, 0.5f),
+                PlayType = Effect2D.EffectManager.PlayType.ReverseLoop
             };
-            select.PlayType = Effect2D.EffectManager.PlayType.ReverseLoop;
             select.Play();
 
             buttons = new Button[2];
@@ -87,10 +87,10 @@ namespace PPDSingle
                 }
                 buttons[i] = new Button(device, resourceManager, Utility.Path, text)
                 {
-                    Position = new Vector2(300 + i * 200, 315)
+                    Position = new Vector2(300 + i * 200, 315),
+                    Selected = false,
+                    Hidden = true
                 };
-                buttons[i].Selected = false;
-                buttons[i].Hidden = true;
                 this.AddChild(buttons[i]);
             }
 
@@ -256,9 +256,7 @@ namespace PPDSingle
                         Sound.Play(PPDSetting.DefaultSounds[3], -1000);
                         break;
                     case 2:
-                        bool temp = buttons[0].Selected;
-                        buttons[0].Selected = buttons[1].Selected;
-                        buttons[1].Selected = temp;
+                        (buttons[1].Selected, buttons[0].Selected) = (buttons[0].Selected, buttons[1].Selected);
                         Sound.Play(PPDSetting.DefaultSounds[0], -1000);
                         break;
                 }
@@ -277,9 +275,7 @@ namespace PPDSingle
                         Sound.Play(PPDSetting.DefaultSounds[3], -1000);
                         break;
                     case 2:
-                        bool temp = buttons[0].Selected;
-                        buttons[0].Selected = buttons[1].Selected;
-                        buttons[1].Selected = temp;
+                        (buttons[1].Selected, buttons[0].Selected) = (buttons[0].Selected, buttons[1].Selected);
                         Sound.Play(PPDSetting.DefaultSounds[0], -1000);
                         break;
                 }

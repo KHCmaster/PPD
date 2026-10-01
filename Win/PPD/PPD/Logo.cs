@@ -214,9 +214,9 @@ namespace PPD
 
         class Circle : GameComponent
         {
-            ImageResourceBase loadCircleImageResource;
-            VertexInfo loadCircleImageVertex;
-            VertexInfo invLoadCircleImageVertex;
+            readonly ImageResourceBase loadCircleImageResource;
+            readonly VertexInfo loadCircleImageVertex;
+            readonly VertexInfo invLoadCircleImageVertex;
             int displayNum;
 
             public bool Inverse

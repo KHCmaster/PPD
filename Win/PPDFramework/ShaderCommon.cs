@@ -60,11 +60,8 @@ namespace PPDFramework
         /// </summary>
         protected override void DisposeResource()
         {
-            if (vertexManager != null)
-            {
-                vertexManager.Dispose();
-                vertexManager = null;
-            }
+            vertexManager?.Dispose();
+            vertexManager = null;
         }
     }
 }

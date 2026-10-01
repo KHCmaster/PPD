@@ -5,7 +5,7 @@ namespace FlowScriptEngine
 {
     class Utility
     {
-        static Stopwatch stopWatch;
+        static readonly Stopwatch stopWatch;
         static Utility()
         {
             stopWatch = new Stopwatch();

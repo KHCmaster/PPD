@@ -10,7 +10,7 @@ namespace PPDEditor.FlowScript
     class Storage : IStorage
     {
         private const string StoragePath = "PPDEditor_Storage.xml";
-        Dictionary<Tuple<string, string>, string> storage;
+        readonly Dictionary<Tuple<string, string>, string> storage;
 
         public bool IsChanged
         {
@@ -20,7 +20,7 @@ namespace PPDEditor.FlowScript
 
         public Storage()
         {
-            storage = new Dictionary<Tuple<string, string>, string>();
+            storage = [];
             Load();
         }
 

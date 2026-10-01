@@ -16,7 +16,7 @@ namespace PPDFramework
         /// </summary>
         public const int Min = -10000;
 
-        private static SoundMasterControl instance = new SoundMasterControl();
+        private static readonly SoundMasterControl instance = new();
         private int masterVolume;
         private int movieVolume;
         private int seVolume;

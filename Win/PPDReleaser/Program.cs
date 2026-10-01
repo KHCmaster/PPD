@@ -249,8 +249,8 @@ namespace PPDReleaser
 
     internal class CopyInfo
     {
-        private string srcDir;
-        private string targetDir;
+        private readonly string srcDir;
+        private readonly string targetDir;
 
         public CopyInfo(string srcDir, string targetDir)
         {

@@ -26,10 +26,10 @@ namespace ShaderCompiler
         public const int Version = 1;
         const string ConstantBufferName = "Parameters";
 
-        static readonly Regex techniqueRegex = new Regex(@"technique11\s+(?<name>\w+)\s*\{", RegexOptions.Compiled);
-        static readonly Regex passRegex = new Regex(@"pass\s+(?<name>\w+)\s*\{(?<body>[^{}]*)\}", RegexOptions.Compiled);
-        static readonly Regex blendRegex = new Regex(@"SetBlendState\(\s*(?<name>\w+)", RegexOptions.Compiled);
-        static readonly Regex shaderRegex = new Regex(@"Set(?<stage>Vertex|Pixel)Shader\(\s*CompileShader\(\s*(?<profile>\w+)\s*,\s*(?<func>\w+)\s*\((?<args>[^()]*)\)\s*\)\s*\)", RegexOptions.Compiled);
+        static readonly Regex techniqueRegex = new(@"technique11\s+(?<name>\w+)\s*\{", RegexOptions.Compiled);
+        static readonly Regex passRegex = new(@"pass\s+(?<name>\w+)\s*\{(?<body>[^{}]*)\}", RegexOptions.Compiled);
+        static readonly Regex blendRegex = new(@"SetBlendState\(\s*(?<name>\w+)", RegexOptions.Compiled);
+        static readonly Regex shaderRegex = new(@"Set(?<stage>Vertex|Pixel)Shader\(\s*CompileShader\(\s*(?<profile>\w+)\s*,\s*(?<func>\w+)\s*\((?<args>[^()]*)\)\s*\)\s*\)", RegexOptions.Compiled);
 
         class ShaderCall
         {
@@ -50,7 +50,7 @@ namespace ShaderCompiler
         class TechniqueInfo
         {
             public string Name;
-            public List<PassInfo> Passes = new List<PassInfo>();
+            public List<PassInfo> Passes = [];
         }
 
         public void Compile(string fxPath, string outputPath)
@@ -169,7 +169,7 @@ namespace ShaderCompiler
                 }
                 var bodyStart = match.Index + match.Length;
                 var end = FindClosingBrace(source, bodyStart);
-                var body = source.Substring(bodyStart, end - bodyStart);
+                var body = source[bodyStart..end];
                 var technique = new TechniqueInfo { Name = match.Groups["name"].Value };
                 foreach (Match passMatch in passRegex.Matches(body))
                 {

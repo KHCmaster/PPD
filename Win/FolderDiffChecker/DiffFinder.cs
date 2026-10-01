@@ -22,10 +22,7 @@ namespace FolderDiffChecker
                 control.Invoke(new DiffEventHandler(OnDiffFind), diffModel);
                 return;
             }
-            if (DiffFound != null)
-            {
-                DiffFound.Invoke(diffModel);
-            }
+            DiffFound?.Invoke(diffModel);
         }
 
         protected void OnFinished()
@@ -35,10 +32,7 @@ namespace FolderDiffChecker
                 control.Invoke(new VoidDelegate(OnFinished));
                 return;
             }
-            if (Finished != null)
-            {
-                Finished.Invoke(this, EventArgs.Empty);
-            }
+            Finished?.Invoke(this, EventArgs.Empty);
         }
 
         protected void OnBeforeCompare(string text)
@@ -49,10 +43,7 @@ namespace FolderDiffChecker
                 return;
             }
 
-            if (BeforeCompare != null)
-            {
-                BeforeCompare.Invoke(text);
-            }
+            BeforeCompare?.Invoke(text);
         }
 
         public string OldFolderPath
@@ -79,7 +70,7 @@ namespace FolderDiffChecker
             private set;
         }
 
-        Control control;
+        readonly Control control;
 
         public DiffFinder(string oldFolderPath, string newFolderPath, Regex[] exceptFilePatterns, Regex[] forceIncludeFilePatterns, Control control)
         {

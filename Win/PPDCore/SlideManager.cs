@@ -11,15 +11,15 @@ namespace PPDCore
         readonly PathObject hatchRightEffetPath = Utility.Path.Combine("slide", "hatch_right.etd");
         readonly PathObject hatchLeftEffetPath = Utility.Path.Combine("slide", "hatch_left.etd");
 
-        PPDFramework.Resource.ResourceManager resourceManager;
-        PPDEffectManager effectManager;
-        SpriteObject pointsSprite;
-        Dictionary<object, SlidePoint> slidePoints;
+        readonly PPDFramework.Resource.ResourceManager resourceManager;
+        readonly PPDEffectManager effectManager;
+        readonly SpriteObject pointsSprite;
+        readonly Dictionary<object, SlidePoint> slidePoints;
 
         public SlideManager(PPDDevice device, PPDFramework.Resource.ResourceManager resourceManager) : base(device)
         {
             this.resourceManager = resourceManager;
-            slidePoints = new Dictionary<object, SlidePoint>();
+            slidePoints = [];
             effectManager = new PPDEffectManager(device, resourceManager);
             effectManager.CreateEffect(maxSlideEffectPath);
             effectManager.CreateEffect(hatchLeftEffetPath);
@@ -62,10 +62,7 @@ namespace PPDCore
         {
             if (slidePoints.TryGetValue(mark, out SlidePoint slidePoint))
             {
-                if (slidePoint.Parent != null)
-                {
-                    slidePoint.Parent.RemoveChild(slidePoint);
-                }
+                slidePoint.Parent?.RemoveChild(slidePoint);
                 slidePoints.Remove(mark);
             }
         }

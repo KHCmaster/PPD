@@ -9,8 +9,8 @@ namespace PPDShareComponent
 {
     public abstract class LoadingSceneWithImage : LoadingBase
     {
-        string[] imageFiles;
-        string[] allowedImageExtensions = { ".png", ".gif", ".jpg", ".jpeg" };
+        readonly string[] imageFiles;
+        readonly string[] allowedImageExtensions = { ".png", ".gif", ".jpg", ".jpeg" };
         PictureObject currentImage;
 
         protected LoadingSceneWithImage(PPDDevice device) : base(device)

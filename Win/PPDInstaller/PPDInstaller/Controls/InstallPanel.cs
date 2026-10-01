@@ -11,13 +11,13 @@ namespace PPDInstaller.Controls
             InitializeComponent();
             if (System.Environment.SystemDirectory.Length >= 2)
             {
-                this.textBox1.Text = System.Environment.SystemDirectory.Substring(0, 2) + "\\KHC";
+                this.textBox1.Text = System.Environment.SystemDirectory[..2] + "\\KHC";
             }
             else
             {
                 if (System.Environment.GetFolderPath(System.Environment.SpecialFolder.ProgramFiles).Length >= 2)
                 {
-                    this.textBox1.Text = System.Environment.GetFolderPath(System.Environment.SpecialFolder.ProgramFiles).Substring(0, 2) + "\\KHC";
+                    this.textBox1.Text = System.Environment.GetFolderPath(System.Environment.SpecialFolder.ProgramFiles)[..2] + "\\KHC";
                 }
             }
         }

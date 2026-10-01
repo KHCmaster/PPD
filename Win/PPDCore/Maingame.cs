@@ -492,10 +492,7 @@ namespace PPDCore
 
         protected void OnPostFinish()
         {
-            if (PostFinished != null)
-            {
-                PostFinished.Invoke(PostSuccess);
-            }
+            PostFinished?.Invoke(PostSuccess);
         }
 
         protected virtual void OnAfterRetry()
@@ -521,10 +518,7 @@ namespace PPDCore
 
         protected void OnReviewFinish()
         {
-            if (ReviewFinished != null)
-            {
-                ReviewFinished.Invoke(reviewSuccess);
-            }
+            ReviewFinished?.Invoke(reviewSuccess);
         }
 
         public bool CanReview
@@ -553,11 +547,8 @@ namespace PPDCore
 
         protected override void DisposeResource()
         {
-            if (client != null)
-            {
-                client.Close();
-                client = null;
-            }
+            client?.Close();
+            client = null;
             base.DisposeResource();
         }
     }

@@ -7,7 +7,7 @@ namespace PPDCore
 {
     class XComparer : IComparer<Vector2>
     {
-        static XComparer comparer = new XComparer();
+        static readonly XComparer comparer = new();
         public static XComparer Comparer
         {
             get

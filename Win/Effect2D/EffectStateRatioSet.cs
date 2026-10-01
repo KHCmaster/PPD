@@ -6,7 +6,7 @@ namespace Effect2D
     /// </summary>
     public class EffectStateRatioSet
     {
-        private IRatioMaker[] RatioMakers;
+        private readonly IRatioMaker[] RatioMakers;
         /// <summary>
         /// コンストラクタ
         /// </summary>

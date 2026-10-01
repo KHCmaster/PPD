@@ -5,14 +5,14 @@ namespace FlowScriptControl.Classes
 {
     public class NodeFilterInfo : NodeFilterInfoBase
     {
-        private static NodeFilterInfo defaultFilter = new NodeFilterInfo("All",
-            new Regex[] { new Regex(".") },
-            new Regex[] { new Regex(".") });
-        private string name;
-        private Regex[] includeAssemblyNames;
-        private Regex[] includeNodeNames;
-        private Regex[] excludeAssemblyNames;
-        private Regex[] excludeNodeNames;
+        private static readonly NodeFilterInfo defaultFilter = new("All",
+            new Regex[] { new(".") },
+            new Regex[] { new(".") });
+        private readonly string name;
+        private readonly Regex[] includeAssemblyNames;
+        private readonly Regex[] includeNodeNames;
+        private readonly Regex[] excludeAssemblyNames;
+        private readonly Regex[] excludeNodeNames;
 
         public static NodeFilterInfo DefaultFilter
         {

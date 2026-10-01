@@ -4,14 +4,14 @@ namespace PPDEditor.Command.PPDSheet
 {
     class ForceToNearBarCommand : Command
     {
-        Dictionary<Mark, float[]> lastTimes;
-        Dictionary<Mark, float[]> times;
-        SortedList<float, Mark>[] data;
+        readonly Dictionary<Mark, float[]> lastTimes;
+        readonly Dictionary<Mark, float[]> times;
+        readonly SortedList<float, Mark>[] data;
         public ForceToNearBarCommand(SortedList<float, Mark>[] data, Dictionary<Mark, float[]> times)
         {
             this.data = data;
             this.times = times;
-            lastTimes = new Dictionary<Mark, float[]>();
+            lastTimes = [];
             foreach (var mark in times.Keys)
             {
                 if (mark is ExMark exmk)

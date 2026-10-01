@@ -5,7 +5,7 @@ namespace PPDSingle
 {
     class SelectedSongInfoFilter
     {
-        private SongSelectFilter filter;
+        private readonly SongSelectFilter filter;
 
         public SelectedSongInfoFilter(SongSelectFilter filter)
         {

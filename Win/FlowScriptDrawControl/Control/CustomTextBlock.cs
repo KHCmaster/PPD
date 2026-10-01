@@ -59,7 +59,7 @@ namespace FlowScriptDrawControl.Control
                     {
                         return text;
                     }
-                    return $"{text.Substring(0, halfPos - iter)}…{text.Substring(halfPos + iter)}";
+                    return $"{text[..(halfPos - iter)]}…{text[(halfPos + iter)..]}";
                 };
                 while (width > CustomMaxWidth)
                 {

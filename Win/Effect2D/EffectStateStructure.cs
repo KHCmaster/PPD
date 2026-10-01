@@ -74,7 +74,7 @@ namespace Effect2D
             set { data[(int)RatioType.ScaleY] = value; }
         }
 
-        float[] data = new float[Utility.RatioTypeArray.Length];
+        readonly float[] data = new float[Utility.RatioTypeArray.Length];
 
         /// <summary>
         /// 合成されたアルファを取得します。
@@ -186,8 +186,8 @@ namespace Effect2D
             {
                 ComposedMatrices = new Matrix[1];
             }
-            ComposedMatrices[ComposedMatrices.Length - 1] = matrix;
-            ComposedAlpha = Alpha = Alpha * parent.Alpha;
+            ComposedMatrices[^1] = matrix;
+            ComposedAlpha = Alpha *= parent.Alpha;
             ComposedBlendMode = parent.BlendMode;
             if (BlendMode != BlendMode.None)
             {

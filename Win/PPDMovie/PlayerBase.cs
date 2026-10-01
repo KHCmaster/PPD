@@ -12,14 +12,14 @@ namespace PPDMovie
 {
     public abstract class PlayerBase : GameComponent, IMovie
     {
-        protected MovieTrimmingData trimmingdata = new MovieTrimmingData(0, 0, 0, 0);
+        protected MovieTrimmingData trimmingdata = new(0, 0, 0, 0);
         public event EventHandler Finished;
         public event EventHandler FadeOutFinished;
 
         protected const int DefaultFadeStep = 2;
         float fadeStep;
 
-        protected object syncobject = new object();
+        protected object syncobject = new();
 
         protected double length;
         protected bool initialized;
@@ -120,10 +120,7 @@ namespace PPDMovie
 
         private void UpdateVertices()
         {
-            if (vertices == null)
-            {
-                vertices = device.GetModule<ShaderCommon>().CreateVertex(4);
-            }
+            vertices ??= device.GetModule<ShaderCommon>().CreateVertex(4);
             float width = MovieDisplayWidth;
             float height = MovieDisplayHeight;
             float textureWidth = MovieDisplayWidth;
@@ -276,11 +273,8 @@ namespace PPDMovie
 
         protected override void DisposeResource()
         {
-            if (vertices != null)
-            {
-                vertices.Dispose();
-                vertices = null;
-            }
+            vertices?.Dispose();
+            vertices = null;
             MovieUtility.GraphNotify -= util_GraphNotify;
             var thread = new Thread(() =>
             {

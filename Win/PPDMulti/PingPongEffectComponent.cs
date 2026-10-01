@@ -11,10 +11,10 @@ namespace PPDMulti
     {
         const int maxSpeed = 5;
 
-        PPDFramework.Resource.ResourceManager resourceManager;
-        RectangleComponent leftRect;
-        RectangleComponent rightRect;
-        RectangleComponent ballRect;
+        readonly PPDFramework.Resource.ResourceManager resourceManager;
+        readonly RectangleComponent leftRect;
+        readonly RectangleComponent rightRect;
+        readonly RectangleComponent ballRect;
 
         Vector2 ballVector;
 
@@ -104,7 +104,7 @@ namespace PPDMulti
             if (ballVector.Length() > 100)
             {
                 ballVector = MathCompat.NormalizeSharpDX(ballVector);
-                ballVector = ballVector * 100;
+                ballVector *= 100;
             }
         }
 
@@ -155,7 +155,7 @@ namespace PPDMulti
             public float Width;
             public float Height;
 
-            public bool Intersect(Rectangle rect)
+            public readonly bool Intersect(Rectangle rect)
             {
                 return (Position.X <= rect.Position.X && rect.Position.X <= Position.X + Width && Position.Y <= rect.Position.Y && rect.Position.Y <= Position.Y + Height)
                     || (Position.X <= rect.Position.X + rect.Width && rect.Position.X + rect.Width <= Position.X + Width && Position.Y <= rect.Position.Y && rect.Position.Y <= Position.Y + Height)

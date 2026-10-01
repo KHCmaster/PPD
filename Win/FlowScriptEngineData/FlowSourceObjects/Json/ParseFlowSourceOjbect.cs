@@ -60,9 +60,8 @@ namespace FlowScriptEngineData.FlowSourceObjects.Json
                 }
                 return ret;
             }
-            else if (obj is JValue)
+            else if (obj is JValue v)
             {
-                var v = (JValue)obj;
                 if (v.Value is long)
                 {
                     var vv = (long)v.Value;
@@ -79,9 +78,8 @@ namespace FlowScriptEngineData.FlowSourceObjects.Json
                         return (int)vv;
                     }
                 }
-                else if (v.Value is double)
+                else if (v.Value is double vv)
                 {
-                    var vv = (double)v.Value;
                     if ((float)vv == vv)
                     {
                         return (float)vv;

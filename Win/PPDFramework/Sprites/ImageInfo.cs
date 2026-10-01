@@ -10,9 +10,9 @@ namespace PPDFramework.Sprites
     /// </summary>
     public class ImageInfo
     {
-        static readonly Regex scaleRegex = new Regex(@"\.(\d+)_(\d+)\.\w+$");
+        static readonly Regex scaleRegex = new(@"\.(\d+)_(\d+)\.\w+$");
 
-        Func<Image> imageCallback;
+        readonly Func<Image> imageCallback;
 
         /// <summary>
         /// パスを取得します。

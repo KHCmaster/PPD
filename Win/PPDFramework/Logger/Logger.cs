@@ -13,8 +13,8 @@ namespace PPDFramework.Logger
     {
         const string logFileName = "log.txt";
 
-        private static Logger instance = new Logger();
-        Queue<LogInfo> logs;
+        private static readonly Logger instance = new();
+        readonly Queue<LogInfo> logs;
 
         /// <summary>
         /// インスタンスを取得します。

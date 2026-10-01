@@ -30,7 +30,7 @@ namespace FlowScriptEngineBasic.FlowSourceObjects.Enumerable
                 SetValue(nameof(Enumerable));
                 if (Enumerable == null)
                 {
-                    return new Dictionary<object, object>();
+                    return [];
                 }
                 return Enumerable.ToDictionary(obj =>
                 {

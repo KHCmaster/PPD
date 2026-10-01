@@ -19,7 +19,7 @@ namespace PPDCore
         public const float RandWidth = 15;
         public const int WidthPerCount = MaxWidth / SplitCount * 2;
 
-        Random r;
+        readonly Random r;
         int iter;
 
         public ImageResourceBase ImageResource

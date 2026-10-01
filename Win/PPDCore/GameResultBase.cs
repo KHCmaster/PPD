@@ -158,7 +158,7 @@ namespace PPDCore
             }
             UpdateScore(util, replaying);
             SendScore(util, inputs, replaying, perfectTrialToken);
-            if (ResultSet != null) ResultSet.Invoke(this, EventArgs.Empty);
+            ResultSet?.Invoke(this, EventArgs.Empty);
         }
 
         private void UpdateScore(PPDGameUtility util, bool replaying)

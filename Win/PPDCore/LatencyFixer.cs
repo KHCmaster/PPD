@@ -6,8 +6,8 @@ namespace PPDCore
 {
     class LatencyFixer
     {
-        List<float> diffs;
-        int initialLatencyCount;
+        readonly List<float> diffs;
+        readonly int initialLatencyCount;
 
         public bool Enabled
         {
@@ -19,7 +19,7 @@ namespace PPDCore
         {
             Enabled = true;
             this.initialLatencyCount = initialLatencyCount;
-            diffs = new List<float>();
+            diffs = [];
         }
 
         public void Add(float diff)

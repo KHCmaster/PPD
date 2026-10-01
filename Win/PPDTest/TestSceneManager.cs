@@ -7,16 +7,16 @@ namespace PPDTest
 {
     class TestSceneManager
     {
-        List<Type> sceneTypes;
+        readonly List<Type> sceneTypes;
         int currentSceneIndex;
-        PPDDevice device;
-        SceneManager sceneManager;
+        readonly PPDDevice device;
+        readonly SceneManager sceneManager;
 
         public TestSceneManager(SceneManager sceneManager, PPDDevice device)
         {
             this.device = device;
             this.sceneManager = sceneManager;
-            sceneTypes = new List<Type>();
+            sceneTypes = [];
         }
 
         public void Add(Type type)

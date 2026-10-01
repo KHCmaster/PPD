@@ -15,22 +15,22 @@ namespace PPDMulti
         const int scrollBarMaxHeight = 330;
         const int MaxDisplayCount = 12;
 
-        PPDFramework.Resource.ResourceManager resourceManager;
-        ISound sound;
-        IGameHost gameHost;
+        readonly PPDFramework.Resource.ResourceManager resourceManager;
+        readonly ISound sound;
+        readonly IGameHost gameHost;
 
-        PictureObject back;
-        SpriteObject listSprite;
+        readonly PictureObject back;
+        readonly SpriteObject listSprite;
 
-        LineRectangleComponent selectRectangle;
-        RectangleComponent scrollBar;
-        EffectObject loading;
+        readonly LineRectangleComponent selectRectangle;
+        readonly RectangleComponent scrollBar;
+        readonly EffectObject loading;
         int currentIndex;
         int scrollIndex;
 
-        GetRoomListExecutor getRoomListExecutor;
+        readonly GetRoomListExecutor getRoomListExecutor;
         bool listGot;
-        int timerID;
+        readonly int timerID;
 
         private RoomContentComponent CurrentComponent
         {
@@ -225,10 +225,7 @@ namespace PPDMulti
         private void GoToRoom()
         {
             gameHost.RemoveTimerCallBack(timerID);
-            if (RoomSelected != null)
-            {
-                RoomSelected.Invoke(CurrentComponent.RoomInfo);
-            }
+            RoomSelected?.Invoke(CurrentComponent.RoomInfo);
         }
 
         protected override void UpdateImpl()
@@ -272,8 +269,8 @@ namespace PPDMulti
         class RoomContentComponent : GameComponent
         {
             private bool selected;
-            TextureString roomName;
-            TextureString userName;
+            readonly TextureString roomName;
+            readonly TextureString userName;
 
 
             public RoomContentComponent(PPDDevice device, PPDFramework.Resource.ResourceManager resourceManager, RoomInfo roomInfo) : base(device)

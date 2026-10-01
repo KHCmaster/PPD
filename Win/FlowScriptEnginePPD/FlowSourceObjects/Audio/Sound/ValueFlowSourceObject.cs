@@ -45,7 +45,7 @@ namespace FlowScriptEnginePPD.FlowSourceObjects.Audio.Sound
 
             if (resourceManager != null)
             {
-                Object = (SoundResource)resourceManager.GetResource(Path, PPDCoreModel.Data.ResourceKind.Sound, new Dictionary<string, object>());
+                Object = (SoundResource)resourceManager.GetResource(Path, PPDCoreModel.Data.ResourceKind.Sound, []);
                 OnSuccess();
             }
             else

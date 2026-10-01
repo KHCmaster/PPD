@@ -18,12 +18,12 @@ namespace PPDSingle
         int width = 350;
         int realWidth = 350;
         int height = 250;
-        TextureString name;
-        TextureString xname;
-        TextureString[] ynames;
-        RectangleComponent yAxis;
-        RectangleComponent xAxis;
-        LineComponent line;
+        readonly TextureString name;
+        readonly TextureString xname;
+        readonly TextureString[] ynames;
+        readonly RectangleComponent yAxis;
+        readonly RectangleComponent xAxis;
+        readonly LineComponent line;
 
         int lineWidth = 1;
         Color4 lineColor = PPDColors.Selection;
@@ -35,7 +35,7 @@ namespace PPDSingle
 
         Vector2 drawStartPos;
 
-        List<Vector2> poses;
+        readonly List<Vector2> poses;
 
         public GraphDrawer(PPDDevice device, PPDFramework.Resource.ResourceManager resourceManager) : base(device)
         {
@@ -59,7 +59,7 @@ namespace PPDSingle
                 LineWidth = 2
             });
 
-            poses = new List<Vector2>();
+            poses = [];
             Formatter = FloatToIntFormatter.Formatter;
         }
 

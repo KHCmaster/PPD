@@ -9,9 +9,9 @@ namespace PPD
 {
     class SettingPanel : HomePanelBase
     {
-        PPDFramework.Resource.ResourceManager resourceManager;
-        MyGame myGame;
-        ISound sound;
+        readonly PPDFramework.Resource.ResourceManager resourceManager;
+        readonly MyGame myGame;
+        readonly ISound sound;
 
         int currentIndex;
         SpriteObject allSlideSprite;
@@ -256,20 +256,20 @@ namespace PPD
 
         class ChangeKeyConfigSprite : FocusableGameComponent
         {
-            PPDFramework.Resource.ResourceManager resourceManager;
-            MyGame myGame;
-            ISound sound;
+            readonly PPDFramework.Resource.ResourceManager resourceManager;
+            readonly MyGame myGame;
+            readonly ISound sound;
 
-            TextButton[] textButtons;
-            TextureString[] keys;
-            TextureString[] buttons;
+            readonly TextButton[] textButtons;
+            readonly TextureString[] keys;
+            readonly TextureString[] buttons;
 
             int currentIndex;
             TextButton clickedTextButton;
-            KeyConfig keyConfig;
+            readonly KeyConfig keyConfig;
             bool gotFocused;
 
-            PictureObject select;
+            readonly PictureObject select;
 
             public ChangeKeyConfigSprite(PPDDevice device, PPDFramework.Resource.ResourceManager resourceManager, MyGame myGame, KeyConfig keyConfig, ISound sound) : base(device)
             {
@@ -376,10 +376,7 @@ namespace PPD
 
             void textButton_MouseLeftDown(GameComponent sender, MouseEvent mouseEvent)
             {
-                if (clickedTextButton != null)
-                {
-                    clickedTextButton.Text = Utility.Language["Change"];
-                }
+                clickedTextButton?.Text = Utility.Language["Change"];
                 clickedTextButton = sender as TextButton;
                 clickedTextButton.Text = Utility.Language["Waiting"];
                 currentIndex = clickedTextButton.Index;
@@ -419,11 +416,8 @@ namespace PPD
 
             private void DisableAssignMode()
             {
-                if (clickedTextButton != null)
-                {
-                    clickedTextButton.Text = Utility.Language["Change"];
-                    clickedTextButton = null;
-                }
+                clickedTextButton?.Text = Utility.Language["Change"];
+                clickedTextButton = null;
                 myGame.Input.AssignMode = false;
             }
         }

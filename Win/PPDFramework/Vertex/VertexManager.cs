@@ -6,7 +6,7 @@ namespace PPDFramework.Vertex
     {
         const int InitialBucketCount = 8;
 
-        PPDDevice device;
+        readonly PPDDevice device;
         List<VertexBucket> buckets;
 
         public VertexManager(PPDDevice device)

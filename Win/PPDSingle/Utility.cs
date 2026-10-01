@@ -7,8 +7,8 @@ namespace PPDSingle
 {
     class Utility
     {
-        private static ExLanguageReader langReader = new ExLanguageReader("PPDSingle");
-        private static PathManager pathManager = new PathManager(@"img\PPD\single");
+        private static readonly ExLanguageReader langReader = new("PPDSingle");
+        private static readonly PathManager pathManager = new(@"img\PPD\single");
 
         public static ExLanguageReader Language
         {
@@ -53,8 +53,8 @@ namespace PPDSingle
             }
 
             //コピー先のディレクトリ名の末尾に"\"をつける
-            if (destDirName[destDirName.Length - 1] != System.IO.Path.DirectorySeparatorChar)
-                destDirName = destDirName + System.IO.Path.DirectorySeparatorChar;
+            if (destDirName[^1] != System.IO.Path.DirectorySeparatorChar)
+                destDirName += System.IO.Path.DirectorySeparatorChar;
 
             //コピー元のディレクトリにあるファイルをコピー
             var files = Directory.GetFiles(sourceDirName);

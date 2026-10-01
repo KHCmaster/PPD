@@ -2,7 +2,7 @@
 {
     public class CreateRoomExecutor : HostExecutorBase
     {
-        private RoomInfo roomInfo;
+        private readonly RoomInfo roomInfo;
 
         public CreateRoomExecutor(WebManager webManager, RoomInfo roomInfo)
             : base(webManager)

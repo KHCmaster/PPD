@@ -35,10 +35,7 @@
             SetValue(nameof(Default));
             SetValue(nameof(Min));
             SetValue(nameof(Max));
-            if (modSettingManager != null)
-            {
-                modSettingManager.AddDoubleSetting(Key, DisplayName, Description, Default, Min, Max);
-            }
+            modSettingManager?.AddDoubleSetting(Key, DisplayName, Description, Default, Min, Max);
         }
     }
 }

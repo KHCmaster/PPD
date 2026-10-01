@@ -7,7 +7,7 @@ namespace PPDFramework
 {
     class LogicFolderInformationComparer : IComparer<LogicFolderInfomation>
     {
-        private List<int> _orderList;
+        private readonly List<int> _orderList;
         public LogicFolderInformationComparer(List<int> orderList)
         {
             _orderList = orderList;
@@ -142,10 +142,7 @@ namespace PPDFramework
         {
             get
             {
-                if (children == null)
-                {
-                    children = GetInfos(this.ChildIDs, this);
-                }
+                children ??= GetInfos(this.ChildIDs, this);
                 return children;
             }
         }
@@ -174,7 +171,7 @@ namespace PPDFramework
                 if (root == null)
                 {
                     using (var reader = PPDDatabase.DB.ExecuteReader("select * from LogicFolder where name = @name;", new SQLiteParameter[] {
-                           new SQLiteParameter("@name",PPDDatabase.LogicFolderRoot)}))
+                           new("@name",PPDDatabase.LogicFolderRoot)}))
                     {
                         while (reader.Reader.Read())
                         {
@@ -236,7 +233,7 @@ namespace PPDFramework
         {
             string childids = string.Empty;
             using (var reader = PPDDatabase.DB.ExecuteReader("select * from LogicFolder where folderid = @folderid;", new SQLiteParameter[] {
-                new SQLiteParameter("@folderid",id)}))
+                new("@folderid",id)}))
             {
                 while (reader.Reader.Read())
                 {
@@ -249,7 +246,7 @@ namespace PPDFramework
 
         private static List<LogicFolderInfomation> GetInfos(string ids, LogicFolderInfomation parent)
         {
-            if (string.IsNullOrEmpty(ids)) return new List<LogicFolderInfomation>();
+            if (string.IsNullOrEmpty(ids)) return [];
 
             var orderList = PPDDatabase.ParseStringToList(ids);
             // SQL に埋め込むので、数値として読めた ID だけを使う
@@ -295,7 +292,7 @@ namespace PPDFramework
             }
             else
             {
-                return new List<LogicFolderInfomation>();
+                return [];
             }
         }
 
@@ -303,7 +300,7 @@ namespace PPDFramework
         {
             if (parent == null || !parent.IsFolder) return null;
             PPDDatabase.DB.ExecuteDataTable("insert into LogicFolder(isfolder,name,childids,date) values(@isfolder,@name,@childids,@date);", new SQLiteParameter[] {
-                new SQLiteParameter("@isfolder",1),                new SQLiteParameter("@name",name),                new SQLiteParameter("@childids",string.Empty),                new SQLiteParameter("@date",DateTime.Now.ToString(CultureInfo.InvariantCulture))            });
+                new("@isfolder",1),                new("@name",name),                new("@childids",string.Empty),                new("@date",DateTime.Now.ToString(CultureInfo.InvariantCulture))            });
             var newfolder = new LogicFolderInfomation();
             using (var reader = PPDDatabase.DB.ExecuteReader("select * from LogicFolder where ROWID = last_insert_rowid();", null))
             {
@@ -349,7 +346,7 @@ namespace PPDFramework
         {
             if (parent == null || si == null || !parent.IsFolder || !si.IsPPDSong) return null;
             PPDDatabase.DB.ExecuteDataTable("insert into LogicFolder(scoreid,isfolder,name,date) values(@scoreid,@isfolder,@name,@date);", new SQLiteParameter[] {
-                new SQLiteParameter("@scoreid",si.ID),                new SQLiteParameter("@isfolder","0"),                new SQLiteParameter("@name",linkName),                new SQLiteParameter("@date",DateTime.Now.ToString(CultureInfo.InvariantCulture))            });
+                new("@scoreid",si.ID),                new("@isfolder","0"),                new("@name",linkName),                new("@date",DateTime.Now.ToString(CultureInfo.InvariantCulture))            });
             var newscore = new LogicFolderInfomation();
             using (var reader = PPDDatabase.DB.ExecuteReader("select * from LogicFolder where ROWID = last_insert_rowid();", null))
             {
@@ -400,18 +397,15 @@ namespace PPDFramework
         private static void UpdateChildIDs(string childIDs, int ID)
         {
             PPDDatabase.DB.ExecuteDataTable("update LogicFolder set childids = @childids where folderid = @folderid;", new SQLiteParameter[]{
-                    new SQLiteParameter("@childids",childIDs),
-                    new SQLiteParameter("@folderid",ID)
+                    new("@childids",childIDs),
+                    new("@folderid",ID)
             });
         }
 
         private void Remove(LogicFolderInfomation info)
         {
             if (info == null || info.Name == PPDDatabase.LogicFolderRoot) return;
-            if (StaticBeforeRemove != null)
-            {
-                StaticBeforeRemove.Invoke(info, EventArgs.Empty);
-            }
+            StaticBeforeRemove?.Invoke(info, EventArgs.Empty);
             Remove(info, true);
         }
 
@@ -452,11 +446,8 @@ namespace PPDFramework
 
         private static void RemoveRelation(LogicFolderInfomation info)
         {
-            if (info.parent != null)
-            {
-                info.parent.ChildrenList.Remove(info);
-                info.parent = null;
-            }
+            info.parent?.ChildrenList.Remove(info);
+            info.parent = null;
             info.disposed = true;
         }
 
@@ -464,7 +455,7 @@ namespace PPDFramework
         {
             if (info == null) return;
             PPDDatabase.DB.ExecuteDataTable("delete from LogicFolder where folderid == @folderid;", new SQLiteParameter[]{
-                new SQLiteParameter("@folderid",info.ID)
+                new("@folderid",info.ID)
             });
         }
 
@@ -481,8 +472,8 @@ namespace PPDFramework
         {
             info.Name = newName;
             PPDDatabase.DB.ExecuteDataTable("update LogicFolder set name = @name where folderid = @folderid;", new SQLiteParameter[]{
-                    new SQLiteParameter("@name",newName),
-                    new SQLiteParameter("@folderid",info.ID)
+                    new("@name",newName),
+                    new("@folderid",info.ID)
             });
         }
 
@@ -532,10 +523,7 @@ namespace PPDFramework
 
         private static void ChangeIndex(LogicFolderInfomation info, int index)
         {
-            if (StaticBeforeChangeIndex != null)
-            {
-                StaticBeforeChangeIndex.Invoke(info, EventArgs.Empty);
-            }
+            StaticBeforeChangeIndex?.Invoke(info, EventArgs.Empty);
             var currentIndex = Array.IndexOf(info.Parent.Children, info);
             LogicFolderInfomation tempParent = info.Parent;
             info.Parent.children.Remove(info);

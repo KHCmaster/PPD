@@ -49,34 +49,22 @@ namespace PPDMultiCommon.Tcp
 
         void connection_Closed()
         {
-            if (Closed != null)
-            {
-                Closed.Invoke();
-            }
+            Closed?.Invoke();
         }
 
         void connection_Read(byte[] data)
         {
-            if (Read != null)
-            {
-                Read.Invoke(data);
-            }
+            Read?.Invoke(data);
         }
 
         public void Write(byte[] data)
         {
-            if (connection != null)
-            {
-                connection.Write(data);
-            }
+            connection?.Write(data);
         }
 
         public void Close()
         {
-            if (connection != null)
-            {
-                connection.Dispose();
-            }
+            connection?.Dispose();
         }
 
         public bool HasConnection
@@ -107,10 +95,7 @@ namespace PPDMultiCommon.Tcp
 
             protected override void OnClose()
             {
-                if (Closed != null)
-                {
-                    Closed.Invoke();
-                }
+                Closed?.Invoke();
             }
         }
     }

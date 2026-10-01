@@ -8,9 +8,9 @@ namespace Effect2DEditor.Command
 {
     class AddStateCommand : CommandBase
     {
-        bool iskey;
-        int itemindex;
-        int keyindex;
+        readonly bool iskey;
+        readonly int itemindex;
+        readonly int keyindex;
         bool islast;
         bool twoframeinserted;
         EffectStateRatioSet previousset;

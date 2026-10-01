@@ -6,7 +6,7 @@ namespace FolderDiffChecker
 {
     public partial class UserForm : Form
     {
-        private string lastUserNameFilePath = "lastUser.txt";
+        private readonly string lastUserNameFilePath = "lastUser.txt";
 
         public string UserName
         {

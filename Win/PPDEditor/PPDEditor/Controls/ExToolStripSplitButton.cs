@@ -32,7 +32,7 @@ namespace PPDEditor.Controls
             set
             {
                 _Checked = value;
-                if (CheckStateChanged != null) CheckStateChanged.Invoke(this, EventArgs.Empty);
+                CheckStateChanged?.Invoke(this, EventArgs.Empty);
                 this.Invalidate();
             }
         }

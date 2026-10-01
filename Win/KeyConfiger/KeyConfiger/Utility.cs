@@ -5,7 +5,7 @@ namespace KeyConfiger
 {
     class Utility
     {
-        private static LanguageReader langReader = new LanguageReader("KeyConfiger", PPDSetting.Setting.LangISO);
+        private static LanguageReader langReader = new("KeyConfiger", PPDSetting.Setting.LangISO);
 
         public static LanguageReader Language
         {

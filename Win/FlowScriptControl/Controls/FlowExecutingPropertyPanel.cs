@@ -8,12 +8,12 @@ namespace FlowScriptControl.Controls
 {
     public partial class FlowExecutingPropertyPanel : UserControl
     {
-        private Dictionary<string, Dictionary<int, ExpandInfo>> expandInfos;
+        private readonly Dictionary<string, Dictionary<int, ExpandInfo>> expandInfos;
 
         public FlowExecutingPropertyPanel()
         {
             InitializeComponent();
-            expandInfos = new Dictionary<string, Dictionary<int, ExpandInfo>>();
+            expandInfos = [];
         }
 
         public string FileName
@@ -61,10 +61,7 @@ namespace FlowScriptControl.Controls
             scopeNode.Expand();
 
             var expandInfo = GetExpandInfo(FileName, SourceId);
-            if (expandInfo != null)
-            {
-                expandInfo.Restore(treeView1.Nodes);
-            }
+            expandInfo?.Restore(treeView1.Nodes);
         }
 
         public void ParseProperty(TreeNode node, XElement element)
@@ -131,7 +128,7 @@ namespace FlowScriptControl.Controls
         {
             if (!expandInfos.TryGetValue(expandInfo.FileName, out Dictionary<int, ExpandInfo> dict))
             {
-                dict = new Dictionary<int, ExpandInfo>();
+                dict = [];
                 expandInfos.Add(expandInfo.FileName, dict);
             }
             dict[expandInfo.SourceId] = expandInfo;
@@ -144,7 +141,7 @@ namespace FlowScriptControl.Controls
 
         class ExpandInfo
         {
-            private ExpandInfoChild root;
+            private readonly ExpandInfoChild root;
 
             public string FileName
             {
@@ -202,7 +199,7 @@ namespace FlowScriptControl.Controls
 
             class ExpandInfoChild
             {
-                List<ExpandInfoChild> children;
+                readonly List<ExpandInfoChild> children;
 
                 public bool IsExpanded
                 {
@@ -228,7 +225,7 @@ namespace FlowScriptControl.Controls
 
                 public ExpandInfoChild()
                 {
-                    children = new List<ExpandInfoChild>();
+                    children = [];
                 }
 
                 public void Add(ExpandInfoChild child)

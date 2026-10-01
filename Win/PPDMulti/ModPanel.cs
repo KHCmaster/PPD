@@ -17,25 +17,25 @@ namespace PPDMulti
         const int scrollBarStartY = 80;
         const int scrollBarMaxHeight = 330;
 
-        IGameHost gameHost;
-        ISound sound;
-        PPDFramework.Resource.ResourceManager resourceManager;
-        AllowedModList allowedModList;
+        readonly IGameHost gameHost;
+        readonly ISound sound;
+        readonly PPDFramework.Resource.ResourceManager resourceManager;
+        readonly AllowedModList allowedModList;
 
-        RectangleComponent black;
-        SpriteObject waitSprite;
-        SpriteObject updateSprite;
-        PictureObject back;
+        readonly RectangleComponent black;
+        readonly SpriteObject waitSprite;
+        readonly SpriteObject updateSprite;
+        readonly PictureObject back;
         ModInfoBase currentModInfo;
 
-        SpriteObject settingMenu;
-        SpriteObject updateMenu;
-        TextureString author;
-        TextureString version;
-        TextureString filename;
-        TextureString notAvailable;
-        RectangleComponent scrollBar;
-        SpriteObject modListSprite;
+        readonly SpriteObject settingMenu;
+        readonly SpriteObject updateMenu;
+        readonly TextureString author;
+        readonly TextureString version;
+        readonly TextureString filename;
+        readonly TextureString notAvailable;
+        readonly RectangleComponent scrollBar;
+        readonly SpriteObject modListSprite;
 
         int currentIndex = -1;
         int scrollIndex;
@@ -512,11 +512,11 @@ namespace PPDMulti
 
         public class ModInfoComponent : ModInfoComponentBase
         {
-            private bool allowedByServer;
+            private readonly bool allowedByServer;
 
-            private PictureObject check;
-            private PictureObject checkBox;
-            private PictureObject availableRanking;
+            private readonly PictureObject check;
+            private readonly PictureObject checkBox;
+            private readonly PictureObject availableRanking;
 
             public ModInfo ModInfo
             {
@@ -576,7 +576,7 @@ namespace PPDMulti
 
         public class DirModInfoComponent : ModInfoComponentBase
         {
-            private PictureObject folder;
+            private readonly PictureObject folder;
 
             public DirModInfo ModInfo
             {

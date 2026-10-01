@@ -24,9 +24,9 @@ namespace PPD
             Random
         }
 
-        PPDFramework.Resource.ResourceManager resourceManager;
-        ISound sound;
-        MyGame myGame;
+        readonly PPDFramework.Resource.ResourceManager resourceManager;
+        readonly ISound sound;
+        readonly MyGame myGame;
 
         bool initialized;
 
@@ -42,7 +42,7 @@ namespace PPD
 
         LineRectangleComponent selection;
 
-        List<ThumbList> removeList = new List<ThumbList>();
+        readonly List<ThumbList> removeList = [];
 
         int updateCount;
         bool playing;
@@ -312,23 +312,23 @@ namespace PPD
 
         class MovieController : FocusableGameComponent
         {
-            PPDFramework.Resource.ResourceManager resourceManager;
+            readonly PPDFramework.Resource.ResourceManager resourceManager;
             MoviePlayer moviePlayer;
 
-            TextureString moviePos;
-            FadableButton play;
-            FadableButton pause;
-            FadableButton stop;
-            FadableButton seekForward;
-            FadableButton seekBackward;
-            FadableButton changeTrimming;
-            FadableButton getThumb;
-            FadableButton oneLoop;
-            FadableButton secLoop;
-            FadableButton randomLoop;
-            Dictionary<MovieLoopType, FadableButton> loopDict;
+            readonly TextureString moviePos;
+            readonly FadableButton play;
+            readonly FadableButton pause;
+            readonly FadableButton stop;
+            readonly FadableButton seekForward;
+            readonly FadableButton seekBackward;
+            readonly FadableButton changeTrimming;
+            readonly FadableButton getThumb;
+            readonly FadableButton oneLoop;
+            readonly FadableButton secLoop;
+            readonly FadableButton randomLoop;
+            readonly Dictionary<MovieLoopType, FadableButton> loopDict;
 
-            FadableButton[] list;
+            readonly FadableButton[] list;
             int currentIndex;
 
             public MoviePlayer MoviePlayer
@@ -523,8 +523,8 @@ namespace PPD
             public event EventHandler PlayNext;
 
             private IMovie movie;
-            private SongInformation songInfo;
-            private LoadablePictureComponent picture;
+            private readonly SongInformation songInfo;
+            private readonly LoadablePictureComponent picture;
             private bool aspectApplied = true;
 
             public IMovie Movie
@@ -567,10 +567,7 @@ namespace PPD
                         break;
                     case MovieLoopType.Sequential:
                     case MovieLoopType.Random:
-                        if (PlayNext != null)
-                        {
-                            PlayNext.Invoke(this, EventArgs.Empty);
-                        }
+                        PlayNext?.Invoke(this, EventArgs.Empty);
                         break;
                 }
             }
@@ -656,10 +653,7 @@ namespace PPD
                         }
                         bt.Save(Path.Combine(songInfo.DirectoryPath, "thumb.png"), System.Drawing.Imaging.ImageFormat.Png);
 
-                        if (picture != null)
-                        {
-                            picture.UpdatePicture();
-                        }
+                        picture?.UpdatePicture();
                     }
                 }
                 catch
@@ -670,11 +664,8 @@ namespace PPD
 
             protected override void DisposeResource()
             {
-                if (movie != null)
-                {
-                    movie.Stop();
-                    movie = null;
-                }
+                movie?.Stop();
+                movie = null;
                 base.DisposeResource();
             }
 
@@ -730,16 +721,16 @@ namespace PPD
         class LoadablePictureComponent : GameComponent
         {
             // isLoading は全インスタンスで共有するので、ロックも共有する
-            static readonly object loadingLock = new object();
+            static readonly object loadingLock = new();
             static bool isLoading;
 
-            PPDFramework.Resource.ResourceManager resourceManager;
-            SongInformation songInfo;
+            readonly PPDFramework.Resource.ResourceManager resourceManager;
+            readonly SongInformation songInfo;
 
-            EffectObject loading;
+            readonly EffectObject loading;
             PictureObject picture;
 
-            string thumbPath;
+            readonly string thumbPath;
 
             public LoadablePictureComponent(PPDDevice device, PPDFramework.Resource.ResourceManager resourceManager, SongInformation songInfo) : base(device)
             {

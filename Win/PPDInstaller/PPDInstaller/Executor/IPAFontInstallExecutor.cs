@@ -7,10 +7,10 @@ namespace PPDInstaller.Executor
 {
     class IPAFontInstallExecutor : CExecutor
     {
-        public static Uri ipafonturi = new Uri("http://ossipedia.ipa.go.jp/ipafont/ipag00303.php");
-        FileDownloader downloadClient = new FileDownloader();
-        string filePath;
-        string unzipPath;
+        public static Uri ipafonturi = new("http://ossipedia.ipa.go.jp/ipafont/ipag00303.php");
+        readonly FileDownloader downloadClient = new();
+        readonly string filePath;
+        readonly string unzipPath;
         public IPAFontInstallExecutor(string filePath, string unzipPath, Control control)
             : base(control)
         {

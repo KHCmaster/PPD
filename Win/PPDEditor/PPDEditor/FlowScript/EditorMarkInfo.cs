@@ -32,7 +32,7 @@ namespace PPDEditor.FlowScript
                 IsLong = false;
                 ReleaseTime = 0;
             }
-            Parameters = new Dictionary<object, object>();
+            Parameters = [];
             foreach (var pair in mark.Parameters)
             {
                 Parameters.Add(pair.Key, pair.Value);

@@ -21,21 +21,21 @@ namespace PPDEditor
             fill = 3
         }
 
-        private static PPDEditorSkin skin = new PPDEditorSkin();
-        string[] smallcolorimagepaths = new string[(int)ButtonType.Start];
-        PathObject[] colorimagepaths = new PathObject[(int)ButtonType.Start + 4];
-        PathObject[] imagepaths = new PathObject[(int)ButtonType.Start + 4];
-        PathObject[] traceimagepaths = new PathObject[(int)ButtonType.Start + 4];
-        PathObject longnotecirclepath;
-        float _innerradius;
-        float _outerradius;
-        PathObject axisimagepath;
-        PathObject clockaxisimagepath;
-        PathObject[] effectpaths = new PathObject[(int)MarkEvaluateType.Worst + 1];
-        PathObject appeareffectpath;
-        PathObject holdpath;
-        float holdx;
-        float holdy;
+        private static readonly PPDEditorSkin skin = new();
+        readonly string[] smallcolorimagepaths = new string[(int)ButtonType.Start];
+        readonly PathObject[] colorimagepaths = new PathObject[(int)ButtonType.Start + 4];
+        readonly PathObject[] imagepaths = new PathObject[(int)ButtonType.Start + 4];
+        readonly PathObject[] traceimagepaths = new PathObject[(int)ButtonType.Start + 4];
+        readonly PathObject longnotecirclepath;
+        readonly float _innerradius;
+        readonly float _outerradius;
+        readonly PathObject axisimagepath;
+        readonly PathObject clockaxisimagepath;
+        readonly PathObject[] effectpaths = new PathObject[(int)MarkEvaluateType.Worst + 1];
+        readonly PathObject appeareffectpath;
+        readonly PathObject holdpath;
+        readonly float holdx;
+        readonly float holdy;
 
         public static PPDEditorSkin Skin
         {
@@ -60,7 +60,7 @@ namespace PPDEditor
             TimeLineVerticalLineColor3 = Color.FromArgb(204, 204, 204);
             TimeLineVerticalLineColor4 = Color.Green;
             TimeLineVerticalLineColor5 = Color.LightGreen;
-            TimeLineBackGroundColors = new Dictionary<int, Brush>();
+            TimeLineBackGroundColors = [];
             TimeLineHoldExtentColor = Color.Orange;
             TimeLineRowHeight = 26;
             TimeLineHeight = 22;

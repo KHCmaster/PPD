@@ -37,8 +37,8 @@ namespace PPDEditor
         const string SoundDirPath = "Resource\\Sound";
         const string OthersDirPath = "Resource\\Others";
 
-        string[] allowImageExtensions = { ".jpg", ".jpeg", ".gif", ".png" };
-        string[] allowSoundExtensions = { ".wav", ".ogg" };
+        readonly string[] allowImageExtensions = { ".jpg", ".jpeg", ".gif", ".png" };
+        readonly string[] allowSoundExtensions = { ".wav", ".ogg" };
 
         private Sound sound;
 

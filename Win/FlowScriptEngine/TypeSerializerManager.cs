@@ -5,11 +5,11 @@ namespace FlowScriptEngine
 {
     public static class TypeSerializerManager
     {
-        static Dictionary<Type, TypeSerializerBase> serializers;
+        static readonly Dictionary<Type, TypeSerializerBase> serializers;
 
         static TypeSerializerManager()
         {
-            serializers = new Dictionary<Type, TypeSerializerBase>();
+            serializers = [];
         }
 
         public static TypeSerializerBase GetSerializer(Type type)

@@ -11,7 +11,7 @@ namespace PPDFramework.Mod
 {
     class ModSettingDatabase : SettingDataBase
     {
-        private static ModSettingDatabase setting = new ModSettingDatabase();
+        private static readonly ModSettingDatabase setting = new();
 
         private ModSettingDatabase()
         {
@@ -36,7 +36,7 @@ namespace PPDFramework.Mod
             string setting = this[key];
             if (String.IsNullOrEmpty(setting))
             {
-                return new Dictionary<string, object>();
+                return [];
             }
 
             return Parse(setting);
@@ -51,7 +51,7 @@ namespace PPDFramework.Mod
                             {
                                 Key = p.Attribute("Key").Value,
 #pragma warning disable RECS0069 // Redundant explicit property name
-                                Value = p.Attribute("Value").Value,
+                                p.Attribute("Value").Value,
 #pragma warning restore RECS0069 // Redundant explicit property name
                                 Type = p.Attribute("Type").Value,
                             };
@@ -69,15 +69,13 @@ namespace PPDFramework.Mod
                         }
                         break;
                     case "Float":
-                        float floatVal;
-                        if (float.TryParse(elem.Value, NumberStyles.Float, CultureInfo.InvariantCulture, out floatVal))
+                        if (float.TryParse(elem.Value, NumberStyles.Float, CultureInfo.InvariantCulture, out float floatVal))
                         {
                             addValue = floatVal;
                         }
                         break;
                     case "Double":
-                        double doubleVal;
-                        if (double.TryParse(elem.Value, NumberStyles.Float, CultureInfo.InvariantCulture, out doubleVal))
+                        if (double.TryParse(elem.Value, NumberStyles.Float, CultureInfo.InvariantCulture, out double doubleVal))
                         {
                             addValue = doubleVal;
                         }
@@ -86,8 +84,7 @@ namespace PPDFramework.Mod
                         addValue = elem.Value;
                         break;
                     case "Boolean":
-                        bool boolVal;
-                        if (bool.TryParse(elem.Value, out boolVal))
+                        if (bool.TryParse(elem.Value, out bool boolVal))
                         {
                             addValue = boolVal;
                         }

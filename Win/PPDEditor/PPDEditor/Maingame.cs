@@ -10,19 +10,19 @@ namespace PPDEditor
     class MainGame : GameComponent
     {
         IMovie m;
-        PPDFramework.Resource.ResourceManager resourceManager;
-        GridComponent grid;
-        MainGameTop mgt;
-        MainGameBottom mgb;
-        PictureObject up;
-        PictureObject upSelect;
-        PictureObject right;
-        PictureObject rightSelect;
-        PictureObject area;
-        LineComponent angleLine;
-        TextureString kasi;
-        MarkPointDrawer mpd;
-        DummyDrawComponent dummy;
+        readonly PPDFramework.Resource.ResourceManager resourceManager;
+        readonly GridComponent grid;
+        readonly MainGameTop mgt;
+        readonly MainGameBottom mgb;
+        readonly PictureObject up;
+        readonly PictureObject upSelect;
+        readonly PictureObject right;
+        readonly PictureObject rightSelect;
+        readonly PictureObject area;
+        readonly LineComponent angleLine;
+        readonly TextureString kasi;
+        readonly MarkPointDrawer mpd;
+        readonly DummyDrawComponent dummy;
 
         public IMovie Movie
         {

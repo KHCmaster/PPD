@@ -5,8 +5,8 @@ namespace PPDEditorCommon.Dialog.Model
 {
     public class SoundManagerInfo
     {
-        List<string> sounds;
-        SortedList<float, ushort[]> changes;
+        readonly List<string> sounds;
+        readonly SortedList<float, ushort[]> changes;
 
         public string[] Sounds
         {
@@ -26,8 +26,8 @@ namespace PPDEditorCommon.Dialog.Model
 
         public SoundManagerInfo()
         {
-            sounds = new List<string>();
-            changes = new SortedList<float, ushort[]>();
+            sounds = [];
+            changes = [];
         }
 
         public void Add(string filePath)

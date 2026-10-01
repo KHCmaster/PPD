@@ -7,14 +7,14 @@ namespace PPDEditor.Command.PPDSheet
 {
     class SetDataFromSelectionCommand : Command
     {
-        float[][] lastInfo;
-        Vector2[] positions;
-        float[] angles;
-        bool reverse;
-        bool withAngle;
+        readonly float[][] lastInfo;
+        readonly Vector2[] positions;
+        readonly float[] angles;
+        readonly bool reverse;
+        readonly bool withAngle;
 
-        SortedList<float, Mark>[] data;
-        Mark selectedMark;
+        readonly SortedList<float, Mark>[] data;
+        readonly Mark selectedMark;
 
         public SetDataFromSelectionCommand(SortedList<float, Mark>[] data, Vector2[] positions, float[] angles, bool reverse, bool withAngle, Mark selectedMark)
         {

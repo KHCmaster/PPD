@@ -7,13 +7,13 @@ namespace PPDFramework.Chars
 {
     class SizeTextureManager : DisposableComponent
     {
-        PPDDevice device;
-        List<SizeTexture> textures;
+        readonly PPDDevice device;
+        readonly List<SizeTexture> textures;
 
         public SizeTextureManager(PPDDevice device)
         {
             this.device = device;
-            textures = new List<SizeTexture>();
+            textures = [];
         }
 
         public SizeTexture Write(TextureBase texture, int width, int height, out Vector2 uv, out Vector2 uvSize, out AvailableSpace usingAvailableSpace)

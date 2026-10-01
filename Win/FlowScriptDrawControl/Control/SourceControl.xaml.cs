@@ -64,16 +64,22 @@ namespace FlowScriptDrawControl.Control
             {
                 if (item.IsOut)
                 {
-                    var outItem = new SourceItemControl { DataContext = item };
-                    outItem.HorizontalContentAlignment = System.Windows.HorizontalAlignment.Right;
+                    var outItem = new SourceItemControl
+                    {
+                        DataContext = item,
+                        HorizontalContentAlignment = System.Windows.HorizontalAlignment.Right
+                    };
                     outItem.Selected += outItem_Selected;
                     outItem.TryConnected += outItem_TryConnected;
                     rightStack.Children.Add(outItem);
                 }
                 else
                 {
-                    var inItem = new SourceItemControl { DataContext = item };
-                    inItem.HorizontalContentAlignment = System.Windows.HorizontalAlignment.Left;
+                    var inItem = new SourceItemControl
+                    {
+                        DataContext = item,
+                        HorizontalContentAlignment = System.Windows.HorizontalAlignment.Left
+                    };
                     inItem.Selected += inItem_Selected;
                     inItem.TryConnected += inItem_TryConnected;
                     leftStack.Children.Add(inItem);
@@ -107,18 +113,12 @@ namespace FlowScriptDrawControl.Control
         {
             if (isOut)
             {
-                if (outItems == null)
-                {
-                    outItems = GetDict(isOut);
-                }
+                outItems ??= GetDict(isOut);
                 return outItems[name];
             }
             else
             {
-                if (inItems == null)
-                {
-                    inItems = GetDict(isOut);
-                }
+                inItems ??= GetDict(isOut);
                 return inItems[name];
             }
         }

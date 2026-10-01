@@ -51,7 +51,7 @@ namespace PPDFramework.Resource
                     {
                         if (!loadableImages.TryGetValue(pair.Key, out List<Tuple<SpriteInfo, SpriteDictionary>> list))
                         {
-                            list = new List<Tuple<SpriteInfo, SpriteDictionary>>();
+                            list = [];
                             loadableImages.Add(pair.Key, list);
                         }
                         list.Add(new Tuple<SpriteInfo, SpriteDictionary>(pair.Value, dict));

@@ -17,10 +17,10 @@ namespace PPDFramework.Texture.DX11
     {
         const int BytesPerPixel = 4;
 
-        PPDDevice device;
-        bool pa;
+        readonly PPDDevice device;
+        readonly bool pa;
         byte[] cpuData;
-        readonly object cpuDataLock = new object();
+        readonly object cpuDataLock = new();
         int dirtyTop;
         int dirtyBottom;
 
@@ -90,26 +90,14 @@ namespace PPDFramework.Texture.DX11
 
         protected override void DisposeResource()
         {
-            if (_ShaderResourceView != null)
-            {
-                _ShaderResourceView.Dispose();
-                _ShaderResourceView = null;
-            }
-            if (_RenderTargetView != null)
-            {
-                _RenderTargetView.Dispose();
-                _RenderTargetView = null;
-            }
-            if (_Texture != null)
-            {
-                _Texture.Dispose();
-                _Texture = null;
-            }
-            if (Surface != null)
-            {
-                Surface.Dispose();
-                Surface = null;
-            }
+            _ShaderResourceView?.Dispose();
+            _ShaderResourceView = null;
+            _RenderTargetView?.Dispose();
+            _RenderTargetView = null;
+            _Texture?.Dispose();
+            _Texture = null;
+            Surface?.Dispose();
+            Surface = null;
             cpuData = null;
             ComDiagnostics.UnTrack(this);
             base.DisposeResource();
@@ -241,10 +229,7 @@ namespace PPDFramework.Texture.DX11
 
         private void EnsureCpuData()
         {
-            if (cpuData == null)
-            {
-                cpuData = ReadPixels(((PPDFramework.DX11.PPDDevice)device).Context, _Texture);
-            }
+            cpuData ??= ReadPixels(((PPDFramework.DX11.PPDDevice)device).Context, _Texture);
         }
 
         private void MarkDirty(int top, int bottom)

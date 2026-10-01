@@ -21,7 +21,7 @@ namespace PPDEditor
         public static float[] Eval;
         public static Vector2[] CirclePoints;
 
-        private static PathManager pathManager = new PathManager(@"img\PPDEditor");
+        private static readonly PathManager pathManager = new(@"img\PPDEditor");
 
         public static PathManager Path
         {
@@ -115,16 +115,13 @@ namespace PPDEditor
         {
             get
             {
-                if (appDir == null)
-                {
-                    appDir = System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-                }
+                appDir ??= System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
                 return appDir;
             }
         }
 
-        private static LanguageReader langReader = new LanguageReader("PPDEditor", PPDStaticSetting.langFileISO);
+        private static LanguageReader langReader = new("PPDEditor", PPDStaticSetting.langFileISO);
 
         public static LanguageReader Language
         {
@@ -266,18 +263,15 @@ namespace PPDEditor
 
         public static void CopyDirectory(string sourceDirName, string destDirName, Regex[] exceptFiles, Func<string, bool> overwriteConfirm)
         {
-            if (exceptFiles == null)
-            {
-                exceptFiles = new Regex[0];
-            }
+            exceptFiles ??= new Regex[0];
             if (!Directory.Exists(destDirName))
             {
                 Directory.CreateDirectory(destDirName);
             }
 
-            if (destDirName[destDirName.Length - 1] != System.IO.Path.DirectorySeparatorChar)
+            if (destDirName[^1] != System.IO.Path.DirectorySeparatorChar)
             {
-                destDirName = destDirName + System.IO.Path.DirectorySeparatorChar;
+                destDirName += System.IO.Path.DirectorySeparatorChar;
             }
 
             var files = Directory.GetFiles(sourceDirName);

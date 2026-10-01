@@ -4,8 +4,8 @@ namespace PPDEditor.Command.PPDSheet
 {
     class DeleteMarksCommand : Command
     {
-        private SortedList<float, Mark>[] data;
-        private Mark[] mks;
+        private readonly SortedList<float, Mark>[] data;
+        private readonly Mark[] mks;
         public DeleteMarksCommand(SortedList<float, Mark>[] data, Mark[] mks)
         {
             this.data = data;

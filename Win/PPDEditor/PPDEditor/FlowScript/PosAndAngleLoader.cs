@@ -5,7 +5,7 @@ namespace PPDEditor.FlowScript
 {
     class PosAndAngleLoader : IPosAndAngleLoader
     {
-        private static PosAndAngleLoader instance = new PosAndAngleLoader();
+        private static readonly PosAndAngleLoader instance = new();
 
         public static PosAndAngleLoader Instance
         {

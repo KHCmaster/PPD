@@ -12,12 +12,12 @@ namespace FlowScriptControlTest
     {
         public event Action Aborted;
         public event Action Finished;
-        private ExecuteInfo[] executeInfos;
-        private string stdinText;
-        private DebugController controller;
+        private readonly ExecuteInfo[] executeInfos;
+        private readonly string stdinText;
+        private readonly DebugController controller;
         private Thread thread;
         private Thread workingThread;
-        private Dictionary<FlowSourceManager, ExecuteInfo> dict;
+        private readonly Dictionary<FlowSourceManager, ExecuteInfo> dict;
 
         public DebugController Controller
         {
@@ -40,7 +40,7 @@ namespace FlowScriptControlTest
             this.executeInfos = executeInfos;
             this.stdinText = stdinText;
             controller = new DebugController();
-            dict = new Dictionary<FlowSourceManager, ExecuteInfo>();
+            dict = [];
         }
 
         public ExecuteInfo GetExecuteInfo(FlowSourceManager manager)
@@ -74,8 +74,10 @@ namespace FlowScriptControlTest
                     }
                 }
                 OnFinished();
-            });
-            thread.IsBackground = true;
+            })
+            {
+                IsBackground = true
+            };
             thread.Start();
         }
 

@@ -190,10 +190,7 @@ namespace PPDEditor.Forms
             }
             set
             {
-                if (MyGame.Movie != null)
-                {
-                    MyGame.Movie.TrimmingData = value;
-                }
+                MyGame.Movie?.TrimmingData = value;
             }
         }
 
@@ -562,11 +559,8 @@ namespace PPDEditor.Forms
             set
             {
                 PPDStaticSetting.FixDockPanel = value;
-                if (dockPanel1 != null)
-                {
-                    dockPanel1.AllowChangeDock = dockPanel1.AllowEndUserDocking =
+                dockPanel1?.AllowChangeDock = dockPanel1.AllowEndUserDocking =
                         dockPanel1.AllowEndUserNestedDocking = !value;
-                }
                 ドックを固定ToolStripMenuItem.Checked = value;
             }
         }

@@ -12,7 +12,7 @@ namespace PPDEditor
         Guid guid = Guid.NewGuid();
         string numbererror = "エラー。数値でない可能性があります";
         string gettimefromtimeline = "タイムラインから読み込み";
-        string parseerror = "数値変換エラーです。@";
+        readonly string parseerror = "数値変換エラーです。@";
         public IniFileWriter()
         {
             InitializeComponent();

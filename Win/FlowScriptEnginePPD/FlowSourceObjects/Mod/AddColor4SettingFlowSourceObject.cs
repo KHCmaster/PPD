@@ -23,10 +23,7 @@ namespace FlowScriptEnginePPD.FlowSourceObjects.Mod
         {
             base.In(e);
             SetValue(nameof(Default));
-            if (modSettingManager != null)
-            {
-                modSettingManager.AddColor4Setting(Key, DisplayName, Description, Default);
-            }
+            modSettingManager?.AddColor4Setting(Key, DisplayName, Description, Default);
         }
     }
 }

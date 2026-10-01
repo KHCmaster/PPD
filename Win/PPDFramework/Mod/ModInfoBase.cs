@@ -7,7 +7,7 @@ namespace PPDFramework.Mod
     /// </summary>
     public abstract class ModInfoBase
     {
-        private List<ModInfoBase> childModInfos;
+        private readonly List<ModInfoBase> childModInfos;
 
         /// <summary>
         /// 親を取得します。
@@ -49,7 +49,7 @@ namespace PPDFramework.Mod
         /// </summary>
         protected ModInfoBase(string path, bool isDir)
         {
-            childModInfos = new List<ModInfoBase>();
+            childModInfos = [];
             IsDir = isDir;
             ModPath = path;
         }

@@ -7,11 +7,11 @@ namespace PPDEditor.Command.PPDSheet
 {
     class ApplyTransCommand : Command
     {
-        private float[][] lastState;
-        private Mark[] mks;
+        private readonly float[][] lastState;
+        private readonly Mark[] mks;
         private Vector2[] poses;
         private Vector2[] dirs;
-        private bool applyRotation;
+        private readonly bool applyRotation;
         public ApplyTransCommand(Mark[] mks, Vector2[] poses, Vector2[] dirs, bool applyRotation)
         {
             this.mks = mks;

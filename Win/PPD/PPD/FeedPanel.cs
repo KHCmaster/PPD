@@ -12,9 +12,9 @@ namespace PPD
 {
     class FeedPanel : HomePanelBase
     {
-        IGameHost gameHost;
-        PPDFramework.Resource.ResourceManager resourceManager;
-        ISound sound;
+        readonly IGameHost gameHost;
+        readonly PPDFramework.Resource.ResourceManager resourceManager;
+        readonly ISound sound;
 
         PictureObject left;
         PictureObject leftSelection;
@@ -150,10 +150,10 @@ namespace PPD
 
         class FeedComponent : GameComponent
         {
-            PPDFramework.Resource.ResourceManager resourceManager;
-            Feed feed;
+            readonly PPDFramework.Resource.ResourceManager resourceManager;
+            readonly Feed feed;
 
-            EffectObject loading;
+            readonly EffectObject loading;
 
             private bool error;
             private bool generated;
@@ -304,7 +304,7 @@ namespace PPD
 
         class FeedListLoader
         {
-            List<Feed> feedList;
+            readonly List<Feed> feedList;
 
             public Feed[] List
             {
@@ -334,7 +334,7 @@ namespace PPD
 
             public FeedListLoader()
             {
-                feedList = new List<Feed>();
+                feedList = [];
             }
 
             public void GetList()

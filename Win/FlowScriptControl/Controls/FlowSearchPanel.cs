@@ -45,7 +45,7 @@ namespace FlowScriptControl.Controls
                 foreach (SearchResultItem item in listBox1.Items)
                 {
                     maxWidth = Math.Max(maxWidth,
-                        g.MeasureString(listBox1.Items[listBox1.Items.Count - 1].ToString(), listBox1.Font).Width);
+                        g.MeasureString(listBox1.Items[^1].ToString(), listBox1.Font).Width);
                 }
                 listBox1.HorizontalExtent = (int)maxWidth + 50;
             }

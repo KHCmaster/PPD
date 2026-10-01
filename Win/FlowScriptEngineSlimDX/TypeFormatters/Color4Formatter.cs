@@ -19,7 +19,7 @@ namespace FlowScriptEngineSlimDX.TypeFormatters
             Vortice.Mathematics.Color4 color;
             if (str.StartsWith("#"))
             {
-                if (GetSharpColor(str.Substring(1), out color))
+                if (GetSharpColor(str[1..], out color))
                 {
                     value = color;
                     return true;
@@ -56,19 +56,19 @@ namespace FlowScriptEngineSlimDX.TypeFormatters
                 switch (str.Length)
                 {
                     case 3:
-                        r = int.Parse(str.Substring(0, 1), NumberStyles.HexNumber);
+                        r = int.Parse(str[..1], NumberStyles.HexNumber);
                         g = int.Parse(str.Substring(1, 1), NumberStyles.HexNumber);
                         b = int.Parse(str.Substring(2, 1), NumberStyles.HexNumber);
                         color = new Vortice.Mathematics.Color4(r / 255f, g / 255f, b / 255f, 1f);
                         return true;
                     case 6:
-                        r = int.Parse(str.Substring(0, 2), NumberStyles.HexNumber);
+                        r = int.Parse(str[..2], NumberStyles.HexNumber);
                         g = int.Parse(str.Substring(2, 2), NumberStyles.HexNumber);
                         b = int.Parse(str.Substring(4, 2), NumberStyles.HexNumber);
                         color = new Vortice.Mathematics.Color4(r / 255f, g / 255f, b / 255f, 1f);
                         return true;
                     case 8:
-                        a = int.Parse(str.Substring(0, 2), NumberStyles.HexNumber);
+                        a = int.Parse(str[..2], NumberStyles.HexNumber);
                         r = int.Parse(str.Substring(2, 2), NumberStyles.HexNumber);
                         g = int.Parse(str.Substring(4, 2), NumberStyles.HexNumber);
                         b = int.Parse(str.Substring(6, 2), NumberStyles.HexNumber);

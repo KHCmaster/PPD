@@ -5,7 +5,7 @@ namespace Effect2DEditor.Command
 {
     class DeleteEffectCommand : CommandBase
     {
-        int deleteindex;
+        readonly int deleteindex;
         IEffect ie;
         public DeleteEffectCommand(EffectManager manager, string exp, int deleteindex)
             : base(manager, exp)

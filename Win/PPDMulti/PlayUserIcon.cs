@@ -7,20 +7,21 @@ using System.Numerics;
 using PPDMath;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace PPDMulti
 {
     class PlayUserIcon : BindableGameComponent
     {
-        PPDFramework.Resource.ResourceManager resourceManager;
+        readonly PPDFramework.Resource.ResourceManager resourceManager;
 
         PictureObject userIcon;
         TextureString userNameString;
         NumberPictureObject scorePicture;
-        UserPlayState userPlayState;
+        readonly UserPlayState userPlayState;
         LifeGage lifeGage;
         PictureObject[] evals;
-        ItemManagerComponent itemManager;
+        readonly ItemManagerComponent itemManager;
         Dictionary<ItemEffect, PictureObject> itemPictureDict;
         SpriteObject itemSprite;
 
@@ -53,7 +54,7 @@ namespace PPDMulti
         private void InnerStruct()
         {
             Hidden = true;
-            itemPictureDict = new Dictionary<ItemEffect, PictureObject>();
+            itemPictureDict = [];
 
             this.AddChild(itemSprite = new SpriteObject(device)
             {
@@ -143,7 +144,7 @@ namespace PPDMulti
         private void ChangeItemPosition()
         {
             int iter = 0;
-            foreach (PictureObject pic in itemSprite.Children)
+            foreach (PictureObject pic in itemSprite.Children.Cast<PictureObject>())
             {
                 pic.Hidden = iter >= 6;
                 pic.Position = new System.Numerics.Vector2(iter % 2 == 0 ? 0 : 12, 12 * (iter / 2));
@@ -283,7 +284,7 @@ namespace PPDMulti
         class LifeGage : GameComponent
         {
             const int MaxWidth = 76;
-            RectangleComponent rectangle;
+            readonly RectangleComponent rectangle;
 
             float gageWidth;
 

@@ -53,10 +53,7 @@ namespace PPDMultiCommon.Web
         {
             get
             {
-                if (easy == null)
-                {
-                    easy = ParseString(EasyHash);
-                }
+                easy ??= ParseString(EasyHash);
                 return easy;
             }
         }
@@ -65,10 +62,7 @@ namespace PPDMultiCommon.Web
         {
             get
             {
-                if (normal == null)
-                {
-                    normal = ParseString(NormalHash);
-                }
+                normal ??= ParseString(NormalHash);
                 return normal;
             }
         }
@@ -77,10 +71,7 @@ namespace PPDMultiCommon.Web
         {
             get
             {
-                if (hard == null)
-                {
-                    hard = ParseString(HardHash);
-                }
+                hard ??= ParseString(HardHash);
                 return hard;
             }
         }
@@ -89,10 +80,7 @@ namespace PPDMultiCommon.Web
         {
             get
             {
-                if (extreme == null)
-                {
-                    extreme = ParseString(ExtremeHash);
-                }
+                extreme ??= ParseString(ExtremeHash);
                 return extreme;
             }
         }

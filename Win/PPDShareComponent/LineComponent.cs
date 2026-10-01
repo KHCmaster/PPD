@@ -12,7 +12,7 @@ namespace PPDShareComponent
 {
     public class LineComponent : GameComponent
     {
-        PPDFramework.Resource.ResourceManager resourceManager;
+        readonly PPDFramework.Resource.ResourceManager resourceManager;
         Vector2[] points;
         float lineWidth;
         bool lineChanged;
@@ -80,11 +80,8 @@ namespace PPDShareComponent
 
         private void UpdateVertex()
         {
-            if (vertices != null)
-            {
-                vertices.Dispose();
-                vertices = null;
-            }
+            vertices?.Dispose();
+            vertices = null;
 
             if (points == null || points.Length < 2)
             {
@@ -158,11 +155,8 @@ namespace PPDShareComponent
         protected override void DisposeResource()
         {
             base.DisposeResource();
-            if (vertices != null)
-            {
-                vertices.Dispose();
-                vertices = null;
-            }
+            vertices?.Dispose();
+            vertices = null;
         }
     }
 }

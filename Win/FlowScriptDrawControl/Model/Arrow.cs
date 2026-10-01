@@ -44,15 +44,9 @@ namespace FlowScriptDrawControl.Model
             {
                 if (srcItem != value)
                 {
-                    if (srcItem != null)
-                    {
-                        srcItem.PropertyChanged -= srcItem_PropertyChanged;
-                    }
+                    srcItem?.PropertyChanged -= srcItem_PropertyChanged;
                     srcItem = value;
-                    if (srcItem != null)
-                    {
-                        srcItem.PropertyChanged += srcItem_PropertyChanged;
-                    }
+                    srcItem?.PropertyChanged += srcItem_PropertyChanged;
                     OnPropertyChanged("SrcItem");
                     UpdateStroke();
                 }
@@ -66,15 +60,9 @@ namespace FlowScriptDrawControl.Model
             {
                 if (destItem != value)
                 {
-                    if (destItem != null)
-                    {
-                        destItem.PropertyChanged -= destItem_PropertyChanged;
-                    }
+                    destItem?.PropertyChanged -= destItem_PropertyChanged;
                     destItem = value;
-                    if (destItem != null)
-                    {
-                        destItem.PropertyChanged += destItem_PropertyChanged;
-                    }
+                    destItem?.PropertyChanged += destItem_PropertyChanged;
                     OnPropertyChanged("DestItem");
                 }
             }

@@ -6,8 +6,8 @@ namespace PPDShareComponent
 {
     public class CheckBoxComponent : SelectableComponent
     {
-        private PictureObject check;
-        private PictureObject checkBox;
+        private readonly PictureObject check;
+        private readonly PictureObject checkBox;
 
         public CheckBoxComponent(PPDDevice device, PPDFramework.Resource.ResourceManager resourceManager, PathManager pathManager, string text) : base(device)
         {

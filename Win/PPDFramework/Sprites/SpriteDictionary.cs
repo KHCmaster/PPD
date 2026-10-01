@@ -12,7 +12,7 @@ namespace PPDFramework.Sprites
     /// </summary>
     public class SpriteDictionary
     {
-        static readonly Regex scaleRegex = new Regex(@"\.\d+_\d+(\.\w+)$");
+        static readonly Regex scaleRegex = new(@"\.\d+_\d+(\.\w+)$");
 
         /// <summary>
         /// 画像のパスを取得します。
@@ -58,8 +58,8 @@ namespace PPDFramework.Sprites
         /// <param name="imageScale"></param>
         public SpriteDictionary(string dir, int index, ImageScale imageScale)
         {
-            Sprites = new Dictionary<string, SpriteInfo>();
-            SpritesWithActualPath = new Dictionary<string, SpriteInfo>();
+            Sprites = [];
+            SpritesWithActualPath = [];
             ImageScale = imageScale;
             ImagePath = Path.Combine(dir, String.Format("{0}.{1}_{2}.png", index, imageScale.Numerator, imageScale.Denominator));
             var xmlPath = Path.Combine(dir, String.Format("{0}.{1}_{2}.xml", index, imageScale.Numerator, imageScale.Denominator));

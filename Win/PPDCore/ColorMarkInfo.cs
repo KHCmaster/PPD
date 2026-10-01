@@ -10,7 +10,7 @@ namespace PPDCore
     {
         VertexInfo vertices1;
         VertexInfo vertices2;
-        PictureObject trace;
+        readonly PictureObject trace;
         int drawVerticesCount1;
         int drawVerticesCount2;
 
@@ -141,16 +141,10 @@ namespace PPDCore
 
         protected override void DisposeResource()
         {
-            if (vertices1 != null)
-            {
-                vertices1.Dispose();
-                vertices1 = null;
-            }
-            if (vertices2 != null)
-            {
-                vertices2.Dispose();
-                vertices2 = null;
-            }
+            vertices1?.Dispose();
+            vertices1 = null;
+            vertices2?.Dispose();
+            vertices2 = null;
         }
     }
 }

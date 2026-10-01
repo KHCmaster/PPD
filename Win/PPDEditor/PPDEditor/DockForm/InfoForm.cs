@@ -167,7 +167,7 @@ namespace PPDEditor
             {
                 try
                 {
-                    var name = Path.Combine(Path.GetDirectoryName(childFile), Path.GetFileNameWithoutExtension(childFile)).Substring(dir.Length).TrimStart(Path.DirectorySeparatorChar);
+                    var name = Path.Combine(Path.GetDirectoryName(childFile), Path.GetFileNameWithoutExtension(childFile))[dir.Length..].TrimStart(Path.DirectorySeparatorChar);
                     var preset = new ParameterPreset(childFile, name);
                     var childMenu = new CommandToolStripMenuItem(preset);
                     menuItem.DropDownItems.Add(childMenu);

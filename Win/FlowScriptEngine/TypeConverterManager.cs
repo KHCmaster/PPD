@@ -5,15 +5,15 @@ namespace FlowScriptEngine
 {
     public static class TypeConverterManager
     {
-        static Dictionary<Type, Dictionary<Type, TypeConverterBase>> dict;
-        static Dictionary<Type, TypeConverterFromBase> fromDict;
-        static Dictionary<Type, TypeConverterToBase> toDict;
+        static readonly Dictionary<Type, Dictionary<Type, TypeConverterBase>> dict;
+        static readonly Dictionary<Type, TypeConverterFromBase> fromDict;
+        static readonly Dictionary<Type, TypeConverterToBase> toDict;
 
         static TypeConverterManager()
         {
-            dict = new Dictionary<Type, Dictionary<Type, TypeConverterBase>>();
-            fromDict = new Dictionary<Type, TypeConverterFromBase>();
-            toDict = new Dictionary<Type, TypeConverterToBase>();
+            dict = [];
+            fromDict = [];
+            toDict = [];
         }
 
         private static TypeConverterBase GetConverter(Type from, Type to)
@@ -77,7 +77,7 @@ namespace FlowScriptEngine
         {
             if (!dict.TryGetValue(converter.From, out Dictionary<Type, TypeConverterBase> innerDict))
             {
-                innerDict = new Dictionary<Type, TypeConverterBase>();
+                innerDict = [];
                 dict.Add(converter.From, innerDict);
             }
             if (!innerDict.ContainsKey(converter.To))

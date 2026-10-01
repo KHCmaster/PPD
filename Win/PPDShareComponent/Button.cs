@@ -6,10 +6,10 @@ namespace PPDShareComponent
 {
     public class Button : GameComponent
     {
-        private TextureString textureString;
-        private EffectObject button;
-        private PictureObject disableButton;
-        private PPDFramework.Resource.ResourceManager resourceManager;
+        private readonly TextureString textureString;
+        private readonly EffectObject button;
+        private readonly PictureObject disableButton;
+        private readonly PPDFramework.Resource.ResourceManager resourceManager;
 
         private bool disabled;
 

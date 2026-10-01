@@ -4,7 +4,7 @@ namespace PPDEditorCommon.Dialog.Model
 {
     public class ScriptManagerInfo
     {
-        List<ScriptInfo> scripts;
+        readonly List<ScriptInfo> scripts;
 
         public ScriptInfo[] Scripts
         {
@@ -16,7 +16,7 @@ namespace PPDEditorCommon.Dialog.Model
 
         public ScriptManagerInfo()
         {
-            scripts = new List<ScriptInfo>();
+            scripts = [];
         }
 
         public void Add(ScriptInfo scriptInfo)

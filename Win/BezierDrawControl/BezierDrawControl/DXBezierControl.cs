@@ -14,7 +14,7 @@ namespace BezierDrawControl
         public class BezierDrawer : GameCoreBase
         {
             SpriteObject spriteObject;
-            RectangleComponent back;
+            readonly RectangleComponent back;
 
             public PPDDevice Device
             {
@@ -72,16 +72,10 @@ namespace BezierDrawControl
 
             protected override void DisposeResource()
             {
-                if (spriteObject != null)
-                {
-                    spriteObject.Dispose();
-                    spriteObject = null;
-                }
-                if (ResourceManager != null)
-                {
-                    ResourceManager.Dispose();
-                    ResourceManager = null;
-                }
+                spriteObject?.Dispose();
+                spriteObject = null;
+                ResourceManager?.Dispose();
+                ResourceManager = null;
                 base.DisposeResource();
             }
         }
@@ -133,8 +127,8 @@ namespace BezierDrawControl
                     new Vortice.Mathematics.Color4(color.R / 255f, color.G / 255f, color.B / 255f, color.A / 255f))
                 {
                     Points = new System.Numerics.Vector2[] {
-                        new System.Numerics.Vector2(p1.X,p1.Y),
-                        new System.Numerics.Vector2(p2.X,p2.Y)
+                        new(p1.X,p1.Y),
+                        new(p2.X,p2.Y)
                     },
                     LineWidth = 1
                 };
@@ -205,11 +199,8 @@ namespace BezierDrawControl
 
         private void DXBezierControl_Disposed(object sender, EventArgs e)
         {
-            if (Drawer != null)
-            {
-                Drawer.Dispose();
-                Drawer = null;
-            }
+            Drawer?.Dispose();
+            Drawer = null;
         }
 
         private void Controller_DrawRequired()

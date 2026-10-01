@@ -145,10 +145,7 @@ namespace PPDTest
                 0,1,2,3,28024,19024,10024,1024,5,6,9,12
                 }, out inputInfo);
             }
-            if (inputInfo == null)
-            {
-                inputInfo = EmptyInputInfo.Instance;
-            }
+            inputInfo ??= EmptyInputInfo.Instance;
             sceneManager.Update(inputInfo, MouseInfo.Empty, null);
         }
 
@@ -165,16 +162,11 @@ namespace PPDTest
                 sceneManager.Dispose();
                 sceneManager = null;
             }
-            if (resourceManager != null)
-            {
-                resourceManager.Dispose();
-                resourceManager = null;
-            }
-            if (input != null)
-            {
-                input.Dispose();
-                input = null;
-            }
+
+            resourceManager?.Dispose();
+            resourceManager = null;
+            input?.Dispose();
+            input = null;
         }
 
         public IMovie GetMovie(SongInformation songInformation)

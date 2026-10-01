@@ -9,24 +9,24 @@ namespace PPDMulti
 {
     class MenuUserIcon : BindableGameComponent
     {
-        PPDFramework.Resource.ResourceManager resourceManager;
+        readonly PPDFramework.Resource.ResourceManager resourceManager;
 
-        PictureObject readyIcon;
-        PictureObject notReadyIcon;
-        PictureObject playingIcon;
-        PictureObject watchIcon;
-        PictureObject hasSongIcon;
+        readonly PictureObject readyIcon;
+        readonly PictureObject notReadyIcon;
+        readonly PictureObject playingIcon;
+        readonly PictureObject watchIcon;
+        readonly PictureObject hasSongIcon;
 
         PictureObject userIcon;
-        TextureString userNameString;
-        TextureString accountIdString;
-        PictureObject[] pingPictures;
-        TextureString pingString;
-        PictureObject leaderIcon;
+        readonly TextureString userNameString;
+        readonly TextureString accountIdString;
+        readonly PictureObject[] pingPictures;
+        readonly TextureString pingString;
+        readonly PictureObject leaderIcon;
 
         private string currentUserIconPath = Utility.Path.Combine("noimage_icon.png");
 
-        UserListComponent listComponent;
+        readonly UserListComponent listComponent;
 
         public MenuUserIcon(PPDDevice device, PPDFramework.Resource.ResourceManager resourceManager, UserListComponent listComponent, User user) : base(device)
         {

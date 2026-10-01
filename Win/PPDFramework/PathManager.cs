@@ -8,7 +8,7 @@ namespace PPDFramework
     /// </summary>
     public class PathManager
     {
-        string baseDir;
+        readonly string baseDir;
 
         /// <summary>
         /// 基底フォルダを取得します。

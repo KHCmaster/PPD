@@ -125,10 +125,7 @@ namespace PPDMulti.Data
 
         protected void OnItemChanged(T[] addedItems, T[] removedItems)
         {
-            if (ItemChanged != null)
-            {
-                ItemChanged.Invoke(addedItems, removedItems);
-            }
+            ItemChanged?.Invoke(addedItems, removedItems);
         }
     }
 }

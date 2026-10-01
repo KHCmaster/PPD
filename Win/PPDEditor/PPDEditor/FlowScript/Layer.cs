@@ -7,7 +7,7 @@ namespace PPDEditor.FlowScript
 {
     class Layer : ILayer
     {
-        private ChangeMarkPropertyManager manager;
+        private readonly ChangeMarkPropertyManager manager;
 
         public Layer(PPDSheet sheet, IDProvider idProvider, bool isSelected)
         {

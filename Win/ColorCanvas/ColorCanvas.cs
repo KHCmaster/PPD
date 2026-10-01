@@ -18,7 +18,7 @@ namespace ColorCanvas
         private const string PART_SpectrumSlider = "PART_SpectrumSlider";
         private const string PART_HexadecimalTextBox = "PART_HexadecimalTextBox";
 
-        private TranslateTransform _colorShadeSelectorTransform = new TranslateTransform();
+        private readonly TranslateTransform _colorShadeSelectorTransform = new();
         private Canvas _colorShadingCanvas;
         private Canvas _colorShadeSelector;
         private ColorSpectrumSlider _spectrumSlider;
@@ -292,32 +292,19 @@ namespace ColorCanvas
 
             _colorShadeSelector = GetTemplateChild(PART_ColorShadeSelector) as Canvas;
 
-            if (_colorShadeSelector != null)
-            {
-                _colorShadeSelector.RenderTransform = _colorShadeSelectorTransform;
-            }
+            _colorShadeSelector?.RenderTransform = _colorShadeSelectorTransform;
 
-            if (_spectrumSlider != null)
-            {
-                _spectrumSlider.ValueChanged -= SpectrumSlider_ValueChanged;
-            }
+            _spectrumSlider?.ValueChanged -= SpectrumSlider_ValueChanged;
 
             _spectrumSlider = GetTemplateChild(PART_SpectrumSlider) as ColorSpectrumSlider;
 
-            if (_spectrumSlider != null)
-                _spectrumSlider.ValueChanged += SpectrumSlider_ValueChanged;
+            _spectrumSlider?.ValueChanged += SpectrumSlider_ValueChanged;
 
-            if (_hexadecimalTextBox != null)
-            {
-                _hexadecimalTextBox.LostFocus -= HexadecimalTextBox_LostFocus;
-            }
+            _hexadecimalTextBox?.LostFocus -= HexadecimalTextBox_LostFocus;
 
             _hexadecimalTextBox = GetTemplateChild(PART_HexadecimalTextBox) as CustomTextBox;
 
-            if (_hexadecimalTextBox != null)
-            {
-                _hexadecimalTextBox.LostFocus += HexadecimalTextBox_LostFocus;
-            }
+            _hexadecimalTextBox?.LostFocus += HexadecimalTextBox_LostFocus;
 
             UpdateRGBValues(SelectedColor);
             UpdateColorShadeSelectorPosition(SelectedColor);
@@ -449,8 +436,8 @@ namespace ColorCanvas
             _colorShadeSelectorTransform.X = p.X - (_colorShadeSelector.Width / 2);
             _colorShadeSelectorTransform.Y = p.Y - (_colorShadeSelector.Height / 2);
 
-            p.X = p.X / _colorShadingCanvas.ActualWidth;
-            p.Y = p.Y / _colorShadingCanvas.ActualHeight;
+            p.X /= _colorShadingCanvas.ActualWidth;
+            p.Y /= _colorShadingCanvas.ActualHeight;
 
             _currentColorPosition = p;
 
@@ -529,10 +516,7 @@ namespace ColorCanvas
 
         private void SetHexadecimalTextBoxTextProperty(string newValue)
         {
-            if (_hexadecimalTextBox != null)
-            {
-                _hexadecimalTextBox.CustomText = newValue;
-            }
+            _hexadecimalTextBox?.CustomText = newValue;
         }
     }
 }

@@ -192,8 +192,8 @@ namespace PPDExpansion.ViewModel
         {
             get
             {
-                return closeCommand ?? (closeCommand = new RelayCommand(
-                    CloseCommand_Execute));
+                return closeCommand ??= new RelayCommand(
+                    CloseCommand_Execute);
             }
         }
 
@@ -201,8 +201,8 @@ namespace PPDExpansion.ViewModel
         {
             get
             {
-                return closedCommand ?? (closedCommand = new RelayCommand(
-                    ClosedCommand_Execute));
+                return closedCommand ??= new RelayCommand(
+                    ClosedCommand_Execute);
             }
         }
 
@@ -247,9 +247,8 @@ namespace PPDExpansion.ViewModel
         {
             dispatcher.Invoke((Action)(() =>
             {
-                if (obj is ScoreInfo)
+                if (obj is ScoreInfo scoreInfo)
                 {
-                    var scoreInfo = (ScoreInfo)obj;
                     IsMulti = scoreInfo.PlayType == PlayType.MultiPlay;
                 }
 
@@ -274,11 +273,8 @@ namespace PPDExpansion.ViewModel
         /// </summary>
         public void Dispose()
         {
-            if (host != null)
-            {
-                host.Dispose();
-                host = null;
-            }
+            host?.Dispose();
+            host = null;
         }
 
         private void ClosedCommand_Execute()

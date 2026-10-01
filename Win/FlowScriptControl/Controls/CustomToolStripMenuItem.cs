@@ -28,8 +28,8 @@ namespace FlowScriptControl.Controls
         }
 
         private Timer timer;
-        private ToolTip toolTip;
-        private FlowDrawPanel panel;
+        private readonly ToolTip toolTip;
+        private readonly FlowDrawPanel panel;
 
         public CustomToolStripMenuItem(Classes.IToolTipText toolTipText, FlowDrawPanel panel, ToolTip tooltip, string text)
             : base(text)

@@ -5,7 +5,7 @@ namespace PPDEditor
 {
     class FlowScriptLanguageProvider : ILanguageProvider
     {
-        private SettingReader flowLang;
+        private readonly SettingReader flowLang;
 
         public FlowScriptLanguageProvider(SettingReader flowLang)
         {

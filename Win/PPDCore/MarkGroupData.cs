@@ -6,7 +6,7 @@ namespace PPDCore
 {
     class MarkGroupData : IGrouping<float, MarkDataBase>
     {
-        private MarkDataBase[] data;
+        private readonly MarkDataBase[] data;
 
         public SameTimingMarks SameTimings
         {
@@ -18,11 +18,7 @@ namespace PPDCore
         {
             Key = time;
             this.data = data;
-            SameTimings = new SameTimingMarks();
-            foreach (var ppdData in data)
-            {
-                SameTimings.Add(ppdData);
-            }
+            SameTimings = [.. data];
         }
 
         #region IGrouping<float,IPPDData> メンバー

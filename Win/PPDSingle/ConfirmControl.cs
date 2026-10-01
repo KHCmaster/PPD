@@ -18,12 +18,12 @@ namespace PPDSingle
             vanishing = 2,
             next = 3
         }
-        TextureString songname;
-        TextureString difficulty;
-        EffectObject confirm;
-        RectangleComponent black;
+        readonly TextureString songname;
+        readonly TextureString difficulty;
+        readonly EffectObject confirm;
+        readonly RectangleComponent black;
 
-        SpriteObject sprite;
+        readonly SpriteObject sprite;
 
         State state;
 

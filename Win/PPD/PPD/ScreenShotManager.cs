@@ -13,16 +13,16 @@ namespace PPD
         const int baseWidth = 800;
         const int baseHeight = 450;
 
-        private PPDDevice device;
-        private List<ScreenShotInfo> infos;
+        private readonly PPDDevice device;
+        private readonly List<ScreenShotInfo> infos;
         int updateCallCount;
-        List<ScreenShotInfo> removeInfos;
+        readonly List<ScreenShotInfo> removeInfos;
 
         public ScreenShotManager(PPDDevice device)
         {
             this.device = device;
-            infos = new List<ScreenShotInfo>();
-            removeInfos = new List<ScreenShotInfo>();
+            infos = [];
+            removeInfos = [];
         }
 
         public void Add(string filePath, Action<string> action)
@@ -44,8 +44,8 @@ namespace PPD
                 var size = GetSize(fileName);
                 if (size.Width != baseWidth || size.Height != baseHeight)
                 {
-                    using (Bitmap src = new Bitmap(fileName))
-                    using (Bitmap bitmap = new Bitmap(baseWidth, baseHeight))
+                    using (Bitmap src = new(fileName))
+                    using (Bitmap bitmap = new(baseWidth, baseHeight))
                     using (Graphics g = Graphics.FromImage(bitmap))
                     {
                         g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
@@ -90,7 +90,7 @@ namespace PPD
 
         private Size GetSize(string filePath)
         {
-            using (Bitmap bitmap = new Bitmap(filePath))
+            using (Bitmap bitmap = new(filePath))
             {
                 return new Size(bitmap.Width, bitmap.Height);
             }

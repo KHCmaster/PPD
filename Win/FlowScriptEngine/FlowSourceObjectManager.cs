@@ -5,10 +5,10 @@ namespace FlowScriptEngine
 {
     public static class FlowSourceObjectManager
     {
-        private static Dictionary<string, AssemblyAndType> dict;
+        private static readonly Dictionary<string, AssemblyAndType> dict;
         static FlowSourceObjectManager()
         {
-            dict = new Dictionary<string, AssemblyAndType>();
+            dict = [];
         }
 
         internal static void AddFlowSourceObject(AssemblyAndType asmAndType)

@@ -4,7 +4,7 @@ namespace PPDCore
 {
     class DbLatencyUpdater : LatencyUpdaterBase
     {
-        PPDGameUtility ppdGameUtility;
+        readonly PPDGameUtility ppdGameUtility;
 
         public DbLatencyUpdater(PPDGameUtility ppdGameUtility)
             : base(ppdGameUtility.SongInformation.Latency)

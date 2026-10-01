@@ -128,7 +128,7 @@ namespace PPDEditorCommon.Dialog.ViewModel
         {
             get
             {
-                return loadedCommand ?? (loadedCommand = new RelayCommand(LoadedCommand_Execute));
+                return loadedCommand ??= new RelayCommand(LoadedCommand_Execute);
             }
         }
 
@@ -136,7 +136,7 @@ namespace PPDEditorCommon.Dialog.ViewModel
         {
             get
             {
-                return okCommand ?? (okCommand = new RelayCommand(OkCommand_Execute));
+                return okCommand ??= new RelayCommand(OkCommand_Execute);
             }
         }
 
@@ -144,7 +144,7 @@ namespace PPDEditorCommon.Dialog.ViewModel
         {
             get
             {
-                return cancelCommand ?? (cancelCommand = new RelayCommand(CancelCommand_Execute));
+                return cancelCommand ??= new RelayCommand(CancelCommand_Execute);
             }
         }
 
@@ -152,8 +152,8 @@ namespace PPDEditorCommon.Dialog.ViewModel
         {
             get
             {
-                return selectedItemChangedCommand ?? (selectedItemChangedCommand = new RelayCommand<RoutedPropertyChangedEventArgs<object>>(
-                    SelectedItemChangedCommand_Execute));
+                return selectedItemChangedCommand ??= new RelayCommand<RoutedPropertyChangedEventArgs<object>>(
+                    SelectedItemChangedCommand_Execute);
             }
         }
 
@@ -161,7 +161,7 @@ namespace PPDEditorCommon.Dialog.ViewModel
         {
             get
             {
-                return referLocationCommand ?? (referLocationCommand = new RelayCommand(ReferLocationCommand_Execute));
+                return referLocationCommand ??= new RelayCommand(ReferLocationCommand_Execute);
             }
         }
 
@@ -169,14 +169,14 @@ namespace PPDEditorCommon.Dialog.ViewModel
         {
             get
             {
-                return referMovieCommand ?? (referMovieCommand = new RelayCommand(ReferMovieCommand_Execute));
+                return referMovieCommand ??= new RelayCommand(ReferMovieCommand_Execute);
             }
         }
 
         public NewProjectWindowViewModel(LanguageReader languageReader)
         {
             TranslateExtension.Language = languageReader;
-            Templates = new ObservableCollection<ListViewModel<TemplateInfo>>();
+            Templates = [];
             Root = new TreeNodeViewModel<TemplateInfo>();
         }
 
@@ -355,8 +355,7 @@ namespace PPDEditorCommon.Dialog.ViewModel
 
         private void SelectedItemChangedCommand_Execute(RoutedPropertyChangedEventArgs<object> e)
         {
-            var node = e.NewValue as TreeNodeViewModel<TemplateInfo>;
-            if (node == null)
+            if (e.NewValue is not TreeNodeViewModel<TemplateInfo> node)
             {
                 return;
             }

@@ -16,12 +16,12 @@ namespace PPDFramework.Mod
     /// </summary>
     public class ModInfo : ModInfoBase
     {
-        private ModManager modManager;
-        private List<ModSetting> settings;
+        private readonly ModManager modManager;
+        private readonly List<ModSetting> settings;
         private ModSettingManager modSettingManager;
         private WebModInfo matchedWebModInfo;
         private WebModInfoDetail matchedWebModInfoDetail;
-        private Guid guid;
+        private readonly Guid guid;
         private bool isApplied;
 
         /// <summary>
@@ -220,7 +220,7 @@ namespace PPDFramework.Mod
         internal ModInfo(string path, ModManager modManager, WebModInfo[] webModInfos)
             : base(path, false)
         {
-            settings = new List<ModSetting>();
+            settings = [];
             this.guid = Guid.NewGuid();
             this.modManager = modManager;
             UpdateInfo();
@@ -231,7 +231,7 @@ namespace PPDFramework.Mod
 
         private void UpdateInfo()
         {
-            using (PackReader reader = new PackReader(ModPath))
+            using (PackReader reader = new(ModPath))
             {
                 DisplayName = ReadString(reader, "Mod\\DisplayName");
                 AuthorName = ReadString(reader, "Mod\\AuthorName");

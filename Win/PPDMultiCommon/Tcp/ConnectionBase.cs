@@ -9,12 +9,12 @@ namespace PPDMultiCommon.Tcp
 {
     public abstract class ConnectionBase
     {
-        private readonly object syncRoot = new object();
+        private readonly object syncRoot = new();
         protected TcpClient client;
         NetworkStream net;
         Thread readThread;
         Thread writeThread;
-        Queue<byte[]> jobs;
+        readonly Queue<byte[]> jobs;
 
         volatile bool disposed;
 
@@ -58,7 +58,7 @@ namespace PPDMultiCommon.Tcp
             byte[] resBytes = new byte[client.ReceiveBufferSize];
             while (true)
             {
-                using (MemoryStream ms = new MemoryStream())
+                using (MemoryStream ms = new())
                 {
                     int resSize;
                     try
@@ -174,16 +174,10 @@ namespace PPDMultiCommon.Tcp
             if (!disposed)
             {
                 disposed = true;
-                if (net != null)
-                {
-                    net.Close();
-                    net = null;
-                }
-                if (client != null)
-                {
-                    client.Close();
-                    client = null;
-                }
+                net?.Close();
+                net = null;
+                client?.Close();
+                client = null;
 
                 // .NET では Thread.Abort が使えない。読み込みのスレッドは接続を閉じたことで、
                 // 書き込みのスレッドは disposed を見て終わる

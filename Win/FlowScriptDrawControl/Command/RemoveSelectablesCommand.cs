@@ -7,10 +7,10 @@ namespace FlowScriptDrawControl.Command
 {
     class RemoveSelectablesCommand : CommandBase
     {
-        private SelectableControl[] controls;
+        private readonly SelectableControl[] controls;
         private SourceControl[] sources;
         private CommentControl[] comments;
-        private FlowAreaControl flowAreaControl;
+        private readonly FlowAreaControl flowAreaControl;
         private RemoveFlowCommand[] removeFlowCommands;
         private RemoveBoundCommentCommand[] removeBoundCommentCommands;
         private RemoveSelectableFromScopeCommand[] removeFromScopeCommands;

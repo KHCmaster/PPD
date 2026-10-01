@@ -4,8 +4,8 @@ namespace FlowScriptEnginePPD
 {
     public class Warning : IWarning
     {
-        private string key;
-        private string text;
+        private readonly string key;
+        private readonly string text;
         public Warning(string key)
         {
             this.key = key;

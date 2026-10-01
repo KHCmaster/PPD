@@ -25,12 +25,12 @@ namespace PPDShareComponent
             OK
         }
 
-        TextureString confirm;
-        Button[] buttons;
+        readonly TextureString confirm;
+        readonly Button[] buttons;
 
         private int selection;
 
-        PPDFramework.Resource.ResourceManager resourceManager;
+        readonly PPDFramework.Resource.ResourceManager resourceManager;
 
         public bool OK
         {
@@ -55,10 +55,9 @@ namespace PPDShareComponent
                 {
                     buttons[i] = new Button(device, resourceManager, pathManager, i == 0 ? yes : no)
                     {
-                        Position = new Vector2(i == 0 ? 350 : 450, 280)
+                        Position = new Vector2(i == 0 ? 350 : 450, 280),
+                        Selected = false
                     };
-
-                    buttons[i].Selected = false;
                     this.AddChild(buttons[i]);
                 }
             }
@@ -145,10 +144,7 @@ namespace PPDShareComponent
                 Value = true
             };
 
-            if (ButtonPressed != null)
-            {
-                ButtonPressed.Invoke(this, e);
-            }
+            ButtonPressed?.Invoke(this, e);
 
             if (e.Value)
             {

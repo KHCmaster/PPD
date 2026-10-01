@@ -14,24 +14,24 @@ namespace PPDSingle
         const int scrollBarStartY = 80;
         const int scrollBarMaxHeight = 330;
 
-        IGameHost gameHost;
-        ISound sound;
-        PPDFramework.Resource.ResourceManager resourceManager;
+        readonly IGameHost gameHost;
+        readonly ISound sound;
+        readonly PPDFramework.Resource.ResourceManager resourceManager;
 
-        RectangleComponent black;
-        SpriteObject waitSprite;
-        SpriteObject updateSprite;
-        PictureObject back;
+        readonly RectangleComponent black;
+        readonly SpriteObject waitSprite;
+        readonly SpriteObject updateSprite;
+        readonly PictureObject back;
         ModInfoBase currentModInfo;
 
-        SpriteObject settingMenu;
-        SpriteObject updateMenu;
-        TextureString author;
-        TextureString version;
-        TextureString filename;
-        TextureString notAvailable;
-        RectangleComponent scrollBar;
-        SpriteObject modListSprite;
+        readonly SpriteObject settingMenu;
+        readonly SpriteObject updateMenu;
+        readonly TextureString author;
+        readonly TextureString version;
+        readonly TextureString filename;
+        readonly TextureString notAvailable;
+        readonly RectangleComponent scrollBar;
+        readonly SpriteObject modListSprite;
 
         int currentIndex = -1;
         int scrollIndex;
@@ -499,9 +499,9 @@ namespace PPDSingle
 
         public class ModInfoComponent : ModInfoComponentBase
         {
-            private PictureObject check;
-            private PictureObject checkBox;
-            private PictureObject availableRanking;
+            private readonly PictureObject check;
+            private readonly PictureObject checkBox;
+            private readonly PictureObject availableRanking;
 
             public ModInfo ModInfo
             {
@@ -560,7 +560,7 @@ namespace PPDSingle
 
         public class DirModInfoComponent : ModInfoComponentBase
         {
-            private PictureObject folder;
+            private readonly PictureObject folder;
 
             public DirModInfo ModInfo
             {

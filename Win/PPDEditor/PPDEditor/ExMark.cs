@@ -16,13 +16,13 @@ namespace PPDEditor
         const int ExMarkPosDiffStart = 24;
         protected float endtime;
         float lasttime;
-        PictureObject outcircle;
-        PictureObject outjiku;
+        readonly PictureObject outcircle;
+        readonly PictureObject outjiku;
         PictureObject[] exMarks;
         PictureObject[] exMarksc;
-        Vector2[] circlepoints;
+        readonly Vector2[] circlepoints;
         PictureObject trace;
-        PictureObject hold;
+        readonly PictureObject hold;
         Vector2 holdoffset;
         bool played;
         float slideScale = 1;

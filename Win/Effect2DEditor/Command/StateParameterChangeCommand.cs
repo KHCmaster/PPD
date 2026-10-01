@@ -4,9 +4,9 @@ namespace Effect2DEditor.Command
 {
     class StateParameterChangeCommand : CommandBase
     {
-        SelectedManager SManager;
+        readonly SelectedManager SManager;
         float previousvalue;
-        RatioType type;
+        readonly RatioType type;
         float value;
         public StateParameterChangeCommand(EffectManager manager, string exp, SelectedManager SManager, RatioType type, float value)
             : base(manager, exp)

@@ -9,12 +9,12 @@ namespace PPDMulti
 {
     class ItemSettingComponent : FocusableGameComponent
     {
-        PPDFramework.Resource.ResourceManager resourceManager;
-        ISound sound;
-        PictureObject back;
+        readonly PPDFramework.Resource.ResourceManager resourceManager;
+        readonly ISound sound;
+        readonly PictureObject back;
 
-        SpriteObject manualUseSprite;
-        SpriteObject autoUseSprite;
+        readonly SpriteObject manualUseSprite;
+        readonly SpriteObject autoUseSprite;
 
         UseItemComponent current;
 
@@ -228,11 +228,11 @@ namespace PPDMulti
 
         class UseItemComponent : GameComponent
         {
-            PPDFramework.Resource.ResourceManager resourceManager;
+            readonly PPDFramework.Resource.ResourceManager resourceManager;
 
             bool selected;
-            RectangleComponent rectangle;
-            TextureString nameString;
+            readonly RectangleComponent rectangle;
+            readonly TextureString nameString;
 
             public UseItemComponent(PPDDevice device, PPDFramework.Resource.ResourceManager resourceManager, ItemType itemType) : base(device)
             {

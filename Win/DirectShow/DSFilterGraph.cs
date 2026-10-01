@@ -66,7 +66,7 @@ namespace DirectShow
         protected double m_dRate = 1.0;
         protected bool m_bShouldPreview = true;
 
-        protected List<DSFilter> m_Filters = new List<DSFilter>();
+        protected List<DSFilter> m_Filters = [];
 
         ~DSFilterGraphBase()
         {
@@ -276,7 +276,7 @@ namespace DirectShow
         {
             get
             {
-                bool bVisible = ((m_VideoControl != null) ? m_VideoControl.Visible : false);
+                bool bVisible = ((m_VideoControl != null) && m_VideoControl.Visible);
                 return m_bShouldPreview || bVisible;
             }
             set
@@ -578,11 +578,8 @@ namespace DirectShow
             try
             {
                 OnCloseInterfaces();
-                if (m_MediaEventEx != null)
-                {
-                    m_MediaEventEx.SetNotifyWindow(IntPtr.Zero, 0, IntPtr.Zero);
-                    m_MediaEventEx = null;
-                }
+                m_MediaEventEx?.SetNotifyWindow(IntPtr.Zero, 0, IntPtr.Zero);
+                m_MediaEventEx = null;
                 if (m_VideoWindow != null)
                 {
                     m_VideoWindow.put_Visible(0);

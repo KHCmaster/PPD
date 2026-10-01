@@ -71,7 +71,7 @@ namespace Effect2D
         }
 
         PlayState state = PlayState.Stop;
-        Stopwatch stopwatch;
+        readonly Stopwatch stopwatch;
         float currentFrame;
         PlayType playType = PlayType.Once;
 
@@ -155,8 +155,8 @@ namespace Effect2D
         {
             stopwatch = new Stopwatch();
             FPS = 60;
-            Effects = new List<IEffect>();
-            Sets = new SortedList<int, EffectStateRatioSet>();
+            Effects = [];
+            Sets = [];
             var set = new EffectStateRatioSet
             {
                 StartState = new EffectStateStructure(),
@@ -259,7 +259,7 @@ namespace Effect2D
                 stopwatch.Stop();
                 stopwatch.Reset();
                 currentFrame = FrameLength;
-                if (Finish != null) Finish.Invoke(this, EventArgs.Empty);
+                Finish?.Invoke(this, EventArgs.Empty);
             }
             else if (currentFrame < 0 && playType == PlayType.ReverseOnce)
             {
@@ -267,7 +267,7 @@ namespace Effect2D
                 stopwatch.Stop();
                 stopwatch.Reset();
                 currentFrame = 0;
-                if (Finish != null) Finish.Invoke(this, EventArgs.Empty);
+                Finish?.Invoke(this, EventArgs.Empty);
             }
             InnerUpdate();
         }

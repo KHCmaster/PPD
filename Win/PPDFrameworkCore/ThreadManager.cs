@@ -5,7 +5,7 @@ namespace PPDFrameworkCore
 {
     public class ThreadManager
     {
-        private static ThreadManager instance = new ThreadManager();
+        private static readonly ThreadManager instance = new();
         public static ThreadManager Instance
         {
             get
@@ -14,11 +14,11 @@ namespace PPDFrameworkCore
             }
         }
 
-        List<Thread> threads;
+        readonly List<Thread> threads;
 
         private ThreadManager()
         {
-            threads = new List<Thread>();
+            threads = [];
         }
 
         public void Update()

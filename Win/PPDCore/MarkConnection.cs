@@ -10,15 +10,15 @@ namespace PPDCore
 {
     class MarkConnection : GameComponent
     {
-        List<Mark> convexMarks;
-        List<Mark> inMarks;
-        MarkConnectionCommon connectionCommon;
+        readonly List<Mark> convexMarks;
+        readonly List<Mark> inMarks;
+        readonly MarkConnectionCommon connectionCommon;
 
         public MarkConnection(PPDDevice device, MarkConnectionCommon connectionCommon) : base(device)
         {
             this.connectionCommon = connectionCommon;
-            convexMarks = new List<Mark>();
-            inMarks = new List<Mark>();
+            convexMarks = [];
+            inMarks = [];
         }
 
         public void AddConvex(Mark mk)
@@ -70,9 +70,9 @@ namespace PPDCore
 
         class MarkConnectionLine : GameComponent
         {
-            MarkConnectionCommon markConnectionCommon;
-            Mark mk1;
-            Mark mk2;
+            readonly MarkConnectionCommon markConnectionCommon;
+            readonly Mark mk1;
+            readonly Mark mk2;
             int drawCount;
             VertexInfo[] vertices;
 

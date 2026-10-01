@@ -4,7 +4,7 @@ namespace PPDFramework.Web
 {
     class RankingCache
     {
-        private static RankingCache cache = new RankingCache();
+        private static readonly RankingCache cache = new();
 
         public static RankingCache Cache
         {
@@ -14,8 +14,8 @@ namespace PPDFramework.Web
             }
         }
 
-        ArrayTree<byte, RankingCacheInfo> tree;
-        ArrayTree<byte, RankingCacheInfo> rivalTree;
+        readonly ArrayTree<byte, RankingCacheInfo> tree;
+        readonly ArrayTree<byte, RankingCacheInfo> rivalTree;
 
         private RankingCache()
         {

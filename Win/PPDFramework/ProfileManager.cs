@@ -10,13 +10,13 @@ namespace PPDFramework
     /// </summary>
     public class ProfileManager
     {
-        List<Profile> profiles;
+        readonly List<Profile> profiles;
         int iter;
-        static ProfileManager manager = new ProfileManager();
+        static readonly ProfileManager manager = new();
         private ProfileManager()
         {
             iter = 0;
-            profiles = new List<Profile>();
+            profiles = [];
 
             string directory = "profiles";
 

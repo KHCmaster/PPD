@@ -13,8 +13,8 @@ namespace PPDEditor.Controls
         public event EventHandler Duplicated;
         bool selected;
         bool visible = true;
-        int rightmargin = 5;
-        PPDSheet data;
+        readonly int rightmargin = 5;
+        readonly PPDSheet data;
         Color markColor;
         string deleteconfirm = "削除してもよろしいですか?";
         string confirm = "確認";
@@ -47,19 +47,13 @@ namespace PPDEditor.Controls
         }
         private void VisibleChange()
         {
-            if (VisibleStateChanged != null)
-            {
-                VisibleStateChanged.Invoke(this, EventArgs.Empty);
-            }
+            VisibleStateChanged?.Invoke(this, EventArgs.Empty);
         }
         private void label2_MouseClick(object sender, MouseEventArgs e)
         {
             selected = true;
             this.Focus();
-            if (SelectStateChanged != null)
-            {
-                SelectStateChanged.Invoke(this, EventArgs.Empty);
-            }
+            SelectStateChanged?.Invoke(this, EventArgs.Empty);
             ChangeDisplayMode();
         }
 
@@ -67,10 +61,7 @@ namespace PPDEditor.Controls
         {
             selected = true;
             this.Focus();
-            if (SelectStateChanged != null)
-            {
-                SelectStateChanged.Invoke(this, EventArgs.Empty);
-            }
+            SelectStateChanged?.Invoke(this, EventArgs.Empty);
             ChangeDisplayMode();
         }
 
@@ -78,20 +69,14 @@ namespace PPDEditor.Controls
         {
             selected = true;
             this.Focus();
-            if (SelectStateChanged != null)
-            {
-                SelectStateChanged.Invoke(this, EventArgs.Empty);
-            }
+            SelectStateChanged?.Invoke(this, EventArgs.Empty);
             ChangeDisplayMode();
         }
         private void layerdisplay_MouseDown(object sender, MouseEventArgs e)
         {
             selected = true;
             this.Focus();
-            if (SelectStateChanged != null)
-            {
-                SelectStateChanged.Invoke(this, EventArgs.Empty);
-            }
+            SelectStateChanged?.Invoke(this, EventArgs.Empty);
             ChangeDisplayMode();
 
         }
@@ -148,10 +133,7 @@ namespace PPDEditor.Controls
         {
             selected = true;
             this.Focus();
-            if (SelectStateChanged != null)
-            {
-                SelectStateChanged.Invoke(this, EventArgs.Empty);
-            }
+            SelectStateChanged?.Invoke(this, EventArgs.Empty);
             ChangeDisplayMode();
         }
 
@@ -168,10 +150,7 @@ namespace PPDEditor.Controls
 
         private void このレイヤーを複製ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (this.Duplicated != null)
-            {
-                this.Duplicated.Invoke(this, EventArgs.Empty);
-            }
+            this.Duplicated?.Invoke(this, EventArgs.Empty);
         }
         public PPDSheet PPDData
         {
@@ -204,10 +183,7 @@ namespace PPDEditor.Controls
                 if (selected)
                 {
                     this.Focus();
-                    if (SelectStateChanged != null)
-                    {
-                        SelectStateChanged.Invoke(this, EventArgs.Empty);
-                    }
+                    SelectStateChanged?.Invoke(this, EventArgs.Empty);
                 }
                 ChangeDisplayMode();
             }
@@ -263,7 +239,7 @@ namespace PPDEditor.Controls
 
         private void panel2_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            using (ColorDialog cd = new ColorDialog())
+            using (ColorDialog cd = new())
             {
                 cd.Color = panel2.BackColor;
                 if (cd.ShowDialog() == DialogResult.OK)

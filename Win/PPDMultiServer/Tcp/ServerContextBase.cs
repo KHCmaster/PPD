@@ -9,7 +9,7 @@ namespace PPDMultiServer.Tcp
     public abstract class ServerContextBase : IDisposable
     {
         private bool disposed;
-        Dictionary<Type, Tuple<object, MethodInfo>> processors;
+        readonly Dictionary<Type, Tuple<object, MethodInfo>> processors;
 
         public bool Disposed
         {
@@ -31,7 +31,7 @@ namespace PPDMultiServer.Tcp
 
         protected ServerContextBase(ServerContextBase previousContext)
         {
-            processors = new Dictionary<Type, Tuple<object, MethodInfo>>();
+            processors = [];
         }
 
         protected void AddProcessor<T>(Action<T> processor) where T : NetworkData

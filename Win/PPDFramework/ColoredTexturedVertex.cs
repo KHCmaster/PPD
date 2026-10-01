@@ -115,7 +115,7 @@ namespace PPDFramework
         /// <returns>
         /// A 32-bit signed integer that is the hash code for this instance.
         /// </returns>
-        public override int GetHashCode()
+        public override readonly int GetHashCode()
         {
             return Position.GetHashCode() + TextureCoordinates.GetHashCode();
         }
@@ -145,7 +145,7 @@ namespace PPDFramework
         /// <returns>
         /// true if the current object is equal to the <paramref name="other"/> parameter; otherwise, false.
         /// </returns>
-        public bool Equals(ColoredTexturedVertex other)
+        public readonly bool Equals(ColoredTexturedVertex other)
         {
             return (Position == other.Position && TextureCoordinates == other.TextureCoordinates);
         }

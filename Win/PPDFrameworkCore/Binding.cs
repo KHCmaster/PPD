@@ -57,7 +57,7 @@ namespace PPDFrameworkCore
         {
             Object lastObj = first;
             var srcSplit = exp.Split('.');
-            last = srcSplit[srcSplit.Length - 1];
+            last = srcSplit[^1];
             for (int i = 0; i < srcSplit.Length - 1; i++)
             {
                 var propertyInfo = FindPropertyInfo(lastObj, srcSplit[i]);
@@ -118,10 +118,7 @@ namespace PPDFrameworkCore
 
         public void Release()
         {
-            if (srcObject != null)
-            {
-                srcObject.PropertyChanged -= Binding_PropertyChanged;
-            }
+            srcObject?.PropertyChanged -= Binding_PropertyChanged;
         }
     }
 
