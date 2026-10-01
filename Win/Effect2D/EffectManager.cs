@@ -5,7 +5,6 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
 
 namespace Effect2D
@@ -23,10 +22,6 @@ namespace Effect2D
     /// </summary>
     public class EffectManager : IEffect
     {
-        // 子のエフェクトがこの数以上のときだけ並列に更新する（少ないときは並列化のコストと確保のほうが大きい）
-        const int ParallelUpdateThreshold = 16;
-        static readonly ParallelOptions parallelOptions = new() { MaxDegreeOfParallelism = Environment.ProcessorCount };
-        Action<IEffect> updateEffect;
 
         /// <summary>
         /// 終了イベント
@@ -285,17 +280,11 @@ namespace Effect2D
             set.GetRatios(CurrentFrame, ratios);
             CurrentState ??= new EffectStateStructure();
             CurrentState.SetMixedState(set.StartState, ratios, set.EndState);
-            if (Effects.Count >= ParallelUpdateThreshold)
+            // 子のエフェクトの更新は 1 つあたり数マイクロ秒なので、並列にするとスレッドを起こす・待つコストのほうが大きい
+            // （CPU の計測で、メインスレッドの時間の約 25% がこの待ちだった）。順に更新する
+            foreach (var effect in Effects)
             {
-                updateEffect ??= UpdateEffect;
-                Parallel.ForEach(Effects, parallelOptions, updateEffect);
-            }
-            else
-            {
-                foreach (var effect in Effects)
-                {
-                    UpdateEffect(effect);
-                }
+                UpdateEffect(effect);
             }
         }
 
