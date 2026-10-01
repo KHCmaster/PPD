@@ -65,13 +65,13 @@ namespace PPDConfig
                         Name = fileName.ToLower(),
                         Checked = Path.GetFileName(fileName).ToLower() == String.Format("lang_{0}_{1}.ini", this.GetType().Assembly.GetName().Name, langFileISO).ToLower()
                     };
-                    tsmi.Click += tsmi_Click;
+                    tsmi.Click += Tsmi_Click;
                     言語ToolStripMenuItem.DropDownItems.Add(tsmi);
                 }
             }
         }
 
-        void tsmi_Click(object sender, EventArgs e)
+        void Tsmi_Click(object sender, EventArgs e)
         {
             if (sender is ToolStripMenuItem tsmi)
             {
@@ -232,29 +232,27 @@ namespace PPDConfig
             var setting = new SettingReader(sr.ReadToEnd());
             sr.Close();
             setting.ReplaceOrAdd("Language", langFileISO);
-            using (SettingWriter sw = new(iniFileName, false))
+            using SettingWriter sw = new(iniFileName, false);
+            foreach (KeyValuePair<string, string> kvp in setting.Dictionary)
             {
-                foreach (KeyValuePair<string, string> kvp in setting.Dictionary)
-                {
-                    sw.Write(kvp.Key, kvp.Value);
-                }
+                sw.Write(kvp.Key, kvp.Value);
             }
         }
 
 
-        private void button5_Click(object sender, EventArgs e)
+        private void Button5_Click(object sender, EventArgs e)
         {
             SavePPDIni();
             SaveSetting();
             this.Close();
         }
 
-        private void button6_Click(object sender, EventArgs e)
+        private void Button6_Click(object sender, EventArgs e)
         {
             this.Close();
         }
 
-        private void button7_Click(object sender, EventArgs e)
+        private void Button7_Click(object sender, EventArgs e)
         {
             MonitorLatency = 0.017f;
             MovieExtensions = "mp4;flv;avi;wmv;mkv;divx;mov;ogv;webm";
@@ -582,11 +580,11 @@ namespace PPDConfig
             }
         }
 
-        private void button3_Click(object sender, EventArgs e)
+        private void Button3_Click(object sender, EventArgs e)
         {
         }
 
-        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void LinkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             new Thread(() =>
             {

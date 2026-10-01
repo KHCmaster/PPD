@@ -4,12 +4,13 @@ using System.Numerics;
 using PPDMath;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace PPDSingle
 {
     class UpdateScoreControl : FocusableGameComponent
     {
-        private readonly object syncRoot = new();
+        private readonly Lock syncRoot = new();
         const int MaxDisplayCount = 13;
         const int scrollBarStartY = 80;
         const int scrollBarMaxHeight = 330;
@@ -32,9 +33,9 @@ namespace PPDSingle
             {
                 if (updatedSongInformations != null)
                 {
-                    return updatedSongInformations.ToArray();
+                    return [.. updatedSongInformations];
                 }
-                return new SongInformation[0];
+                return [];
             }
         }
 

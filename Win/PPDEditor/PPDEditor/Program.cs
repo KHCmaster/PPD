@@ -48,7 +48,7 @@ namespace PPDEditor
             try
             {
                 PPDSetting.Initialize();
-                game = new MyGame(new PPDExecuteArg(new string[] { }));
+                game = new MyGame(new PPDExecuteArg([]));
                 game.Run();
             }
             catch (Exception e)
@@ -71,7 +71,6 @@ namespace PPDEditor
             finally
             {
                 game?.Dispose();
-                game = null;
             }
         }
     }

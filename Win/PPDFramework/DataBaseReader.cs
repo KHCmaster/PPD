@@ -6,10 +6,16 @@ namespace PPDFramework
     /// <summary>
     /// 読み取りの SQL の結果です。破棄するまでデータベースのロックを保持します。
     /// </summary>
-    public class DataBaseReader : DisposableComponent
+    /// <remarks>
+    /// コンストラクタです。
+    /// </remarks>
+    /// <param name="reader">結果のリーダー。</param>
+    /// <param name="lockObject">データベースのロックに使うオブジェクト。</param>
+    /// <param name="lockTaken">ロックを取得できたかどうか。</param>
+    public class DataBaseReader(SQLiteDataReader reader, object lockObject, bool lockTaken) : DisposableComponent
     {
-        private object lockObject;
-        private readonly bool lockTaken;
+        private object lockObject = lockObject;
+        private readonly bool lockTaken = lockTaken;
 
         /// <summary>
         /// 結果を読み取るリーダーを取得します。
@@ -18,20 +24,7 @@ namespace PPDFramework
         {
             get;
             private set;
-        }
-
-        /// <summary>
-        /// コンストラクタです。
-        /// </summary>
-        /// <param name="reader">結果のリーダー。</param>
-        /// <param name="lockObject">データベースのロックに使うオブジェクト。</param>
-        /// <param name="lockTaken">ロックを取得できたかどうか。</param>
-        public DataBaseReader(SQLiteDataReader reader, object lockObject, bool lockTaken)
-        {
-            this.lockObject = lockObject;
-            this.lockTaken = lockTaken;
-            Reader = reader;
-        }
+        } = reader;
 
         /// <summary>
         /// ロックを解放し、リーダーを破棄します。

@@ -2,7 +2,7 @@
 
 namespace PPDCoreModel
 {
-    public class HoldInfo
+    public class HoldInfo(int currentHoldScore, int maxHoldBonus, MarkType[] holdMarks)
     {
         public const string HoldStart = "PPDHoldStart";
         public const string HoldChange = "PPDHoldChange";
@@ -13,25 +13,18 @@ namespace PPDCoreModel
         {
             get;
             private set;
-        }
+        } = currentHoldScore;
 
         public int MaxHoldBonus
         {
             get;
             private set;
-        }
+        } = maxHoldBonus;
 
         public MarkType[] HoldMarks
         {
             get;
             private set;
-        }
-
-        public HoldInfo(int currentHoldScore, int maxHoldBonus, MarkType[] holdMarks)
-        {
-            CurrentHoldScore = currentHoldScore;
-            MaxHoldBonus = maxHoldBonus;
-            HoldMarks = holdMarks;
-        }
+        } = holdMarks;
     }
 }

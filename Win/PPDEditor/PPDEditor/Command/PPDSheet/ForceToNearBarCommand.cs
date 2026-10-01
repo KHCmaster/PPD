@@ -16,11 +16,11 @@ namespace PPDEditor.Command.PPDSheet
             {
                 if (mark is ExMark exmk)
                 {
-                    lastTimes[exmk] = new float[] { exmk.Time, exmk.EndTime };
+                    lastTimes[exmk] = [exmk.Time, exmk.EndTime];
                 }
                 else
                 {
-                    lastTimes[mark] = new float[] { mark.Time };
+                    lastTimes[mark] = [mark.Time];
                 }
             }
         }

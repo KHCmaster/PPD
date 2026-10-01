@@ -77,7 +77,7 @@
             this.okButton.TabIndex = 1;
             this.okButton.Text = "OK";
             this.okButton.UseVisualStyleBackColor = true;
-            this.okButton.Click += new System.EventHandler(this.okButton_Click);
+            this.okButton.Click += new System.EventHandler(this.OkButton_Click);
             // 
             // cancelButton
             // 
@@ -88,7 +88,7 @@
             this.cancelButton.TabIndex = 2;
             this.cancelButton.Text = "Cancel";
             this.cancelButton.UseVisualStyleBackColor = true;
-            this.cancelButton.Click += new System.EventHandler(this.cancelButton_Click);
+            this.cancelButton.Click += new System.EventHandler(this.CancelButton_Click);
             // 
             // addButton
             // 
@@ -98,7 +98,7 @@
             this.addButton.TabIndex = 3;
             this.addButton.Text = "Add";
             this.addButton.UseVisualStyleBackColor = true;
-            this.addButton.Click += new System.EventHandler(this.addButton_Click);
+            this.addButton.Click += new System.EventHandler(this.AddButton_Click);
             // 
             // removeButton
             // 
@@ -108,7 +108,7 @@
             this.removeButton.TabIndex = 4;
             this.removeButton.Text = "Remove";
             this.removeButton.UseVisualStyleBackColor = true;
-            this.removeButton.Click += new System.EventHandler(this.removeButton_Click);
+            this.removeButton.Click += new System.EventHandler(this.RemoveButton_Click);
             // 
             // dataGridViewTextBoxColumn1
             // 

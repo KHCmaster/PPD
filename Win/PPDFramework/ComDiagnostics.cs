@@ -56,7 +56,7 @@ namespace PPDFramework
                 .GroupBy(o => o.GetType().FullName)
                 .OrderBy(g => g.Key, StringComparer.Ordinal)
                 .Select(g => string.Format("  {0} x{1}", g.Key, g.Count()));
-            Write(title, objects.ToArray());
+            Write(title, [.. objects]);
         }
 
         static readonly System.Collections.Generic.Dictionary<object, string> trackedObjects = [];
@@ -106,7 +106,7 @@ namespace PPDFramework
             }
             lock (trackedObjects)
             {
-                Write(title, trackedObjects.Values.ToArray());
+                Write(title, [.. trackedObjects.Values]);
             }
         }
 

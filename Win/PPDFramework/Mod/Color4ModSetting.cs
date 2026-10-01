@@ -10,19 +10,15 @@ namespace PPDFramework.Mod
     /// <summary>
     /// 色の設定を扱うクラスです。
     /// </summary>
-    public class Color4ModSetting : TemplateModSetting<Color4>
+    /// <remarks>
+    /// コンストラクタです。
+    /// </remarks>
+    /// <param name="key"></param>
+    /// <param name="name"></param>
+    /// <param name="description"></param>
+    /// <param name="defaultValue"></param>
+    public class Color4ModSetting(string key, string name, string description, Color4 defaultValue) : TemplateModSetting<Color4>(key, name, description, defaultValue)
     {
-        /// <summary>
-        /// コンストラクタです。
-        /// </summary>
-        /// <param name="key"></param>
-        /// <param name="name"></param>
-        /// <param name="description"></param>
-        /// <param name="defaultValue"></param>
-        public Color4ModSetting(string key, string name, string description, Color4 defaultValue)
-            : base(key, name, description, defaultValue)
-        {
-        }
 
         /// <summary>
         /// 文字列を取得します。

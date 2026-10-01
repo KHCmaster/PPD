@@ -146,7 +146,7 @@ namespace PPDCoreModel
                     }
                 }
             }
-            var spriteManager = new PPDPackSpriteManager(packReader, imageList.ToArray(), spriteDirName, lastWriteTime);
+            var spriteManager = new PPDPackSpriteManager(packReader, [.. imageList], spriteDirName, lastWriteTime);
             spriteManager.Pack();
             resourceManager = new SpriteResourceManager(device, spriteManager);
         }

@@ -10,21 +10,15 @@ namespace FlowScriptEngineSlimDX.FlowSourceObjects.Vector4
     {
         public override object GetPropertyValue(string propertyName)
         {
-            switch (propertyName)
+            return propertyName switch
             {
-                case "Value":
-                    return Value;
-                case "W":
-                    return W;
-                case "X":
-                    return X;
-                case "Y":
-                    return Y;
-                case "Z":
-                    return Z;
-                default:
-                    return null;
-            }
+                "Value" => Value,
+                "W" => W,
+                "X" => X,
+                "Y" => Y,
+                "Z" => Z,
+                _ => null,
+            };
         }
 
         protected override void SetPropertyValue(string propertyName, object value)

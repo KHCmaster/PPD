@@ -9,7 +9,7 @@ namespace PPDEditor.Forms
 {
     public partial class EventEditForm : Form
     {
-        readonly ButtonType[] normalInitializeOrder = {
+        readonly ButtonType[] normalInitializeOrder = [
             ButtonType.Square,
             ButtonType.Cross,
             ButtonType.Circle,
@@ -20,8 +20,8 @@ namespace PPDEditor.Forms
             ButtonType.Up,
             ButtonType.R,
             ButtonType.L
-        };
-        readonly ButtonType[] ACInitializeOrder = {
+        ];
+        readonly ButtonType[] ACInitializeOrder = [
             ButtonType.Triangle,
             ButtonType.Square,
             ButtonType.Cross,
@@ -32,7 +32,7 @@ namespace PPDEditor.Forms
             ButtonType.Right,
             ButtonType.R,
             ButtonType.L
-        };
+        ];
         List<ButtonType> initializeOrder;
         string[] orderName;
         private bool isReadOnly;
@@ -66,12 +66,12 @@ namespace PPDEditor.Forms
         {
             if (radioButton8.Checked)
             {
-                initializeOrder = new List<ButtonType>(normalInitializeOrder);
+                initializeOrder = [.. normalInitializeOrder];
                 UpdateList();
             }
             else if (radioButton9.Checked)
             {
-                initializeOrder = new List<ButtonType>(ACInitializeOrder);
+                initializeOrder = [.. ACInitializeOrder];
                 UpdateList();
             }
 
@@ -168,7 +168,7 @@ namespace PPDEditor.Forms
                 if (radioButton6.Checked) ret.NoteType = NoteType.Normal;
                 if (radioButton7.Checked) ret.NoteType = NoteType.AC;
                 if (radioButton11.Checked) ret.NoteType = NoteType.ACFT;
-                ret.InitializeOrder = initializeOrder.ToArray();
+                ret.InitializeOrder = [.. initializeOrder];
                 if (!float.TryParse(this.textBox3.Text, out float slideScale))
                 {
                     slideScale = 1;
@@ -248,7 +248,7 @@ namespace PPDEditor.Forms
                 }
                 textBox3.Text = value.SlideScale.ToString();
 
-                initializeOrder = new List<ButtonType>(value.InitializeOrder);
+                initializeOrder = [.. value.InitializeOrder];
                 if (Utility.IsSameArray(normalInitializeOrder, value.InitializeOrder))
                 {
                     radioButton8.Checked = true;
@@ -351,7 +351,7 @@ namespace PPDEditor.Forms
             this.button3.Text = Utility.Language["EEFButton3"];
             this.button4.Text = Utility.Language["EEFButton4"];
         }
-        private void textBox2_TextChanged(object sender, EventArgs e)
+        private void TextBox2_TextChanged(object sender, EventArgs e)
         {
             if (!float.TryParse(this.textBox2.Text, out float temp))
             {
@@ -363,19 +363,19 @@ namespace PPDEditor.Forms
             }
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void Button1_Click(object sender, EventArgs e)
         {
             this.DialogResult = DialogResult.OK;
             this.Close();
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void Button2_Click(object sender, EventArgs e)
         {
             this.DialogResult = DialogResult.Cancel;
             this.Close();
         }
 
-        private void button3_Click(object sender, EventArgs e)
+        private void Button3_Click(object sender, EventArgs e)
         {
             if (listBox1.SelectedIndex >= 0)
             {
@@ -391,7 +391,7 @@ namespace PPDEditor.Forms
             }
         }
 
-        private void button4_Click(object sender, EventArgs e)
+        private void Button4_Click(object sender, EventArgs e)
         {
             if (listBox1.SelectedIndex >= 0)
             {

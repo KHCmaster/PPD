@@ -7,7 +7,7 @@ using System.Threading;
 
 namespace PPDExpansionCore.Tcp
 {
-    public class Host : Base, IDisposable
+    public class Host(int port) : Base, IDisposable
     {
         private TcpListener listener;
         private TcpClient client;
@@ -22,12 +22,7 @@ namespace PPDExpansionCore.Tcp
         {
             get;
             private set;
-        }
-
-        public Host(int port)
-        {
-            Port = port;
-        }
+        } = port;
 
         public void Start()
         {
@@ -74,7 +69,7 @@ namespace PPDExpansionCore.Tcp
 
         private void Work()
         {
-            byte[] lastBytes = new byte[0];
+            byte[] lastBytes = [];
             NetworkStream stream;
             try
             {
@@ -91,7 +86,7 @@ namespace PPDExpansionCore.Tcp
                 {
                     break;
                 }
-                bytes = lastBytes.Concat(bytes).ToArray();
+                bytes = [.. lastBytes, .. bytes];
                 while (true)
                 {
                     var lastLength = bytes.Length;
@@ -117,24 +112,22 @@ namespace PPDExpansionCore.Tcp
         {
             try
             {
-                using (MemoryStream stream = new(bytes))
-                using (PPDPack.V2.PackReader reader = new(stream))
+                using MemoryStream stream = new(bytes);
+                using PPDPack.V2.PackReader reader = new(stream);
+                var dataType = (DataType)ParseInt(reader, "DataType");
+                var packable = PackableBase.Create(dataType);
+                if (packable != null)
                 {
-                    var dataType = (DataType)ParseInt(reader, "DataType");
-                    var packable = PackableBase.Create(dataType);
-                    if (packable != null)
-                    {
-                        packable.Read(reader);
-                        OnDataReceived(packable);
-                    }
-
-                    byte[] restBytes = new byte[bytes.Length - reader.FileSize];
-                    if (restBytes.Length > 0)
-                    {
-                        Array.Copy(bytes, reader.FileSize, restBytes, 0, restBytes.Length);
-                    }
-                    return restBytes;
+                    packable.Read(reader);
+                    OnDataReceived(packable);
                 }
+
+                byte[] restBytes = new byte[bytes.Length - reader.FileSize];
+                if (restBytes.Length > 0)
+                {
+                    Array.Copy(bytes, reader.FileSize, restBytes, 0, restBytes.Length);
+                }
+                return restBytes;
             }
             catch
             {

@@ -432,7 +432,7 @@ namespace PPDExpansion.ViewModel
                 StartTime = 0,
                 UserHighScore = 10000,
                 WebHighScore = 10000,
-                ScoreHash = new byte[0],
+                ScoreHash = [],
                 ScoreName = "",
                 Difficulty = Difficulty.Other
             });

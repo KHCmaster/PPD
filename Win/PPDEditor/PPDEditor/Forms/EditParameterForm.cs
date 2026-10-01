@@ -29,7 +29,7 @@ namespace PPDEditor.Forms
         {
             set
             {
-                existKeys = new HashSet<string>(value);
+                existKeys = [.. value];
             }
         }
 
@@ -62,23 +62,23 @@ namespace PPDEditor.Forms
             removeButton.Text = Utility.Language["Remove"];
         }
 
-        private void okButton_Click(object sender, EventArgs e)
+        private void OkButton_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.OK;
             Close();
         }
 
-        private void cancelButton_Click(object sender, EventArgs e)
+        private void CancelButton_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.Cancel;
             Close();
         }
 
-        private void addButton_Click(object sender, EventArgs e)
+        private void AddButton_Click(object sender, EventArgs e)
         {
             var parameters = Parameters;
-            string name = null;
             int index = 1;
+            string name;
             while (true)
             {
                 name = String.Format("Key{0}", index);
@@ -91,7 +91,7 @@ namespace PPDEditor.Forms
             dataGridView1.Rows.Add(name, "");
         }
 
-        private void removeButton_Click(object sender, EventArgs e)
+        private void RemoveButton_Click(object sender, EventArgs e)
         {
             if (dataGridView1.SelectedRows.Count == 0)
             {

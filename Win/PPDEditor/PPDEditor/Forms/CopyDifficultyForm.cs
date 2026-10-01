@@ -42,13 +42,13 @@ namespace PPDEditor.Forms
             }
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void Button1_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.OK;
             this.Close();
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void Button2_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.Cancel;
             this.Close();

@@ -30,7 +30,7 @@ namespace PPDSingle
         public PostDialog(PPDDevice device, PPDFramework.Resource.ResourceManager resourceManager, ISound sound, IBlueSkyManager blueSkyManager) : base(device)
         {
             this.BlueSkyManager = blueSkyManager;
-            blueSkyManager.PostFinished += blueSkyMangager_PostFinished;
+            blueSkyManager.PostFinished += BlueSkyMangager_PostFinished;
             this.Sound = sound;
             back = new EffectObject(device, resourceManager, Utility.Path.Combine("postconfirm.etd"))
             {
@@ -105,7 +105,7 @@ namespace PPDSingle
             private set;
         }
 
-        void blueSkyMangager_PostFinished(bool ok)
+        void BlueSkyMangager_PostFinished(bool ok)
         {
             if (ok)
             {
@@ -184,14 +184,14 @@ namespace PPDSingle
             message.Hidden = content.Hidden = buttons[0].Hidden = buttons[1].Hidden = true;
             back.Stop();
             back.PlayType = Effect2D.EffectManager.PlayType.ReverseOnce;
-            back.Finish += back_ReverseFinish;
+            back.Finish += Back_ReverseFinish;
             back.Play();
         }
 
-        void back_ReverseFinish(object sender, EventArgs e)
+        void Back_ReverseFinish(object sender, EventArgs e)
         {
             back.Hidden = true;
-            back.Finish -= back_ReverseFinish;
+            back.Finish -= Back_ReverseFinish;
         }
 
         void PostDialog_GotFocused(IFocusable sender, FocusEventArgs args)
@@ -201,15 +201,15 @@ namespace PPDSingle
             PostString = BlueSkyManager.PostText;
             back.Stop();
             back.PlayType = Effect2D.EffectManager.PlayType.Once;
-            back.Finish += back_NormalFinish;
+            back.Finish += Back_NormalFinish;
             back.Play();
             back.Hidden = false;
         }
 
-        void back_NormalFinish(object sender, EventArgs e)
+        void Back_NormalFinish(object sender, EventArgs e)
         {
             message.Hidden = content.Hidden = buttons[0].Hidden = buttons[1].Hidden = false;
-            back.Finish -= back_NormalFinish;
+            back.Finish -= Back_NormalFinish;
             opening = false;
         }
 

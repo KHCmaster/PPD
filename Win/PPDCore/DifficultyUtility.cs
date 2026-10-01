@@ -5,19 +5,14 @@ namespace PPDCore
     {
         public static string ConvertDifficulty(Difficulty difficulty)
         {
-            switch (difficulty)
+            return difficulty switch
             {
-                case Difficulty.Easy:
-                    return "easy";
-                case Difficulty.Normal:
-                    return "normal";
-                case Difficulty.Hard:
-                    return "hard";
-                case Difficulty.Extreme:
-                    return "extreme";
-                default:
-                    return "base";
-            }
+                Difficulty.Easy => "easy",
+                Difficulty.Normal => "normal",
+                Difficulty.Hard => "hard",
+                Difficulty.Extreme => "extreme",
+                _ => "base",
+            };
         }
     }
 }

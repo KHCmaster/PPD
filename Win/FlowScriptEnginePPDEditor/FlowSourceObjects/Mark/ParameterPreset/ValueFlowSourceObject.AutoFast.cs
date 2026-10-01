@@ -9,15 +9,12 @@ namespace FlowScriptEnginePPDEditor.FlowSourceObjects.Mark.ParameterPreset
     {
         public override object GetPropertyValue(string propertyName)
         {
-            switch (propertyName)
+            return propertyName switch
             {
-                case "Parameters":
-                    return Parameters;
-                case "PresetName":
-                    return PresetName;
-                default:
-                    return null;
-            }
+                "Parameters" => Parameters,
+                "PresetName" => PresetName,
+                _ => null,
+            };
         }
 
         protected override void SetPropertyValue(string propertyName, object value)

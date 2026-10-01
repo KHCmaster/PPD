@@ -3,7 +3,7 @@ using System.Windows.Forms;
 
 namespace FlowScriptControl.Controls
 {
-    public class ButtonCell : DataGridViewTextBoxCell
+    public class ButtonCell(string sourceName, string propertyName, Type propertyType) : DataGridViewTextBoxCell
     {
         public event EventHandler ButtonClick;
         ButtonEditingControl ctrl;
@@ -13,19 +13,19 @@ namespace FlowScriptControl.Controls
         {
             get;
             private set;
-        }
+        } = sourceName;
 
         public string PropertyName
         {
             get;
             private set;
-        }
+        } = propertyName;
 
         public Type PropertyType
         {
             get;
             private set;
-        }
+        } = propertyType;
 
         public ButtonEditingControl Ctrl
         {
@@ -33,13 +33,6 @@ namespace FlowScriptControl.Controls
             {
                 return ctrl;
             }
-        }
-
-        public ButtonCell(string sourceName, string propertyName, Type propertyType)
-        {
-            SourceName = sourceName;
-            PropertyName = propertyName;
-            PropertyType = propertyType;
         }
 
         protected override void OnDataGridViewChanged()
@@ -53,7 +46,7 @@ namespace FlowScriptControl.Controls
             ctrl = DataGridView.EditingControl as ButtonEditingControl;
             if (!initialized)
             {
-                ctrl.ButtonClick += ctl_ButtonClick;
+                ctrl.ButtonClick += Ctl_ButtonClick;
                 initialized = true;
             }
             ctrl.Initializing = true;
@@ -61,7 +54,7 @@ namespace FlowScriptControl.Controls
             ctrl.Initializing = false;
         }
 
-        void ctl_ButtonClick()
+        void Ctl_ButtonClick()
         {
             if (IsInEditMode)
             {

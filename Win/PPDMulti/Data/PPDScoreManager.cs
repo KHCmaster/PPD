@@ -7,7 +7,7 @@ namespace PPDMulti.Data
     class PPDScoreManager
     {
         private static readonly PPDScoreManager manager = new();
-        private PPDScoreInfo[] scores = new PPDScoreInfo[0];
+        private PPDScoreInfo[] scores = [];
 
         public static PPDScoreManager Manager
         {

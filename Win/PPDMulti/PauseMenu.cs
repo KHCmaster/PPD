@@ -10,7 +10,7 @@ namespace PPDMulti
     /// <summary>
     /// 停止中の画面UI
     /// </summary>
-    public class PauseMenu : PauseMenuBase
+    public class PauseMenu(PPDDevice device) : PauseMenuBase(device)
     {
         enum PauseType
         {
@@ -41,10 +41,6 @@ namespace PPDMulti
 
         Button[] buttons;
         PauseType pausetype = PauseType.Resume;
-
-        public PauseMenu(PPDDevice device) : base(device)
-        {
-        }
 
         public override void Load()
         {

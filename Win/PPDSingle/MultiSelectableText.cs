@@ -76,7 +76,7 @@ namespace PPDSingle
                 this.AddChild(obj);
                 menus.Add(obj);
             }
-            menuTextStrings = menus.ToArray();
+            menuTextStrings = [.. menus];
             this.AddChild(rectangle = new RectangleComponent(device, resourceManager, PPDColors.Active)
             {
                 Position = new Vector2(0, -fontHeight / 2),

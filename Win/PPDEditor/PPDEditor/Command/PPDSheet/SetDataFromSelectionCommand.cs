@@ -34,11 +34,11 @@ namespace PPDEditor.Command.PPDSheet
                     Mark mk = data[(int)selectedMark.Type].Values[iter];
                     if (withAngle)
                     {
-                        lastInfo[i] = new float[] { mk.Position.X, mk.Position.Y, mk.Rotation };
+                        lastInfo[i] = [mk.Position.X, mk.Position.Y, mk.Rotation];
                     }
                     else
                     {
-                        lastInfo[i] = new float[] { mk.Position.X, mk.Position.Y };
+                        lastInfo[i] = [mk.Position.X, mk.Position.Y];
                     }
                     iter++;
                     if (iter >= data[(int)selectedMark.Type].Count) break;
@@ -52,11 +52,11 @@ namespace PPDEditor.Command.PPDSheet
                     Mark mk = data[(int)selectedMark.Type].Values[iter];
                     if (withAngle)
                     {
-                        lastInfo[i] = new float[] { mk.Position.X, mk.Position.Y, mk.Rotation };
+                        lastInfo[i] = [mk.Position.X, mk.Position.Y, mk.Rotation];
                     }
                     else
                     {
-                        lastInfo[i] = new float[] { mk.Position.X, mk.Position.Y };
+                        lastInfo[i] = [mk.Position.X, mk.Position.Y];
                     }
                     iter--;
                     if (iter < 0) break;

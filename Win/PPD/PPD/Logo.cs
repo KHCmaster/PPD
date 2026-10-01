@@ -11,7 +11,7 @@ using System;
 
 namespace PPD
 {
-    class Logo : SceneBase
+    class Logo(PPDDevice device) : SceneBase(device)
     {
         enum State
         {
@@ -44,11 +44,6 @@ namespace PPD
         {
             get;
             private set;
-        }
-
-        public Logo(PPDDevice device) : base(device)
-        {
-
         }
 
         public override bool Load()

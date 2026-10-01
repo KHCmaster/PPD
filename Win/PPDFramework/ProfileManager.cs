@@ -44,44 +44,42 @@ namespace PPDFramework
 
         private void ReadProfile(string path)
         {
-            using (XmlReader reader = XmlReader.Create(path))
+            using XmlReader reader = XmlReader.Create(path);
+            while (reader.Read())
             {
-                while (reader.Read())
+                if (reader.IsStartElement("Profile"))
                 {
-                    if (reader.IsStartElement("Profile"))
+                    try
                     {
-                        try
-                        {
-                            var text = reader.GetAttribute("DisplayText");
-                            int coolPoint = int.Parse(reader.GetAttribute("CoolPoint")),
-                                goodPoint = int.Parse(reader.GetAttribute("GoodPoint")),
-                                safePoint = int.Parse(reader.GetAttribute("SafePoint")),
-                                sadPoint = int.Parse(reader.GetAttribute("SadPoint")),
-                                worstPoint = int.Parse(reader.GetAttribute("WorstPoint"));
-                            bool godMode = reader.GetAttribute("GodMode") == "1",
-                                muteSE = reader.GetAttribute("MuteSE") == "1",
-                                connect = reader.GetAttribute("Connect") == "1";
+                        var text = reader.GetAttribute("DisplayText");
+                        int coolPoint = int.Parse(reader.GetAttribute("CoolPoint")),
+                            goodPoint = int.Parse(reader.GetAttribute("GoodPoint")),
+                            safePoint = int.Parse(reader.GetAttribute("SafePoint")),
+                            sadPoint = int.Parse(reader.GetAttribute("SadPoint")),
+                            worstPoint = int.Parse(reader.GetAttribute("WorstPoint"));
+                        bool godMode = reader.GetAttribute("GodMode") == "1",
+                            muteSE = reader.GetAttribute("MuteSE") == "1",
+                            connect = reader.GetAttribute("Connect") == "1";
 
-                            var p = new Profile
-                            {
-                                Connect = connect,
-                                CoolPoint = coolPoint,
-                                DisplayText = text,
-                                GodMode = godMode,
-                                GoodPoint = goodPoint,
-                                MuteSE = muteSE,
-                                SadPoint = sadPoint,
-                                SafePoint = safePoint,
-                                WorstPoint = worstPoint,
-                                Index = iter
-                            };
-
-                            profiles.Add(p);
-                            iter++;
-                        }
-                        catch
+                        var p = new Profile
                         {
-                        }
+                            Connect = connect,
+                            CoolPoint = coolPoint,
+                            DisplayText = text,
+                            GodMode = godMode,
+                            GoodPoint = goodPoint,
+                            MuteSE = muteSE,
+                            SadPoint = sadPoint,
+                            SafePoint = safePoint,
+                            WorstPoint = worstPoint,
+                            Index = iter
+                        };
+
+                        profiles.Add(p);
+                        iter++;
+                    }
+                    catch
+                    {
                     }
                 }
             }
@@ -146,7 +144,7 @@ namespace PPDFramework
         {
             get
             {
-                return profiles.ToArray();
+                return [.. profiles];
             }
         }
     }

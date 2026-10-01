@@ -9,31 +9,20 @@ namespace FlowScriptEnginePPDEditor.FlowSourceObjects.Event
     {
         public override object GetPropertyValue(string propertyName)
         {
-            switch (propertyName)
+            return propertyName switch
             {
-                case "BPM":
-                    return BPM;
-                case "BPMRapidChange":
-                    return BPMRapidChange;
-                case "DisplayState":
-                    return DisplayState;
-                case "InitializeOrder":
-                    return InitializeOrder;
-                case "KeepPlayings":
-                    return KeepPlayings;
-                case "MoveState":
-                    return MoveState;
-                case "NoteType":
-                    return NoteType;
-                case "ReleaseSounds":
-                    return ReleaseSounds;
-                case "SlideScale":
-                    return SlideScale;
-                case "VolumePercents":
-                    return VolumePercents;
-                default:
-                    return null;
-            }
+                "BPM" => BPM,
+                "BPMRapidChange" => BPMRapidChange,
+                "DisplayState" => DisplayState,
+                "InitializeOrder" => InitializeOrder,
+                "KeepPlayings" => KeepPlayings,
+                "MoveState" => MoveState,
+                "NoteType" => NoteType,
+                "ReleaseSounds" => ReleaseSounds,
+                "SlideScale" => SlideScale,
+                "VolumePercents" => VolumePercents,
+                _ => null,
+            };
         }
 
         protected override void SetPropertyValue(string propertyName, object value)

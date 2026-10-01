@@ -9,7 +9,7 @@ namespace FlowScriptControl
         private static LoadingForm _form;
         private static Form _mainForm;
         private static Thread _thread;
-        private static readonly object syncObject = new();
+        private static readonly Lock syncObject = new();
 
         private static bool closeRequired;
         readonly System.Windows.Forms.Timer timer = new();
@@ -29,7 +29,7 @@ namespace FlowScriptControl
             closeRequired = false;
 
             _mainForm = mainForm;
-            _mainForm?.Activated += _mainForm_Activated;
+            _mainForm?.Activated += MainForm_Activated;
 
             _thread = new System.Threading.Thread(new System.Threading.ThreadStart(StartThread))
             {
@@ -51,7 +51,7 @@ namespace FlowScriptControl
             {
                 if (_mainForm != null)
                 {
-                    _mainForm.Activated -= _mainForm_Activated;
+                    _mainForm.Activated -= MainForm_Activated;
                     _mainForm.Activate();
                 }
 
@@ -97,12 +97,12 @@ namespace FlowScriptControl
             }
         }
 
-        private static void _form_Click(object sender, EventArgs e)
+        private static void Form_Click(object sender, EventArgs e)
         {
             CloseLoading();
         }
 
-        private static void _mainForm_Activated(object sender, EventArgs e)
+        private static void MainForm_Activated(object sender, EventArgs e)
         {
             CloseLoading();
         }
@@ -114,7 +114,7 @@ namespace FlowScriptControl
             {
                 Interval = 1000
             };
-            timer.Tick += timer_Tick;
+            timer.Tick += Timer_Tick;
             timer.Start();
 #if DEBUG
 #else
@@ -122,7 +122,7 @@ namespace FlowScriptControl
 #endif
         }
 
-        void timer_Tick(object sender, EventArgs e)
+        void Timer_Tick(object sender, EventArgs e)
         {
             if (closeRequired)
             {

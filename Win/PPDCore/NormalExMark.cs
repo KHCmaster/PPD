@@ -10,19 +10,13 @@ using System.Collections.Generic;
 
 namespace PPDCore
 {
-    class NormalExMark : ExMarkBase
+    class NormalExMark(PPDDevice device, PPDFramework.Resource.ResourceManager resourceManager, MarkImagePathsBase filenames, ExMarkData emd, ButtonType type, float[] eval,
+        float gap, Vector2[] circlepoints, DisplayState dState, NoteType noteType, int sameTimingMarks, KeyValuePair<string, string>[] parameters, PostDrawManager postDrawManager) : ExMarkBase(device, resourceManager, filenames, emd, type, eval, gap, dState, noteType, sameTimingMarks, parameters, postDrawManager)
     {
         PictureObject outCircle;
         PictureObject outAxis;
         NormalExMarkGage gage;
-        readonly Vector2[] circlePoints;
-
-        public NormalExMark(PPDDevice device, PPDFramework.Resource.ResourceManager resourceManager, MarkImagePathsBase filenames, ExMarkData emd, ButtonType type, float[] eval,
-            float gap, Vector2[] circlepoints, DisplayState dState, NoteType noteType, int sameTimingMarks, KeyValuePair<string, string>[] parameters, PostDrawManager postDrawManager)
-            : base(device, resourceManager, filenames, emd, type, eval, gap, dState, noteType, sameTimingMarks, parameters, postDrawManager)
-        {
-            this.circlePoints = circlepoints;
-        }
+        readonly Vector2[] circlePoints = circlepoints;
 
         public override void Initialize(CreateMarkFunc createMark, GetScriptAllowedButtonsFunc getScriptAllowedButtons)
         {

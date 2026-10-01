@@ -3,7 +3,11 @@
     /// <summary>
     /// クリップの情報です
     /// </summary>
-    public class ClipInfo
+    /// <remarks>
+    /// コンストラクタです。
+    /// </remarks>
+    /// <param name="gameHost">ゲームホストです。</param>
+    public class ClipInfo(IGameHost gameHost)
     {
         /// <summary>
         /// ゲームホストです。
@@ -12,7 +16,7 @@
         {
             get;
             private set;
-        }
+        } = gameHost;
 
         /// <summary>
         /// X座標の位置です。
@@ -48,15 +52,6 @@
         {
             get;
             set;
-        }
-
-        /// <summary>
-        /// コンストラクタです。
-        /// </summary>
-        /// <param name="gameHost">ゲームホストです。</param>
-        public ClipInfo(IGameHost gameHost)
-        {
-            GameHost = gameHost;
         }
     }
 }

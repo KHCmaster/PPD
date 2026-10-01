@@ -9,19 +9,14 @@ namespace FlowScriptEnginePPD.FlowSourceObjects.Graphics.Vertex
     {
         public override object GetPropertyValue(string propertyName)
         {
-            switch (propertyName)
+            return propertyName switch
             {
-                case "Color":
-                    return Color;
-                case "Position":
-                    return Position;
-                case "TextureCoordinates":
-                    return TextureCoordinates;
-                case "Value":
-                    return Value;
-                default:
-                    return null;
-            }
+                "Color" => Color,
+                "Position" => Position,
+                "TextureCoordinates" => TextureCoordinates,
+                "Value" => Value,
+                _ => null,
+            };
         }
 
         protected override void SetPropertyValue(string propertyName, object value)

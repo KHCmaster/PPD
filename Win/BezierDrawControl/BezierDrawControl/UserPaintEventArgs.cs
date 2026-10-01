@@ -2,17 +2,12 @@
 
 namespace BezierDrawControl
 {
-    public class UserPaintEventArgs : EventArgs
+    public class UserPaintEventArgs(IBezierDrawContext context) : EventArgs
     {
         public IBezierDrawContext Context
         {
             get;
             private set;
-        }
-
-        public UserPaintEventArgs(IBezierDrawContext context)
-        {
-            Context = context;
-        }
+        } = context;
     }
 }

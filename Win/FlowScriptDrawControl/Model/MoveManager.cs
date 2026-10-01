@@ -7,7 +7,7 @@ using System.Windows.Input;
 
 namespace FlowScriptDrawControl.Model
 {
-    public class MoveManager
+    public class MoveManager(PositionableControl[] controls, Command.CommandManager commandManager)
     {
         struct MoveInfo
         {
@@ -19,16 +19,16 @@ namespace FlowScriptDrawControl.Model
         private Point areaShift;
         private MoveInfo[] moveInfos;
 
-        private readonly PositionableControl[] controls;
+        private readonly PositionableControl[] controls = controls;
         private FlowAreaControl areaControl;
-        private readonly Command.CommandManager commandManager;
+        private readonly Command.CommandManager commandManager = commandManager;
         private MovePositionablesCommand command;
 
         public PositionableControl[] Controls
         {
             get
             {
-                return controls.ToArray();
+                return [.. controls];
             }
         }
 
@@ -36,36 +36,30 @@ namespace FlowScriptDrawControl.Model
         public event EventHandler MoveEnd;
         public event EventHandler ControlPressed;
 
-        public MoveManager(PositionableControl[] controls, Command.CommandManager commandManager)
-        {
-            this.commandManager = commandManager;
-            this.controls = controls;
-        }
-
         public void Initialize()
         {
             controls[0].IsMoved = false;
             mouseDownPos = controls[0].PointToScreen(Mouse.GetPosition(controls[0]));
-            moveInfos = controls.Select(c => new MoveInfo
+            moveInfos = [.. controls.Select(c => new MoveInfo
             {
                 OffsetX = c.CurrentPositionable.Position.X,
                 OffsetY = c.CurrentPositionable.Position.Y
-            }).ToArray();
+            })];
 
             areaControl = Utility.GetParent<FlowAreaControl>(controls[0]);
-            areaControl.MouseMove += areaControl_MouseMove;
-            areaControl.MouseUp += areaControl_MouseUp;
-            areaControl.MouseLeave += areaControl_MouseLeave;
-            areaControl.KeyDown += areaControl_KeyDown;
+            areaControl.MouseMove += AreaControl_MouseMove;
+            areaControl.MouseUp += AreaControl_MouseUp;
+            areaControl.MouseLeave += AreaControl_MouseLeave;
+            areaControl.KeyDown += AreaControl_KeyDown;
             areaShift = new Point(areaControl.CurrentShiftX, areaControl.CurrentShiftY);
         }
 
         private void DisableMove()
         {
-            areaControl.MouseMove -= areaControl_MouseMove;
-            areaControl.MouseUp -= areaControl_MouseUp;
-            areaControl.MouseLeave -= areaControl_MouseLeave;
-            areaControl.KeyDown -= areaControl_KeyDown;
+            areaControl.MouseMove -= AreaControl_MouseMove;
+            areaControl.MouseUp -= AreaControl_MouseUp;
+            areaControl.MouseLeave -= AreaControl_MouseLeave;
+            areaControl.KeyDown -= AreaControl_KeyDown;
             OnMoveEnd(this, EventArgs.Empty);
         }
 
@@ -82,19 +76,19 @@ namespace FlowScriptDrawControl.Model
                 (currentPos.Y - mouseDownPos.Y - areaControl.CurrentShiftY + areaShift.Y) / areaControl.CurrentScale);
             if (command != null)
             {
-                command.NewPoses = moveInfos.Select(m => new Point(diff.X + m.OffsetX, diff.Y + m.OffsetY)).ToArray();
+                command.NewPoses = [.. moveInfos.Select(m => new Point(diff.X + m.OffsetX, diff.Y + m.OffsetY))];
                 command.Execute();
             }
             else
             {
-                command = new MovePositionablesCommand(controls.Select(c => c.CurrentPositionable).ToArray(),
-                    moveInfos.Select(m => new Point(diff.X + m.OffsetX, diff.Y + m.OffsetY)).ToArray());
+                command = new MovePositionablesCommand([.. controls.Select(c => c.CurrentPositionable)],
+                    [.. moveInfos.Select(m => new Point(diff.X + m.OffsetX, diff.Y + m.OffsetY))]);
                 commandManager.AddCommand(command);
             }
             OnMoved(this, EventArgs.Empty);
         }
 
-        private void keyPressImpl(KeyboardEventArgs e)
+        private void KeyPressImpl(KeyboardEventArgs e)
         {
             if (e.KeyboardDevice.IsKeyDown(Key.LeftCtrl))
             {
@@ -102,24 +96,24 @@ namespace FlowScriptDrawControl.Model
             }
         }
 
-        void areaControl_MouseLeave(object sender, MouseEventArgs e)
+        void AreaControl_MouseLeave(object sender, MouseEventArgs e)
         {
             DisableMove();
         }
 
-        void areaControl_MouseUp(object sender, MouseButtonEventArgs e)
+        void AreaControl_MouseUp(object sender, MouseButtonEventArgs e)
         {
             DisableMove();
         }
 
-        void areaControl_MouseMove(object sender, MouseEventArgs e)
+        void AreaControl_MouseMove(object sender, MouseEventArgs e)
         {
             MoveImpl();
         }
 
-        void areaControl_KeyDown(object sender, KeyEventArgs e)
+        void AreaControl_KeyDown(object sender, KeyEventArgs e)
         {
-            keyPressImpl(e);
+            KeyPressImpl(e);
         }
 
         private void OnMoved(object sender, EventArgs e)

@@ -173,7 +173,7 @@
             this.button7.TabIndex = 26;
             this.button7.Text = "デフォルト";
             this.button7.UseVisualStyleBackColor = true;
-            this.button7.Click += new System.EventHandler(this.button7_Click);
+            this.button7.Click += new System.EventHandler(this.Button7_Click);
             // 
             // button6
             // 
@@ -184,7 +184,7 @@
             this.button6.TabIndex = 25;
             this.button6.Text = "Cancel";
             this.button6.UseVisualStyleBackColor = true;
-            this.button6.Click += new System.EventHandler(this.button6_Click);
+            this.button6.Click += new System.EventHandler(this.Button6_Click);
             // 
             // button5
             // 
@@ -195,7 +195,7 @@
             this.button5.TabIndex = 24;
             this.button5.Text = "OK";
             this.button5.UseVisualStyleBackColor = true;
-            this.button5.Click += new System.EventHandler(this.button5_Click);
+            this.button5.Click += new System.EventHandler(this.Button5_Click);
             // 
             // label13
             // 

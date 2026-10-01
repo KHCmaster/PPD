@@ -100,7 +100,7 @@ namespace PPDShareComponent
                 propertyChanged = false;
 
                 var borderThickness2 = borderThickness * 2;
-                vertices.Write(new[] {
+                vertices.Write([
                     new ColoredTexturedVertex(new Vector3(0, 0, 0.5f)),
                     new ColoredTexturedVertex(new Vector3(borderThickness, borderThickness, 0.5f)),
                     new ColoredTexturedVertex(new Vector3(0, borderThickness2 + rectangleHeight, 0.5f)),
@@ -111,7 +111,7 @@ namespace PPDShareComponent
                     new ColoredTexturedVertex(new Vector3(borderThickness + rectangleWidth, borderThickness, 0.5f)),
                     new ColoredTexturedVertex(new Vector3(0, 0, 0.5f)),
                     new ColoredTexturedVertex(new Vector3(borderThickness, borderThickness, 0.5f))
-                });
+                ]);
             }
         }
 

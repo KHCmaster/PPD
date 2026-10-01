@@ -466,7 +466,7 @@ namespace PPDEditor.Controls
         public MarkData[] GetSorteData()
         {
             PPDSheet ppdsheet = WindowUtility.LayerManager.SelectedPpdSheet;
-            if (ppdsheet == null) return new MarkData[0];
+            if (ppdsheet == null) return [];
             return ppdsheet.GetSortedDataAsMarkData();
         }
         public void MoveLine(int linenum, int diff)
@@ -1108,7 +1108,7 @@ namespace PPDEditor.Controls
         {
             PPDSheet ppdsheet = WindowUtility.LayerManager.SelectedPpdSheet;
             if (ppdsheet == null) return;
-            Mark[] marks = null;
+            Mark[] marks;
             if (onlyInSelection)
             {
                 if (!ppdsheet.AreaSelectionEnabled)
@@ -1128,11 +1128,11 @@ namespace PPDEditor.Controls
                 float[] ts;
                 if (mark is ExMark exmk)
                 {
-                    ts = new float[] { t, exmk.EndTime - exmk.Time + t };
+                    ts = [t, exmk.EndTime - exmk.Time + t];
                 }
                 else
                 {
-                    ts = new float[] { t };
+                    ts = [t];
                 }
                 times.Add(mark, ts);
             }
@@ -1170,51 +1170,18 @@ namespace PPDEditor.Controls
         }
         private int GetMove(ShortcutType shortcutType)
         {
-            switch (shortcutType)
+            return shortcutType switch
             {
-                case ShortcutType.Left0:
-                case ShortcutType.Right0:
-                case ShortcutType.Up0:
-                case ShortcutType.Down0:
-                    return PPDStaticSetting.Moves[0];
-                case ShortcutType.Left1:
-                case ShortcutType.Right1:
-                case ShortcutType.Up1:
-                case ShortcutType.Down1:
-                    return PPDStaticSetting.Moves[1];
-                case ShortcutType.Left2:
-                case ShortcutType.Right2:
-                case ShortcutType.Up2:
-                case ShortcutType.Down2:
-                    return PPDStaticSetting.Moves[2];
-                case ShortcutType.Left3:
-                case ShortcutType.Right3:
-                case ShortcutType.Up3:
-                case ShortcutType.Down3:
-                    return PPDStaticSetting.Moves[3];
-                case ShortcutType.Left4:
-                case ShortcutType.Right4:
-                case ShortcutType.Up4:
-                case ShortcutType.Down4:
-                    return PPDStaticSetting.Moves[4];
-                case ShortcutType.Left5:
-                case ShortcutType.Right5:
-                case ShortcutType.Up5:
-                case ShortcutType.Down5:
-                    return PPDStaticSetting.Moves[5];
-                case ShortcutType.Left6:
-                case ShortcutType.Right6:
-                case ShortcutType.Up6:
-                case ShortcutType.Down6:
-                    return PPDStaticSetting.Moves[6];
-                case ShortcutType.Left7:
-                case ShortcutType.Right7:
-                case ShortcutType.Up7:
-                case ShortcutType.Down7:
-                    return PPDStaticSetting.Moves[7];
-                default:
-                    return 1;
-            }
+                ShortcutType.Left0 or ShortcutType.Right0 or ShortcutType.Up0 or ShortcutType.Down0 => PPDStaticSetting.Moves[0],
+                ShortcutType.Left1 or ShortcutType.Right1 or ShortcutType.Up1 or ShortcutType.Down1 => PPDStaticSetting.Moves[1],
+                ShortcutType.Left2 or ShortcutType.Right2 or ShortcutType.Up2 or ShortcutType.Down2 => PPDStaticSetting.Moves[2],
+                ShortcutType.Left3 or ShortcutType.Right3 or ShortcutType.Up3 or ShortcutType.Down3 => PPDStaticSetting.Moves[3],
+                ShortcutType.Left4 or ShortcutType.Right4 or ShortcutType.Up4 or ShortcutType.Down4 => PPDStaticSetting.Moves[4],
+                ShortcutType.Left5 or ShortcutType.Right5 or ShortcutType.Up5 or ShortcutType.Down5 => PPDStaticSetting.Moves[5],
+                ShortcutType.Left6 or ShortcutType.Right6 or ShortcutType.Up6 or ShortcutType.Down6 => PPDStaticSetting.Moves[6],
+                ShortcutType.Left7 or ShortcutType.Right7 or ShortcutType.Up7 or ShortcutType.Down7 => PPDStaticSetting.Moves[7],
+                _ => 1,
+            };
         }
         public bool CheckPreviewKey(Keys key, bool Control, bool Shift, bool Alt)
         {
@@ -1342,7 +1309,7 @@ namespace PPDEditor.Controls
                         }
                         break;
                     case ShortcutType.NextAll:
-                        if (ppdsheet.ShiftSelectedMarkInAll(1, WindowUtility.TimeLineForm.RowManager.InverseRowOrders.Select(i => (ButtonType)i).ToArray()))
+                        if (ppdsheet.ShiftSelectedMarkInAll(1, [.. WindowUtility.TimeLineForm.RowManager.InverseRowOrders.Select(i => (ButtonType)i)]))
                         {
                             UpdateInfo();
                             SeekToNearSelected();
@@ -1350,7 +1317,7 @@ namespace PPDEditor.Controls
                         }
                         break;
                     case ShortcutType.PreviousAll:
-                        if (ppdsheet.ShiftSelectedMarkInAll(-1, WindowUtility.TimeLineForm.RowManager.InverseRowOrders.Select(i => (ButtonType)i).ToArray()))
+                        if (ppdsheet.ShiftSelectedMarkInAll(-1, [.. WindowUtility.TimeLineForm.RowManager.InverseRowOrders.Select(i => (ButtonType)i)]))
                         {
                             UpdateInfo();
                             SeekToNearSelected();

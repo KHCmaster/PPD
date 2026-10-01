@@ -55,7 +55,7 @@ namespace PPD
         {
             get
             {
-                return games.ToArray();
+                return [.. games];
             }
         }
     }

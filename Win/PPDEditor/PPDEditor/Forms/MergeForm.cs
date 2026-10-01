@@ -11,11 +11,11 @@ namespace PPDEditor.Forms
         public MergeForm()
         {
             InitializeComponent();
-            mergeGroupBox1.ButtonPressed += mergeBox_ButtonPressed;
-            mergeGroupBox2.ButtonPressed += mergeBox_ButtonPressed;
-            mergeGroupBox3.ButtonPressed += mergeBox_ButtonPressed;
-            mergeGroupBox4.ButtonPressed += mergeBox_ButtonPressed;
-            mergeGroupBox5.ButtonPressed += mergeBox_ButtonPressed;
+            mergeGroupBox1.ButtonPressed += MergeBox_ButtonPressed;
+            mergeGroupBox2.ButtonPressed += MergeBox_ButtonPressed;
+            mergeGroupBox3.ButtonPressed += MergeBox_ButtonPressed;
+            mergeGroupBox4.ButtonPressed += MergeBox_ButtonPressed;
+            mergeGroupBox5.ButtonPressed += MergeBox_ButtonPressed;
         }
 
         public void SetLang()
@@ -28,7 +28,7 @@ namespace PPDEditor.Forms
             openprojectfilter = Utility.Language["ProjectFilter"];
         }
 
-        void mergeBox_ButtonPressed(object sender, EventArgs e)
+        void MergeBox_ButtonPressed(object sender, EventArgs e)
         {
             openFileDialog1.Filter = openprojectfilter;
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
@@ -99,19 +99,19 @@ namespace PPDEditor.Forms
             }
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void Button1_Click(object sender, EventArgs e)
         {
             this.DialogResult = DialogResult.OK;
             this.Close();
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void Button2_Click(object sender, EventArgs e)
         {
             this.DialogResult = DialogResult.Cancel;
             this.Close();
         }
 
-        private void button3_Click(object sender, EventArgs e)
+        private void Button3_Click(object sender, EventArgs e)
         {
             saveFileDialog1.Filter = openprojectfilter;
             if (saveFileDialog1.ShowDialog() == DialogResult.OK)

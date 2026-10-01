@@ -272,7 +272,7 @@ namespace PPDSingle
                 Position = new Vector2(300, 370)
             });
 
-            selectList = new SelectableComponent[]{
+            selectList = [
                 nameRadio,
                 timeRadio,
                 updateDateRadio,
@@ -288,7 +288,7 @@ namespace PPDSingle
                 acScoreCheck,
                 acftScoreCheck,
                 setDefaultButton
-            };
+            ];
             foreach (SelectableComponent comp in selectList)
             {
                 selection.Add(comp.Position);

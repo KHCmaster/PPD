@@ -72,7 +72,7 @@ namespace PPDFramework.Resource
                 }
                 Add(pair.Key, new SpriteImageResource(device, imageResource, nearest.Item1, nearest.Item2.ImageScale));
             }
-            this.imageResources = usedSpriteDictionary.Values.ToArray();
+            this.imageResources = [.. usedSpriteDictionary.Values];
         }
 
         /// <summary>

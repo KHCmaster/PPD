@@ -9,13 +9,11 @@ namespace FlowScriptEngineBasic.FlowSourceObjects.HashSet
     {
         public override object GetPropertyValue(string propertyName)
         {
-            switch (propertyName)
+            return propertyName switch
             {
-                case "Removed":
-                    return Removed;
-                default:
-                    return null;
-            }
+                "Removed" => Removed,
+                _ => null,
+            };
         }
 
         protected override void SetPropertyValue(string propertyName, object value)

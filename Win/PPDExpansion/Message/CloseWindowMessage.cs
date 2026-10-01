@@ -1,12 +1,7 @@
 ﻿
 namespace PPDExpansion.Message
 {
-    class CloseWindowMessage : MessageBase
+    class CloseWindowMessage(object sender) : MessageBase(sender)
     {
-        public CloseWindowMessage(object sender)
-            : base(sender)
-        {
-
-        }
     }
 }

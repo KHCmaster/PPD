@@ -288,18 +288,13 @@ namespace PPDMulti
         }
     }
 
-    abstract class ItemEffect
+    abstract class ItemEffect(ItemType itemType)
     {
         public const int DefaultEffectTime = 15000;
         private long startTime;
         private int addedEffectTime;
 
         public event EventHandler Removed;
-
-        protected ItemEffect(ItemType itemType)
-        {
-            ItemType = itemType;
-        }
 
         public virtual void RemoveEffect()
         {
@@ -337,7 +332,7 @@ namespace PPDMulti
         {
             get;
             private set;
-        }
+        } = itemType;
 
         protected virtual int EffectTime
         {
@@ -586,18 +581,13 @@ namespace PPDMulti
         }
     }
 
-    class ItemUseEventArgs
+    class ItemUseEventArgs(ItemType itemType)
     {
-        public ItemUseEventArgs(ItemType itemType)
-        {
-            ItemType = itemType;
-        }
-
         public ItemType ItemType
         {
             get;
             private set;
-        }
+        } = itemType;
 
         public bool Use
         {

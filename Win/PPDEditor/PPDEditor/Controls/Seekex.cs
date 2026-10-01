@@ -18,7 +18,7 @@ namespace PPDEditor.Controls
             InitializeBuffer();
         }
 
-        public void setseekmain(Seekmain sm)
+        public void Setseekmain(Seekmain sm)
         {
             this.sm = sm;
         }

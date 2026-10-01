@@ -50,7 +50,7 @@ namespace PPDInstaller.Controls
             this.button2.Text = setting["CustomInstall"];
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void Button1_Click(object sender, EventArgs e)
         {
             while (PanelManager.CurrentPanel is not ConfirmPanel)
             {
@@ -59,7 +59,7 @@ namespace PPDInstaller.Controls
             PanelManager.Next();
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void Button2_Click(object sender, EventArgs e)
         {
             PanelManager.Next();
         }

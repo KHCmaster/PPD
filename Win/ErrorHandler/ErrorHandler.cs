@@ -48,10 +48,8 @@ namespace ErrorHandle
         {
             try
             {
-                using (StreamWriter writer = new(FileName, true))
-                {
-                    WriteError(e, writer);
-                }
+                using StreamWriter writer = new(FileName, true);
+                WriteError(e, writer);
             }
             catch
             {

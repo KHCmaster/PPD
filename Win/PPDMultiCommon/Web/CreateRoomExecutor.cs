@@ -1,14 +1,8 @@
 ﻿namespace PPDMultiCommon.Web
 {
-    public class CreateRoomExecutor : HostExecutorBase
+    public class CreateRoomExecutor(WebManager webManager, RoomInfo roomInfo) : HostExecutorBase(webManager)
     {
-        private readonly RoomInfo roomInfo;
-
-        public CreateRoomExecutor(WebManager webManager, RoomInfo roomInfo)
-            : base(webManager)
-        {
-            this.roomInfo = roomInfo;
-        }
+        private readonly RoomInfo roomInfo = roomInfo;
 
         protected override void InnerStart()
         {

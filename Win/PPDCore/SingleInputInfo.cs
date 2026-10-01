@@ -2,19 +2,11 @@
 
 namespace PPDCore
 {
-    class SingleInputInfo : InputInfoBase
+    class SingleInputInfo(ButtonType buttonType, bool isPressed, int pressingFrame) : InputInfoBase(false)
     {
-        private readonly ButtonType buttonType;
-        private readonly bool isPressed;
-        private readonly int pressingFrame;
-
-        public SingleInputInfo(ButtonType buttonType, bool isPressed, int pressingFrame)
-            : base(false)
-        {
-            this.buttonType = buttonType;
-            this.isPressed = isPressed;
-            this.pressingFrame = pressingFrame;
-        }
+        private readonly ButtonType buttonType = buttonType;
+        private readonly bool isPressed = isPressed;
+        private readonly int pressingFrame = pressingFrame;
 
         public override bool IsPressed(ButtonType buttonType)
         {

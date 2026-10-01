@@ -1,13 +1,13 @@
 ﻿
 namespace PPDEditorCommon.Dialog.Message
 {
-    class OpenFileDialogMessage : MessageBase
+    class OpenFileDialogMessage(object sender, string filter) : MessageBase(sender)
     {
         public string Filter
         {
             get;
             set;
-        }
+        } = filter;
 
         public string FileName
         {
@@ -19,12 +19,6 @@ namespace PPDEditorCommon.Dialog.Message
         {
             get;
             set;
-        }
-
-        public OpenFileDialogMessage(object sender, string filter)
-            : base(sender)
-        {
-            Filter = filter;
         }
     }
 }

@@ -89,7 +89,7 @@
             this.playToolStripMenuItem.Name = "playToolStripMenuItem";
             this.playToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
             this.playToolStripMenuItem.Text = "1回再生";
-            this.playToolStripMenuItem.Click += new System.EventHandler(this.playToolStripMenuItem_Click);
+            this.playToolStripMenuItem.Click += new System.EventHandler(this.PlayToolStripMenuItem_Click);
             // 
             // reversePlayToolStripMenuItem
             // 
@@ -97,7 +97,7 @@
             this.reversePlayToolStripMenuItem.Name = "reversePlayToolStripMenuItem";
             this.reversePlayToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
             this.reversePlayToolStripMenuItem.Text = "リバース1回再生";
-            this.reversePlayToolStripMenuItem.Click += new System.EventHandler(this.reversePlayToolStripMenuItem_Click);
+            this.reversePlayToolStripMenuItem.Click += new System.EventHandler(this.ReversePlayToolStripMenuItem_Click);
             // 
             // loopPlayToolStripMenuItem
             // 
@@ -105,7 +105,7 @@
             this.loopPlayToolStripMenuItem.Name = "loopPlayToolStripMenuItem";
             this.loopPlayToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
             this.loopPlayToolStripMenuItem.Text = "ループ再生";
-            this.loopPlayToolStripMenuItem.Click += new System.EventHandler(this.loopPlayToolStripMenuItem_Click);
+            this.loopPlayToolStripMenuItem.Click += new System.EventHandler(this.LoopPlayToolStripMenuItem_Click);
             // 
             // reverseLoopPlayToolStripMenuItem
             // 
@@ -113,7 +113,7 @@
             this.reverseLoopPlayToolStripMenuItem.Name = "reverseLoopPlayToolStripMenuItem";
             this.reverseLoopPlayToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
             this.reverseLoopPlayToolStripMenuItem.Text = "リバースループ再生";
-            this.reverseLoopPlayToolStripMenuItem.Click += new System.EventHandler(this.reverseLoopPlayToolStripMenuItem_Click);
+            this.reverseLoopPlayToolStripMenuItem.Click += new System.EventHandler(this.ReverseLoopPlayToolStripMenuItem_Click);
             // 
             // toolStripButton1
             // 
@@ -123,7 +123,7 @@
             this.toolStripButton1.Name = "toolStripButton1";
             this.toolStripButton1.Size = new System.Drawing.Size(23, 27);
             this.toolStripButton1.Text = "toolStripButton1";
-            this.toolStripButton1.Click += new System.EventHandler(this.toolStripButton1_Click);
+            this.toolStripButton1.Click += new System.EventHandler(this.ToolStripButton1_Click);
             // 
             // toolStripComboBox1
             // 
@@ -136,7 +136,7 @@
             "1024 x 1024"});
             this.toolStripComboBox1.Name = "toolStripComboBox1";
             this.toolStripComboBox1.Size = new System.Drawing.Size(100, 30);
-            this.toolStripComboBox1.SelectedIndexChanged += new System.EventHandler(this.toolStripComboBox1_SelectedIndexChanged);
+            this.toolStripComboBox1.SelectedIndexChanged += new System.EventHandler(this.ToolStripComboBox1_SelectedIndexChanged);
             // 
             // toolStripComboBox2
             // 
@@ -148,7 +148,7 @@
             "カスタム"});
             this.toolStripComboBox2.Name = "toolStripComboBox2";
             this.toolStripComboBox2.Size = new System.Drawing.Size(100, 30);
-            this.toolStripComboBox2.SelectedIndexChanged += new System.EventHandler(this.toolStripComboBox2_SelectedIndexChanged);
+            this.toolStripComboBox2.SelectedIndexChanged += new System.EventHandler(this.ToolStripComboBox2_SelectedIndexChanged);
             // 
             // panel1
             // 

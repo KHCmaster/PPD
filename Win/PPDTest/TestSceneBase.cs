@@ -4,19 +4,14 @@ using PPDFramework.Scene;
 
 namespace PPDTest
 {
-    abstract class TestSceneBase : SceneBase
+    abstract class TestSceneBase(TestSceneManager testSceneManager, PPDDevice device) : SceneBase(device)
     {
-        readonly TestSceneManager testSceneManager;
+        readonly TestSceneManager testSceneManager = testSceneManager;
         protected SpriteObject contentSprite;
 
         protected abstract string Title
         {
             get;
-        }
-
-        protected TestSceneBase(TestSceneManager testSceneManager, PPDDevice device) : base(device)
-        {
-            this.testSceneManager = testSceneManager;
         }
 
         public override bool Load()

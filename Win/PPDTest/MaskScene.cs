@@ -3,7 +3,7 @@ using PPDFramework;
 
 namespace PPDTest
 {
-    class MaskScene : TestSceneBase
+    class MaskScene(TestSceneManager testSceneManager, PPDDevice device) : TestSceneBase(testSceneManager, device)
     {
         protected override string Title
         {
@@ -11,11 +11,6 @@ namespace PPDTest
             {
                 return "画像マスクテスト";
             }
-        }
-
-        public MaskScene(TestSceneManager testSceneManager, PPDDevice device) : base(testSceneManager, device)
-        {
-
         }
 
         protected override void OnInitialize()

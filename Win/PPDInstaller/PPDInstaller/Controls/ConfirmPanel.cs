@@ -105,11 +105,11 @@ namespace PPDInstaller.Controls
             executeQueues = new Queue<CExecutor>();
 
             var installListExecutor = new InstallListExecutor(this);
-            installListExecutor.Finished += installListExecutor_Finished;
+            installListExecutor.Finished += InstallListExecutor_Finished;
             installListExecutor.Execute();
         }
 
-        void installListExecutor_Finished(object sender, EventArgs e)
+        void InstallListExecutor_Finished(object sender, EventArgs e)
         {
             var ip = PanelManager.GetPanel<InstallPanel>();
             if (installInfo.PPD)
@@ -161,8 +161,8 @@ namespace PPDInstaller.Controls
                 label7.Text = String.Format("{0} {1} {2}%", executor.ProgressText, executor.Name, executor.Progress);
                 var node = GetNodeFromText(targetNode, targetText);
                 node?.ImageKey = Progress;
-                executor.Progressed += executor_Progressed;
-                executor.Finished += executor_Finished;
+                executor.Progressed += Executor_Progressed;
+                executor.Finished += Executor_Finished;
 
                 thread = new Thread(new ThreadStart(executor.Execute));
                 thread.Start();
@@ -172,7 +172,7 @@ namespace PPDInstaller.Controls
             InstallFinished?.Invoke(this, EventArgs.Empty);
         }
 
-        void executor_Finished(object sender, EventArgs e)
+        void Executor_Finished(object sender, EventArgs e)
         {
             var executor = sender as CExecutor;
             if (executor.ErrorLog != "")
@@ -192,7 +192,7 @@ namespace PPDInstaller.Controls
             InnerInstall();
         }
 
-        void executor_Progressed(object sender, EventArgs e)
+        void Executor_Progressed(object sender, EventArgs e)
         {
             var executor = sender as CExecutor;
             label7.Text = String.Format("{0} {1} {2}%", executor.ProgressText, executor.Name, executor.Progress);

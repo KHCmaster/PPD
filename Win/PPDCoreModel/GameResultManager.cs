@@ -149,13 +149,13 @@ namespace PPDCoreModel
         {
             get
             {
-                return new int[]{
+                return [
                     CoolCount,
                     GoodCount,
                     SafeCount,
                     SadCount,
                     WorstCount
-                };
+                ];
             }
         }
 

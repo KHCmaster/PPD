@@ -5,20 +5,14 @@ namespace PPDFramework.PPDStructure
     /// <summary>
     /// サウンド変更データクラス
     /// </summary>
-    public class SCDData
+    /// <remarks>
+    /// コンストラクタ
+    /// </remarks>
+    /// <param name="time">時間</param>
+    /// <param name="buttontype">ボタンタイプ</param>
+    /// <param name="soundindex">サウンドインデックス</param>
+    public class SCDData(float time, ButtonType buttontype, UInt16 soundindex)
     {
-        /// <summary>
-        /// コンストラクタ
-        /// </summary>
-        /// <param name="time">時間</param>
-        /// <param name="buttontype">ボタンタイプ</param>
-        /// <param name="soundindex">サウンドインデックス</param>
-        public SCDData(float time, ButtonType buttontype, UInt16 soundindex)
-        {
-            Time = time;
-            ButtonType = buttontype;
-            SoundIndex = soundindex;
-        }
 
         /// <summary>
         /// 時間
@@ -27,7 +21,7 @@ namespace PPDFramework.PPDStructure
         {
             get;
             private set;
-        }
+        } = time;
 
         /// <summary>
         /// ボタンタイプ
@@ -36,7 +30,7 @@ namespace PPDFramework.PPDStructure
         {
             get;
             private set;
-        }
+        } = buttontype;
 
         /// <summary>
         /// サウンドインデックス
@@ -45,6 +39,6 @@ namespace PPDFramework.PPDStructure
         {
             get;
             private set;
-        }
+        } = soundindex;
     }
 }

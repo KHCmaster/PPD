@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace PPDEditor.Forms
@@ -15,7 +16,7 @@ namespace PPDEditor.Forms
         //Splashを表示するスレッド
         private static System.Threading.Thread _thread;
         //lock用のオブジェクト
-        private static readonly object syncObject = new();
+        private static readonly Lock syncObject = new();
 
         /// <summary>
         /// Splashフォーム
@@ -36,7 +37,7 @@ namespace PPDEditor.Forms
 
             _mainForm = mainForm;
             //メインフォームのActivatedイベントでSplashフォームを消す
-            _mainForm?.Activated += _mainForm_Activated;
+            _mainForm?.Activated += MainForm_Activated;
 
             //スレッドの作成
             _thread = new System.Threading.Thread(
@@ -77,7 +78,7 @@ namespace PPDEditor.Forms
 
                 if (_mainForm != null)
                 {
-                    _mainForm.Activated -= _mainForm_Activated;
+                    _mainForm.Activated -= MainForm_Activated;
                     //メインフォームをアクティブにする
                     _mainForm.Activate();
                 }
@@ -134,14 +135,14 @@ namespace PPDEditor.Forms
         }
 
         //Splashフォームがクリックされた時
-        private static void _form_Click(object sender, EventArgs e)
+        private static void Form_Click(object sender, EventArgs e)
         {
             //Splashフォームを閉じる
             CloseSplash();
         }
 
         //メインフォームがアクティブになった時
-        private static void _mainForm_Activated(object sender, EventArgs e)
+        private static void MainForm_Activated(object sender, EventArgs e)
         {
             //Splashフォームを閉じる
             CloseSplash();

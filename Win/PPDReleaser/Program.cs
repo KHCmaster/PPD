@@ -60,22 +60,22 @@ namespace PPDReleaser
         {
             var copyInfo = new CopyInfo(srcDir, targetDir);
             copyInfo.CopyDir("Lang");
-            copyInfo.CopyFiles(new string[]{
+            copyInfo.CopyFiles([
                 "ICSharpCode.SharpZipLib.dll",
                 "Interop.IWshRuntimeLibrary.dll",
                 "PPDInstaller.exe",
                 "PPDInstaller.exe.config",
                 "ErrorHandle.dll",
                 "PPDConfiguration.dll"
-            });
+            ]);
 
             copyInfo = new CopyInfo(srcDir, Path.Combine(targetDir, "Data"));
 
             var pdCopyInfo = copyInfo.GetNext("BMSTOPPD");
-            pdCopyInfo.CopyFiles(new string[]{
+            pdCopyInfo.CopyFiles([
                 "BMSTOPPD.exe",
                 "BMSTOPPD.exe.config"
-            });
+            ]);
 
             var executables = new string[]{
                 "Effect2DEditor.exe",
@@ -155,26 +155,30 @@ namespace PPDReleaser
             pdCopyInfo.CopyDir("Functions");
             pdCopyInfo.CopyDir("Commands");
             pdCopyInfo.CopyDir("Review_Preset");
-            pdCopyInfo.CopyFiles(executables.Concat(new string[]{
-                "Effect2DEditor.exe.config",
-                "FlowScriptControlTest.exe.config",
-                "KeyConfiger.exe.config",
-                "PPD.exe.config",
-                "PPDConfig.exe.config",
-                "PPDEditor.exe.config",
-                "PPDExpansion.exe.config",
-                "PPDMultiServerService.exe.config",
-                "MultiRoomInfo.xml",
-                "PPDUpdater.exe.config",
-            }).ToArray());
+            pdCopyInfo.CopyFiles(
+            [
+                .. executables,
+                .. new string[]{
+                    "Effect2DEditor.exe.config",
+                    "FlowScriptControlTest.exe.config",
+                    "KeyConfiger.exe.config",
+                    "PPD.exe.config",
+                    "PPDConfig.exe.config",
+                    "PPDEditor.exe.config",
+                    "PPDExpansion.exe.config",
+                    "PPDMultiServerService.exe.config",
+                    "MultiRoomInfo.xml",
+                    "PPDUpdater.exe.config",
+                },
+            ]);
 
             CopyFile("Items\\x64\\fmodex64.dll", Path.Combine(pdCopyInfo.Dir, "fmodex64.dll"));
-            executables = executables.Concat(new string[] { "fmodex64.dll" }).ToArray();
+            executables = [.. executables, .. new string[] { "fmodex64.dll" }];
 
             var prefixes = new string[] { "", "beta_" };
             foreach (var prefix in prefixes)
             {
-                CreateAssemblyInfo(Path.Combine(Directory.GetParent(targetDir).FullName, String.Format("{0}assembly_x64.xml", prefix)), executables.Select(e => Path.Combine(targetDir, "Data", "PPD", e)).ToArray());
+                CreateAssemblyInfo(Path.Combine(Directory.GetParent(targetDir).FullName, String.Format("{0}assembly_x64.xml", prefix)), [.. executables.Select(e => Path.Combine(targetDir, "Data", "PPD", e))]);
             }
         }
 
@@ -226,15 +230,13 @@ namespace PPDReleaser
                 Indent = true,
                 NewLineChars = Environment.NewLine
             };
-            using (XmlWriter writer = XmlWriter.Create(filePath, setting))
+            using XmlWriter writer = XmlWriter.Create(filePath, setting);
+            writer.WriteStartElement("Root");
+            foreach (string file in filePaths)
             {
-                writer.WriteStartElement("Root");
-                foreach (string file in filePaths)
-                {
-                    WriteVersionInfo(writer, file);
-                }
-                writer.WriteEndElement();
+                WriteVersionInfo(writer, file);
             }
+            writer.WriteEndElement();
         }
 
         public static void WriteVersionInfo(XmlWriter writer, string filePath)
@@ -247,16 +249,10 @@ namespace PPDReleaser
         }
     }
 
-    internal class CopyInfo
+    internal class CopyInfo(string srcDir, string targetDir)
     {
-        private readonly string srcDir;
-        private readonly string targetDir;
-
-        public CopyInfo(string srcDir, string targetDir)
-        {
-            this.srcDir = srcDir;
-            this.targetDir = targetDir;
-        }
+        private readonly string srcDir = srcDir;
+        private readonly string targetDir = targetDir;
 
         public void CopyFile(string fileName)
         {

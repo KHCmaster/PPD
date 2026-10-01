@@ -84,10 +84,8 @@ namespace PPDCore
 
         public static PPDPlayDecorder FromFile(string filePath)
         {
-            using (FileStream fs = File.Open(filePath, FileMode.Open))
-            {
-                return FromStream(fs);
-            }
+            using FileStream fs = File.Open(filePath, FileMode.Open);
+            return FromStream(fs);
         }
 
         /// <summary>

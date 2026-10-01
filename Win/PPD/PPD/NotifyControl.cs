@@ -8,22 +8,15 @@ using System.Collections.Generic;
 
 namespace PPD
 {
-    class NotifyControl : GameComponent
+    class NotifyControl(PPDDevice device, PPDFramework.Resource.ResourceManager resourceManager, GameTimer gameTimer) : GameComponent(device)
     {
         private const int startY = 20;
         private const int itemHeight = 25;
 
-        private readonly PPDFramework.Resource.ResourceManager resourceManager;
-        private readonly GameTimer gameTimer;
+        private readonly PPDFramework.Resource.ResourceManager resourceManager = resourceManager;
+        private readonly GameTimer gameTimer = gameTimer;
 
-        private readonly Queue<string> textQueue;
-
-        public NotifyControl(PPDDevice device, PPDFramework.Resource.ResourceManager resourceManager, GameTimer gameTimer) : base(device)
-        {
-            this.resourceManager = resourceManager;
-            this.gameTimer = gameTimer;
-            textQueue = new Queue<string>();
-        }
+        private readonly Queue<string> textQueue = new Queue<string>();
 
         public void AddNotify(string text)
         {
@@ -54,7 +47,7 @@ namespace PPD
             public NotifyComponent(PPDDevice device, PPDFramework.Resource.ResourceManager resourceManager, GameTimer gameTimer, string text) : base(device)
             {
                 this.gameTimer = gameTimer;
-                TextureString textureString = null;
+                TextureString textureString;
                 this.AddChild(textureString = new TextureString(device, text, 10, PPDColors.Black)
                 {
                     Position = new Vector2(26, 8)

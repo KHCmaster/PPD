@@ -4,25 +4,19 @@ namespace PPDSingle
 {
     public delegate void SelectionEventHandler(object sender, SelectionEventArgs args);
 
-    public class SelectionEventArgs
+    public class SelectionEventArgs(TreeViewItem prevItem, TreeViewItem newItem)
     {
-        public SelectionEventArgs(TreeViewItem prevItem, TreeViewItem newItem)
-        {
-            Prev = prevItem;
-            New = newItem;
-        }
-
         public TreeViewItem Prev
         {
             get;
             private set;
-        }
+        } = prevItem;
 
         public TreeViewItem New
         {
             get;
             private set;
-        }
+        } = newItem;
     }
 
     public class TreeView

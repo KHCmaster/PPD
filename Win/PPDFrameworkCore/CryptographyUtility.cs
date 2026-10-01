@@ -18,7 +18,7 @@ namespace PPDFrameworkCore
         {
             if (String.IsNullOrEmpty(str))
             {
-                return new byte[0];
+                return [];
             }
 
             byte[] ret = new byte[str.Length / 2];
@@ -57,10 +57,8 @@ namespace PPDFrameworkCore
         /// <returns></returns>
         public static byte[] CalcMd5Hash(byte[] bytes)
         {
-            using (MD5 md5 = MD5.Create())
-            {
-                return md5.ComputeHash(bytes);
-            }
+            using MD5 md5 = MD5.Create();
+            return md5.ComputeHash(bytes);
         }
 
         /// <summary>
@@ -91,10 +89,8 @@ namespace PPDFrameworkCore
         /// <returns></returns>
         public static string CalcMd5HashString(byte[] bytes)
         {
-            using (MD5 md5 = MD5.Create())
-            {
-                return Getx2Encoding(md5.ComputeHash(bytes));
-            }
+            using MD5 md5 = MD5.Create();
+            return Getx2Encoding(md5.ComputeHash(bytes));
         }
 
         /// <summary>
@@ -125,10 +121,8 @@ namespace PPDFrameworkCore
         /// <returns></returns>
         public static byte[] CalcSha256Hash(byte[] bytes)
         {
-            using (var sha = SHA256.Create())
-            {
-                return sha.ComputeHash(bytes);
-            }
+            using var sha = SHA256.Create();
+            return sha.ComputeHash(bytes);
         }
 
         /// <summary>
@@ -159,10 +153,8 @@ namespace PPDFrameworkCore
         /// <returns></returns>
         public static string CalcSha256HashString(byte[] bytes)
         {
-            using (var sha = SHA256.Create())
-            {
-                return Getx2Encoding(sha.ComputeHash(bytes));
-            }
+            using var sha = SHA256.Create();
+            return Getx2Encoding(sha.ComputeHash(bytes));
         }
 
         /// <summary>

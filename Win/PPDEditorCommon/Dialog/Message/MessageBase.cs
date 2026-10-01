@@ -3,7 +3,7 @@ namespace PPDEditorCommon.Dialog.Message
     /// <summary>
     /// ビューモデルからビューへ送るメッセージの基底クラスです。
     /// </summary>
-    abstract class MessageBase
+    abstract class MessageBase(object sender)
     {
         /// <summary>
         /// 送信者を取得します。
@@ -12,11 +12,6 @@ namespace PPDEditorCommon.Dialog.Message
         {
             get;
             private set;
-        }
-
-        protected MessageBase(object sender)
-        {
-            Sender = sender;
-        }
+        } = sender;
     }
 }

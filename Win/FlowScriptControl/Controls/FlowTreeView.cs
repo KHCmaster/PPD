@@ -34,7 +34,7 @@ namespace FlowScriptControl.Controls
             {
                 Interval = 1000
             };
-            timer.Tick += timer_Tick;
+            timer.Tick += Timer_Tick;
 
             treeView1.ImageList = new ImageList
             {
@@ -43,11 +43,11 @@ namespace FlowScriptControl.Controls
             treeView1.ImageList.Images.Add(flowSourceKey, FlowScriptControl.Properties.Resources.flowsource);
             treeView1.ImageList.Images.Add(folderKey, FlowScriptControl.Properties.Resources.folder);
 
-            treeView1.ItemDrag += treeView1_ItemDrag;
-            treeView1.DragOver += treeView1_DragOver;
-            treeView1.MouseMove += treeView1_MouseMove;
-            treeView1.MouseLeave += treeView1_MouseLeave;
-            treeView1.KeyDown += treeView1_KeyDown;
+            treeView1.ItemDrag += TreeView1_ItemDrag;
+            treeView1.DragOver += TreeView1_DragOver;
+            treeView1.MouseMove += TreeView1_MouseMove;
+            treeView1.MouseLeave += TreeView1_MouseLeave;
+            treeView1.KeyDown += TreeView1_KeyDown;
         }
 
         internal void ReprecateMenuToTree(CustomToolStripMenuItem menu)
@@ -65,7 +65,7 @@ namespace FlowScriptControl.Controls
             }
         }
 
-        private void toolStripComboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        private void ToolStripComboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             Filter();
             SelectedFilterChanged?.Invoke(this, EventArgs.Empty);
@@ -125,7 +125,7 @@ namespace FlowScriptControl.Controls
             return null;
         }
 
-        void timer_Tick(object sender, EventArgs e)
+        void Timer_Tick(object sender, EventArgs e)
         {
             if (lastHoverNode != null)
             {
@@ -203,7 +203,7 @@ namespace FlowScriptControl.Controls
             var nodesToRemove = new List<TreeNode>();
             foreach (CustomTreeNode node in nodes)
             {
-                Action<int> action = (nextIndex) =>
+                void action(int nextIndex)
                 {
                     var childrenIsVisible = HideNodes(node.Nodes, filters, nextIndex, expandOrCollapse);
                     if (!childrenIsVisible)
@@ -222,7 +222,7 @@ namespace FlowScriptControl.Controls
                         }
                     }
                     hasVisibleNodes |= childrenIsVisible;
-                };
+                }
                 if (IsFilteredNode(node, filters[filterIndex]))
                 {
                     if (filterIndex == filters.Length - 1)
@@ -303,7 +303,7 @@ namespace FlowScriptControl.Controls
             removedNodes.Clear();
         }
 
-        private void toolStripTextBox1_KeyDown(object sender, KeyEventArgs e)
+        private void ToolStripTextBox1_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
             {
@@ -312,7 +312,7 @@ namespace FlowScriptControl.Controls
             }
         }
 
-        private void toolStripTextBox1_KeyPress(object sender, KeyPressEventArgs e)
+        private void ToolStripTextBox1_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (e.KeyChar == (char)Keys.Enter)
             {
@@ -320,7 +320,7 @@ namespace FlowScriptControl.Controls
             }
         }
 
-        private void treeView1_ItemDrag(object sender, ItemDragEventArgs e)
+        private void TreeView1_ItemDrag(object sender, ItemDragEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
             {
@@ -331,7 +331,7 @@ namespace FlowScriptControl.Controls
             }
         }
 
-        private void treeView1_DragOver(object sender, DragEventArgs e)
+        private void TreeView1_DragOver(object sender, DragEventArgs e)
         {
             if (e.Data.GetDataPresent(typeof(CustomTreeNode)))
             {
@@ -343,13 +343,13 @@ namespace FlowScriptControl.Controls
             }
         }
 
-        private void treeView1_MouseLeave(object sender, EventArgs e)
+        private void TreeView1_MouseLeave(object sender, EventArgs e)
         {
             timer.Stop();
             HideToolTip();
         }
 
-        private void treeView1_MouseMove(object sender, MouseEventArgs e)
+        private void TreeView1_MouseMove(object sender, MouseEventArgs e)
         {
             var node = treeView1.GetNodeAt(new Point(e.X, e.Y)) as CustomTreeNode;
             if (node != lastHoverNode)
@@ -361,7 +361,7 @@ namespace FlowScriptControl.Controls
             }
         }
 
-        private void treeView1_KeyDown(object sender, KeyEventArgs e)
+        private void TreeView1_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.F && e.Control)
             {

@@ -440,19 +440,14 @@ namespace PPDSingle
         {
             get
             {
-                switch (selectdifficulty)
+                return selectdifficulty switch
                 {
-                    case Difficulty.Easy:
-                        return "EASY";
-                    case Difficulty.Normal:
-                        return "NORMAL";
-                    case Difficulty.Hard:
-                        return "HARD";
-                    case Difficulty.Extreme:
-                        return "EXTREME";
-                    default:
-                        return "";
-                }
+                    Difficulty.Easy => "EASY",
+                    Difficulty.Normal => "NORMAL",
+                    Difficulty.Hard => "HARD",
+                    Difficulty.Extreme => "EXTREME",
+                    _ => "",
+                };
             }
         }
         public Difficulty Difficulty

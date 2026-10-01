@@ -21,32 +21,30 @@ namespace PPDCore
             var path = Path.Combine(ppdgameutility.SongInformation.DirectoryPath, "kasi.txt");
             if (File.Exists(path))
             {
-                using (StreamReader sr = new(path))
+                using StreamReader sr = new(path);
+                var data = sr.ReadToEnd();
+                sr.Close();
+                data = data.Replace("\r\n", "\r").Replace("\r", "\n");
+                if (string.IsNullOrEmpty(data)) return;
+                var datas = data.Split('\n');
+                foreach (string eachdata in datas)
                 {
-                    var data = sr.ReadToEnd();
-                    sr.Close();
-                    data = data.Replace("\r\n", "\r").Replace("\r", "\n");
-                    if (string.IsNullOrEmpty(data)) return;
-                    var datas = data.Split('\n');
-                    foreach (string eachdata in datas)
+                    var temp = eachdata.Split(':');
+                    try
                     {
-                        var temp = eachdata.Split(':');
-                        try
-                        {
-                            if (temp.Length >= 2) pool.Add(float.Parse(temp[0], CultureInfo.InvariantCulture), temp[1]);
-                            else pool.Add(float.Parse(temp[0], CultureInfo.InvariantCulture), "");
-                        }
-                        catch
-                        {
-                        }
+                        if (temp.Length >= 2) pool.Add(float.Parse(temp[0], CultureInfo.InvariantCulture), temp[1]);
+                        else pool.Add(float.Parse(temp[0], CultureInfo.InvariantCulture), "");
                     }
-                    if (pool.Count > 0)
+                    catch
                     {
-                        nexttime = pool.Keys[0];
-                        starttime = nexttime;
                     }
-                    initialized = true;
                 }
+                if (pool.Count > 0)
+                {
+                    nexttime = pool.Keys[0];
+                    starttime = nexttime;
+                }
+                initialized = true;
             }
         }
 

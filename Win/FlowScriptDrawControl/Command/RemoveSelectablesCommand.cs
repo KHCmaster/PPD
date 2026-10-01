@@ -5,26 +5,20 @@ using System.Linq;
 
 namespace FlowScriptDrawControl.Command
 {
-    class RemoveSelectablesCommand : CommandBase
+    class RemoveSelectablesCommand(FlowAreaControl flowAreaControl, SelectableControl[] controls) : CommandBase
     {
-        private readonly SelectableControl[] controls;
+        private readonly SelectableControl[] controls = controls;
         private SourceControl[] sources;
         private CommentControl[] comments;
-        private readonly FlowAreaControl flowAreaControl;
+        private readonly FlowAreaControl flowAreaControl = flowAreaControl;
         private RemoveFlowCommand[] removeFlowCommands;
         private RemoveBoundCommentCommand[] removeBoundCommentCommands;
         private RemoveSelectableFromScopeCommand[] removeFromScopeCommands;
 
-        public RemoveSelectablesCommand(FlowAreaControl flowAreaControl, SelectableControl[] controls)
-        {
-            this.flowAreaControl = flowAreaControl;
-            this.controls = controls;
-        }
-
         public override void Execute()
         {
-            sources = controls.Where(c => c is SourceControl).Cast<SourceControl>().ToArray();
-            comments = controls.Where(c => c is CommentControl).Cast<CommentControl>().ToArray();
+            sources = [.. controls.Where(c => c is SourceControl).Cast<SourceControl>()];
+            comments = [.. controls.Where(c => c is CommentControl).Cast<CommentControl>()];
             RemoveFlow();
             RemoveBoundComment();
             RemoveFromScope();
@@ -59,7 +53,7 @@ namespace FlowScriptDrawControl.Command
                     }
                 }
             }
-            removeFlowCommands = listFlow.ToArray();
+            removeFlowCommands = [.. listFlow];
 
             foreach (RemoveFlowCommand command in removeFlowCommands)
             {
@@ -81,7 +75,7 @@ namespace FlowScriptDrawControl.Command
                     }
                 }
             }
-            removeBoundCommentCommands = removeBoundCommentList.ToArray();
+            removeBoundCommentCommands = [.. removeBoundCommentList];
             foreach (RemoveBoundCommentCommand command in removeBoundCommentCommands)
             {
                 command.Execute();
@@ -99,7 +93,7 @@ namespace FlowScriptDrawControl.Command
                     removeFromScopeList.Add(new RemoveSelectableFromScopeCommand(flowAreaControl, scopeControl, control));
                 }
             }
-            removeFromScopeCommands = removeFromScopeList.ToArray();
+            removeFromScopeCommands = [.. removeFromScopeList];
             foreach (RemoveSelectableFromScopeCommand command in removeFromScopeCommands)
             {
                 command.Execute();

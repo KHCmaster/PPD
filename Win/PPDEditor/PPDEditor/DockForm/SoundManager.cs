@@ -23,7 +23,7 @@ namespace PPDEditor
         string cannotdeletesound = "無音は削除できません";
         string cannotdeletefirst = "最初の設定は削除できません";
         string alreadyadded = "すでにこの時間に変更が設定されています。削除してからもう一度追加してください";
-        public List<string> sounddatapaths
+        public List<string> Sounddatapaths
         {
             get
             {
@@ -32,7 +32,7 @@ namespace PPDEditor
         }
         public void SetEvent()
         {
-            WindowUtility.Seekmain.Seeked += this.seekpointchange;
+            WindowUtility.Seekmain.Seeked += this.Seekpointchange;
         }
         public void SetLang()
         {
@@ -76,7 +76,7 @@ namespace PPDEditor
                 cbs[i].Items.Add(data[0]);
                 cbs[i].SelectedIndex = 0;
             }
-            updatedatagrid();
+            Updatedatagrid();
         }
         public void SetSkin()
         {
@@ -112,11 +112,11 @@ namespace PPDEditor
                 cbs[i].Items.Add(data[0]);
                 cbs[i].SelectedIndex = 0;
             }
-            addchange(0);
+            Addchange(0);
             foreach (DataGridViewColumn c in dataGridView1.Columns) c.SortMode = DataGridViewColumnSortMode.NotSortable;
             ContentSaved();
         }
-        public bool fixedcombo
+        public bool Fixedcombo
         {
             get
             {
@@ -154,11 +154,11 @@ namespace PPDEditor
             }
             ContentSaved();
         }
-        public void setSound(Sound sou)
+        public void SetSound(Sound sou)
         {
             this.sou = sou;
         }
-        public string savesoundset()
+        public string Savesoundset()
         {
             string ret = "";
             for (int i = 1; i < data.Count; i++)
@@ -185,7 +185,7 @@ namespace PPDEditor
                 }
                 lastdata = nowdata;
             }
-            return ret.ToArray();
+            return [.. ret];
         }
         public float[] GetSoundChangeWithinTime(float starttime, float endtime)
         {
@@ -204,7 +204,7 @@ namespace PPDEditor
                     }
                 }
             }
-            return ret.ToArray();
+            return [.. ret];
         }
         public string GetFormattedContent(float time)
         {
@@ -247,12 +247,12 @@ namespace PPDEditor
                 ushort[] change = changedata[previoustime];
                 changedata.Remove(previoustime);
                 changedata.Add(newtime, change);
-                updatedatagrid();
+                Updatedatagrid();
                 ContentChanged();
                 WindowUtility.Seekmain.DrawAndRefresh();
             }
         }
-        public void playsound(bool[] b)
+        public void Playsound(bool[] b)
         {
             for (int i = 0; i < b.Length; i++)
             {
@@ -262,7 +262,7 @@ namespace PPDEditor
                 }
             }
         }
-        private void button1_Click(object sender, EventArgs e)
+        private void Button1_Click(object sender, EventArgs e)
         {
             this.openFileDialog1.Filter = wavefilter;
             this.openFileDialog1.RestoreDirectory = true;
@@ -270,10 +270,10 @@ namespace PPDEditor
             this.openFileDialog1.Multiselect = true;
             if (this.openFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                readsounds(this.openFileDialog1.FileNames);
+                Readsounds(this.openFileDialog1.FileNames);
             }
         }
-        public void readsounds(string[] filenames)
+        public void Readsounds(string[] filenames)
         {
             for (int i = 0; i < filenames.Length; i++)
             {
@@ -290,7 +290,7 @@ namespace PPDEditor
                 ContentChanged();
             }
         }
-        public void readchangedata(float[] times, ushort[][] changes)
+        public void Readchangedata(float[] times, ushort[][] changes)
         {
             for (int i = 0; i < times.Length; i++)
             {
@@ -304,9 +304,9 @@ namespace PPDEditor
                     changedata.Add(times[i], changes[i]);
                 }
             }
-            updatedatagrid();
+            Updatedatagrid();
         }
-        private void button5_Click(object sender, EventArgs e)
+        private void Button5_Click(object sender, EventArgs e)
         {
             if (this.comboBox11.SelectedIndex > 0)
             {
@@ -314,7 +314,7 @@ namespace PPDEditor
             }
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void Button2_Click(object sender, EventArgs e)
         {
             if (this.comboBox11.SelectedIndex < 0)
             {
@@ -379,7 +379,7 @@ namespace PPDEditor
                     ChangeDifficultySound(diff, removedIndex);
                 }
             }
-            updatedatagrid();
+            Updatedatagrid();
             ContentChanged();
         }
 
@@ -391,14 +391,14 @@ namespace PPDEditor
                 return;
             }
             var data = SCDReader.Read(path);
-            SCDWriter.Write(path, data.Select(d =>
+            SCDWriter.Write(path, [.. data.Select(d =>
             {
                 var newIndex = removedIndex == d.SoundIndex ? 0 : (d.SoundIndex > removedIndex ? d.SoundIndex - 1 : d.SoundIndex);
                 return new SCDData(d.Time, d.ButtonType, (ushort)newIndex);
-            }).ToArray());
+            })]);
         }
 
-        private UInt16[] cbselectednums()
+        private UInt16[] Cbselectednums()
         {
             UInt16[] ret = new UInt16[10];
             for (int i = 0; i < ret.Length; i++)
@@ -407,7 +407,7 @@ namespace PPDEditor
             }
             return ret;
         }
-        private string cbvalue(int num)
+        private string Cbvalue(int num)
         {
             string ret = "";
             UInt16[] temp = changedata.Values[num];
@@ -428,7 +428,7 @@ namespace PPDEditor
             }
             return ret;
         }
-        private void addchange(float time)
+        private void Addchange(float time)
         {
             if (changedata.ContainsKey(time))
             {
@@ -437,34 +437,34 @@ namespace PPDEditor
             else
             {
                 this.dataGridView1.Rows.Add(1);
-                changedata.Add(time, cbselectednums());
-                updatedatagrid();
+                changedata.Add(time, Cbselectednums());
+                Updatedatagrid();
             }
         }
-        private void updatedatagrid()
+        private void Updatedatagrid()
         {
             for (int i = 0; i < changedata.Count; i++)
             {
                 this.dataGridView1[0, i].Value = changedata.Keys[i];
-                this.dataGridView1[1, i].Value = cbvalue(i);
+                this.dataGridView1[1, i].Value = Cbvalue(i);
             }
         }
-        private void button3_Click(object sender, EventArgs e)
+        private void Button3_Click(object sender, EventArgs e)
         {
-            addchange((float)WindowUtility.Seekmain.Currenttime);
+            Addchange((float)WindowUtility.Seekmain.Currenttime);
         }
-        private void seekpointchange(object sender, EventArgs e)
+        private void Seekpointchange(object sender, EventArgs e)
         {
             var time = (float)WindowUtility.Seekmain.Currenttime;
-            changedatagridselectindex(time);
+            Changedatagridselectindex(time);
             if (this.checkBox1.Checked)
             {
-                synccombobox();
+                Synccombobox();
             }
         }
-        private void changedatagridselectindex(float time)
+        private void Changedatagridselectindex(float time)
         {
-            int i = 0;
+            int i;
             for (i = 0; i < changedata.Count; i++)
             {
                 if (changedata.Keys[i] <= time) continue;
@@ -485,7 +485,7 @@ namespace PPDEditor
             dataGridView1.CurrentCell = dataGridView1[0, i];
             currentnum = i;
         }
-        private void synccombobox()
+        private void Synccombobox()
         {
             if (dataGridView1.CurrentRow != null)
             {
@@ -497,7 +497,7 @@ namespace PPDEditor
                 }
             }
         }
-        private void button4_Click(object sender, EventArgs e)
+        private void Button4_Click(object sender, EventArgs e)
         {
             if (dataGridView1.CurrentRow != null)
             {
@@ -509,13 +509,13 @@ namespace PPDEditor
                 {
                     changedata.RemoveAt(dataGridView1.CurrentRow.Index);
                     dataGridView1.Rows.RemoveAt(this.dataGridView1.CurrentRow.Index);
-                    updatedatagrid();
+                    Updatedatagrid();
                     ContentChanged();
                 }
             }
         }
 
-        private void button7_Click(object sender, EventArgs e)
+        private void Button7_Click(object sender, EventArgs e)
         {
             if (dataGridView1.CurrentRow != null && dataGridView1.CurrentRow.Index > 0)
             {
@@ -523,8 +523,8 @@ namespace PPDEditor
                 var change = changedata[time];
                 var form = new SoundChangeEditForm();
                 form.SetLang();
-                form.SetInfo(change, data.ToArray());
-                form.PlaySound += form_PlaySound;
+                form.SetInfo(change, [.. data]);
+                form.PlaySound += Form_PlaySound;
                 if (form.ShowDialog() != DialogResult.OK)
                 {
                     return;
@@ -532,35 +532,35 @@ namespace PPDEditor
 
                 var index = dataGridView1.CurrentRow.Index;
                 changedata[time] = form.Change;
-                updatedatagrid();
+                Updatedatagrid();
                 ContentChanged();
             }
         }
 
-        void form_PlaySound(string obj)
+        void Form_PlaySound(string obj)
         {
             sou.Play(obj, -1000);
         }
 
-        private void dataGridView1_SelectionChanged(object sender, EventArgs e)
+        private void DataGridView1_SelectionChanged(object sender, EventArgs e)
         {
             if (this.checkBox1.Checked)
             {
-                synccombobox();
+                Synccombobox();
             }
         }
 
-        private void dataGridView1_RowsRemoved(object sender, DataGridViewRowsRemovedEventArgs e)
+        private void DataGridView1_RowsRemoved(object sender, DataGridViewRowsRemovedEventArgs e)
         {
             ContentChanged();
         }
 
-        private void dataGridView1_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
+        private void DataGridView1_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
         {
             ContentChanged();
         }
 
-        private void button6_Click(object sender, EventArgs e)
+        private void Button6_Click(object sender, EventArgs e)
         {
             if (this.comboBox11.SelectedIndex == 0)
             {

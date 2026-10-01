@@ -103,23 +103,23 @@ namespace PPDEditor.Forms
             AdjustPosition();
         }
 
-        private void importButton_Click(object sender, EventArgs e)
+        private void ImportButton_Click(object sender, EventArgs e)
         {
             ImportEvent();
         }
 
-        private void deleteButton_Click(object sender, EventArgs e)
+        private void DeleteButton_Click(object sender, EventArgs e)
         {
             DeleteEvent();
         }
 
-        private void okButton_Click(object sender, EventArgs e)
+        private void OkButton_Click(object sender, EventArgs e)
         {
             DialogResult = System.Windows.Forms.DialogResult.OK;
             this.Close();
         }
 
-        private void cancelButton_Click(object sender, EventArgs e)
+        private void CancelButton_Click(object sender, EventArgs e)
         {
             DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.Close();
@@ -134,7 +134,7 @@ namespace PPDEditor.Forms
             eef.ShowDialog();
         }
 
-        private void currentEventDataGrid_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        private void CurrentEventDataGrid_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             if (currentEventDataGrid.CurrentRow == null)
             {
@@ -145,7 +145,7 @@ namespace PPDEditor.Forms
             ShowEventData(eventData);
         }
 
-        private void readOnlyEventDataGrid_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        private void ReadOnlyEventDataGrid_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             if (readOnlyEventDataGrid.CurrentRow == null)
             {

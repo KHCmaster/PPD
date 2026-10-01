@@ -38,7 +38,7 @@ namespace PPDEditor.Forms
             NameError2 = Utility.Language["PAALSNameError2"];
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void Button1_Click(object sender, EventArgs e)
         {
             FileName = this.textBox1.Text;
             if (FileName == "")
@@ -58,22 +58,22 @@ namespace PPDEditor.Forms
             }
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void Button2_Click(object sender, EventArgs e)
         {
             this.DialogResult = DialogResult.Cancel;
             this.Close();
         }
 
-        private void textBox1_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+        private void TextBox1_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
         {
             if (e.KeyCode == Keys.Return)
             {
                 e.IsInputKey = true;
-                button1_Click(sender, e);
+                Button1_Click(sender, e);
             }
         }
 
-        private void textBox1_KeyPress(object sender, KeyPressEventArgs e)
+        private void TextBox1_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (e.KeyChar == (char)Keys.Enter || e.KeyChar == (char)Keys.Escape)
             {

@@ -53,10 +53,8 @@ namespace Effect2D
             {
                 return cached;
             }
-            using (FileStream fs = File.Open(filename, FileMode.Open))
-            {
-                return Load(fs, filename, BeCached, callback, f => File.Open(f, FileMode.Open));
-            }
+            using FileStream fs = File.Open(filename, FileMode.Open);
+            return Load(fs, filename, BeCached, callback, f => File.Open(f, FileMode.Open));
         }
 
         /// <summary>
@@ -165,7 +163,7 @@ namespace Effect2D
                     switch (reader.Name)
                     {
                         case "Effects":
-                            float val = 0;
+                            float val;
                             if (float.TryParse(reader.GetAttribute("FPS"), NumberStyles.Float, CultureInfo.InvariantCulture, out val))
                             {
                                 manager.FPS = val;
@@ -194,14 +192,12 @@ namespace Effect2D
 
             foreach (BaseEffect baseEffect in list)
             {
-                using (Stream stream = streamCallBack(baseEffect.Filename))
+                using Stream stream = streamCallBack(baseEffect.Filename);
+                var em = Load(stream, baseEffect.Filename, callback, streamCallBack);
+                if (em != null)
                 {
-                    var em = Load(stream, baseEffect.Filename, callback, streamCallBack);
-                    if (em != null)
-                    {
-                        baseEffect.Effects = em.Effects;
-                        baseEffect.FPS = em.FPS;
-                    }
+                    baseEffect.Effects = em.Effects;
+                    baseEffect.FPS = em.FPS;
                 }
             }
             return manager;
@@ -282,7 +278,7 @@ namespace Effect2D
             }
             if (bcps.Count >= 2)
             {
-                set.BAnalyzer = new BezierAnalyzer(bcps.ToArray());
+                set.BAnalyzer = new BezierAnalyzer([.. bcps]);
             }
             reader.Close();
         }
@@ -374,7 +370,7 @@ namespace Effect2D
                 }
             }
 
-            return ret.ToArray();
+            return [.. ret];
         }
 
         /// <summary>

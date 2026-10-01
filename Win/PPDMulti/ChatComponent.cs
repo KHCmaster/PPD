@@ -123,9 +123,6 @@ namespace PPDMulti
             public SystemMessageComponent(PPDDevice device, PPDFramework.Resource.ResourceManager resourceManager, Message message) : base(device)
             {
                 this.resourceManager = resourceManager;
-
-                Color4 color = PPDColors.White;
-
                 this.AddChild((messageString = new TextureString(device, "", 10, 300, 40, true, PPDColors.Black)
                 {
                     Position = new Vector2(10, 1)
@@ -192,7 +189,7 @@ namespace PPDMulti
                     this.AddChild((back = new PictureObject(device, resourceManager, Utility.Path.Combine("message_back.png"))
                     {
                         Position = new Vector2(32, 0),
-                        EdgeColors = new[] { color, color, color, color }
+                        EdgeColors = [color, color, color, color]
                     }));
                 }
                 else
@@ -212,7 +209,7 @@ namespace PPDMulti
                     this.AddChild((back = new PictureObject(device, resourceManager, Utility.Path.Combine("message_back.png"))
                     {
                         Scale = new Vector2(-1, 1),
-                        EdgeColors = new[] { color, color, color, color }
+                        EdgeColors = [color, color, color, color]
                     }));
                     back.ScaleCenter = new Vector2(back.Width / 2, back.Height / 2);
                 }
@@ -269,7 +266,7 @@ namespace PPDMulti
                 {
                     if (back.EdgeColors[0] != value)
                     {
-                        back.EdgeColors = new[] { value, value, value, value };
+                        back.EdgeColors = [value, value, value, value];
                     }
                 }
             }

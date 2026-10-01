@@ -18,7 +18,7 @@ namespace PPDPack.V2
         {
             get
             {
-                return files.Values.Select(f => f.FileName).ToArray();
+                return [.. files.Values.Select(f => f.FileName)];
             }
         }
 

@@ -9,13 +9,11 @@ namespace FlowScriptEngineBasic.FlowSourceObjects.Bit
     {
         public override object GetPropertyValue(string propertyName)
         {
-            switch (propertyName)
+            return propertyName switch
             {
-                case "Count":
-                    return Count;
-                default:
-                    return null;
-            }
+                "Count" => Count,
+                _ => null,
+            };
         }
 
         protected override void SetPropertyValue(string propertyName, object value)

@@ -20,27 +20,27 @@ namespace PPDEditor
             CreateRow("サムネの終了時間", "0");
             CreateRow("開始時間", "0");
             CreateRow("終了時間", "0");
-            this.dataGridView1.Rows.Add(new object[] { "難易度 EASY", "" });
-            this.dataGridView1.Rows.Add(new object[] { "難易度 NORMAL", "" });
-            this.dataGridView1.Rows.Add(new object[] { "難易度 HARD", "" });
-            this.dataGridView1.Rows.Add(new object[] { "難易度 EXTREME", "" });
-            this.dataGridView1.Rows.Add(new object[] { "BPM", "100" });
-            this.dataGridView1.Rows.Add(new object[] { "BPMの文字列表記", "" });
-            this.dataGridView1.Rows.Add(new object[] { "動画の左カット(px)", "0" });
-            this.dataGridView1.Rows.Add(new object[] { "動画の右カット(px)", "0" });
-            this.dataGridView1.Rows.Add(new object[] { "動画の上カット(px)", "0" });
-            this.dataGridView1.Rows.Add(new object[] { "動画の下カット(px)", "0" });
+            this.dataGridView1.Rows.Add(["難易度 EASY", ""]);
+            this.dataGridView1.Rows.Add(["難易度 NORMAL", ""]);
+            this.dataGridView1.Rows.Add(["難易度 HARD", ""]);
+            this.dataGridView1.Rows.Add(["難易度 EXTREME", ""]);
+            this.dataGridView1.Rows.Add(["BPM", "100"]);
+            this.dataGridView1.Rows.Add(["BPMの文字列表記", ""]);
+            this.dataGridView1.Rows.Add(["動画の左カット(px)", "0"]);
+            this.dataGridView1.Rows.Add(["動画の右カット(px)", "0"]);
+            this.dataGridView1.Rows.Add(["動画の上カット(px)", "0"]);
+            this.dataGridView1.Rows.Add(["動画の下カット(px)", "0"]);
             this.dataGridView1.Size = new Size(this.dataGridView1.Width, this.dataGridView1.RowCount * this.dataGridView1.Rows[0].Height + 5);
-            dataGridView1.CurrentCellDirtyStateChanged += dataGridView1_CurrentCellDirtyStateChanged;
-            dataGridView1.DataError += dataGridView1_DataError;
+            dataGridView1.CurrentCellDirtyStateChanged += DataGridView1_CurrentCellDirtyStateChanged;
+            dataGridView1.DataError += DataGridView1_DataError;
         }
 
-        void dataGridView1_DataError(object sender, DataGridViewDataErrorEventArgs e)
+        void DataGridView1_DataError(object sender, DataGridViewDataErrorEventArgs e)
         {
             e.Cancel = true;
         }
 
-        void dataGridView1_CurrentCellDirtyStateChanged(object sender, EventArgs e)
+        void DataGridView1_CurrentCellDirtyStateChanged(object sender, EventArgs e)
         {
             if (dataGridView1.IsCurrentCellDirty)
             {
@@ -57,7 +57,7 @@ namespace PPDEditor
             };
             row.Cells.Add(c);
             var cell = new ExDataGridViewComboBoxCell();
-            cell.SelectIndexChanged += cell_SelectIndexChanged;
+            cell.SelectIndexChanged += Cell_SelectIndexChanged;
             cell.Items.Add(gettimefromtimeline);
             cell.Items.Add(defaultvalue);
             cell.Value = defaultvalue;
@@ -67,7 +67,7 @@ namespace PPDEditor
             cell.SetEvent();
             return row;
         }
-        void cell_SelectIndexChanged(DataGridViewComboBoxEditingControl cb)
+        void Cell_SelectIndexChanged(DataGridViewComboBoxEditingControl cb)
         {
             if (cb.SelectedItem != null && cb.SelectedItem.ToString() == gettimefromtimeline)
             {
@@ -111,21 +111,21 @@ namespace PPDEditor
 
         public bool SaveIni(SettingWriter sw)
         {
-            dataGridView1_CurrentCellDirtyStateChanged(dataGridView1, EventArgs.Empty);
-            floatreaddata(0, out float thumbtimestart);
-            floatreaddata(1, out float thumbtimeend);
-            floatreaddata(2, out float start);
-            floatreaddata(3, out float end);
-            stringreaddata(4, out string easy);
-            stringreaddata(5, out string normal);
-            stringreaddata(6, out string hard);
-            stringreaddata(7, out string extreme);
-            floatreaddata(8, out float bpm);
-            stringreaddata(9, out string bpmstring);
-            floatreaddata(10, out float left);
-            floatreaddata(11, out float right);
-            floatreaddata(12, out float top);
-            floatreaddata(13, out float bottom);
+            DataGridView1_CurrentCellDirtyStateChanged(dataGridView1, EventArgs.Empty);
+            Floatreaddata(0, out float thumbtimestart);
+            Floatreaddata(1, out float thumbtimeend);
+            Floatreaddata(2, out float start);
+            Floatreaddata(3, out float end);
+            Stringreaddata(4, out string easy);
+            Stringreaddata(5, out string normal);
+            Stringreaddata(6, out string hard);
+            Stringreaddata(7, out string extreme);
+            Floatreaddata(8, out float bpm);
+            Stringreaddata(9, out string bpmstring);
+            Floatreaddata(10, out float left);
+            Floatreaddata(11, out float right);
+            Floatreaddata(12, out float top);
+            Floatreaddata(13, out float bottom);
             sw.Write("thumbtimestart", thumbtimestart);
             sw.Write("thumbtimeend", thumbtimeend);
             sw.Write("start", start);
@@ -172,7 +172,7 @@ namespace PPDEditor
             this.dataGridView1[1, 13].Value = "0";
         }
 
-        private void floatreaddata(int rowindex, out float outvalue)
+        private void Floatreaddata(int rowindex, out float outvalue)
         {
             try
             {
@@ -184,7 +184,7 @@ namespace PPDEditor
                 outvalue = 0;
             }
         }
-        private void intreaddata(int rowindex, out int outvalue)
+        private void Intreaddata(int rowindex, out int outvalue)
         {
             try
             {
@@ -196,7 +196,7 @@ namespace PPDEditor
                 outvalue = 0;
             }
         }
-        private void stringreaddata(int rowindex, out string outvalue)
+        private void Stringreaddata(int rowindex, out string outvalue)
         {
             try
             {
@@ -209,10 +209,10 @@ namespace PPDEditor
         }
         public void SetIni(float[] times, string[] difficults, float bpm, string bpmstring, MovieTrimmingData trimmingData)
         {
-            setdata(times[0], 0, 1);
-            setdata(times[1], 1, 1);
-            setdata(times[2], 2, 1);
-            setdata(times[3], 3, 1);
+            Setdata(times[0], 0, 1);
+            Setdata(times[1], 1, 1);
+            Setdata(times[2], 2, 1);
+            Setdata(times[3], 3, 1);
             this.dataGridView1[1, 4].Value = difficults[0];
             this.dataGridView1[1, 5].Value = difficults[1];
             this.dataGridView1[1, 6].Value = difficults[2];
@@ -228,7 +228,7 @@ namespace PPDEditor
             this.dataGridView1[1, 12].Value = trimmingData.Top;
             this.dataGridView1[1, 13].Value = trimmingData.Bottom;
         }
-        private void setdata(float value, int rowindex, int columnindex)
+        private void Setdata(float value, int rowindex, int columnindex)
         {
             var cell = this.dataGridView1[columnindex, rowindex] as DataGridViewComboBoxCell;
             cell.Items.Add(value.ToString());
@@ -277,7 +277,7 @@ namespace PPDEditor
             }
         }
 
-        private void dataGridView1_CellEndEdit(object sender, DataGridViewCellEventArgs e)
+        private void DataGridView1_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex == 8)
             {

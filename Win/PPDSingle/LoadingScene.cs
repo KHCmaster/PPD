@@ -11,16 +11,11 @@ namespace PPDSingle
     /// <summary>
     /// ロード中用のシーン
     /// </summary>
-    public class LoadingScene : LoadingSceneWithImage
+    public class LoadingScene(PPDDevice device) : LoadingSceneWithImage(device)
     {
         EffectObject anim;
         TextureString progressText;
-        readonly Queue<int> progressQueue;
-
-        public LoadingScene(PPDDevice device) : base(device)
-        {
-            progressQueue = new Queue<int>();
-        }
+        readonly Queue<int> progressQueue = new Queue<int>();
 
         public override bool Load()
         {

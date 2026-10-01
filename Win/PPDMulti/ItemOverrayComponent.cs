@@ -6,18 +6,12 @@ using System;
 
 namespace PPDMulti
 {
-    class ItemOverrayComponent : GameComponent
+    class ItemOverrayComponent(PPDDevice device, PPDFramework.Resource.ResourceManager resourceManager, ItemManagerComponent itemManagerComponent) : GameComponent(device)
     {
         public event Action ItemSet;
 
-        readonly PPDFramework.Resource.ResourceManager resourceManager;
-        readonly ItemManagerComponent itemManagerComponent;
-
-        public ItemOverrayComponent(PPDDevice device, PPDFramework.Resource.ResourceManager resourceManager, ItemManagerComponent itemManagerComponent) : base(device)
-        {
-            this.resourceManager = resourceManager;
-            this.itemManagerComponent = itemManagerComponent;
-        }
+        readonly PPDFramework.Resource.ResourceManager resourceManager = resourceManager;
+        readonly ItemManagerComponent itemManagerComponent = itemManagerComponent;
 
         public void AddItem(Vector2 pos)
         {

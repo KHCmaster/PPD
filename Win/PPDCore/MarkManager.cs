@@ -148,7 +148,7 @@ namespace PPDCore
             this.scriptManager = scriptManager;
             externalMarks = [];
 
-            evals = new float[] { PPDSetting.Setting.CoolArea, PPDSetting.Setting.GoodArea, PPDSetting.Setting.SafeArea, PPDSetting.Setting.SadArea };
+            evals = [PPDSetting.Setting.CoolArea, PPDSetting.Setting.GoodArea, PPDSetting.Setting.SafeArea, PPDSetting.Setting.SadArea];
             Logger.Instance.AddLog("CoolArea:{0}", PPDSetting.Setting.CoolArea);
             Logger.Instance.AddLog("GoodArea:{0}", PPDSetting.Setting.GoodArea);
             Logger.Instance.AddLog("SafeArea:{0}", PPDSetting.Setting.SafeArea);
@@ -469,7 +469,7 @@ namespace PPDCore
                 colorposes.Add(mk.ColorPosition);
                 if (mk.NoteType == NoteType.AC || mk.NoteType == NoteType.ACFT)
                 {
-                    mk.ChangeColorPosition += mk_ChangeColorPosition;
+                    mk.ChangeColorPosition += Mk_ChangeColorPosition;
                 }
             }
             simtype++;
@@ -492,11 +492,11 @@ namespace PPDCore
                 Vector2[] convex = null;
                 if (useColorPosition)
                 {
-                    convex = ConvexHull.Convex_Hull(colorposes.ToArray());
+                    convex = ConvexHull.Convex_Hull([.. colorposes]);
                 }
                 else
                 {
-                    convex = ConvexHull.Convex_Hull(poses.ToArray());
+                    convex = ConvexHull.Convex_Hull([.. poses]);
                 }
 
                 var mkc = new MarkConnection(device, markConnectionCommon);
@@ -555,18 +555,18 @@ namespace PPDCore
             }
         }
 
-        bool mk_CheckColorPosition(PPDCoreModel.IMarkInfo markInfo, float currentTime, float bpm)
+        bool Mk_CheckColorPosition(PPDCoreModel.IMarkInfo markInfo, float currentTime, float bpm)
         {
             return scriptManager.CalculatePositionManager.Calculate(markInfo, currentTime, bpm);
         }
 
-        bool mk_ChangeMarkEvaluate(PPDCoreModel.IMarkInfo markInfo, EffectType effectType, bool missPress, bool release, Vector2 position)
+        bool Mk_ChangeMarkEvaluate(PPDCoreModel.IMarkInfo markInfo, EffectType effectType, bool missPress, bool release, Vector2 position)
         {
             PreEvaluate?.Invoke(markInfo, effectType, missPress, release, position);
             return scriptManager.ProcessEvaluateManager.ProcessEvaluate(markInfo, effectType, missPress, release, position);
         }
 
-        Vector2 mk_ChangeColorPosition(float scale, float timediff)
+        Vector2 Mk_ChangeColorPosition(float scale, float timediff)
         {
             return new Vector2(300 * timediff * scale, 0);
         }
@@ -648,8 +648,8 @@ namespace PPDCore
             {
                 MarkLayer.InsertChild(mk, 0);
                 mk.Initialize(scriptManager.CreateMarkManager.CreateMark, scriptManager.ProcessAllowedButtonsManager.Process);
-                mk.CheckColorPosition += mk_CheckColorPosition;
-                mk.ChangeMarkEvaluate += mk_ChangeMarkEvaluate;
+                mk.CheckColorPosition += Mk_CheckColorPosition;
+                mk.ChangeMarkEvaluate += Mk_ChangeMarkEvaluate;
             }
 
             return mk;
@@ -657,7 +657,7 @@ namespace PPDCore
 
         public void Seek(float seektime)
         {
-            retry();
+            Retry();
             if (!initialized) return;
             while (iter < ppdat.Length)
             {
@@ -870,16 +870,16 @@ namespace PPDCore
                             iter--;
                             continue;
                         }
-                        Action proc = () =>
+                        void proc()
                         {
                             b[i] = false;
                             ChangeCombo?.Invoke(false, mk.Position);
                             EvaluateCount.Invoke(eval, true);
-                            mk_ChangeMarkEvaluate(mk, eval, true, false, mk.Position);
+                            Mk_ChangeMarkEvaluate(mk, eval, true, false, mk.Position);
                             MarkLayer.RemoveChild(mk);
                             RemoveFromConnection(mk);
                             mk.Dispose();
-                        };
+                        }
                         if (scriptManager.ProcessMissPressManager.Process(mk, (MarkType)i, out bool isMissPress))
                         {
                             if (isMissPress)
@@ -947,7 +947,7 @@ namespace PPDCore
             return initialized;
         }
 
-        public void retry()
+        public void Retry()
         {
             iter = 0;
             simtype = 1;

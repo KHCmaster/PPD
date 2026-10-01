@@ -70,7 +70,7 @@ namespace PPDEditor.DockForm.Script
 
             FormClosing += FlowDrawDockForm_FormClosing;
             Load += FlowDrawDockForm_Load;
-            flowDrawPanel1.Modified += flowDrawPanel1_Modified;
+            flowDrawPanel1.Modified += FlowDrawPanel1_Modified;
         }
 
         void FlowDrawDockForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -86,7 +86,7 @@ namespace PPDEditor.DockForm.Script
             }
         }
 
-        void flowDrawPanel1_Modified(object sender, EventArgs e)
+        void FlowDrawPanel1_Modified(object sender, EventArgs e)
         {
             OnModified(this, EventArgs.Empty);
             ContentChanged();

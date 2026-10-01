@@ -1,26 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace PPDFrameworkCore
 {
-    public class TimerManager : ITimerManager
+    public class TimerManager(GameTimer gameTimer) : ITimerManager
     {
         int iter = 1;
-        readonly SortedList<int, TimerInfo> list;
-        readonly SortedList<int, TimerInfo> onceList;
-        readonly Dictionary<int, TimerInfo> afterAddList;
-        readonly Dictionary<int, TimerInfo> afterOnceAddList;
-        readonly GameTimer gameTimer;
-        private readonly object lockObject = new();
-
-        public TimerManager(GameTimer gameTimer)
-        {
-            this.gameTimer = gameTimer;
-            list = [];
-            onceList = [];
-            afterAddList = [];
-            afterOnceAddList = [];
-        }
+        readonly SortedList<int, TimerInfo> list = [];
+        readonly SortedList<int, TimerInfo> onceList = [];
+        readonly Dictionary<int, TimerInfo> afterAddList = [];
+        readonly Dictionary<int, TimerInfo> afterOnceAddList = [];
+        readonly GameTimer gameTimer = gameTimer;
+        private readonly Lock lockObject = new();
 
         public void Update()
         {
@@ -93,32 +85,25 @@ namespace PPDFrameworkCore
             }
         }
 
-        class TimerInfo
+        class TimerInfo(long startTime, int interval, Action<int> callback)
         {
-            public TimerInfo(long startTime, int interval, Action<int> callback)
-            {
-                StartTime = startTime;
-                Interval = interval;
-                CallBack = callback;
-            }
-
             public long StartTime
             {
                 get;
                 private set;
-            }
+            } = startTime;
 
             public int Interval
             {
                 get;
                 private set;
-            }
+            } = interval;
 
             public Action<int> CallBack
             {
                 get;
                 private set;
-            }
+            } = callback;
 
             public long CallCount
             {

@@ -9,19 +9,14 @@ namespace FlowScriptEnginePPDEditor.FlowSourceObjects.Mark.PosAndRotation
     {
         public override object GetPropertyValue(string propertyName)
         {
-            switch (propertyName)
+            return propertyName switch
             {
-                case "HasPosition":
-                    return HasPosition;
-                case "HasRotation":
-                    return HasRotation;
-                case "Position":
-                    return Position;
-                case "Rotation":
-                    return Rotation;
-                default:
-                    return null;
-            }
+                "HasPosition" => HasPosition,
+                "HasRotation" => HasRotation,
+                "Position" => Position,
+                "Rotation" => Rotation,
+                _ => null,
+            };
         }
 
         protected override void SetPropertyValue(string propertyName, object value)

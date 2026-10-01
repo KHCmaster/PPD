@@ -11,13 +11,13 @@ using System.Text;
 
 namespace FlowScriptControl.Classes
 {
-    public class FlowSourceDumper : IToolTipText
+    public class FlowSourceDumper(FlowSourceObjectBase flowSourceObject, AssemblyAndType asmAndType) : IToolTipText
     {
         private static readonly Hashtable typeTextTypeDict = [];
         private static readonly List<Type> propertyTypes = [];
 
-        readonly FlowSourceObjectBase flowSourceObject;
-        readonly AssemblyAndType asmAndType;
+        readonly FlowSourceObjectBase flowSourceObject = flowSourceObject;
+        readonly AssemblyAndType asmAndType = asmAndType;
         bool initialized;
 
         private string sourceName;
@@ -125,12 +125,6 @@ namespace FlowScriptControl.Classes
             }
         }
 
-        public FlowSourceDumper(FlowSourceObjectBase flowSourceObject, AssemblyAndType asmAndType)
-        {
-            this.flowSourceObject = flowSourceObject;
-            this.asmAndType = asmAndType;
-        }
-
         private void Initialize()
         {
             Initialize(null);
@@ -178,7 +172,7 @@ namespace FlowScriptControl.Classes
 #endif
                 iter++;
             }
-            return ret.ToArray();
+            return [.. ret];
         }
 
         private Item[] CreateOutMethods(ILanguageProvider language)
@@ -200,7 +194,7 @@ namespace FlowScriptControl.Classes
 #endif
                 iter++;
             }
-            return ret.ToArray();
+            return [.. ret];
         }
 
         private Item[] CreateInProperties(ILanguageProvider language)
@@ -225,7 +219,7 @@ namespace FlowScriptControl.Classes
 #endif
                 iter++;
             }
-            return ret.ToArray();
+            return [.. ret];
         }
 
         private Item[] CreateOutProperties(ILanguageProvider language)
@@ -251,7 +245,7 @@ namespace FlowScriptControl.Classes
 #endif
                 iter++;
             }
-            return ret.ToArray();
+            return [.. ret];
         }
 
         private string GetToolTip<T>(ILanguageProvider language, CustomMemberInfo<T> memberInfo)
@@ -292,18 +286,16 @@ namespace FlowScriptControl.Classes
 
         public static void WriteToText(string path)
         {
-            using (StreamWriter writer = new(path, false, Encoding.UTF8))
+            using StreamWriter writer = new(path, false, Encoding.UTF8);
+            var list = new List<string>();
+            foreach (KeyValuePair<string, string> kvp in dict)
             {
-                var list = new List<string>();
-                foreach (KeyValuePair<string, string> kvp in dict)
-                {
-                    list.Add(String.Format("[{0}]{1}", kvp.Key, kvp.Value));
-                }
-                list.Sort();
-                foreach (string line in list)
-                {
-                    writer.WriteLine(line);
-                }
+                list.Add(String.Format("[{0}]{1}", kvp.Key, kvp.Value));
+            }
+            list.Sort();
+            foreach (string line in list)
+            {
+                writer.WriteLine(line);
             }
         }
 

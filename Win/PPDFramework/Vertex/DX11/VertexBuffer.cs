@@ -2,6 +2,7 @@ using Vortice.Direct3D11;
 using Vortice.Mathematics;
 using System;
 using System.Runtime.InteropServices;
+using System.Threading;
 
 namespace PPDFramework.Vertex.DX11
 {
@@ -9,22 +10,17 @@ namespace PPDFramework.Vertex.DX11
     /// DirectX11の頂点バッファーです。
     /// 書き込まれた頂点はCPU側に保持し、描画スレッドで使われるときにGPUへ転送します。
     /// </summary>
-    class VertexBuffer : VertexBufferBase
+    class VertexBuffer(PPDDevice device, ID3D11Buffer buffer, int sizeInBytes) : VertexBufferBase(device, sizeInBytes)
     {
-        readonly object writeLock = new();
+        readonly Lock writeLock = new();
         int dirtyStart;
         int dirtyEnd;
 
-        public ID3D11Buffer _Buffer
+        public ID3D11Buffer Buffer
         {
             get;
             private set;
-        }
-
-        public VertexBuffer(PPDDevice device, ID3D11Buffer buffer, int sizeInBytes) : base(device, sizeInBytes)
-        {
-            _Buffer = buffer;
-        }
+        } = buffer;
 
         public override void Write(ColoredTexturedVertex[] vertex, int count, int offset)
         {
@@ -56,7 +52,7 @@ namespace PPDFramework.Vertex.DX11
             }
             lock (writeLock)
             {
-                if (_Buffer == null || dirtyEnd <= dirtyStart)
+                if (Buffer == null || dirtyEnd <= dirtyStart)
                 {
                     return;
                 }
@@ -64,7 +60,7 @@ namespace PPDFramework.Vertex.DX11
                 try
                 {
                     var ptr = handle.AddrOfPinnedObject() + dirtyStart * ColoredTexturedVertex.Size;
-                    context.UpdateSubresource(_Buffer, 0,
+                    context.UpdateSubresource(Buffer, 0,
                         new Box(dirtyStart * ColoredTexturedVertex.Size, 0, 0, dirtyEnd * ColoredTexturedVertex.Size, 1, 1),
                         ptr, 0, 0);
                 }
@@ -78,8 +74,8 @@ namespace PPDFramework.Vertex.DX11
 
         protected override void DisposeResource()
         {
-            _Buffer?.Dispose();
-            _Buffer = null;
+            Buffer?.Dispose();
+            Buffer = null;
         }
     }
 }

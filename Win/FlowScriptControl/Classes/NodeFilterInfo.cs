@@ -3,16 +3,17 @@ using System.Text.RegularExpressions;
 
 namespace FlowScriptControl.Classes
 {
-    public class NodeFilterInfo : NodeFilterInfoBase
+    public class NodeFilterInfo(string name, Regex[] includeAssemblyNames, Regex[] includeNodeNames,
+        Regex[] excludeAssemblyNames, Regex[] excludeNodeNames) : NodeFilterInfoBase
     {
         private static readonly NodeFilterInfo defaultFilter = new("All",
-            new Regex[] { new(".") },
-            new Regex[] { new(".") });
-        private readonly string name;
-        private readonly Regex[] includeAssemblyNames;
-        private readonly Regex[] includeNodeNames;
-        private readonly Regex[] excludeAssemblyNames;
-        private readonly Regex[] excludeNodeNames;
+            [new(".")],
+            [new(".")]);
+        private readonly string name = name;
+        private readonly Regex[] includeAssemblyNames = includeAssemblyNames;
+        private readonly Regex[] includeNodeNames = includeNodeNames;
+        private readonly Regex[] excludeAssemblyNames = excludeAssemblyNames;
+        private readonly Regex[] excludeNodeNames = excludeNodeNames;
 
         public static NodeFilterInfo DefaultFilter
         {
@@ -27,16 +28,6 @@ namespace FlowScriptControl.Classes
         public NodeFilterInfo(string name, Regex[] includeAssemblyNames, Regex[] includeNodeNames)
             : this(name, includeAssemblyNames, includeNodeNames, null, null)
         {
-        }
-
-        public NodeFilterInfo(string name, Regex[] includeAssemblyNames, Regex[] includeNodeNames,
-            Regex[] excludeAssemblyNames, Regex[] excludeNodeNames)
-        {
-            this.name = name;
-            this.includeAssemblyNames = includeAssemblyNames;
-            this.includeNodeNames = includeNodeNames;
-            this.excludeAssemblyNames = excludeAssemblyNames;
-            this.excludeNodeNames = excludeNodeNames;
         }
 
         public override bool IsHide(FlowSourceDumper dumper)

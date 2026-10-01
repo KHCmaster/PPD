@@ -9,10 +9,15 @@ namespace PPDFramework.Resource
     /// <summary>
     /// 色のテクスチャリソースクラスです
     /// </summary>
-    public class ColorTextureResource : ColorTextureResourceBase
+    /// <remarks>
+    /// コンストラクタです
+    /// </remarks>
+    /// <param name="device"></param>
+    /// <param name="color"></param>
+    public class ColorTextureResource(PPDDevice device, Color4 color) : ColorTextureResourceBase
     {
-        readonly TextureBase texture;
-        readonly Color4 color;
+        readonly TextureBase texture = device.GetModule<ColorTextureAllcator>().CreateTexture(color);
+        readonly Color4 color = color;
 
         /// <summary>
         /// テクスチャを取得します
@@ -34,17 +39,6 @@ namespace PPDFramework.Resource
             {
                 return color;
             }
-        }
-
-        /// <summary>
-        /// コンストラクタです
-        /// </summary>
-        /// <param name="device"></param>
-        /// <param name="color"></param>
-        public ColorTextureResource(PPDDevice device, Color4 color)
-        {
-            this.color = color;
-            texture = device.GetModule<ColorTextureAllcator>().CreateTexture(color);
         }
 
         /// <summary>

@@ -9,13 +9,11 @@ namespace FlowScriptEngineData.FlowSourceObjects.Json
     {
         public override object GetPropertyValue(string propertyName)
         {
-            switch (propertyName)
+            return propertyName switch
             {
-                case "Json":
-                    return Json;
-                default:
-                    return null;
-            }
+                "Json" => Json,
+                _ => null,
+            };
         }
 
         protected override void SetPropertyValue(string propertyName, object value)

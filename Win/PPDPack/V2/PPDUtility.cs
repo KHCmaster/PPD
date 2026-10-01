@@ -2,7 +2,7 @@
 {
     public static class PackUtility
     {
-        public static byte[] FileSignature = {
+        public static byte[] FileSignature = [
             (byte)'P',
             (byte)'P',
             (byte)'D',
@@ -12,7 +12,7 @@
             (byte)'K',
             (byte)'V',
             (byte)'2'
-        };
+        ];
 
         public static int CheckHeaderStartIndex(byte[] array)
         {

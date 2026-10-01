@@ -34,12 +34,12 @@ namespace PPDEditor
         {
             InitializeComponent();
             radioButton1.Checked = true;
-            this.textBox1.TextChanged += textBoxTextChanged;
-            this.textBox2.TextChanged += textBoxTextChanged;
-            this.textBox3.TextChanged += textBoxTextChanged;
-            this.textBox4.TextChanged += textBoxTextChanged;
-            this.textBox5.TextChanged += textBoxTextChanged;
-            this.textBox6.TextChanged += textBoxTextChanged;
+            this.textBox1.TextChanged += TextBoxTextChanged;
+            this.textBox2.TextChanged += TextBoxTextChanged;
+            this.textBox3.TextChanged += TextBoxTextChanged;
+            this.textBox4.TextChanged += TextBoxTextChanged;
+            this.textBox5.TextChanged += TextBoxTextChanged;
+            this.textBox6.TextChanged += TextBoxTextChanged;
             this.radioButton1.CheckedChanged += ChangeRadioCheck;
             this.radioButton2.CheckedChanged += ChangeRadioCheck;
             this.radioButton3.CheckedChanged += ChangeRadioCheck;
@@ -119,7 +119,7 @@ namespace PPDEditor
             }
         }
 
-        private void textBoxTextChanged(object sender, EventArgs e)
+        private void TextBoxTextChanged(object sender, EventArgs e)
         {
             if (sender is TextBox tb)
             {
@@ -188,7 +188,7 @@ namespace PPDEditor
             }
             this.listBox1.EndUpdate();
         }
-        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
+        private void ListBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (listBox1.SelectedIndex < 0 || listBox1.SelectedIndex >= listBox1.Items.Count)
             {
@@ -302,7 +302,7 @@ namespace PPDEditor
             return (float)val;
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void Button1_Click(object sender, EventArgs e)
         {
             if (this.listBox1.SelectedIndex >= 0)
             {
@@ -312,7 +312,7 @@ namespace PPDEditor
                 }
             }
         }
-        private void button2_Click(object sender, EventArgs e)
+        private void Button2_Click(object sender, EventArgs e)
         {
             if (this.listBox1.SelectedIndex >= 0)
             {
@@ -323,7 +323,7 @@ namespace PPDEditor
             }
         }
 
-        private void button3_Click(object sender, EventArgs e)
+        private void Button3_Click(object sender, EventArgs e)
         {
             if (this.listBox1.SelectedIndex >= 0)
             {
@@ -334,7 +334,7 @@ namespace PPDEditor
             }
         }
 
-        private void button4_Click(object sender, EventArgs e)
+        private void Button4_Click(object sender, EventArgs e)
         {
             if (this.listBox1.SelectedIndex >= 0)
             {
@@ -344,7 +344,7 @@ namespace PPDEditor
                 }
             }
         }
-        private void button5_Click(object sender, EventArgs e)
+        private void Button5_Click(object sender, EventArgs e)
         {
             var fm3 = new SavePosAndAngleForm(button5.Text);
             fm3.SetLang();
@@ -362,7 +362,7 @@ namespace PPDEditor
             }
         }
 
-        private void button6_Click(object sender, EventArgs e)
+        private void Button6_Click(object sender, EventArgs e)
         {
             var fm3 = new SavePosAndAngleForm(button6.Text);
             fm3.SetLang();
@@ -380,7 +380,7 @@ namespace PPDEditor
             }
         }
 
-        private void button7_Click(object sender, EventArgs e)
+        private void Button7_Click(object sender, EventArgs e)
         {
             var fm3 = new SavePosAndAngleForm(button7.Text);
             fm3.SetLang();
@@ -398,7 +398,7 @@ namespace PPDEditor
             }
         }
 
-        private void button8_Click(object sender, EventArgs e)
+        private void Button8_Click(object sender, EventArgs e)
         {
             var fm3 = new SavePosAndAngleForm(button8.Text);
             fm3.SetLang();
@@ -430,15 +430,15 @@ namespace PPDEditor
                     infos.Add(new PosAndAngleInfo(mk.Position));
                 }
             }
-            PosAndAngleInfo.Save(infos.ToArray(), filePath);
+            PosAndAngleInfo.Save([.. infos], filePath);
         }
 
-        private void button9_Click(object sender, EventArgs e)
+        private void Button9_Click(object sender, EventArgs e)
         {
             Reload();
         }
 
-        private void button10_Click(object sender, EventArgs e)
+        private void Button10_Click(object sender, EventArgs e)
         {
             if (this.listBox1.SelectedIndex >= 0)
             {
@@ -450,7 +450,7 @@ namespace PPDEditor
             }
         }
 
-        private void label1_ValueChange(object sender, ValueChangeEventArgs e)
+        private void Label1_ValueChange(object sender, ValueChangeEventArgs e)
         {
             if (textBox1.Enabled)
             {
@@ -458,7 +458,7 @@ namespace PPDEditor
             }
         }
 
-        private void label2_ValueChange(object sender, ValueChangeEventArgs e)
+        private void Label2_ValueChange(object sender, ValueChangeEventArgs e)
         {
             if (textBox2.Enabled)
             {
@@ -466,7 +466,7 @@ namespace PPDEditor
             }
         }
 
-        private void label3_ValueChange(object sender, ValueChangeEventArgs e)
+        private void Label3_ValueChange(object sender, ValueChangeEventArgs e)
         {
             if (textBox3.Enabled)
             {
@@ -475,7 +475,7 @@ namespace PPDEditor
             }
         }
 
-        private void label4_ValueChange(object sender, ValueChangeEventArgs e)
+        private void Label4_ValueChange(object sender, ValueChangeEventArgs e)
         {
             if (textBox4.Enabled)
             {
@@ -483,7 +483,7 @@ namespace PPDEditor
                 if (syncmode == SyncMode.Y) textBox6.Text = textBox4.Text;
             }
         }
-        private void label5_ValueChange(object sender, ValueChangeEventArgs e)
+        private void Label5_ValueChange(object sender, ValueChangeEventArgs e)
         {
             if (textBox5.Enabled)
             {
@@ -491,7 +491,7 @@ namespace PPDEditor
                 if (syncmode == SyncMode.X) textBox3.Text = textBox5.Text;
             }
         }
-        private void label6_ValueChange(object sender, ValueChangeEventArgs e)
+        private void Label6_ValueChange(object sender, ValueChangeEventArgs e)
         {
             if (textBox6.Enabled)
             {
@@ -500,12 +500,12 @@ namespace PPDEditor
             }
         }
 
-        private void checkBox2_CheckedChanged(object sender, EventArgs e)
+        private void CheckBox2_CheckedChanged(object sender, EventArgs e)
         {
             ChangeDisplayData();
         }
 
-        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        private void ComboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (!comboBox1.Enabled) return;
             switch (comboBox1.SelectedIndex)

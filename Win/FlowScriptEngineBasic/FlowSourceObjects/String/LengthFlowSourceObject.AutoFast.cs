@@ -9,13 +9,11 @@ namespace FlowScriptEngineBasic.FlowSourceObjects.String
     {
         public override object GetPropertyValue(string propertyName)
         {
-            switch (propertyName)
+            return propertyName switch
             {
-                case "Length":
-                    return Length;
-                default:
-                    return null;
-            }
+                "Length" => Length,
+                _ => null,
+            };
         }
 
         protected override void SetPropertyValue(string propertyName, object value)

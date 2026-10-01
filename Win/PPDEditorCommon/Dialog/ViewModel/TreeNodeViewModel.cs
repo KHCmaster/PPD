@@ -98,7 +98,7 @@ namespace PPDEditorCommon.Dialog.ViewModel
                 {
                     ret.AddRange(child.Values);
                 }
-                return ret.ToArray();
+                return [.. ret];
             }
         }
 

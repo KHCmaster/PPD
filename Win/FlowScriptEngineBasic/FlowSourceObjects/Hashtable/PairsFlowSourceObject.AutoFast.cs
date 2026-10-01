@@ -9,13 +9,11 @@ namespace FlowScriptEngineBasic.FlowSourceObjects.Hashtable
     {
         public override object GetPropertyValue(string propertyName)
         {
-            switch (propertyName)
+            return propertyName switch
             {
-                case "Pairs":
-                    return Pairs;
-                default:
-                    return null;
-            }
+                "Pairs" => Pairs,
+                _ => null,
+            };
         }
 
         protected override void SetPropertyValue(string propertyName, object value)

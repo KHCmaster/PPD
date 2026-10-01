@@ -4,22 +4,15 @@ using System.Linq;
 
 namespace PPDCore
 {
-    class MarkGroupData : IGrouping<float, MarkDataBase>
+    class MarkGroupData(float time, MarkDataBase[] data) : IGrouping<float, MarkDataBase>
     {
-        private readonly MarkDataBase[] data;
+        private readonly MarkDataBase[] data = data;
 
         public SameTimingMarks SameTimings
         {
             get;
             private set;
-        }
-
-        public MarkGroupData(float time, MarkDataBase[] data)
-        {
-            Key = time;
-            this.data = data;
-            SameTimings = [.. data];
-        }
+        } = [.. data];
 
         #region IGrouping<float,IPPDData> メンバー
 
@@ -27,7 +20,7 @@ namespace PPDCore
         {
             get;
             private set;
-        }
+        } = time;
 
         #endregion
 

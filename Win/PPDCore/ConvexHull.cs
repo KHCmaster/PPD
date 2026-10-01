@@ -34,14 +34,14 @@ namespace PPDCore
             Array.Sort(ps, XComparer.Comparer);
             Vector2[] ch = new Vector2[n * 2];
             for (int i = 0; i < n; ch[k++] = ps[i++]) // lower-hull
-                while (k >= 2 && ccw(ch[k - 2], ch[k - 1], ps[i]) <= 0) --k;
+                while (k >= 2 && Ccw(ch[k - 2], ch[k - 1], ps[i]) <= 0) --k;
             for (int i = n - 2, t = k + 1; i >= 0; ch[k++] = ps[i--]) // upper-hull
-                while (k >= t && ccw(ch[k - 2], ch[k - 1], ps[i]) <= 0) --k;
+                while (k >= t && Ccw(ch[k - 2], ch[k - 1], ps[i]) <= 0) --k;
             Array.Resize(ref ch, k - 1);
             return ch;
         }
 
-        static int ccw(Vector2 a, Vector2 b, Vector2 c)
+        static int Ccw(Vector2 a, Vector2 b, Vector2 c)
         {
             b -= a; c -= a;
             if (Cross(b, c) > 0) return +1;       // counter clockwise

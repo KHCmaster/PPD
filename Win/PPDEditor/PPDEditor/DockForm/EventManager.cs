@@ -33,7 +33,7 @@ namespace PPDEditor
         }
         public void SetEvent()
         {
-            WindowUtility.Seekmain.Seeked += sm_onmoveseek;
+            WindowUtility.Seekmain.Seeked += Sm_onmoveseek;
         }
         public void SetLang()
         {
@@ -104,7 +104,7 @@ namespace PPDEditor
                     }
                 }
             }
-            return ret.ToArray();
+            return [.. ret];
         }
         public string GetFormattedContent(float time)
         {
@@ -362,7 +362,7 @@ namespace PPDEditor
                 lastevent = nowevent;
             }
 
-            return ret.ToArray();
+            return [.. ret];
         }
         public void AddChange(float time, EventData data)
         {
@@ -373,14 +373,14 @@ namespace PPDEditor
                 UpdateDataGrid();
             }
         }
-        private void sm_onmoveseek(object sender, EventArgs e)
+        private void Sm_onmoveseek(object sender, EventArgs e)
         {
             var time = (float)WindowUtility.Seekmain.Currenttime;
             ChangeDataGridSelectedIndex(time);
         }
         private void ChangeDataGridSelectedIndex(float time)
         {
-            int i = 0;
+            int i;
             for (i = 0; i < changeData.Count; i++)
             {
                 if (changeData.Keys[i] <= time) continue;
@@ -438,7 +438,7 @@ namespace PPDEditor
             WindowUtility.MainForm.ChangeVolume(-100 * (100 - data.MovieVolumePercent));
             dstate = data.DisplayState;
         }
-        private void button1_Click(object sender, EventArgs e)
+        private void Button1_Click(object sender, EventArgs e)
         {
             //add
             var time = (float)WindowUtility.Seekmain.Currenttime;
@@ -517,7 +517,7 @@ namespace PPDEditor
             }
         }
 
-        private void button3_Click(object sender, EventArgs e)
+        private void Button3_Click(object sender, EventArgs e)
         {
             //edit
             if (dataGridView1.CurrentRow != null)
@@ -538,7 +538,7 @@ namespace PPDEditor
             }
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void Button2_Click(object sender, EventArgs e)
         {
             //delete
             if (dataGridView1.CurrentRow != null)
@@ -553,7 +553,7 @@ namespace PPDEditor
             }
         }
 
-        private void button4_Click(object sender, EventArgs e)
+        private void Button4_Click(object sender, EventArgs e)
         {
             if (this.dataGridView1.CurrentRow == null)
             {

@@ -58,13 +58,13 @@ namespace PPDFramework.Texture.DX11
             private set;
         }
 
-        public ID3D11ShaderResourceView _ShaderResourceView
+        public ID3D11ShaderResourceView ShaderResourceView
         {
             get;
             private set;
         }
 
-        public ID3D11RenderTargetView _RenderTargetView
+        public ID3D11RenderTargetView RenderTargetView
         {
             get;
             private set;
@@ -79,21 +79,21 @@ namespace PPDFramework.Texture.DX11
             Width = (int)texture.Description.Width;
             Height = (int)texture.Description.Height;
             var d3dDevice = (ID3D11Device)device.Device;
-            _ShaderResourceView = d3dDevice.CreateShaderResourceView(texture);
+            ShaderResourceView = d3dDevice.CreateShaderResourceView(texture);
             Surface = new Surface();
             ComDiagnostics.Track(this, string.Format("Texture {0}x{1} renderTarget={2}", Width, Height, isRenderTarget));
             if (isRenderTarget)
             {
-                _RenderTargetView = d3dDevice.CreateRenderTargetView(texture);
+                RenderTargetView = d3dDevice.CreateRenderTargetView(texture);
             }
         }
 
         protected override void DisposeResource()
         {
-            _ShaderResourceView?.Dispose();
-            _ShaderResourceView = null;
-            _RenderTargetView?.Dispose();
-            _RenderTargetView = null;
+            ShaderResourceView?.Dispose();
+            ShaderResourceView = null;
+            RenderTargetView?.Dispose();
+            RenderTargetView = null;
             _Texture?.Dispose();
             _Texture = null;
             Surface?.Dispose();
@@ -141,10 +141,8 @@ namespace PPDFramework.Texture.DX11
 
         public override void Save(string filename)
         {
-            using (var bitmap = ToBitmap())
-            {
-                bitmap.Save(filename, System.Drawing.Imaging.ImageFormat.Png);
-            }
+            using var bitmap = ToBitmap();
+            bitmap.Save(filename, System.Drawing.Imaging.ImageFormat.Png);
         }
 
         /// <summary>

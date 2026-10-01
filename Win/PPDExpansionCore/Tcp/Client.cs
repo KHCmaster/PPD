@@ -4,7 +4,7 @@ using System.Net.Sockets;
 
 namespace PPDExpansionCore.Tcp
 {
-    public class Client : Base, IDisposable
+    public class Client(int port) : Base, IDisposable
     {
         private TcpClient tcpClient;
         private bool connected;
@@ -21,12 +21,7 @@ namespace PPDExpansionCore.Tcp
         {
             get;
             private set;
-        }
-
-        public Client(int port)
-        {
-            Port = port;
-        }
+        } = port;
 
         public void Start()
         {
@@ -60,15 +55,13 @@ namespace PPDExpansionCore.Tcp
             }
             try
             {
-                using (MemoryStream stream = new())
+                using MemoryStream stream = new();
+                using (PPDPack.V2.PackWriter writer = new(stream))
                 {
-                    using (PPDPack.V2.PackWriter writer = new(stream))
-                    {
-                        packable.Write(writer);
-                    }
-                    stream.Close();
-                    Send(stream.ToArray());
+                    packable.Write(writer);
                 }
+                stream.Close();
+                Send(stream.ToArray());
             }
             catch (Exception e)
             {

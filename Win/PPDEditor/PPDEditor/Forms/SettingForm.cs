@@ -123,8 +123,8 @@ namespace PPDEditor.Forms
         {
             get
             {
-                return new int[]{
-                    (int)move1.Value,                    (int)move2.Value,                    (int)move3.Value,                    (int)move4.Value,                    (int)move5.Value,                    (int)move6.Value,                    (int)move7.Value,                    (int)move8.Value                };
+                return [
+                    (int)move1.Value,                    (int)move2.Value,                    (int)move3.Value,                    (int)move4.Value,                    (int)move5.Value,                    (int)move6.Value,                    (int)move7.Value,                    (int)move8.Value                ];
             }
             set
             {
@@ -143,8 +143,8 @@ namespace PPDEditor.Forms
         {
             get
             {
-                return new int[]{
-                    (int)angle1.Value,                    (int)angle2.Value,                    (int)angle3.Value,                    (int)angle4.Value,                    (int)angle5.Value,                    (int)angle6.Value,                    (int)angle7.Value,                    (int)angle8.Value                };
+                return [
+                    (int)angle1.Value,                    (int)angle2.Value,                    (int)angle3.Value,                    (int)angle4.Value,                    (int)angle5.Value,                    (int)angle6.Value,                    (int)angle7.Value,                    (int)angle8.Value                ];
             }
             set
             {
@@ -225,7 +225,7 @@ namespace PPDEditor.Forms
             return String.Format("{0} {1}", dataGridView1[0, index].Value, dataGridView1[1, index].Value);
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void Button1_Click(object sender, EventArgs e)
         {
             if (CheckSameShortcut())
             {
@@ -301,7 +301,7 @@ namespace PPDEditor.Forms
 
         private ShortcutInfo GetShortcutInfo(string str, ShortcutType shortcutType)
         {
-            Keys key = Keys.None;
+            Keys key;
             GetModifiers(str, out key, out bool ctrl, out bool shift, out bool alt);
 
             if (key != Keys.None)
@@ -314,7 +314,7 @@ namespace PPDEditor.Forms
 
         private ShortcutInfo GetCustomShortcutInfo(string str, string scriptPath)
         {
-            Keys key = Keys.None;
+            Keys key;
             GetModifiers(str, out key, out bool ctrl, out bool shift, out bool alt);
 
             if (key != Keys.NoName)
@@ -343,13 +343,13 @@ namespace PPDEditor.Forms
             return String.Join("+", list.ToArray());
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void Button2_Click(object sender, EventArgs e)
         {
             this.DialogResult = DialogResult.Cancel;
             this.Close();
         }
 
-        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
+        private void ListBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             switch (listBox1.SelectedIndex)
             {
@@ -373,25 +373,25 @@ namespace PPDEditor.Forms
             }
         }
 
-        private void textBox1_TextChanged(object sender, EventArgs e)
+        private void TextBox1_TextChanged(object sender, EventArgs e)
         {
             if (ignore) return;
             ShouldRestart = true;
         }
 
-        private void textBox2_TextChanged(object sender, EventArgs e)
+        private void TextBox2_TextChanged(object sender, EventArgs e)
         {
             if (ignore) return;
             ShouldRestart = true;
         }
 
-        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        private void ComboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (ignore) return;
             ShouldRestart = true;
         }
 
-        private void button3_Click(object sender, EventArgs e)
+        private void Button3_Click(object sender, EventArgs e)
         {
             if (dataGridView1.CurrentRow == null)
             {
@@ -401,7 +401,7 @@ namespace PPDEditor.Forms
             dataGridView1.CurrentRow.Cells[1].Value = "";
         }
 
-        private void dataGridView1_SelectionChanged(object sender, EventArgs e)
+        private void DataGridView1_SelectionChanged(object sender, EventArgs e)
         {
             if (dataGridView1.CurrentRow == null)
             {
@@ -421,12 +421,12 @@ namespace PPDEditor.Forms
             textBox3.SelectAll();
         }
 
-        private void textBox3_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+        private void TextBox3_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
         {
             e.IsInputKey = true;
         }
 
-        private void textBox3_KeyDown(object sender, KeyEventArgs e)
+        private void TextBox3_KeyDown(object sender, KeyEventArgs e)
         {
             e.SuppressKeyPress = true;
             e.Handled = true;
@@ -447,17 +447,17 @@ namespace PPDEditor.Forms
             dataGridView1.CurrentRow?.Cells[1].Value = textBox3.Text;
         }
 
-        private void textBox3_KeyPress(object sender, KeyPressEventArgs e)
+        private void TextBox3_KeyPress(object sender, KeyPressEventArgs e)
         {
             e.Handled = true;
         }
 
-        private void textBox3_Leave(object sender, EventArgs e)
+        private void TextBox3_Leave(object sender, EventArgs e)
         {
             textBox3.Enabled = false;
         }
 
-        private void button4_Click(object sender, EventArgs e)
+        private void Button4_Click(object sender, EventArgs e)
         {
             var form = new CommandSelectForm();
             form.SetLang();
@@ -470,7 +470,7 @@ namespace PPDEditor.Forms
             }
         }
 
-        private void button5_Click(object sender, EventArgs e)
+        private void Button5_Click(object sender, EventArgs e)
         {
             dataGridView1.Rows.RemoveAt(dataGridView1.CurrentRow.Index);
         }

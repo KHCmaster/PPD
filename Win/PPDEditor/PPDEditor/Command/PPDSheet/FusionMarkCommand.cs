@@ -3,23 +3,15 @@ using System.Collections.Generic;
 
 namespace PPDEditor.Command.PPDSheet
 {
-    class FusionMarkCommand : Command
+    class FusionMarkCommand(SortedList<float, Mark>[] data, Mark mk1, Mark mk2, ExMark exmk) : Command
     {
-        private readonly SortedList<float, Mark>[] data;
-        private readonly Mark mk1;
-        private readonly Mark mk2;
-        private readonly ExMark exmk;
+        private readonly SortedList<float, Mark>[] data = data;
+        private readonly Mark mk1 = mk1;
+        private readonly Mark mk2 = mk2;
+        private readonly ExMark exmk = exmk;
 
-        readonly ButtonType typeIndex;
-        public FusionMarkCommand(SortedList<float, Mark>[] data, Mark mk1, Mark mk2, ExMark exmk)
-        {
-            this.data = data;
-            this.mk1 = mk1;
-            this.mk2 = mk2;
-            this.exmk = exmk;
+        readonly ButtonType typeIndex = mk1.Type;
 
-            typeIndex = mk1.Type;
-        }
         public override void Execute()
         {
             data[(int)typeIndex].Remove(mk1.Time);

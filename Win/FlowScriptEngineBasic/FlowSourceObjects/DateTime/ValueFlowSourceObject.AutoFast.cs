@@ -9,33 +9,21 @@ namespace FlowScriptEngineBasic.FlowSourceObjects.DateTime
     {
         public override object GetPropertyValue(string propertyName)
         {
-            switch (propertyName)
+            return propertyName switch
             {
-                case "Date":
-                    return Date;
-                case "Day":
-                    return Day;
-                case "DayOfWeek":
-                    return DayOfWeek;
-                case "DayOfYear":
-                    return DayOfYear;
-                case "Hour":
-                    return Hour;
-                case "Millisecond":
-                    return Millisecond;
-                case "Minute":
-                    return Minute;
-                case "Month":
-                    return Month;
-                case "Second":
-                    return Second;
-                case "TimeOfDay":
-                    return TimeOfDay;
-                case "Year":
-                    return Year;
-                default:
-                    return null;
-            }
+                "Date" => Date,
+                "Day" => Day,
+                "DayOfWeek" => DayOfWeek,
+                "DayOfYear" => DayOfYear,
+                "Hour" => Hour,
+                "Millisecond" => Millisecond,
+                "Minute" => Minute,
+                "Month" => Month,
+                "Second" => Second,
+                "TimeOfDay" => TimeOfDay,
+                "Year" => Year,
+                _ => null,
+            };
         }
 
         protected override void SetPropertyValue(string propertyName, object value)

@@ -126,16 +126,13 @@ namespace PPDFramework
 
         private float GetLeft(int length)
         {
-            switch (Alignment)
+            return Alignment switch
             {
-                case Alignment.Left:
-                    return 0;
-                case Alignment.Right:
-                    return -DigitWidth * length;
-                case Alignment.Center:
-                    return -DigitWidth * length / 2;
-            }
-            return 0;
+                Alignment.Left => 0,
+                Alignment.Right => -DigitWidth * length,
+                Alignment.Center => -DigitWidth * length / 2,
+                _ => 0,
+            };
         }
 
         private void UpdateResource()
@@ -186,12 +183,12 @@ namespace PPDFramework
                     imageResource.Height / textureSize.Height);
                 var pos1X = i * DigitWidth + left;
                 var pos2X = pos1X + DigitWidth;
-                numberVertices[i].Write(new[] {
+                numberVertices[i].Write([
                     new ColoredTexturedVertex(new Vector3(pos1X, 0, 0.5f), rect.TopLeft),
                     new ColoredTexturedVertex(new Vector3(pos2X, 0, 0.5f), rect.TopRight),
                     new ColoredTexturedVertex(new Vector3(pos1X, imageResource.Height, 0.5f), rect.BottomLeft),
                     new ColoredTexturedVertex(new Vector3(pos2X, imageResource.Height, 0.5f), rect.BottomRight)
-                });
+                ]);
             }
         }
 

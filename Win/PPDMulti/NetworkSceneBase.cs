@@ -7,14 +7,9 @@ using System.Reflection;
 
 namespace PPDMulti
 {
-    public abstract class NetworkSceneBase : SceneBase
+    public abstract class NetworkSceneBase(PPDDevice device) : SceneBase(device)
     {
-        readonly Dictionary<Type, Tuple<object, MethodInfo>> processors;
-
-        protected NetworkSceneBase(PPDDevice device) : base(device)
-        {
-            processors = [];
-        }
+        readonly Dictionary<Type, Tuple<object, MethodInfo>> processors = [];
 
         protected void AddProcessor<T>(Action<T> processor) where T : NetworkData
         {
@@ -25,7 +20,7 @@ namespace PPDMulti
         {
             if (processors.TryGetValue(networkData.GetType(), out Tuple<object, MethodInfo> info))
             {
-                info.Item2.Invoke(info.Item1, new object[] { networkData });
+                info.Item2.Invoke(info.Item1, [networkData]);
             }
         }
     }

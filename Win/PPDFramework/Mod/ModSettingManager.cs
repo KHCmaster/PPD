@@ -44,7 +44,7 @@ namespace PPDFramework.Mod
         {
             get
             {
-                return modSettings.ToArray();
+                return [.. modSettings];
             }
         }
 
@@ -55,7 +55,7 @@ namespace PPDFramework.Mod
         {
             get
             {
-                return settings.ToArray();
+                return [.. settings];
             }
         }
 

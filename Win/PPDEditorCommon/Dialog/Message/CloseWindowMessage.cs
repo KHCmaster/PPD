@@ -1,18 +1,12 @@
 ﻿
 namespace PPDEditorCommon.Dialog.Message
 {
-    class CloseWindowMessage : MessageBase
+    class CloseWindowMessage(object sender, bool result) : MessageBase(sender)
     {
         public bool Result
         {
             get;
             private set;
-        }
-
-        public CloseWindowMessage(object sender, bool result)
-            : base(sender)
-        {
-            Result = result;
-        }
+        } = result;
     }
 }

@@ -3,20 +3,12 @@ using System.Collections.Generic;
 
 namespace Effect2DEditor.Command
 {
-    class MoveStateCommand : CommandBase
+    class MoveStateCommand(EffectManager manager, string exp, int beforeframe, int newframe, TimeLine.KeyOperationMode opmode, SelectedManager selectedmanager) : CommandBase(manager, exp)
     {
-        readonly int beforeframe;
-        readonly int newframe;
-        readonly TimeLine.KeyOperationMode opmode;
-        readonly SelectedManager selectedmanager;
-        public MoveStateCommand(EffectManager manager, string exp, int beforeframe, int newframe, TimeLine.KeyOperationMode opmode, SelectedManager selectedmanager)
-            : base(manager, exp)
-        {
-            this.beforeframe = beforeframe;
-            this.newframe = newframe;
-            this.opmode = opmode;
-            this.selectedmanager = selectedmanager;
-        }
+        readonly int beforeframe = beforeframe;
+        readonly int newframe = newframe;
+        readonly TimeLine.KeyOperationMode opmode = opmode;
+        readonly SelectedManager selectedmanager = selectedmanager;
 
         public override void Undo()
         {

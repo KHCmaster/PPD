@@ -41,7 +41,7 @@
             this.textBox1.Size = new System.Drawing.Size(292, 267);
             this.textBox1.TabIndex = 0;
             this.textBox1.WordWrap = false;
-            this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
+            this.textBox1.TextChanged += new System.EventHandler(this.TextBox1_TextChanged);
             // 
             // MemoWindow
             // 

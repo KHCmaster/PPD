@@ -4,16 +4,10 @@ using System.Collections.Generic;
 
 namespace PPDCore
 {
-    class SlideMarkInfo : IMarkInfo
+    class SlideMarkInfo(SlideExMark mark, SlideColorMarkInfo slideColorMarkInfo) : IMarkInfo
     {
-        readonly SlideExMark mark;
-        readonly SlideColorMarkInfo slideColorMarkInfo;
-
-        public SlideMarkInfo(SlideExMark mark, SlideColorMarkInfo slideColorMarkInfo)
-        {
-            this.mark = mark;
-            this.slideColorMarkInfo = slideColorMarkInfo;
-        }
+        readonly SlideExMark mark = mark;
+        readonly SlideColorMarkInfo slideColorMarkInfo = slideColorMarkInfo;
 
         #region IMarkInfo メンバー
 

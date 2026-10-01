@@ -6,7 +6,7 @@ using System.Threading;
 
 namespace PPDSingle
 {
-    class SongInfoFinder
+    class SongInfoFinder(SongSelectFilter filter)
     {
         public string Name
         {
@@ -18,13 +18,13 @@ namespace PPDSingle
         {
             get;
             private set;
-        }
+        } = filter;
 
         public List<SongInformation> Result
         {
             get;
             private set;
-        }
+        } = [];
 
         public bool Finished
         {
@@ -32,14 +32,7 @@ namespace PPDSingle
             private set;
         }
 
-        readonly Queue<SongInformation> queue;
-        public SongInfoFinder(SongSelectFilter filter)
-        {
-            Result = [];
-            queue = new Queue<SongInformation>();
-            this.Filter = filter;
-        }
-
+        readonly Queue<SongInformation> queue = new Queue<SongInformation>();
         Thread t;
         public bool Find()
         {
@@ -75,7 +68,7 @@ namespace PPDSingle
         {
             Result.Clear();
             queue.Clear();
-            var sp = Name.ToLower().Split(new char[] { ' ', '　' }, StringSplitOptions.RemoveEmptyEntries);
+            var sp = Name.ToLower().Split([' ', '　'], StringSplitOptions.RemoveEmptyEntries);
             if (Name != string.Empty)
             {
                 queue.Enqueue(SongInformation.Root);

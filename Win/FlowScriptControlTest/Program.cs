@@ -27,16 +27,14 @@ namespace FlowScriptControlTest
                     return;
                 }
 
-                FlowDrawPanel.EnumerateClasses("dlls", new string[0]);
+                FlowDrawPanel.EnumerateClasses("dlls", []);
                 var engine = new Engine();
                 try
                 {
-                    using (FileStream stream = File.Open(args[0], FileMode.Open))
-                    {
-                        var manager = engine.Load(stream, false);
-                        manager.Initialize();
-                        engine.Start();
-                    }
+                    using FileStream stream = File.Open(args[0], FileMode.Open);
+                    var manager = engine.Load(stream, false);
+                    manager.Initialize();
+                    engine.Start();
                 }
                 catch (Exception ex)
                 {

@@ -76,7 +76,7 @@ namespace PPDSingle
             }
             else if (type == typeof(DxTextBox))
             {
-                textBox.TextChanged -= textBox_TextChanged;
+                textBox.TextChanged -= TextBox_TextChanged;
                 textBox.DrawMode = DxTextBox.DrawingMode.None;
                 if (sif.Finished && sif.Result.Count > 0)
                 {
@@ -97,11 +97,11 @@ namespace PPDSingle
             textBox.Position = new Vector2(240, 65);
             textBox.TextBoxWidth = 300;
             textBox.TextBoxHeight = 20;
-            textBox.TextChanged += textBox_TextChanged;
+            textBox.TextChanged += TextBox_TextChanged;
             FocusManager.Focus(textBox);
         }
 
-        void textBox_TextChanged(object sender, EventArgs e)
+        void TextBox_TextChanged(object sender, EventArgs e)
         {
             mustcheck = true;
         }

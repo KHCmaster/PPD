@@ -29,7 +29,6 @@ namespace PPDMultiServer.Tcp
         long finishWaitStartTime;
 
         public MainGameContext(ServerContextBase previousContext)
-            : base(previousContext)
         {
             stopWatch = new Stopwatch();
             userList = [];
@@ -232,7 +231,7 @@ namespace PPDMultiServer.Tcp
                     state = State.None;
                     Host.Write(MessagePackSerializer.Serialize(new GoToMenuNetworkData
                     {
-                        Results = resultList.Select(r => new Tuple<int, Result>(r.User.ID, r.Result)).ToArray()
+                        Results = [.. resultList.Select(r => new Tuple<int, Result>(r.User.ID, r.Result))]
                     }));
                     ContextManager.Logger?.AddLog(SerializeResult());
                     ContextManager.PopContext();

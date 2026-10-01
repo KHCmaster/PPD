@@ -36,14 +36,14 @@ namespace PPDEditor.Forms
             this.comboBox1.SelectedIndex = 0;
             this.comboBox2.SelectedIndex = 0;
         }
-        public int first
+        public int First
         {
             get
             {
                 return this.comboBox1.SelectedIndex;
             }
         }
-        public int second
+        public int Second
         {
             get
             {
@@ -57,13 +57,13 @@ namespace PPDEditor.Forms
             this.comboBox2.SelectedIndex = 0;
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void Button1_Click(object sender, EventArgs e)
         {
             this.DialogResult = DialogResult.OK;
             this.Close();
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void Button2_Click(object sender, EventArgs e)
         {
             this.DialogResult = DialogResult.Cancel;
             this.Close();

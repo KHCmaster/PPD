@@ -114,15 +114,15 @@ namespace Effect2DEditor.DockForm
             InitializeComponent();
 
             bezierControl1.Controller.AllowMouseOperation = false;
-            bezierControl1.Controller.BeforePaint += bezierControl1_BeforePaint;
-            bezierControl1.Controller.Edited += bezierControl1_Edited;
-            bezierControl1.SizeChanged += bezierControl1_SizeChanged;
+            bezierControl1.Controller.BeforePaint += BezierControl1_BeforePaint;
+            bezierControl1.Controller.Edited += BezierControl1_Edited;
+            bezierControl1.SizeChanged += BezierControl1_SizeChanged;
             timer = new Timer
             {
                 Interval = 1000 / 60
             };
-            timer.Tick += timer_Tick;
-            bezierControl1.Controller.BeforePaint += bezierControl1_BeforePaint;
+            timer.Tick += Timer_Tick;
+            bezierControl1.Controller.BeforePaint += BezierControl1_BeforePaint;
             bezierControl1.Controller.Center = new Point(bezierControl1.Width / 2, bezierControl1.Height / 2);
             CreateCheckBack(bezierControl1.Width);
 
@@ -169,7 +169,7 @@ namespace Effect2DEditor.DockForm
             bezierControl1.Initialize();
         }
 
-        void bezierControl1_SizeChanged(object sender, EventArgs e)
+        void BezierControl1_SizeChanged(object sender, EventArgs e)
         {
             bezierControl1.Controller.Center = new Point(bezierControl1.Width / 2, bezierControl1.Height / 2);
             CreateCheckBack(bezierControl1.Width);
@@ -177,7 +177,7 @@ namespace Effect2DEditor.DockForm
             ResetLocation();
         }
 
-        void bezierControl1_Edited(object sender, BezierDrawControl.BezierControlPointEditEventArgs e)
+        void BezierControl1_Edited(object sender, BezierDrawControl.BezierControlPointEditEventArgs e)
         {
             BezierEdited?.Invoke(this, EventArgs.Empty);
         }
@@ -212,23 +212,21 @@ namespace Effect2DEditor.DockForm
         private void CreateCheckBack(int width)
         {
             checkBackPath = Path.GetTempFileName();
-            using (var bitmap = new Bitmap(width, width))
-            using (Graphics g = Graphics.FromImage(bitmap))
+            using var bitmap = new Bitmap(width, width);
+            using Graphics g = Graphics.FromImage(bitmap);
+            for (int i = 0; i <= width / (checksize * 2); i++)
             {
-                for (int i = 0; i <= width / (checksize * 2); i++)
+                for (int j = 0; j < width / (checksize * 2); j++)
                 {
-                    for (int j = 0; j < width / (checksize * 2); j++)
-                    {
-                        g.FillRectangle(Brushes.White, new Rectangle(2 * i * checksize, 2 * j * checksize, checksize, checksize));
-                        g.FillRectangle(Brushes.LightGray, new Rectangle((2 * i + 1) * checksize, 2 * j * checksize, checksize, checksize));
-                        g.FillRectangle(Brushes.White, new Rectangle((2 * i + 1) * checksize, (2 * j + 1) * checksize, checksize, checksize));
-                        g.FillRectangle(Brushes.LightGray, new Rectangle(2 * i * checksize, (2 * j + 1) * checksize, checksize, checksize));
-                    }
+                    g.FillRectangle(Brushes.White, new Rectangle(2 * i * checksize, 2 * j * checksize, checksize, checksize));
+                    g.FillRectangle(Brushes.LightGray, new Rectangle((2 * i + 1) * checksize, 2 * j * checksize, checksize, checksize));
+                    g.FillRectangle(Brushes.White, new Rectangle((2 * i + 1) * checksize, (2 * j + 1) * checksize, checksize, checksize));
+                    g.FillRectangle(Brushes.LightGray, new Rectangle(2 * i * checksize, (2 * j + 1) * checksize, checksize, checksize));
                 }
-                bitmap.Save(checkBackPath, ImageFormat.Png);
             }
+            bitmap.Save(checkBackPath, ImageFormat.Png);
         }
-        void bezierControl1_BeforePaint(object sender, BezierDrawControl.UserPaintEventArgs e)
+        void BezierControl1_BeforePaint(object sender, BezierDrawControl.UserPaintEventArgs e)
         {
             var context = ((DXBezierControl.Context)e.Context);
             DrawBack(context.Drawer);
@@ -311,7 +309,7 @@ namespace Effect2DEditor.DockForm
             bezierControl1.Drawer.DrawTarget.InsertChild(obj, 0);
         }
 
-        void timer_Tick(object sender, EventArgs e)
+        void Timer_Tick(object sender, EventArgs e)
 
         {
             if (EffectManager.State == EffectManager.PlayState.Stop)
@@ -345,7 +343,7 @@ namespace Effect2DEditor.DockForm
             BezierReset?.Invoke(this, EventArgs.Empty);
         }
 
-        private void contextMenuStrip1_Opening(object sender, CancelEventArgs e)
+        private void ContextMenuStrip1_Opening(object sender, CancelEventArgs e)
         {
             if (bezierControl1.Controller.AllowMouseOperation)
             {

@@ -254,15 +254,12 @@ namespace PPDModSettingUI
             {
                 otherValues.Add(String.Format("{0}:{1}", language["MinValue"], modSetting.MinValue));
             }
-            switch (otherValues.Count)
+            return otherValues.Count switch
             {
-                case 0:
-                    return "";
-                case 1:
-                    return otherValues[0];
-                default:
-                    return otherValues.Aggregate((s1, s2) => String.Format("{0}, {1}", s1, s2));
-            }
+                0 => "",
+                1 => otherValues[0],
+                _ => otherValues.Aggregate((s1, s2) => String.Format("{0}, {1}", s1, s2)),
+            };
         }
 
         private void SetDefaultCommand_Execute()

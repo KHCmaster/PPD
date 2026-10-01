@@ -2,7 +2,8 @@
 
 namespace PPDSingle
 {
-    class GeneralDialog : GeneralDialogBase
+    class GeneralDialog(PPDDevice device, PPDFramework.Resource.ResourceManager resourceManager, ISound sound, string displayText, GeneralDialog.ButtonTypes buttons) : GeneralDialogBase(device, resourceManager, sound, displayText,
+       buttons == ButtonTypes.Ok ? ["OK"] : (buttons == ButtonTypes.OkCancel ? new string[] { Utility.Language["OK"], Utility.Language["Cancel"] } : [Utility.Language["Yes"], Utility.Language["No"]]))
     {
         public enum ButtonTypes
         {
@@ -26,11 +27,6 @@ namespace PPDSingle
 
         public GeneralDialog(PPDDevice device, PPDFramework.Resource.ResourceManager resourceManager, ISound sound, string displayText) :
             this(device, resourceManager, sound, displayText, ButtonTypes.Ok)
-        { }
-
-        public GeneralDialog(PPDDevice device, PPDFramework.Resource.ResourceManager resourceManager, ISound sound, string displayText, ButtonTypes buttons) :
-            base(device, resourceManager, sound, displayText,
-           buttons == ButtonTypes.Ok ? new string[] { "OK" } : (buttons == ButtonTypes.OkCancel ? new string[] { Utility.Language["OK"], Utility.Language["Cancel"] } : new string[] { Utility.Language["Yes"], Utility.Language["No"] }))
         { }
     }
 }

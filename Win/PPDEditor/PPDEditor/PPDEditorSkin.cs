@@ -193,17 +193,19 @@ namespace PPDEditor
                         "ToolWindowInactiveCaptionGradient",
                         "ToolWindowInactiveTabGradient"
                     };
-                    DockPanelGradient[] dpg = new DockPanelGradient[10];
-                    dpg[0] = dockPanelSkin.AutoHideStripSkin.DockStripGradient;
-                    dpg[1] = dockPanelSkin.AutoHideStripSkin.TabGradient;
-                    dpg[2] = dockPanelSkin.DockPaneStripSkin.DocumentGradient.ActiveTabGradient;
-                    dpg[3] = dockPanelSkin.DockPaneStripSkin.DocumentGradient.DockStripGradient;
-                    dpg[4] = dockPanelSkin.DockPaneStripSkin.DocumentGradient.InactiveTabGradient;
-                    dpg[5] = dockPanelSkin.DockPaneStripSkin.ToolWindowGradient.ActiveCaptionGradient;
-                    dpg[6] = dockPanelSkin.DockPaneStripSkin.ToolWindowGradient.ActiveTabGradient;
-                    dpg[7] = dockPanelSkin.DockPaneStripSkin.ToolWindowGradient.DockStripGradient;
-                    dpg[8] = dockPanelSkin.DockPaneStripSkin.ToolWindowGradient.InactiveCaptionGradient;
-                    dpg[9] = dockPanelSkin.DockPaneStripSkin.ToolWindowGradient.InactiveTabGradient;
+                    DockPanelGradient[] dpg =
+                    [
+                        dockPanelSkin.AutoHideStripSkin.DockStripGradient,
+                        dockPanelSkin.AutoHideStripSkin.TabGradient,
+                        dockPanelSkin.DockPaneStripSkin.DocumentGradient.ActiveTabGradient,
+                        dockPanelSkin.DockPaneStripSkin.DocumentGradient.DockStripGradient,
+                        dockPanelSkin.DockPaneStripSkin.DocumentGradient.InactiveTabGradient,
+                        dockPanelSkin.DockPaneStripSkin.ToolWindowGradient.ActiveCaptionGradient,
+                        dockPanelSkin.DockPaneStripSkin.ToolWindowGradient.ActiveTabGradient,
+                        dockPanelSkin.DockPaneStripSkin.ToolWindowGradient.DockStripGradient,
+                        dockPanelSkin.DockPaneStripSkin.ToolWindowGradient.InactiveCaptionGradient,
+                        dockPanelSkin.DockPaneStripSkin.ToolWindowGradient.InactiveTabGradient,
+                    ];
                     for (int i = 0; i < dpg.Length; i++)
                     {
                         var mode = int.Parse(setting.ReadString(Name[i] + "Mode"));

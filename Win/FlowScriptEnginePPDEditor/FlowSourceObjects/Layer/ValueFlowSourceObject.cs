@@ -28,7 +28,7 @@ namespace FlowScriptEnginePPDEditor.FlowSourceObjects.Layer
                 {
                     return Layer.SelectedMarks;
                 }
-                return new object[0];
+                return [];
             }
         }
 
@@ -42,7 +42,7 @@ namespace FlowScriptEnginePPDEditor.FlowSourceObjects.Layer
                 {
                     return Layer.Marks;
                 }
-                return new object[0];
+                return [];
             }
         }
 

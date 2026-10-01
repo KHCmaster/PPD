@@ -115,7 +115,7 @@ namespace PPDMulti
             this.AddChild(leftSprite = new SpriteObject(device));
             leftSprite.AddChild(back = new PictureObject(device, resourceManager, Utility.Path.Combine("leftmenu.png")));
 
-            enables = new bool[]{
+            enables = [
                 false,
                 false,
                 false,
@@ -127,7 +127,7 @@ namespace PPDMulti
                 true,
                 true,
                 true
-            };
+            ];
 
             user.PropertyChanged += (name) =>
             {
@@ -242,7 +242,7 @@ namespace PPDMulti
                         if (songSelectComponent == null)
                         {
                             songSelectComponent = new SongSelectComponent(device, resourceManager, sound, this, movieManager);
-                            songSelectComponent.SongSelected += songSelectComponent_SongSelected;
+                            songSelectComponent.SongSelected += SongSelectComponent_SongSelected;
                             songSelectSprite.InsertChild(songSelectComponent, 0);
                         }
                         sound.Play(PPDSetting.DefaultSounds[1], -1000);
@@ -252,7 +252,7 @@ namespace PPDMulti
                         if (gameRuleComponent == null)
                         {
                             gameRuleComponent = new GameRuleComponent(device, resourceManager, sound);
-                            gameRuleComponent.RuleChanged += gameRuleComponent_RuleChanged;
+                            gameRuleComponent.RuleChanged += GameRuleComponent_RuleChanged;
                             gameRuleSprite.InsertChild(gameRuleComponent, 0);
                         }
                         sound.Play(PPDSetting.DefaultSounds[1], -1000);
@@ -262,8 +262,8 @@ namespace PPDMulti
                         if (userSelectComponent == null)
                         {
                             userSelectComponent = new UserSelectComponent(device, resourceManager, sound, users);
-                            userSelectComponent.ChangeLeader += userSelectComponent_ChangeLeader;
-                            userSelectComponent.KickUser += userSelectComponent_KickUser;
+                            userSelectComponent.ChangeLeader += UserSelectComponent_ChangeLeader;
+                            userSelectComponent.KickUser += UserSelectComponent_KickUser;
                             userSelectSprite.InsertChild(userSelectComponent, 0);
                         }
                         sound.Play(PPDSetting.DefaultSounds[1], -1000);
@@ -314,7 +314,7 @@ namespace PPDMulti
                     case Mode.Finish:
                         sound.Play(PPDSetting.DefaultSounds[1], -1000);
                         var confirmComponent = new ConfirmComponent(device, resourceManager, Utility.Path, Utility.Language["FinishConfirm"], Utility.Language["Yes"], Utility.Language["No"], Utility.Language["OK"], ConfirmComponent.ConfirmButtonType.YesNo);
-                        confirmComponent.LostFocused += confirmComponent_LostFocused;
+                        confirmComponent.LostFocused += ConfirmComponent_LostFocused;
                         this.InsertChild(confirmComponent, 0);
                         FocusManager.Focus(confirmComponent);
                         break;
@@ -360,22 +360,22 @@ namespace PPDMulti
             select.Position = new Vector2(select.Position.X, selectDiffY + back[(int)mode].Position.Y);
         }
 
-        void userSelectComponent_KickUser(object sender, EventArgs e)
+        void UserSelectComponent_KickUser(object sender, EventArgs e)
         {
             KickUser?.Invoke(userSelectComponent.SelectedUser);
         }
 
-        void userSelectComponent_ChangeLeader(object sender, EventArgs e)
+        void UserSelectComponent_ChangeLeader(object sender, EventArgs e)
         {
             ChangeLeader?.Invoke(userSelectComponent.SelectedUser);
         }
 
-        void gameRuleComponent_RuleChanged(object sender, EventArgs e)
+        void GameRuleComponent_RuleChanged(object sender, EventArgs e)
         {
             RuleChanged?.Invoke(gameRuleComponent.GameRule);
         }
 
-        void songSelectComponent_SongSelected(object sender, EventArgs e)
+        void SongSelectComponent_SongSelected(object sender, EventArgs e)
         {
             if (SongSelected != null)
             {
@@ -385,7 +385,7 @@ namespace PPDMulti
             }
         }
 
-        void confirmComponent_LostFocused(IFocusable sender, FocusEventArgs args)
+        void ConfirmComponent_LostFocused(IFocusable sender, FocusEventArgs args)
         {
             if (sender is ConfirmComponent confirmComponent)
             {

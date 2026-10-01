@@ -153,11 +153,9 @@ namespace PPDExpansionCore
 
         protected string ParseString(PPDPackStreamReader packStreamReader)
         {
-            using (StreamReader streamReader = new(packStreamReader, Encoding.UTF8))
-            {
-                var ret = streamReader.ReadToEnd();
-                return ret;
-            }
+            using StreamReader streamReader = new(packStreamReader, Encoding.UTF8);
+            var ret = streamReader.ReadToEnd();
+            return ret;
         }
 
         protected int ParseInt(PPDPackStreamReader packStreamReader)

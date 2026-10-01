@@ -158,18 +158,18 @@ namespace PPDFramework
             {
                 vertices ??= device.GetModule<ShaderCommon>().CreateVertex(4);
                 var textureSize = new Size2F(imageResource.Width, imageResource.Height);
-                var colors = edgeColors != null && edgeColors.Length == 4 ? edgeColors : new[] { PPDColors.White, PPDColors.White, PPDColors.White, PPDColors.White };
+                var colors = edgeColors != null && edgeColors.Length == 4 ? edgeColors : [PPDColors.White, PPDColors.White, PPDColors.White, PPDColors.White];
                 var rect = imageResource.GetActualUVRectangle(
                     rec.X / textureSize.Width,
                     rec.Y / textureSize.Height,
                     (rec.X + rec.Width) / textureSize.Width,
                     (rec.Y + rec.Height) / textureSize.Height);
-                vertices.Write(new[] {
+                vertices.Write([
                     new ColoredTexturedVertex(new Vector3(0, 0, 0.5f), colors[0], rect.TopLeft),
                     new ColoredTexturedVertex(new Vector3(rec.Width, 0, 0.5f), colors[1], rect.TopRight),
                     new ColoredTexturedVertex(new Vector3(0, rec.Height, 0.5f), colors[2], rect.BottomLeft),
                     new ColoredTexturedVertex(new Vector3(rec.Width, rec.Height, 0.5f), colors[3], rect.BottomRight)
-                });
+                ]);
             }
         }
 

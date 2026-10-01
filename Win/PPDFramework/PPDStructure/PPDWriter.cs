@@ -19,10 +19,8 @@ namespace PPDFramework.PPDStructure
         /// <returns></returns>
         public static void Write(string path, MarkData[] markData)
         {
-            using (Stream stream = File.Create(path))
-            {
-                Write(stream, markData);
-            }
+            using Stream stream = File.Create(path);
+            Write(stream, markData);
         }
 
         /// <summary>
@@ -33,7 +31,7 @@ namespace PPDFramework.PPDStructure
         /// <returns></returns>
         public static void Write(Stream stream, MarkData[] markData)
         {
-            var sign = new byte[] { (byte)'P', (byte)'P', (byte)'D' };
+            var sign = "PPD"u8.ToArray();
             byte[] fdata;
             stream.Write(sign, 0, sign.Length);
             var hasParameters = new List<MarkData>();

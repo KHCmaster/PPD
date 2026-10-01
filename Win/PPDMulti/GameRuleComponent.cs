@@ -107,7 +107,7 @@ namespace PPDMulti
                 Position = new Vector2(80, 320)
             });
 
-            selectList = new SelectableComponent[]{
+            selectList = [
                 resultSort,
                 itemAvailable,
                 maxItemCount,
@@ -117,7 +117,7 @@ namespace PPDMulti
                 rankSupply,
                 okButton,
                 cancelButton
-            };
+            ];
             gridSelection = new GridSelection();
             foreach (SelectableComponent comp in selectList)
             {

@@ -10,28 +10,22 @@ namespace PPDFramework
     /// <summary>
     /// テキストボックスの選択範囲
     /// </summary>
-    public struct TextBoxSelection
+    /// <remarks>
+    /// コンストラクタ
+    /// </remarks>
+    /// <param name="selStart"></param>
+    /// <param name="selEnd"></param>
+    public struct TextBoxSelection(int selStart, int selEnd)
     {
         /// <summary>
         /// 選択開始
         /// </summary>
-        public int SelectionStart;
+        public int SelectionStart = selStart;
 
         /// <summary>
         /// 選択終了
         /// </summary>
-        public int SelectionEnd;
-
-        /// <summary>
-        /// コンストラクタ
-        /// </summary>
-        /// <param name="selStart"></param>
-        /// <param name="selEnd"></param>
-        public TextBoxSelection(int selStart, int selEnd)
-        {
-            SelectionStart = selStart;
-            SelectionEnd = selEnd;
-        }
+        public int SelectionEnd = selEnd;
 
         /// <summary>
         /// 長さ
@@ -135,10 +129,10 @@ namespace PPDFramework
         void TextEditableControl_ParentChanged(object sender, EventArgs e)
         {
             var form = FindForm();
-            form?.InputLanguageChanged += form_InputLanguageChanged;
+            form?.InputLanguageChanged += Form_InputLanguageChanged;
         }
 
-        void form_InputLanguageChanged(object sender, InputLanguageChangedEventArgs e)
+        void Form_InputLanguageChanged(object sender, InputLanguageChangedEventArgs e)
         {
             ChangeImeMode(e.Culture.TwoLetterISOLanguageName);
         }
@@ -581,7 +575,7 @@ namespace PPDFramework
 
             public override string ToString()
             {
-                return new string(str.ToArray());
+                return new string([.. str]);
             }
 
             public string GetText(int begin, int length)

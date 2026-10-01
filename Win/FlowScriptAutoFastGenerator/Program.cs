@@ -72,7 +72,7 @@ namespace FlowScriptAutoFastGenerator
             var fileList = GetFileList(projectPath);
             var dict = GetClassInfo(fileList);
 
-            foreach (AssemblyAndType asm in FlowSourceEnumerator.EnumerateFromFile(dllPath, new Type[] { typeof(FlowSourceObjectBase) }))
+            foreach (AssemblyAndType asm in FlowSourceEnumerator.EnumerateFromFile(dllPath, [typeof(FlowSourceObjectBase)]))
             {
                 var temp = (FlowSourceObjectBase)asm.Assembly.CreateInstance(asm.Type.FullName);
                 if (temp != null)
@@ -179,10 +179,8 @@ namespace FlowScriptAutoFastGenerator
                     return;
                 }
             }
-            using (StreamWriter sw = new(filePath, false, encoding))
-            {
-                sw.Write(content);
-            }
+            using StreamWriter sw = new(filePath, false, encoding);
+            sw.Write(content);
         }
 
         static string GetRelativePath(string dir, string filePath)
@@ -261,13 +259,11 @@ namespace FlowScriptAutoFastGenerator
                     compileElem.AppendChild(newElem);
                 }
 
-                using (MemoryStream stream = new())
-                {
-                    doc.Save(stream);
-                    var content = Encoding.UTF8.GetString(stream.ToArray());
-                    content = content[1..];
-                    UpdateContent(content, filePath, false);
-                }
+                using MemoryStream stream = new();
+                doc.Save(stream);
+                var content = Encoding.UTF8.GetString(stream.ToArray());
+                content = content[1..];
+                UpdateContent(content, filePath, false);
                 break;
             }
         }
@@ -295,7 +291,7 @@ namespace FlowScriptAutoFastGenerator
                 }
             }
 
-            return ret.ToArray();
+            return [.. ret];
         }
 
         static Dictionary<string, ClassInfo> GetClassInfo(string[] fileList)
@@ -308,36 +304,34 @@ namespace FlowScriptAutoFastGenerator
 
             foreach (string filePath in fileList)
             {
-                using (StreamReader sr = new(filePath, Encoding.UTF8))
-                {
-                    var content = sr.ReadToEnd();
-                    Match classMatch = classRegex.Match(content),
-                        namespaceMatch = namespaceRegex.Match(content);
+                using StreamReader sr = new(filePath, Encoding.UTF8);
+                var content = sr.ReadToEnd();
+                Match classMatch = classRegex.Match(content),
+                    namespaceMatch = namespaceRegex.Match(content);
 
-                    if (classMatch.Success && namespaceMatch.Success)
+                if (classMatch.Success && namespaceMatch.Success)
+                {
+                    var names = new HashSet<string>();
+                    foreach (Match match in setValueRegex1.Matches(content))
                     {
-                        var names = new HashSet<string>();
-                        foreach (Match match in setValueRegex1.Matches(content))
-                        {
-                            names.Add(match.Groups[1].Value);
-                        }
-                        foreach (Match match in setValueRegex2.Matches(content))
-                        {
-                            names.Add(match.Groups[1].Value);
-                        }
-                        var classInfo = new ClassInfo
-                        {
-                            FilePath = filePath,
-                            ClassName = classMatch.Groups["className"].Value,
-                            HasPartial = !String.IsNullOrEmpty(classMatch.Groups["partial"].Value),
-                            IsAbstract = !String.IsNullOrEmpty(classMatch.Groups["abstract"].Value)
-                        };
-                        foreach (var name in names)
-                        {
-                            classInfo.AddSetValue(name);
-                        }
-                        ret.Add(String.Format("{0}.{1}", namespaceMatch.Groups["namespace"], classMatch.Groups["className"].Value), classInfo);
+                        names.Add(match.Groups[1].Value);
                     }
+                    foreach (Match match in setValueRegex2.Matches(content))
+                    {
+                        names.Add(match.Groups[1].Value);
+                    }
+                    var classInfo = new ClassInfo
+                    {
+                        FilePath = filePath,
+                        ClassName = classMatch.Groups["className"].Value,
+                        HasPartial = !String.IsNullOrEmpty(classMatch.Groups["partial"].Value),
+                        IsAbstract = !String.IsNullOrEmpty(classMatch.Groups["abstract"].Value)
+                    };
+                    foreach (var name in names)
+                    {
+                        classInfo.AddSetValue(name);
+                    }
+                    ret.Add(String.Format("{0}.{1}", namespaceMatch.Groups["namespace"], classMatch.Groups["className"].Value), classInfo);
                 }
             }
 
@@ -353,13 +347,13 @@ namespace FlowScriptAutoFastGenerator
             {
                 get
                 {
-                    return errors.ToArray();
+                    return [.. errors];
                 }
             }
 
             public string[] SetValues
             {
-                get { return setValues.ToArray(); }
+                get { return [.. setValues]; }
             }
 
             public ClassInfo()
@@ -408,25 +402,19 @@ namespace FlowScriptAutoFastGenerator
             }
         }
 
-        class Warning
+        class Warning(string filePath, string warningText)
         {
             public string FilePath
             {
                 get;
                 private set;
-            }
+            } = filePath;
 
             public string WarningText
             {
                 get;
                 private set;
-            }
-
-            public Warning(string filePath, string warningText)
-            {
-                FilePath = filePath;
-                WarningText = warningText;
-            }
+            } = warningText;
         }
     }
 }

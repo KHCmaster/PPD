@@ -34,7 +34,7 @@ namespace PPDSingle
             {
                 Position = new Vector2(400, 225)
             };
-            confirm.Finish += confirm_Finish;
+            confirm.Finish += Confirm_Finish;
             black = new RectangleComponent(device, resourceManager, PPDColors.Black)
             {
                 RectangleHeight = 450,
@@ -75,7 +75,7 @@ namespace PPDSingle
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void confirm_Finish(object sender, EventArgs e)
+        void Confirm_Finish(object sender, EventArgs e)
         {
             switch (state)
             {

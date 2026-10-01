@@ -6,16 +6,10 @@ using System.Windows.Forms;
 
 namespace PPDInput
 {
-    public class Input : InputBase
+    public class Input(Form window) : InputBase(window)
     {
         int[] keyCount;
-        readonly List<int[]> buttonCount;
-
-        public Input(Form window)
-            : base(window)
-        {
-            buttonCount = [];
-        }
+        readonly List<int[]> buttonCount = [];
 
         public override void Load()
         {

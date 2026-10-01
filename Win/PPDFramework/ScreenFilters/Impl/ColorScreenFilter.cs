@@ -20,23 +20,21 @@ namespace PPDFramework.ScreenFilters.Impl
         /// <param name="filters"></param>
         public void Draw(PPDDevice device, IEnumerable<ColorFilterBase> filters)
         {
-            using (var temp = device.Workspace.Get())
+            using var temp = device.Workspace.Get();
+            var context = device.GetModule<AlphaBlendContextCache>().Get();
+            context.Alpha = 1;
+            context.BlendMode = BlendMode.Normal;
+            context.Vertex = device.GetModule<ShaderCommon>().ScreenVertex;
+            context.Texture = temp.Texture;
+            context.SetSRT(Matrix.Identity, 0);
+            context.FilterCount = 1;
+            context.Transparent = true;
+            context.WorldDisabled = true;
+            foreach (var filter in filters.Reverse())
             {
-                var context = device.GetModule<AlphaBlendContextCache>().Get();
-                context.Alpha = 1;
-                context.BlendMode = BlendMode.Normal;
-                context.Vertex = device.GetModule<ShaderCommon>().ScreenVertex;
-                context.Texture = temp.Texture;
-                context.SetSRT(Matrix.Identity, 0);
-                context.FilterCount = 1;
-                context.Transparent = true;
-                context.WorldDisabled = true;
-                foreach (var filter in filters.Reverse())
-                {
-                    device.StretchRectangle(device.GetRenderTarget(), temp);
-                    context.SetFilter(filter, 0);
-                    device.GetModule<AlphaBlend>().Draw(device, context);
-                }
+                device.StretchRectangle(device.GetRenderTarget(), temp);
+                context.SetFilter(filter, 0);
+                device.GetModule<AlphaBlend>().Draw(device, context);
             }
         }
     }

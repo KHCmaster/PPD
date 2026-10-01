@@ -176,22 +176,20 @@ namespace PPDFramework.Chars
             {
                 try
                 {
-                    using (var stream = new MemoryStream())
-                    {
-                        encoder.Save(stream, Direct2DImageFormat.Png, new string(Character, 1), FaceName, ActualFontSize, out int width, out int height);
-                        stream.Seek(0, SeekOrigin.Begin);
-                        var bitmap = new Bitmap(stream);
-                        Utility.PreMultiplyAlpha(bitmap);
-                        var tempStream = new MemoryStream();
-                        bitmap.Save(tempStream, System.Drawing.Imaging.ImageFormat.Png);
-                        tempStream.Seek(0, SeekOrigin.Begin);
-                        var texture = CreateTemporaryTexture(device, tempStream, width, height);
-                        this.width = width;
-                        this.height = height;
-                        this.t_width = Utility.UpperPowerOfTwo(width);
-                        this.t_height = Utility.UpperPowerOfTwo(height);
-                        return texture;
-                    }
+                    using var stream = new MemoryStream();
+                    encoder.Save(stream, Direct2DImageFormat.Png, new string(Character, 1), FaceName, ActualFontSize, out int width, out int height);
+                    stream.Seek(0, SeekOrigin.Begin);
+                    var bitmap = new Bitmap(stream);
+                    Utility.PreMultiplyAlpha(bitmap);
+                    var tempStream = new MemoryStream();
+                    bitmap.Save(tempStream, System.Drawing.Imaging.ImageFormat.Png);
+                    tempStream.Seek(0, SeekOrigin.Begin);
+                    var texture = CreateTemporaryTexture(device, tempStream, width, height);
+                    this.width = width;
+                    this.height = height;
+                    this.t_width = Utility.UpperPowerOfTwo(width);
+                    this.t_height = Utility.UpperPowerOfTwo(height);
+                    return texture;
                 }
                 catch
                 {
@@ -236,43 +234,41 @@ namespace PPDFramework.Chars
                         t_height = Utility.UpperPowerOfTwo(height);
                         texture = CreateTemporaryTexture(device, t_width, t_height);
 
-                        using (var textureData = texture.GetTextureData())
+                        using var textureData = texture.GetTextureData();
+                        var rec = textureData.DataStream;
+                        try
                         {
-                            var rec = textureData.DataStream;
-                            try
+                            byte[] data = new byte[bufferSize];
+                            Marshal.Copy(buffer, data, 0, bufferSize);
+                            int offset1 = (iOfs_x + iOfs_y * t_width) * 4;
+                            int offset2 = (iOfs_x + t_width - iOfs_x - iBmp_w) * 4;
+                            NativeMethods.ZeroMemory(rec.DataPointer, (uint)rec.Length);
+                            var writedata = new byte[] { (byte)255, (byte)255, (byte)255, (byte)255 };
+                            for (int i = 0; i < iBmp_h; i++)
                             {
-                                byte[] data = new byte[bufferSize];
-                                Marshal.Copy(buffer, data, 0, bufferSize);
-                                int offset1 = (iOfs_x + iOfs_y * t_width) * 4;
-                                int offset2 = (iOfs_x + t_width - iOfs_x - iBmp_w) * 4;
-                                NativeMethods.ZeroMemory(rec.DataPointer, (uint)rec.Length);
-                                var writedata = new byte[] { (byte)255, (byte)255, (byte)255, (byte)255 };
-                                for (int i = 0; i < iBmp_h; i++)
+                                for (int j = 0; j < iBmp_w; j++)
                                 {
-                                    for (int j = 0; j < iBmp_w; j++)
+                                    var alpha = (byte)((255 * data[j + iBmp_w * i]) / 64);
+                                    writedata[0] = writedata[1] = writedata[2] = alpha;
+                                    writedata[3] = (byte)alpha;
+                                    if (j == 0)
                                     {
-                                        var alpha = (byte)((255 * data[j + iBmp_w * i]) / 64);
-                                        writedata[0] = writedata[1] = writedata[2] = alpha;
-                                        writedata[3] = (byte)alpha;
-                                        if (j == 0)
+                                        if (i == 0)
                                         {
-                                            if (i == 0)
-                                            {
-                                                rec.Seek(offset1, System.IO.SeekOrigin.Current);
-                                            }
-                                            else
-                                            {
-                                                rec.Seek(offset2, System.IO.SeekOrigin.Current);
-                                            }
+                                            rec.Seek(offset1, System.IO.SeekOrigin.Current);
                                         }
-                                        rec.Write(writedata, 0, writedata.Length);
+                                        else
+                                        {
+                                            rec.Seek(offset2, System.IO.SeekOrigin.Current);
+                                        }
                                     }
+                                    rec.Write(writedata, 0, writedata.Length);
                                 }
                             }
-                            catch
-                            {
-                                Console.WriteLine("CharTextureError");
-                            }
+                        }
+                        catch
+                        {
+                            Console.WriteLine("CharTextureError");
                         }
                     }
                 }

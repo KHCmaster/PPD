@@ -110,7 +110,7 @@
             this.previousButton.TabIndex = 2;
             this.previousButton.Text = "前へ";
             this.previousButton.UseVisualStyleBackColor = true;
-            this.previousButton.Click += new System.EventHandler(this.button3_Click);
+            this.previousButton.Click += new System.EventHandler(this.Button3_Click);
             // 
             // nextButton
             // 
@@ -120,7 +120,7 @@
             this.nextButton.TabIndex = 1;
             this.nextButton.Text = "次へ";
             this.nextButton.UseVisualStyleBackColor = true;
-            this.nextButton.Click += new System.EventHandler(this.button2_Click);
+            this.nextButton.Click += new System.EventHandler(this.Button2_Click);
             // 
             // cancelButton
             // 
@@ -131,7 +131,7 @@
             this.cancelButton.TabIndex = 0;
             this.cancelButton.Text = "キャンセル";
             this.cancelButton.UseVisualStyleBackColor = true;
-            this.cancelButton.Click += new System.EventHandler(this.button1_Click);
+            this.cancelButton.Click += new System.EventHandler(this.Button1_Click);
             // 
             // startPanel1
             // 

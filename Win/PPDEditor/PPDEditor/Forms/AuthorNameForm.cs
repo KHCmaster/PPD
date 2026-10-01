@@ -13,7 +13,7 @@ namespace PPDEditor.Forms
         {
             this.label1.Text = Utility.Language["AuthorNameLabel"];
         }
-        private void button1_Click(object sender, EventArgs e)
+        private void Button1_Click(object sender, EventArgs e)
         {
             this.DialogResult = DialogResult.OK;
             this.Close();

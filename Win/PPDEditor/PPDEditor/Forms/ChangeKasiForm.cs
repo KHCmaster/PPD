@@ -16,27 +16,27 @@ namespace PPDEditor.Forms
             this.label2.Text = Utility.Language["KEDialogLabel2"];
             this.label3.Text = Utility.Language["KEDialogLabel3"];
         }
-        public string beforetext
+        public string Beforetext
         {
             set
             {
                 this.textBox1.Text = value;
             }
         }
-        public string newtext
+        public string Newtext
         {
             get
             {
                 return this.textBox2.Text;
             }
         }
-        private void button1_Click(object sender, EventArgs e)
+        private void Button1_Click(object sender, EventArgs e)
         {
             this.DialogResult = DialogResult.OK;
             this.Close();
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void Button2_Click(object sender, EventArgs e)
         {
             this.DialogResult = DialogResult.Cancel;
             this.Close();

@@ -12,10 +12,10 @@ namespace PPDEditor.Forms
         public GridSettingForm()
         {
             InitializeComponent();
-            this.dataGridView1.Rows.Add(new object[] { "幅", "5" });
-            this.dataGridView1.Rows.Add(new object[] { "高さ", "5" });
-            this.dataGridView1.Rows.Add(new object[] { "Xオフセット", "0" });
-            this.dataGridView1.Rows.Add(new object[] { "Yオフセット", "0" });
+            this.dataGridView1.Rows.Add(["幅", "5"]);
+            this.dataGridView1.Rows.Add(["高さ", "5"]);
+            this.dataGridView1.Rows.Add(["Xオフセット", "0"]);
+            this.dataGridView1.Rows.Add(["Yオフセット", "0"]);
             var row = new DataGridViewRow();
             var c = new DataGridViewTextBoxCell
             {
@@ -23,7 +23,7 @@ namespace PPDEditor.Forms
             };
             row.Cells.Add(c);
             var cell = new ExDataGridViewComboBoxCell();
-            cell.SelectIndexChanged += cell_SelectIndexChanged;
+            cell.SelectIndexChanged += Cell_SelectIndexChanged;
             cell.Items.Add(selectcolor);
             row.Cells.Add(cell);
             this.dataGridView1.Rows.Add(row);
@@ -40,7 +40,7 @@ namespace PPDEditor.Forms
             this.dataGridView1[0, 4].Value = Utility.Language["GSFText5"];
         }
 
-        void cell_SelectIndexChanged(DataGridViewComboBoxEditingControl cb)
+        void Cell_SelectIndexChanged(DataGridViewComboBoxEditingControl cb)
         {
             if (cb.SelectedItem != null && cb.SelectedItem.ToString() == selectcolor)
             {
@@ -99,13 +99,13 @@ namespace PPDEditor.Forms
             return func(ret);
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void Button1_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.OK;
             this.Close();
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void Button2_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.Cancel;
             this.Close();

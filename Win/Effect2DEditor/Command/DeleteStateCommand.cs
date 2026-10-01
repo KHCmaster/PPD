@@ -2,19 +2,14 @@
 
 namespace Effect2DEditor.Command
 {
-    class DeleteStateCommand : CommandBase
+    class DeleteStateCommand(EffectManager manager, string exp, int itemindex, int keyindex) : CommandBase(manager, exp)
     {
-        readonly int itemindex;
-        readonly int keyindex;
+        readonly int itemindex = itemindex;
+        readonly int keyindex = keyindex;
         int insertindex;
         EffectStateRatioSet previousset1;
         EffectStateRatioSet previousset2;
-        public DeleteStateCommand(EffectManager manager, string exp, int itemindex, int keyindex)
-            : base(manager, exp)
-        {
-            this.itemindex = itemindex;
-            this.keyindex = keyindex;
-        }
+
         public override void Undo()
         {
             IEffect effect = manager.Effects[itemindex];

@@ -2,10 +2,7 @@
 
 namespace KeyConfiger
 {
-    public class Game : GameCore
+    public class Game(PPDExecuteArg args, GameForm form) : GameCore(args, form)
     {
-        public Game(PPDExecuteArg args, GameForm form) : base(args, form)
-        {
-        }
     }
 }

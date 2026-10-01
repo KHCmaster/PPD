@@ -49,7 +49,7 @@
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(218, 19);
             this.textBox1.TabIndex = 1;
-            this.textBox1.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.textBox1_PreviewKeyDown);
+            this.textBox1.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.TextBox1_PreviewKeyDown);
             // 
             // button1
             // 
@@ -59,7 +59,7 @@
             this.button1.TabIndex = 2;
             this.button1.Text = "OK";
             this.button1.UseVisualStyleBackColor = true;
-            this.button1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.button1_MouseClick);
+            this.button1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.Button1_MouseClick);
             // 
             // button2
             // 
@@ -69,7 +69,7 @@
             this.button2.TabIndex = 3;
             this.button2.Text = "Cancel";
             this.button2.UseVisualStyleBackColor = true;
-            this.button2.MouseClick += new System.Windows.Forms.MouseEventHandler(this.button2_MouseClick);
+            this.button2.MouseClick += new System.Windows.Forms.MouseEventHandler(this.Button2_MouseClick);
             // 
             // Form6
             // 

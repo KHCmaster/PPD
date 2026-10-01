@@ -64,7 +64,7 @@ namespace PPDFramework
                 }
             }
 
-            presets = list.ToArray();
+            presets = [.. list];
         }
     }
 }

@@ -13,8 +13,8 @@ namespace PPDEditor.Forms
         {
             get
             {
-                return new ushort[]{
-                    (ushort)comboBox1.SelectedIndex,                    (ushort)comboBox2.SelectedIndex,                    (ushort)comboBox3.SelectedIndex,                    (ushort)comboBox4.SelectedIndex,                    (ushort)comboBox5.SelectedIndex,                    (ushort)comboBox6.SelectedIndex,                    (ushort)comboBox7.SelectedIndex,                    (ushort)comboBox8.SelectedIndex,                    (ushort)comboBox9.SelectedIndex,                    (ushort)comboBox10.SelectedIndex                };
+                return [
+                    (ushort)comboBox1.SelectedIndex,                    (ushort)comboBox2.SelectedIndex,                    (ushort)comboBox3.SelectedIndex,                    (ushort)comboBox4.SelectedIndex,                    (ushort)comboBox5.SelectedIndex,                    (ushort)comboBox6.SelectedIndex,                    (ushort)comboBox7.SelectedIndex,                    (ushort)comboBox8.SelectedIndex,                    (ushort)comboBox9.SelectedIndex,                    (ushort)comboBox10.SelectedIndex                ];
             }
         }
 
@@ -69,19 +69,19 @@ namespace PPDEditor.Forms
             comboBox11.SelectedIndex = 0;
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void Button1_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.OK;
             Close();
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void Button2_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.Cancel;
             Close();
         }
 
-        private void button5_Click(object sender, EventArgs e)
+        private void Button5_Click(object sender, EventArgs e)
         {
             if (comboBox11.SelectedIndex <= 0)
             {

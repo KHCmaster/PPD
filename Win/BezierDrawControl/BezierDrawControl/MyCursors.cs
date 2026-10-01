@@ -18,13 +18,12 @@ namespace BezierDrawControl
             {
                 return dict[angle];
             }
-            using (Bitmap bit = new(32, 32))
-            using (Graphics g = Graphics.FromImage(bit))
-            {
-                g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-                g.TranslateTransform(16, 16);
-                g.RotateTransform(angle);
-                var points = new PointF[]{
+            using Bitmap bit = new(32, 32);
+            using Graphics g = Graphics.FromImage(bit);
+            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+            g.TranslateTransform(16, 16);
+            g.RotateTransform(angle);
+            var points = new PointF[]{
                     new(8,0),
                     new(5,3),
                     new(5,1),
@@ -36,11 +35,10 @@ namespace BezierDrawControl
                     new(5,-1),
                     new(5,-3)
                 };
-                g.FillPolygon(Brushes.Black, points);
-                var cursor = new Cursor(bit.GetHicon());
-                dict[angle] = cursor;
-                return cursor;
-            }
+            g.FillPolygon(Brushes.Black, points);
+            var cursor = new Cursor(bit.GetHicon());
+            dict[angle] = cursor;
+            return cursor;
         }
 
         private static int NormalizeAngle(int num)

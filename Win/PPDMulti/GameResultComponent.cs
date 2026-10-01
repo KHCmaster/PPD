@@ -283,16 +283,13 @@ namespace PPDMulti
 
             private string ConvertRank(int rank)
             {
-                switch (rank)
+                return rank switch
                 {
-                    case 1:
-                        return "1st";
-                    case 2:
-                        return "2nd";
-                    case 3:
-                        return "3rd";
-                }
-                return String.Format("{0}th", rank);
+                    1 => "1st",
+                    2 => "2nd",
+                    3 => "3rd",
+                    _ => String.Format("{0}th", rank),
+                };
             }
 
             public string UserImagePath

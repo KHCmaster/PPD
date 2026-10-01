@@ -8,16 +8,16 @@ using System.Threading;
 namespace FlowScriptControlTest
 {
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1001:Types that own disposable fields should be disposable", Justification = "止まらなかったスクリプトのスレッドが DebugController を使い続ける可能性があるので破棄しない（イベントのハンドルは GC で解放される）")]
-    class Executor
+    class Executor(ExecuteInfo[] executeInfos, string stdinText)
     {
         public event Action Aborted;
         public event Action Finished;
-        private readonly ExecuteInfo[] executeInfos;
-        private readonly string stdinText;
-        private readonly DebugController controller;
+        private readonly ExecuteInfo[] executeInfos = executeInfos;
+        private readonly string stdinText = stdinText;
+        private readonly DebugController controller = new DebugController();
         private Thread thread;
         private Thread workingThread;
-        private readonly Dictionary<FlowSourceManager, ExecuteInfo> dict;
+        private readonly Dictionary<FlowSourceManager, ExecuteInfo> dict = [];
 
         public DebugController Controller
         {
@@ -33,14 +33,6 @@ namespace FlowScriptControlTest
             {
                 return workingThread != null && workingThread.IsAlive;
             }
-        }
-
-        public Executor(ExecuteInfo[] executeInfos, string stdinText)
-        {
-            this.executeInfos = executeInfos;
-            this.stdinText = stdinText;
-            controller = new DebugController();
-            dict = [];
         }
 
         public ExecuteInfo GetExecuteInfo(FlowSourceManager manager)

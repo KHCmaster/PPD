@@ -10,7 +10,7 @@ namespace FlowScriptEngineBasic.FlowSourceObjects.Logic
         [ToolTipText("Logic_All_Out")]
         public event FlowEventHandler Out;
         private readonly Dictionary<string, bool> connectDict;
-        private readonly string[] methodList = { "In0", "In1", "In2", "In3", "In4", "In5" };
+        private readonly string[] methodList = ["In0", "In1", "In2", "In3", "In4", "In5"];
         public AllFlowSourceObject()
         {
             connectDict = [];

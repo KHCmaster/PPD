@@ -5,19 +5,14 @@ namespace PPDFramework
     /// <summary>
     /// 処分可能なオブジェクトです。
     /// </summary>
-    public sealed class Disposable : IDisposable
+    /// <remarks>
+    /// コンストラクタです。
+    /// </remarks>
+    /// <param name="disposedCallback"></param>
+    public sealed class Disposable(Action disposedCallback) : IDisposable
     {
         bool disposed;
-        readonly Action disposedCallback;
-
-        /// <summary>
-        /// コンストラクタです。
-        /// </summary>
-        /// <param name="disposedCallback"></param>
-        public Disposable(Action disposedCallback)
-        {
-            this.disposedCallback = disposedCallback;
-        }
+        readonly Action disposedCallback = disposedCallback;
 
         /// <summary>
         /// 処分する

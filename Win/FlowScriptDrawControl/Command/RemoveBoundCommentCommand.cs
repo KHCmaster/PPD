@@ -2,13 +2,8 @@
 
 namespace FlowScriptDrawControl.Command
 {
-    class RemoveBoundCommentCommand : BoundCommentCommandBase
+    class RemoveBoundCommentCommand(FlowAreaControl areaControl, SourceControl sourceControl, BoundCommentControl commentControl) : BoundCommentCommandBase(areaControl, sourceControl, commentControl)
     {
-        public RemoveBoundCommentCommand(FlowAreaControl areaControl, SourceControl sourceControl, BoundCommentControl commentControl) :
-            base(areaControl, sourceControl, commentControl)
-        {
-        }
-
         public override void Execute()
         {
             RemoveComment();

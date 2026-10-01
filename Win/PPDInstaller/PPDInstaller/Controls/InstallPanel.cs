@@ -36,7 +36,7 @@ namespace PPDInstaller.Controls
             }
         }
 
-        private void button4_Click(object sender, EventArgs e)
+        private void Button4_Click(object sender, EventArgs e)
         {
             folderBrowserDialog1.SelectedPath = this.textBox1.Text;
             if (folderBrowserDialog1.ShowDialog() == DialogResult.OK) this.textBox1.Text = folderBrowserDialog1.SelectedPath + "\\KHC";

@@ -95,7 +95,7 @@ namespace PPDTest
             SetPropertyToScene(scene);
             scene.Load();
             sceneManager.CurrentScene = scene;
-            TextEditableControl.IMEStarted += control_IMEStarted;
+            TextEditableControl.IMEStarted += Control_IMEStarted;
         }
 
         private void SetPropertyToScene(ISceneBase scene)
@@ -106,7 +106,7 @@ namespace PPDTest
             scene.GameHost = this;
         }
 
-        void control_IMEStarted(object sender, EventArgs e)
+        void Control_IMEStarted(object sender, EventArgs e)
         {
         }
 
@@ -127,8 +127,8 @@ namespace PPDTest
             InputInfoBase inputInfo = null;
             if (IsWindowActive)
             {
-                input.GetInput(new Key[]
-                {
+                input.GetInput(
+                [
                 Key.H,
                 Key.J,
                 Key.K,
@@ -141,9 +141,9 @@ namespace PPDTest
                 Key.E,
                 Key.Escape,
                 Key.Space
-                }, new int[] {
+                ], [
                 0,1,2,3,28024,19024,10024,1024,5,6,9,12
-                }, out inputInfo);
+                ], out inputInfo);
             }
             inputInfo ??= EmptyInputInfo.Instance;
             sceneManager.Update(inputInfo, MouseInfo.Empty, null);

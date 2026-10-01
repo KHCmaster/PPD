@@ -69,7 +69,7 @@ namespace PPDSingle
             gameutility.SpeedScale = 1;
             gameutility.Random = false;
             gameutility.Connect = connect == "1";
-            gameutility.AppliedMods = modInfos.Count > 0 ? modInfos.ToArray() : null;
+            gameutility.AppliedMods = modInfos.Count > 0 ? [.. modInfos] : null;
             float.TryParse(starttime, out float starttimevalue);
             dic = new Dictionary<string, object>
             {
@@ -85,21 +85,15 @@ namespace PPDSingle
         }
         private Difficulty ParseDifficulty(string difficuly)
         {
-            switch (difficuly.ToLower())
+            return difficuly.ToLower() switch
             {
-                case "base":
-                    return Difficulty.Other;
-                case "easy":
-                    return Difficulty.Easy;
-                case "normal":
-                    return Difficulty.Normal;
-                case "hard":
-                    return Difficulty.Hard;
-                case "extreme":
-                    return Difficulty.Extreme;
-                default:
-                    return Difficulty.Other;
-            }
+                "base" => Difficulty.Other,
+                "easy" => Difficulty.Easy,
+                "normal" => Difficulty.Normal,
+                "hard" => Difficulty.Hard,
+                "extreme" => Difficulty.Extreme,
+                _ => Difficulty.Other,
+            };
         }
     }
 }

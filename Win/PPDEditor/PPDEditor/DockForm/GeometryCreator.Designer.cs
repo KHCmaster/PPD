@@ -96,7 +96,7 @@ namespace PPDEditor
             this.checkBox1.TabIndex = 1;
             this.checkBox1.Text = "アンチエイリアスをかける";
             this.checkBox1.UseVisualStyleBackColor = false;
-            this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
+            this.checkBox1.CheckedChanged += new System.EventHandler(this.CheckBox1_CheckedChanged);
             // 
             // bezierControl1
             // 
@@ -112,11 +112,11 @@ namespace PPDEditor
             this.bezierControl1.Controller.TransformScale = ((System.Drawing.PointF)(resources.GetObject("bezierControl1.TransformScale")));
             this.bezierControl1.Controller.TransformTranslation = ((System.Drawing.PointF)(resources.GetObject("bezierControl1.TransformTranslation")));
             this.bezierControl1.AntialiasEnabled = false;
-            this.bezierControl1.Controller.BeforePaint += new BezierDrawControl.BezierController.PaintEventHandler(this.bezierControl1_BeforePaint);
-            this.bezierControl1.Controller.AfterPaint += new BezierDrawControl.BezierController.PaintEventHandler(this.bezierControl1_AfterPaint);
-            this.bezierControl1.Controller.PreprocessPoint += new System.Func<System.Drawing.PointF, System.Drawing.PointF>(this.bezierControl1_PreprocessPoint);
-            this.bezierControl1.MouseLeave += new System.EventHandler(this.bezierControl1_MouseLeave);
-            this.bezierControl1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.bezierControl1_MouseMove);
+            this.bezierControl1.Controller.BeforePaint += new BezierDrawControl.BezierController.PaintEventHandler(this.BezierControl1_BeforePaint);
+            this.bezierControl1.Controller.AfterPaint += new BezierDrawControl.BezierController.PaintEventHandler(this.BezierControl1_AfterPaint);
+            this.bezierControl1.Controller.PreprocessPoint += new System.Func<System.Drawing.PointF, System.Drawing.PointF>(this.BezierControl1_PreprocessPoint);
+            this.bezierControl1.MouseLeave += new System.EventHandler(this.BezierControl1_MouseLeave);
+            this.bezierControl1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.BezierControl1_MouseMove);
             // 
             // checkBox4
             // 
@@ -128,7 +128,7 @@ namespace PPDEditor
             this.checkBox4.TabIndex = 2;
             this.checkBox4.Text = "パスを動かす度に適用する";
             this.checkBox4.UseVisualStyleBackColor = false;
-            this.checkBox4.CheckedChanged += new System.EventHandler(this.checkBox4_CheckedChanged);
+            this.checkBox4.CheckedChanged += new System.EventHandler(this.CheckBox4_CheckedChanged);
             // 
             // button1
             // 
@@ -138,7 +138,7 @@ namespace PPDEditor
             this.button1.TabIndex = 3;
             this.button1.Text = "選択範囲に適用する";
             this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.button1.Click += new System.EventHandler(this.Button1_Click);
             // 
             // groupBox1
             // 
@@ -165,7 +165,7 @@ namespace PPDEditor
             this.label1.Size = new System.Drawing.Size(29, 12);
             this.label1.TabIndex = 17;
             this.label1.Text = "角数";
-            this.label1.ValueChange += new PPDEditor.Controls.ValueChangeEventHandler(this.label1_ValueChange);
+            this.label1.ValueChange += new PPDEditor.Controls.ValueChangeEventHandler(this.Label1_ValueChange);
             // 
             // textBox1
             // 
@@ -183,7 +183,7 @@ namespace PPDEditor
             this.button2.TabIndex = 5;
             this.button2.Text = "生成";
             this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
+            this.button2.Click += new System.EventHandler(this.Button2_Click);
             // 
             // radioButton2
             // 
@@ -221,7 +221,7 @@ namespace PPDEditor
             this.checkBox2.TabIndex = 5;
             this.checkBox2.Text = "位置を描画する";
             this.checkBox2.UseVisualStyleBackColor = false;
-            this.checkBox2.CheckedChanged += new System.EventHandler(this.checkBox2_CheckedChanged);
+            this.checkBox2.CheckedChanged += new System.EventHandler(this.CheckBox2_CheckedChanged);
             // 
             // checkBox3
             // 
@@ -235,7 +235,7 @@ namespace PPDEditor
             this.checkBox3.TabIndex = 6;
             this.checkBox3.Text = "角度を描画する";
             this.checkBox3.UseVisualStyleBackColor = false;
-            this.checkBox3.CheckedChanged += new System.EventHandler(this.checkBox3_CheckedChanged);
+            this.checkBox3.CheckedChanged += new System.EventHandler(this.CheckBox3_CheckedChanged);
             // 
             // groupBox2
             // 
@@ -317,7 +317,7 @@ namespace PPDEditor
             this.button3.TabIndex = 18;
             this.button3.Text = "クリア";
             this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.button3_Click);
+            this.button3.Click += new System.EventHandler(this.Button3_Click);
             // 
             // groupBox3
             // 
@@ -342,7 +342,7 @@ namespace PPDEditor
             this.textBox2.Size = new System.Drawing.Size(24, 19);
             this.textBox2.TabIndex = 18;
             this.textBox2.Text = "30";
-            this.textBox2.TextChanged += new System.EventHandler(this.textBox2_TextChanged);
+            this.textBox2.TextChanged += new System.EventHandler(this.TextBox2_TextChanged);
             // 
             // radioButton11
             // 
@@ -354,7 +354,7 @@ namespace PPDEditor
             this.radioButton11.TabIndex = 26;
             this.radioButton11.Text = "４分固定距離";
             this.radioButton11.UseVisualStyleBackColor = false;
-            this.radioButton11.CheckedChanged += new System.EventHandler(this.radioButton11_CheckedChanged);
+            this.radioButton11.CheckedChanged += new System.EventHandler(this.RadioButton11_CheckedChanged);
             // 
             // radioButton10
             // 
@@ -492,7 +492,7 @@ namespace PPDEditor
             this.toolStripButton4.Name = "toolStripButton4";
             this.toolStripButton4.Size = new System.Drawing.Size(84, 22);
             this.toolStripButton4.Text = "既定値に戻す";
-            this.toolStripButton4.Click += new System.EventHandler(this.toolStripButton4_Click);
+            this.toolStripButton4.Click += new System.EventHandler(this.ToolStripButton4_Click);
             // 
             // numericUpDown1
             // 
@@ -506,7 +506,7 @@ namespace PPDEditor
             this.numericUpDown1.Size = new System.Drawing.Size(39, 19);
             this.numericUpDown1.TabIndex = 21;
             this.numericUpDown1.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.numericUpDown1.ValueChanged += new System.EventHandler(this.numericUpDown1_ValueChanged);
+            this.numericUpDown1.ValueChanged += new System.EventHandler(this.NumericUpDown1_ValueChanged);
             // 
             // label2
             // 
@@ -528,7 +528,7 @@ namespace PPDEditor
             this.checkBox5.TabIndex = 23;
             this.checkBox5.Text = "グリッドを表示";
             this.checkBox5.UseVisualStyleBackColor = false;
-            this.checkBox5.CheckedChanged += new System.EventHandler(this.checkBox5_CheckedChanged);
+            this.checkBox5.CheckedChanged += new System.EventHandler(this.CheckBox5_CheckedChanged);
             // 
             // button4
             // 
@@ -538,7 +538,7 @@ namespace PPDEditor
             this.button4.TabIndex = 24;
             this.button4.Text = "グリッドの設定";
             this.button4.UseVisualStyleBackColor = true;
-            this.button4.Click += new System.EventHandler(this.button4_Click);
+            this.button4.Click += new System.EventHandler(this.Button4_Click);
             // 
             // GeometryCreator
             // 

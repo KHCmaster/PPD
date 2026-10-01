@@ -13,13 +13,13 @@ namespace PPDEditor.Forms
             this.Text = Utility.Language["LMNewLayer"];
             this.label1.Text = Utility.Language["LMNewLayerName"];
         }
-        private void button1_MouseClick(object sender, MouseEventArgs e)
+        private void Button1_MouseClick(object sender, MouseEventArgs e)
         {
             DialogResult = DialogResult.OK;
             this.Close();
         }
 
-        private void button2_MouseClick(object sender, MouseEventArgs e)
+        private void Button2_MouseClick(object sender, MouseEventArgs e)
         {
             DialogResult = DialogResult.Cancel;
             this.Close();
@@ -36,7 +36,7 @@ namespace PPDEditor.Forms
             }
         }
 
-        private void textBox1_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+        private void TextBox1_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
         {
             if (e.KeyCode == Keys.Return)
             {

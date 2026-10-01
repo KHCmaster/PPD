@@ -40,7 +40,7 @@ namespace BMSTOPPD
             }
             sr.Close();
         }
-        public void savedata()
+        public void Savedata()
         {
             var sw = new StreamWriter("setting.ini");
             for (int i = 0; i < 10; i++)

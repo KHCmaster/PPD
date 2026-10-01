@@ -6,18 +6,13 @@ namespace PPDFramework
     /// <summary>
     /// バインド可能なゲームコンポーネントです。
     /// </summary>
-    public abstract class BindableGameComponent : GameComponent
+    /// <remarks>
+    /// コンストラクタです。
+    /// </remarks>
+    /// <param name="device"></param>
+    public abstract class BindableGameComponent(PPDDevice device) : GameComponent(device)
     {
-        readonly List<Binding> bindings;
-
-        /// <summary>
-        /// コンストラクタです。
-        /// </summary>
-        /// <param name="device"></param>
-        protected BindableGameComponent(PPDDevice device) : base(device)
-        {
-            bindings = [];
-        }
+        readonly List<Binding> bindings = [];
 
         /// <summary>
         /// バインディングを追加します。

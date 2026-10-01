@@ -4,10 +4,10 @@ using System.Linq;
 
 namespace PPDEditorCommon.Dialog.ViewModel
 {
-    public class SettingWindowViewModel : ObservableObject
+    public class SettingWindowViewModel(string title) : ObservableObject
     {
         private bool isOkEnabled;
-        private readonly List<SettingViewModelBase> settings;
+        private readonly List<SettingViewModelBase> settings = [];
 
         public object this[string key]
         {
@@ -21,7 +21,7 @@ namespace PPDEditorCommon.Dialog.ViewModel
         {
             get
             {
-                return settings.Select(s => new KeyValuePair<object, object>(s.Name, s.ValidatedValue)).ToArray();
+                return [.. settings.Select(s => new KeyValuePair<object, object>(s.Name, s.ValidatedValue))];
 
             }
         }
@@ -36,7 +36,7 @@ namespace PPDEditorCommon.Dialog.ViewModel
         {
             get;
             private set;
-        }
+        } = title;
 
         public bool IsOkEnabled
         {
@@ -51,18 +51,12 @@ namespace PPDEditorCommon.Dialog.ViewModel
             }
         }
 
-        public SettingWindowViewModel(string title)
-        {
-            Title = title;
-            settings = [];
-        }
-
         public void Initialize()
         {
             Settings = settings.ToArray();
             foreach (var setting in settings)
             {
-                setting.PropertyChanged += setting_PropertyChanged;
+                setting.PropertyChanged += Setting_PropertyChanged;
             }
             IsOkEnabled = true;
         }
@@ -107,7 +101,7 @@ namespace PPDEditorCommon.Dialog.ViewModel
             settings.Add(settingViewModel);
         }
 
-        void setting_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        void Setting_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             if (e.PropertyName == "IsValidated")
             {

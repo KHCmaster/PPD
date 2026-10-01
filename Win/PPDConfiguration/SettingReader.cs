@@ -84,7 +84,7 @@ namespace PPDConfiguration
             var regex = new Regex(@"^\[([^\]]+)\](.*)");
             var key = "";
             var datas = new List<string>();
-            Action addData = () =>
+            void addData()
             {
                 if (datas.Count > 0 && !String.IsNullOrEmpty(key))
                 {
@@ -98,7 +98,7 @@ namespace PPDConfiguration
                 }
                 datas.Clear();
                 key = "";
-            };
+            }
             foreach (var line in data.Split('\n'))
             {
                 var match = regex.Match(line);

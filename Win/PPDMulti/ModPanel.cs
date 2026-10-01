@@ -475,7 +475,7 @@ namespace PPDMulti
             return !Hidden && OverFocused;
         }
 
-        public class ModInfoComponentBase : GameComponent
+        public class ModInfoComponentBase(PPDDevice device, PPDFramework.Mod.ModInfoBase modInfo) : GameComponent(device)
         {
             protected TextureString text;
             private bool selected;
@@ -497,12 +497,7 @@ namespace PPDMulti
             {
                 get;
                 private set;
-            }
-
-            public ModInfoComponentBase(PPDDevice device, PPDFramework.Mod.ModInfoBase modInfo) : base(device)
-            {
-                ModInfoBase = modInfo;
-            }
+            } = modInfo;
 
             public virtual void UpdateInfo()
             {

@@ -3,7 +3,7 @@ using PPDMath;
 
 namespace PPDEditor.Command.PPDSheet
 {
-    class ChangeMarkPosOrAngleCommand : Command
+    class ChangeMarkPosOrAngleCommand(Mark mk, ChangeMarkPosOrAngleCommand.TransType transType, Vector2 position, float rotation) : Command
     {
         public enum TransType
         {
@@ -11,22 +11,12 @@ namespace PPDEditor.Command.PPDSheet
             Rotation = 1
         }
 
-        private readonly Mark mk;
-        private readonly TransType transType;
-        private Vector2 position;
-        private float rotation;
-        private Vector2 lastPosition;
-        private readonly float lastRotation;
-
-        public ChangeMarkPosOrAngleCommand(Mark mk, TransType transType, Vector2 position, float rotation)
-        {
-            this.mk = mk;
-            this.transType = transType;
-            this.position = position;
-            this.rotation = rotation;
-            lastPosition = mk.Position;
-            lastRotation = mk.Rotation;
-        }
+        private readonly Mark mk = mk;
+        private readonly TransType transType = transType;
+        private Vector2 position = position;
+        private float rotation = rotation;
+        private Vector2 lastPosition = mk.Position;
+        private readonly float lastRotation = mk.Rotation;
 
         public Mark Mark
         {

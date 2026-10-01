@@ -71,7 +71,7 @@ namespace FlowScriptEngine
         public void Serialize(XElement element, object value)
         {
             Type type = null;
-            string typeText = "";
+            string typeText;
             if (value == null)
             {
                 typeText = "(null)";

@@ -43,40 +43,38 @@ namespace PPDFramework.Shaders
         /// <param name="size"></param>
         public void Draw(PPDDevice device, WorkspaceTexture filterTexture, int size)
         {
-            using (var workspaceTexture = device.Workspace.Get())
-            using (var xTexture = device.Workspace.Get())
-            {
+            using var workspaceTexture = device.Workspace.Get();
+            using var xTexture = device.Workspace.Get();
 #if BENCHMARK
                 using (var handler = Benchmark.Instance.Start("Copy"))
                 {
 #endif
-                    device.StretchRectangle(device.GetRenderTarget(), workspaceTexture);
+            device.StretchRectangle(device.GetRenderTarget(), workspaceTexture);
 #if BENCHMARK
                 }
 #endif
-                var renderTarget = device.GetRenderTarget();
-                device.SetRenderTarget(xTexture);
-                device.Clear();
-                effect.Technique = "Mosaic";
-                effect.SetTexture(filterTextureHandle, filterTexture.Texture);
-                effect.SetTexture(lastRenderTargetTextureHandle, workspaceTexture.Texture);
-                effect.SetValue(sizeHandle, size);
-                var passCount = effect.Begin();
-                effect.BeginPass(0);
-                effect.CommitChanges();
-                device.VertexDeclaration = effect.VertexDeclaration;
-                var screenVertex = device.GetModule<ShaderCommon>().ScreenVertex;
-                device.SetStreamSource(screenVertex.VertexBucket.VertexBuffer);
-                device.DrawPrimitives(PrimitiveType.TriangleStrip, screenVertex.Offset, 2);
-                effect.EndPass();
-                device.SetRenderTarget(renderTarget);
-                effect.SetTexture(xTextureHandle, xTexture.Texture);
-                effect.BeginPass(1);
-                effect.CommitChanges();
-                device.DrawPrimitives(PrimitiveType.TriangleStrip, screenVertex.Offset, 2);
-                effect.EndPass();
-                effect.End();
-            }
+            var renderTarget = device.GetRenderTarget();
+            device.SetRenderTarget(xTexture);
+            device.Clear();
+            effect.Technique = "Mosaic";
+            effect.SetTexture(filterTextureHandle, filterTexture.Texture);
+            effect.SetTexture(lastRenderTargetTextureHandle, workspaceTexture.Texture);
+            effect.SetValue(sizeHandle, size);
+            var passCount = effect.Begin();
+            effect.BeginPass(0);
+            effect.CommitChanges();
+            device.VertexDeclaration = effect.VertexDeclaration;
+            var screenVertex = device.GetModule<ShaderCommon>().ScreenVertex;
+            device.SetStreamSource(screenVertex.VertexBucket.VertexBuffer);
+            device.DrawPrimitives(PrimitiveType.TriangleStrip, screenVertex.Offset, 2);
+            effect.EndPass();
+            device.SetRenderTarget(renderTarget);
+            effect.SetTexture(xTextureHandle, xTexture.Texture);
+            effect.BeginPass(1);
+            effect.CommitChanges();
+            device.DrawPrimitives(PrimitiveType.TriangleStrip, screenVertex.Offset, 2);
+            effect.EndPass();
+            effect.End();
         }
 
         /// <summary>

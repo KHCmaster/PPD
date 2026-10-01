@@ -87,7 +87,7 @@ namespace PPDInstaller.Controls
             var s = sr.ReadToEnd();
             sr.Close();
             var setting = new SettingReader(s);
-            string temp = "";
+            string temp;
             if ((temp = setting["PPDVersion"].Trim()) != "") ppdCheckBox.Checked = PPDVersion != temp;
             if ((temp = setting["BMSTOPPDVersion"].Trim()) != "") bmsTOPPDCheckBox.Checked = BMSTOPPDVersion != temp;
         }
@@ -116,7 +116,7 @@ namespace PPDInstaller.Controls
             }
         }
 
-        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void LinkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo("http://ossipedia.ipa.go.jp/ipafont/index.html") { UseShellExecute = true });
         }

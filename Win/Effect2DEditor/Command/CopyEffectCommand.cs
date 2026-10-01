@@ -2,14 +2,9 @@
 
 namespace Effect2DEditor.Command
 {
-    class CopyEffectCommand : CommandBase
+    class CopyEffectCommand(EffectManager manager, string exp, SelectedManager SManager) : CommandBase(manager, exp)
     {
-        readonly SelectedManager SManager;
-        public CopyEffectCommand(EffectManager manager, string exp, SelectedManager SManager)
-            : base(manager, exp)
-        {
-            this.SManager = SManager;
-        }
+        readonly SelectedManager SManager = SManager;
 
         public override void Undo()
         {

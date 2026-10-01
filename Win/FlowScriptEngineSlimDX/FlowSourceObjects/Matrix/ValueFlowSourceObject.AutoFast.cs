@@ -10,45 +10,27 @@ namespace FlowScriptEngineSlimDX.FlowSourceObjects.Matrix
     {
         public override object GetPropertyValue(string propertyName)
         {
-            switch (propertyName)
+            return propertyName switch
             {
-                case "M11":
-                    return M11;
-                case "M12":
-                    return M12;
-                case "M13":
-                    return M13;
-                case "M14":
-                    return M14;
-                case "M21":
-                    return M21;
-                case "M22":
-                    return M22;
-                case "M23":
-                    return M23;
-                case "M24":
-                    return M24;
-                case "M31":
-                    return M31;
-                case "M32":
-                    return M32;
-                case "M33":
-                    return M33;
-                case "M34":
-                    return M34;
-                case "M41":
-                    return M41;
-                case "M42":
-                    return M42;
-                case "M43":
-                    return M43;
-                case "M44":
-                    return M44;
-                case "Value":
-                    return Value;
-                default:
-                    return null;
-            }
+                "M11" => M11,
+                "M12" => M12,
+                "M13" => M13,
+                "M14" => M14,
+                "M21" => M21,
+                "M22" => M22,
+                "M23" => M23,
+                "M24" => M24,
+                "M31" => M31,
+                "M32" => M32,
+                "M33" => M33,
+                "M34" => M34,
+                "M41" => M41,
+                "M42" => M42,
+                "M43" => M43,
+                "M44" => M44,
+                "Value" => Value,
+                _ => null,
+            };
         }
 
         protected override void SetPropertyValue(string propertyName, object value)

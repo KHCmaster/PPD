@@ -10,11 +10,11 @@ namespace PPDMultiCommon.Tcp
 
     public class TcpByteReader
     {
-        static readonly byte[] PPDPACK = { (byte)'P', (byte)'P', (byte)'D', (byte)'P', (byte)'A', (byte)'C', (byte)'K' };
+        static readonly byte[] PPDPACK = [(byte)'P', (byte)'P', (byte)'D', (byte)'P', (byte)'A', (byte)'C', (byte)'K'];
 
         public event ByteReadedEventHandler ByteReaded;
         private readonly Dictionary<int, byte[]> lastArrayDictionary = [];
-        private readonly object lockObject = new();
+        private readonly Lock lockObject = new();
 
         public void Read(byte[] data, int id)
         {

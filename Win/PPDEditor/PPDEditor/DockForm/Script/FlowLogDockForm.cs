@@ -28,7 +28,7 @@ namespace PPDEditor.DockForm.Script
             dataGridView1.Rows.Clear();
         }
 
-        private void clearToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ClearToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ClearLogs();
         }

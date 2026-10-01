@@ -324,21 +324,21 @@ namespace PPDEditor.Forms
             this.ppdToolStripMenuItem.Name = "ppdToolStripMenuItem";
             this.ppdToolStripMenuItem.Size = new System.Drawing.Size(123, 22);
             this.ppdToolStripMenuItem.Text = "*.ppd";
-            this.ppdToolStripMenuItem.Click += new System.EventHandler(this.ppdToolStripMenuItem_Click);
+            this.ppdToolStripMenuItem.Click += new System.EventHandler(this.PpdToolStripMenuItem_Click);
             // 
             // movieToolStripMenuItem
             // 
             this.movieToolStripMenuItem.Name = "movieToolStripMenuItem";
             this.movieToolStripMenuItem.Size = new System.Drawing.Size(123, 22);
             this.movieToolStripMenuItem.Text = "movie.*";
-            this.movieToolStripMenuItem.Click += new System.EventHandler(this.movieToolStripMenuItem_Click);
+            this.movieToolStripMenuItem.Click += new System.EventHandler(this.MovieToolStripMenuItem_Click);
             // 
             // kasitxtToolStripMenuItem1
             // 
             this.kasitxtToolStripMenuItem1.Name = "kasitxtToolStripMenuItem1";
             this.kasitxtToolStripMenuItem1.Size = new System.Drawing.Size(123, 22);
             this.kasitxtToolStripMenuItem1.Text = "kasi.txt";
-            this.kasitxtToolStripMenuItem1.Click += new System.EventHandler(this.kasitxtToolStripMenuItem1_Click);
+            this.kasitxtToolStripMenuItem1.Click += new System.EventHandler(this.KasitxtToolStripMenuItem1_Click);
             // 
             // datainiToolStripMenuItem1
             // 
@@ -346,14 +346,14 @@ namespace PPDEditor.Forms
             this.datainiToolStripMenuItem1.Name = "datainiToolStripMenuItem1";
             this.datainiToolStripMenuItem1.Size = new System.Drawing.Size(123, 22);
             this.datainiToolStripMenuItem1.Text = "data.ini";
-            this.datainiToolStripMenuItem1.Click += new System.EventHandler(this.datainiToolStripMenuItem1_Click);
+            this.datainiToolStripMenuItem1.Click += new System.EventHandler(this.DatainiToolStripMenuItem1_Click);
             // 
             // evdToolStripMenuItem1
             // 
             this.evdToolStripMenuItem1.Name = "evdToolStripMenuItem1";
             this.evdToolStripMenuItem1.Size = new System.Drawing.Size(123, 22);
             this.evdToolStripMenuItem1.Text = "*.evd";
-            this.evdToolStripMenuItem1.Click += new System.EventHandler(this.evdToolStripMenuItem1_Click);
+            this.evdToolStripMenuItem1.Click += new System.EventHandler(this.EvdToolStripMenuItem1_Click);
             // 
             // 保存ToolStripMenuItem
             // 
@@ -373,28 +373,28 @@ namespace PPDEditor.Forms
             this.ppdToolStripMenuItem1.Name = "ppdToolStripMenuItem1";
             this.ppdToolStripMenuItem1.Size = new System.Drawing.Size(149, 22);
             this.ppdToolStripMenuItem1.Text = "*.ppd";
-            this.ppdToolStripMenuItem1.Click += new System.EventHandler(this.ppdToolStripMenuItem1_Click);
+            this.ppdToolStripMenuItem1.Click += new System.EventHandler(this.PpdToolStripMenuItem1_Click);
             // 
             // kasitxtToolStripMenuItem
             // 
             this.kasitxtToolStripMenuItem.Name = "kasitxtToolStripMenuItem";
             this.kasitxtToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
             this.kasitxtToolStripMenuItem.Text = "kasi.txt";
-            this.kasitxtToolStripMenuItem.Click += new System.EventHandler(this.kasitxtToolStripMenuItem_Click);
+            this.kasitxtToolStripMenuItem.Click += new System.EventHandler(this.KasitxtToolStripMenuItem_Click);
             // 
             // soundsettxtToolStripMenuItem
             // 
             this.soundsettxtToolStripMenuItem.Name = "soundsettxtToolStripMenuItem";
             this.soundsettxtToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
             this.soundsettxtToolStripMenuItem.Text = "soundset.txt";
-            this.soundsettxtToolStripMenuItem.Click += new System.EventHandler(this.soundsettxtToolStripMenuItem_Click);
+            this.soundsettxtToolStripMenuItem.Click += new System.EventHandler(this.SoundsettxtToolStripMenuItem_Click);
             // 
             // scdToolStripMenuItem
             // 
             this.scdToolStripMenuItem.Name = "scdToolStripMenuItem";
             this.scdToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
             this.scdToolStripMenuItem.Text = "*.scd";
-            this.scdToolStripMenuItem.Click += new System.EventHandler(this.scdToolStripMenuItem_Click);
+            this.scdToolStripMenuItem.Click += new System.EventHandler(this.ScdToolStripMenuItem_Click);
             // 
             // datainiToolStripMenuItem
             // 
@@ -402,14 +402,14 @@ namespace PPDEditor.Forms
             this.datainiToolStripMenuItem.Name = "datainiToolStripMenuItem";
             this.datainiToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
             this.datainiToolStripMenuItem.Text = "data.ini";
-            this.datainiToolStripMenuItem.Click += new System.EventHandler(this.datainiToolStripMenuItem_Click);
+            this.datainiToolStripMenuItem.Click += new System.EventHandler(this.DatainiToolStripMenuItem_Click);
             // 
             // evdToolStripMenuItem
             // 
             this.evdToolStripMenuItem.Name = "evdToolStripMenuItem";
             this.evdToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
             this.evdToolStripMenuItem.Text = "*.evd";
-            this.evdToolStripMenuItem.Click += new System.EventHandler(this.evdToolStripMenuItem_Click);
+            this.evdToolStripMenuItem.Click += new System.EventHandler(this.EvdToolStripMenuItem_Click);
             // 
             // インポートToolStripMenuItem
             // 
@@ -438,35 +438,35 @@ namespace PPDEditor.Forms
             this.easyToolStripMenuItem1.Name = "easyToolStripMenuItem1";
             this.easyToolStripMenuItem1.Size = new System.Drawing.Size(148, 22);
             this.easyToolStripMenuItem1.Text = "Easy";
-            this.easyToolStripMenuItem1.Click += new System.EventHandler(this.easyToolStripMenuItem1_Click);
+            this.easyToolStripMenuItem1.Click += new System.EventHandler(this.EasyToolStripMenuItem1_Click);
             // 
             // normalToolStripMenuItem1
             // 
             this.normalToolStripMenuItem1.Name = "normalToolStripMenuItem1";
             this.normalToolStripMenuItem1.Size = new System.Drawing.Size(148, 22);
             this.normalToolStripMenuItem1.Text = "Normal";
-            this.normalToolStripMenuItem1.Click += new System.EventHandler(this.normalToolStripMenuItem1_Click);
+            this.normalToolStripMenuItem1.Click += new System.EventHandler(this.NormalToolStripMenuItem1_Click);
             // 
             // hardToolStripMenuItem1
             // 
             this.hardToolStripMenuItem1.Name = "hardToolStripMenuItem1";
             this.hardToolStripMenuItem1.Size = new System.Drawing.Size(148, 22);
             this.hardToolStripMenuItem1.Text = "Hard";
-            this.hardToolStripMenuItem1.Click += new System.EventHandler(this.hardToolStripMenuItem1_Click);
+            this.hardToolStripMenuItem1.Click += new System.EventHandler(this.HardToolStripMenuItem1_Click);
             // 
             // extremeToolStripMenuItem1
             // 
             this.extremeToolStripMenuItem1.Name = "extremeToolStripMenuItem1";
             this.extremeToolStripMenuItem1.Size = new System.Drawing.Size(148, 22);
             this.extremeToolStripMenuItem1.Text = "Extreme";
-            this.extremeToolStripMenuItem1.Click += new System.EventHandler(this.extremeToolStripMenuItem1_Click);
+            this.extremeToolStripMenuItem1.Click += new System.EventHandler(this.ExtremeToolStripMenuItem1_Click);
             // 
             // baseToolStripMenuItem1
             // 
             this.baseToolStripMenuItem1.Name = "baseToolStripMenuItem1";
             this.baseToolStripMenuItem1.Size = new System.Drawing.Size(148, 22);
             this.baseToolStripMenuItem1.Text = "Base";
-            this.baseToolStripMenuItem1.Click += new System.EventHandler(this.baseToolStripMenuItem1_Click);
+            this.baseToolStripMenuItem1.Click += new System.EventHandler(this.BaseToolStripMenuItem1_Click);
             // 
             // 別のファイルToolStripMenuItem
             // 
@@ -489,7 +489,7 @@ namespace PPDEditor.Forms
             this.mODを発行ToolStripMenuItem.Name = "mODを発行ToolStripMenuItem";
             this.mODを発行ToolStripMenuItem.Size = new System.Drawing.Size(267, 22);
             this.mODを発行ToolStripMenuItem.Text = "MODを発行";
-            this.mODを発行ToolStripMenuItem.Click += new System.EventHandler(this.mODを発行ToolStripMenuItem_Click);
+            this.mODを発行ToolStripMenuItem.Click += new System.EventHandler(this.MODを発行ToolStripMenuItem_Click);
             // 
             // toolStripSeparator4
             // 
@@ -714,7 +714,7 @@ namespace PPDEditor.Forms
             this.bPMToolStripMenuItem.Name = "bPMToolStripMenuItem";
             this.bPMToolStripMenuItem.Size = new System.Drawing.Size(220, 22);
             this.bPMToolStripMenuItem.Text = "BPM測定";
-            this.bPMToolStripMenuItem.Click += new System.EventHandler(this.bPMToolStripMenuItem_Click);
+            this.bPMToolStripMenuItem.Click += new System.EventHandler(this.BPMToolStripMenuItem_Click);
             // 
             // レイヤーマネージャーToolStripMenuItem
             // 
@@ -854,7 +854,7 @@ namespace PPDEditor.Forms
             this.pPDプロセスを強制終了ToolStripMenuItem.Name = "pPDプロセスを強制終了ToolStripMenuItem";
             this.pPDプロセスを強制終了ToolStripMenuItem.Size = new System.Drawing.Size(277, 22);
             this.pPDプロセスを強制終了ToolStripMenuItem.Text = "PPDプロセスを強制終了";
-            this.pPDプロセスを強制終了ToolStripMenuItem.Click += new System.EventHandler(this.pPDプロセスを強制終了ToolStripMenuItem_Click);
+            this.pPDプロセスを強制終了ToolStripMenuItem.Click += new System.EventHandler(this.PPDプロセスを強制終了ToolStripMenuItem_Click);
             this.pPDプロセスを強制終了ToolStripMenuItem.Enabled = false;
             // 
             // toolStripSeparator1
@@ -867,7 +867,7 @@ namespace PPDEditor.Forms
             this.connectToolStripMenuItem.Name = "connectToolStripMenuItem";
             this.connectToolStripMenuItem.Size = new System.Drawing.Size(277, 22);
             this.connectToolStripMenuItem.Text = "Connect";
-            this.connectToolStripMenuItem.Click += new System.EventHandler(this.connectToolStripMenuItem_Click);
+            this.connectToolStripMenuItem.Click += new System.EventHandler(this.ConnectToolStripMenuItem_Click);
             // 
             // mODToolStripMenuItem
             // 
@@ -885,7 +885,7 @@ namespace PPDEditor.Forms
             this.disableExpansionToolStripMenuItem.Name = "disableExpansionToolStripMenuItem";
             this.disableExpansionToolStripMenuItem.Size = new System.Drawing.Size(277, 22);
             this.disableExpansionToolStripMenuItem.Text = "Expansionを起動しない";
-            this.disableExpansionToolStripMenuItem.Click += new System.EventHandler(this.disableExpansionToolStripMenuItem_Click);
+            this.disableExpansionToolStripMenuItem.Click += new System.EventHandler(this.DisableExpansionToolStripMenuItem_Click);
             // 
             // 難易度ToolStripMenuItem
             // 
@@ -907,7 +907,7 @@ namespace PPDEditor.Forms
             this.easyToolStripMenuItem.Name = "easyToolStripMenuItem";
             this.easyToolStripMenuItem.Size = new System.Drawing.Size(196, 22);
             this.easyToolStripMenuItem.Text = "Easy";
-            this.easyToolStripMenuItem.Click += new System.EventHandler(this.easyToolStripMenuItem_Click);
+            this.easyToolStripMenuItem.Click += new System.EventHandler(this.EasyToolStripMenuItem_Click);
             // 
             // normalToolStripMenuItem
             // 
@@ -915,7 +915,7 @@ namespace PPDEditor.Forms
             this.normalToolStripMenuItem.Name = "normalToolStripMenuItem";
             this.normalToolStripMenuItem.Size = new System.Drawing.Size(196, 22);
             this.normalToolStripMenuItem.Text = "Normal";
-            this.normalToolStripMenuItem.Click += new System.EventHandler(this.normalToolStripMenuItem_Click);
+            this.normalToolStripMenuItem.Click += new System.EventHandler(this.NormalToolStripMenuItem_Click);
             // 
             // hardToolStripMenuItem
             // 
@@ -923,7 +923,7 @@ namespace PPDEditor.Forms
             this.hardToolStripMenuItem.Name = "hardToolStripMenuItem";
             this.hardToolStripMenuItem.Size = new System.Drawing.Size(196, 22);
             this.hardToolStripMenuItem.Text = "Hard";
-            this.hardToolStripMenuItem.Click += new System.EventHandler(this.hardToolStripMenuItem_Click);
+            this.hardToolStripMenuItem.Click += new System.EventHandler(this.HardToolStripMenuItem_Click);
             // 
             // extremeToolStripMenuItem
             // 
@@ -931,14 +931,14 @@ namespace PPDEditor.Forms
             this.extremeToolStripMenuItem.Name = "extremeToolStripMenuItem";
             this.extremeToolStripMenuItem.Size = new System.Drawing.Size(196, 22);
             this.extremeToolStripMenuItem.Text = "Extreme";
-            this.extremeToolStripMenuItem.Click += new System.EventHandler(this.extremeToolStripMenuItem_Click);
+            this.extremeToolStripMenuItem.Click += new System.EventHandler(this.ExtremeToolStripMenuItem_Click);
             // 
             // baseToolStripMenuItem
             // 
             this.baseToolStripMenuItem.Name = "baseToolStripMenuItem";
             this.baseToolStripMenuItem.Size = new System.Drawing.Size(196, 22);
             this.baseToolStripMenuItem.Text = "Base";
-            this.baseToolStripMenuItem.Click += new System.EventHandler(this.baseToolStripMenuItem_Click);
+            this.baseToolStripMenuItem.Click += new System.EventHandler(this.BaseToolStripMenuItem_Click);
             // 
             // 現在の難易度をコピーToolStripMenuItem
             // 
@@ -1127,7 +1127,7 @@ namespace PPDEditor.Forms
             this.toolStripTextBox1.Size = new System.Drawing.Size(100, 26);
             this.toolStripTextBox1.Text = "100";
             this.toolStripTextBox1.ToolTipText = "BPM";
-            this.toolStripTextBox1.TextChanged += new System.EventHandler(this.toolStripTextBox1_TextChanged);
+            this.toolStripTextBox1.TextChanged += new System.EventHandler(this.ToolStripTextBox1_TextChanged);
             // 
             // toolStripTextBox2
             // 
@@ -1135,7 +1135,7 @@ namespace PPDEditor.Forms
             this.toolStripTextBox2.Size = new System.Drawing.Size(100, 26);
             this.toolStripTextBox2.Text = "0";
             this.toolStripTextBox2.ToolTipText = "BPM offset(1/BPM)";
-            this.toolStripTextBox2.TextChanged += new System.EventHandler(this.toolStripTextBox2_TextChanged);
+            this.toolStripTextBox2.TextChanged += new System.EventHandler(this.ToolStripTextBox2_TextChanged);
             // 
             // toolStripTextBox3
             // 
@@ -1143,7 +1143,7 @@ namespace PPDEditor.Forms
             this.toolStripTextBox3.Size = new System.Drawing.Size(100, 26);
             this.toolStripTextBox3.Text = "240";
             this.toolStripTextBox3.ToolTipText = "タイムラインの幅";
-            this.toolStripTextBox3.TextChanged += new System.EventHandler(this.toolStripTextBox3_TextChanged);
+            this.toolStripTextBox3.TextChanged += new System.EventHandler(this.ToolStripTextBox3_TextChanged);
             // 
             // toolStripSeparator2
             // 
@@ -1165,7 +1165,7 @@ namespace PPDEditor.Forms
             "４８分の１拍子まで表示"});
             this.toolStripComboBox1.Name = "toolStripComboBox1";
             this.toolStripComboBox1.Size = new System.Drawing.Size(180, 26);
-            this.toolStripComboBox1.SelectedIndexChanged += new System.EventHandler(this.toolStripComboBox1_SelectedIndexChanged);
+            this.toolStripComboBox1.SelectedIndexChanged += new System.EventHandler(this.ToolStripComboBox1_SelectedIndexChanged);
             // 
             // toolStripComboBox3
             // 
@@ -1177,7 +1177,7 @@ namespace PPDEditor.Forms
             "5拍子"});
             this.toolStripComboBox3.Name = "toolStripComboBox3";
             this.toolStripComboBox3.Size = new System.Drawing.Size(150, 26);
-            this.toolStripComboBox3.SelectedIndexChanged += new System.EventHandler(this.toolStripComboBox3_SelectedIndexChanged);
+            this.toolStripComboBox3.SelectedIndexChanged += new System.EventHandler(this.ToolStripComboBox3_SelectedIndexChanged);
             // 
             // toolStripComboBox2
             // 
@@ -1192,7 +1192,7 @@ namespace PPDEditor.Forms
             "x 2.0"});
             this.toolStripComboBox2.Name = "toolStripComboBox2";
             this.toolStripComboBox2.Size = new System.Drawing.Size(75, 26);
-            this.toolStripComboBox2.SelectedIndexChanged += new System.EventHandler(this.toolStripComboBox2_SelectedIndexChanged);
+            this.toolStripComboBox2.SelectedIndexChanged += new System.EventHandler(this.ToolStripComboBox2_SelectedIndexChanged);
             // 
             // toolStripSeparator3
             // 
@@ -1265,7 +1265,7 @@ namespace PPDEditor.Forms
             this.pxToolStripMenuItem1.Name = "pxToolStripMenuItem1";
             this.pxToolStripMenuItem1.Size = new System.Drawing.Size(124, 22);
             this.pxToolStripMenuItem1.Text = "10px";
-            this.pxToolStripMenuItem1.Click += new System.EventHandler(this.pxToolStripMenuItem1_Click);
+            this.pxToolStripMenuItem1.Click += new System.EventHandler(this.PxToolStripMenuItem1_Click);
             // 
             // pxToolStripMenuItem2
             // 
@@ -1273,7 +1273,7 @@ namespace PPDEditor.Forms
             this.pxToolStripMenuItem2.Name = "pxToolStripMenuItem2";
             this.pxToolStripMenuItem2.Size = new System.Drawing.Size(124, 22);
             this.pxToolStripMenuItem2.Text = "20px";
-            this.pxToolStripMenuItem2.Click += new System.EventHandler(this.pxToolStripMenuItem2_Click);
+            this.pxToolStripMenuItem2.Click += new System.EventHandler(this.PxToolStripMenuItem2_Click);
             // 
             // pxToolStripMenuItem3
             // 
@@ -1281,7 +1281,7 @@ namespace PPDEditor.Forms
             this.pxToolStripMenuItem3.Name = "pxToolStripMenuItem3";
             this.pxToolStripMenuItem3.Size = new System.Drawing.Size(124, 22);
             this.pxToolStripMenuItem3.Text = "50px";
-            this.pxToolStripMenuItem3.Click += new System.EventHandler(this.pxToolStripMenuItem3_Click);
+            this.pxToolStripMenuItem3.Click += new System.EventHandler(this.PxToolStripMenuItem3_Click);
             // 
             // 詳細設定ToolStripMenuItem
             // 
@@ -1303,7 +1303,7 @@ namespace PPDEditor.Forms
             this.toolStripSplitButton1.Name = "toolStripSplitButton1";
             this.toolStripSplitButton1.Size = new System.Drawing.Size(32, 23);
             this.toolStripSplitButton1.Text = "toolStripSplitButton1";
-            this.toolStripSplitButton1.CheckStateChanged += new System.EventHandler(this.toolStripSplitButton1_CheckStateChanged);
+            this.toolStripSplitButton1.CheckStateChanged += new System.EventHandler(this.ToolStripSplitButton1_CheckStateChanged);
             // 
             // 詳細設定ToolStripMenuItem2
             // 
@@ -1330,7 +1330,7 @@ namespace PPDEditor.Forms
             this.pxToolStripMenuItem.Name = "pxToolStripMenuItem";
             this.pxToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.pxToolStripMenuItem.Text = "5px";
-            this.pxToolStripMenuItem.Click += new System.EventHandler(this.pxToolStripMenuItem_Click);
+            this.pxToolStripMenuItem.Click += new System.EventHandler(this.PxToolStripMenuItem_Click);
             // 
             // EditorForm
             // 

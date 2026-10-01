@@ -9,7 +9,7 @@ namespace PPDShareComponent
     /// <summary>
     /// 停止中の画面UI
     /// </summary>
-    public class PauseMenu : PauseMenuBase
+    public class PauseMenu(PPDDevice device, PathManager pathManager) : PauseMenuBase(device)
     {
         enum PauseType
         {
@@ -26,12 +26,7 @@ namespace PPDShareComponent
         Button[] buttons;
         TextureString latencyString;
         PauseType pauseType = PauseType.Resume;
-        readonly PathManager pathManager;
-
-        public PauseMenu(PPDDevice device, PathManager pathManager) : base(device)
-        {
-            this.pathManager = pathManager;
-        }
+        readonly PathManager pathManager = pathManager;
 
         public override void Load()
         {

@@ -24,19 +24,15 @@ namespace PPDMultiCommon.Web
                 var url = String.Format("{0}/createroom?username={1}&roomname={2}&passwordhash={3}&language={4}&port={5}", baseUrl, roomInfo.UserName,
                     HttpUtility.UrlEncode(roomInfo.RoomName), roomInfo.PasswordHash, roomInfo.Language, roomInfo.Port);
                 var req = CreateRequest(url);
-                using (var res = req.GetResponse())
+                using var res = req.GetResponse();
+                using XmlReader reader = XmlReader.Create(res.GetResponseStream());
+                while (reader.Read())
                 {
-                    using (XmlReader reader = XmlReader.Create(res.GetResponseStream()))
+                    if (reader.IsStartElement("Root"))
                     {
-                        while (reader.Read())
-                        {
-                            if (reader.IsStartElement("Root"))
-                            {
-                                token = reader.GetAttribute("Token");
-                                isRoomExist = true;
-                                break;
-                            }
-                        }
+                        token = reader.GetAttribute("Token");
+                        isRoomExist = true;
+                        break;
                     }
                 }
 
@@ -91,25 +87,21 @@ namespace PPDMultiCommon.Web
             try
             {
                 var req = CreateRequest(url);
-                using (var res = req.GetResponse())
+                using var res = req.GetResponse();
+                using XmlReader reader = XmlReader.Create(res.GetResponseStream());
+                while (reader.Read())
                 {
-                    using (XmlReader reader = XmlReader.Create(res.GetResponseStream()))
+                    if (reader.IsStartElement("Room"))
                     {
-                        while (reader.Read())
-                        {
-                            if (reader.IsStartElement("Room"))
-                            {
-                                ret.Add(new RoomInfo(
-                                    reader.GetAttribute("UserName"),
-                                    reader.GetAttribute("RoomName"),
-                                    reader.GetAttribute("PasswordHash"),
-                                    int.Parse(reader.GetAttribute("Port")),
-                                    reader.GetAttribute("Language"),
-                                    reader.GetAttribute("IP"),
-                                    int.Parse(reader.GetAttribute("PlayerCount"))
-                                ));
-                            }
-                        }
+                        ret.Add(new RoomInfo(
+                            reader.GetAttribute("UserName"),
+                            reader.GetAttribute("RoomName"),
+                            reader.GetAttribute("PasswordHash"),
+                            int.Parse(reader.GetAttribute("Port")),
+                            reader.GetAttribute("Language"),
+                            reader.GetAttribute("IP"),
+                            int.Parse(reader.GetAttribute("PlayerCount"))
+                        ));
                     }
                 }
             }
@@ -117,7 +109,7 @@ namespace PPDMultiCommon.Web
             {
             }
 
-            return ret.ToArray();
+            return [.. ret];
         }
 
         public static PPDScoreInfo[] GetScores()
@@ -154,24 +146,20 @@ namespace PPDMultiCommon.Web
                         }
                     }
                 }
-                return list.ToArray();
+                return [.. list];
             }
             catch
             {
-                return new PPDScoreInfo[0];
+                return [];
             }
         }
 
         private static string GetString(string url)
         {
             var req = CreateRequest(url);
-            using (var response = req.GetResponse())
-            {
-                using (StreamReader reader = new(response.GetResponseStream()))
-                {
-                    return reader.ReadToEnd();
-                }
-            }
+            using var response = req.GetResponse();
+            using StreamReader reader = new(response.GetResponseStream());
+            return reader.ReadToEnd();
         }
 
         private static Request CreateRequest(string url)
@@ -182,14 +170,9 @@ namespace PPDMultiCommon.Web
         /// <summary>
         /// 送る前のリクエストです（HttpWebRequest の代わり）。
         /// </summary>
-        private sealed class Request
+        private sealed class Request(string url)
         {
-            private readonly string url;
-
-            public Request(string url)
-            {
-                this.url = url;
-            }
+            private readonly string url = url;
 
             public HttpResponse GetResponse()
             {

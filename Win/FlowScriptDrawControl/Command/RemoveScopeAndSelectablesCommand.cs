@@ -5,15 +5,10 @@ using System.Linq;
 
 namespace FlowScriptDrawControl.Command
 {
-    class RemoveScopeAndSelectablesCommand : ScopeCommandBase
+    class RemoveScopeAndSelectablesCommand(FlowAreaControl flowAreaControl, ScopeControl scopeControl, ScopeControl parentScopeControl) : ScopeCommandBase(flowAreaControl, scopeControl, parentScopeControl)
     {
         private RemoveScopeAndSelectablesCommand[] removeScopeCommands;
         private RemoveSelectablesCommand removeSelectablesCommand;
-
-        public RemoveScopeAndSelectablesCommand(FlowAreaControl flowAreaControl, ScopeControl scopeControl, ScopeControl parentScopeControl)
-            : base(flowAreaControl, scopeControl, parentScopeControl)
-        {
-        }
 
         public override void Execute()
         {
@@ -32,7 +27,7 @@ namespace FlowScriptDrawControl.Command
             {
                 list.Add(new RemoveScopeAndSelectablesCommand(flowAreaControl, control, scopeControl));
             }
-            removeScopeCommands = list.ToArray();
+            removeScopeCommands = [.. list];
             foreach (RemoveScopeAndSelectablesCommand command in removeScopeCommands)
             {
                 command.Execute();

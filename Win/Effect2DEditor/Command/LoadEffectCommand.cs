@@ -4,18 +4,11 @@ using System.Drawing;
 
 namespace Effect2DEditor.Command
 {
-    class LoadEffectCommand : CommandBase
+    class LoadEffectCommand(EffectManager manager, string exp, int insertindex, string filename, SortedList<string, Image> ImagePool) : CommandBase(manager, exp)
     {
-        readonly int insertindex;
-        readonly string filename;
-        readonly SortedList<string, Image> ImagePool;
-        public LoadEffectCommand(EffectManager manager, string exp, int insertindex, string filename, SortedList<string, Image> ImagePool)
-            : base(manager, exp)
-        {
-            this.filename = filename;
-            this.insertindex = insertindex;
-            this.ImagePool = ImagePool;
-        }
+        readonly int insertindex = insertindex;
+        readonly string filename = filename;
+        readonly SortedList<string, Image> ImagePool = ImagePool;
 
         public override void Undo()
         {

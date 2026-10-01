@@ -22,7 +22,7 @@ namespace FlowScriptEngineBasic.FlowSourceObjects.Enumerable
                 SetValue(nameof(Enumerable));
                 if (enumerable == null)
                 {
-                    return System.Linq.Enumerable.Empty<object>();
+                    return [];
                 }
                 return enumerable.Reverse();
             }

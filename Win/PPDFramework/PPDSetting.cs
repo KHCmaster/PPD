@@ -14,7 +14,7 @@ namespace PPDFramework
     {
         readonly string settingFileName = "PPD.ini";
         static PPDSetting setting;
-        static readonly string[] defaultsounds = { "sounds\\cursor1.wav", "sounds\\cursor2.wav", "sounds\\cursor3.wav", "sounds\\cursor4.wav" };
+        static readonly string[] defaultsounds = ["sounds\\cursor1.wav", "sounds\\cursor2.wav", "sounds\\cursor3.wav", "sounds\\cursor4.wav"];
         private PPDSetting(bool isDebug, string songDir, string langIso, bool disableExpansion)
         {
             SongDir = "songs";
@@ -69,11 +69,11 @@ namespace PPDFramework
             }
             else
             {
-                MovieExtensions = new string[0];
-                MusicExtensions = new string[0];
+                MovieExtensions = [];
+                MusicExtensions = [];
             }
-            MovieExtensions = MovieExtensions.Select(e => e.ToLower()).ToArray();
-            MusicExtensions = MusicExtensions.Select(e => e.ToLower()).ToArray();
+            MovieExtensions = [.. MovieExtensions.Select(e => e.ToLower())];
+            MusicExtensions = [.. MusicExtensions.Select(e => e.ToLower())];
             if (isDebug)
             {
                 IsDebug = true;

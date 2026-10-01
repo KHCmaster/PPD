@@ -79,7 +79,7 @@ namespace PPDFramework.DX11
                 if (vertexDeclaration != value)
                 {
                     vertexDeclaration = value;
-                    Context.IASetInputLayout(((Vertex.DX11.VertexDeclaration)vertexDeclaration)._InputLayout);
+                    Context.IASetInputLayout(((Vertex.DX11.VertexDeclaration)vertexDeclaration).InputLayout);
                 }
             }
         }
@@ -243,7 +243,7 @@ namespace PPDFramework.DX11
         internal override void SetRenderTarget(WorkspaceTexture workSpaceTexture)
         {
             renderTarget = workSpaceTexture;
-            Context.OMSetRenderTargets(((Texture.DX11.Texture)workSpaceTexture.Texture)._RenderTargetView);
+            Context.OMSetRenderTargets(((Texture.DX11.Texture)workSpaceTexture.Texture).RenderTargetView);
         }
 
         /// <summary>
@@ -274,7 +274,7 @@ namespace PPDFramework.DX11
         /// <param name="color"></param>
         internal override void Clear(Color4 color)
         {
-            Context.ClearRenderTargetView(((Texture.DX11.Texture)GetRenderTarget().Texture)._RenderTargetView, color);
+            Context.ClearRenderTargetView(((Texture.DX11.Texture)GetRenderTarget().Texture).RenderTargetView, color);
         }
 
         /// <summary>
@@ -288,7 +288,7 @@ namespace PPDFramework.DX11
             var newRenderTarget = GetRenderTarget();
             SetRenderTarget(newRenderTarget);
             Context.RSSetViewport(0, 0, Width, Height, 0.0f, 1.0f);
-            Context.ClearRenderTargetView(((Texture.DX11.Texture)newRenderTarget.Texture)._RenderTargetView, new Color4(0f, 0f, 0f, 1f));
+            Context.ClearRenderTargetView(((Texture.DX11.Texture)newRenderTarget.Texture).RenderTargetView, new Color4(0f, 0f, 0f, 1f));
             SetScissorRect(new Rectangle(0, 0, Width, Height), false);
         }
 
@@ -361,19 +361,14 @@ namespace PPDFramework.DX11
 
         private static int GetVertexCount(PrimitiveType primitiveType, int primitiveCount)
         {
-            switch (primitiveType)
+            return primitiveType switch
             {
-                case PrimitiveType.PointList:
-                    return primitiveCount;
-                case PrimitiveType.LineList:
-                    return primitiveCount * 2;
-                case PrimitiveType.LineStrip:
-                    return primitiveCount + 1;
-                case PrimitiveType.TriangleList:
-                    return primitiveCount * 3;
-                default:
-                    return primitiveCount + 2;
-            }
+                PrimitiveType.PointList => primitiveCount,
+                PrimitiveType.LineList => primitiveCount * 2,
+                PrimitiveType.LineStrip => primitiveCount + 1,
+                PrimitiveType.TriangleList => primitiveCount * 3,
+                _ => primitiveCount + 2,
+            };
         }
 
         /// <summary>
@@ -389,7 +384,7 @@ namespace PPDFramework.DX11
                 return;
             }
             currentBuffer = buffer;
-            Context.IASetVertexBuffer(0, dx11Buffer._Buffer, (uint)ColoredTexturedVertex.Size, 0);
+            Context.IASetVertexBuffer(0, dx11Buffer.Buffer, (uint)ColoredTexturedVertex.Size, 0);
         }
 
         /// <summary>
@@ -403,7 +398,7 @@ namespace PPDFramework.DX11
                 return;
             }
             currentIndex = index;
-            Context.IASetIndexBuffer(((Vertex.DX11.IndexBuffer)index)._Buffer, Format.R32_UInt, 0);
+            Context.IASetIndexBuffer(((Vertex.DX11.IndexBuffer)index).Buffer, Format.R32_UInt, 0);
         }
 
         /// <summary>
@@ -413,10 +408,8 @@ namespace PPDFramework.DX11
         public override void BackBufferToFile(string filepath)
         {
             var pixels = Texture.DX11.Texture.ReadPixels(Context, backBuffer);
-            using (var bitmap = Texture.DX11.Texture.ToBitmap(pixels, (int)backBuffer.Description.Width, (int)backBuffer.Description.Height))
-            {
-                bitmap.Save(filepath, System.Drawing.Imaging.ImageFormat.Png);
-            }
+            using var bitmap = Texture.DX11.Texture.ToBitmap(pixels, (int)backBuffer.Description.Width, (int)backBuffer.Description.Height);
+            bitmap.Save(filepath, System.Drawing.Imaging.ImageFormat.Png);
         }
 
         /// <summary>
@@ -504,7 +497,7 @@ namespace PPDFramework.DX11
             var infoQueue = device.QueryInterfaceOrNull<Vortice.Direct3D11.Debug.ID3D11InfoQueue>();
             if (debug == null || infoQueue == null)
             {
-                ComDiagnostics.Write("D3D11 live objects", new[] { "  (debug layer is not available)" });
+                ComDiagnostics.Write("D3D11 live objects", ["  (debug layer is not available)"]);
                 debug?.Dispose();
                 infoQueue?.Dispose();
                 return;
@@ -519,7 +512,7 @@ namespace PPDFramework.DX11
                 {
                     lines.Add("  " + infoQueue.GetMessage(i).Description);
                 }
-                ComDiagnostics.Write("D3D11 live objects", lines.ToArray());
+                ComDiagnostics.Write("D3D11 live objects", [.. lines]);
             }
         }
     }

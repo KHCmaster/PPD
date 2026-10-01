@@ -93,7 +93,7 @@ namespace PPDEditor.FlowScript
                     controllerClient.Create();
                 }
                 var engine = new Engine();
-                engine.Error += engine_Error;
+                engine.Error += Engine_Error;
                 using (FileStream fs = File.Open(ScriptFilePath, FileMode.Open))
                 {
                     var manager = engine.Load(fs, true, Guid.NewGuid(), debugController);
@@ -129,7 +129,7 @@ namespace PPDEditor.FlowScript
             Finished?.Invoke(this, EventArgs.Empty);
         }
 
-        void engine_Error(FlowExecutionException obj)
+        void Engine_Error(FlowExecutionException obj)
         {
             ProcessError(obj);
         }

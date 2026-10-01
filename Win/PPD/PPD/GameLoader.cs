@@ -6,7 +6,7 @@ using System.Reflection;
 
 namespace PPD
 {
-    class GameLoader
+    class GameLoader(string path)
     {
         static readonly ClassType[] classTypeList = Enum.GetValues(typeof(ClassType)) as ClassType[];
         static readonly Dictionary<Type, ClassType> typeDictionary;
@@ -20,14 +20,14 @@ namespace PPD
         {
             get;
             private set;
-        }
+        } = path;
         public string Version
         {
             get;
             private set;
         }
 
-        readonly Dictionary<ClassType, string> Names;
+        readonly Dictionary<ClassType, string> Names = [];
         private Assembly assembly;
         private FileVersionInfo fileVersionInfo;
 
@@ -38,11 +38,6 @@ namespace PPD
                 {typeof(EntrySceneManagerBase),ClassType.EntrySceneManagerBase},                {typeof(GameInformationBase),ClassType.GameInformationBase},                {typeof(LoadingBase),ClassType.LoadingBase}            };
         }
 
-        public GameLoader(string path)
-        {
-            Path = path;
-            Names = [];
-        }
         public bool Load()
         {
             try
@@ -102,7 +97,7 @@ namespace PPD
             try
             {
                 var ret = (LoadingBase)assembly.CreateInstance(Names[ClassType.LoadingBase], false,
-                    BindingFlags.Public | BindingFlags.Instance, null, new object[] { device }, null, null);
+                    BindingFlags.Public | BindingFlags.Instance, null, [device], null, null);
                 return ret;
             }
             catch

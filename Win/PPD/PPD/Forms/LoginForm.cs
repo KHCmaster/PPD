@@ -83,7 +83,7 @@ namespace PPD.Forms
             }
         }
 
-        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void LinkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             try
             {
@@ -95,7 +95,7 @@ namespace PPD.Forms
             }
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void Button1_Click(object sender, EventArgs e)
         {
             panel1.Enabled = false;
             var id = textBox1.Text;
@@ -137,23 +137,16 @@ namespace PPD.Forms
 
         private void ShowErrorMessage(ErrorReason errorReason)
         {
-            string errorText = "";
-            switch (errorReason)
+            string errorText = errorReason switch
             {
-                case ErrorReason.AuthFailed:
-                    errorText = Utility.Language["LoginAuthFailed"];
-                    break;
-                case ErrorReason.VersionUnmatch:
-                    errorText = Utility.Language["LoginVersionUnmatch"];
-                    break;
-                default:
-                    errorText = Utility.Language["LoginFailed"];
-                    break;
-            }
+                ErrorReason.AuthFailed => Utility.Language["LoginAuthFailed"],
+                ErrorReason.VersionUnmatch => Utility.Language["LoginVersionUnmatch"],
+                _ => Utility.Language["LoginFailed"],
+            };
             MessageBox.Show(errorText);
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void Button2_Click(object sender, EventArgs e)
         {
             this.Close();
         }

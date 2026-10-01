@@ -40,13 +40,13 @@ namespace KeyConfiger
                 Form.MainForm.Close();
             }
 
-            Key k = Key.Unknown;
+            Key k;
             if (input.GetPressedKey(out k))
             {
                 form.SetNumber((int)k, true);
             }
 
-            int a = -1;
+            int a;
             if (input.GetPressedButton(out a))
             {
                 form.SetNumber(a, false);

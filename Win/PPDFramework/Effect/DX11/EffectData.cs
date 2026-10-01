@@ -59,57 +59,55 @@ namespace PPDFramework.Effect.DX11
 
         public EffectData(byte[] bytes)
         {
-            using (var reader = new BinaryReader(new MemoryStream(bytes), Encoding.UTF8))
+            using var reader = new BinaryReader(new MemoryStream(bytes), Encoding.UTF8);
+            if (reader.ReadString() != Magic || reader.ReadInt32() != Version)
             {
-                if (reader.ReadString() != Magic || reader.ReadInt32() != Version)
+                throw new InvalidDataException("Unsupported effect data. Rebuild the shaders with ShaderCompiler.");
+            }
+            ConstantBufferSize = reader.ReadInt32();
+            var variableCount = reader.ReadInt32();
+            Variables = new Dictionary<string, Variable>(variableCount);
+            for (var i = 0; i < variableCount; i++)
+            {
+                var variable = new Variable
                 {
-                    throw new InvalidDataException("Unsupported effect data. Rebuild the shaders with ShaderCompiler.");
-                }
-                ConstantBufferSize = reader.ReadInt32();
-                var variableCount = reader.ReadInt32();
-                Variables = new Dictionary<string, Variable>(variableCount);
-                for (var i = 0; i < variableCount; i++)
+                    Name = reader.ReadString(),
+                    Offset = reader.ReadInt32(),
+                    Size = reader.ReadInt32(),
+                    Elements = reader.ReadInt32(),
+                    Stride = reader.ReadInt32(),
+                    BaseType = (VariableBaseType)reader.ReadByte()
+                };
+                Variables.Add(variable.Name, variable);
+            }
+            var textureCount = reader.ReadInt32();
+            TextureSlots = new Dictionary<string, int>(textureCount);
+            for (var i = 0; i < textureCount; i++)
+            {
+                TextureSlots.Add(reader.ReadString(), reader.ReadInt32());
+            }
+            VertexShaders = ReadBytecodes(reader);
+            PixelShaders = ReadBytecodes(reader);
+            var techniqueCount = reader.ReadInt32();
+            Techniques = new Dictionary<string, Technique>(techniqueCount);
+            for (var i = 0; i < techniqueCount; i++)
+            {
+                var technique = new Technique
                 {
-                    var variable = new Variable
+                    Name = reader.ReadString(),
+                    Passes = new Pass[reader.ReadInt32()]
+                };
+                for (var j = 0; j < technique.Passes.Length; j++)
+                {
+                    technique.Passes[j] = new Pass
                     {
                         Name = reader.ReadString(),
-                        Offset = reader.ReadInt32(),
-                        Size = reader.ReadInt32(),
-                        Elements = reader.ReadInt32(),
-                        Stride = reader.ReadInt32(),
-                        BaseType = (VariableBaseType)reader.ReadByte()
+                        VertexShaderIndex = reader.ReadInt32(),
+                        PixelShaderIndex = reader.ReadInt32(),
+                        BlendState = reader.ReadString()
                     };
-                    Variables.Add(variable.Name, variable);
                 }
-                var textureCount = reader.ReadInt32();
-                TextureSlots = new Dictionary<string, int>(textureCount);
-                for (var i = 0; i < textureCount; i++)
-                {
-                    TextureSlots.Add(reader.ReadString(), reader.ReadInt32());
-                }
-                VertexShaders = ReadBytecodes(reader);
-                PixelShaders = ReadBytecodes(reader);
-                var techniqueCount = reader.ReadInt32();
-                Techniques = new Dictionary<string, Technique>(techniqueCount);
-                for (var i = 0; i < techniqueCount; i++)
-                {
-                    var technique = new Technique
-                    {
-                        Name = reader.ReadString(),
-                        Passes = new Pass[reader.ReadInt32()]
-                    };
-                    for (var j = 0; j < technique.Passes.Length; j++)
-                    {
-                        technique.Passes[j] = new Pass
-                        {
-                            Name = reader.ReadString(),
-                            VertexShaderIndex = reader.ReadInt32(),
-                            PixelShaderIndex = reader.ReadInt32(),
-                            BlendState = reader.ReadString()
-                        };
-                    }
-                    Techniques.Add(technique.Name, technique);
-                }
+                Techniques.Add(technique.Name, technique);
             }
         }
 

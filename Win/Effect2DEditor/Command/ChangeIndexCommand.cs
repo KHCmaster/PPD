@@ -2,16 +2,10 @@
 
 namespace Effect2DEditor.Command
 {
-    class ChangeIndexCommand : CommandBase
+    class ChangeIndexCommand(EffectManager manager, string exp, int index, int beforeindex) : CommandBase(manager, exp)
     {
-        readonly int beforeindex;
-        readonly int index;
-        public ChangeIndexCommand(EffectManager manager, string exp, int index, int beforeindex)
-            : base(manager, exp)
-        {
-            this.index = index;
-            this.beforeindex = beforeindex;
-        }
+        readonly int beforeindex = beforeindex;
+        readonly int index = index;
 
         public override void Undo()
         {

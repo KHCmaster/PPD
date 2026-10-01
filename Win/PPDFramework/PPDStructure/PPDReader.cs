@@ -18,13 +18,11 @@ namespace PPDFramework.PPDStructure
         /// <returns></returns>
         public static MarkDataBase[] Read(string path)
         {
-            MarkDataBase[] ret = new MarkDataBase[0];
+            MarkDataBase[] ret = [];
             if (File.Exists(path))
             {
-                using (FileStream fs = File.Open(path, FileMode.Open))
-                {
-                    ret = Read(fs);
-                }
+                using FileStream fs = File.Open(path, FileMode.Open);
+                ret = Read(fs);
             }
             return ret;
         }
@@ -50,13 +48,13 @@ namespace PPDFramework.PPDStructure
         {
             var data = new List<MarkDataBase>();
             var dict = new Dictionary<int, MarkDataBase>();
-            var sign = new byte[] { (byte)'P', (byte)'P', (byte)'D' };
+            var sign = "PPD"u8.ToArray();
             byte[] headdata = new byte[3];
             stream.ReadAtLeast(headdata, headdata.Length, throwOnEndOfStream: false);
             if (sign[0] != headdata[0] || sign[1] != headdata[1] || sign[2] != headdata[2])
             {
                 signError = true;
-                return data.ToArray();
+                return [.. data];
             }
             byte[] fdata = new byte[4];
             while (stream.Position < stream.Length)
@@ -125,7 +123,7 @@ namespace PPDFramework.PPDStructure
                     dict[(int)markData.ID] = markData;
                 }
             }
-            return data.ToArray();
+            return [.. data];
         }
     }
 }

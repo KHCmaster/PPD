@@ -3,15 +3,11 @@ using System;
 
 namespace Effect2DEditor.Command
 {
-    class DeleteEffectCommand : CommandBase
+    class DeleteEffectCommand(EffectManager manager, string exp, int deleteindex) : CommandBase(manager, exp)
     {
-        readonly int deleteindex;
+        readonly int deleteindex = deleteindex;
         IEffect ie;
-        public DeleteEffectCommand(EffectManager manager, string exp, int deleteindex)
-            : base(manager, exp)
-        {
-            this.deleteindex = deleteindex;
-        }
+
         public override void Undo()
         {
             manager.Effects.Insert(deleteindex, ie);

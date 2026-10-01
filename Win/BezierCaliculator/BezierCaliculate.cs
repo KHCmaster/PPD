@@ -66,8 +66,7 @@ namespace BezierCaliculator
         /// <returns></returns>
         public static bool OnBezeier(PointF p1, PointF p2, PointF p3, PointF p4, PointF target, out float outt)
         {
-            PointF lastbezierpoint, bezierpoint;
-            lastbezierpoint = p1;
+            PointF bezierpoint;
             outt = -1;
             float best = float.MaxValue;
             var count = BezierCaliculate.AboutBezeirCount(ref p1, ref p2, ref p3, ref p4);
@@ -81,7 +80,6 @@ namespace BezierCaliculator
                     best = temp;
                     outt = t;
                 }
-                lastbezierpoint = bezierpoint;
             }
             if (best <= 2)
             {

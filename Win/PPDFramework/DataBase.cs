@@ -267,14 +267,12 @@ namespace PPDFramework
         /// <returns></returns>
         public string GetColumnType(string tableName, string columnName)
         {
-            using (var reader = ExecuteReader(String.Format("PRAGMA table_info({0});", tableName), null))
+            using var reader = ExecuteReader(String.Format("PRAGMA table_info({0});", tableName), null);
+            while (reader.Reader.Read())
             {
-                while (reader.Reader.Read())
+                if (reader.Reader[1].ToString() == columnName)
                 {
-                    if (reader.Reader[1].ToString() == columnName)
-                    {
-                        return reader.Reader[2].ToString().ToLower();
-                    }
+                    return reader.Reader[2].ToString().ToLower();
                 }
             }
             return null;

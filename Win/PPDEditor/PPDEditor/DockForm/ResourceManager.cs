@@ -37,8 +37,8 @@ namespace PPDEditor
         const string SoundDirPath = "Resource\\Sound";
         const string OthersDirPath = "Resource\\Others";
 
-        readonly string[] allowImageExtensions = { ".jpg", ".jpeg", ".gif", ".png" };
-        readonly string[] allowSoundExtensions = { ".wav", ".ogg" };
+        readonly string[] allowImageExtensions = [".jpg", ".jpeg", ".gif", ".png"];
+        readonly string[] allowSoundExtensions = [".wav", ".ogg"];
 
         private Sound sound;
 
@@ -228,7 +228,7 @@ namespace PPDEditor
             {
                 ret.Add(childNode.Text);
             }
-            return ret.ToArray();
+            return [.. ret];
         }
 
         private string[] GetList(Filter filter)
@@ -271,7 +271,7 @@ namespace PPDEditor
                 }
             }
 
-            return ret.ToArray();
+            return [.. ret];
         }
 
         private string[] GetListEffect(TreeNode node)
@@ -289,22 +289,20 @@ namespace PPDEditor
                 }
             }
 
-            return ret.ToArray();
+            return [.. ret];
         }
 
         public void WriteResource(Stream stream, string fileName)
         {
             var path = Path.Combine(Path.Combine(WindowUtility.MainForm.CurrentProjectDir, ResourcePath), fileName);
 
-            using (FileStream fs = File.Open(path, FileMode.Open))
-            {
-                byte[] data = new byte[fs.Length];
-                fs.ReadAtLeast(data, data.Length, throwOnEndOfStream: false);
-                stream.Write(data, 0, data.Length);
-            }
+            using FileStream fs = File.Open(path, FileMode.Open);
+            byte[] data = new byte[fs.Length];
+            fs.ReadAtLeast(data, data.Length, throwOnEndOfStream: false);
+            stream.Write(data, 0, data.Length);
         }
 
-        private void imageを追加ToolStripMenuItem_Click(object sender, EventArgs e)
+        private void Imageを追加ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             openFileDialog1.FileName = null;
             openFileDialog1.Filter = "Image(*.jpg;*.jpeg;*.gif;*.png)|*.jpg;*.jpeg;*.gif;*.png";
@@ -333,7 +331,7 @@ namespace PPDEditor
             CreateNode(ImageNode.Nodes, Path.GetFileName(filePath), NodeType.Image);
         }
 
-        private void effectを追加ToolStripMenuItem_Click(object sender, EventArgs e)
+        private void Effectを追加ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             openFileDialog1.FileName = null;
             openFileDialog1.Filter = "Effect(*.etd)|*.etd";
@@ -378,7 +376,7 @@ namespace PPDEditor
             }
         }
 
-        private void soundを追加ToolStripMenuItem_Click(object sender, EventArgs e)
+        private void Soundを追加ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             openFileDialog1.FileName = null;
             openFileDialog1.Filter = Utility.Language["SMWaveFilter"];
@@ -460,12 +458,12 @@ namespace PPDEditor
             imageを追加ToolStripMenuItem.Enabled = effectを追加ToolStripMenuItem.Enabled = soundを追加ToolStripMenuItem.Enabled = その他を追加ToolStripMenuItem.Enabled = WindowUtility.MainForm.IsProjectLoaded;
         }
 
-        private void treeView1_NodeMouseClick(object sender, System.Windows.Forms.TreeNodeMouseClickEventArgs e)
+        private void TreeView1_NodeMouseClick(object sender, System.Windows.Forms.TreeNodeMouseClickEventArgs e)
         {
             treeView1.SelectedNode = e.Node;
         }
 
-        private void contextMenuStrip1_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        private void ContextMenuStrip1_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
             無効化ToolStripMenuItem.Text = NativeMethods.GetTreeViewOverlay(treeView1.SelectedNode) == 0 ? Utility.Language["MakeInvalid"] : Utility.Language["MakeValid"];
         }
@@ -545,7 +543,7 @@ namespace PPDEditor
             return node;
         }
 
-        private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
+        private void TreeView1_AfterSelect(object sender, TreeViewEventArgs e)
         {
             ChangeDataGrid();
         }
@@ -609,7 +607,7 @@ namespace PPDEditor
                                 break;
                             case 2:
                                 val = System.Text.Encoding.ASCII.GetString(propertyItem.Value);
-                                val = val.Trim(new char[] { '\0' });
+                                val = val.Trim(['\0']);
                                 break;
                             case 3:
                                 var uint16Value = BitConverter.ToUInt16(propertyItem.Value, 0);
@@ -766,54 +764,52 @@ namespace PPDEditor
 
             try
             {
-                using (FileStream fs = File.Open(path, FileMode.Open))
+                using FileStream fs = File.Open(path, FileMode.Open);
+                bool b = false;
+                var ppdData = PPDReader.Read(fs, ref b);
+                if (!b)
                 {
-                    bool b = false;
-                    var ppdData = PPDReader.Read(fs, ref b);
-                    if (!b)
+                    int normalCount = 0, longCount = 0;
+                    float startTime = float.MaxValue, endTime = float.MinValue;
+                    foreach (MarkDataBase data in ppdData)
                     {
-                        int normalCount = 0, longCount = 0;
-                        float startTime = float.MaxValue, endTime = float.MinValue;
-                        foreach (MarkDataBase data in ppdData)
+                        if (startTime > data.Time)
                         {
-                            if (startTime > data.Time)
-                            {
-                                startTime = data.Time;
-                            }
-
-                            if (endTime < data.Time)
-                            {
-                                endTime = data.Time;
-                            }
-
-                            if (data is ExMarkData)
-                            {
-                                longCount++;
-                                if (endTime < (data as ExMarkData).EndTime)
-                                {
-                                    endTime = (data as ExMarkData).EndTime;
-                                }
-                            }
-                            else if (data is MarkData)
-                            {
-                                normalCount++;
-                            }
+                            startTime = data.Time;
                         }
 
-                        if (ppdData.Length == 0)
+                        if (endTime < data.Time)
                         {
-                            startTime = endTime = 0;
+                            endTime = data.Time;
                         }
 
-                        AddInfo("通常マークの数", normalCount);
-                        AddInfo("長押しマークの数", longCount);
-                        AddInfo("最初のマークの時間", startTime);
-                        AddInfo("最後のマークの時間", endTime);
+                        if (data is ExMarkData)
+                        {
+                            longCount++;
+                            if (endTime < (data as ExMarkData).EndTime)
+                            {
+                                endTime = (data as ExMarkData).EndTime;
+                            }
+                        }
+                        else if (data is MarkData)
+                        {
+                            normalCount++;
+                        }
                     }
-                    else
+
+                    if (ppdData.Length == 0)
                     {
-                        AddInfo("サイズ", fs.Length);
+                        startTime = endTime = 0;
                     }
+
+                    AddInfo("通常マークの数", normalCount);
+                    AddInfo("長押しマークの数", longCount);
+                    AddInfo("最初のマークの時間", startTime);
+                    AddInfo("最後のマークの時間", endTime);
+                }
+                else
+                {
+                    AddInfo("サイズ", fs.Length);
                 }
             }
             catch (Exception e)
@@ -828,7 +824,7 @@ namespace PPDEditor
             this.splitContainer2.Panel1.Controls.Add(control);
         }
 
-        private void treeView1_KeyDown(object sender, KeyEventArgs e)
+        private void TreeView1_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Control && e.KeyCode == Keys.C)
             {

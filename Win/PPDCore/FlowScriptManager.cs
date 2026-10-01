@@ -95,7 +95,7 @@ namespace PPDCore
 
         public ScriptResourceManager[] ScriptResourceManagers
         {
-            get { return scriptList.Select(s => s.Value.ResourceManager).ToArray(); }
+            get { return [.. scriptList.Select(s => s.Value.ResourceManager)]; }
         }
 
         readonly Dictionary<string, object> afterLoadList;
@@ -109,7 +109,7 @@ namespace PPDCore
         {
             priorityManagers = [];
             engine = new Engine();
-            engine.Error += engine_Error;
+            engine.Error += Engine_Error;
             BPMManager = new BPMManager();
             UpdateManager = new UpdateManager(engine);
             CalculatePositionManager = new CalculatePositionManager(engine);
@@ -157,7 +157,7 @@ namespace PPDCore
             }
         }
 
-        void engine_Error(FlowExecutionException obj)
+        void Engine_Error(FlowExecutionException obj)
         {
             if (SuppressErrorLog)
             {

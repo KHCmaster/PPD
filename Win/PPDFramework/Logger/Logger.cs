@@ -89,32 +89,25 @@ namespace PPDFramework.Logger
             AddLog(String.Format(format, args));
         }
 
-        private class LogInfo
+        private class LogInfo(string log, int threadId, DateTime dateTime)
         {
             public string Log
             {
                 get;
                 private set;
-            }
+            } = log;
 
             public int ThreadId
             {
                 get;
                 private set;
-            }
+            } = threadId;
 
             public DateTime DateTime
             {
                 get;
                 private set;
-            }
-
-            public LogInfo(string log, int threadId, DateTime dateTime)
-            {
-                Log = log;
-                ThreadId = threadId;
-                DateTime = dateTime;
-            }
+            } = dateTime;
         }
     }
 }

@@ -89,7 +89,7 @@ namespace FlowScriptControl.Controls
             }
             else
             {
-                TreeNode valueNode = null;
+                TreeNode valueNode;
                 if (valueElems.Count() > 0)
                 {
                     var valueElem = valueElems.First();
@@ -219,7 +219,7 @@ namespace FlowScriptControl.Controls
                 {
                     get
                     {
-                        return children.ToArray();
+                        return [.. children];
                     }
                 }
 

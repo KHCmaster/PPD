@@ -45,7 +45,7 @@ namespace PPDEditor.Forms
             button1.Enabled = (checkBox1.Checked || checkBox2.Checked || checkBox3.Checked || checkBox4.Checked) && textBox2.Text != "";
         }
 
-        private void textBox2_TextChanged(object sender, EventArgs e)
+        private void TextBox2_TextChanged(object sender, EventArgs e)
         {
             CheckOKButtonEnable();
         }
@@ -142,34 +142,32 @@ namespace PPDEditor.Forms
                 {
 
                     var filePath = Path.Combine(WindowUtility.MainForm.CurrentProjectDir, difficulty + ".ppd");
-                    using (PackReader reader = new(filePath))
+                    using PackReader reader = new(filePath);
+                    if (reader.FileList.Contains("ppd"))
                     {
-                        if (reader.FileList.Contains("ppd"))
+                        var r = reader.Read("ppd");
+                        var data = PPDReader.Read(r);
+                        var timeDatas = new Dictionary<ButtonType, SortedSet<float>>();
+                        foreach (var d in data)
                         {
-                            var r = reader.Read("ppd");
-                            var data = PPDReader.Read(r);
-                            var timeDatas = new Dictionary<ButtonType, SortedSet<float>>();
-                            foreach (var d in data)
+                            if (!timeDatas.TryGetValue(d.ButtonType, out SortedSet<float> set))
                             {
-                                if (!timeDatas.TryGetValue(d.ButtonType, out SortedSet<float> set))
-                                {
-                                    set = [];
-                                    timeDatas.Add(d.ButtonType, set);
-                                }
-                                foreach (var setVal in set)
-                                {
-                                    if (Math.Abs(setVal - d.Time) <= checkTimeInterval)
-                                    {
-                                        MessageBox.Show(Utility.Language["NearTimeWarning"] + "\n" +
-                                            Utility.Language["Difficulty"] + ":" + difficulty + "\n" +
-                                            Utility.Language["Time"] + ":" + d.Time + "\n" +
-                                            Utility.Language["ButtonType"] + ":" + Utility.Language[d.ButtonType.ToString()] + "\n");
-                                        found = true;
-                                        break;
-                                    }
-                                }
-                                set.Add(d.Time);
+                                set = [];
+                                timeDatas.Add(d.ButtonType, set);
                             }
+                            foreach (var setVal in set)
+                            {
+                                if (Math.Abs(setVal - d.Time) <= checkTimeInterval)
+                                {
+                                    MessageBox.Show(Utility.Language["NearTimeWarning"] + "\n" +
+                                        Utility.Language["Difficulty"] + ":" + difficulty + "\n" +
+                                        Utility.Language["Time"] + ":" + d.Time + "\n" +
+                                        Utility.Language["ButtonType"] + ":" + Utility.Language[d.ButtonType.ToString()] + "\n");
+                                    found = true;
+                                    break;
+                                }
+                            }
+                            set.Add(d.Time);
                         }
                     }
                 }
@@ -177,7 +175,7 @@ namespace PPDEditor.Forms
             return !found;
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void Button1_Click(object sender, EventArgs e)
         {
             if (!CheckSameScore() || !CheckNearTime())
             {
@@ -187,13 +185,13 @@ namespace PPDEditor.Forms
             this.Close();
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void Button2_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.Cancel;
             this.Close();
         }
 
-        private void button3_Click(object sender, EventArgs e)
+        private void Button3_Click(object sender, EventArgs e)
         {
             folderBrowserDialog1.SelectedPath = this.textBox1.Text;
             if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)

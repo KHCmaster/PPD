@@ -9,7 +9,7 @@ namespace PPDSingle
     /// <summary>
     /// ゲーム結果のUI
     /// </summary>
-    public class GameResult : GameResultBase
+    public class GameResult(PPDDevice device) : GameResultBase(device)
     {
         public override event EventHandler Returned;
         public override event EventHandler Retryed;
@@ -24,10 +24,6 @@ namespace PPDSingle
             grs.Retry();
         }
 
-        public GameResult(PPDDevice device) : base(device)
-        {
-        }
-
         public override void Load()
         {
             focusManager = new FocusManager();
@@ -35,9 +31,9 @@ namespace PPDSingle
             ScoreSent += GameResult_ScoreSent;
             ScoreSending += GameResult_ScoreSending;
             grs = new GameResultScore(device, ResourceManager, PPDGameUtility, Sound, BlueSkyManager, ReviewManager, GameHost);
-            grs.Retryed += grs_Retryed;
-            grs.Returned += grs_Returned;
-            grs.Replayed += grs_Replayed;
+            grs.Retryed += Grs_Retryed;
+            grs.Returned += Grs_Returned;
+            grs.Replayed += Grs_Replayed;
             focusManager.Focus(grs);
             grs.UpdateRanking();
 
@@ -106,17 +102,17 @@ namespace PPDSingle
             }
         }
 
-        void grs_Returned(object sender, EventArgs e)
+        void Grs_Returned(object sender, EventArgs e)
         {
             this.Returned?.Invoke(this, EventArgs.Empty);
         }
 
-        void grs_Retryed(object sender, EventArgs e)
+        void Grs_Retryed(object sender, EventArgs e)
         {
             this.Retryed?.Invoke(this, EventArgs.Empty);
         }
 
-        void grs_Replayed(object sender, EventArgs e)
+        void Grs_Replayed(object sender, EventArgs e)
         {
             this.Replayed?.Invoke(this, EventArgs.Empty);
         }

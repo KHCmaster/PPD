@@ -9,13 +9,11 @@ namespace FlowScriptEnginePPD.FlowSourceObjects.Mod
     {
         public override object GetPropertyValue(string propertyName)
         {
-            switch (propertyName)
+            return propertyName switch
             {
-                case "Mods":
-                    return Mods;
-                default:
-                    return null;
-            }
+                "Mods" => Mods,
+                _ => null,
+            };
         }
 
 

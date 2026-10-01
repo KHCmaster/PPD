@@ -7,18 +7,13 @@ namespace PPDFramework.Vertex.DX11
     /// <summary>
     /// DirectX11のインデックスバッファーです。描画スレッドから書き込む必要があります。
     /// </summary>
-    class IndexBuffer : IndexBufferBase
+    class IndexBuffer(PPDDevice device, ID3D11Buffer buffer) : IndexBufferBase(device)
     {
-        public ID3D11Buffer _Buffer
+        public ID3D11Buffer Buffer
         {
             get;
             private set;
-        }
-
-        public IndexBuffer(PPDDevice device, ID3D11Buffer buffer) : base(device)
-        {
-            _Buffer = buffer;
-        }
+        } = buffer;
 
         public override void Write(int[] indices, int count, int offset)
         {
@@ -29,7 +24,7 @@ namespace PPDFramework.Vertex.DX11
             var handle = GCHandle.Alloc(indices, GCHandleType.Pinned);
             try
             {
-                ((PPDFramework.DX11.PPDDevice)device).Context.UpdateSubresource(_Buffer, 0,
+                ((PPDFramework.DX11.PPDDevice)device).Context.UpdateSubresource(Buffer, 0,
                     new Box(offset * sizeof(int), 0, 0, (offset + count) * sizeof(int), 1, 1),
                     handle.AddrOfPinnedObject(), 0, 0);
             }
@@ -41,8 +36,8 @@ namespace PPDFramework.Vertex.DX11
 
         protected override void DisposeResource()
         {
-            _Buffer?.Dispose();
-            _Buffer = null;
+            Buffer?.Dispose();
+            Buffer = null;
         }
     }
 }

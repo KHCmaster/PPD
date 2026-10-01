@@ -60,7 +60,7 @@
             this.button7.Size = new System.Drawing.Size(25, 23);
             this.button7.TabIndex = 42;
             this.button7.UseVisualStyleBackColor = true;
-            this.button7.Click += new System.EventHandler(this.button7_Click);
+            this.button7.Click += new System.EventHandler(this.Button7_Click);
             // 
             // changeValueLabel1
             // 
@@ -80,7 +80,7 @@
             this.button6.Size = new System.Drawing.Size(25, 23);
             this.button6.TabIndex = 40;
             this.button6.UseVisualStyleBackColor = true;
-            this.button6.Click += new System.EventHandler(this.button6_Click);
+            this.button6.Click += new System.EventHandler(this.Button6_Click);
             // 
             // button5
             // 
@@ -90,7 +90,7 @@
             this.button5.Size = new System.Drawing.Size(25, 23);
             this.button5.TabIndex = 39;
             this.button5.UseVisualStyleBackColor = true;
-            this.button5.Click += new System.EventHandler(this.button5_Click);
+            this.button5.Click += new System.EventHandler(this.Button5_Click);
             // 
             // button4
             // 
@@ -100,7 +100,7 @@
             this.button4.Size = new System.Drawing.Size(25, 23);
             this.button4.TabIndex = 38;
             this.button4.UseVisualStyleBackColor = true;
-            this.button4.Click += new System.EventHandler(this.button4_Click);
+            this.button4.Click += new System.EventHandler(this.Button4_Click);
             // 
             // button3
             // 
@@ -110,7 +110,7 @@
             this.button3.Size = new System.Drawing.Size(25, 23);
             this.button3.TabIndex = 37;
             this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.button3_Click);
+            this.button3.Click += new System.EventHandler(this.Button3_Click);
             // 
             // button2
             // 
@@ -120,7 +120,7 @@
             this.button2.Size = new System.Drawing.Size(25, 23);
             this.button2.TabIndex = 36;
             this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
+            this.button2.Click += new System.EventHandler(this.Button2_Click);
             // 
             // button1
             // 
@@ -130,7 +130,7 @@
             this.button1.Size = new System.Drawing.Size(25, 23);
             this.button1.TabIndex = 35;
             this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.button1.Click += new System.EventHandler(this.Button1_Click);
             // 
             // textBox6
             // 
@@ -138,7 +138,7 @@
             this.textBox6.Name = "textBox6";
             this.textBox6.Size = new System.Drawing.Size(100, 19);
             this.textBox6.TabIndex = 34;
-            this.textBox6.TextChanged += new System.EventHandler(this.textBox6_TextChanged);
+            this.textBox6.TextChanged += new System.EventHandler(this.TextBox6_TextChanged);
             // 
             // label6
             // 
@@ -149,7 +149,7 @@
             this.label6.Size = new System.Drawing.Size(40, 12);
             this.label6.TabIndex = 33;
             this.label6.Text = "ScaleY";
-            this.label6.ValueChange += new Effect2DEditor.ValueChangeEventHandler(this.label6_ValueChange);
+            this.label6.ValueChange += new Effect2DEditor.ValueChangeEventHandler(this.Label6_ValueChange);
             // 
             // textBox5
             // 
@@ -157,7 +157,7 @@
             this.textBox5.Name = "textBox5";
             this.textBox5.Size = new System.Drawing.Size(100, 19);
             this.textBox5.TabIndex = 32;
-            this.textBox5.TextChanged += new System.EventHandler(this.textBox5_TextChanged);
+            this.textBox5.TextChanged += new System.EventHandler(this.TextBox5_TextChanged);
             // 
             // label5
             // 
@@ -168,7 +168,7 @@
             this.label5.Size = new System.Drawing.Size(40, 12);
             this.label5.TabIndex = 31;
             this.label5.Text = "ScaleX";
-            this.label5.ValueChange += new Effect2DEditor.ValueChangeEventHandler(this.label5_ValueChange);
+            this.label5.ValueChange += new Effect2DEditor.ValueChangeEventHandler(this.Label5_ValueChange);
             // 
             // textBox4
             // 
@@ -176,7 +176,7 @@
             this.textBox4.Name = "textBox4";
             this.textBox4.Size = new System.Drawing.Size(100, 19);
             this.textBox4.TabIndex = 30;
-            this.textBox4.TextChanged += new System.EventHandler(this.textBox4_TextChanged);
+            this.textBox4.TextChanged += new System.EventHandler(this.TextBox4_TextChanged);
             // 
             // label4
             // 
@@ -187,7 +187,7 @@
             this.label4.Size = new System.Drawing.Size(48, 12);
             this.label4.TabIndex = 29;
             this.label4.Text = "Rotation";
-            this.label4.ValueChange += new Effect2DEditor.ValueChangeEventHandler(this.label4_ValueChange);
+            this.label4.ValueChange += new Effect2DEditor.ValueChangeEventHandler(this.Label4_ValueChange);
             // 
             // textBox3
             // 
@@ -195,7 +195,7 @@
             this.textBox3.Name = "textBox3";
             this.textBox3.Size = new System.Drawing.Size(100, 19);
             this.textBox3.TabIndex = 28;
-            this.textBox3.TextChanged += new System.EventHandler(this.textBox3_TextChanged);
+            this.textBox3.TextChanged += new System.EventHandler(this.TextBox3_TextChanged);
             // 
             // label3
             // 
@@ -206,7 +206,7 @@
             this.label3.Size = new System.Drawing.Size(34, 12);
             this.label3.TabIndex = 27;
             this.label3.Text = "Alpha";
-            this.label3.ValueChange += new Effect2DEditor.ValueChangeEventHandler(this.label3_ValueChange);
+            this.label3.ValueChange += new Effect2DEditor.ValueChangeEventHandler(this.Label3_ValueChange);
             // 
             // textBox2
             // 
@@ -214,7 +214,7 @@
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(100, 19);
             this.textBox2.TabIndex = 26;
-            this.textBox2.TextChanged += new System.EventHandler(this.textBox2_TextChanged);
+            this.textBox2.TextChanged += new System.EventHandler(this.TextBox2_TextChanged);
             // 
             // label2
             // 
@@ -225,7 +225,7 @@
             this.label2.Size = new System.Drawing.Size(12, 12);
             this.label2.TabIndex = 25;
             this.label2.Text = "Y";
-            this.label2.ValueChange += new Effect2DEditor.ValueChangeEventHandler(this.label2_ValueChange);
+            this.label2.ValueChange += new Effect2DEditor.ValueChangeEventHandler(this.Label2_ValueChange);
             // 
             // textBox1
             // 
@@ -233,7 +233,7 @@
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(100, 19);
             this.textBox1.TabIndex = 24;
-            this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
+            this.textBox1.TextChanged += new System.EventHandler(this.TextBox1_TextChanged);
             // 
             // label1
             // 
@@ -244,7 +244,7 @@
             this.label1.Size = new System.Drawing.Size(12, 12);
             this.label1.TabIndex = 23;
             this.label1.Text = "X";
-            this.label1.ValueChange += new Effect2DEditor.ValueChangeEventHandler(this.label1_ValueChange);
+            this.label1.ValueChange += new Effect2DEditor.ValueChangeEventHandler(this.Label1_ValueChange);
             // 
             // changeValueLabel2
             // 
@@ -264,7 +264,7 @@
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(100, 20);
             this.comboBox1.TabIndex = 44;
-            this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
+            this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.ComboBox1_SelectedIndexChanged);
             // 
             // PropertyDock
             // 

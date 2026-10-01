@@ -97,7 +97,7 @@ namespace FlowScriptEngineBasic.FlowSourceObjects.Array
                     SetValue(nameof(F));
                     Add(ret, F);
                 }
-                return ret.ToArray();
+                return [.. ret];
             }
         }
 

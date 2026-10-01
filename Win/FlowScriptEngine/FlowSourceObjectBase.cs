@@ -305,7 +305,7 @@ namespace FlowScriptEngine
                 {
                     try
                     {
-                        memberInfo.MemberInfo.Invoke(this, new object[] { new FlowEventArgs(this, false) });
+                        memberInfo.MemberInfo.Invoke(this, [new FlowEventArgs(this, false)]);
                     }
                     catch (Exception e)
                     {
@@ -334,7 +334,7 @@ namespace FlowScriptEngine
             {
                 if (objects[i] is IgnoreAttribute)
                 {
-                    replacedNames = replaced.ToArray();
+                    replacedNames = [.. replaced];
                     return false;
                 }
                 else if (objects[i] is IToolTipText)
@@ -362,7 +362,7 @@ namespace FlowScriptEngine
                 Console.WriteLine("[{0}]'s [{1}]'s summary is not implemented", source.GetType(), memberInfo);
             }
 #endif
-            replacedNames = replaced.ToArray();
+            replacedNames = [.. replaced];
             return true;
         }
 

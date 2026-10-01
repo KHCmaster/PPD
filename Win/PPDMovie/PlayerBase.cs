@@ -65,7 +65,7 @@ namespace PPDMovie
             innerVolume = MaximumVolume;
             MovieDisplayWidth = 800;
             MovieDisplayHeight = 450;
-            MovieUtility.GraphNotify += util_GraphNotify;
+            MovieUtility.GraphNotify += Util_GraphNotify;
         }
 
         public abstract int Initialize();
@@ -139,12 +139,12 @@ namespace PPDMovie
                 y1 = 1 - y1;
                 y2 = 1 - y2;
             }
-            vertices.Write(new[] {
+            vertices.Write([
                 new ColoredTexturedVertex(new Vector3((left < 0 ? -left : 0) * scale.X, (top < 0 ? -top : 0) * scale.Y, 0.5f), new Vector2(x1, y1)),
                 new ColoredTexturedVertex(new Vector3(width + (right < 0 ? right : 0) * scale.X, (top < 0 ? -top : 0) * scale.Y, 0.5f), new Vector2(x2, y1)),
                 new ColoredTexturedVertex(new Vector3((left < 0 ? -left : 0) * scale.X, height + (bottom < 0 ? bottom : 0) * scale.Y, 0.5f), new Vector2(x1, y2)),
                 new ColoredTexturedVertex(new Vector3(width + (right < 0 ? right : 0) * scale.X, height + (bottom < 0 ? bottom : 0) * scale.Y, 0.5f), new Vector2(x2,y2))
-            });
+            ]);
         }
 
         protected override bool OnCanUpdate()
@@ -233,7 +233,7 @@ namespace PPDMovie
             }
         }
 
-        void util_GraphNotify(object sender, EventArgs e)
+        void Util_GraphNotify(object sender, EventArgs e)
         {
             OnGraphNotify();
         }
@@ -241,7 +241,7 @@ namespace PPDMovie
         void OnGraphNotify()
         {
             if (MediaEventEx == null || !initialized) return;
-            int hr = 0;
+            int hr;
             do
             {
                 if (MediaEventEx == null || !initialized)
@@ -263,7 +263,7 @@ namespace PPDMovie
             while (hr == 0);
         }
 
-        public virtual void releaseCOM()
+        public virtual void ReleaseCOM()
         {
             if (!initialized) return;
             this.initialized = false;
@@ -275,12 +275,12 @@ namespace PPDMovie
         {
             vertices?.Dispose();
             vertices = null;
-            MovieUtility.GraphNotify -= util_GraphNotify;
+            MovieUtility.GraphNotify -= Util_GraphNotify;
             var thread = new Thread(() =>
             {
                 Stop();
                 Thread.Sleep(1000);
-                releaseCOM();
+                ReleaseCOM();
             })
             {
                 IsBackground = true

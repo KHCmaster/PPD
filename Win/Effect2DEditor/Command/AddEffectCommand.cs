@@ -6,18 +6,12 @@ using System.Drawing;
 
 namespace Effect2DEditor.Command
 {
-    class AddEffectCommand : CommandBase
+    class AddEffectCommand(EffectManager manager, string exp, int insertindex, string filename, SortedList<string, Image> imagepool) : CommandBase(manager, exp)
     {
-        readonly int insertindex;
-        readonly string filename;
-        readonly SortedList<string, Image> imagepool;
-        public AddEffectCommand(EffectManager manager, string exp, int insertindex, string filename, SortedList<string, Image> imagepool)
-            : base(manager, exp)
-        {
-            this.insertindex = insertindex;
-            this.filename = filename;
-            this.imagepool = imagepool;
-        }
+        readonly int insertindex = insertindex;
+        readonly string filename = filename;
+        readonly SortedList<string, Image> imagepool = imagepool;
+
         public override void Undo()
         {
             manager.Effects.RemoveAt(insertindex);

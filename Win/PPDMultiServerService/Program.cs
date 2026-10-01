@@ -26,10 +26,10 @@ namespace PPDMultiServerService
                 }
 
                 ServiceBase[] ServicesToRun;
-                ServicesToRun = new ServiceBase[]
-            {
+                ServicesToRun =
+            [
                 new Service()
-            };
+            ];
                 ServiceBase.Run(ServicesToRun);
             }
             catch (Exception e)

@@ -15,7 +15,7 @@ namespace PPDEditor.Forms
             {
                 Interval = 1000
             };
-            timer.Tick += timer_Tick;
+            timer.Tick += Timer_Tick;
             AutoScroll = true;
         }
 
@@ -26,7 +26,7 @@ namespace PPDEditor.Forms
             return this.DisplayRectangle.Location;
         }
 
-        void timer_Tick(object sender, EventArgs e)
+        void Timer_Tick(object sender, EventArgs e)
         {
             this.SuspendLayout();
             GetBackGround();

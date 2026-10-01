@@ -10,21 +10,15 @@ namespace FlowScriptEngineSlimDX.FlowSourceObjects.Color4
     {
         public override object GetPropertyValue(string propertyName)
         {
-            switch (propertyName)
+            return propertyName switch
             {
-                case "Alpha":
-                    return Alpha;
-                case "Blue":
-                    return Blue;
-                case "Green":
-                    return Green;
-                case "Red":
-                    return Red;
-                case "Value":
-                    return Value;
-                default:
-                    return null;
-            }
+                "Alpha" => Alpha,
+                "Blue" => Blue,
+                "Green" => Green,
+                "Red" => Red,
+                "Value" => Value,
+                _ => null,
+            };
         }
 
         protected override void SetPropertyValue(string propertyName, object value)

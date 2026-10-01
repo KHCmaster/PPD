@@ -111,8 +111,8 @@ namespace FlowScriptEnginePPDEditor.FlowSourceObjects.Event
                 SetValue(nameof(Event));
                 if (Event != null)
                 {
-                    return new object[]{
-                        Event.MovieVolumePercent,                        Event.SquareVolumePercent,                        Event.CrossVolumePercent,                        Event.CircleVolumePercent,                        Event.TriangleVolumePercent,                        Event.LeftVolumePercent,                        Event.DownVolumePercent,                        Event.RightVolumePercent,                        Event.UpVolumePercent,                        Event.RVolumePercent,                        Event.LVolumePercent                    };
+                    return [
+                        Event.MovieVolumePercent,                        Event.SquareVolumePercent,                        Event.CrossVolumePercent,                        Event.CircleVolumePercent,                        Event.TriangleVolumePercent,                        Event.LeftVolumePercent,                        Event.DownVolumePercent,                        Event.RightVolumePercent,                        Event.UpVolumePercent,                        Event.RVolumePercent,                        Event.LVolumePercent                    ];
                 }
                 return null;
             }
@@ -126,8 +126,8 @@ namespace FlowScriptEnginePPDEditor.FlowSourceObjects.Event
                 SetValue(nameof(Event));
                 if (Event != null)
                 {
-                    return new object[]{
-                        Event.SquareKeepPlaying,                        Event.CrossKeepPlaying,                        Event.CircleKeepPlaying,                        Event.TriangleKeepPlaying,                        Event.LeftKeepPlaying,                        Event.DownKeepPlaying,                        Event.RightKeepPlaying,                        Event.UpKeepPlaying,                        Event.RKeepPlaying,                        Event.LKeepPlaying                    };
+                    return [
+                        Event.SquareKeepPlaying,                        Event.CrossKeepPlaying,                        Event.CircleKeepPlaying,                        Event.TriangleKeepPlaying,                        Event.LeftKeepPlaying,                        Event.DownKeepPlaying,                        Event.RightKeepPlaying,                        Event.UpKeepPlaying,                        Event.RKeepPlaying,                        Event.LKeepPlaying                    ];
                 }
                 return null;
             }
@@ -141,8 +141,8 @@ namespace FlowScriptEnginePPDEditor.FlowSourceObjects.Event
                 SetValue(nameof(Event));
                 if (Event != null)
                 {
-                    return new object[]{
-                        Event.SquareReleaseSound,                        Event.CrossReleaseSound,                        Event.CircleReleaseSound,                        Event.TriangleReleaseSound,                        Event.LeftReleaseSound,                        Event.DownReleaseSound,                        Event.RightReleaseSound,                        Event.UpReleaseSound,                        Event.RReleaseSound,                        Event.LReleaseSound                    };
+                    return [
+                        Event.SquareReleaseSound,                        Event.CrossReleaseSound,                        Event.CircleReleaseSound,                        Event.TriangleReleaseSound,                        Event.LeftReleaseSound,                        Event.DownReleaseSound,                        Event.RightReleaseSound,                        Event.UpReleaseSound,                        Event.RReleaseSound,                        Event.LReleaseSound                    ];
                 }
                 return null;
             }

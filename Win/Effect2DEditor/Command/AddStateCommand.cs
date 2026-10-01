@@ -6,22 +6,16 @@ using System.Drawing.Drawing2D;
 
 namespace Effect2DEditor.Command
 {
-    class AddStateCommand : CommandBase
+    class AddStateCommand(EffectManager manager, string exp, bool IsKey, int itemindex, int keyindex) : CommandBase(manager, exp)
     {
-        readonly bool iskey;
-        readonly int itemindex;
-        readonly int keyindex;
+        readonly bool iskey = IsKey;
+        readonly int itemindex = itemindex;
+        readonly int keyindex = keyindex;
         bool islast;
         bool twoframeinserted;
         EffectStateRatioSet previousset;
         int setindex;
-        public AddStateCommand(EffectManager manager, string exp, bool IsKey, int itemindex, int keyindex)
-            : base(manager, exp)
-        {
-            iskey = IsKey;
-            this.itemindex = itemindex;
-            this.keyindex = keyindex;
-        }
+
         public override void Undo()
         {
             IEffect effect = manager.Effects[itemindex];
@@ -226,8 +220,8 @@ namespace Effect2DEditor.Command
                 ScaleAt(new PointF(BezierRatioMaker.MaxLength, 0), new PointF(BezierRatioMaker.MaxLength / (BezierRatioMaker.MaxLength - bcp22.Second.X), BezierRatioMaker.MaxLength / bcp22.Second.Y), bcp3);
                 ScaleAt(new PointF(BezierRatioMaker.MaxLength, 0), new PointF(BezierRatioMaker.MaxLength / (BezierRatioMaker.MaxLength - bcp22.Second.X), BezierRatioMaker.MaxLength / bcp22.Second.Y), bcp22);
                 bcp22.Second = new PointF(0, 128);
-                out1 = new BezierControlPoint[] { bcp1, bcp2 };
-                out2 = new BezierControlPoint[] { bcp22, bcp3 };
+                out1 = [bcp1, bcp2];
+                out2 = [bcp22, bcp3];
             }
         }
         private void ScaleAt(PointF basepoint, PointF Scale, BezierControlPoint bcp)

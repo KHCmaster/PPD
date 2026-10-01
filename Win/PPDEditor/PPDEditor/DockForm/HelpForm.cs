@@ -9,16 +9,16 @@ namespace PPDEditor
         public HelpForm()
         {
             InitializeComponent();
-            webBrowser1.Navigated += webBrowser1_Navigated;
-            webBrowser1.ProgressChanged += webBrowser1_ProgressChanged;
+            webBrowser1.Navigated += WebBrowser1_Navigated;
+            webBrowser1.ProgressChanged += WebBrowser1_ProgressChanged;
         }
 
-        void webBrowser1_ProgressChanged(object sender, WebBrowserProgressChangedEventArgs e)
+        void WebBrowser1_ProgressChanged(object sender, WebBrowserProgressChangedEventArgs e)
         {
             toolStripButton3.Visible &= e.CurrentProgress != e.MaximumProgress;
         }
 
-        void webBrowser1_Navigated(object sender, WebBrowserNavigatedEventArgs e)
+        void WebBrowser1_Navigated(object sender, WebBrowserNavigatedEventArgs e)
         {
             toolStripTextBox1.Text = webBrowser1.Url.ToString();
             toolStripButton1.Enabled = webBrowser1.CanGoBack;
@@ -31,7 +31,7 @@ namespace PPDEditor
             webBrowser1.Navigate(url);
         }
 
-        private void toolStripButton1_Click(object sender, EventArgs e)
+        private void ToolStripButton1_Click(object sender, EventArgs e)
         {
             if (webBrowser1.CanGoBack)
             {
@@ -39,7 +39,7 @@ namespace PPDEditor
             }
         }
 
-        private void toolStripButton2_Click(object sender, EventArgs e)
+        private void ToolStripButton2_Click(object sender, EventArgs e)
         {
             if (webBrowser1.CanGoForward)
             {
@@ -47,7 +47,7 @@ namespace PPDEditor
             }
         }
 
-        private void toolStripTextBox1_KeyDown(object sender, KeyEventArgs e)
+        private void ToolStripTextBox1_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Return)
             {
@@ -55,7 +55,7 @@ namespace PPDEditor
             }
         }
 
-        private void toolStripTextBox1_KeyPress(object sender, KeyPressEventArgs e)
+        private void ToolStripTextBox1_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (e.KeyChar == '\r' || e.KeyChar == '\n')
             {

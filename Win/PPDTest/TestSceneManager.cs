@@ -5,19 +5,12 @@ using System.Collections.Generic;
 
 namespace PPDTest
 {
-    class TestSceneManager
+    class TestSceneManager(SceneManager sceneManager, PPDDevice device)
     {
-        readonly List<Type> sceneTypes;
+        readonly List<Type> sceneTypes = [];
         int currentSceneIndex;
-        readonly PPDDevice device;
-        readonly SceneManager sceneManager;
-
-        public TestSceneManager(SceneManager sceneManager, PPDDevice device)
-        {
-            this.device = device;
-            this.sceneManager = sceneManager;
-            sceneTypes = [];
-        }
+        readonly PPDDevice device = device;
+        readonly SceneManager sceneManager = sceneManager;
 
         public void Add(Type type)
         {

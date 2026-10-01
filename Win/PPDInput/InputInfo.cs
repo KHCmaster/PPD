@@ -3,15 +3,10 @@ using System;
 
 namespace PPDInput
 {
-    class InputInfo : InputInfoBase
+    class InputInfo(bool accurate) : InputInfoBase(accurate)
     {
         private int[] pressCount;
         private bool[] released;
-
-        public InputInfo(bool accurate)
-            : base(accurate)
-        {
-        }
 
         public void Update(int[] keyPressCount, bool[] keyReleased, int[] buttonPressCount, bool[] buttonReleased)
         {

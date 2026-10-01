@@ -28,7 +28,7 @@ namespace PPDEditor
             this.label3.ForeColor = PPDEditorSkin.Skin.TransparentTextColor;
             this.label4.ForeColor = PPDEditorSkin.Skin.TransparentTextColor;
         }
-        private void updateText()
+        private void UpdateText()
         {
             if (data.Count <= 1) return;
             long tempdata = (long)data[^1] - (long)data[0];
@@ -36,22 +36,22 @@ namespace PPDEditor
             this.label4.Text = (60f / (tempdata / 1000f) * data.Count).ToString();
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void Button2_Click(object sender, EventArgs e)
         {
             data.Clear();
             this.label3.Text = "0";
             this.label4.Text = "0";
         }
 
-        private void button2_Enter(object sender, EventArgs e)
+        private void Button2_Enter(object sender, EventArgs e)
         {
             button1.Focus();
         }
 
-        private void button1_MouseDown(object sender, MouseEventArgs e)
+        private void Button1_MouseDown(object sender, MouseEventArgs e)
         {
             data.Add(NativeMethods.timeGetTime());
-            updateText();
+            UpdateText();
 
         }
 
@@ -65,7 +65,7 @@ namespace PPDEditor
                 {
                     e.Handled = true;
                     data.Add(NativeMethods.timeGetTime());
-                    updateText();
+                    UpdateText();
                 }
             }
         }

@@ -121,8 +121,8 @@ namespace PPD
             {
                 Position = new System.Numerics.Vector2(400, 0)
             };
-            textureString.MouseEnter += textureString_MouseEnter;
-            textureString.MouseLeftClick += textureString_MouseLeftClick;
+            textureString.MouseEnter += TextureString_MouseEnter;
+            textureString.MouseLeftClick += TextureString_MouseLeftClick;
             textSprite.AddChild(textureString);
             modified = true;
             menuEnabled.Add(true);
@@ -130,13 +130,13 @@ namespace PPD
             currentIndex = 0;
         }
 
-        void textureString_MouseLeftClick(GameComponent sender, MouseEvent mouseEvent)
+        void TextureString_MouseLeftClick(GameComponent sender, MouseEvent mouseEvent)
         {
             currentIndex = textSprite.IndexOf(sender);
             Selected?.Invoke(this, EventArgs.Empty);
         }
 
-        void textureString_MouseEnter(GameComponent sender, MouseEvent mouseEvent)
+        void TextureString_MouseEnter(GameComponent sender, MouseEvent mouseEvent)
         {
             currentIndex = textSprite.IndexOf(sender);
         }

@@ -25,7 +25,7 @@ namespace PPDFramework
             }
 
             var alive = true;
-            EventHandler disposed = (sender, e) => alive = false;
+            void disposed(object sender, EventArgs e) => alive = false;
             control.Disposed += disposed;
             try
             {

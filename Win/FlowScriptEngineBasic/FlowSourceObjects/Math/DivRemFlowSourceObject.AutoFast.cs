@@ -9,15 +9,12 @@ namespace FlowScriptEngineBasic.FlowSourceObjects.Math
     {
         public override object GetPropertyValue(string propertyName)
         {
-            switch (propertyName)
+            return propertyName switch
             {
-                case "Quotient":
-                    return Quotient;
-                case "Remainder":
-                    return Remainder;
-                default:
-                    return null;
-            }
+                "Quotient" => Quotient,
+                "Remainder" => Remainder,
+                _ => null,
+            };
         }
 
         protected override void SetPropertyValue(string propertyName, object value)

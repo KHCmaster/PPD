@@ -5,13 +5,8 @@ using PPDMath;
 
 namespace PPDSingle
 {
-    public class TestMenu : SceneBase
+    public class TestMenu(PPDDevice device) : SceneBase(device)
     {
-        public TestMenu(PPDDevice device) : base(device)
-        {
-
-        }
-
         public override bool Load()
         {
             SpriteObject sprite;

@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 
 namespace PPDMovie
 {
-    public abstract class MusicPlayerBase : PlayerBase
+    public abstract class MusicPlayerBase(PPDDevice device, string filename) : PlayerBase(device, filename)
     {
         protected IGraphBuilder graphBuilder2;
         protected IMediaSeeking mediaSeeking;
@@ -50,7 +50,7 @@ namespace PPDMovie
                     var innerVolumeRatio = (innerVolume - VolumeSilence) / (float)-VolumeSilence;
                     var userVolumeRatio = userVolume / 100f;
                     var volume = Math.Min(0, SoundMasterControl.Instance.GetVolume((int)(innerVolumeRatio * userVolumeRatio * 10000 + VolumeSilence), SoundType.Movie));
-                    var hr = this.basicAudio.put_Volume(volume);
+                    var hr = this.basicAudio.Put_Volume(volume);
                 }
             }
         }
@@ -70,11 +70,6 @@ namespace PPDMovie
             {
                 mediaSeeking?.SetRate(value);
             }
-        }
-
-        protected MusicPlayerBase(PPDDevice device, string filename)
-            : base(device, filename)
-        {
         }
 
         public override int Initialize()
@@ -128,7 +123,7 @@ namespace PPDMovie
 
             DumpFilterLog();
 
-            hr = this.mediaPosition.get_Duration(out this.length);
+            hr = this.mediaPosition.Get_Duration(out this.length);
             DsError.ThrowExceptionForHR(hr);
             state = MovieFadeState.None;
             Volume = MaximumVolume;
@@ -146,32 +141,30 @@ namespace PPDMovie
             var hr = this.graphBuilder2.EnumFilters(out IEnumFilters fils);
             IBaseFilter[] fil = new IBaseFilter[1];
             IntPtr ptr = IntPtr.Zero;
-            using (StreamWriter sw = new(Path.Combine(Utility.AppDir, "filterinfo.log")))
+            using StreamWriter sw = new(Path.Combine(Utility.AppDir, "filterinfo.log"));
+            try
             {
-                try
+                while (true)
                 {
-                    while (true)
+                    hr = fils.Next(1, fil, ptr);
+                    DsError.ThrowExceptionForHR(hr);
+                    var fi = new FilterInfo();
+                    hr = fil[0].QueryFilterInfo(fi);
+                    try
                     {
-                        hr = fils.Next(1, fil, ptr);
                         DsError.ThrowExceptionForHR(hr);
-                        var fi = new FilterInfo();
-                        hr = fil[0].QueryFilterInfo(fi);
-                        try
-                        {
-                            DsError.ThrowExceptionForHR(hr);
-                        }
-                        catch
-                        {
-                            //next works fine 
-                            continue;
-                        }
-                        sw.WriteLine(fi.achName);
                     }
+                    catch
+                    {
+                        //next works fine 
+                        continue;
+                    }
+                    sw.WriteLine(fi.achName);
                 }
-                catch
-                {
+            }
+            catch
+            {
 
-                }
             }
         }
 
@@ -184,7 +177,7 @@ namespace PPDMovie
 
             if (time <= this.length && time >= 0)
             {
-                var hr = this.mediaPosition.put_CurrentPosition(time);
+                var hr = this.mediaPosition.Put_CurrentPosition(time);
                 DsError.ThrowExceptionForHR(hr);
             }
         }
@@ -222,7 +215,7 @@ namespace PPDMovie
             Volume = innerVolume;
         }
 
-        public override void releaseCOM()
+        public override void ReleaseCOM()
         {
             if (!initialized) return;
             int hr = 0;
@@ -275,10 +268,9 @@ namespace PPDMovie
 
         public void RemoveAllFilters()
         {
-            int hr = 0;
             var filtersArray = new ArrayList();
 
-            hr = this.graphBuilder2.EnumFilters(out IEnumFilters enumFilters);
+            int hr = graphBuilder2.EnumFilters(out IEnumFilters enumFilters);
             DsError.ThrowExceptionForHR(hr);
 
             IBaseFilter[] filters = new IBaseFilter[1];
@@ -312,7 +304,7 @@ namespace PPDMovie
                     return 0;
                 }
 
-                this.mediaPosition.get_CurrentPosition(out double check);
+                this.mediaPosition.Get_CurrentPosition(out double check);
                 return check;
             }
         }

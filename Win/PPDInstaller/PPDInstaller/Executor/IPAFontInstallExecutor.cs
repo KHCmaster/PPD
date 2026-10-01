@@ -5,18 +5,12 @@ using System.Windows.Forms;
 
 namespace PPDInstaller.Executor
 {
-    class IPAFontInstallExecutor : CExecutor
+    class IPAFontInstallExecutor(string filePath, string unzipPath, Control control) : CExecutor(control)
     {
         public static Uri ipafonturi = new("http://ossipedia.ipa.go.jp/ipafont/ipag00303.php");
         readonly FileDownloader downloadClient = new();
-        readonly string filePath;
-        readonly string unzipPath;
-        public IPAFontInstallExecutor(string filePath, string unzipPath, Control control)
-            : base(control)
-        {
-            this.filePath = filePath;
-            this.unzipPath = unzipPath;
-        }
+        readonly string filePath = filePath;
+        readonly string unzipPath = unzipPath;
 
         public override void Execute()
         {

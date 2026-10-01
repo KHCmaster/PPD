@@ -13,16 +13,11 @@ using System.Threading.Tasks;
 
 namespace PPDSingle
 {
-    class MainGame : PPDCore.MainGame
+    class MainGame(PPDDevice device) : PPDCore.MainGame(device)
     {
         UserScoreListComponent userScoreListComponent;
         UserPlayState selfPlayState;
         GhostPlayInfo[] ghostPlayInfos;
-
-        public MainGame(PPDDevice device) : base(device)
-        {
-
-        }
 
         protected override void OnBeforeInitialize()
         {
@@ -40,31 +35,29 @@ namespace PPDSingle
                     GodMode = true,
                     MuteSE = true
                 };
-                using (var disposable = Sound.Disable())
+                using var disposable = Sound.Disable();
+                var reason = WebManager.Instance.GetGhost(CryptographyUtility.Getx2Encoding(gameUtility.SongInformation.GetScoreHash(gameUtility.Difficulty)),
+                    gameUtility.RivalGhostCount, out GhostInfo[] ghosts);
+                if (reason == ErrorReason.OK)
                 {
-                    var reason = WebManager.Instance.GetGhost(CryptographyUtility.Getx2Encoding(gameUtility.SongInformation.GetScoreHash(gameUtility.Difficulty)),
-                        gameUtility.RivalGhostCount, out GhostInfo[] ghosts);
-                    if (reason == ErrorReason.OK)
+                    var games = new MainGameComponent[ghosts.Length];
+                    for (var i = 0; i < games.Length; i++)
                     {
-                        var games = new MainGameComponent[ghosts.Length];
-                        for (var i = 0; i < games.Length; i++)
-                        {
-                            games[i] = new MainGameComponent(device, GameHost, ResourceManager, Sound, this, newGameUtility,
-                                null, (MarkImagePathsBase)Param["MarkImagePath"], null, null, MainGameConfigBase.Default, startTime, mmStartTime);
-                            games[i].Initialize(false, true);
-                        }
-                        userScoreListComponent = new UserScoreListComponent(device, ResourceManager)
-                        {
-                            Position = new System.Numerics.Vector2(680, 45)
-                        };
+                        games[i] = new MainGameComponent(device, GameHost, ResourceManager, Sound, this, newGameUtility,
+                            null, (MarkImagePathsBase)Param["MarkImagePath"], null, null, MainGameConfigBase.Default, startTime, mmStartTime);
+                        games[i].Initialize(false, true);
+                    }
+                    userScoreListComponent = new UserScoreListComponent(device, ResourceManager)
+                    {
+                        Position = new System.Numerics.Vector2(680, 45)
+                    };
 
-                        var ghostInfo = new Dictionary<GhostInfo, GhostFrame[]>();
-                        var actions = new Action[] {
+                    var ghostInfo = new Dictionary<GhostInfo, GhostFrame[]>();
+                    var actions = new Action[] {
                             () => {
                                 var progresses =new int[ghosts.Length];
                                 var prevAllProgress = 0;
-                                Action<int, int> allProgressCallback = (i, p) =>
-                                {
+                                void allProgressCallback (int i, int p)                                 {
                                     progresses[i] = p;
                                     var allProgress = progresses.Sum() / ghosts.Length;
                                     if (prevAllProgress != allProgress)
@@ -74,20 +67,19 @@ namespace PPDSingle
                                             {"Progress", allProgress}                                    });
                                         prevAllProgress = allProgress;
                                     }
-                                };
+                                }
                                 Parallel.For(0, ghosts.Length, new ParallelOptions { MaxDegreeOfParallelism = Environment.ProcessorCount },  i =>
                                 {
                                     var ghost = ghosts[i];
                                     var tempMainGameComponent = games[i];
                                     var prevProgress = 0;
-                                    Action<int> progressCallback = p =>
-                                    {
+                                    void progressCallback(int p) {
                                         if (prevProgress != p)
                                         {
                                             allProgressCallback(i, p);
                                             prevProgress = p;
                                         }
-                                    };
+                                    }
                                     var ghostFrame = tempMainGameComponent.GetGhostFrames(ghost.ReplayData, progressCallback);
                                     lock(ghostInfo)
                                     {
@@ -99,12 +91,11 @@ namespace PPDSingle
                                 InitializeUserList(ghosts);
                             }
                         };
-                        Parallel.ForEach(actions, new ParallelOptions { MaxDegreeOfParallelism = Environment.ProcessorCount }, a => a());
-                        ghostPlayInfos = ghostInfo.Select(p =>
-                            new GhostPlayInfo(
-                                userScoreListComponent.Players.FirstOrDefault(pi => !pi.UserPlayState.User.IsSelf && pi.UserPlayState.User.AccountId == p.Key.AccountId).UserPlayState,
-                                p.Value)).ToArray();
-                    }
+                    Parallel.ForEach(actions, new ParallelOptions { MaxDegreeOfParallelism = Environment.ProcessorCount }, a => a());
+                    ghostPlayInfos = [.. ghostInfo.Select(p =>
+                        new GhostPlayInfo(
+                            userScoreListComponent.Players.FirstOrDefault(pi => !pi.UserPlayState.User.IsSelf && pi.UserPlayState.User.AccountId == p.Key.AccountId).UserPlayState,
+                            p.Value))];
                 }
             }
         }
@@ -128,12 +119,12 @@ namespace PPDSingle
                 userScoreListComponent.AddUser(userPlayState, t.Item1.ShowScore, t.Item1.ShowEvaluate, t.Item1.ShowLife);
             }
             userScoreListComponent.Retry();
-            gr.Retryed += gr_Retryed;
-            gr.Replayed += gr_Replayed;
-            mainGameComponent.Drawed += mainGameComponent_Drawed;
-            mainGameComponent.ScoreChanged += mainGameComponent_ScoreChanged;
-            mainGameComponent.LifeChanged += mainGameComponent_LifeChanged;
-            mainGameComponent.EvaluateChanged += mainGameComponent_EvaluateChanged;
+            gr.Retryed += Gr_Retryed;
+            gr.Replayed += Gr_Replayed;
+            mainGameComponent.Drawed += MainGameComponent_Drawed;
+            mainGameComponent.ScoreChanged += MainGameComponent_ScoreChanged;
+            mainGameComponent.LifeChanged += MainGameComponent_LifeChanged;
+            mainGameComponent.EvaluateChanged += MainGameComponent_EvaluateChanged;
             foreach (var u in userScoreListComponent.Players)
             {
                 var path = Path.GetTempFileName();
@@ -142,12 +133,12 @@ namespace PPDSingle
             }
         }
 
-        void gr_Replayed(object sender, EventArgs e)
+        void Gr_Replayed(object sender, EventArgs e)
         {
             Reset();
         }
 
-        void gr_Retryed(object sender, EventArgs e)
+        void Gr_Retryed(object sender, EventArgs e)
         {
             Reset();
         }
@@ -199,7 +190,7 @@ namespace PPDSingle
             }
         }
 
-        void mainGameComponent_EvaluateChanged(PPDFramework.MarkEvaluateType arg1, bool arg2)
+        void MainGameComponent_EvaluateChanged(PPDFramework.MarkEvaluateType arg1, bool arg2)
         {
             if (selfPlayState != null)
             {
@@ -208,17 +199,17 @@ namespace PPDSingle
             }
         }
 
-        void mainGameComponent_LifeChanged(int obj)
+        void MainGameComponent_LifeChanged(int obj)
         {
             selfPlayState?.Life = obj;
         }
 
-        void mainGameComponent_ScoreChanged(int obj)
+        void MainGameComponent_ScoreChanged(int obj)
         {
             selfPlayState?.Score = obj;
         }
 
-        void mainGameComponent_Drawed(LayerType layerType)
+        void MainGameComponent_Drawed(LayerType layerType)
         {
             if (layerType == LayerType.AfterMarkEffect)
             {
@@ -240,17 +231,11 @@ namespace PPDSingle
             }
         }
 
-        class GhostPlayInfo
+        class GhostPlayInfo(UserPlayState userPlayState, GhostFrame[] ghostFrames)
         {
-            readonly UserPlayState userPlayState;
-            readonly GhostFrame[] ghostFrames;
+            readonly UserPlayState userPlayState = userPlayState;
+            readonly GhostFrame[] ghostFrames = ghostFrames;
             int index;
-
-            public GhostPlayInfo(UserPlayState userPlayState, GhostFrame[] ghostFrames)
-            {
-                this.userPlayState = userPlayState;
-                this.ghostFrames = ghostFrames;
-            }
 
             public void Retry()
             {

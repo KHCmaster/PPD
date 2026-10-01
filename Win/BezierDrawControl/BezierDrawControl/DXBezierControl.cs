@@ -80,18 +80,13 @@ namespace BezierDrawControl
             }
         }
 
-        public class Context : IBezierDrawContext
+        public class Context(DXBezierControl.BezierDrawer drawer) : IBezierDrawContext
         {
             public BezierDrawer Drawer
             {
                 get;
                 private set;
-            }
-
-            public Context(BezierDrawer drawer)
-            {
-                Drawer = drawer;
-            }
+            } = drawer;
 
             public void DrawString(string text, Color color, float fontSize, PointF point)
             {
@@ -126,10 +121,10 @@ namespace BezierDrawControl
                 var line = new LineComponent(Drawer.Device, Drawer.ResourceManager,
                     new Vortice.Mathematics.Color4(color.R / 255f, color.G / 255f, color.B / 255f, color.A / 255f))
                 {
-                    Points = new System.Numerics.Vector2[] {
+                    Points = [
                         new(p1.X,p1.Y),
                         new(p2.X,p2.Y)
-                    },
+                    ],
                     LineWidth = 1
                 };
                 Drawer.DrawTarget.InsertChild(line, 0);
@@ -140,7 +135,7 @@ namespace BezierDrawControl
                 var line = new LineComponent(Drawer.Device, Drawer.ResourceManager,
                     new Vortice.Mathematics.Color4(color.R / 255f, color.G / 255f, color.B / 255f, color.A / 255f))
                 {
-                    Points = points.Select(p => new System.Numerics.Vector2(p.X, p.Y)).ToArray(),
+                    Points = [.. points.Select(p => new System.Numerics.Vector2(p.X, p.Y))],
                     LineWidth = 1
                 };
                 Drawer.DrawTarget.InsertChild(line, 0);

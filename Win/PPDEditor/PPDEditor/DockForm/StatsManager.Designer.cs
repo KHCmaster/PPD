@@ -104,7 +104,7 @@
             this.listBox1.Name = "listBox1";
             this.listBox1.Size = new System.Drawing.Size(128, 407);
             this.listBox1.TabIndex = 0;
-            this.listBox1.SelectedIndexChanged += new System.EventHandler(this.listBox1_SelectedIndexChanged);
+            this.listBox1.SelectedIndexChanged += new System.EventHandler(this.ListBox1_SelectedIndexChanged);
             // 
             // tabControl1
             // 
@@ -234,7 +234,7 @@
             this.chart2.Size = new System.Drawing.Size(420, 375);
             this.chart2.TabIndex = 1;
             this.chart2.Text = "chart2";
-            this.chart2.FormatNumber += new System.EventHandler<System.Windows.Forms.DataVisualization.Charting.FormatNumberEventArgs>(this.chart2_FormatNumber);
+            this.chart2.FormatNumber += new System.EventHandler<System.Windows.Forms.DataVisualization.Charting.FormatNumberEventArgs>(this.Chart2_FormatNumber);
             // 
             // StatsManager
             // 

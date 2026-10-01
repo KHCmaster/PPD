@@ -96,7 +96,7 @@ namespace PPDEditor.Forms
             }
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void Button2_Click(object sender, EventArgs e)
         {
             if (CheckInput())
             {
@@ -105,13 +105,13 @@ namespace PPDEditor.Forms
             }
         }
 
-        private void button3_Click(object sender, EventArgs e)
+        private void Button3_Click(object sender, EventArgs e)
         {
             this.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.Close();
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void Button1_Click(object sender, EventArgs e)
         {
             folderBrowserDialog1.SelectedPath = textBox5.Text;
             if (folderBrowserDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)

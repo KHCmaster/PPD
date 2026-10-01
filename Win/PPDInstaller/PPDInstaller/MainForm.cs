@@ -105,7 +105,7 @@ namespace PPDInstaller
             extractDialog.ShowDialog();
             DataDirectory = Path.Combine(extractDialog.ExtractDir, "Data");
 
-            confirmPanel1.InstallFinished += confirmPanel1_InstallFinished;
+            confirmPanel1.InstallFinished += ConfirmPanel1_InstallFinished;
 
             AddPanel(this.startPanel1);
             AddPanel(this.installPanel1);
@@ -191,7 +191,7 @@ namespace PPDInstaller
             ApplyPanelProperty(panels[currentIndex]);
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void Button1_Click(object sender, EventArgs e)
         {
             this.Close();
         }
@@ -220,7 +220,7 @@ namespace PPDInstaller
             }
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void Button2_Click(object sender, EventArgs e)
         {
             if (interrupted)
             {
@@ -243,12 +243,12 @@ namespace PPDInstaller
             cancelButton.Text = panel.CancelText;
         }
 
-        private void button3_Click(object sender, EventArgs e)
+        private void Button3_Click(object sender, EventArgs e)
         {
             Previous();
         }
 
-        void confirmPanel1_InstallFinished(object sender, EventArgs e)
+        void ConfirmPanel1_InstallFinished(object sender, EventArgs e)
         {
             confirmPanel1.InstallInfo.RegisterToMenu = linkCreatePanel1.CreateStartMenu;
             WriteLangISO();
@@ -275,13 +275,11 @@ namespace PPDInstaller
             {
                 if (File.Exists(path))
                 {
-                    using (StreamReader reader = new(path))
+                    using StreamReader reader = new(path);
+                    var setting = new SettingReader(reader.ReadToEnd());
+                    foreach (string key in InstallInfo.InstallationInfoData)
                     {
-                        var setting = new SettingReader(reader.ReadToEnd());
-                        foreach (string key in InstallInfo.InstallationInfoData)
-                        {
-                            installedInfo[key] |= setting[key] == "1";
-                        }
+                        installedInfo[key] |= setting[key] == "1";
                     }
                 }
 
@@ -345,12 +343,10 @@ namespace PPDInstaller
                 var setting = new SettingReader(sr.ReadToEnd());
                 sr.Close();
                 setting.ReplaceOrAdd("Language", langFileISO);
-                using (SettingWriter sw = new(path, false))
+                using SettingWriter sw = new(path, false);
+                foreach (KeyValuePair<string, string> kvp in setting.Dictionary)
                 {
-                    foreach (KeyValuePair<string, string> kvp in setting.Dictionary)
-                    {
-                        sw.Write(kvp.Key, kvp.Value);
-                    }
+                    sw.Write(kvp.Key, kvp.Value);
                 }
             }
         }
@@ -363,12 +359,10 @@ namespace PPDInstaller
                 var setting = new SettingReader(sr.ReadToEnd());
                 sr.Close();
                 setting.ReplaceOrAdd("fontname", fontName);
-                using (SettingWriter sw = new(path, false))
+                using SettingWriter sw = new(path, false);
+                foreach (KeyValuePair<string, string> kvp in setting.Dictionary)
                 {
-                    foreach (KeyValuePair<string, string> kvp in setting.Dictionary)
-                    {
-                        sw.Write(kvp.Key, kvp.Value);
-                    }
+                    sw.Write(kvp.Key, kvp.Value);
                 }
             }
         }

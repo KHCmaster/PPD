@@ -11,7 +11,10 @@ namespace PPDFramework
     /// <summary>
     /// シーンマネージャー
     /// </summary>
-    public class SceneManager : DisposableComponent
+    /// <remarks>
+    /// コンストラクタ
+    /// </remarks>
+    public class SceneManager(PPDDevice device) : DisposableComponent
     {
         /// <summary>
         /// ローディングに入った
@@ -56,12 +59,12 @@ namespace PPDFramework
             set;
         }
 
-        readonly PPDDevice device;
+        readonly PPDDevice device = device;
         ISceneBase nextScene;
         ISceneBase previousScene;
         Thread loadingThread;
-        readonly Dictionary<Type, Dictionary<string, object>> globalPool;
-        readonly Stack<ISceneBase> sceneStack;
+        readonly Dictionary<Type, Dictionary<string, object>> globalPool = [];
+        readonly Stack<ISceneBase> sceneStack = new Stack<ISceneBase>();
         bool previousSceneResourceUsing;
 
         float lastTime;
@@ -96,16 +99,6 @@ namespace PPDFramework
             {
                 return loadingThread != null;
             }
-        }
-
-        /// <summary>
-        /// コンストラクタ
-        /// </summary>
-        public SceneManager(PPDDevice device)
-        {
-            this.device = device;
-            globalPool = [];
-            sceneStack = new Stack<ISceneBase>();
         }
 
         /// <summary>
@@ -215,10 +208,10 @@ namespace PPDFramework
                 }
                 else
                 {
-                    nextScene.ResourceManager = new ResourceManager(new Tuple<ResourceManager, bool>[] {
+                    nextScene.ResourceManager = new ResourceManager([
                         new( new SpriteResourceManager(device, nextScene.SpriteDir), true),
                         new( caller.ResourceManager,false)
-                    });
+                    ]);
                     previousSceneResourceUsing = true;
                 }
             }

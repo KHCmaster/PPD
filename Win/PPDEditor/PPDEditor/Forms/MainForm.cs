@@ -177,22 +177,22 @@ namespace PPDEditor.Forms
             WindowUtility.ScriptManager = scm;
             WindowUtility.StatsManager = stm;
 
-            paals.VisibleChanged += windowvisiblechanged;
-            ke.VisibleChanged += windowvisiblechanged;
-            sm.VisibleChanged += windowvisiblechanged;
-            ifw.VisibleChanged += windowvisiblechanged;
-            bm.VisibleChanged += windowvisiblechanged;
-            tlf.VisibleChanged += windowvisiblechanged;
-            dxf.VisibleChanged += windowvisiblechanged;
-            infof.VisibleChanged += windowvisiblechanged;
-            lm.VisibleChanged += windowvisiblechanged;
-            em.VisibleChanged += windowvisiblechanged;
-            gc.VisibleChanged += windowvisiblechanged;
-            mw.VisibleChanged += windowvisiblechanged;
-            hf.VisibleChanged += windowvisiblechanged;
-            rm.VisibleChanged += windowvisiblechanged;
-            scm.VisibleChanged += windowvisiblechanged;
-            stm.VisibleChanged += windowvisiblechanged;
+            paals.VisibleChanged += Windowvisiblechanged;
+            ke.VisibleChanged += Windowvisiblechanged;
+            sm.VisibleChanged += Windowvisiblechanged;
+            ifw.VisibleChanged += Windowvisiblechanged;
+            bm.VisibleChanged += Windowvisiblechanged;
+            tlf.VisibleChanged += Windowvisiblechanged;
+            dxf.VisibleChanged += Windowvisiblechanged;
+            infof.VisibleChanged += Windowvisiblechanged;
+            lm.VisibleChanged += Windowvisiblechanged;
+            em.VisibleChanged += Windowvisiblechanged;
+            gc.VisibleChanged += Windowvisiblechanged;
+            mw.VisibleChanged += Windowvisiblechanged;
+            hf.VisibleChanged += Windowvisiblechanged;
+            rm.VisibleChanged += Windowvisiblechanged;
+            scm.VisibleChanged += Windowvisiblechanged;
+            stm.VisibleChanged += Windowvisiblechanged;
 
             em.SetEvent();
             sm.SetEvent();
@@ -325,12 +325,10 @@ namespace PPDEditor.Forms
 
         private void SaveShortcut()
         {
-            using (StreamWriter writer = new(Path.Combine(Utility.AppDir, shortcutFileName)))
+            using StreamWriter writer = new(Path.Combine(Utility.AppDir, shortcutFileName));
+            foreach (ShortcutInfo info in WindowUtility.Seekmain.ShortcutManager.Shortcuts)
             {
-                foreach (ShortcutInfo info in WindowUtility.Seekmain.ShortcutManager.Shortcuts)
-                {
-                    writer.WriteLine(info.Serialize());
-                }
+                writer.WriteLine(info.Serialize());
             }
         }
 
@@ -369,13 +367,13 @@ namespace PPDEditor.Forms
                         Name = fileName.ToLower(),
                         Checked = Path.GetFileName(fileName).ToLower() == String.Format("lang_{0}_{1}.ini", this.GetType().Assembly.GetName().Name, PPDStaticSetting.langFileISO).ToLower()
                     };
-                    langtsmi.Click += langtsmi_Click;
+                    langtsmi.Click += Langtsmi_Click;
                     言語ToolStripMenuItem.DropDownItems.Add(langtsmi);
                 }
             }
         }
 
-        void langtsmi_Click(object sender, EventArgs e)
+        void Langtsmi_Click(object sender, EventArgs e)
         {
             if (sender is ToolStripMenuItem tsmi)
             {
@@ -548,7 +546,7 @@ namespace PPDEditor.Forms
                         {
                             Text = String.Format("{0}x{1}{2}", m.Groups["w"].Value, m.Groups["h"].Value, m.Groups["extra"].Value)
                         };
-                        tsmi.Click += viewtsmi_Click;
+                        tsmi.Click += Viewtsmi_Click;
                         tsmi.Tag = file;
                         ビューを読み込むToolStripMenuItem.DropDownItems.Add(tsmi);
                     }
@@ -556,7 +554,7 @@ namespace PPDEditor.Forms
             }
         }
 
-        void viewtsmi_Click(object sender, EventArgs e)
+        void Viewtsmi_Click(object sender, EventArgs e)
         {
             var tsmi = sender as ToolStripMenuItem;
             this.SuspendLayout();
@@ -654,7 +652,7 @@ namespace PPDEditor.Forms
             dockPanel1.ResumeLayout(true, true);
         }
 
-        private void windowvisiblechanged(object sender, EventArgs e)
+        private void Windowvisiblechanged(object sender, EventArgs e)
         {
             this.bPMToolStripMenuItem.Checked = Utility.CheckVisible(bm);
             this.ゲームウィンドウToolStripMenuItem.Checked = Utility.CheckVisible(dxf);
@@ -676,42 +674,26 @@ namespace PPDEditor.Forms
 
         private IDockContent DeserializeForm(string persistentString)
         {
-            switch (persistentString)
+            return persistentString switch
             {
-                case "PPDEditor.BPMMeasure":
-                    return bm;
-                case "PPDEditor.DXForm":
-                    return dxf;
-                case "PPDEditor.InfoForm":
-                    return infof;
-                case "PPDEditor.KasiEditor":
-                    return ke;
-                case "PPDEditor.PosAndAngleLoaderSaver":
-                    return paals;
-                case "PPDEditor.SoundManager":
-                    return sm;
-                case "PPDEditor.TimeLineForm":
-                    return tlf;
-                case "PPDEditor.IniFileWriter":
-                    return ifw;
-                case "PPDEditor.LayerManager":
-                    return lm;
-                case "PPDEditor.EventManager":
-                    return em;
-                case "PPDEditor.GeometryCreator":
-                    return gc;
-                case "PPDEditor.MemoWindow":
-                    return mw;
-                case "PPDEditor.HelpForm":
-                    return hf;
-                case "PPDEditor.ResourceManager":
-                    return rm;
-                case "PPDEditor.ScriptManager":
-                    return scm;
-                case "PPDEditor.StatsManager":
-                    return stm;
-            }
-            return null;
+                "PPDEditor.BPMMeasure" => bm,
+                "PPDEditor.DXForm" => dxf,
+                "PPDEditor.InfoForm" => infof,
+                "PPDEditor.KasiEditor" => ke,
+                "PPDEditor.PosAndAngleLoaderSaver" => paals,
+                "PPDEditor.SoundManager" => sm,
+                "PPDEditor.TimeLineForm" => tlf,
+                "PPDEditor.IniFileWriter" => ifw,
+                "PPDEditor.LayerManager" => lm,
+                "PPDEditor.EventManager" => em,
+                "PPDEditor.GeometryCreator" => gc,
+                "PPDEditor.MemoWindow" => mw,
+                "PPDEditor.HelpForm" => hf,
+                "PPDEditor.ResourceManager" => rm,
+                "PPDEditor.ScriptManager" => scm,
+                "PPDEditor.StatsManager" => stm,
+                _ => null,
+            };
         }
         #endregion
 
@@ -820,7 +802,7 @@ namespace PPDEditor.Forms
         }
         #endregion
 
-        private void movieToolStripMenuItem_Click(object sender, EventArgs e)
+        private void MovieToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.openFileDialog1.Filter = openmoviefilter;
             this.openFileDialog1.RestoreDirectory = true;
@@ -848,8 +830,8 @@ namespace PPDEditor.Forms
 
         private string GetMilliSecond(float ms)
         {
-            string ret = "";
             var s = ms.ToString();
+            string ret;
             if (s.Length == 1)
             {
                 ret = "000";
@@ -1083,7 +1065,7 @@ namespace PPDEditor.Forms
         public void SetMarkInfo(Mark mark)
         {
             SetMarkInfo(mark.Position, mark.Rotation, mark.ID);
-            infof.UpdateParameters(new Mark[] { mark });
+            infof.UpdateParameters([mark]);
         }
 
         public void SetMarksInfo(Mark[] marks)
@@ -1099,7 +1081,7 @@ namespace PPDEditor.Forms
             }
         }
 
-        private void soundsettxtToolStripMenuItem_Click(object sender, EventArgs e)
+        private void SoundsettxtToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.saveFileDialog1.Filter = opensoundsetfilter;
             this.saveFileDialog1.RestoreDirectory = true;
@@ -1127,15 +1109,13 @@ namespace PPDEditor.Forms
 
         private void SaveSoundSet(string filename)
         {
-            using (StreamWriter sw = new(filename))
-            {
-                sw.Write(sm.savesoundset());
-                sw.Close();
-                sm.ContentSaved();
-            }
+            using StreamWriter sw = new(filename);
+            sw.Write(sm.Savesoundset());
+            sw.Close();
+            sm.ContentSaved();
         }
 
-        private void scdToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ScdToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.saveFileDialog1.Filter = openscdfilter;
             this.saveFileDialog1.RestoreDirectory = true;
@@ -1170,7 +1150,7 @@ namespace PPDEditor.Forms
             sm.ContentSaved();
         }
 
-        private void ppdToolStripMenuItem1_Click(object sender, EventArgs e)
+        private void PpdToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             this.saveFileDialog1.Filter = openppdfilter;
             this.saveFileDialog1.RestoreDirectory = true;
@@ -1192,7 +1172,7 @@ namespace PPDEditor.Forms
                 {
                     File.Delete(saveFileDialog1.FileName);
                 }
-                saveppdfile(this.saveFileDialog1.FileName, tlf.Seekmain.GetSorteData());
+                Saveppdfile(this.saveFileDialog1.FileName, tlf.Seekmain.GetSorteData());
             }
         }
 
@@ -1202,15 +1182,13 @@ namespace PPDEditor.Forms
             tlf.ContentSaved();
         }
 
-        private void saveppdfile(string filename, MarkData[] sorted)
+        private void Saveppdfile(string filename, MarkData[] sorted)
         {
-            using (FileStream fs = File.Create(filename))
-            {
-                SavePpd(fs, sorted);
-            }
+            using FileStream fs = File.Create(filename);
+            SavePpd(fs, sorted);
         }
 
-        private void kasitxtToolStripMenuItem_Click(object sender, EventArgs e)
+        private void KasitxtToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.saveFileDialog1.Filter = opensoundsetfilter;
             this.saveFileDialog1.RestoreDirectory = true;
@@ -1238,15 +1216,13 @@ namespace PPDEditor.Forms
 
         private void SaveKasi(string filename)
         {
-            using (StreamWriter sw = new(filename))
-            {
-                sw.Write(ke.savedata());
-                sw.Close();
-                ke.ContentSaved();
-            }
+            using StreamWriter sw = new(filename);
+            sw.Write(ke.Savedata());
+            sw.Close();
+            ke.ContentSaved();
         }
 
-        private void datainiToolStripMenuItem_Click(object sender, EventArgs e)
+        private void DatainiToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.saveFileDialog1.Filter = openinifilter;
             this.saveFileDialog1.RestoreDirectory = true;
@@ -1280,7 +1256,7 @@ namespace PPDEditor.Forms
             ifw.ContentSaved();
         }
 
-        private void evdToolStripMenuItem_Click(object sender, EventArgs e)
+        private void EvdToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.saveFileDialog1.Filter = openevdfilter;
             this.saveFileDialog1.RestoreDirectory = true;
@@ -1314,10 +1290,8 @@ namespace PPDEditor.Forms
 
         private void SaveEvd(string filename)
         {
-            using (FileStream fs = File.Create(filename))
-            {
-                SaveEvd(fs);
-            }
+            using FileStream fs = File.Create(filename);
+            SaveEvd(fs);
         }
 
         private void SaveLayers(string insideDirectory)
@@ -1333,13 +1307,12 @@ namespace PPDEditor.Forms
                 {
                     File.Delete(insideDirectory + "\\layers" + "\\layer" + i + ".ppd");
                 }
-                saveppdfile(insideDirectory + "\\layers" + "\\layer" + i + ".ppd", lds[i].PPDData.GetSortedDataAsMarkData());
+                Saveppdfile(insideDirectory + "\\layers" + "\\layer" + i + ".ppd", lds[i].PPDData.GetSortedDataAsMarkData());
             }
         }
 
         private DialogResult CheckCanSaveAndSaveProject()
         {
-            DialogResult ret = DialogResult.None;
             this.saveFileDialog1.Filter = openprojectfilter;
             this.saveFileDialog1.RestoreDirectory = true;
             if (this.projectfiledir != "")
@@ -1354,7 +1327,7 @@ namespace PPDEditor.Forms
             {
                 this.saveFileDialog1.FileName = "New.ppdproj";
             }
-            ret = saveFileDialog1.ShowDialog();
+            DialogResult ret = saveFileDialog1.ShowDialog();
             if (ret == DialogResult.OK)
             {
                 if (saveFileDialog1.FileName[^8..] != ".ppdproj")
@@ -1417,7 +1390,7 @@ namespace PPDEditor.Forms
                 {
                     File.Delete(writepath);
                 }
-                saveppdfile(writepath, lds[i].PPDData.GetSortedDataAsMarkData());
+                Saveppdfile(writepath, lds[i].PPDData.GetSortedDataAsMarkData());
             }
             lm.ContentSaved();
 
@@ -1497,7 +1470,7 @@ namespace PPDEditor.Forms
             var pw = new PackWriter(Path.Combine(projectdir, headdot + "ppd"));
             var packFileList = new List<string>(scm.GetEnabledScriptList());
             packFileList.AddRange(new string[] { "ppd", "evd" });
-            foreach (PPDPackStreamWriter ppdpsw in pw.Write(packFileList.ToArray()))
+            foreach (PPDPackStreamWriter ppdpsw in pw.Write([.. packFileList]))
             {
                 switch (ppdpsw.Filename)
                 {
@@ -1525,7 +1498,7 @@ namespace PPDEditor.Forms
 
             var fns = Directory.GetFiles(projectdir);
             NonExistCreateDirectory(Path.Combine(projectdir, "sound"));
-            List<string> datas = sm.sounddatapaths;
+            List<string> datas = sm.Sounddatapaths;
             for (int i = 1; i < datas.Count; i++)
             {
                 if (!ExDirectory.Contains(Path.Combine(projectdir, "sound"), Path.GetFileName(datas[i])))
@@ -1588,7 +1561,7 @@ namespace PPDEditor.Forms
             }
         }
 
-        private void kasitxtToolStripMenuItem1_Click(object sender, EventArgs e)
+        private void KasitxtToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             this.openFileDialog1.Filter = opensoundsetfilter;
             this.openFileDialog1.RestoreDirectory = true;
@@ -1601,14 +1574,12 @@ namespace PPDEditor.Forms
 
         private void ReadKasi(string filename)
         {
-            using (StreamReader sr = new(filename))
-            {
-                ke.setdata(sr.ReadToEnd());
-                sr.Close();
-                ke.ContentSaved();
-            }
+            using StreamReader sr = new(filename);
+            ke.Setdata(sr.ReadToEnd());
+            sr.Close();
+            ke.ContentSaved();
         }
-        private void ppdToolStripMenuItem_Click(object sender, EventArgs e)
+        private void PpdToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.openFileDialog1.Filter = openppdfilter;
             this.openFileDialog1.RestoreDirectory = true;
@@ -1623,11 +1594,9 @@ namespace PPDEditor.Forms
         {
             try
             {
-                using (PackReader reader = new(filename))
-                {
-                    var ppdpsr = reader.Read("ppd");
-                    ReadPpd(ppdpsr);
-                }
+                using PackReader reader = new(filename);
+                var ppdpsr = reader.Read("ppd");
+                ReadPpd(ppdpsr);
             }
             catch
             {
@@ -1636,10 +1605,8 @@ namespace PPDEditor.Forms
         }
         private void ReadPpd(string filename)
         {
-            using (FileStream fs = File.Open(filename, FileMode.Open))
-            {
-                ReadPpd(fs);
-            }
+            using FileStream fs = File.Open(filename, FileMode.Open);
+            ReadPpd(fs);
         }
 
         private void ReadPpd(Stream stream)
@@ -1668,7 +1635,7 @@ namespace PPDEditor.Forms
             tlf.ContentSaved();
         }
 
-        private void datainiToolStripMenuItem1_Click(object sender, EventArgs e)
+        private void DatainiToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             this.openFileDialog1.Filter = openinifilter;
             this.openFileDialog1.RestoreDirectory = true;
@@ -1681,60 +1648,56 @@ namespace PPDEditor.Forms
 
         private void ReadIni(string filename)
         {
-            using (StreamReader sr = new(filename))
+            using StreamReader sr = new(filename);
+            var s = sr.ReadToEnd();
+            sr.Close();
+            var setting = new SettingReader(s);
+            float[] times = new float[4];
+            string[] diffs = new string[4];
+            string guid;
+            string bpmstring;
+            float.TryParse(setting.ReadString("thumbtimestart"), NumberStyles.Float, CultureInfo.InvariantCulture, out times[0]);
+            float.TryParse(setting.ReadString("thumbtimeend"), NumberStyles.Float, CultureInfo.InvariantCulture, out times[1]);
+            float.TryParse(setting.ReadString("start"), NumberStyles.Float, CultureInfo.InvariantCulture, out times[2]);
+            float.TryParse(setting.ReadString("end"), NumberStyles.Float, CultureInfo.InvariantCulture, out times[3]);
+            float.TryParse(setting.ReadString("bpm"), NumberStyles.Float, CultureInfo.InvariantCulture, out float bpm);
+            diffs[0] = setting.ReadString("difficulty easy");
+            diffs[1] = setting.ReadString("difficulty normal");
+            diffs[2] = setting.ReadString("difficulty hard");
+            diffs[3] = setting.ReadString("difficulty extreme");
+            float.TryParse(setting.ReadString("moviecutleft"), NumberStyles.Float, CultureInfo.InvariantCulture, out float left);
+            float.TryParse(setting.ReadString("moviecutright"), NumberStyles.Float, CultureInfo.InvariantCulture, out float right);
+            float.TryParse(setting.ReadString("moviecuttop"), NumberStyles.Float, CultureInfo.InvariantCulture, out float top);
+            float.TryParse(setting.ReadString("moviecutbottom"), NumberStyles.Float, CultureInfo.InvariantCulture, out float bottom);
+            guid = setting.ReadString("guid");
+            bpmstring = setting.ReadString("bpmstring");
+            MovieTrimmingData = new MovieTrimmingData(top, left, right, bottom);
+            ifw.SetIni(times, diffs, bpm, bpmstring, MovieTrimmingData);
+            if (guid != "")
             {
-                var s = sr.ReadToEnd();
-                sr.Close();
-                var setting = new SettingReader(s);
-                float[] times = new float[4];
-                string[] diffs = new string[4];
-                string guid;
-                string bpmstring;
-                float.TryParse(setting.ReadString("thumbtimestart"), NumberStyles.Float, CultureInfo.InvariantCulture, out times[0]);
-                float.TryParse(setting.ReadString("thumbtimeend"), NumberStyles.Float, CultureInfo.InvariantCulture, out times[1]);
-                float.TryParse(setting.ReadString("start"), NumberStyles.Float, CultureInfo.InvariantCulture, out times[2]);
-                float.TryParse(setting.ReadString("end"), NumberStyles.Float, CultureInfo.InvariantCulture, out times[3]);
-                float.TryParse(setting.ReadString("bpm"), NumberStyles.Float, CultureInfo.InvariantCulture, out float bpm);
-                diffs[0] = setting.ReadString("difficulty easy");
-                diffs[1] = setting.ReadString("difficulty normal");
-                diffs[2] = setting.ReadString("difficulty hard");
-                diffs[3] = setting.ReadString("difficulty extreme");
-                float.TryParse(setting.ReadString("moviecutleft"), NumberStyles.Float, CultureInfo.InvariantCulture, out float left);
-                float.TryParse(setting.ReadString("moviecutright"), NumberStyles.Float, CultureInfo.InvariantCulture, out float right);
-                float.TryParse(setting.ReadString("moviecuttop"), NumberStyles.Float, CultureInfo.InvariantCulture, out float top);
-                float.TryParse(setting.ReadString("moviecutbottom"), NumberStyles.Float, CultureInfo.InvariantCulture, out float bottom);
-                guid = setting.ReadString("guid");
-                bpmstring = setting.ReadString("bpmstring");
-                MovieTrimmingData = new MovieTrimmingData(top, left, right, bottom);
-                ifw.SetIni(times, diffs, bpm, bpmstring, MovieTrimmingData);
-                if (guid != "")
-                {
-                    ifw.SongGuid = new Guid(guid);
-                }
-                ifw.ContentSaved();
+                ifw.SongGuid = new Guid(guid);
             }
+            ifw.ContentSaved();
         }
 
         private void ReadSoundSet(string filename)
         {
-            using (StreamReader sr = new(filename))
+            using StreamReader sr = new(filename);
+            var insidedirectory = Path.GetDirectoryName(filename);
+            var s = sr.ReadToEnd().Replace("\r\n", "\r").Replace("\r", "\n");
+            sr.Close();
+            if (s.Length == 0) return;
+            if (s[^1] == '\n')
             {
-                var insidedirectory = Path.GetDirectoryName(filename);
-                var s = sr.ReadToEnd().Replace("\r\n", "\r").Replace("\r", "\n");
-                sr.Close();
-                if (s.Length == 0) return;
-                if (s[^1] == '\n')
-                {
-                    s = s[..^1];
-                }
-                var pathes = s.Split('\n');
-                for (int i = 0; i < pathes.Length; i++)
-                {
-                    pathes[i] = insidedirectory + "\\sound\\" + pathes[i];
-                }
-                sm.readsounds(pathes);
-                sm.ContentSaved();
+                s = s[..^1];
             }
+            var pathes = s.Split('\n');
+            for (int i = 0; i < pathes.Length; i++)
+            {
+                pathes[i] = insidedirectory + "\\sound\\" + pathes[i];
+            }
+            sm.Readsounds(pathes);
+            sm.ContentSaved();
         }
 
         private void ReadScd(string filename)
@@ -1771,11 +1734,11 @@ namespace PPDEditor.Forms
             ushort[] truec = new ushort[10];
             Array.Copy(changes, truec, 10);
             soundChanges.Add(truec);
-            sm.readchangedata(times.ToArray(), soundChanges.ToArray());
+            sm.Readchangedata([.. times], [.. soundChanges]);
             sm.ContentSaved();
         }
 
-        private void evdToolStripMenuItem1_Click(object sender, EventArgs e)
+        private void EvdToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             this.openFileDialog1.Filter = openevdfilter;
             this.openFileDialog1.RestoreDirectory = true;
@@ -1866,11 +1829,9 @@ namespace PPDEditor.Forms
         {
             try
             {
-                using (PackReader reader = new(filename))
-                {
-                    var ppdpsr = reader.Read("evd");
-                    ReadEvd(ppdpsr);
-                }
+                using PackReader reader = new(filename);
+                var ppdpsr = reader.Read("evd");
+                ReadEvd(ppdpsr);
             }
             catch
             {
@@ -1880,10 +1841,8 @@ namespace PPDEditor.Forms
 
         private void ReadEvd(string filename)
         {
-            using (FileStream fs = File.Open(filename, FileMode.Open))
-            {
-                ReadEvd(fs);
-            }
+            using FileStream fs = File.Open(filename, FileMode.Open);
+            ReadEvd(fs);
         }
 
         private void プロジェクトを開くToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1939,12 +1898,11 @@ namespace PPDEditor.Forms
             var setting = new SettingReader(sr.ReadToEnd());
             sr.Close();
             var version = setting.ReadString("version");
-            switch (version)
+            return version switch
             {
-                case "":
-                    return 1;
-            }
-            return int.Parse(version);
+                "" => 1,
+                _ => int.Parse(version),
+            };
         }
 
         private void BackUpProject(string path)
@@ -1965,7 +1923,7 @@ namespace PPDEditor.Forms
             {
                 Directory.CreateDirectory(copydir);
             }
-            Utility.CopyDirectory(Path.Combine(parentdirectory, filename), copydir, new Regex[] { new("^movie\\.\\w+$") });
+            Utility.CopyDirectory(Path.Combine(parentdirectory, filename), copydir, [new("^movie\\.\\w+$")]);
         }
 
         private void ConvertProject(string path, int version)
@@ -2013,7 +1971,7 @@ namespace PPDEditor.Forms
             // merge ppd and evd
             var tempfilename = Path.Combine(projectdir, Path.GetRandomFileName());
             var pw = new PackWriter(tempfilename);
-            foreach (PPDPackStreamWriter ppdpsw in pw.Write(new string[] { "ppd", "evd" }))
+            foreach (PPDPackStreamWriter ppdpsw in pw.Write(["ppd", "evd"]))
             {
                 string filepath = string.Empty;
                 switch (ppdpsw.Filename)
@@ -2043,21 +2001,15 @@ namespace PPDEditor.Forms
         public static AvailableDifficulty GetDifficultyFromString(string s)
         {
             s = s.ToLower();
-            switch (s)
+            return s switch
             {
-                case "base":
-                    return AvailableDifficulty.Base;
-                case "easy":
-                    return AvailableDifficulty.Easy;
-                case "normal":
-                    return AvailableDifficulty.Normal;
-                case "hard":
-                    return AvailableDifficulty.Hard;
-                case "extreme":
-                    return AvailableDifficulty.Extreme;
-                default:
-                    return AvailableDifficulty.None;
-            }
+                "base" => AvailableDifficulty.Base,
+                "easy" => AvailableDifficulty.Easy,
+                "normal" => AvailableDifficulty.Normal,
+                "hard" => AvailableDifficulty.Hard,
+                "extreme" => AvailableDifficulty.Extreme,
+                _ => AvailableDifficulty.None,
+            };
         }
 
         private void ClearData()
@@ -2215,7 +2167,7 @@ namespace PPDEditor.Forms
                 iter++;
             }
 
-            int selectedlayerindex = -1;
+            int selectedlayerindex;
             if (!int.TryParse(setting.ReadString(headdot + "selectedlayerindex"), NumberStyles.Integer, CultureInfo.InvariantCulture, out selectedlayerindex))
             {
                 selectedlayerindex = -1;
@@ -2358,7 +2310,7 @@ namespace PPDEditor.Forms
             {
                 Directory.CreateDirectory(rescuedirectory);
             }
-            saveppdfile(rescuedirectory + "\\base.ppd", lm.GetAllData(true));
+            Saveppdfile(rescuedirectory + "\\base.ppd", lm.GetAllData(true));
             SaveScd(rescuedirectory + "\\base.scd");
             SaveSoundSet(rescuedirectory + "\\soundset.txt");
             SaveKasi(rescuedirectory + "\\kasi.txt");
@@ -2384,8 +2336,8 @@ namespace PPDEditor.Forms
             fm5.SetLang();
             if (fm5.ShowDialog() == DialogResult.OK)
             {
-                int first = fm5.first;
-                int second = fm5.second;
+                int first = fm5.First;
+                int second = fm5.Second;
                 tlf.Seekmain.Swap(first, second);
             }
         }
@@ -2409,7 +2361,7 @@ namespace PPDEditor.Forms
             Utility.ShowOrHideWindow(dockPanel1, ke, ModifierKeys);
         }
 
-        private void bPMToolStripMenuItem_Click(object sender, EventArgs e)
+        private void BPMToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Utility.ShowOrHideWindow(dockPanel1, bm, ModifierKeys);
         }
@@ -2621,7 +2573,7 @@ namespace PPDEditor.Forms
             {
                 var tsmi = new ToolStripMenuItem(path);
                 tsmi.Name = tsmi.Text = path;
-                tsmi.Click += tsmi_Click;
+                tsmi.Click += Tsmi_Click;
                 this.最近使用したプロジェクトToolStripMenuItem.DropDownItems.Insert(0, tsmi);
                 if (this.最近使用したプロジェクトToolStripMenuItem.DropDownItems.Count > 5)
                 {
@@ -2630,19 +2582,17 @@ namespace PPDEditor.Forms
             }
         }
 
-        void tsmi_Click(object sender, EventArgs e)
+        void Tsmi_Click(object sender, EventArgs e)
         {
             CheckReadProject((sender as ToolStripMenuItem).Text);
         }
 
         private void SaveRecentUsedProject()
         {
-            using (StreamWriter sw = new(Path.Combine(Utility.AppDir, projectcache)))
+            using StreamWriter sw = new(Path.Combine(Utility.AppDir, projectcache));
+            foreach (ToolStripMenuItem tsmi in this.最近使用したプロジェクトToolStripMenuItem.DropDownItems)
             {
-                foreach (ToolStripMenuItem tsmi in this.最近使用したプロジェクトToolStripMenuItem.DropDownItems)
-                {
-                    sw.WriteLine(tsmi.Text);
-                }
+                sw.WriteLine(tsmi.Text);
             }
         }
 
@@ -2769,14 +2719,14 @@ namespace PPDEditor.Forms
             processStartInfo.WorkingDirectory = Path.GetDirectoryName(Program.PPDExePath);
             currentProcess.StartInfo = processStartInfo;
             ProcessStarted?.Invoke();
-            currentProcess.Exited += currentProcess_Exited;
+            currentProcess.Exited += CurrentProcess_Exited;
             currentProcess.Start();
             現在の時間から開始ToolStripMenuItem.Enabled = 現在の時間から開始オートToolStripMenuItem.Enabled =
                 最初から開始ToolStripMenuItem.Enabled = 最初から開始オートToolStripMenuItem.Enabled = メニューから開始ToolStripMenuItem.Enabled = false;
             pPDプロセスを強制終了ToolStripMenuItem.Enabled = true;
         }
 
-        void currentProcess_Exited(object sender, EventArgs e)
+        void CurrentProcess_Exited(object sender, EventArgs e)
         {
             this.Invoke((Action)(() =>
             {
@@ -2797,14 +2747,14 @@ namespace PPDEditor.Forms
             }
         }
 
-        private void toolStripComboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        private void ToolStripComboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             WindowUtility.LayerManager.DisplayMode = (DisplayLineMode)this.toolStripComboBox1.SelectedIndex;
             WindowUtility.Seekmain.DisplayMode = (DisplayLineMode)this.toolStripComboBox1.SelectedIndex;
             WindowUtility.Seekmain.DrawAndRefresh();
         }
 
-        private void toolStripComboBox2_SelectedIndexChanged(object sender, EventArgs e)
+        private void ToolStripComboBox2_SelectedIndexChanged(object sender, EventArgs e)
         {
             float result = 0;
             switch (this.toolStripComboBox2.SelectedIndex)
@@ -2835,14 +2785,14 @@ namespace PPDEditor.Forms
         }
 
 
-        private void toolStripComboBox3_SelectedIndexChanged(object sender, EventArgs e)
+        private void ToolStripComboBox3_SelectedIndexChanged(object sender, EventArgs e)
         {
             WindowUtility.LayerManager.BeatType = (DisplayBeatType)this.toolStripComboBox3.SelectedIndex;
             WindowUtility.Seekmain.BeatType = (DisplayBeatType)this.toolStripComboBox3.SelectedIndex;
             WindowUtility.Seekmain.DrawAndRefresh();
         }
 
-        private void toolStripTextBox1_TextChanged(object sender, EventArgs e)
+        private void ToolStripTextBox1_TextChanged(object sender, EventArgs e)
         {
             if (float.TryParse(this.toolStripTextBox1.Text, out float result))
             {
@@ -2853,7 +2803,7 @@ namespace PPDEditor.Forms
             }
         }
 
-        private void toolStripTextBox2_TextChanged(object sender, EventArgs e)
+        private void ToolStripTextBox2_TextChanged(object sender, EventArgs e)
         {
             if (float.TryParse(this.toolStripTextBox2.Text, out float result))
             {
@@ -2861,7 +2811,7 @@ namespace PPDEditor.Forms
             }
         }
 
-        private void toolStripTextBox3_TextChanged(object sender, EventArgs e)
+        private void ToolStripTextBox3_TextChanged(object sender, EventArgs e)
         {
             if (int.TryParse(this.toolStripTextBox3.Text, out int result))
             {
@@ -2874,28 +2824,28 @@ namespace PPDEditor.Forms
             return toolStripComboBox1.Items[(int)index].ToString();
         }
 
-        private void pxToolStripMenuItem_Click(object sender, EventArgs e)
+        private void PxToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.exToolStripSplitButton1.Checked = true;
             TurnOffExcept(sender as ToolStripMenuItem);
             GridPixel = 5;
         }
 
-        private void pxToolStripMenuItem1_Click(object sender, EventArgs e)
+        private void PxToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             this.exToolStripSplitButton1.Checked = true;
             TurnOffExcept(sender as ToolStripMenuItem);
             GridPixel = 10;
         }
 
-        private void pxToolStripMenuItem2_Click(object sender, EventArgs e)
+        private void PxToolStripMenuItem2_Click(object sender, EventArgs e)
         {
             this.exToolStripSplitButton1.Checked = true;
             TurnOffExcept(sender as ToolStripMenuItem);
             GridPixel = 20;
         }
 
-        private void pxToolStripMenuItem3_Click(object sender, EventArgs e)
+        private void PxToolStripMenuItem3_Click(object sender, EventArgs e)
         {
             this.exToolStripSplitButton1.Checked = true;
             TurnOffExcept(sender as ToolStripMenuItem);
@@ -2981,35 +2931,35 @@ namespace PPDEditor.Forms
             }
         }
 
-        private void easyToolStripMenuItem_Click(object sender, EventArgs e)
+        private void EasyToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ChangeDifficulty(AvailableDifficulty.Easy);
             TurnOffExceptDifficulty(sender as ToolStripMenuItem);
             ChangeWindowText();
         }
 
-        private void normalToolStripMenuItem_Click(object sender, EventArgs e)
+        private void NormalToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ChangeDifficulty(AvailableDifficulty.Normal);
             TurnOffExceptDifficulty(sender as ToolStripMenuItem);
             ChangeWindowText();
         }
 
-        private void hardToolStripMenuItem_Click(object sender, EventArgs e)
+        private void HardToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ChangeDifficulty(AvailableDifficulty.Hard);
             TurnOffExceptDifficulty(sender as ToolStripMenuItem);
             ChangeWindowText();
         }
 
-        private void extremeToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ExtremeToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ChangeDifficulty(AvailableDifficulty.Extreme);
             TurnOffExceptDifficulty(sender as ToolStripMenuItem);
             ChangeWindowText();
         }
 
-        private void baseToolStripMenuItem_Click(object sender, EventArgs e)
+        private void BaseToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ChangeDifficulty(AvailableDifficulty.Base);
             TurnOffExceptDifficulty(sender as ToolStripMenuItem);
@@ -3084,7 +3034,7 @@ namespace PPDEditor.Forms
                         destFolder = Path.Combine(CurrentProjectDir, cdf.DestDifficulty + "_" + "Scripts");
                     if (Directory.Exists(srcFolder))
                     {
-                        Utility.CopyDirectory(srcFolder, destFolder, new Regex[0]);
+                        Utility.CopyDirectory(srcFolder, destFolder, []);
                     }
                 }
             }
@@ -3150,7 +3100,7 @@ namespace PPDEditor.Forms
                         CopySpecificFile(projectdir, destdir, difficulty + ".scd");
                     }
                 }
-                Utility.CopyDirectory(Path.Combine(projectdir, "sound"), Path.Combine(destdir, "sound"), new Regex[0]);
+                Utility.CopyDirectory(Path.Combine(projectdir, "sound"), Path.Combine(destdir, "sound"), []);
                 ShowExplorerWithDir(destdir);
             }
         }
@@ -3209,7 +3159,7 @@ namespace PPDEditor.Forms
                     {
                         var mi = mf.GetMergeInfo(difficulty);
                         Utility.CopyDirectory(Path.Combine(GetProjectDirFromPath(mi.ProjectPath), mi.Difficulty + "_" + "layers"),
-                            Path.Combine(projectdir, difficulty + "_" + "layers"), new Regex[0]);
+                            Path.Combine(projectdir, difficulty + "_" + "layers"), []);
                         File.Copy(Path.Combine(GetProjectDirFromPath(mi.ProjectPath), mi.Difficulty + ".ppd"),
                             Path.Combine(projectdir, difficulty + ".ppd"), true);
                         File.Copy(Path.Combine(GetProjectDirFromPath(mi.ProjectPath), mi.Difficulty + ".scd"),
@@ -3218,7 +3168,7 @@ namespace PPDEditor.Forms
                         var scriptDir = Path.Combine(GetProjectDirFromPath(mi.ProjectPath), mi.Difficulty + "_" + "Scripts");
                         if (Directory.Exists(scriptDir))
                         {
-                            Utility.CopyDirectory(scriptDir, Path.Combine(projectdir, difficulty + "_" + "Scripts"), new Regex[0]);
+                            Utility.CopyDirectory(scriptDir, Path.Combine(projectdir, difficulty + "_" + "Scripts"), []);
                         }
 
                         if (difficulty == mf.BaseInfoProjectDifficulty)
@@ -3226,10 +3176,10 @@ namespace PPDEditor.Forms
                             var resourceDir = Path.Combine(GetProjectDirFromPath(mi.ProjectPath), "Resource");
                             if (Directory.Exists(resourceDir))
                             {
-                                Utility.CopyDirectory(resourceDir, Path.Combine(projectdir, "Resource"), new Regex[0]);
+                                Utility.CopyDirectory(resourceDir, Path.Combine(projectdir, "Resource"), []);
                             }
 
-                            Utility.CopyDirectory(Path.Combine(GetProjectDirFromPath(mi.ProjectPath), "sound"), Path.Combine(projectdir, "sound"), new Regex[0]);
+                            Utility.CopyDirectory(Path.Combine(GetProjectDirFromPath(mi.ProjectPath), "sound"), Path.Combine(projectdir, "sound"), []);
 
                             File.Copy(Path.Combine(GetProjectDirFromPath(mi.ProjectPath), "data.ini"),
                                 Path.Combine(projectdir, "data.ini"), true);
@@ -3261,7 +3211,7 @@ namespace PPDEditor.Forms
                 sw.Close();
 
                 //Copy To Local
-                Utility.CopyDirectory(tempdir, Path.GetDirectoryName(mf.DestProjectFilePath), new Regex[0]);
+                Utility.CopyDirectory(tempdir, Path.GetDirectoryName(mf.DestProjectFilePath), []);
                 if (File.Exists(moviePath))
                 {
                     File.Copy(moviePath, Path.Combine(GetProjectDirFromPath(mf.DestProjectFilePath), Path.GetFileName(moviePath)), true);
@@ -3381,7 +3331,7 @@ namespace PPDEditor.Forms
             }
             if (sounds.Count > 0)
             {
-                sm.readsounds(sounds.ToArray());
+                sm.Readsounds([.. sounds]);
             }
             foreach (var change in template.SoundManagerInfo.Changes)
             {
@@ -3393,8 +3343,8 @@ namespace PPDEditor.Forms
                     }
                 }
             }
-            sm.readchangedata(template.SoundManagerInfo.Changes.Select(p => p.Key).ToArray(),
-                template.SoundManagerInfo.Changes.Select(p => p.Value).ToArray());
+            sm.Readchangedata([.. template.SoundManagerInfo.Changes.Select(p => p.Key)],
+                [.. template.SoundManagerInfo.Changes.Select(p => p.Value)]);
 
             // create folders
             NonExistCreateDirectory(Path.Combine(CurrentProjectDir, "Base_Scripts"));
@@ -3453,7 +3403,7 @@ namespace PPDEditor.Forms
             return !cancel;
         }
 
-        private void mODを発行ToolStripMenuItem_Click(object sender, EventArgs e)
+        private void MODを発行ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (scm.GetEnabledScriptList().Length < 1)
             {
@@ -3476,7 +3426,7 @@ namespace PPDEditor.Forms
                     list.AddRange(dict.Keys);
                     list.AddRange(scm.GetEnabledScriptList());
                     list.AddRange(rm.GetEnabledList());
-                    foreach (PPDPackStreamWriter packWriter in writer.Write(list.ToArray()))
+                    foreach (PPDPackStreamWriter packWriter in writer.Write([.. list]))
                     {
                         if (packWriter.Filename.StartsWith("Mod"))
                         {
@@ -3504,7 +3454,7 @@ namespace PPDEditor.Forms
             return fvi.FileVersion;
         }
 
-        private void connectToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ConnectToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Connect = !Connect;
         }
@@ -3525,18 +3475,14 @@ namespace PPDEditor.Forms
             SortedList<float, EventData> data = null;
             try
             {
-                using (PackReader reader = new(filePath))
-                {
-                    var ppdpsr = reader.Read("evd");
-                    data = ReadEvdAsEventData(ppdpsr);
-                }
+                using PackReader reader = new(filePath);
+                var ppdpsr = reader.Read("evd");
+                data = ReadEvdAsEventData(ppdpsr);
             }
             catch
             {
-                using (FileStream stream = File.Open(filePath, FileMode.Open))
-                {
-                    data = ReadEvdAsEventData(stream);
-                }
+                using FileStream stream = File.Open(filePath, FileMode.Open);
+                data = ReadEvdAsEventData(stream);
             }
             var form = new ImportEventForm();
             form.SetCurrentEvent(em.ChangeData);
@@ -3548,27 +3494,27 @@ namespace PPDEditor.Forms
             }
         }
 
-        private void easyToolStripMenuItem1_Click(object sender, EventArgs e)
+        private void EasyToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             ImportEvent(Path.Combine(CurrentProjectDir, "easy.ppd"));
         }
 
-        private void normalToolStripMenuItem1_Click(object sender, EventArgs e)
+        private void NormalToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             ImportEvent(Path.Combine(CurrentProjectDir, "normal.ppd"));
         }
 
-        private void hardToolStripMenuItem1_Click(object sender, EventArgs e)
+        private void HardToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             ImportEvent(Path.Combine(CurrentProjectDir, "hard.ppd"));
         }
 
-        private void extremeToolStripMenuItem1_Click(object sender, EventArgs e)
+        private void ExtremeToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             ImportEvent(Path.Combine(CurrentProjectDir, "extreme.ppd"));
         }
 
-        private void baseToolStripMenuItem1_Click(object sender, EventArgs e)
+        private void BaseToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             ImportEvent(Path.Combine(CurrentProjectDir, "base.ppd"));
         }
@@ -3600,7 +3546,7 @@ namespace PPDEditor.Forms
             extremeToolStripMenuItem1.Enabled = AvailableDifficulty.HasFlag(AvailableDifficulty.Extreme) && CurrentDifficulty != PPDEditor.AvailableDifficulty.Extreme;
         }
 
-        private void toolStripSplitButton1_CheckStateChanged(object sender, EventArgs e)
+        private void ToolStripSplitButton1_CheckStateChanged(object sender, EventArgs e)
         {
             tlf.RowManager.IsLimited = toolStripSplitButton1.Checked;
             tlf.InvalidateAll();
@@ -3618,13 +3564,13 @@ namespace PPDEditor.Forms
             tlf.InvalidateAll();
         }
 
-        private void disableExpansionToolStripMenuItem_Click(object sender, EventArgs e)
+        private void DisableExpansionToolStripMenuItem_Click(object sender, EventArgs e)
         {
             DisableExpansion = !DisableExpansion;
         }
 
 
-        private void pPDプロセスを強制終了ToolStripMenuItem_Click(object sender, EventArgs e)
+        private void PPDプロセスを強制終了ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             CheckProcess();
         }
@@ -3691,7 +3637,7 @@ namespace PPDEditor.Forms
                     childMenu.ShortcutKeyDisplayString = shortcut.GetCommandText();
                     childMenu.ShowShortcutKeys = true;
                 }
-                childMenu.Click += childMenu_Click;
+                childMenu.Click += ChildMenu_Click;
                 menuItem.DropDownItems.Insert(insertIndex++, childMenu);
             }
         }
@@ -3714,7 +3660,7 @@ namespace PPDEditor.Forms
             CommandExecuting?.Invoke(fullPath);
             コマンドToolStripMenuItem.Enabled = false;
             ゲームToolStripMenuItem.Enabled = false;
-            currentExecutor = new Executor(fullPath, layers.ToArray());
+            currentExecutor = new Executor(fullPath, [.. layers]);
             currentExecutor.AddItem("Storage", storage);
             currentExecutor.AddItem("PosAndAngleLoader", PosAndAngleLoader.Instance);
             currentExecutor.AddItem("WindowManager", this);
@@ -3723,11 +3669,11 @@ namespace PPDEditor.Forms
             currentExecutor.AddItem("MovieManager", this);
             currentExecutor.AddItem("SongInfo", this);
             currentExecutor.AddItem("ParameterPresets", infof.Presets);
-            currentExecutor.Finished += executor_Finished;
+            currentExecutor.Finished += Executor_Finished;
             currentExecutor.Execute();
         }
 
-        void executor_Finished(object sender, EventArgs e)
+        void Executor_Finished(object sender, EventArgs e)
         {
             currentExecutor = null;
             SafeInvoke(() =>
@@ -3762,7 +3708,7 @@ namespace PPDEditor.Forms
             action();
         }
 
-        void childMenu_Click(object sender, EventArgs e)
+        void ChildMenu_Click(object sender, EventArgs e)
         {
             var menuItem = (ToolStripMenuItem)sender;
             var filePath = (string)menuItem.Tag;

@@ -103,25 +103,20 @@ namespace PPDSingle
 
         private Effect2D.EffectManager.PlayType ParsePlayType(string value)
         {
-            switch (value)
+            return value switch
             {
-                case "Once":
-                    return Effect2D.EffectManager.PlayType.Once;
-                case "ReverseOnce":
-                    return Effect2D.EffectManager.PlayType.ReverseOnce;
-                case "Loop":
-                    return Effect2D.EffectManager.PlayType.Loop;
-                case "ReserseLoop":
-                    return Effect2D.EffectManager.PlayType.ReverseLoop;
-                default:
-                    return Effect2D.EffectManager.PlayType.Loop;
-            }
+                "Once" => Effect2D.EffectManager.PlayType.Once,
+                "ReverseOnce" => Effect2D.EffectManager.PlayType.ReverseOnce,
+                "Loop" => Effect2D.EffectManager.PlayType.Loop,
+                "ReserseLoop" => Effect2D.EffectManager.PlayType.ReverseLoop,
+                _ => Effect2D.EffectManager.PlayType.Loop,
+            };
         }
 
         private float ReadAttribute(XmlReader reader, string attribute, float defaultValue)
         {
-            float ret = defaultValue;
             var value = reader.GetAttribute(attribute);
+            float ret;
             if (!float.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture, out ret))
             {
                 ret = defaultValue;

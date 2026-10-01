@@ -14,7 +14,7 @@ namespace PPDEditor
         {
             InitializeComponent();
             timer1.Interval = 100;
-            timer1.Tick += movemark;
+            timer1.Tick += Movemark;
             this.AutoScaleDimensions = new System.Drawing.SizeF(16f / 9, 1);
             ControlAdded += DXForm_ControlAdded;
         }
@@ -35,7 +35,7 @@ namespace PPDEditor
             this.画面比を169にToolStripMenuItem.Text = Utility.Language["ChangeAspect"];
             this.標準解像度にするToolStripMenuItem.Text = Utility.Language["GWDefaultResolution"];
         }
-        private void movemark(object sender, EventArgs e)
+        private void Movemark(object sender, EventArgs e)
         {
             var p = this.PointToClient(Cursor.Position);
             var pos = new Point(p.X, p.Y);

@@ -99,8 +99,8 @@ namespace Effect2DEditor
             vScrollBar1.Minimum = 0;
             vScrollBar1.LargeChange = 1;
             vScrollBar1.SmallChange = 1;
-            vScrollBar1.Scroll += vScrollBar1_Scroll;
-            hScrollBar1.Scroll += hScrollBar1_Scroll;
+            vScrollBar1.Scroll += VScrollBar1_Scroll;
+            hScrollBar1.Scroll += HScrollBar1_Scroll;
             this.SizeChanged += TimeLine_SizeChanged;
             this.MouseWheel += TimeLine_MouseWheel;
         }
@@ -115,7 +115,7 @@ namespace Effect2DEditor
             }
         }
 
-        void hScrollBar1_Scroll(object sender, ScrollEventArgs e)
+        void HScrollBar1_Scroll(object sender, ScrollEventArgs e)
         {
             DrawAndRefresh();
         }
@@ -216,7 +216,7 @@ namespace Effect2DEditor
             if (vScrollBar1.Minimum <= num && num <= vScrollBar1.Maximum) vScrollBar1.Value = num;
             MainForm.RefreshTimeLine();
         }
-        void vScrollBar1_Scroll(object sender, ScrollEventArgs e)
+        void VScrollBar1_Scroll(object sender, ScrollEventArgs e)
         {
             MainForm.RefreshTimeLine();
         }
@@ -505,7 +505,7 @@ namespace Effect2DEditor
             MainForm.AddState(presseditemindex, pressedkeyindex, false);
         }
 
-        private void contextMenuStrip1_Opening(object sender, CancelEventArgs e)
+        private void ContextMenuStrip1_Opening(object sender, CancelEventArgs e)
         {
             if (presseditemindex < 0 || presseditemindex >= EffectManager.Effects.Count)
             {

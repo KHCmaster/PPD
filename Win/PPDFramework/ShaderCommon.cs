@@ -7,9 +7,13 @@ namespace PPDFramework
     /// <summary>
     /// シェーダーを使う上で共通の部分です。
     /// </summary>
-    public class ShaderCommon : DisposableComponent
+    /// <remarks>
+    /// コンストラクタです。
+    /// </remarks>
+    /// <param name="device"></param>
+    public class ShaderCommon(PPDDevice device) : DisposableComponent
     {
-        VertexManager vertexManager;
+        VertexManager vertexManager = new VertexManager(device);
         VertexInfo vertices;
 
         /// <summary>
@@ -21,15 +25,6 @@ namespace PPDFramework
         }
 
         /// <summary>
-        /// コンストラクタです。
-        /// </summary>
-        /// <param name="device"></param>
-        public ShaderCommon(PPDDevice device)
-        {
-            vertexManager = new VertexManager(device);
-        }
-
-        /// <summary>
         /// スクリーン頂点を初期化します。
         /// </summary>
         public void InitializeScreenVertex(PPDDevice device)
@@ -37,12 +32,12 @@ namespace PPDFramework
             vertices = CreateVertex(4);
             var width = device.Width;
             var height = device.Height;
-            vertices.Write(new[] {
+            vertices.Write([
                 new ColoredTexturedVertex(new Vector3(0, 0, 0.5f), new Vector2(0, 0)),
                 new ColoredTexturedVertex(new Vector3(width, 0, 0.5f), new Vector2(1, 0)),
                 new ColoredTexturedVertex(new Vector3(0, height, 0.5f), new Vector2(0, 1)),
                 new ColoredTexturedVertex(new Vector3(width, height, 0.5f), new Vector2(1, 1))
-            });
+            ]);
         }
 
         /// <summary>

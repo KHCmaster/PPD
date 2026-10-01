@@ -56,7 +56,7 @@
             this.button4.TabIndex = 24;
             this.button4.Text = "選択した行のテキストを変更する";
             this.button4.UseVisualStyleBackColor = true;
-            this.button4.Click += new System.EventHandler(this.button4_Click);
+            this.button4.Click += new System.EventHandler(this.Button4_Click);
             // 
             // button3
             // 
@@ -66,7 +66,7 @@
             this.button3.TabIndex = 23;
             this.button3.Text = "選択した行の時間をずらす";
             this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.button3_Click);
+            this.button3.Click += new System.EventHandler(this.Button3_Click);
             // 
             // label2
             // 
@@ -104,7 +104,7 @@
             this.button2.TabIndex = 20;
             this.button2.Text = "選択した行を削除";
             this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
+            this.button2.Click += new System.EventHandler(this.Button2_Click);
             // 
             // label1
             // 
@@ -132,7 +132,7 @@
             this.button1.TabIndex = 17;
             this.button1.Text = "現在の時間に追加する";
             this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.button1.Click += new System.EventHandler(this.Button1_Click);
             // 
             // dataGridView1
             // 
@@ -178,8 +178,8 @@
             this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridView1.Size = new System.Drawing.Size(232, 196);
             this.dataGridView1.TabIndex = 16;
-            this.dataGridView1.RowsAdded += new System.Windows.Forms.DataGridViewRowsAddedEventHandler(this.dataGridView1_RowsAdded);
-            this.dataGridView1.RowsRemoved += new System.Windows.Forms.DataGridViewRowsRemovedEventHandler(this.dataGridView1_RowsRemoved);
+            this.dataGridView1.RowsAdded += new System.Windows.Forms.DataGridViewRowsAddedEventHandler(this.DataGridView1_RowsAdded);
+            this.dataGridView1.RowsRemoved += new System.Windows.Forms.DataGridViewRowsRemovedEventHandler(this.DataGridView1_RowsRemoved);
             // 
             // Column1
             // 
@@ -202,7 +202,7 @@
             this.button5.TabIndex = 25;
             this.button5.Text = "選択行をコピーして現在の時間に追加";
             this.button5.UseVisualStyleBackColor = true;
-            this.button5.Click += new System.EventHandler(this.button5_Click);
+            this.button5.Click += new System.EventHandler(this.Button5_Click);
             // 
             // button6
             // 
@@ -212,7 +212,7 @@
             this.button6.TabIndex = 26;
             this.button6.Text = "X";
             this.button6.UseVisualStyleBackColor = true;
-            this.button6.Click += new System.EventHandler(this.button6_Click);
+            this.button6.Click += new System.EventHandler(this.Button6_Click);
             // 
             // KasiEditor
             // 

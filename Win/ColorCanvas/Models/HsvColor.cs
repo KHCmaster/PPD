@@ -1,16 +1,9 @@
 ﻿namespace ColorCanvas.Models
 {
-    internal struct HsvColor
+    internal struct HsvColor(double h, double s, double v)
     {
-        public double H;
-        public double S;
-        public double V;
-
-        public HsvColor(double h, double s, double v)
-        {
-            H = h;
-            S = s;
-            V = v;
-        }
+        public double H = h;
+        public double S = s;
+        public double V = v;
     }
 }

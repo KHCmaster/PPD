@@ -4,26 +4,19 @@ using System.Linq;
 
 namespace FlowScriptEngine
 {
-    public class FunctionScope
+    public class FunctionScope(ScopeType scopeType)
     {
         public event Action<FunctionScopeArg> EventInvoked;
         public event Action<FunctionScopeArg> PreviewEventInvoked;
-        readonly Dictionary<string, object> dict;
+        readonly Dictionary<string, object> dict = [];
 
-        private readonly List<FunctionScope> childScopes;
+        private readonly List<FunctionScope> childScopes = [];
 
         public ScopeType ScopeType
         {
             get;
             private set;
-        }
-
-        public FunctionScope(ScopeType scopeType)
-        {
-            ScopeType = scopeType;
-            childScopes = [];
-            dict = [];
-        }
+        } = scopeType;
 
         internal int Id
         {
@@ -47,7 +40,7 @@ namespace FlowScriptEngine
         {
             get
             {
-                return dict.ToArray();
+                return [.. dict];
             }
         }
 
@@ -136,7 +129,7 @@ namespace FlowScriptEngine
                 {
                     bool anyHandled = false;
                     int currentEndCount = 0;
-                    Action childInvokeEnd = () =>
+                    void childInvokeEnd()
                     {
                         if (!anyHandled)
                         {
@@ -146,7 +139,7 @@ namespace FlowScriptEngine
                             });
                             OnEventInvoked(scopeArg2);
                         }
-                    };
+                    }
                     if (childScopes.Count > 0)
                     {
                         foreach (FunctionScope child in childScopes)
@@ -157,14 +150,14 @@ namespace FlowScriptEngine
                                 currentEndCount++;
                                 if (currentEndCount == childScopes.Count)
                                 {
-                                    childInvokeEnd.Invoke();
+                                    childInvokeEnd();
                                 }
                             });
                         }
                     }
                     else
                     {
-                        childInvokeEnd.Invoke();
+                        childInvokeEnd();
                     }
                 }
             });

@@ -119,12 +119,12 @@ namespace PPDFramework
             if (rectangleChanged)
             {
                 rectangleChanged = false;
-                vertices.Write(new[] {
+                vertices.Write([
                     new ColoredTexturedVertex(new Vector3(0, 0, 0.5f)),
                     new ColoredTexturedVertex(new Vector3(rectangleWidth, 0, 0.5f)),
                     new ColoredTexturedVertex(new Vector3(0, rectangleHeight, 0.5f)),
                     new ColoredTexturedVertex(new Vector3(rectangleWidth, rectangleHeight, 0.5f))
-                });
+                ]);
             }
 
             base.Update();

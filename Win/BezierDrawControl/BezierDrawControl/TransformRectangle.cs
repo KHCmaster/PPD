@@ -4,7 +4,7 @@ using System.Drawing.Drawing2D;
 
 namespace BezierDrawControl
 {
-    class TransformRectangle
+    class TransformRectangle(PointF topLeft, PointF topRight, PointF bottomLeft, PointF bottomRight)
     {
         public enum ExpandType
         {
@@ -25,28 +25,16 @@ namespace BezierDrawControl
             Y = 2,
             FixAspect = 4
         }
-        PointF topLeft;
-        PointF topRight;
-        PointF bottomLeft;
-        PointF bottomRight;
-        float rotation;
-        float scaleX;
-        float scaleY;
-        float moveX;
-        float moveY;
+        PointF topLeft = topLeft;
+        PointF topRight = topRight;
+        PointF bottomLeft = bottomLeft;
+        PointF bottomRight = bottomRight;
+        float rotation = 0;
+        float scaleX = 1;
+        float scaleY = 1;
+        float moveX = 0;
+        float moveY = 0;
 
-        public TransformRectangle(PointF topLeft, PointF topRight, PointF bottomLeft, PointF bottomRight)
-        {
-            this.topLeft = topLeft;
-            this.topRight = topRight;
-            this.bottomLeft = bottomLeft;
-            this.bottomRight = bottomRight;
-            rotation = 0;
-            scaleX = 1;
-            scaleY = 1;
-            moveX = 0;
-            moveY = 0;
-        }
         public PointF TopLeft
         {
             get

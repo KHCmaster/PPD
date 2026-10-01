@@ -69,11 +69,11 @@ namespace PPD
                 Position = new System.Numerics.Vector2(400, 10)
             }));
             reload = new FadableButton(device, resourceManager, Utility.Path.Combine("reload.png"), Utility.Path.Combine("reload_select.png"), "");
-            reload.MouseLeftClick += reload_MouseLeftClick;
+            reload.MouseLeftClick += Reload_MouseLeftClick;
             up = new FadableButton(device, resourceManager, Utility.Path.Combine("up.png"), Utility.Path.Combine("up_select.png"), "");
-            up.MouseLeftClick += up_MouseLeftClick;
+            up.MouseLeftClick += Up_MouseLeftClick;
             down = new FadableButton(device, resourceManager, Utility.Path.Combine("down.png"), Utility.Path.Combine("down_select.png"), "");
-            down.MouseLeftClick += down_MouseLeftClick;
+            down.MouseLeftClick += Down_MouseLeftClick;
             sprite.AddChild(up);
             sprite.AddChild(down);
             sprite.AddChild(reload);
@@ -93,7 +93,7 @@ namespace PPD
             for (int i = 0; i < ButtonUtility.Array.Length; i++)
             {
                 var textButton = new TextButton(device, resourceManager) { Position = new System.Numerics.Vector2(530, 90 + i * 30), Text = Utility.Language["Change"], Index = i };
-                textButton.MouseLeftDown += textButton_MouseLeftDown;
+                textButton.MouseLeftDown += TextButton_MouseLeftDown;
 
                 keys[i] = new TextureString(device, keyConfig.GetKeyMap((ButtonType)i).ToString(), 14, true, PPDColors.White)
                 {
@@ -125,8 +125,8 @@ namespace PPD
             left = new FadableButton(device, resourceManager, Utility.Path.Combine("left.png"), Utility.Path.Combine("left_select.png"), "Back") { Position = new System.Numerics.Vector2(30, 225) };
             this.AddChild(left);
 
-            left.MouseLeftClick += left_MouseLeftClick;
-            right.MouseLeftClick += right_MouseLeftClick;
+            left.MouseLeftClick += Left_MouseLeftClick;
+            right.MouseLeftClick += Right_MouseLeftClick;
 
             focusManager = new FocusManager();
             focusManager.Focus(this);
@@ -135,7 +135,7 @@ namespace PPD
             this.Alpha = 0;
         }
 
-        void textButton_MouseLeftDown(GameComponent sender, MouseEvent mouseEvent)
+        void TextButton_MouseLeftDown(GameComponent sender, MouseEvent mouseEvent)
         {
             myGame.Input.AssignMode = true;
             clickedTextButton?.Text = Utility.Language["Change"];
@@ -143,7 +143,7 @@ namespace PPD
             clickedTextButton.Text = Utility.Language["Waiting"];
         }
 
-        void down_MouseLeftClick(GameComponent sender, MouseEvent mouseEvent)
+        void Down_MouseLeftClick(GameComponent sender, MouseEvent mouseEvent)
         {
             if (myGame != null)
             {
@@ -160,7 +160,7 @@ namespace PPD
             }
         }
 
-        void up_MouseLeftClick(GameComponent sender, MouseEvent mouseEvent)
+        void Up_MouseLeftClick(GameComponent sender, MouseEvent mouseEvent)
         {
             if (myGame != null)
             {
@@ -177,7 +177,7 @@ namespace PPD
             }
         }
 
-        void reload_MouseLeftClick(GameComponent sender, MouseEvent mouseEvent)
+        void Reload_MouseLeftClick(GameComponent sender, MouseEvent mouseEvent)
         {
             if (myGame != null)
             {
@@ -185,7 +185,7 @@ namespace PPD
             }
         }
 
-        void right_MouseLeftClick(GameComponent sender, MouseEvent mouseEvent)
+        void Right_MouseLeftClick(GameComponent sender, MouseEvent mouseEvent)
         {
             if (currentPageIndex < contentSprite.ChildrenCount - 1)
             {
@@ -198,7 +198,7 @@ namespace PPD
             }
         }
 
-        void left_MouseLeftClick(GameComponent sender, MouseEvent mouseEvent)
+        void Left_MouseLeftClick(GameComponent sender, MouseEvent mouseEvent)
         {
             if (currentPageIndex > 0)
             {

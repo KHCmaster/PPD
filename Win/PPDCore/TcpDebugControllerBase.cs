@@ -66,14 +66,10 @@ namespace PPDCore
         {
             if (reader.FileList.Contains(keyName))
             {
-                using (PPDPackStreamReader packStreamReader = reader.Read(keyName))
-                {
-                    using (StreamReader streamReader = new(packStreamReader, Encoding.UTF8))
-                    {
-                        var ret = streamReader.ReadToEnd();
-                        return ret;
-                    }
-                }
+                using PPDPackStreamReader packStreamReader = reader.Read(keyName);
+                using StreamReader streamReader = new(packStreamReader, Encoding.UTF8);
+                var ret = streamReader.ReadToEnd();
+                return ret;
             }
 
             return null;
@@ -83,13 +79,11 @@ namespace PPDCore
         {
             if (reader.FileList.Contains(keyName))
             {
-                using (PPDPackStreamReader packStreamReader = reader.Read(keyName))
-                {
-                    byte[] data = new byte[sizeof(int)];
-                    packStreamReader.ReadAtLeast(data, data.Length, throwOnEndOfStream: false);
-                    var ret = BitConverter.ToInt32(data, 0);
-                    return ret;
-                }
+                using PPDPackStreamReader packStreamReader = reader.Read(keyName);
+                byte[] data = new byte[sizeof(int)];
+                packStreamReader.ReadAtLeast(data, data.Length, throwOnEndOfStream: false);
+                var ret = BitConverter.ToInt32(data, 0);
+                return ret;
             }
 
             return 0;
@@ -97,39 +91,35 @@ namespace PPDCore
 
         protected byte[] Read(Stream stream)
         {
-            using (MemoryStream ms = new())
+            using MemoryStream ms = new();
+            byte[] buffer = new byte[1024 * 1024];
+            try
             {
-                byte[] buffer = new byte[1024 * 1024];
-                try
-                {
-                    var readSize = stream.Read(buffer, 0, buffer.Length);
-                    if (readSize == 0)
-                    {
-                        OnClosed();
-                        return new byte[0];
-                    }
-                    ms.Write(buffer, 0, readSize);
-                    return ms.ToArray();
-                }
-                catch
+                var readSize = stream.Read(buffer, 0, buffer.Length);
+                if (readSize == 0)
                 {
                     OnClosed();
-                    return new byte[0];
+                    return [];
                 }
+                ms.Write(buffer, 0, readSize);
+                return ms.ToArray();
+            }
+            catch
+            {
+                OnClosed();
+                return [];
             }
         }
 
         protected byte[] GetBytes(string[] keys, Action<PPDPackStreamWriter> writeCallback)
         {
-            using (MemoryStream stream = new())
+            using MemoryStream stream = new();
+            var packWriter = new PackWriter(stream);
+            foreach (PPDPackStreamWriter writer in packWriter.Write(keys))
             {
-                var packWriter = new PackWriter(stream);
-                foreach (PPDPackStreamWriter writer in packWriter.Write(keys))
-                {
-                    writeCallback(writer);
-                }
-                return stream.ToArray();
+                writeCallback(writer);
             }
+            return stream.ToArray();
         }
 
         protected virtual void OnClosed()

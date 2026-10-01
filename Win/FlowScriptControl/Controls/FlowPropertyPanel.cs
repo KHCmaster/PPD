@@ -14,10 +14,10 @@ namespace FlowScriptControl.Controls
         public FlowPropertyPanel()
         {
             InitializeComponent();
-            dataGridView1.CurrentCellDirtyStateChanged += dataGridView1_CurrentCellDirtyStateChanged;
+            dataGridView1.CurrentCellDirtyStateChanged += DataGridView1_CurrentCellDirtyStateChanged;
         }
 
-        void dataGridView1_CurrentCellDirtyStateChanged(object sender, EventArgs e)
+        void DataGridView1_CurrentCellDirtyStateChanged(object sender, EventArgs e)
         {
             if (dataGridView1.IsCurrentCellDirty)
             {
@@ -73,7 +73,7 @@ namespace FlowScriptControl.Controls
                                 if (CanValueButtonClick(source.Name, propertyInfo.MemberInfo.Name, propertyInfo.MemberInfo.PropertyType))
                                 {
                                     var buttonCell = new ButtonCell(source.Name, propertyInfo.MemberInfo.Name, propertyInfo.MemberInfo.PropertyType);
-                                    buttonCell.ButtonClick += buttonCell_ButtonClick;
+                                    buttonCell.ButtonClick += ButtonCell_ButtonClick;
                                     cell2 = buttonCell;
                                 }
                                 else
@@ -105,7 +105,7 @@ namespace FlowScriptControl.Controls
             }
         }
 
-        void buttonCell_ButtonClick(object sender, EventArgs e)
+        void ButtonCell_ButtonClick(object sender, EventArgs e)
         {
             var cell = sender as ButtonCell;
             var val = ValueButtonClicked(cell.SourceName, cell.PropertyName, cell.PropertyType);
@@ -115,7 +115,7 @@ namespace FlowScriptControl.Controls
             }
         }
 
-        private void dataGridView1_CellEndEdit(object sender, DataGridViewCellEventArgs e)
+        private void DataGridView1_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
             if (currentFlowDrawPanel != null)
             {
@@ -141,12 +141,12 @@ namespace FlowScriptControl.Controls
             }
         }
 
-        private void dataGridView1_CellBeginEdit(object sender, DataGridViewCellCancelEventArgs e)
+        private void DataGridView1_CellBeginEdit(object sender, DataGridViewCellCancelEventArgs e)
         {
             lastEditValue = dataGridView1[1, e.RowIndex].Value == null ? null : dataGridView1[e.ColumnIndex, e.RowIndex].Value.ToString();
         }
 
-        private void dataGridView1_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        private void DataGridView1_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
             if (e.ColumnIndex == 1 && !dataGridView1[e.ColumnIndex, e.RowIndex].IsInEditMode)
             {

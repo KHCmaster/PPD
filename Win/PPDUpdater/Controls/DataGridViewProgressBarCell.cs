@@ -128,10 +128,8 @@ namespace PPDUpdater.Controls
             if ((paintParts & DataGridViewPaintParts.Background) ==
                 DataGridViewPaintParts.Background)
             {
-                using (SolidBrush backBrush = new(bkColor))
-                {
-                    graphics.FillRectangle(backBrush, paintRect);
-                }
+                using SolidBrush backBrush = new(bkColor);
+                graphics.FillRectangle(backBrush, paintRect);
             }
 
             //Paddingを差し引く

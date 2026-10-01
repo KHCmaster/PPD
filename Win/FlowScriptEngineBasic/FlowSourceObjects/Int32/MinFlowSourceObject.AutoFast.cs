@@ -9,13 +9,11 @@ namespace FlowScriptEngineBasic.FlowSourceObjects.Int32
     {
         public override object GetPropertyValue(string propertyName)
         {
-            switch (propertyName)
+            return propertyName switch
             {
-                case "Min":
-                    return Min;
-                default:
-                    return null;
-            }
+                "Min" => Min,
+                _ => null,
+            };
         }
 
 

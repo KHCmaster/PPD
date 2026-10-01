@@ -9,13 +9,11 @@ namespace FlowScriptEngineBasic.FlowSourceObjects.Enumerable
     {
         public override object GetPropertyValue(string propertyName)
         {
-            switch (propertyName)
+            return propertyName switch
             {
-                case "Single":
-                    return Single;
-                default:
-                    return null;
-            }
+                "Single" => Single,
+                _ => null,
+            };
         }
 
         protected override void SetPropertyValue(string propertyName, object value)

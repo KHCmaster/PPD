@@ -25,7 +25,7 @@ namespace PPDEditor
         {
             get
             {
-                return 読み込みToolStripMenuItem.GetDescendants().OfType<CommandToolStripMenuItem>().Select(c => c.Preset).ToArray();
+                return [.. 読み込みToolStripMenuItem.GetDescendants().OfType<CommandToolStripMenuItem>().Select(c => c.Preset)];
             }
         }
 
@@ -37,12 +37,12 @@ namespace PPDEditor
         public InfoForm()
         {
             InitializeComponent();
-            this.dataGridView1.Rows.Add(new object[] { "幅(px)", "" });
-            this.dataGridView1.Rows.Add(new object[] { "高さ(px)", "" });
-            this.dataGridView1.Rows.Add(new object[] { "長さ", "" });
-            this.dataGridView1.Rows.Add(new object[] { "位置", "" });
-            this.dataGridView1.Rows.Add(new object[] { "回転角", "" });
-            this.dataGridView1.Rows.Add(new object[] { "ID", "" });
+            this.dataGridView1.Rows.Add(["幅(px)", ""]);
+            this.dataGridView1.Rows.Add(["高さ(px)", ""]);
+            this.dataGridView1.Rows.Add(["長さ", ""]);
+            this.dataGridView1.Rows.Add(["位置", ""]);
+            this.dataGridView1.Rows.Add(["回転角", ""]);
+            this.dataGridView1.Rows.Add(["ID", ""]);
             if (!Directory.Exists(PresetDir))
             {
                 Directory.CreateDirectory(PresetDir);
@@ -172,7 +172,7 @@ namespace PPDEditor
                     var childMenu = new CommandToolStripMenuItem(preset);
                     menuItem.DropDownItems.Add(childMenu);
                     childMenu.Text = childMenu.ToolTipText = Path.GetFileNameWithoutExtension(childFile);
-                    childMenu.Click += childMenu_Click;
+                    childMenu.Click += ChildMenu_Click;
                 }
                 catch
                 {
@@ -181,7 +181,7 @@ namespace PPDEditor
             }
         }
 
-        void childMenu_Click(object sender, EventArgs e)
+        void ChildMenu_Click(object sender, EventArgs e)
         {
             var menuItem = (CommandToolStripMenuItem)sender;
             if (menuItem != null)
@@ -312,18 +312,13 @@ namespace PPDEditor
             Utility.ChangeToolStripCheckState(読み込みToolStripMenuItem);
         }
 
-        public class CommandToolStripMenuItem : ToolStripMenuItem
+        public class CommandToolStripMenuItem(ParameterPreset preset) : ToolStripMenuItem
         {
             public ParameterPreset Preset
             {
                 get;
                 private set;
-            }
-
-            public CommandToolStripMenuItem(ParameterPreset preset)
-            {
-                Preset = preset;
-            }
+            } = preset;
 
             public CommandToolStripMenuItem Clone()
             {

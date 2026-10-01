@@ -8,7 +8,7 @@ using System.Windows.Forms;
 
 namespace PPDInput
 {
-    public class AccurateInput : Input
+    public class AccurateInput(Form form, int sleepTime) : Input(form)
     {
         private Thread thread;
         private bool finish;
@@ -18,14 +18,8 @@ namespace PPDInput
         private Stopwatch stopwatch;
         private Queue<InputAction> queue;
         private Dictionary<ButtonType, InputAction> lastPressInfos;
-        private readonly object settingLock = new();
-        private readonly int sleepTime;
-
-        public AccurateInput(Form form, int sleepTime)
-            : base(form)
-        {
-            this.sleepTime = sleepTime;
-        }
+        private readonly Lock settingLock = new();
+        private readonly int sleepTime = sleepTime;
 
         public override void Load()
         {
@@ -131,7 +125,7 @@ namespace PPDInput
             Dictionary<ButtonType, InputAction> lastPress;
             lock (queue)
             {
-                actions = queue.ToArray();
+                actions = [.. queue];
                 queue.Clear();
             }
             lock (lastPressInfos)

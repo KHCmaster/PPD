@@ -113,7 +113,6 @@ namespace PPDCore
         {
             set
             {
-                float previouslife = currentlife;
                 currentlife = value;
                 black.Rectangle = new RectangleF(0, 0, black.Width * (1 - value / 100f), black.Height);
                 black.Position = new System.Numerics.Vector2(Position.X + 2 + black.Width - black.Rectangle.Width, black.Position.Y);

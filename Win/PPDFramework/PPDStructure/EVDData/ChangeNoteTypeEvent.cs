@@ -3,18 +3,13 @@
     /// <summary>
     /// ノーツタイプ切り替えイベントです
     /// </summary>
-    public class ChangeNoteTypeEvent : IEVDData
+    /// <remarks>
+    /// コンストラクタ
+    /// </remarks>
+    /// <param name="time"></param>
+    /// <param name="noteType"></param>
+    public class ChangeNoteTypeEvent(float time, NoteType noteType) : IEVDData(time, EventType.ChangeNoteType)
     {
-        /// <summary>
-        /// コンストラクタ
-        /// </summary>
-        /// <param name="time"></param>
-        /// <param name="noteType"></param>
-        public ChangeNoteTypeEvent(float time, NoteType noteType)
-            : base(time, EventType.ChangeNoteType)
-        {
-            this.NoteType = noteType;
-        }
 
         /// <summary>
         /// ノーツの種類
@@ -23,6 +18,6 @@
         {
             get;
             private set;
-        }
+        } = noteType;
     }
 }

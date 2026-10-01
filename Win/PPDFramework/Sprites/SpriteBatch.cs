@@ -226,30 +226,17 @@ namespace PPDFramework.Sprites
             indices = null;
         }
 
-        class SpriteInfo
+        class SpriteInfo(Texture.TextureBase texture, Matrix matrix, float alpha, Color4 overlayColor, PrimitiveType primitiveType, ColoredTexturedVertex[] vertices, int offset, int count, int scissorRectIndex)
         {
-            public Texture.TextureBase Texture { get; private set; }
-            public Matrix Matrix { get; private set; }
-            public float Alpha { get; private set; }
-            public ColoredTexturedVertex[] Vertices { get; private set; }
-            public Color4 OverlayColor { get; private set; }
-            public PrimitiveType PrimitiveType { get; private set; }
-            public int Offset { get; private set; }
-            public int Count { get; private set; }
-            public int ScissorRectIndex { get; private set; }
-
-            public SpriteInfo(Texture.TextureBase texture, Matrix matrix, float alpha, Color4 overlayColor, PrimitiveType primitiveType, ColoredTexturedVertex[] vertices, int offset, int count, int scissorRectIndex)
-            {
-                Texture = texture;
-                Matrix = matrix;
-                Alpha = alpha;
-                Vertices = vertices;
-                OverlayColor = overlayColor;
-                PrimitiveType = primitiveType;
-                Offset = offset;
-                Count = count;
-                ScissorRectIndex = scissorRectIndex;
-            }
+            public Texture.TextureBase Texture { get; private set; } = texture;
+            public Matrix Matrix { get; private set; } = matrix;
+            public float Alpha { get; private set; } = alpha;
+            public ColoredTexturedVertex[] Vertices { get; private set; } = vertices;
+            public Color4 OverlayColor { get; private set; } = overlayColor;
+            public PrimitiveType PrimitiveType { get; private set; } = primitiveType;
+            public int Offset { get; private set; } = offset;
+            public int Count { get; private set; } = count;
+            public int ScissorRectIndex { get; private set; } = scissorRectIndex;
 
             public void Transform()
             {
@@ -266,46 +253,30 @@ namespace PPDFramework.Sprites
             }
         }
 
-        class BatchInfo
+        class BatchInfo(SpriteBatch.SpriteInfo spriteInfo, int vertexPos, int vertexCount, int indexPos, int indexCount, int scissorRectIndex)
         {
-            public SpriteInfo SpriteInfo { get; private set; }
-            public int VertexPos { get; private set; }
-            public int IndexPos { get; private set; }
-            public int VertexCount { get; private set; }
-            public int IndexCount { get; private set; }
-            public int ScissorRectIndex { get; private set; }
+            public SpriteInfo SpriteInfo { get; private set; } = spriteInfo;
+            public int VertexPos { get; private set; } = vertexPos;
+            public int IndexPos { get; private set; } = indexPos;
+            public int VertexCount { get; private set; } = vertexCount;
+            public int IndexCount { get; private set; } = indexCount;
+            public int ScissorRectIndex { get; private set; } = scissorRectIndex;
             public bool PA { get { return SpriteInfo.Texture.PA; } }
-
-            public BatchInfo(SpriteInfo spriteInfo, int vertexPos, int vertexCount, int indexPos, int indexCount, int scissorRectIndex)
-            {
-                SpriteInfo = spriteInfo;
-                VertexPos = vertexPos;
-                VertexCount = vertexCount;
-                IndexPos = indexPos;
-                IndexCount = indexCount;
-                ScissorRectIndex = scissorRectIndex;
-            }
         }
 
-        class ScissorRectState
+        class ScissorRectState(Rectangle rectangle, bool enabled)
         {
             public Rectangle Rectangle
             {
                 get;
                 private set;
-            }
+            } = rectangle;
 
             public bool Enabled
             {
                 get;
                 private set;
-            }
-
-            public ScissorRectState(Rectangle rectangle, bool enabled)
-            {
-                Rectangle = rectangle;
-                Enabled = enabled;
-            }
+            } = enabled;
         }
     }
 }

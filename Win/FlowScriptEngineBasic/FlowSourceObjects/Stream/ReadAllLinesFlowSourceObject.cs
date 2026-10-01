@@ -33,7 +33,7 @@ namespace FlowScriptEngineBasic.FlowSourceObjects.Stream
                 byte[] array = new byte[Stream.Length - Stream.Position];
                 Stream.ReadAtLeast(array, array.Length, throwOnEndOfStream: false);
                 var str = EncodingUtility.GetEncoding(Encoding).GetString(array);
-                Value = new List<object>(str.Replace("\r\n", "\n").Replace("\r", "\n").Split('\n'));
+                Value = [.. str.Replace("\r\n", "\n").Replace("\r", "\n").Split('\n')];
                 OnSuccess();
             }
             else

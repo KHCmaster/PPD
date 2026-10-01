@@ -5,17 +5,17 @@ using System.Linq;
 
 namespace PPDInput
 {
-    class AccurateInputInfo : InputInfoBase
+    class AccurateInputInfo(InputAction[] actions, Stopwatch stopwatch, Dictionary<ButtonType, InputAction> lastPressInfos) : InputInfoBase(true)
     {
-        private readonly InputAction[] actions;
-        private readonly Stopwatch stopwatch;
-        private readonly Dictionary<ButtonType, InputAction> lastPressInfos;
+        private readonly InputAction[] actions = actions;
+        private readonly Stopwatch stopwatch = stopwatch;
+        private readonly Dictionary<ButtonType, InputAction> lastPressInfos = lastPressInfos;
 
         public double CurrentTime
         {
             get;
             private set;
-        }
+        } = (double)stopwatch.ElapsedTicks / Stopwatch.Frequency;
 
         public override InputActionBase[] Actions
         {
@@ -23,16 +23,6 @@ namespace PPDInput
             {
                 return actions;
             }
-        }
-
-        public AccurateInputInfo(InputAction[] actions, Stopwatch stopwatch, Dictionary<ButtonType, InputAction> lastPressInfos)
-            : base(true)
-        {
-            this.actions = actions;
-            this.stopwatch = stopwatch;
-            this.lastPressInfos = lastPressInfos;
-
-            CurrentTime = (double)stopwatch.ElapsedTicks / Stopwatch.Frequency;
         }
 
         public override bool IsPressed(ButtonType buttonType)

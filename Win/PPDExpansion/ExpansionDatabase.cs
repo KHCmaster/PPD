@@ -42,17 +42,15 @@ data blob
 
         public Result FindResult(string hash)
         {
-            using (var reader = ExecuteReader("select * from ResultTable where hash = @hash;", new SQLiteParameter[]{
+            using var reader = ExecuteReader("select * from ResultTable where hash = @hash;", [
                 new("@hash", hash)
-            }))
+            ]);
+            while (reader.Reader.Read())
             {
-                while (reader.Reader.Read())
-                {
-                    hash = (string)reader.Reader.GetValue(0);
-                    var score = (int)reader.Reader.GetValue(1);
-                    var data = (byte[])reader.Reader.GetValue(2);
-                    return new Result(hash, score, data);
-                }
+                hash = (string)reader.Reader.GetValue(0);
+                var score = (int)reader.Reader.GetValue(1);
+                var data = (byte[])reader.Reader.GetValue(2);
+                return new Result(hash, score, data);
             }
             return null;
         }
@@ -69,18 +67,18 @@ data blob
                                    @hash,
                                    @score,
                                    @data);",
-                                           new SQLiteParameter[]{
+                                           [
                                        new("@hash",result.Hash),
                                        new("@score",result.Score),
-                                       new("@data",result.DataAsByte)});
+                                       new("@data",result.DataAsByte)]);
             }
             else
             {
                 ExecuteDataTable(@"update ResultTable set score = @score, data = @data where hash = @hash;",
-                                           new SQLiteParameter[]{
+                                           [
                                        new("@hash",result.Hash),
                                        new("@score",result.Score),
-                                       new("@data",result.DataAsByte)});
+                                       new("@data",result.DataAsByte)]);
             }
         }
     }

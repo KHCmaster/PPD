@@ -100,7 +100,7 @@ namespace PPDCore
 
         public PPDPlayDecorder Create()
         {
-            return PPDPlayDecorder.FromInputs(new PPDPlayInput[0]);
+            return PPDPlayDecorder.FromInputs([]);
         }
     }
 }

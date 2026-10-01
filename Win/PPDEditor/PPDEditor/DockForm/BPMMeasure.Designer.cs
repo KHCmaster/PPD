@@ -46,7 +46,7 @@
             this.button1.TabStop = false;
             this.button1.Text = "ビートを打つ";
             this.button1.UseVisualStyleBackColor = false;
-            this.button1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.button1_MouseDown);
+            this.button1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Button1_MouseDown);
             // 
             // button2
             // 
@@ -57,8 +57,8 @@
             this.button2.TabStop = false;
             this.button2.Text = "クリア";
             this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
-            this.button2.Enter += new System.EventHandler(this.button2_Enter);
+            this.button2.Click += new System.EventHandler(this.Button2_Click);
+            this.button2.Enter += new System.EventHandler(this.Button2_Enter);
             // 
             // label1
             // 

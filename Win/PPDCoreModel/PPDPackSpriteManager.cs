@@ -5,15 +5,9 @@ using System.IO;
 
 namespace PPDCoreModel
 {
-    class PPDPackSpriteManager : PPDPackSpriteManagerBase
+    class PPDPackSpriteManager(PackReader packReader, string[] imageNames, string spriteDirName, DateTime lastWriteTime) : PPDPackSpriteManagerBase(packReader, imageNames, spriteDirName)
     {
-        readonly DateTime lastWriteTime;
-
-        public PPDPackSpriteManager(PackReader packReader, string[] imageNames, string spriteDirName, DateTime lastWriteTime)
-            : base(packReader, imageNames, spriteDirName)
-        {
-            this.lastWriteTime = lastWriteTime;
-        }
+        readonly DateTime lastWriteTime = lastWriteTime;
 
         protected override bool CheckUpdate(ImageInfo[] infos)
         {

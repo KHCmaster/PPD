@@ -79,7 +79,7 @@ namespace Effect2DEditor.DockForm
             this.button6.Enabled = IsRatioMakerAvailable;
         }
 
-        private void label1_ValueChange(object sender, ValueChangeEventArgs e)
+        private void Label1_ValueChange(object sender, ValueChangeEventArgs e)
         {
             if (float.TryParse(this.textBox1.Text, out float val))
             {
@@ -87,7 +87,7 @@ namespace Effect2DEditor.DockForm
             }
         }
 
-        private void label2_ValueChange(object sender, ValueChangeEventArgs e)
+        private void Label2_ValueChange(object sender, ValueChangeEventArgs e)
         {
             if (float.TryParse(this.textBox2.Text, out float val))
             {
@@ -95,7 +95,7 @@ namespace Effect2DEditor.DockForm
             }
         }
 
-        private void label3_ValueChange(object sender, ValueChangeEventArgs e)
+        private void Label3_ValueChange(object sender, ValueChangeEventArgs e)
         {
             if (float.TryParse(this.textBox3.Text, out float val))
             {
@@ -103,7 +103,7 @@ namespace Effect2DEditor.DockForm
             }
         }
 
-        private void label4_ValueChange(object sender, ValueChangeEventArgs e)
+        private void Label4_ValueChange(object sender, ValueChangeEventArgs e)
         {
             if (float.TryParse(this.textBox4.Text, out float val))
             {
@@ -111,7 +111,7 @@ namespace Effect2DEditor.DockForm
             }
         }
 
-        private void label5_ValueChange(object sender, ValueChangeEventArgs e)
+        private void Label5_ValueChange(object sender, ValueChangeEventArgs e)
         {
             if (float.TryParse(this.textBox5.Text, out float val))
             {
@@ -119,7 +119,7 @@ namespace Effect2DEditor.DockForm
             }
         }
 
-        private void label6_ValueChange(object sender, ValueChangeEventArgs e)
+        private void Label6_ValueChange(object sender, ValueChangeEventArgs e)
         {
             if (float.TryParse(this.textBox6.Text, out float val))
             {
@@ -127,7 +127,7 @@ namespace Effect2DEditor.DockForm
             }
         }
 
-        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        private void ComboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (ignoreInput) return;
             if (this.comboBox1.SelectedItem is BlendMode)
@@ -136,7 +136,7 @@ namespace Effect2DEditor.DockForm
             }
         }
 
-        private void textBox1_TextChanged(object sender, EventArgs e)
+        private void TextBox1_TextChanged(object sender, EventArgs e)
         {
             if (ignoreInput) return;
             if (float.TryParse(this.textBox1.Text, out float val))
@@ -145,7 +145,7 @@ namespace Effect2DEditor.DockForm
             }
         }
 
-        private void textBox2_TextChanged(object sender, EventArgs e)
+        private void TextBox2_TextChanged(object sender, EventArgs e)
         {
             if (ignoreInput) return;
             if (float.TryParse(this.textBox2.Text, out float val))
@@ -154,7 +154,7 @@ namespace Effect2DEditor.DockForm
             }
         }
 
-        private void textBox3_TextChanged(object sender, EventArgs e)
+        private void TextBox3_TextChanged(object sender, EventArgs e)
         {
             if (ignoreInput) return;
             if (float.TryParse(this.textBox3.Text, out float val))
@@ -177,7 +177,7 @@ namespace Effect2DEditor.DockForm
             }
         }
 
-        private void textBox4_TextChanged(object sender, EventArgs e)
+        private void TextBox4_TextChanged(object sender, EventArgs e)
         {
             if (ignoreInput) return;
             if (float.TryParse(this.textBox4.Text, out float val))
@@ -186,7 +186,7 @@ namespace Effect2DEditor.DockForm
             }
         }
 
-        private void textBox5_TextChanged(object sender, EventArgs e)
+        private void TextBox5_TextChanged(object sender, EventArgs e)
         {
             if (ignoreInput) return;
             if (float.TryParse(this.textBox5.Text, out float val))
@@ -202,7 +202,7 @@ namespace Effect2DEditor.DockForm
             }
         }
 
-        private void textBox6_TextChanged(object sender, EventArgs e)
+        private void TextBox6_TextChanged(object sender, EventArgs e)
         {
             if (ignoreInput) return;
             if (float.TryParse(this.textBox6.Text, out float val))
@@ -228,37 +228,37 @@ namespace Effect2DEditor.DockForm
             BlendModeChanged?.Invoke(blendMode);
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void Button1_Click(object sender, EventArgs e)
         {
             OnSetRatio(RatioType.X);
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void Button2_Click(object sender, EventArgs e)
         {
             OnSetRatio(RatioType.Y);
         }
 
-        private void button3_Click(object sender, EventArgs e)
+        private void Button3_Click(object sender, EventArgs e)
         {
             OnSetRatio(RatioType.Alpha);
         }
 
-        private void button4_Click(object sender, EventArgs e)
+        private void Button4_Click(object sender, EventArgs e)
         {
             OnSetRatio(RatioType.Rotation);
         }
 
-        private void button5_Click(object sender, EventArgs e)
+        private void Button5_Click(object sender, EventArgs e)
         {
             OnSetRatio(RatioType.ScaleX);
         }
 
-        private void button6_Click(object sender, EventArgs e)
+        private void Button6_Click(object sender, EventArgs e)
         {
             OnSetRatio(RatioType.ScaleY);
         }
 
-        private void button7_Click(object sender, EventArgs e)
+        private void Button7_Click(object sender, EventArgs e)
         {
             OnSetRatio(RatioType.BezierPosition);
         }

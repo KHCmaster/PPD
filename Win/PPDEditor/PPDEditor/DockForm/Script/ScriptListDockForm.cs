@@ -90,8 +90,8 @@ namespace PPDEditor.DockForm.Script
             treeView1.Nodes.Add("folder", "Functions").ContextMenuStrip = contextMenuStrip2;
             treeView1.Nodes.Add("folder", "Scripts").ContextMenuStrip = contextMenuStrip2;
 
-            treeView1.BeforeLabelEdit += treeView1_BeforeLabelEdit;
-            treeView1.AfterLabelEdit += treeView1_AfterLabelEdit;
+            treeView1.BeforeLabelEdit += TreeView1_BeforeLabelEdit;
+            treeView1.AfterLabelEdit += TreeView1_AfterLabelEdit;
 
             ReadCommands();
             ReadFunctions();
@@ -107,7 +107,7 @@ namespace PPDEditor.DockForm.Script
             this.名前の変更ToolStripMenuItem.Text = this.名前の変更ToolStripMenuItem1.Text = Utility.Language["Rename"];
         }
 
-        void treeView1_AfterLabelEdit(object sender, NodeLabelEditEventArgs e)
+        void TreeView1_AfterLabelEdit(object sender, NodeLabelEditEventArgs e)
         {
             treeView1.LabelEdit = false;
             if (String.IsNullOrEmpty(e.Label))
@@ -167,7 +167,7 @@ namespace PPDEditor.DockForm.Script
             }
         }
 
-        void treeView1_BeforeLabelEdit(object sender, NodeLabelEditEventArgs e)
+        void TreeView1_BeforeLabelEdit(object sender, NodeLabelEditEventArgs e)
         {
             e.CancelEdit = e.Node == CommandNode || e.Node == FunctionNode || e.Node == ScriptNode;
         }
@@ -223,7 +223,7 @@ namespace PPDEditor.DockForm.Script
                 }
             }
 
-            return ret.ToArray();
+            return [.. ret];
         }
 
         public void WriteScript(Stream stream, string scriptName)
@@ -254,12 +254,10 @@ namespace PPDEditor.DockForm.Script
             }
 
             string path = GetFullPath(node) + ".fsml";
-            using (FileStream fs = File.Open(path, FileMode.Open))
-            {
-                byte[] data = new byte[fs.Length];
-                fs.ReadAtLeast(data, data.Length, throwOnEndOfStream: false);
-                stream.Write(data, 0, data.Length);
-            }
+            using FileStream fs = File.Open(path, FileMode.Open);
+            byte[] data = new byte[fs.Length];
+            fs.ReadAtLeast(data, data.Length, throwOnEndOfStream: false);
+            stream.Write(data, 0, data.Length);
         }
 
         public void ReadScript(string projectDirPath, AvailableDifficulty difficulty, string disableList)
@@ -405,12 +403,12 @@ namespace PPDEditor.DockForm.Script
             OnReloaded();
         }
 
-        private void toolStripButton1_Click(object sender, EventArgs e)
+        private void ToolStripButton1_Click(object sender, EventArgs e)
         {
             Reload();
         }
 
-        private void toolStripButton2_Click(object sender, EventArgs e)
+        private void ToolStripButton2_Click(object sender, EventArgs e)
         {
             CreateNewFolder();
         }
@@ -559,14 +557,14 @@ namespace PPDEditor.DockForm.Script
             CreateNewFolder();
         }
 
-        private void contextMenuStrip1_Opening(object sender, CancelEventArgs e)
+        private void ContextMenuStrip1_Opening(object sender, CancelEventArgs e)
         {
             無効化ToolStripMenuItem.Text = NativeMethods.GetTreeViewOverlay(treeView1.SelectedNode) == 0 ? Utility.Language["MakeInvalid"] : Utility.Language["MakeValid"];
             無効化ToolStripMenuItem.Enabled = GetRootNode(treeView1.SelectedNode) == ScriptNode;
             名前の変更ToolStripMenuItem.Enabled = ChildNodeSelected;
         }
 
-        private void contextMenuStrip2_Opening(object sender, CancelEventArgs e)
+        private void ContextMenuStrip2_Opening(object sender, CancelEventArgs e)
         {
             削除ToolStripMenuItem1.Enabled = 名前の変更ToolStripMenuItem1.Enabled = ChildNodeSelected;
         }
@@ -581,7 +579,7 @@ namespace PPDEditor.DockForm.Script
             return NativeMethods.GetTreeViewOverlay(node) == 0;
         }
 
-        private void treeView1_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
+        private void TreeView1_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
         {
             treeView1.SelectedNode = e.Node;
         }
@@ -658,7 +656,7 @@ namespace PPDEditor.DockForm.Script
             }
         }
 
-        private void treeView1_KeyDown(object sender, KeyEventArgs e)
+        private void TreeView1_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.F2)
             {
@@ -674,7 +672,7 @@ namespace PPDEditor.DockForm.Script
             }
         }
 
-        private void treeView1_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
+        private void TreeView1_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
         {
             if (treeView1.SelectedNode.Name == "folder")
             {
@@ -683,7 +681,7 @@ namespace PPDEditor.DockForm.Script
             ScriptSelected?.Invoke(Path.ChangeExtension(GetFullPath(treeView1.SelectedNode), ".fsml"));
         }
 
-        private void treeView1_ItemDrag(object sender, ItemDragEventArgs e)
+        private void TreeView1_ItemDrag(object sender, ItemDragEventArgs e)
         {
             var treeView = (TreeView)sender;
             var treeNode = (TreeNode)e.Item;
@@ -696,7 +694,7 @@ namespace PPDEditor.DockForm.Script
             var effect = treeView.DoDragDrop(e.Item, DragDropEffects.Copy);
         }
 
-        private void treeView1_DragOver(object sender, DragEventArgs e)
+        private void TreeView1_DragOver(object sender, DragEventArgs e)
         {
             if (e.Data.GetDataPresent(typeof(TreeNode)))
             {
@@ -734,7 +732,7 @@ namespace PPDEditor.DockForm.Script
             }
         }
 
-        private void treeView1_DragDrop(object sender, DragEventArgs e)
+        private void TreeView1_DragDrop(object sender, DragEventArgs e)
         {
             if (e.Data.GetDataPresent(typeof(TreeNode)))
             {

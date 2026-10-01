@@ -60,7 +60,7 @@ namespace PPDEditor.Forms
             this.label4.Location = new Point(this.textBox4.Location.X - 5 - this.label4.Width, this.label4.Location.Y);
             numbererror = Utility.Language["CutNumberError"];
         }
-        private void button1_Click(object sender, EventArgs e)
+        private void Button1_Click(object sender, EventArgs e)
         {
             this.DialogResult = DialogResult.OK;
             if (float.TryParse(this.textBox1.Text, out float num))
@@ -98,13 +98,13 @@ namespace PPDEditor.Forms
             this.Close();
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void Button2_Click(object sender, EventArgs e)
         {
             this.DialogResult = DialogResult.Cancel;
             this.Close();
         }
 
-        private void textBox1_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+        private void TextBox1_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
         {
             if (e.KeyCode == Keys.Return)
             {
@@ -114,7 +114,7 @@ namespace PPDEditor.Forms
             }
         }
 
-        private void textBox2_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+        private void TextBox2_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
         {
             if (e.KeyCode == Keys.Return)
             {
@@ -124,7 +124,7 @@ namespace PPDEditor.Forms
             }
         }
 
-        private void textBox3_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+        private void TextBox3_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
         {
             if (e.KeyCode == Keys.Return)
             {
@@ -134,15 +134,15 @@ namespace PPDEditor.Forms
             }
         }
 
-        private void textBox4_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+        private void TextBox4_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
         {
             if (e.KeyCode == Keys.Return)
             {
-                this.button1_Click(sender, e);
+                this.Button1_Click(sender, e);
             }
         }
 
-        private void textBox1_KeyPress(object sender, KeyPressEventArgs e)
+        private void TextBox1_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (e.KeyChar == (char)Keys.Enter || e.KeyChar == (char)Keys.Escape)
             {
@@ -150,7 +150,7 @@ namespace PPDEditor.Forms
             }
         }
 
-        private void textBox2_KeyPress(object sender, KeyPressEventArgs e)
+        private void TextBox2_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (e.KeyChar == (char)Keys.Enter || e.KeyChar == (char)Keys.Escape)
             {
@@ -158,7 +158,7 @@ namespace PPDEditor.Forms
             }
         }
 
-        private void textBox3_KeyPress(object sender, KeyPressEventArgs e)
+        private void TextBox3_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (e.KeyChar == (char)Keys.Enter || e.KeyChar == (char)Keys.Escape)
             {
@@ -166,7 +166,7 @@ namespace PPDEditor.Forms
             }
         }
 
-        private void textBox4_KeyPress(object sender, KeyPressEventArgs e)
+        private void TextBox4_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (e.KeyChar == (char)Keys.Enter || e.KeyChar == (char)Keys.Escape)
             {

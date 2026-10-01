@@ -71,8 +71,8 @@ namespace PPDMultiCommon.Tcp
                 var ns = client.GetStream();
 
                 var connection = new Connection(client, ns);
-                connection.ReadClient += connection_ReadClient;
-                connection.Closed += connection_Closed;
+                connection.ReadClient += Connection_ReadClient;
+                connection.Closed += Connection_Closed;
                 manager.Add(connection);
                 connection.Start();
 
@@ -83,12 +83,12 @@ namespace PPDMultiCommon.Tcp
             }
         }
 
-        void connection_Closed(int id)
+        void Connection_Closed(int id)
         {
             Closed?.Invoke(id);
         }
 
-        void connection_ReadClient(byte[] data, int id)
+        void Connection_ReadClient(byte[] data, int id)
         {
             ReadClient?.Invoke(data, id);
         }
@@ -144,7 +144,7 @@ namespace PPDMultiCommon.Tcp
                 {
                     lock (connections)
                     {
-                        return connections.Values.ToArray();
+                        return [.. connections.Values];
                     }
                 }
             }
@@ -160,10 +160,10 @@ namespace PPDMultiCommon.Tcp
                 {
                     connections.Add(connection.ID, connection);
                 }
-                connection.Closed += connection_Closed;
+                connection.Closed += Connection_Closed;
             }
 
-            void connection_Closed(int id)
+            void Connection_Closed(int id)
             {
                 lock (connections)
                 {
@@ -278,12 +278,12 @@ namespace PPDMultiCommon.Tcp
         }
 
 
-        class Connection : ConnectionBase
+        class Connection(TcpClient client, NetworkStream net) : ConnectionBase(client, net)
         {
             public static int _id;
             public event ReadClientEventHandler ReadClient;
             public event ClosedEventHandler Closed;
-            private readonly int id;
+            private readonly int id = ++_id;
 
             public int ID
             {
@@ -296,12 +296,6 @@ namespace PPDMultiCommon.Tcp
                 {
                     return ((IPEndPoint)client.Client.RemoteEndPoint).Address.ToString();
                 }
-            }
-
-            public Connection(TcpClient client, NetworkStream net)
-                : base(client, net)
-            {
-                id = ++_id;
             }
 
             protected override void OnRead(byte[] bytes)

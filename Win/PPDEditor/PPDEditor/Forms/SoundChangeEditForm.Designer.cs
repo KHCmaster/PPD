@@ -262,7 +262,7 @@
             this.button5.TabIndex = 47;
             this.button5.Text = "視聴";
             this.button5.UseVisualStyleBackColor = true;
-            this.button5.Click += new System.EventHandler(this.button5_Click);
+            this.button5.Click += new System.EventHandler(this.Button5_Click);
             // 
             // button1
             // 
@@ -273,7 +273,7 @@
             this.button1.TabIndex = 48;
             this.button1.Text = "OK";
             this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.button1.Click += new System.EventHandler(this.Button1_Click);
             // 
             // button2
             // 
@@ -284,7 +284,7 @@
             this.button2.TabIndex = 49;
             this.button2.Text = "Cancel";
             this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
+            this.button2.Click += new System.EventHandler(this.Button2_Click);
             // 
             // SoundChangeEditForm
             // 

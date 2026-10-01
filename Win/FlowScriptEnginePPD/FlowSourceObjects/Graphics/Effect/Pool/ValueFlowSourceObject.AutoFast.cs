@@ -9,13 +9,11 @@ namespace FlowScriptEnginePPD.FlowSourceObjects.Graphics.Effect.Pool
     {
         public override object GetPropertyValue(string propertyName)
         {
-            switch (propertyName)
+            return propertyName switch
             {
-                case "Pool":
-                    return Pool;
-                default:
-                    return null;
-            }
+                "Pool" => Pool,
+                _ => null,
+            };
         }
 
         protected override void SetPropertyValue(string propertyName, object value)

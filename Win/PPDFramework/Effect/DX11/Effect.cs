@@ -192,7 +192,7 @@ namespace PPDFramework.Effect.DX11
             if (texture is Texture.DX11.Texture dx11Texture)
             {
                 dx11Texture.Flush(Context);
-                textures[slot] = dx11Texture._ShaderResourceView;
+                textures[slot] = dx11Texture.ShaderResourceView;
             }
             else
             {

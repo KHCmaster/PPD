@@ -168,7 +168,7 @@ namespace PPDEditor
             dir = MathCompat.NormalizeSharpDX(dir);
             var v1 = new Vector2(-dir.Y, dir.X);
             var v2 = new Vector2(-v1.X, -v1.Y);
-            angleLine.Points = new Vector2[] { p1, p2 };
+            angleLine.Points = [p1, p2];
             angleLine.Hidden = false;
         }
 

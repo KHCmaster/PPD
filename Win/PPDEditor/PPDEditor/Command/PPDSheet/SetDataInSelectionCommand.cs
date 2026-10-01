@@ -31,11 +31,11 @@ namespace PPDEditor.Command.PPDSheet
                 {
                     if (withAngle)
                     {
-                        lastInfo[i] = new float[] { mks[iter].Position.X, mks[iter].Position.Y, mks[iter].Rotation };
+                        lastInfo[i] = [mks[iter].Position.X, mks[iter].Position.Y, mks[iter].Rotation];
                     }
                     else
                     {
-                        lastInfo[i] = new float[] { mks[iter].Position.X, mks[iter].Position.Y };
+                        lastInfo[i] = [mks[iter].Position.X, mks[iter].Position.Y];
                     }
                     iter++;
                     if (iter >= mks.Length) break;
@@ -48,11 +48,11 @@ namespace PPDEditor.Command.PPDSheet
                 {
                     if (withAngle)
                     {
-                        lastInfo[i] = new float[] { mks[iter].Position.X, mks[iter].Position.Y, mks[iter].Rotation };
+                        lastInfo[i] = [mks[iter].Position.X, mks[iter].Position.Y, mks[iter].Rotation];
                     }
                     else
                     {
-                        lastInfo[i] = new float[] { mks[iter].Position.X, mks[iter].Position.Y };
+                        lastInfo[i] = [mks[iter].Position.X, mks[iter].Position.Y];
                     }
                     iter--;
                     if (iter < 0) break;

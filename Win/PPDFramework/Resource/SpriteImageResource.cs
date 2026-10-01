@@ -33,12 +33,12 @@ namespace PPDFramework.Resource
         {
             vertices = device.GetModule<ShaderCommon>().CreateVertex(4);
             var rect = GetActualUVRectangle(0, 0, 1, 1);
-            vertices.Write(new[] {
+            vertices.Write([
                 new ColoredTexturedVertex(new Vector3(0, 0, 0.5f), rect.TopLeft),
                 new ColoredTexturedVertex(new Vector3(Width, 0, 0.5f), rect.TopRight),
                 new ColoredTexturedVertex(new Vector3(0, Height, 0.5f), rect.BottomLeft),
                 new ColoredTexturedVertex(new Vector3(Width, Height, 0.5f), rect.BottomRight)
-            });
+            ]);
         }
 
         public ImageScale ImageScale

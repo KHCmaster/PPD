@@ -96,18 +96,16 @@ namespace PPD
         {
             var strBytes = Encoding.UTF8.GetBytes(sourceString);
 
-            using (var aes = CreateAes())
-            using (ICryptoTransform encryptor = aes.CreateEncryptor())
+            using var aes = CreateAes();
+            using ICryptoTransform encryptor = aes.CreateEncryptor();
+            try
             {
-                try
-                {
-                    var encBytes = encryptor.TransformFinalBlock(strBytes, 0, strBytes.Length);
-                    return Convert.ToBase64String(encBytes);
-                }
-                catch
-                {
-                    return "";
-                }
+                var encBytes = encryptor.TransformFinalBlock(strBytes, 0, strBytes.Length);
+                return Convert.ToBase64String(encBytes);
+            }
+            catch
+            {
+                return "";
             }
         }
 
@@ -115,12 +113,10 @@ namespace PPD
         {
             var strBytes = Convert.FromBase64String(sourceString);
 
-            using (var aes = CreateAes())
-            using (ICryptoTransform decryptor = aes.CreateDecryptor())
-            {
-                var decBytes = decryptor.TransformFinalBlock(strBytes, 0, strBytes.Length);
-                return Encoding.UTF8.GetString(decBytes);
-            }
+            using var aes = CreateAes();
+            using ICryptoTransform decryptor = aes.CreateDecryptor();
+            var decBytes = decryptor.TransformFinalBlock(strBytes, 0, strBytes.Length);
+            return Encoding.UTF8.GetString(decBytes);
         }
 
         /// <summary>

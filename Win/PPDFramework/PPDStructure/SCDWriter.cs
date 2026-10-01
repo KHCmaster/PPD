@@ -15,10 +15,8 @@ namespace PPDFramework.PPDStructure
         /// <returns></returns>
         public static void Write(string path, SCDData[] scdData)
         {
-            using (Stream stream = File.Create(path))
-            {
-                Write(stream, scdData);
-            }
+            using Stream stream = File.Create(path);
+            Write(stream, scdData);
         }
 
         /// <summary>

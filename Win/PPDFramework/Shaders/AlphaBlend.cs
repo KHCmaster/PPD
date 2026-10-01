@@ -12,18 +12,13 @@ namespace PPDFramework.Shaders
     /// <summary>
     /// アルファブレンドのクラスです。
     /// </summary>
-    public class AlphaBlend : DisposableComponent
+    /// <remarks>
+    /// コンストラクタです。
+    /// </remarks>
+    /// <param name="device"></param>
+    public class AlphaBlend(PPDDevice device) : DisposableComponent
     {
-        AlphaBlendBase alphaBlend;
-
-        /// <summary>
-        /// コンストラクタです。
-        /// </summary>
-        /// <param name="device"></param>
-        public AlphaBlend(PPDDevice device)
-        {
-            alphaBlend = new AlphaBlendShading(device);
-        }
+        AlphaBlendBase alphaBlend = new AlphaBlendShading(device);
 
         /// <summary>
         /// 描画します。
@@ -111,21 +106,15 @@ namespace PPDFramework.Shaders
                 maskHandlers.Pop();
             }
 
-            class MaskHandler : DisposableComponent
+            class MaskHandler(AlphaBlend.AlphaBlendBase alphaBlend, MaskType maskType) : DisposableComponent
             {
-                readonly AlphaBlendBase alphaBlend;
+                readonly AlphaBlendBase alphaBlend = alphaBlend;
 
                 public MaskType MaskType
                 {
                     get;
                     private set;
-                }
-
-                public MaskHandler(AlphaBlendBase alphaBlend, MaskType maskType)
-                {
-                    MaskType = maskType;
-                    this.alphaBlend = alphaBlend;
-                }
+                } = maskType;
 
                 protected override void DisposeResource()
                 {
@@ -223,19 +212,17 @@ namespace PPDFramework.Shaders
                         }
                         else
                         {
-                            using (var workspaceTexture = device.Workspace.Get())
-                            {
-                                Flush();
+                            using var workspaceTexture = device.Workspace.Get();
+                            Flush();
 #if BENCHMARK
                                 using (var handler = Benchmark.Instance.Start("Copy"))
                                 {
 #endif
-                                    device.StretchRectangle(device.GetRenderTarget(), workspaceTexture);
+                            device.StretchRectangle(device.GetRenderTarget(), workspaceTexture);
 #if BENCHMARK
                                 }
 #endif
-                                DrawNotNormalBlend(device, context, m, workspaceTexture, primitiveType, primitiveCount, startIndex, vertexCount);
-                            }
+                            DrawNotNormalBlend(device, context, m, workspaceTexture, primitiveType, primitiveCount, startIndex, vertexCount);
                         }
                     }
                 }
@@ -248,13 +235,12 @@ namespace PPDFramework.Shaders
 
             private void DrawMask(PPDDevice device, AlphaBlendContext context, Matrix m, PrimitiveType primitiveType, int primitiveCount, int startIndex, int vertexCount)
             {
-                using (var workspaceTexture = device.Workspace.Get())
-                {
+                using var workspaceTexture = device.Workspace.Get();
 #if BENCHMARK
                     using (var handler = Benchmark.Instance.Start("Copy"))
                     {
 #endif
-                        device.StretchRectangle(device.GetRenderTarget(), workspaceTexture);
+                device.StretchRectangle(device.GetRenderTarget(), workspaceTexture);
 #if BENCHMARK
                     }
 #endif
@@ -262,16 +248,16 @@ namespace PPDFramework.Shaders
                     using (var handler = Benchmark.Instance.Start("Effect Prepare"))
                     {
 #endif
-                        effect.Technique = maskTechniqueNames[new Tuple<MaskType, bool>(MaskType, context.MaskTexture != null)];
-                        effect.SetTexture(textureHandle, context.Texture);
-                        effect.SetTexture(lastRenderTargetTextureHandle, workspaceTexture.Texture);
-                        effect.SetTexture(maskTextureHandle, context.MaskTexture);
-                        effect.SetValue(drawInfoHandle, new DrawInfo
-                        {
-                            Matrix = m,
-                            Alpha = context.Alpha,
-                            OverlayColor = context.Overlay
-                        });
+                effect.Technique = maskTechniqueNames[new Tuple<MaskType, bool>(MaskType, context.MaskTexture != null)];
+                effect.SetTexture(textureHandle, context.Texture);
+                effect.SetTexture(lastRenderTargetTextureHandle, workspaceTexture.Texture);
+                effect.SetTexture(maskTextureHandle, context.MaskTexture);
+                effect.SetValue(drawInfoHandle, new DrawInfo
+                {
+                    Matrix = m,
+                    Alpha = context.Alpha,
+                    OverlayColor = context.Overlay
+                });
 #if BENCHMARK
                     }
 #endif
@@ -280,50 +266,45 @@ namespace PPDFramework.Shaders
                     using (var handler = Benchmark.Instance.Start("Mask Draw"))
                     {
 #endif
-                        var passCount = effect.Begin();
-                        effect.BeginPass(0);
-                        effect.CommitChanges();
-                        device.VertexDeclaration = effect.VertexDeclaration;
-                        device.SetStreamSource(context.Vertex.VertexBucket.VertexBuffer);
-                        device.DrawPrimitives(primitiveType, context.Vertex.Offset + startIndex, primitiveCount);
-                        effect.EndPass();
-                        effect.End();
-                        effect.SetTexture(textureHandle, null);
+                var passCount = effect.Begin();
+                effect.BeginPass(0);
+                effect.CommitChanges();
+                device.VertexDeclaration = effect.VertexDeclaration;
+                device.SetStreamSource(context.Vertex.VertexBucket.VertexBuffer);
+                device.DrawPrimitives(primitiveType, context.Vertex.Offset + startIndex, primitiveCount);
+                effect.EndPass();
+                effect.End();
+                effect.SetTexture(textureHandle, null);
 #if BENCHMARK
                     }
 #endif
-                }
             }
 
             private void DrawGlass(PPDDevice device, AlphaBlendContext context, Matrix m,
                 PrimitiveType primitiveType, int primitiveCount, int startIndex, int vertexCount)
             {
-                using (var workspaceTexture = device.Workspace.Get())
-                {
-                    Flush();
+                using var workspaceTexture = device.Workspace.Get();
+                Flush();
 #if BENCHMARK
                     using (var handler = Benchmark.Instance.Start("Copy"))
                     {
 #endif
-                        device.StretchRectangle(device.GetRenderTarget(), workspaceTexture);
+                device.StretchRectangle(device.GetRenderTarget(), workspaceTexture);
 #if BENCHMARK
                     }
 #endif
-                    using (var tempWorkspaceTexture = device.Workspace.Get())
-                    using (var tempWorkspaceTexture2 = device.Workspace.Get())
-                    {
-                        context.BlendMode = BlendMode.Normal;
-                        var renderTarget = device.GetRenderTarget();
-                        device.SetRenderTarget(tempWorkspaceTexture);
-                        device.Clear();
-                        device.SetRenderTarget(tempWorkspaceTexture2);
-                        device.Clear();
-                        device.SetRenderTarget(tempWorkspaceTexture);
-                        DrawNotNormalBlend(device, context, m, tempWorkspaceTexture2, primitiveType, primitiveCount, startIndex, vertexCount);
-                        device.SetRenderTarget(renderTarget);
-                        device.GetModule<GlassFilter>().Draw(device, tempWorkspaceTexture.Texture, workspaceTexture.Texture);
-                    }
-                }
+                using var tempWorkspaceTexture = device.Workspace.Get();
+                using var tempWorkspaceTexture2 = device.Workspace.Get();
+                context.BlendMode = BlendMode.Normal;
+                var renderTarget = device.GetRenderTarget();
+                device.SetRenderTarget(tempWorkspaceTexture);
+                device.Clear();
+                device.SetRenderTarget(tempWorkspaceTexture2);
+                device.Clear();
+                device.SetRenderTarget(tempWorkspaceTexture);
+                DrawNotNormalBlend(device, context, m, tempWorkspaceTexture2, primitiveType, primitiveCount, startIndex, vertexCount);
+                device.SetRenderTarget(renderTarget);
+                device.GetModule<GlassFilter>().Draw(device, tempWorkspaceTexture.Texture, workspaceTexture.Texture);
             }
 
             private void DrawNormalBlend(PPDDevice device, AlphaBlendContext context, Matrix m,

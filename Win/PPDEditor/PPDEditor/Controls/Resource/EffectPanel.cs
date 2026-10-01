@@ -40,11 +40,11 @@ namespace PPDEditor.Controls.Resource
             {
                 Interval = 1000 / 60
             };
-            timer.Tick += timer_Tick;
-            canvasPanel.CustomPaint += canvasPanel_CustomPaint;
-            canvasPanel.SizeChanged += canvasPanel_SizeChanged;
+            timer.Tick += Timer_Tick;
+            canvasPanel.CustomPaint += CanvasPanel_CustomPaint;
+            canvasPanel.SizeChanged += CanvasPanel_SizeChanged;
             SizeChanged += EffectPanel_SizeChanged;
-            toolStripSplitButton1.Click += toolStripSplitButton1_Click;
+            toolStripSplitButton1.Click += ToolStripSplitButton1_Click;
             Dock = DockStyle.Fill;
 
             toolStrip1.Renderer = new CustomToolStripRenderer();
@@ -109,7 +109,7 @@ namespace PPDEditor.Controls.Resource
             }
         }
 
-        void toolStripSplitButton1_Click(object sender, EventArgs e)
+        void ToolStripSplitButton1_Click(object sender, EventArgs e)
         {
             toolStripSplitButton1.Checked = !toolStripSplitButton1.Checked;
             if (toolStripSplitButton1.Checked)
@@ -161,7 +161,7 @@ namespace PPDEditor.Controls.Resource
             canvasPanel.Location = new Point(posX, posY);
         }
 
-        void canvasPanel_SizeChanged(object sender, EventArgs e)
+        void CanvasPanel_SizeChanged(object sender, EventArgs e)
         {
             CanvasSizeChanged();
             ChangeCanvasLocation();
@@ -181,19 +181,17 @@ namespace PPDEditor.Controls.Resource
             CheckBack?.Dispose();
             CheckBack = null;
             CheckBack = new Bitmap(width, checksize * 2);
-            using (Graphics g = Graphics.FromImage(CheckBack))
+            using Graphics g = Graphics.FromImage(CheckBack);
+            for (int i = 0; i <= width / (checksize * 2); i++)
             {
-                for (int i = 0; i <= width / (checksize * 2); i++)
-                {
-                    g.FillRectangle(Brushes.White, new Rectangle(2 * i * checksize, 0, checksize, checksize));
-                    g.FillRectangle(Brushes.LightGray, new Rectangle((2 * i + 1) * checksize, 0, checksize, checksize));
-                    g.FillRectangle(Brushes.White, new Rectangle((2 * i + 1) * checksize, checksize, checksize, checksize));
-                    g.FillRectangle(Brushes.LightGray, new Rectangle(2 * i * checksize, checksize, checksize, checksize));
-                }
+                g.FillRectangle(Brushes.White, new Rectangle(2 * i * checksize, 0, checksize, checksize));
+                g.FillRectangle(Brushes.LightGray, new Rectangle((2 * i + 1) * checksize, 0, checksize, checksize));
+                g.FillRectangle(Brushes.White, new Rectangle((2 * i + 1) * checksize, checksize, checksize, checksize));
+                g.FillRectangle(Brushes.LightGray, new Rectangle(2 * i * checksize, checksize, checksize, checksize));
             }
         }
 
-        void canvasPanel_CustomPaint(object sender, PaintEventArgs e)
+        void CanvasPanel_CustomPaint(object sender, PaintEventArgs e)
         {
             DrawBack(e.Graphics);
             e.Graphics.Transform = moveMatrix;
@@ -259,7 +257,7 @@ namespace PPDEditor.Controls.Resource
             g.Transform = temp;
         }
 
-        void timer_Tick(object sender, EventArgs e)
+        void Timer_Tick(object sender, EventArgs e)
         {
             if (effectManager.State == EffectManager.PlayState.Stop)
             {
@@ -276,19 +274,17 @@ namespace PPDEditor.Controls.Resource
             effectManager = EffectLoader.Load(path, false, (fn) =>
             {
                 var filename = Path.Combine(dir, fn);
-                using (Image image = Image.FromFile(filename))
+                using Image image = Image.FromFile(filename);
+                if (!dict.ContainsKey(filename))
                 {
-                    if (!dict.ContainsKey(filename))
-                    {
-                        dict.Add(filename, new Bitmap(image));
-                    }
+                    dict.Add(filename, new Bitmap(image));
                 }
             });
-            effectManager.Finish += effectManager_Finish;
+            effectManager.Finish += EffectManager_Finish;
             canvasPanel.DrawAndRefresh();
         }
 
-        void effectManager_Finish(object sender, EventArgs e)
+        void EffectManager_Finish(object sender, EventArgs e)
         {
             this.toolStripSplitButton1.Checked = false;
             ChangeImage();
@@ -310,8 +306,8 @@ namespace PPDEditor.Controls.Resource
 
         private void Play()
         {
-            string tooltiptext = "";
             EffectManager.PlayType playType = Effect2D.EffectManager.PlayType.Once;
+            string tooltiptext;
             if (playToolStripMenuItem.Checked)
             {
                 playType = EffectManager.PlayType.Once;
@@ -341,25 +337,25 @@ namespace PPDEditor.Controls.Resource
             timer.Start();
         }
 
-        private void playToolStripMenuItem_Click(object sender, EventArgs e)
+        private void PlayToolStripMenuItem_Click(object sender, EventArgs e)
         {
             TurnOffExcept(playToolStripMenuItem);
             Play();
         }
 
-        private void reversePlayToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ReversePlayToolStripMenuItem_Click(object sender, EventArgs e)
         {
             TurnOffExcept(reversePlayToolStripMenuItem);
             Play();
         }
 
-        private void loopPlayToolStripMenuItem_Click(object sender, EventArgs e)
+        private void LoopPlayToolStripMenuItem_Click(object sender, EventArgs e)
         {
             TurnOffExcept(loopPlayToolStripMenuItem);
             Play();
         }
 
-        private void reverseLoopPlayToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ReverseLoopPlayToolStripMenuItem_Click(object sender, EventArgs e)
         {
             TurnOffExcept(reverseLoopPlayToolStripMenuItem);
             Play();
@@ -374,21 +370,21 @@ namespace PPDEditor.Controls.Resource
             }
         }
 
-        private void toolStripButton1_Click(object sender, EventArgs e)
+        private void ToolStripButton1_Click(object sender, EventArgs e)
         {
             Stop();
             toolStripSplitButton1.Checked = false;
             ChangeImage();
         }
 
-        private void toolStripComboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        private void ToolStripComboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             int length = sizeDict[toolStripComboBox1.SelectedIndex];
             canvasPanel.Size = new Size(length, length);
             PPDStaticSetting.CanvasSizeIndex = toolStripComboBox1.SelectedIndex;
         }
 
-        private void toolStripComboBox2_SelectedIndexChanged(object sender, EventArgs e)
+        private void ToolStripComboBox2_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (toolStripComboBox2.SelectedIndex == 3 && !ignore)
             {

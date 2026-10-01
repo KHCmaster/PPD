@@ -4,13 +4,14 @@ using PPDMultiCommon.Tcp;
 using PPDMultiCommon.Web;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace PPDMultiServer.Tcp
 {
     public class PPDServer : IContextManager, IDisposable
     {
-        private readonly object syncRoot = new();
-        static readonly byte[] PPDPackV2DisconnectBytes = { 80, 80, 68, 80, 65, 67, 75, 86, 50, 51, 0, 0, 0, 23, 0, 0, 0, 7, 0, 0, 0, 0, 0, 10, 0, 77, 101, 116, 104, 111, 100, 84, 121, 112, 101, 2, 0, 0, 0, 6, 0, 82, 101, 97, 115, 111, 110, 4, 0, 0, 0 };
+        private readonly Lock syncRoot = new();
+        static readonly byte[] PPDPackV2DisconnectBytes = [80, 80, 68, 80, 65, 67, 75, 86, 50, 51, 0, 0, 0, 23, 0, 0, 0, 7, 0, 0, 0, 0, 0, 10, 0, 77, 101, 116, 104, 111, 100, 84, 121, 112, 101, 2, 0, 0, 0, 6, 0, 82, 101, 97, 115, 111, 110, 4, 0, 0, 0];
 
         public event EventHandler FailedToCreateRoom;
 
@@ -25,7 +26,7 @@ namespace PPDMultiServer.Tcp
         readonly Dictionary<int, DateTime> delayedDisconnects;
         readonly TcpByteReader byteReader;
         Host host;
-        static readonly Object updateLock = new();
+        static readonly Lock updateLock = new();
 
         public WebManager WebManager
         {
@@ -66,7 +67,7 @@ namespace PPDMultiServer.Tcp
         }
 
         public PPDServer(int port, WebManager webManager, RoomInfo roomInfo, ITimerManager timerManager)
-            : this(port, webManager, roomInfo, timerManager, "", new string[0])
+            : this(port, webManager, roomInfo, timerManager, "", [])
         {
 
         }
@@ -89,13 +90,13 @@ namespace PPDMultiServer.Tcp
             userLastUpdatedAt = [];
             delayedDisconnects = [];
             byteReader = new TcpByteReader();
-            byteReader.ByteReaded += byteReader_ByteReaded;
+            byteReader.ByteReaded += ByteReader_ByteReaded;
             host = new Host
             {
                 Port = port
             };
-            host.ReadClient += host_ReadClient;
-            host.Closed += host_Closed;
+            host.ReadClient += Host_ReadClient;
+            host.Closed += Host_Closed;
         }
 
         public void Start()
@@ -119,8 +120,8 @@ namespace PPDMultiServer.Tcp
             if (host != null)
             {
                 host.Dispose();
-                host.ReadClient -= host_ReadClient;
-                host.Closed -= host_Closed;
+                host.ReadClient -= Host_ReadClient;
+                host.Closed -= Host_Closed;
                 host = null;
             }
 
@@ -266,7 +267,7 @@ namespace PPDMultiServer.Tcp
             }
         }
 
-        void host_Closed(int id)
+        void Host_Closed(int id)
         {
             var networkData = new DeleteUserNetworkData
             {
@@ -283,12 +284,12 @@ namespace PPDMultiServer.Tcp
             }
         }
 
-        void host_ReadClient(byte[] data, int id)
+        void Host_ReadClient(byte[] data, int id)
         {
             byteReader.Read(data, id);
         }
 
-        void byteReader_ByteReaded(ReadInfo readInfo, int id)
+        void ByteReader_ByteReaded(ReadInfo readInfo, int id)
         {
             var userInput = readInfo.NetworkData is PingNetworkData;
             readInfo.NetworkData.Id = id;

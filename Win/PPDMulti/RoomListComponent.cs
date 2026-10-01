@@ -70,9 +70,9 @@ namespace PPDMulti
             loading.Hidden = true;
 
             getRoomListExecutor = new GetRoomListExecutor();
-            getRoomListExecutor.Finished += getRoomListExecutor_Finished;
+            getRoomListExecutor.Finished += GetRoomListExecutor_Finished;
 
-            timerID = gameHost.AddTimerCallBack(timerCallBack, 15000, false, true);
+            timerID = gameHost.AddTimerCallBack(TimerCallBack, 15000, false, true);
 
             Inputed += RoomListComponent_Inputed;
             LostFocused += RoomListComponent_LostFocused;
@@ -86,7 +86,7 @@ namespace PPDMulti
             }
         }
 
-        private void timerCallBack(int obj)
+        private void TimerCallBack(int obj)
         {
             StartGetRoomList();
         }
@@ -97,7 +97,7 @@ namespace PPDMulti
             getRoomListExecutor.Start();
         }
 
-        void getRoomListExecutor_Finished(object sender, EventArgs e)
+        void GetRoomListExecutor_Finished(object sender, EventArgs e)
         {
             loading.Hidden = true;
             listGot = true;
@@ -149,7 +149,7 @@ namespace PPDMulti
                     if (CurrentComponent.RoomInfo.HasPassword)
                     {
                         var dialog = new PasswordDialog(device, resourceManager, gameHost, CurrentComponent.RoomInfo);
-                        dialog.Processed += dialog_Processed;
+                        dialog.Processed += Dialog_Processed;
                         FocusManager.Focus(dialog);
                         this.InsertChild(dialog, 0);
                     }
@@ -213,7 +213,7 @@ namespace PPDMulti
             }
         }
 
-        void dialog_Processed(object sender, EventArgs e)
+        void Dialog_Processed(object sender, EventArgs e)
         {
             var dialog = sender as PasswordDialog;
             if (dialog.IsValid)

@@ -9,7 +9,7 @@ namespace PPDFramework
     /// </summary>
     public class PPDExecuteArg
     {
-        private static readonly PPDExecuteArg empty = new(new string[0]);
+        private static readonly PPDExecuteArg empty = new([]);
         private readonly Dictionary<string, string> dict;
 
         /// <summary>

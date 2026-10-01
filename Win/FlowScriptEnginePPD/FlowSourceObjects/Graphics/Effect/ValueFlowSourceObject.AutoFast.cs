@@ -10,15 +10,12 @@ namespace FlowScriptEnginePPD.FlowSourceObjects.Graphics.Effect
     {
         public override object GetPropertyValue(string propertyName)
         {
-            switch (propertyName)
+            return propertyName switch
             {
-                case "Object":
-                    return Object;
-                case "PlayState":
-                    return PlayState;
-                default:
-                    return null;
-            }
+                "Object" => Object,
+                "PlayState" => PlayState,
+                _ => null,
+            };
         }
 
         protected override void SetPropertyValue(string propertyName, object value)

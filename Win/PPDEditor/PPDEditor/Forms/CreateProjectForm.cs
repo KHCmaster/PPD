@@ -152,7 +152,7 @@ namespace PPDEditor.Forms
             done = Utility.Language["CPFDone"];
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void Button1_Click(object sender, EventArgs e)
         {
             switch (CurrentMode)
             {
@@ -206,7 +206,7 @@ namespace PPDEditor.Forms
             return true;
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void Button2_Click(object sender, EventArgs e)
         {
             switch (CurrentMode)
             {
@@ -259,16 +259,16 @@ namespace PPDEditor.Forms
             }
         }
 
-        private void button3_Click(object sender, EventArgs e)
+        private void Button3_Click(object sender, EventArgs e)
         {
             if (CurrentMode == Mode.InitialSound)
             {
                 InitialSoundSkipped = true;
-                button2_Click(button2, e);
+                Button2_Click(button2, e);
             }
         }
 
-        private void button4_Click(object sender, EventArgs e)
+        private void Button4_Click(object sender, EventArgs e)
         {
             folderBrowserDialog1.SelectedPath = this.textBox1.Text;
             if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
@@ -277,7 +277,7 @@ namespace PPDEditor.Forms
             }
         }
 
-        private void button5_Click(object sender, EventArgs e)
+        private void Button5_Click(object sender, EventArgs e)
         {
             openFileDialog1.FileName = this.textBox2.Text;
             openFileDialog1.Filter = openmoviefilter;
@@ -287,7 +287,7 @@ namespace PPDEditor.Forms
             }
         }
 
-        private void button6_Click(object sender, EventArgs e)
+        private void Button6_Click(object sender, EventArgs e)
         {
             openFileDialog1.FileName = this.textBox4.Text;
             openFileDialog1.Filter = wavefilter;

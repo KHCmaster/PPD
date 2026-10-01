@@ -10,15 +10,12 @@ namespace PPDFramework.Effect
     /// <summary>
     /// エフェクトのクラスです。
     /// </summary>
-    public abstract class EffectBase : ResettableComponent
+    /// <remarks>
+    /// コンストラクタです。
+    /// </remarks>
+    /// <param name="device"></param>
+    public abstract class EffectBase(PPDDevice device) : ResettableComponent(device)
     {
-        /// <summary>
-        /// コンストラクタです。
-        /// </summary>
-        /// <param name="device"></param>
-        protected EffectBase(PPDDevice device) : base(device)
-        {
-        }
 
         /// <summary>
         /// 入力頂点の情報を取得します。

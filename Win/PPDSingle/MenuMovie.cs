@@ -7,7 +7,7 @@ namespace PPDSingle
     /// <summary>
     /// メニュー動画
     /// </summary>
-    class MenuMovie : GameComponent, IMovie
+    class MenuMovie(PPDDevice device) : GameComponent(device), IMovie
     {
         const int FadeStep = 2;
 
@@ -44,10 +44,6 @@ namespace PPDSingle
                     }
                 }
             }
-        }
-
-        public MenuMovie(PPDDevice device) : base(device)
-        {
         }
 
         protected override void UpdateImpl()

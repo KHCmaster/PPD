@@ -27,7 +27,7 @@ namespace FlowScriptDrawControl.Control
         {
             get
             {
-                return leftStack.Children.Cast<SourceItemControl>().ToArray();
+                return [.. leftStack.Children.Cast<SourceItemControl>()];
             }
         }
 
@@ -35,7 +35,7 @@ namespace FlowScriptDrawControl.Control
         {
             get
             {
-                return rightStack.Children.Cast<SourceItemControl>().ToArray();
+                return [.. rightStack.Children.Cast<SourceItemControl>()];
             }
         }
 
@@ -69,8 +69,8 @@ namespace FlowScriptDrawControl.Control
                         DataContext = item,
                         HorizontalContentAlignment = System.Windows.HorizontalAlignment.Right
                     };
-                    outItem.Selected += outItem_Selected;
-                    outItem.TryConnected += outItem_TryConnected;
+                    outItem.Selected += OutItem_Selected;
+                    outItem.TryConnected += OutItem_TryConnected;
                     rightStack.Children.Add(outItem);
                 }
                 else
@@ -80,8 +80,8 @@ namespace FlowScriptDrawControl.Control
                         DataContext = item,
                         HorizontalContentAlignment = System.Windows.HorizontalAlignment.Left
                     };
-                    inItem.Selected += inItem_Selected;
-                    inItem.TryConnected += inItem_TryConnected;
+                    inItem.Selected += InItem_Selected;
+                    inItem.TryConnected += InItem_TryConnected;
                     leftStack.Children.Add(inItem);
                 }
             }
@@ -89,22 +89,22 @@ namespace FlowScriptDrawControl.Control
             outItems = null;
         }
 
-        void outItem_TryConnected(object sender, EventArgs e)
+        void OutItem_TryConnected(object sender, EventArgs e)
         {
             OnTryConnected(sender as SourceItemControl);
         }
 
-        void inItem_TryConnected(object sender, EventArgs e)
+        void InItem_TryConnected(object sender, EventArgs e)
         {
             OnTryConnected(sender as SourceItemControl);
         }
 
-        void inItem_Selected(object sender, EventArgs e)
+        void InItem_Selected(object sender, EventArgs e)
         {
             OnInItemSelected(sender as SourceItemControl);
         }
 
-        void outItem_Selected(object sender, EventArgs e)
+        void OutItem_Selected(object sender, EventArgs e)
         {
             OnOutItemSelected(sender as SourceItemControl);
         }

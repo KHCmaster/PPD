@@ -7,35 +7,27 @@ using System.Collections.Generic;
 
 namespace PPDEditor.FlowScript
 {
-    class ChangeMarkPropertyManager : IChangeMarkPropertyManager
+    class ChangeMarkPropertyManager(PPDSheet sheet, Layer layer, IDProvider idProvider) : IChangeMarkPropertyManager
     {
-        private readonly List<TaskBase> tasks;
+        private readonly List<TaskBase> tasks = [];
 
         public PPDSheet Sheet
         {
             get;
             private set;
-        }
+        } = sheet;
 
         public Layer Layer
         {
             get;
             private set;
-        }
+        } = layer;
 
         public IDProvider IDProvider
         {
             get;
             private set;
-        }
-
-        public ChangeMarkPropertyManager(PPDSheet sheet, Layer layer, IDProvider idProvider)
-        {
-            tasks = [];
-            Sheet = sheet;
-            Layer = layer;
-            IDProvider = idProvider;
-        }
+        } = idProvider;
 
         public void Execute()
         {
@@ -128,35 +120,24 @@ namespace PPDEditor.FlowScript
 
         #endregion
 
-        abstract class TaskBase
+        abstract class TaskBase(EditorMarkInfo editorMarkInfo)
         {
             public EditorMarkInfo EditorMarkInfo
             {
                 get;
                 private set;
-            }
-
-            protected TaskBase(EditorMarkInfo editorMarkInfo)
-            {
-                EditorMarkInfo = editorMarkInfo;
-            }
+            } = editorMarkInfo;
 
             public abstract void Execute(PPDSheet sheet);
         }
 
-        class ChangeMarkPositionTask : TaskBase
+        class ChangeMarkPositionTask(EditorMarkInfo editorMarkInfo, Vector2 position) : TaskBase(editorMarkInfo)
         {
             public Vector2 Position
             {
                 get;
                 private set;
-            }
-
-            public ChangeMarkPositionTask(EditorMarkInfo editorMarkInfo, Vector2 position) :
-                base(editorMarkInfo)
-            {
-                Position = position;
-            }
+            } = position;
 
             public override void Execute(PPDSheet sheet)
             {
@@ -164,19 +145,13 @@ namespace PPDEditor.FlowScript
             }
         }
 
-        class ChangeMarkRotationTask : TaskBase
+        class ChangeMarkRotationTask(EditorMarkInfo editorMarkInfo, float rotation) : TaskBase(editorMarkInfo)
         {
             public float Rotation
             {
                 get;
                 private set;
-            }
-
-            public ChangeMarkRotationTask(EditorMarkInfo editorMarkInfo, float rotation) :
-                base(editorMarkInfo)
-            {
-                Rotation = rotation;
-            }
+            } = rotation;
 
             public override void Execute(PPDSheet sheet)
             {
@@ -184,19 +159,13 @@ namespace PPDEditor.FlowScript
             }
         }
 
-        class ChangeMarkTypeTask : TaskBase
+        class ChangeMarkTypeTask(EditorMarkInfo editorMarkInfo, MarkType markType) : TaskBase(editorMarkInfo)
         {
             public MarkType MarkType
             {
                 get;
                 private set;
-            }
-
-            public ChangeMarkTypeTask(EditorMarkInfo editorMarkInfo, MarkType markType)
-                : base(editorMarkInfo)
-            {
-                MarkType = markType;
-            }
+            } = markType;
 
             public override void Execute(PPDSheet sheet)
             {
@@ -204,19 +173,13 @@ namespace PPDEditor.FlowScript
             }
         }
 
-        class ChangeMarkTimeTask : TaskBase
+        class ChangeMarkTimeTask(EditorMarkInfo editorMarkInfo, float time) : TaskBase(editorMarkInfo)
         {
             public float Time
             {
                 get;
                 private set;
-            }
-
-            public ChangeMarkTimeTask(EditorMarkInfo editorMarkInfo, float time)
-                : base(editorMarkInfo)
-            {
-                Time = time;
-            }
+            } = time;
 
             public override void Execute(PPDSheet sheet)
             {
@@ -224,26 +187,19 @@ namespace PPDEditor.FlowScript
             }
         }
 
-        class ChangeMarkParameterTask : TaskBase
+        class ChangeMarkParameterTask(EditorMarkInfo editorMarkInfo, string key, string value) : TaskBase(editorMarkInfo)
         {
             public string Key
             {
                 get;
                 private set;
-            }
+            } = key;
 
             public string Value
             {
                 get;
                 private set;
-            }
-
-            public ChangeMarkParameterTask(EditorMarkInfo editorMarkInfo, string key, string value)
-                : base(editorMarkInfo)
-            {
-                Key = key;
-                Value = value;
-            }
+            } = value;
 
             public override void Execute(PPDSheet sheet)
             {
@@ -251,19 +207,13 @@ namespace PPDEditor.FlowScript
             }
         }
 
-        class RemoveMarkParameterTask : TaskBase
+        class RemoveMarkParameterTask(EditorMarkInfo editorMarkInfo, string key) : TaskBase(editorMarkInfo)
         {
             public string Key
             {
                 private get;
                 set;
-            }
-
-            public RemoveMarkParameterTask(EditorMarkInfo editorMarkInfo, string key)
-                : base(editorMarkInfo)
-            {
-                Key = key;
-            }
+            } = key;
 
             public override void Execute(PPDSheet sheet)
             {
@@ -271,47 +221,37 @@ namespace PPDEditor.FlowScript
             }
         }
 
-        class AddMarkTask : TaskBase
+        class AddMarkTask(ILayer layer, Vector2 position, float angle, float time, PPDCoreModel.Data.MarkType markType) : TaskBase(null)
         {
             public ILayer Layer
             {
                 get;
                 private set;
-            }
+            } = layer;
 
             public Vector2 Position
             {
                 get;
                 private set;
-            }
+            } = position;
 
             public float Angle
             {
                 get;
                 private set;
-            }
+            } = angle;
 
             public float Time
             {
                 get;
                 private set;
-            }
+            } = time;
 
             public MarkType MarkType
             {
                 get;
                 private set;
-            }
-
-            public AddMarkTask(ILayer layer, Vector2 position, float angle, float time, PPDCoreModel.Data.MarkType markType)
-                : base(null)
-            {
-                Layer = layer;
-                Position = position;
-                Angle = angle;
-                Time = time;
-                MarkType = markType;
-            }
+            } = markType;
 
             public override void Execute(PPDSheet sheet)
             {
@@ -319,54 +259,43 @@ namespace PPDEditor.FlowScript
             }
         }
 
-        class AddExMarkTask : TaskBase
+        class AddExMarkTask(ILayer layer, Vector2 position, float angle, float time, float releaseTime, PPDCoreModel.Data.MarkType markType) : TaskBase(null)
         {
             public ILayer Layer
             {
                 get;
                 private set;
-            }
+            } = layer;
 
             public Vector2 Position
             {
                 get;
                 private set;
-            }
+            } = position;
 
             public float Angle
             {
                 get;
                 private set;
-            }
+            } = angle;
 
             public float Time
             {
                 get;
                 private set;
-            }
+            } = time;
 
             public float ReleaseTime
             {
                 get;
                 private set;
-            }
+            } = releaseTime;
 
             public MarkType MarkType
             {
                 get;
                 private set;
-            }
-
-            public AddExMarkTask(ILayer layer, Vector2 position, float angle, float time, float releaseTime, PPDCoreModel.Data.MarkType markType)
-                : base(null)
-            {
-                Layer = layer;
-                Position = position;
-                Angle = angle;
-                Time = time;
-                ReleaseTime = releaseTime;
-                MarkType = markType;
-            }
+            } = markType;
 
             public override void Execute(PPDSheet sheet)
             {
@@ -374,40 +303,24 @@ namespace PPDEditor.FlowScript
             }
         }
 
-        class AssignMarkIdTask : TaskBase
+        class AssignMarkIdTask(EditorMarkInfo editorMarkInfo) : TaskBase(editorMarkInfo)
         {
-            public AssignMarkIdTask(EditorMarkInfo editorMarkInfo)
-                : base(editorMarkInfo)
-            {
-
-            }
-
             public override void Execute(PPDSheet sheet)
             {
                 sheet.AssignID(EditorMarkInfo.Mark);
             }
         }
 
-        class UnassignMarkIdTask : TaskBase
+        class UnassignMarkIdTask(EditorMarkInfo editorMarkInfo) : TaskBase(editorMarkInfo)
         {
-            public UnassignMarkIdTask(EditorMarkInfo editorMarkInfo)
-                : base(editorMarkInfo)
-            {
-            }
-
             public override void Execute(PPDSheet sheet)
             {
                 sheet.UnassignID(EditorMarkInfo.Mark);
             }
         }
 
-        class RemoveMarkTask : TaskBase
+        class RemoveMarkTask(EditorMarkInfo editorMarkInfo) : TaskBase(editorMarkInfo)
         {
-            public RemoveMarkTask(EditorMarkInfo editorMarkInfo) :
-                base(editorMarkInfo)
-            {
-            }
-
             public override void Execute(PPDSheet sheet)
             {
                 sheet.RemoveMark(EditorMarkInfo.Mark);

@@ -40,7 +40,7 @@ namespace FlowScriptEngineBasic.FlowSourceObjects.Enumerable
                 {
                     if (Second == null)
                     {
-                        return System.Linq.Enumerable.Empty<object>();
+                        return [];
                     }
                     else
                     {

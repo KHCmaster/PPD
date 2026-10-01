@@ -93,32 +93,25 @@ namespace PPDFramework.Web
             }
         }
 
-        class RankingCacheInfo
+        class RankingCacheInfo(Ranking ranking, byte[] hash)
         {
-            public RankingCacheInfo(Ranking ranking, byte[] hash)
-            {
-                Ranking = ranking;
-                Hash = hash;
-                CreatedTime = DateTime.Now;
-            }
-
             public Ranking Ranking
             {
                 get;
                 private set;
-            }
+            } = ranking;
 
             public Byte[] Hash
             {
                 get;
                 private set;
-            }
+            } = hash;
 
             public DateTime CreatedTime
             {
                 get;
                 private set;
-            }
+            } = DateTime.Now;
         }
     }
 }

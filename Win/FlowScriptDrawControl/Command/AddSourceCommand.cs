@@ -2,21 +2,15 @@
 
 namespace FlowScriptDrawControl.Command
 {
-    class AddSourceCommand : CommandBase
+    class AddSourceCommand(FlowAreaControl areaControl, SourceControl sourceControl) : CommandBase
     {
-        private readonly FlowAreaControl areaControl;
+        private readonly FlowAreaControl areaControl = areaControl;
 
         public SourceControl SourceControl
         {
             get;
             private set;
-        }
-
-        public AddSourceCommand(FlowAreaControl areaControl, SourceControl sourceControl)
-        {
-            this.areaControl = areaControl;
-            SourceControl = sourceControl;
-        }
+        } = sourceControl;
 
         public override void Execute()
         {

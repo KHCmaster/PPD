@@ -29,7 +29,7 @@ namespace PPDSingle
 
         readonly PPDFramework.Resource.ResourceManager resourceManager;
         readonly ISound sound;
-        readonly float[] speeds = { 0.5f, 0.75f, 1.0f, 1.25f, 1.5f, 1.75f, 2.0f };
+        readonly float[] speeds = [0.5f, 0.75f, 1.0f, 1.25f, 1.5f, 1.75f, 2.0f];
         readonly PictureObject back;
         readonly SelectableComponent[] selectables;
         State state = State.Auto;
@@ -126,7 +126,7 @@ namespace PPDSingle
             back = new PictureObject(device, resourceManager, Utility.Path.Combine("option.png"));
             width = back.Width;
             Position = new Vector2(-width, 0);
-            string[] langs = { "Auto", "ExceptSlide", "Random", "MuteSE", "Connect", "PerfectTrial", "RivalGhost", "RivalGhostCount", "Speed", "Profile" };
+            string[] langs = ["Auto", "ExceptSlide", "Random", "MuteSE", "Connect", "PerfectTrial", "RivalGhost", "RivalGhostCount", "Speed", "Profile"];
             selectables = new SelectableComponent[langs.Length];
             for (int i = 0; i < selectables.Length; i++)
             {
@@ -266,7 +266,7 @@ namespace PPDSingle
                             var drd = new GeneralDialog(device, resourceManager, sound, Utility.Language["LoginNecessaryForPerfectTrial"]);
                             FocusManager.Focus(drd);
                             this.InsertChild(drd, 0);
-                            drd.LostFocused += drd_LostFocused;
+                            drd.LostFocused += Drd_LostFocused;
                         }
                         break;
                     case State.RivalGhost:
@@ -279,7 +279,7 @@ namespace PPDSingle
                             var drd = new GeneralDialog(device, resourceManager, sound, Utility.Language["LoginNecessaryForRivalGhost"]);
                             FocusManager.Focus(drd);
                             this.InsertChild(drd, 0);
-                            drd.LostFocused += drd_LostFocused;
+                            drd.LostFocused += Drd_LostFocused;
                         }
                         break;
                     case State.RivalGhostCount:
@@ -330,7 +330,7 @@ namespace PPDSingle
             }
         }
 
-        void drd_LostFocused(IFocusable sender, FocusEventArgs args)
+        void Drd_LostFocused(IFocusable sender, FocusEventArgs args)
         {
             var baseDialog = sender as GeneralDialogBase;
             this.RemoveChild(baseDialog);

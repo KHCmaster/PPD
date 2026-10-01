@@ -6,24 +6,16 @@ using System.Collections.Generic;
 
 namespace PPDCoreModel
 {
-    public abstract class EffectPoolBase
+    public abstract class EffectPoolBase(PPDDevice device, int count)
     {
-        protected PPDDevice device;
-        readonly Queue<EffectObject> nonUsedList;
+        protected PPDDevice device = device;
+        readonly Queue<EffectObject> nonUsedList = new Queue<EffectObject>(count);
 
         public int Count
         {
             get;
             private set;
-        }
-
-
-        protected EffectPoolBase(PPDDevice device, int count)
-        {
-            this.device = device;
-            Count = count;
-            nonUsedList = new Queue<EffectObject>(count);
-        }
+        } = count;
 
         public void Initialize()
         {
@@ -38,11 +30,11 @@ namespace PPDCoreModel
         private EffectObject CreateEffectInner()
         {
             var eo = CreateEffect();
-            eo.Finish += eo_Finish;
+            eo.Finish += Eo_Finish;
             return eo;
         }
 
-        void eo_Finish(object sender, EventArgs e)
+        void Eo_Finish(object sender, EventArgs e)
         {
             var eo = sender as EffectObject;
             nonUsedList.Enqueue(eo);

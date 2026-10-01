@@ -54,20 +54,11 @@ namespace FlowScriptControl.Controls
 
         public bool EditingControlWantsInputKey(Keys key, bool dataGridViewWantsInputKey)
         {
-            switch (key & Keys.KeyCode)
+            return (key & Keys.KeyCode) switch
             {
-                case Keys.Left:
-                case Keys.Up:
-                case Keys.Down:
-                case Keys.Right:
-                case Keys.Home:
-                case Keys.End:
-                case Keys.PageDown:
-                case Keys.PageUp:
-                    return true;
-                default:
-                    return !dataGridViewWantsInputKey;
-            }
+                Keys.Left or Keys.Up or Keys.Down or Keys.Right or Keys.Home or Keys.End or Keys.PageDown or Keys.PageUp => true,
+                _ => !dataGridViewWantsInputKey,
+            };
         }
 
         public void PrepareEditingControlForEdit(bool selectAll)

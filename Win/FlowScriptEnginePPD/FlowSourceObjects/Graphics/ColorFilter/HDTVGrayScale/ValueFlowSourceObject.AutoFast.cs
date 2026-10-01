@@ -9,13 +9,11 @@ namespace FlowScriptEnginePPD.FlowSourceObjects.Graphics.ColorFilter.HDTVGraySca
     {
         public override object GetPropertyValue(string propertyName)
         {
-            switch (propertyName)
+            return propertyName switch
             {
-                case "Filter":
-                    return Filter;
-                default:
-                    return null;
-            }
+                "Filter" => Filter,
+                _ => null,
+            };
         }
 
         protected override void SetPropertyValue(string propertyName, object value)

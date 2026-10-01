@@ -131,8 +131,8 @@ namespace PPD
                 LoadNormal();
             }
             LoadCommon();
-            TextEditableControl.IMEStarted += control_IMEStarted;
-            TextEditableControl._EnabledChanged += control_EnabledChanged;
+            TextEditableControl.IMEStarted += Control_IMEStarted;
+            TextEditableControl._EnabledChanged += Control_EnabledChanged;
         }
 
         private bool CheckExecuteMode(out string gamePath)
@@ -155,9 +155,9 @@ namespace PPD
         {
             currentOverray = new CloseOverlay(device);
             SetPropertyToScene(currentOverray);
-            currentOverray.ResourceManager = new PPDFramework.Resource.ResourceManager(new Tuple<PPDFramework.Resource.ResourceManager, bool>[] {
+            currentOverray.ResourceManager = new PPDFramework.Resource.ResourceManager([
                 new( homeResourceManager,false)
-            });
+            ]);
             currentOverray.Load();
             currentOverray.PreScreenFilters.Add(gaussianFilter);
         }
@@ -208,12 +208,12 @@ namespace PPD
             debugMode = true;
         }
 
-        void control_EnabledChanged(object sender, EventArgs e)
+        void Control_EnabledChanged(object sender, EventArgs e)
         {
             TextBoxEnabledChanged?.Invoke(this, EventArgs.Empty);
         }
 
-        void control_IMEStarted(object sender, EventArgs e)
+        void Control_IMEStarted(object sender, EventArgs e)
         {
             IMEStarted?.Invoke(this, EventArgs.Empty);
         }

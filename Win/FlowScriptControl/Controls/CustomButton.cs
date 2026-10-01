@@ -12,12 +12,12 @@ namespace FlowScriptControl.Controls
         {
             InitializeComponent();
 
-            textBox1.TextChanged += textBox1_TextChanged;
+            textBox1.TextChanged += TextBox1_TextChanged;
             VisibleChanged += CustomButton_VisibleChanged;
-            button1.Click += button1_Click;
+            button1.Click += Button1_Click;
         }
 
-        void button1_Click(object sender, EventArgs e)
+        void Button1_Click(object sender, EventArgs e)
         {
             ButtonClick?.Invoke();
             textBox1.Focus();
@@ -28,7 +28,7 @@ namespace FlowScriptControl.Controls
             textBox1.Focus();
         }
 
-        void textBox1_TextChanged(object sender, EventArgs e)
+        void TextBox1_TextChanged(object sender, EventArgs e)
         {
             this.Text = textBox1.Text;
         }

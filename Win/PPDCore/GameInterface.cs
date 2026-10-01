@@ -7,7 +7,7 @@ namespace PPDCore
     /// <summary>
     /// メインゲームのUIクラス
     /// </summary>
-    public class GameInterface : GameInterfaceBase
+    public class GameInterface(PPDDevice device) : GameInterfaceBase(device)
     {
 
         GameInterfaceTop mgt;
@@ -15,11 +15,6 @@ namespace PPDCore
         int dangercount;
 
         float currentlife = 50;
-
-
-        public GameInterface(PPDDevice device) : base(device)
-        {
-        }
 
         /// <summary>
         /// 読み込み

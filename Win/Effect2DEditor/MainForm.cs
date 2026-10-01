@@ -83,18 +83,18 @@ namespace Effect2DEditor
             timeLineDock.MainForm = this;
             InitializeComponent();
 
-            canvasDock.BezierEdited += canvasDock_BezierEdited;
-            canvasDock.BezierReset += canvasDock_BezierReset;
+            canvasDock.BezierEdited += CanvasDock_BezierEdited;
+            canvasDock.BezierReset += CanvasDock_BezierReset;
             historyDock.CommandManager.CommandChanged += CommandManager_CommandChanged;
-            propertyDock.StateValueChanged += propertyDock_StateValueChanged;
-            propertyDock.SetRatio += propertyDock_SetRatio;
+            propertyDock.StateValueChanged += PropertyDock_StateValueChanged;
+            propertyDock.SetRatio += PropertyDock_SetRatio;
             propertyDock.BlendModeChanged += PropertyDock_BlendModeChanged;
-            timeLineDock.FpsChanged += timeLineDock_FpsChanged;
-            timeLineDock.EffectCleared += timeLineDock_EffectCleared;
-            timeLineDock.EffectCopyed += timeLineDock_EffectCopyed;
-            timeLineDock.EffectDeleted += timeLineDock_EffectDeleted;
-            timeLineDock.EffectLoaded += timeLineDock_EffectLoaded;
-            timeLineDock.EffectReversed += timeLineDock_EffectReversed;
+            timeLineDock.FpsChanged += TimeLineDock_FpsChanged;
+            timeLineDock.EffectCleared += TimeLineDock_EffectCleared;
+            timeLineDock.EffectCopyed += TimeLineDock_EffectCopyed;
+            timeLineDock.EffectDeleted += TimeLineDock_EffectDeleted;
+            timeLineDock.EffectLoaded += TimeLineDock_EffectLoaded;
+            timeLineDock.EffectReversed += TimeLineDock_EffectReversed;
 
             LoadConfig();
             CheckSetting();
@@ -111,19 +111,14 @@ namespace Effect2DEditor
             {
                 dockPanel1.LoadFromXml(dockFileName, (str) =>
                 {
-                    switch (str)
+                    return str switch
                     {
-                        case "Effect2DEditor.DockForm.CanvasDock":
-                            return canvasDock;
-                        case "Effect2DEditor.DockForm.PropertyDock":
-                            return propertyDock;
-                        case "Effect2DEditor.DockForm.HistoryDock":
-                            return historyDock;
-                        case "Effect2DEditor.DockForm.TimeLineDock":
-                            return timeLineDock;
-                    }
-
-                    return null;
+                        "Effect2DEditor.DockForm.CanvasDock" => canvasDock,
+                        "Effect2DEditor.DockForm.PropertyDock" => propertyDock,
+                        "Effect2DEditor.DockForm.HistoryDock" => historyDock,
+                        "Effect2DEditor.DockForm.TimeLineDock" => timeLineDock,
+                        _ => null,
+                    };
                 });
             }
             else
@@ -140,7 +135,7 @@ namespace Effect2DEditor
             dockPanel1.SaveAsXml(dockFileName);
         }
 
-        void timeLineDock_EffectReversed()
+        void TimeLineDock_EffectReversed()
         {
             if (canvasDock.EffectManager.Effects.Count >= 1 && canvasDock.SelectedManager.Effect != null)
             {
@@ -148,12 +143,12 @@ namespace Effect2DEditor
             }
         }
 
-        void timeLineDock_EffectLoaded(string obj)
+        void TimeLineDock_EffectLoaded(string obj)
         {
             LoadEffect(obj);
         }
 
-        void timeLineDock_EffectDeleted()
+        void TimeLineDock_EffectDeleted()
         {
             if (canvasDock.SelectedManager.Effect != null)
             {
@@ -165,7 +160,7 @@ namespace Effect2DEditor
             }
         }
 
-        void timeLineDock_EffectCopyed()
+        void TimeLineDock_EffectCopyed()
         {
             if (canvasDock.EffectManager.Effects.Count >= 1 && canvasDock.SelectedManager.Effect != null)
             {
@@ -173,7 +168,7 @@ namespace Effect2DEditor
             }
         }
 
-        void timeLineDock_EffectCleared()
+        void TimeLineDock_EffectCleared()
         {
             if (canvasDock.EffectManager.Effects.Count >= 1)
             {
@@ -181,12 +176,12 @@ namespace Effect2DEditor
             }
         }
 
-        void timeLineDock_FpsChanged(float obj)
+        void TimeLineDock_FpsChanged(float obj)
         {
             canvasDock.EffectManager.FPS = obj;
         }
 
-        void propertyDock_SetRatio(RatioType obj)
+        void PropertyDock_SetRatio(RatioType obj)
         {
             if (canvasDock.SelectedManager.Set != null)
             {
@@ -195,17 +190,17 @@ namespace Effect2DEditor
                 rcf.MainForm = this;
                 if (canvasDock.SelectedManager.Set[obj] is BezierRatioMaker brm && brm.Analyzer.BCPS != null)
                 {
-                    rcf.bcps = brm.Analyzer.BCPS;
+                    rcf.Bcps = brm.Analyzer.BCPS;
                 }
                 if (rcf.ShowDialog() == DialogResult.OK)
                 {
                     if (rcf.IsLinear) ChangeRatioMaker(obj, new LinearRatioMaker());
-                    else ChangeRatioMaker(obj, new BezierRatioMaker(rcf.bcps[0], rcf.bcps[1]));
+                    else ChangeRatioMaker(obj, new BezierRatioMaker(rcf.Bcps[0], rcf.Bcps[1]));
                 }
             }
         }
 
-        void propertyDock_StateValueChanged(RatioType arg1, float arg2)
+        void PropertyDock_StateValueChanged(RatioType arg1, float arg2)
         {
             if (canvasDock.SelectedManager.State != null)
             {
@@ -225,12 +220,12 @@ namespace Effect2DEditor
             }
         }
 
-        void canvasDock_BezierReset(object sender, EventArgs e)
+        void CanvasDock_BezierReset(object sender, EventArgs e)
         {
             ResetPath();
         }
 
-        void canvasDock_BezierEdited(object sender, EventArgs e)
+        void CanvasDock_BezierEdited(object sender, EventArgs e)
         {
             BezierEdit();
         }
@@ -263,13 +258,13 @@ namespace Effect2DEditor
                         Name = fileName.ToLower(),
                         Checked = Path.GetFileName(fileName).ToLower() == String.Format("lang_{0}_{1}.ini", this.GetType().Assembly.GetName().Name, langFileISO).ToLower()
                     };
-                    tsmi.Click += langtsmi_Click;
+                    tsmi.Click += Langtsmi_Click;
                     言語ToolStripMenuItem.DropDownItems.Add(tsmi);
                 }
             }
         }
 
-        void langtsmi_Click(object sender, EventArgs e)
+        void Langtsmi_Click(object sender, EventArgs e)
         {
             if (sender is ToolStripMenuItem tsmi)
             {
@@ -660,12 +655,12 @@ namespace Effect2DEditor
                     var bcp2 = new BezierControlPoint();
                     bcp.Second = new PointF(canvasDock.SelectedManager.Set.StartState.X, canvasDock.SelectedManager.Set.StartState.Y);
                     bcp2.Second = new PointF(canvasDock.SelectedManager.Set.EndState.X, canvasDock.SelectedManager.Set.EndState.Y);
-                    canvasDock.BezierControl.Controller.BCPS = new BezierControlPoint[] { bcp, bcp2 };
+                    canvasDock.BezierControl.Controller.BCPS = [bcp, bcp2];
                     canvasDock.BezierControl.Controller.AllowMouseOperation = true;
                 }
                 else
                 {
-                    canvasDock.BezierControl.Controller.BCPS = new BezierControlPoint[0];
+                    canvasDock.BezierControl.Controller.BCPS = [];
                     canvasDock.BezierControl.Controller.AllowMouseOperation = false;
                 }
                 RefreshCanvas();
@@ -946,7 +941,7 @@ namespace Effect2DEditor
                 {
                     Name = effectfilename
                 };
-                tsmi.Click += tsmi_Click;
+                tsmi.Click += Tsmi_Click;
                 this.最近使用したファイルToolStripMenuItem.DropDownItems.Insert(0, tsmi);
                 if (this.最近使用したファイルToolStripMenuItem.DropDownItems.Count > 5)
                 {
@@ -1113,19 +1108,17 @@ namespace Effect2DEditor
                 }
                 if (File.Exists(recentUsedFileName))
                 {
-                    using (StreamReader sr = new(recentUsedFileName))
+                    using StreamReader sr = new(recentUsedFileName);
+                    while (!sr.EndOfStream)
                     {
-                        while (!sr.EndOfStream)
+                        var path = sr.ReadLine();
+                        if (!File.Exists(path)) continue;
+                        var tsmi = new ToolStripMenuItem(path)
                         {
-                            var path = sr.ReadLine();
-                            if (!File.Exists(path)) continue;
-                            var tsmi = new ToolStripMenuItem(path)
-                            {
-                                Name = path
-                            };
-                            this.最近使用したファイルToolStripMenuItem.DropDownItems.Add(tsmi);
-                            tsmi.Click += tsmi_Click;
-                        }
+                            Name = path
+                        };
+                        this.最近使用したファイルToolStripMenuItem.DropDownItems.Add(tsmi);
+                        tsmi.Click += Tsmi_Click;
                     }
                 }
             }
@@ -1134,7 +1127,7 @@ namespace Effect2DEditor
             }
         }
 
-        void tsmi_Click(object sender, EventArgs e)
+        void Tsmi_Click(object sender, EventArgs e)
         {
             if (CheckSave() != DialogResult.Cancel)
             {

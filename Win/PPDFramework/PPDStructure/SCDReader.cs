@@ -16,13 +16,11 @@ namespace PPDFramework.PPDStructure
         /// <returns></returns>
         public static SCDData[] Read(string path)
         {
-            SCDData[] ret = new SCDData[0];
+            SCDData[] ret = [];
             if (File.Exists(path))
             {
-                using (FileStream fs = File.Open(path, FileMode.Open))
-                {
-                    return Read(fs);
-                }
+                using FileStream fs = File.Open(path, FileMode.Open);
+                return Read(fs);
             }
             return ret;
         }
@@ -46,7 +44,7 @@ namespace PPDFramework.PPDStructure
                 var data = new SCDData(BitConverter.ToSingle(tb, 0), (ButtonType)buttontype, BitConverter.ToUInt16(sb, 0));
                 list.Add(data);
             }
-            return list.ToArray();
+            return [.. list];
         }
     }
 }

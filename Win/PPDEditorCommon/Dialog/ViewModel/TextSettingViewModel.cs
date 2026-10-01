@@ -3,7 +3,7 @@ using System.Windows.Input;
 
 namespace PPDEditorCommon.Dialog.ViewModel
 {
-    abstract class TextSettingViewModel : SettingViewModelBase
+    abstract class TextSettingViewModel(SettingBase setting) : SettingViewModelBase(setting)
     {
         private string text;
         private ICommand changedCommand;
@@ -28,11 +28,6 @@ namespace PPDEditorCommon.Dialog.ViewModel
                 return changedCommand ??= new RelayCommand(
                     ChangedCommand_Execute);
             }
-        }
-
-        protected TextSettingViewModel(SettingBase setting)
-            : base(setting)
-        {
         }
 
         protected abstract void Validate();

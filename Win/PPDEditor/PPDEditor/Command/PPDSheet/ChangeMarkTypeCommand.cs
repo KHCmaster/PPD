@@ -3,20 +3,12 @@ using System.Collections.Generic;
 
 namespace PPDEditor.Command.PPDSheet
 {
-    class ChangeMarkTypeCommand : Command
+    class ChangeMarkTypeCommand(SortedList<float, Mark>[] data, Mark mk, ButtonType newType) : Command
     {
-        readonly SortedList<float, Mark>[] data;
-        readonly Mark mk;
-        readonly ButtonType newType;
-        readonly ButtonType prevType;
-        public ChangeMarkTypeCommand(SortedList<float, Mark>[] data, Mark mk, ButtonType newType)
-        {
-            this.data = data;
-            this.mk = mk;
-            this.newType = newType;
-
-            prevType = mk.Type;
-        }
+        readonly SortedList<float, Mark>[] data = data;
+        readonly Mark mk = mk;
+        readonly ButtonType newType = newType;
+        readonly ButtonType prevType = mk.Type;
 
         public override void Execute()
         {

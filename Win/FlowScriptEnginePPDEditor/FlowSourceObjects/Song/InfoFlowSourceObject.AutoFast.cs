@@ -9,19 +9,14 @@ namespace FlowScriptEnginePPDEditor.FlowSourceObjects.Song
     {
         public override object GetPropertyValue(string propertyName)
         {
-            switch (propertyName)
+            return propertyName switch
             {
-                case "BPM":
-                    return BPM;
-                case "BPMOffset":
-                    return BPMOffset;
-                case "ProjectName":
-                    return ProjectName;
-                case "ProjectPath":
-                    return ProjectPath;
-                default:
-                    return null;
-            }
+                "BPM" => BPM,
+                "BPMOffset" => BPMOffset,
+                "ProjectName" => ProjectName,
+                "ProjectPath" => ProjectPath,
+                _ => null,
+            };
         }
 
 

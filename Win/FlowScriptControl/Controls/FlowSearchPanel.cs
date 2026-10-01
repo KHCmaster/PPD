@@ -39,16 +39,14 @@ namespace FlowScriptControl.Controls
             listBox1.Items.AddRange(searchResult.Comments.Select(c => new SearchResultItem(searchResult, c)).ToArray());
 
 
-            using (Graphics g = listBox1.CreateGraphics())
+            using Graphics g = listBox1.CreateGraphics();
+            float maxWidth = 0;
+            foreach (SearchResultItem item in listBox1.Items)
             {
-                float maxWidth = 0;
-                foreach (SearchResultItem item in listBox1.Items)
-                {
-                    maxWidth = Math.Max(maxWidth,
-                        g.MeasureString(listBox1.Items[^1].ToString(), listBox1.Font).Width);
-                }
-                listBox1.HorizontalExtent = (int)maxWidth + 50;
+                maxWidth = Math.Max(maxWidth,
+                    g.MeasureString(listBox1.Items[^1].ToString(), listBox1.Font).Width);
             }
+            listBox1.HorizontalExtent = (int)maxWidth + 50;
         }
 
         private void Search()
@@ -57,7 +55,7 @@ namespace FlowScriptControl.Controls
             ProcessSearchResult(searchResult);
         }
 
-        private void toolStripTextBox1_KeyDown(object sender, KeyEventArgs e)
+        private void ToolStripTextBox1_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
             {
@@ -66,7 +64,7 @@ namespace FlowScriptControl.Controls
             }
         }
 
-        private void toolStripTextBox1_KeyPress(object sender, KeyPressEventArgs e)
+        private void ToolStripTextBox1_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (e.KeyChar == (char)Keys.Enter)
             {
@@ -74,7 +72,7 @@ namespace FlowScriptControl.Controls
             }
         }
 
-        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
+        private void ListBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (listBox1.SelectedIndex >= 0 && listBox1.SelectedIndex < listBox1.Items.Count)
             {

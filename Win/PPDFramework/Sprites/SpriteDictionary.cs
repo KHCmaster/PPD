@@ -105,14 +105,12 @@ namespace PPDFramework.Sprites
                 {
                     foreach (var packInfo in packInfos)
                     {
-                        using (var img = packInfo.ImageInfo.GetImage())
-                        {
-                            g.DrawImage(
-                                img,
-                                new System.Drawing.Rectangle((int)packInfo.Position.X, (int)packInfo.Position.Y, img.Width, img.Height),
-                                new System.Drawing.Rectangle(0, 0, img.Width, img.Height),
-                                GraphicsUnit.Pixel);
-                        }
+                        using var img = packInfo.ImageInfo.GetImage();
+                        g.DrawImage(
+                            img,
+                            new System.Drawing.Rectangle((int)packInfo.Position.X, (int)packInfo.Position.Y, img.Width, img.Height),
+                            new System.Drawing.Rectangle(0, 0, img.Width, img.Height),
+                            GraphicsUnit.Pixel);
                     }
                 }
                 Utility.PreMultiplyAlpha(bitmap);

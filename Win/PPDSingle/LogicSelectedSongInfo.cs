@@ -2,19 +2,13 @@
 
 namespace PPDSingle
 {
-    class LogicSelectedSongInfo : SelectedSongInfo
+    class LogicSelectedSongInfo(LogicFolderInfomation logicInfo) : SelectedSongInfo(SongInformation.FindSongInformationByID(logicInfo.ScoreID))
     {
         public LogicFolderInfomation LogicFolderInfomation
         {
             get;
             private set;
-        }
-
-        public LogicSelectedSongInfo(LogicFolderInfomation logicInfo)
-            : base(SongInformation.FindSongInformationByID(logicInfo.ScoreID))
-        {
-            LogicFolderInfomation = logicInfo;
-        }
+        } = logicInfo;
 
         public override string Text
         {

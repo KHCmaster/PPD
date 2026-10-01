@@ -3,18 +3,13 @@
     /// <summary>
     /// スライドスケール変更イベント
     /// </summary>
-    public class ChangeSlideScaleEvent : IEVDData
+    /// <remarks>
+    /// コンストラクタ
+    /// </remarks>
+    /// <param name="time">時間</param>
+    /// <param name="slideScale">スライドスケール</param>
+    public class ChangeSlideScaleEvent(float time, float slideScale) : IEVDData(time, EventType.ChangeSlideScale)
     {
-        /// <summary>
-        /// コンストラクタ
-        /// </summary>
-        /// <param name="time">時間</param>
-        /// <param name="slideScale">スライドスケール</param>
-        public ChangeSlideScaleEvent(float time, float slideScale)
-            : base(time, EventType.ChangeSlideScale)
-        {
-            SlideScale = slideScale;
-        }
 
         /// <summary>
         /// スライドスケールを取得します
@@ -23,6 +18,6 @@
         {
             get;
             private set;
-        }
+        } = slideScale;
     }
 }

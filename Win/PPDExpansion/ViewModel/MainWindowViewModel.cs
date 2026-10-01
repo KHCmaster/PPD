@@ -221,13 +221,13 @@ namespace PPDExpansion.ViewModel
             SinglePlayViewModel = new ViewModel.SinglePlayViewModel(this);
             MultiPlayViewModel = new ViewModel.MultiPlayViewModel(this);
             host = new Host(App.Port);
-            host.DataReceived += host_DataReceived;
-            host.Connected += host_Connected;
-            host.Disconnected += host_Disconnected;
+            host.DataReceived += Host_DataReceived;
+            host.Connected += Host_Connected;
+            host.Disconnected += Host_Disconnected;
             host.Start();
         }
 
-        void host_Disconnected()
+        void Host_Disconnected()
         {
             dispatcher.Invoke((Action)(() =>
             {
@@ -235,7 +235,7 @@ namespace PPDExpansion.ViewModel
             }));
         }
 
-        void host_Connected()
+        void Host_Connected()
         {
             dispatcher.Invoke((Action)(() =>
             {
@@ -243,7 +243,7 @@ namespace PPDExpansion.ViewModel
             }));
         }
 
-        void host_DataReceived(PackableBase obj)
+        void Host_DataReceived(PackableBase obj)
         {
             dispatcher.Invoke((Action)(() =>
             {

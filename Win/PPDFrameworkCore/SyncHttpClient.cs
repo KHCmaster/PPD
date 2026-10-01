@@ -56,10 +56,8 @@ namespace PPDFrameworkCore
         /// <returns></returns>
         public static HttpStatusCode GetStatusCode(string url, TimeSpan? timeout = null)
         {
-            using (var response = Send(new HttpRequestMessage(HttpMethod.Get, url), timeout, null, false))
-            {
-                return response.StatusCode;
-            }
+            using var response = Send(new HttpRequestMessage(HttpMethod.Get, url), timeout, null, false);
+            return response.StatusCode;
         }
 
         /// <summary>
@@ -70,11 +68,9 @@ namespace PPDFrameworkCore
         /// <returns></returns>
         public static string GetString(string url, TimeSpan? timeout = null)
         {
-            using (var response = Get(url, timeout))
-            using (var reader = new StreamReader(response.GetResponseStream()))
-            {
-                return reader.ReadToEnd();
-            }
+            using var response = Get(url, timeout);
+            using var reader = new StreamReader(response.GetResponseStream());
+            return reader.ReadToEnd();
         }
 
         private static HttpResponse Send(HttpRequestMessage request, TimeSpan? timeout, ICredentials credentials, bool ensureSuccess)

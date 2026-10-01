@@ -3,7 +3,7 @@ namespace PPDFramework.Effect.DX11
     /// <summary>
     /// エフェクトのパラメーター（定数バッファの変数、またはテクスチャ）を指します。
     /// </summary>
-    class EffectHandle : EffectHandleBase
+    class EffectHandle(EffectData.Variable variable, int textureSlot) : EffectHandleBase
     {
         /// <summary>
         /// 定数バッファの変数です。テクスチャの場合は null です。
@@ -12,7 +12,7 @@ namespace PPDFramework.Effect.DX11
         {
             get;
             private set;
-        }
+        } = variable;
 
         /// <summary>
         /// テクスチャのスロットです。テクスチャでない場合は -1 です。
@@ -21,12 +21,6 @@ namespace PPDFramework.Effect.DX11
         {
             get;
             private set;
-        }
-
-        public EffectHandle(EffectData.Variable variable, int textureSlot)
-        {
-            Variable = variable;
-            TextureSlot = textureSlot;
-        }
+        } = textureSlot;
     }
 }

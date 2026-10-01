@@ -2,17 +2,12 @@
 
 namespace FlowScriptEngine
 {
-    public class ReplacedAttribute : Attribute
+    public class ReplacedAttribute(string name) : Attribute
     {
         public string Name
         {
             get;
             private set;
-        }
-
-        public ReplacedAttribute(string name)
-        {
-            Name = name;
-        }
+        } = name;
     }
 }

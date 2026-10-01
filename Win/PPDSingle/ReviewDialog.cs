@@ -35,7 +35,7 @@ namespace PPDSingle
         public ReviewDialog(PPDDevice device, PPDFramework.Resource.ResourceManager resourceManager, ISound sound, IReviewManager reviewManager) : base(device)
         {
             this.ReviewManager = reviewManager;
-            reviewManager.ReviewFinished += reviewManager_ReviewFinished;
+            reviewManager.ReviewFinished += ReviewManager_ReviewFinished;
             this.Sound = sound;
             back = new EffectObject(device, resourceManager, Utility.Path.Combine("postconfirm.etd"))
             {
@@ -107,7 +107,7 @@ namespace PPDSingle
             black.Alpha = 0;
             back.Hidden = true;
             processing.Hidden = true;
-            hiddenList = new GameComponent[]{
+            hiddenList = [
                 content,
                 rate,
                 buttons[0],
@@ -119,7 +119,7 @@ namespace PPDSingle
                 stars[4],
                 select,
                 review
-            };
+            ];
 
             foreach (GameComponent hidden in hiddenList)
             {
@@ -141,7 +141,7 @@ namespace PPDSingle
             Rate = 3;
         }
 
-        void reviewManager_ReviewFinished(bool ok)
+        void ReviewManager_ReviewFinished(bool ok)
         {
             processing.Hidden = true;
             reviewWaiting = false;
@@ -331,14 +331,14 @@ namespace PPDSingle
             }
             back.Stop();
             back.PlayType = Effect2D.EffectManager.PlayType.ReverseOnce;
-            back.Finish += back_ReverseFinish;
+            back.Finish += Back_ReverseFinish;
             back.Play();
         }
 
-        void back_ReverseFinish(object sender, EventArgs e)
+        void Back_ReverseFinish(object sender, EventArgs e)
         {
             back.Hidden = true;
-            back.Finish -= back_ReverseFinish;
+            back.Finish -= Back_ReverseFinish;
         }
 
         void ReviewDialog_GotFocused(IFocusable sender, FocusEventArgs args)
@@ -347,12 +347,12 @@ namespace PPDSingle
             Reviewed = false;
             back.Stop();
             back.PlayType = Effect2D.EffectManager.PlayType.Once;
-            back.Finish += back_NormalFinish;
+            back.Finish += Back_NormalFinish;
             back.Play();
             back.Hidden = false;
         }
 
-        void back_NormalFinish(object sender, EventArgs e)
+        void Back_NormalFinish(object sender, EventArgs e)
         {
             foreach (GameComponent hidden in hiddenList)
             {
@@ -361,7 +361,7 @@ namespace PPDSingle
             selection = 0;
             select.Position = new Vector2(235, 140 + 30 * selection);
             buttons[0].Selected = buttons[1].Selected = false;
-            back.Finish -= back_NormalFinish;
+            back.Finish -= Back_NormalFinish;
             opening = false;
         }
 

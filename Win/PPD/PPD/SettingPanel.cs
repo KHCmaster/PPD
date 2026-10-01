@@ -7,22 +7,15 @@ using System;
 
 namespace PPD
 {
-    class SettingPanel : HomePanelBase
+    class SettingPanel(PPDDevice device, PPDFramework.Resource.ResourceManager resourceManager, MyGame myGame, ISound sound) : HomePanelBase(device)
     {
-        readonly PPDFramework.Resource.ResourceManager resourceManager;
-        readonly MyGame myGame;
-        readonly ISound sound;
+        readonly PPDFramework.Resource.ResourceManager resourceManager = resourceManager;
+        readonly MyGame myGame = myGame;
+        readonly ISound sound = sound;
 
         int currentIndex;
         SpriteObject allSlideSprite;
         SlideSprite firstSprite;
-
-        public SettingPanel(PPDDevice device, PPDFramework.Resource.ResourceManager resourceManager, MyGame myGame, ISound sound) : base(device)
-        {
-            this.resourceManager = resourceManager;
-            this.myGame = myGame;
-            this.sound = sound;
-        }
 
         public override void Load()
         {
@@ -38,7 +31,7 @@ namespace PPD
             allSlideSprite.AddChild(firstSprite);
             OnLoadProgressed(90);
 
-            firstSprite.Selected += slideSprite_Selected;
+            firstSprite.Selected += SlideSprite_Selected;
             GotFocused += SettingPanel_GotFocused;
             OnLoadProgressed(100);
         }
@@ -51,7 +44,7 @@ namespace PPD
             }
         }
 
-        void slideSprite_Selected(object sender, EventArgs e)
+        void SlideSprite_Selected(object sender, EventArgs e)
         {
             if (!Focused && !OverFocused)
             {
@@ -65,8 +58,8 @@ namespace PPD
             {
                 case 0:
                     var keyButtonSprite = new SlideSprite(device, resourceManager, sound) { Position = new System.Numerics.Vector2(800 * currentIndex, 0) };
-                    keyButtonSprite.Selected += keyButtonSprite_Selected;
-                    keyButtonSprite.LostFocused += slideSprite_LostFocused;
+                    keyButtonSprite.Selected += KeyButtonSprite_Selected;
+                    keyButtonSprite.LostFocused += SlideSprite_LostFocused;
                     keyButtonSprite.AddSelection(Utility.Language["AssingKeyButton"]);
                     keyButtonSprite.AddSelection(Utility.Language["ChangeCurrentController"]);
                     keyButtonSprite.AddSelection(Utility.Language["ChangeCurrentSetting"]);
@@ -75,22 +68,22 @@ namespace PPD
                     break;
                 case 1:
                     var accountSprite = new SlideSprite(device, resourceManager, sound) { Position = new System.Numerics.Vector2(800 * currentIndex, 0) };
-                    accountSprite.Selected += accountSprite_Selected;
-                    accountSprite.LostFocused += slideSprite_LostFocused;
+                    accountSprite.Selected += AccountSprite_Selected;
+                    accountSprite.LostFocused += SlideSprite_LostFocused;
                     accountSprite.AddSelection(WebManager.Instance.IsLogined ? Utility.Language["Logout"] : Utility.Language["Login"]);
                     allSlideSprite.AddChild(accountSprite);
                     FocusManager.Focus(accountSprite);
                     break;
                 case 2:
                     var changeVolumeSprite = new ChangeVolumeSprite(device, resourceManager, myGame, sound) { Position = new System.Numerics.Vector2(800 * currentIndex, 0) };
-                    changeVolumeSprite.LostFocused += slideSprite_LostFocused;
+                    changeVolumeSprite.LostFocused += SlideSprite_LostFocused;
                     allSlideSprite.AddChild(changeVolumeSprite);
                     FocusManager.Focus(changeVolumeSprite);
                     break;
             }
         }
 
-        void accountSprite_Selected(object sender, EventArgs e)
+        void AccountSprite_Selected(object sender, EventArgs e)
         {
             if (!Focused && !OverFocused)
             {
@@ -99,7 +92,6 @@ namespace PPD
 
             if (WebManager.Instance.IsLogined)
             {
-                var accountSprite = sender as SlideSprite;
                 WebManager.Instance.Logout();
                 PPDGeneralSetting.Setting.Username = "";
                 PPDGeneralSetting.Setting.Password = "";
@@ -111,7 +103,7 @@ namespace PPD
             ReturnToFirst();
         }
 
-        void slideSprite_LostFocused(IFocusable sender, FocusEventArgs args)
+        void SlideSprite_LostFocused(IFocusable sender, FocusEventArgs args)
         {
             if (sender is FocusableGameComponent slide && !slide.OverFocused)
             {
@@ -119,7 +111,7 @@ namespace PPD
             }
         }
 
-        void keyButtonSprite_Selected(object sender, EventArgs e)
+        void KeyButtonSprite_Selected(object sender, EventArgs e)
         {
             if (!Focused && !OverFocused)
             {
@@ -137,15 +129,15 @@ namespace PPD
                     {
                         Position = new System.Numerics.Vector2(800 * currentIndex, 0)
                     };
-                    changeKeyConfigSprite.LostFocused += slideSprite_LostFocused;
+                    changeKeyConfigSprite.LostFocused += SlideSprite_LostFocused;
 
                     allSlideSprite.AddChild(changeKeyConfigSprite);
                     FocusManager.Focus(changeKeyConfigSprite);
                     break;
                 case 1:
                     var changeControllerSprite = new SlideSprite(device, resourceManager, sound) { Position = new System.Numerics.Vector2(800 * currentIndex, 0) };
-                    changeControllerSprite.Selected += changeControllerSprite_Selected;
-                    changeControllerSprite.LostFocused += slideSprite_LostFocused;
+                    changeControllerSprite.Selected += ChangeControllerSprite_Selected;
+                    changeControllerSprite.LostFocused += SlideSprite_LostFocused;
                     myGame.Input.Load();
 
                     for (int i = 0; i < myGame.Input.JoyStickCount; i++)
@@ -170,8 +162,8 @@ namespace PPD
                     break;
                 case 2:
                     var changeProfileSprite = new SlideSprite(device, resourceManager, sound) { Position = new System.Numerics.Vector2(800 * currentIndex, 0) };
-                    changeProfileSprite.Selected += changeProfileSprite_Selected;
-                    changeProfileSprite.LostFocused += slideSprite_LostFocused;
+                    changeProfileSprite.Selected += ChangeProfileSprite_Selected;
+                    changeProfileSprite.LostFocused += SlideSprite_LostFocused;
 
                     for (int i = 0; i < myGame.KeyConfigManager.Configs.Length; i++)
                     {
@@ -186,7 +178,7 @@ namespace PPD
             }
         }
 
-        void changeProfileSprite_Selected(object sender, EventArgs e)
+        void ChangeProfileSprite_Selected(object sender, EventArgs e)
         {
             if (!Focused && !OverFocused)
             {
@@ -206,7 +198,7 @@ namespace PPD
             ReturnToFirst();
         }
 
-        void changeControllerSprite_Selected(object sender, EventArgs e)
+        void ChangeControllerSprite_Selected(object sender, EventArgs e)
         {
             if (!Focused && !OverFocused)
             {
@@ -296,7 +288,7 @@ namespace PPD
                 for (int i = 0; i < ButtonUtility.Array.Length; i++)
                 {
                     var textButton = new TextButton(device, resourceManager) { Position = new System.Numerics.Vector2(530, 90 + i * 30), Text = Utility.Language["Change"], Index = i };
-                    textButton.MouseLeftDown += textButton_MouseLeftDown;
+                    textButton.MouseLeftDown += TextButton_MouseLeftDown;
                     textButtons[i] = textButton;
 
                     keys[i] = new TextureString(device, keyConfig.GetKeyMap((ButtonType)i).ToString(), 14, true, PPDColors.White)
@@ -361,7 +353,7 @@ namespace PPD
                     }
                     else
                     {
-                        textButton_MouseLeftDown(textButtons[currentIndex], new MouseEvent(System.Numerics.Vector2.Zero, false, MouseEvent.MouseEventType.Left));
+                        TextButton_MouseLeftDown(textButtons[currentIndex], new MouseEvent(System.Numerics.Vector2.Zero, false, MouseEvent.MouseEventType.Left));
                     }
                 }
                 else if (args.InputInfo.IsPressed(ButtonType.Cross))
@@ -374,7 +366,7 @@ namespace PPD
                 }
             }
 
-            void textButton_MouseLeftDown(GameComponent sender, MouseEvent mouseEvent)
+            void TextButton_MouseLeftDown(GameComponent sender, MouseEvent mouseEvent)
             {
                 clickedTextButton?.Text = Utility.Language["Change"];
                 clickedTextButton = sender as TextButton;

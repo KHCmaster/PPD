@@ -6,26 +6,20 @@ namespace PPDFramework.Resource
     /// <summary>
     /// リソースマネージャーのクラス
     /// </summary>
-    public class ResourceManager : DisposableComponent
+    /// <remarks>
+    /// コンストラクタ
+    /// </remarks>
+    /// <param name="parents"></param>
+    public class ResourceManager(Tuple<ResourceManager, bool>[] parents) : DisposableComponent
     {
-        readonly Dictionary<string, ResourceBase> resources;
-        readonly Tuple<ResourceManager, bool>[] parents;
+        readonly Dictionary<string, ResourceBase> resources = new Dictionary<string, ResourceBase>(StringComparer.OrdinalIgnoreCase);
+        readonly Tuple<ResourceManager, bool>[] parents = parents;
 
         /// <summary>
         /// コンストラクタ
         /// </summary>
         public ResourceManager() : this(null)
         {
-        }
-
-        /// <summary>
-        /// コンストラクタ
-        /// </summary>
-        /// <param name="parents"></param>
-        public ResourceManager(Tuple<ResourceManager, bool>[] parents)
-        {
-            resources = new Dictionary<string, ResourceBase>(StringComparer.OrdinalIgnoreCase);
-            this.parents = parents;
         }
 
         /// <summary>

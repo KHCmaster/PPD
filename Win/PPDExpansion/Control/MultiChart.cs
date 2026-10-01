@@ -15,7 +15,7 @@ namespace PPDExpansion.Control
         {
             // setup wrapper for CollectionChanged
             _sourceChanged = new CollectionChangedWeakEventSource();
-            _sourceChanged.CollectionChanged += sourceCollectionChanged_CollectionChanged;
+            _sourceChanged.CollectionChanged += SourceCollectionChanged_CollectionChanged;
         }
 
         #region SeriesSource (DependencyProperty)
@@ -117,7 +117,7 @@ namespace PPDExpansion.Control
             }
         }
 
-        void sourceCollectionChanged_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        void SourceCollectionChanged_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
 
             switch (e.Action)

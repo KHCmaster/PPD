@@ -4,7 +4,7 @@ using PPDFramework.Shaders;
 
 namespace PPDTest
 {
-    class ScreenFilterScene : TestSceneBase
+    class ScreenFilterScene(TestSceneManager testSceneManager, PPDDevice device) : TestSceneBase(testSceneManager, device)
     {
         protected override string Title
         {
@@ -12,11 +12,6 @@ namespace PPDTest
             {
                 return "スクリーンフィルタテスト";
             }
-        }
-
-        public ScreenFilterScene(TestSceneManager testSceneManager, PPDDevice device) : base(testSceneManager, device)
-        {
-
         }
 
         protected override void OnInitialize()

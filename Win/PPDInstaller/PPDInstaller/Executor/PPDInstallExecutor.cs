@@ -5,25 +5,19 @@ using System.Windows.Forms;
 
 namespace PPDInstaller.Executor
 {
-    class PPDInstallExecutor : CExecutor
+    class PPDInstallExecutor(string dataDirectory, string installDirectory, Control control) : CExecutor(control)
     {
 
-        readonly Regex[] PPDIgnoreList = {
+        readonly Regex[] PPDIgnoreList = [
         new("PPD\\.ini",RegexOptions.IgnoreCase),        new("keyconfig\\.ini",RegexOptions.IgnoreCase)            /*"0.profile",
             "1.profile",
             "2.profile",
             "3.profile",
             "4.profile"*/
-        };
+        ];
 
-        readonly string dataDirectory;
-        readonly string installDirectory;
-        public PPDInstallExecutor(string dataDirectory, string installDirectory, Control control)
-            : base(control)
-        {
-            this.dataDirectory = dataDirectory;
-            this.installDirectory = installDirectory;
-        }
+        readonly string dataDirectory = dataDirectory;
+        readonly string installDirectory = installDirectory;
 
         public override void Execute()
         {

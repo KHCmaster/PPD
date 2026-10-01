@@ -20,7 +20,9 @@ using System.Text;
 namespace PPDCore
 {
     public delegate void DrawEventHandler(LayerType layerType);
-    public class MainGameComponent : GameComponent
+    public class MainGameComponent(PPDDevice device, IGameHost gameHost, PPDFramework.Resource.ResourceManager resourceManager,
+        ISound sound, ISceneBase scene, PPDGameUtility gameUtility, GameInterfaceBase gameInterface, MarkImagePathsBase markImagePath,
+        GameResultBase gameResult, PauseMenuBase pauseMenu, MainGameConfigBase config, float startTime, float markStartTime) : GameComponent(device)
     {
         public event DrawEventHandler Drawed;
         public event EventHandler Paused;
@@ -33,9 +35,9 @@ namespace PPDCore
         public event Action<ErrorReason> PerfectTrialError;
         public event Action<int, int> PerfectTrialStart;
 
-        readonly PPDFramework.Resource.ResourceManager resourceManager;
-        readonly ISound sound;
-        readonly ISceneBase scene;
+        readonly PPDFramework.Resource.ResourceManager resourceManager = resourceManager;
+        readonly ISound sound = sound;
+        readonly ISceneBase scene = scene;
 
         const float defaultbpm = 130;
         const int maxMovieTimesCount = 180;
@@ -72,7 +74,7 @@ namespace PPDCore
         readonly int[] evaPoint = new int[5];
         long lastTime;
         float tempLastTime;
-        readonly PPDGameUtility gameUtility;
+        readonly PPDGameUtility gameUtility = gameUtility;
         PPDPlayRecorder playRecorder;
         PPDPlayDecorder playDecorder;
         bool recording = true;
@@ -83,15 +85,15 @@ namespace PPDCore
         LatencyUpdaterBase latencyUpdater;
         LatencyFixer latencyFixer;
 
-        readonly float startTime;
-        readonly float markStartTime;
+        readonly float startTime = startTime;
+        readonly float markStartTime = markStartTime;
 
-        readonly IGameHost gameHost;
-        readonly GameInterfaceBase gameInterface;
-        readonly MarkImagePathsBase markImagePath;
-        readonly GameResultBase gameResult;
-        readonly PauseMenuBase pauseMenu;
-        readonly MainGameConfigBase config;
+        readonly IGameHost gameHost = gameHost;
+        readonly GameInterfaceBase gameInterface = gameInterface;
+        readonly MarkImagePathsBase markImagePath = markImagePath;
+        readonly GameResultBase gameResult = gameResult;
+        readonly PauseMenuBase pauseMenu = pauseMenu;
+        readonly MainGameConfigBase config = config;
         List<float> movieTimes;
 
         bool movieFinishCalled;
@@ -184,7 +186,7 @@ namespace PPDCore
         {
             get;
             set;
-        }
+        } = true;
 
         public bool Replaying
         {
@@ -192,26 +194,6 @@ namespace PPDCore
             {
                 return !recording;
             }
-        }
-
-        public MainGameComponent(PPDDevice device, IGameHost gameHost, PPDFramework.Resource.ResourceManager resourceManager,
-            ISound sound, ISceneBase scene, PPDGameUtility gameUtility, GameInterfaceBase gameInterface, MarkImagePathsBase markImagePath,
-            GameResultBase gameResult, PauseMenuBase pauseMenu, MainGameConfigBase config, float startTime, float markStartTime) : base(device)
-        {
-            this.gameHost = gameHost;
-            this.resourceManager = resourceManager;
-            this.sound = sound;
-            this.scene = scene;
-            this.gameUtility = gameUtility;
-            this.gameInterface = gameInterface;
-            this.gameResult = gameResult;
-            this.pauseMenu = pauseMenu;
-            this.markImagePath = markImagePath;
-            this.startTime = startTime;
-            this.markStartTime = markStartTime;
-            this.config = config;
-
-            PauseMovieWhenPause = true;
         }
 
         public void Initialize(bool play = true, bool isGhost = false, Dictionary<string, object> scriptItems = null)
@@ -267,11 +249,11 @@ namespace PPDCore
                 Path.Combine("scores", gameUtility.SongInformation.ID.ToString()));
             scriptManager = new FlowScriptManager(device, sound);
             holdManager = new HoldManager(device, resourceManager);
-            holdManager.ScoreGained += hm_ScoreGained;
+            holdManager.ScoreGained += Hm_ScoreGained;
             slideManager = new SlideManager(device, resourceManager);
             effectManager = new PPDEffectManager(device, resourceManager);
             kasiManager = new KasiManager(gameUtility);
-            kasiManager.KasiChanged += km_KasiChanged;
+            kasiManager.KasiChanged += Km_KasiChanged;
             soundManager = new SoundManager(new ExSound(sound), gameUtility);
             combo = new Combo(device, resourceManager);
             scoreStorage = ScoreStorage.GetStorageFromSongInformation(gameUtility.SongInformation);
@@ -284,28 +266,24 @@ namespace PPDCore
             else
             {
                 var path = Path.Combine(gameUtility.SongInformation.DirectoryPath, DifficultyUtility.ConvertDifficulty(gameUtility.Difficulty) + ".ppd");
-                using (PackReader reader = new(path))
+                using PackReader reader = new(path);
+                foreach (string content in reader.FileList)
                 {
-                    foreach (string content in reader.FileList)
+                    using PPDPackStreamReader ppdpsr = reader.Read(content);
+                    switch (content)
                     {
-                        using (PPDPackStreamReader ppdpsr = reader.Read(content))
-                        {
-                            switch (content)
+                        case "evd":
+                            eventManager = new EventManager(gameUtility, ppdpsr, config, scriptManager);
+                            break;
+                        case "ppd":
+                            markManager = new MarkManager(device, resourceManager, gameUtility, randomChangeManager, effectManager, markImagePath, config, scriptManager, ppdpsr);
+                            break;
+                        default:
+                            if (content.StartsWith("Scripts"))
                             {
-                                case "evd":
-                                    eventManager = new EventManager(gameUtility, ppdpsr, config, scriptManager);
-                                    break;
-                                case "ppd":
-                                    markManager = new MarkManager(device, resourceManager, gameUtility, randomChangeManager, effectManager, markImagePath, config, scriptManager, ppdpsr);
-                                    break;
-                                default:
-                                    if (content.StartsWith("Scripts"))
-                                    {
-                                        scriptManager.LoadScript(ppdpsr, defaultResource, content);
-                                    }
-                                    break;
+                                scriptManager.LoadScript(ppdpsr, defaultResource, content);
                             }
-                        }
+                            break;
                     }
                 }
             }
@@ -345,26 +323,26 @@ namespace PPDCore
             markManager.EventManager = eventManager;
             if (pauseMenu != null)
             {
-                pauseMenu.Resumed += pd_Resumed;
-                pauseMenu.Retryed += pd_Retryed;
-                pauseMenu.Returned += pd_Returned;
-                pauseMenu.Replayed += pauseMenu_Replayed;
-                pauseMenu.LatencyChanged += pd_LatencyChanged;
+                pauseMenu.Resumed += Pd_Resumed;
+                pauseMenu.Retryed += Pd_Retryed;
+                pauseMenu.Returned += Pd_Returned;
+                pauseMenu.Replayed += PauseMenu_Replayed;
+                pauseMenu.LatencyChanged += Pd_LatencyChanged;
             }
             if (gameResult != null)
             {
                 gameResult.CanReplay = gameUtility.AutoMode == AutoMode.None;
-                gameResult.Retryed += gameResult_Retryed;
-                gameResult.Replayed += gameResult_Replayed;
+                gameResult.Retryed += GameResult_Retryed;
+                gameResult.Replayed += GameResult_Replayed;
             }
-            markManager.ChangeCombo += mm_ChangeCombo;
+            markManager.ChangeCombo += Mm_ChangeCombo;
             markManager.PlaySound += SpecialPlaySound;
             markManager.StopSound += SpecialStopSound;
             markManager.EvaluateCount += EvaluateCount;
-            markManager.PressingButton += mm_PressingButton;
-            markManager.Slide += markManager_Slide;
-            markManager.MaxSlide += markManager_MaxSlide;
-            markManager.PreEvaluate += markManager_PreEvaluate;
+            markManager.PressingButton += Mm_PressingButton;
+            markManager.Slide += MarkManager_Slide;
+            markManager.MaxSlide += MarkManager_MaxSlide;
+            markManager.PreEvaluate += MarkManager_PreEvaluate;
             eventManager.ChangeMovieVolume += ChangeMovieVolume;
             holdManager.HoldStart += h =>
             {
@@ -470,18 +448,18 @@ namespace PPDCore
             Retry();
             var ret = new List<GhostFrame>();
             playDecorder = PPDPlayDecorder.FromBytes(replayData);
-            Action<int> lifeChangeHandler = l =>
+            void lifeChangeHandler(int l)
             {
                 ret.Add(new GhostFrame(currentUpdateTime, GameResultManager.CurrentScore, GameResultManager.CurrentLife));
-            };
-            Action<int> scoreChangeHandler = s =>
+            }
+            void scoreChangeHandler(int s)
             {
                 ret.Add(new GhostFrame(currentUpdateTime, GameResultManager.CurrentScore, GameResultManager.CurrentLife));
-            };
-            Action<MarkEvaluateType, bool> evaluateChangeHandler = (e, m) =>
+            }
+            void evaluateChangeHandler(MarkEvaluateType e, bool m)
             {
                 ret.Add(new GhostFrame(currentUpdateTime, e, m));
-            };
+            }
             LifeChanged += lifeChangeHandler;
             ScoreChanged += scoreChangeHandler;
             EvaluateChanged += evaluateChangeHandler;
@@ -491,7 +469,7 @@ namespace PPDCore
             EvaluateChanged -= evaluateChangeHandler;
             effectManager.SuspendAdd = false;
             scriptManager.SuppressErrorLog = false;
-            return ret.ToArray();
+            return [.. ret];
         }
 
         private void PerfectTrial()
@@ -521,14 +499,14 @@ namespace PPDCore
             }
         }
 
-        void creator_Progressed(int obj)
+        void Creator_Progressed(int obj)
         {
             gameHost.SendToLoading(new Dictionary<string, object>
             {
                 {"Progress",obj}            });
         }
 
-        void gameResult_Retryed(object sender, EventArgs e)
+        void GameResult_Retryed(object sender, EventArgs e)
         {
             Retry();
         }
@@ -537,7 +515,7 @@ namespace PPDCore
         {
             var ppdData = markManager.Marks;
             var groupData = ppdData.GroupBy(p => p.Time).Select(
-                g => new MarkGroupData(g.Key, g.ToArray())).ToArray();
+                g => new MarkGroupData(g.Key, [.. g])).ToArray();
             var noteTypes = new Dictionary<float, NoteType>();
             var slideScales = new Dictionary<float, float>();
             foreach (var data in ppdData)
@@ -600,7 +578,7 @@ namespace PPDCore
             };
             if (creator.CanCreate())
             {
-                creator.Progressed += creator_Progressed;
+                creator.Progressed += Creator_Progressed;
                 var decorder = creator.Create();
                 if (isFreePass || WebManager.Instance.UseItem(autoItem))
                 {
@@ -646,17 +624,13 @@ namespace PPDCore
                     continue;
                 }
                 var tempResourceManager = new ScriptResourceManager(device, sound, modInfo.ModPath, Path.Combine("mods", String.Join("", modInfo.UniqueName.Split(Path.GetInvalidPathChars()))));
-                using (PackReader reader = new(modInfo.ModPath))
+                using PackReader reader = new(modInfo.ModPath);
+                foreach (string content in reader.FileList)
                 {
-                    foreach (string content in reader.FileList)
+                    using PPDPackStreamReader ppdpsr = reader.Read(content);
+                    if (content.StartsWith("Scripts"))
                     {
-                        using (PPDPackStreamReader ppdpsr = reader.Read(content))
-                        {
-                            if (content.StartsWith("Scripts"))
-                            {
-                                scriptManager.LoadScript(ppdpsr, tempResourceManager, modInfo);
-                            }
-                        }
+                        scriptManager.LoadScript(ppdpsr, tempResourceManager, modInfo);
                     }
                 }
             }
@@ -692,7 +666,7 @@ namespace PPDCore
             latencyUpdater.SaveLatency();
         }
 
-        float pd_LatencyChanged(int sign)
+        float Pd_LatencyChanged(int sign)
         {
             latencyFixer?.Enabled = false;
             int lastCount = latencyUpdater.LatencyCount;
@@ -761,17 +735,17 @@ namespace PPDCore
             }
         }
 
-        void pd_Returned(object sender, EventArgs e)
+        void Pd_Returned(object sender, EventArgs e)
         {
             pauseMenu.Hidden = true;
         }
 
-        void pd_Retryed(object sender, EventArgs e)
+        void Pd_Retryed(object sender, EventArgs e)
         {
             pauseMenu.Hidden = true;
         }
 
-        void pauseMenu_Replayed(object sender, EventArgs e)
+        void PauseMenu_Replayed(object sender, EventArgs e)
         {
             pauseMenu.Hidden = true;
         }
@@ -797,7 +771,7 @@ namespace PPDCore
             }
         }
 
-        void pd_Resumed(object sender, EventArgs e)
+        void Pd_Resumed(object sender, EventArgs e)
         {
             state = State.Playing;
             if (PauseMovieWhenPause)
@@ -833,15 +807,15 @@ namespace PPDCore
             }
             movie.Seek(startTime);
             movie.TrimmingData = gameUtility.SongInformation.TrimmingData;
-            movie.Finished += m_Finished;
+            movie.Finished += M_Finished;
         }
 
-        void m_Finished(object sender, EventArgs e)
+        void M_Finished(object sender, EventArgs e)
         {
             movieFinishCalled = true;
         }
 
-        void gameResult_Replayed(object sender, EventArgs e)
+        void GameResult_Replayed(object sender, EventArgs e)
         {
             Replay();
         }
@@ -1055,12 +1029,12 @@ namespace PPDCore
                 {
                     if (b[k])
                     {
-                        scriptManager.Call("PPD.Input", new object[] { (MarkType)k, inputInfo.GetPressingFrame((ButtonType)k), b[k], false });
+                        scriptManager.Call("PPD.Input", [(MarkType)k, inputInfo.GetPressingFrame((ButtonType)k), b[k], false]);
                     }
 
                     if (released[k])
                     {
-                        scriptManager.Call("PPD.Input", new object[] { (MarkType)k, 0, false, true });
+                        scriptManager.Call("PPD.Input", [(MarkType)k, 0, false, true]);
                     }
                 }
             }
@@ -1304,12 +1278,12 @@ namespace PPDCore
             soundManager.SpStopSound(index);
         }
 
-        void km_KasiChanged(string kasi)
+        void Km_KasiChanged(string kasi)
         {
             gameInterface?.ChangeKasi(kasi);
         }
 
-        void mm_ChangeCombo(bool gain, Vector2 pos)
+        void Mm_ChangeCombo(bool gain, Vector2 pos)
         {
             if (gain)
             {
@@ -1354,7 +1328,7 @@ namespace PPDCore
             OnEvaluateChanged(markEvaluate, isMissPress);
         }
 
-        void markManager_PreEvaluate(IMarkInfo markInfo, EffectType effectType, bool missPress, bool release, Vector2 position)
+        void MarkManager_PreEvaluate(IMarkInfo markInfo, EffectType effectType, bool missPress, bool release, Vector2 position)
         {
             if (latencyFixer == null)
             {
@@ -1370,20 +1344,15 @@ namespace PPDCore
 
         private MarkEvaluateType ConvertEffectTypeToMarkEvaluate(EffectType effectType)
         {
-            switch (effectType)
+            return effectType switch
             {
-                case EffectType.Cool:
-                    return MarkEvaluateType.Cool;
-                case EffectType.Fine:
-                    return MarkEvaluateType.Fine;
-                case EffectType.Safe:
-                    return MarkEvaluateType.Safe;
-                case EffectType.Sad:
-                    return MarkEvaluateType.Sad;
-                case EffectType.Worst:
-                    return MarkEvaluateType.Worst;
-            }
-            return MarkEvaluateType.Worst;
+                EffectType.Cool => MarkEvaluateType.Cool,
+                EffectType.Fine => MarkEvaluateType.Fine,
+                EffectType.Safe => MarkEvaluateType.Safe,
+                EffectType.Sad => MarkEvaluateType.Sad,
+                EffectType.Worst => MarkEvaluateType.Worst,
+                _ => MarkEvaluateType.Worst,
+            };
         }
 
         private void OnEvaluateChanged(MarkEvaluateType evaType, bool missPress)
@@ -1396,23 +1365,23 @@ namespace PPDCore
             ComboChanged?.Invoke(combo, pos);
         }
 
-        bool mm_PressingButton(ButtonType buttonType, bool pressing)
+        bool Mm_PressingButton(ButtonType buttonType, bool pressing)
         {
             return holdManager.SetPressing(buttonType, pressing, currentTime);
         }
 
-        void hm_ScoreGained(int gain)
+        void Hm_ScoreGained(int gain)
         {
             GameResultManager.AddHoldBonus((int)(gain * config.ScoreScale));
         }
 
-        void markManager_Slide(object sender, Vector2 position, int score, bool isRight)
+        void MarkManager_Slide(object sender, Vector2 position, int score, bool isRight)
         {
             GameResultManager.AddSlideBonus((int)(score * config.ScoreScale));
             slideManager.AddSlidePoint(sender, position, score, isRight);
         }
 
-        void markManager_MaxSlide(object sender, Vector2 position, int score, bool isRight)
+        void MarkManager_MaxSlide(object sender, Vector2 position, int score, bool isRight)
         {
             GameResultManager.AddSlideBonus((int)(score * config.ScoreScale));
             slideManager.AddMaxSlideEffect(sender, position, score);

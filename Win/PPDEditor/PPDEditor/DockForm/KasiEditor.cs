@@ -54,7 +54,7 @@ namespace PPDEditor
                     }
                 }
             }
-            return ret.ToArray();
+            return [.. ret];
         }
         public string GetFormattedContent(float time)
         {
@@ -91,14 +91,14 @@ namespace PPDEditor
                 string kasi = changedata[previoustime];
                 changedata.Remove(previoustime);
                 changedata.Add(newtime, kasi);
-                updatedatagrid();
+                Updatedatagrid();
                 ContentChanged();
                 WindowUtility.Seekmain.DrawAndRefresh();
             }
         }
-        public void setdata(string s)
+        public void Setdata(string s)
         {
-            s = removeextra(s);
+            s = Removeextra(s);
             var datas = s.Split('\n');
             foreach (string eachdata in datas)
             {
@@ -116,13 +116,13 @@ namespace PPDEditor
                 {
                 }
             }
-            updatedatagrid();
+            Updatedatagrid();
         }
-        public string askcurrentkasi()
+        public string Askcurrentkasi()
         {
             var time = (float)WindowUtility.Seekmain.Currenttime;
             string ret = "";
-            int i = 0;
+            int i;
             for (i = 0; i < changedata.Count; i++)
             {
                 if (changedata.Keys[i] <= time) continue;
@@ -135,7 +135,7 @@ namespace PPDEditor
             }
             return ret;
         }
-        public string savedata()
+        public string Savedata()
         {
             string ret = "";
             for (int i = 0; i < changedata.Count; i++)
@@ -153,7 +153,7 @@ namespace PPDEditor
             changedata.Clear();
             this.dataGridView1.RowCount = 0;
         }
-        private string removeextra(string st)
+        private string Removeextra(string st)
         {
             var a = st.IndexOf("\t");
             while (a != -1)
@@ -169,14 +169,14 @@ namespace PPDEditor
             }
             return st;
         }
-        private void button1_Click(object sender, EventArgs e)
+        private void Button1_Click(object sender, EventArgs e)
         {
             if (!changedata.ContainsKey((float)WindowUtility.Seekmain.Currenttime))
             {
                 var text = textBox1.Text.Replace("\n", "");
                 changedata.Add((float)WindowUtility.Seekmain.Currenttime, text);
                 this.dataGridView1.Rows.Add(1);
-                updatedatagrid();
+                Updatedatagrid();
                 ContentChanged();
             }
             else
@@ -184,7 +184,7 @@ namespace PPDEditor
                 MessageBox.Show(alreadyadd);
             }
         }
-        private void updatedatagrid()
+        private void Updatedatagrid()
         {
             for (int i = 0; i < changedata.Count; i++)
             {
@@ -193,7 +193,7 @@ namespace PPDEditor
             }
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void Button2_Click(object sender, EventArgs e)
         {
             if (this.dataGridView1.CurrentRow == null)
             {
@@ -207,7 +207,7 @@ namespace PPDEditor
             }
         }
 
-        private void button3_Click(object sender, EventArgs e)
+        private void Button3_Click(object sender, EventArgs e)
         {
             if (this.dataGridView1.CurrentRow == null)
             {
@@ -221,13 +221,13 @@ namespace PPDEditor
                     string text = changedata.Values[this.dataGridView1.CurrentRow.Index];
                     changedata.RemoveAt(this.dataGridView1.CurrentRow.Index);
                     changedata.Add(time + (float)this.numericUpDown1.Value, text);
-                    updatedatagrid();
+                    Updatedatagrid();
                     ContentChanged();
                 }
             }
         }
 
-        private void button4_Click(object sender, EventArgs e)
+        private void Button4_Click(object sender, EventArgs e)
         {
             if (this.dataGridView1.CurrentRow == null)
             {
@@ -237,20 +237,20 @@ namespace PPDEditor
             {
                 var fm4 = new ChangeKasiForm();
                 fm4.SetLang();
-                fm4.beforetext = changedata.Values[this.dataGridView1.CurrentRow.Index];
+                fm4.Beforetext = changedata.Values[this.dataGridView1.CurrentRow.Index];
                 if (fm4.ShowDialog() == DialogResult.OK)
                 {
                     float time = changedata.Keys[this.dataGridView1.CurrentRow.Index];
-                    var newtext = fm4.newtext.Replace("\n", "");
+                    var newtext = fm4.Newtext.Replace("\n", "");
                     changedata.RemoveAt(this.dataGridView1.CurrentRow.Index);
                     changedata.Add(time, newtext);
-                    updatedatagrid();
+                    Updatedatagrid();
                     ContentChanged();
                 }
             }
         }
 
-        private void button5_Click(object sender, EventArgs e)
+        private void Button5_Click(object sender, EventArgs e)
         {
             if (this.dataGridView1.CurrentRow == null)
             {
@@ -260,21 +260,21 @@ namespace PPDEditor
             {
                 string text = changedata.Values[dataGridView1.CurrentRow.Index];
                 this.textBox1.Text = text;
-                this.button1_Click(this, e);
+                this.Button1_Click(this, e);
                 ContentChanged();
             }
         }
-        private void dataGridView1_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
+        private void DataGridView1_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
         {
             ContentChanged();
         }
 
-        private void dataGridView1_RowsRemoved(object sender, DataGridViewRowsRemovedEventArgs e)
+        private void DataGridView1_RowsRemoved(object sender, DataGridViewRowsRemovedEventArgs e)
         {
             ContentChanged();
         }
 
-        private void button6_Click(object sender, EventArgs e)
+        private void Button6_Click(object sender, EventArgs e)
         {
             this.textBox1.Text = "";
             this.textBox1.Focus();

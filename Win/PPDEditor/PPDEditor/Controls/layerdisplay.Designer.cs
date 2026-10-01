@@ -52,7 +52,7 @@
             this.label1.Size = new System.Drawing.Size(36, 12);
             this.label1.TabIndex = 0;
             this.label1.Text = "layer1";
-            this.label1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.label1_MouseDoubleClick);
+            this.label1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.Label1_MouseDoubleClick);
             // 
             // label2
             // 
@@ -63,7 +63,7 @@
             this.label2.Size = new System.Drawing.Size(35, 12);
             this.label2.TabIndex = 1;
             this.label2.Text = "label2";
-            this.label2.MouseClick += new System.Windows.Forms.MouseEventHandler(this.label2_MouseClick);
+            this.label2.MouseClick += new System.Windows.Forms.MouseEventHandler(this.Label2_MouseClick);
             // 
             // panel1
             // 
@@ -75,7 +75,7 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(38, 46);
             this.panel1.TabIndex = 4;
-            this.panel1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panel1_MouseDown);
+            this.panel1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Panel1_MouseDown);
             // 
             // pictureBox1
             // 
@@ -85,7 +85,7 @@
             this.pictureBox1.Size = new System.Drawing.Size(16, 16);
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
-            this.pictureBox1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseDown);
+            this.pictureBox1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.PictureBox1_MouseDown);
             // 
             // contextMenuStrip1
             // 
@@ -94,7 +94,7 @@
             this.このレイヤーを複製ToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
             this.contextMenuStrip1.Size = new System.Drawing.Size(185, 48);
-            this.contextMenuStrip1.Opened += new System.EventHandler(this.contextMenuStrip1_Opened);
+            this.contextMenuStrip1.Opened += new System.EventHandler(this.ContextMenuStrip1_Opened);
             // 
             // このレイヤーを削除ToolStripMenuItem
             // 
@@ -118,7 +118,7 @@
             this.textBox1.Size = new System.Drawing.Size(107, 19);
             this.textBox1.TabIndex = 5;
             this.textBox1.Visible = false;
-            this.textBox1.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.textBox1_PreviewKeyDown);
+            this.textBox1.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.TextBox1_PreviewKeyDown);
             // 
             // panel2
             // 
@@ -127,7 +127,7 @@
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(19, 17);
             this.panel2.TabIndex = 0;
-            this.panel2.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.panel2_MouseDoubleClick);
+            this.panel2.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.Panel2_MouseDoubleClick);
             // 
             // LayerDisplay
             // 
@@ -144,8 +144,8 @@
             this.Cursor = System.Windows.Forms.Cursors.Hand;
             this.Name = "LayerDisplay";
             this.Size = new System.Drawing.Size(238, 45);
-            this.MouseClick += new System.Windows.Forms.MouseEventHandler(this.layerdisplay_MouseClick);
-            this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.layerdisplay_MouseDown);
+            this.MouseClick += new System.Windows.Forms.MouseEventHandler(this.Layerdisplay_MouseClick);
+            this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Layerdisplay_MouseDown);
             this.panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.contextMenuStrip1.ResumeLayout(false);

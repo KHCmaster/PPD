@@ -5,19 +5,13 @@ using System.Windows.Forms;
 
 namespace PPDInstaller.Executor
 {
-    class BMSTOPPDInstallExecutor : CExecutor
+    class BMSTOPPDInstallExecutor(string dataDirectory, string installDirectory, Control control) : CExecutor(control)
     {
-        readonly Regex[] BMSTOPPDIgnoreList = {
+        readonly Regex[] BMSTOPPDIgnoreList = [
           new("setting\\.ini",RegexOptions.IgnoreCase)
-        };
-        readonly string dataDirectory;
-        readonly string installDirectory;
-        public BMSTOPPDInstallExecutor(string dataDirectory, string installDirectory, Control control)
-            : base(control)
-        {
-            this.dataDirectory = dataDirectory;
-            this.installDirectory = installDirectory;
-        }
+        ];
+        readonly string dataDirectory = dataDirectory;
+        readonly string installDirectory = installDirectory;
 
         public override void Execute()
         {

@@ -7,32 +7,24 @@ using System.Xml;
 
 namespace FlowScriptEngine
 {
-    public class Engine
+    public class Engine(TextReader consoleReader)
     {
         public event Action<FlowExecutionException> Error;
 
-        private readonly List<FlowSourceManager> managers;
-        private readonly FunctionScope globalScope;
+        private readonly List<FlowSourceManager> managers = [];
+        private readonly FunctionScope globalScope = new FunctionScope(ScopeType.Global);
 
-        private readonly Dictionary<Guid, FunctionScope> contexts;
+        private readonly Dictionary<Guid, FunctionScope> contexts = [];
 
         public TextReader ConsoleReader
         {
             get;
             private set;
-        }
+        } = consoleReader;
 
         public Engine()
             : this(Console.In)
         {
-        }
-
-        public Engine(TextReader consoleReader)
-        {
-            ConsoleReader = consoleReader;
-            managers = [];
-            globalScope = new FunctionScope(ScopeType.Global);
-            contexts = [];
         }
 
         public FlowSourceManager Load(Stream stream, bool debugMode)
@@ -118,7 +110,7 @@ namespace FlowScriptEngine
             }
             reader.Close();
 
-            return ret.ToArray();
+            return [.. ret];
         }
 
         private KeyValuePair<string, string>[] ReadValues(XmlReader reader, FlowSourceObjectBase source)
@@ -139,7 +131,7 @@ namespace FlowScriptEngine
             }
             reader.Close();
 
-            return ret.ToArray();
+            return [.. ret];
         }
 
         private void ReadFlows(XmlReader reader, FlowSourceManager manager)

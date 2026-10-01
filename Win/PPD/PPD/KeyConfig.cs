@@ -48,7 +48,7 @@ namespace PPD
         {
             get
             {
-                return keyConfigs.ToArray();
+                return [.. keyConfigs];
             }
         }
 

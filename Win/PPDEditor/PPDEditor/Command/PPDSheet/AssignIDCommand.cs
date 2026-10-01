@@ -1,17 +1,10 @@
 ﻿namespace PPDEditor.Command.PPDSheet
 {
-    class AssignIDCommand : Command
+    class AssignIDCommand(Mark mark, uint id) : Command
     {
-        readonly uint newID;
-        readonly uint prevID;
-        readonly Mark mark;
-
-        public AssignIDCommand(Mark mark, uint id)
-        {
-            newID = id;
-            this.mark = mark;
-            prevID = mark.ID;
-        }
+        readonly uint newID = id;
+        readonly uint prevID = mark.ID;
+        readonly Mark mark = mark;
 
         public override void Execute()
         {

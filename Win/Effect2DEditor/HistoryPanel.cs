@@ -26,7 +26,7 @@ namespace Effect2DEditor
             vScrollBar1.Minimum = 0;
             vScrollBar1.SmallChange = 1;
             vScrollBar1.LargeChange = 1;
-            vScrollBar1.Scroll += vScrollBar1_Scroll;
+            vScrollBar1.Scroll += VScrollBar1_Scroll;
             this.MouseWheel += HistoryPanel_MouseWheel;
             this.SizeChanged += HistoryPanel_SizeChanged;
             DrawAndRefresh();
@@ -53,7 +53,7 @@ namespace Effect2DEditor
             }
         }
 
-        void vScrollBar1_Scroll(object sender, ScrollEventArgs e)
+        void VScrollBar1_Scroll(object sender, ScrollEventArgs e)
         {
             DrawAndRefresh();
         }

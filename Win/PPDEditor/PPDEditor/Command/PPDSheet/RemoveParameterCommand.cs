@@ -1,16 +1,11 @@
 ﻿namespace PPDEditor.Command.PPDSheet
 {
-    class RemoveParameterCommand : Command
+    class RemoveParameterCommand(Mark mk, string key) : Command
     {
-        private readonly Mark mk;
-        private readonly string key;
-        private readonly string prevValue;
-        public RemoveParameterCommand(Mark mk, string key)
-        {
-            this.mk = mk;
-            this.key = key;
-            prevValue = mk[key];
-        }
+        private readonly Mark mk = mk;
+        private readonly string key = key;
+        private readonly string prevValue = mk[key];
+
         public override void Execute()
         {
             if (prevValue != null)

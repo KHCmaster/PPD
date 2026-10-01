@@ -2,18 +2,12 @@
 
 namespace PPDCoreModel
 {
-    public class UpdateManager : TemplateManager<IUpdatable>
+    public class UpdateManager(Engine engine) : TemplateManager<IUpdatable>(engine)
     {
         public float MovieTime
         {
             get;
             set;
-        }
-
-        public UpdateManager(Engine engine)
-            : base(engine)
-        {
-
         }
 
         public void Update()

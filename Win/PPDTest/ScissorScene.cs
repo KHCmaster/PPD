@@ -2,7 +2,7 @@
 
 namespace PPDTest
 {
-    class ScissorScene : TestSceneBase
+    class ScissorScene(TestSceneManager testSceneManager, PPDDevice device) : TestSceneBase(testSceneManager, device)
     {
         protected override string Title
         {
@@ -10,11 +10,6 @@ namespace PPDTest
             {
                 return "シザーテスト";
             }
-        }
-
-        public ScissorScene(TestSceneManager testSceneManager, PPDDevice device) : base(testSceneManager, device)
-        {
-
         }
 
         protected override void OnInitialize()

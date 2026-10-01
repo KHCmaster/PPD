@@ -94,8 +94,9 @@ namespace ColorCanvas
 
         public static Color ConvertHsvToRgb(double h, double s, double v)
         {
-            double r = 0, g = 0, b = 0;
-
+            double r;
+            double g;
+            double b;
             if (s == 0)
             {
                 r = v;

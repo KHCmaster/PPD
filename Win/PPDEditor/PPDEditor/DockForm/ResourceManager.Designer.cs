@@ -108,9 +108,9 @@
             this.treeView1.Name = "treeView1";
             this.treeView1.Size = new System.Drawing.Size(264, 333);
             this.treeView1.TabIndex = 0;
-            this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
-            this.treeView1.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.treeView1_NodeMouseClick);
-            this.treeView1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.treeView1_KeyDown);
+            this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.TreeView1_AfterSelect);
+            this.treeView1.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.TreeView1_NodeMouseClick);
+            this.treeView1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TreeView1_KeyDown);
             // 
             // splitContainer2
             // 
@@ -214,21 +214,21 @@
             this.imageを追加ToolStripMenuItem.Name = "imageを追加ToolStripMenuItem";
             this.imageを追加ToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
             this.imageを追加ToolStripMenuItem.Text = "Imageを追加";
-            this.imageを追加ToolStripMenuItem.Click += new System.EventHandler(this.imageを追加ToolStripMenuItem_Click);
+            this.imageを追加ToolStripMenuItem.Click += new System.EventHandler(this.Imageを追加ToolStripMenuItem_Click);
             // 
             // effectを追加ToolStripMenuItem
             // 
             this.effectを追加ToolStripMenuItem.Name = "effectを追加ToolStripMenuItem";
             this.effectを追加ToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
             this.effectを追加ToolStripMenuItem.Text = "Effectを追加";
-            this.effectを追加ToolStripMenuItem.Click += new System.EventHandler(this.effectを追加ToolStripMenuItem_Click);
+            this.effectを追加ToolStripMenuItem.Click += new System.EventHandler(this.Effectを追加ToolStripMenuItem_Click);
             // 
             // soundを追加ToolStripMenuItem
             // 
             this.soundを追加ToolStripMenuItem.Name = "soundを追加ToolStripMenuItem";
             this.soundを追加ToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
             this.soundを追加ToolStripMenuItem.Text = "Soundを追加";
-            this.soundを追加ToolStripMenuItem.Click += new System.EventHandler(this.soundを追加ToolStripMenuItem_Click);
+            this.soundを追加ToolStripMenuItem.Click += new System.EventHandler(this.Soundを追加ToolStripMenuItem_Click);
             // 
             // その他を追加ToolStripMenuItem
             // 
@@ -244,7 +244,7 @@
             this.無効化ToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
             this.contextMenuStrip1.Size = new System.Drawing.Size(113, 48);
-            this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
+            this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStrip1_Opening);
             // 
             // 削除ToolStripMenuItem
             // 

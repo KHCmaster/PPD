@@ -18,7 +18,7 @@ namespace FlowScriptDrawControl.Model
         {
             get
             {
-                return selectedSelectables.ToArray();
+                return [.. selectedSelectables];
             }
         }
 

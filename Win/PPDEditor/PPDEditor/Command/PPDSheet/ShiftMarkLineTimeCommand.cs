@@ -22,11 +22,11 @@ namespace PPDEditor.Command.PPDSheet
                     Mark mk = data[i].Values[j];
                     if (mk is not ExMark exmk)
                     {
-                        lastTime[i][j] = new float[] { mk.Time };
+                        lastTime[i][j] = [mk.Time];
                     }
                     else
                     {
-                        lastTime[i][j] = new float[] { exmk.Time, exmk.EndTime };
+                        lastTime[i][j] = [exmk.Time, exmk.EndTime];
                     }
                 }
             }

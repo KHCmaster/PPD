@@ -5,7 +5,7 @@ namespace FlowScriptEngineBasic.TypeFormatters
 {
     public class BooleanFormatter : TypeFormatterBase
     {
-        private readonly string[] allowed = { "False", "True" };
+        private readonly string[] allowed = ["False", "True"];
         public override Type Type
         {
             get { return typeof(bool); }

@@ -43,28 +43,24 @@ namespace PPDUpdater
             Exception error = null;
             try
             {
-                using (var response = await client.GetAsync(uri, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false))
+                using var response = await client.GetAsync(uri, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false);
+                response.EnsureSuccessStatusCode();
+                var total = response.Content.Headers.ContentLength ?? -1;
+                using var source = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+                using var destination = File.Create(filePath);
+                var buffer = new byte[81920];
+                long received = 0;
+                var lastPercentage = -1;
+                int read;
+                while ((read = await source.ReadAsync(buffer, 0, buffer.Length).ConfigureAwait(false)) > 0)
                 {
-                    response.EnsureSuccessStatusCode();
-                    var total = response.Content.Headers.ContentLength ?? -1;
-                    using (var source = await response.Content.ReadAsStreamAsync().ConfigureAwait(false))
-                    using (var destination = File.Create(filePath))
+                    await destination.WriteAsync(buffer, 0, read).ConfigureAwait(false);
+                    received += read;
+                    var percentage = total > 0 ? (int)(received * 100 / total) : 0;
+                    if (percentage != lastPercentage)
                     {
-                        var buffer = new byte[81920];
-                        long received = 0;
-                        var lastPercentage = -1;
-                        int read;
-                        while ((read = await source.ReadAsync(buffer, 0, buffer.Length).ConfigureAwait(false)) > 0)
-                        {
-                            await destination.WriteAsync(buffer, 0, read).ConfigureAwait(false);
-                            received += read;
-                            var percentage = total > 0 ? (int)(received * 100 / total) : 0;
-                            if (percentage != lastPercentage)
-                            {
-                                lastPercentage = percentage;
-                                Raise(context, () => ProgressChanged?.Invoke(percentage));
-                            }
-                        }
+                        lastPercentage = percentage;
+                        Raise(context, () => ProgressChanged?.Invoke(percentage));
                     }
                 }
             }

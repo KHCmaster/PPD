@@ -32,10 +32,10 @@ namespace Effect2DEditor
         }
         public void SetLinearRatio()
         {
-            bcps = new BezierControlPoint[]{
+            bcps = [
                 BezierControlPoint.Deserialize("VT=1 SX=0 SY=128 TDX=0.707106781 TDY=-0.707106781 TL=60"),
                 BezierControlPoint.Deserialize("VF=1 SX=128 SY=0 FDX=-0.707106781 FDY=0.707106781 FL=60")
-            };
+            ];
             IsLinear = true;
             DrawandRefresh();
         }

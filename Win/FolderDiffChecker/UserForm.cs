@@ -35,14 +35,14 @@ namespace FolderDiffChecker
             }
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void Button1_Click(object sender, EventArgs e)
         {
             File.WriteAllText(lastUserNameFilePath, UserName);
             DialogResult = DialogResult.OK;
             Close();
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void Button2_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.Cancel;
             Close();

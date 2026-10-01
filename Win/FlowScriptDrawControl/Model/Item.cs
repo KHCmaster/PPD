@@ -6,7 +6,7 @@ using System.Windows.Media;
 
 namespace FlowScriptDrawControl.Model
 {
-    public class Item : ObservableObject
+    public class Item(string[] replacedNames) : ObservableObject
     {
         private string name;
         private string value;
@@ -24,15 +24,9 @@ namespace FlowScriptDrawControl.Model
 
         private Connection inConnection;
 
-        private readonly List<Connection> outConnections;
+        private readonly List<Connection> outConnections = [];
 
         public event EventHandler ConnectionChanged;
-
-        public Item(string[] replacedNames)
-        {
-            ReplacedNames = replacedNames;
-            outConnections = [];
-        }
 
         public bool IsMouseOver
         {
@@ -51,7 +45,7 @@ namespace FlowScriptDrawControl.Model
         {
             get;
             private set;
-        }
+        } = replacedNames;
 
         public Connection InConnection
         {
@@ -69,7 +63,7 @@ namespace FlowScriptDrawControl.Model
         {
             get
             {
-                return outConnections.ToArray();
+                return [.. outConnections];
             }
         }
 
@@ -93,9 +87,9 @@ namespace FlowScriptDrawControl.Model
             {
                 if (source != value)
                 {
-                    source?.PropertyChanged -= source_PropertyChanged;
+                    source?.PropertyChanged -= Source_PropertyChanged;
                     source = value;
-                    source?.PropertyChanged += source_PropertyChanged;
+                    source?.PropertyChanged += Source_PropertyChanged;
                     UpdateIsCollapsed();
                 }
             }
@@ -272,7 +266,7 @@ namespace FlowScriptDrawControl.Model
             IsPropertyValueShown = InConnection == null && Value != null;
         }
 
-        void source_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        void Source_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             if (e.PropertyName == "IsCollapsed")
             {

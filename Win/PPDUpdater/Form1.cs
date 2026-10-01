@@ -113,13 +113,13 @@ namespace PPDUpdater
                         Name = fileName.ToLower(),
                         Checked = Path.GetFileName(fileName).ToLower() == String.Format("lang_{0}_{1}.ini", this.GetType().Assembly.GetName().Name, langFileISO).ToLower()
                     };
-                    tsmi.Click += tsmi_Click;
+                    tsmi.Click += Tsmi_Click;
                     言語ToolStripMenuItem.DropDownItems.Add(tsmi);
                 }
             }
         }
 
-        void tsmi_Click(object sender, EventArgs e)
+        void Tsmi_Click(object sender, EventArgs e)
         {
             if (sender is ToolStripMenuItem tsmi)
             {
@@ -241,8 +241,8 @@ namespace PPDUpdater
                     dataGridView1[State.Name, i].Value = downloading;
                     var ui = dataGridView1[Version.Name, i].Value as UpdateInfo;
                     var due = new DownloadUpdateExecutor(ui, this, i);
-                    due.Progressed += due_Progressed;
-                    due.Finished += due_Finished;
+                    due.Progressed += Due_Progressed;
+                    due.Finished += Due_Finished;
                     var thread = new Thread(new ThreadStart(due.Execute));
                     WriteLog(String.Format("DownloadUpdate:{0}", due.URL));
                     thread.Start();
@@ -262,7 +262,7 @@ namespace PPDUpdater
             }
         }
 
-        void due_Finished(object sender, EventArgs e)
+        void Due_Finished(object sender, EventArgs e)
         {
             var due = sender as DownloadUpdateExecutor;
             dataGridView1[download, due.Index].Value = 100;
@@ -277,7 +277,7 @@ namespace PPDUpdater
             }
         }
 
-        void due_Progressed(object sender, EventArgs e)
+        void Due_Progressed(object sender, EventArgs e)
         {
             var due = sender as DownloadUpdateExecutor;
             dataGridView1[download, due.Index].Value = due.Progress;
@@ -294,8 +294,8 @@ namespace PPDUpdater
                     dataGridView1[State.Name, i].Value = installing;
                     var ui = dataGridView1[Version.Name, i].Value as UpdateInfo;
                     var iue = new InstallUpdateExecutor(ui.FilePath, ui.VersionInfo, installInfo, i, this);
-                    iue.Progressed += iue_Progressed;
-                    iue.Finished += iue_Finished;
+                    iue.Progressed += Iue_Progressed;
+                    iue.Finished += Iue_Finished;
                     var thread = new Thread(new ThreadStart(iue.Execute));
                     WriteLog(String.Format("InstallUpdate:{0}", iue.FilePath));
                     thread.Start();
@@ -312,13 +312,13 @@ namespace PPDUpdater
             }
         }
 
-        void iue_Progressed(object sender, EventArgs e)
+        void Iue_Progressed(object sender, EventArgs e)
         {
             var iue = sender as InstallUpdateExecutor;
             dataGridView1[install, iue.Index].Value = iue.Progress;
         }
 
-        void iue_Finished(object sender, EventArgs e)
+        void Iue_Finished(object sender, EventArgs e)
         {
             var iue = sender as InstallUpdateExecutor;
             installInfo.InstallVersion = iue.InstallVersion;
@@ -337,23 +337,21 @@ namespace PPDUpdater
 
         private void WriteInstallInfo()
         {
-            using (StreamWriter sw = new(installinfofile))
-            {
-                WriteData(sw, "PPD", installInfo.PPD);
-                WriteData(sw, "SharpDX", installInfo.SharpDX);
-                WriteData(sw, "DirectShowLib", installInfo.DirectShowLib);
-                WriteData(sw, "IPAFont", installInfo.IPAFont);
-                WriteData(sw, "PPDeditor", installInfo.PPDeditor);
-                WriteData(sw, "ffdshow", installInfo.ffdshow);
-                WriteData(sw, "MP4Splitter", installInfo.MP4Splitter);
-                WriteData(sw, "FLVSplitter", installInfo.FLVSplitter);
-                WriteData(sw, "Effect2DEditor", installInfo.Effect2DEditor);
-                WriteData(sw, "PPDVersion", installInfo.PPDVersion.ToString());
-                WriteData(sw, "PPDeditorVersion", installInfo.PPDeditorVersion.ToString());
-                WriteData(sw, "BMSTOPPDVersion", installInfo.BMSTOPPDVersion.ToString());
-                WriteData(sw, "Effect2DEditorVersion", installInfo.Effect2DEditorVersion.ToString());
-                WriteData(sw, "InstallVersion", installInfo.InstallVersion.ToString());
-            }
+            using StreamWriter sw = new(installinfofile);
+            WriteData(sw, "PPD", installInfo.PPD);
+            WriteData(sw, "SharpDX", installInfo.SharpDX);
+            WriteData(sw, "DirectShowLib", installInfo.DirectShowLib);
+            WriteData(sw, "IPAFont", installInfo.IPAFont);
+            WriteData(sw, "PPDeditor", installInfo.PPDeditor);
+            WriteData(sw, "ffdshow", installInfo.Ffdshow);
+            WriteData(sw, "MP4Splitter", installInfo.MP4Splitter);
+            WriteData(sw, "FLVSplitter", installInfo.FLVSplitter);
+            WriteData(sw, "Effect2DEditor", installInfo.Effect2DEditor);
+            WriteData(sw, "PPDVersion", installInfo.PPDVersion.ToString());
+            WriteData(sw, "PPDeditorVersion", installInfo.PPDeditorVersion.ToString());
+            WriteData(sw, "BMSTOPPDVersion", installInfo.BMSTOPPDVersion.ToString());
+            WriteData(sw, "Effect2DEditorVersion", installInfo.Effect2DEditorVersion.ToString());
+            WriteData(sw, "InstallVersion", installInfo.InstallVersion.ToString());
 
         }
 
@@ -377,7 +375,7 @@ namespace PPDUpdater
                 var url = String.Format(updatelist[0], channel);
                 updatelist.RemoveAt(0);
                 var cule = new CheckUpdateListExecutor(url, this);
-                cule.Finished += cule_Finished;
+                cule.Finished += Cule_Finished;
                 var thread = new Thread(new ThreadStart(cule.Execute));
                 WriteLog(String.Format("GetUpdateList:{0}", cule.Url));
                 thread.Start();
@@ -389,7 +387,7 @@ namespace PPDUpdater
             }
         }
 
-        void cule_Finished(object sender, EventArgs e)
+        void Cule_Finished(object sender, EventArgs e)
         {
             var cule = sender as CheckUpdateListExecutor;
             if (cule.Success)
@@ -441,7 +439,7 @@ namespace PPDUpdater
                 installInfo.IPAFont = setting["IPAFont"] == "1";
                 installInfo.PPDeditor = setting["PPDeditor"] == "1";
                 installInfo.BMSTOPPD = setting["BMSTOPPD"] == "1";
-                installInfo.ffdshow = setting["ffdshow"] == "1";
+                installInfo.Ffdshow = setting["ffdshow"] == "1";
                 installInfo.MP4Splitter = setting["MP4Splitter"] == "1";
                 installInfo.FLVSplitter = setting["FLVSplitter"] == "1";
                 installInfo.Effect2DEditor = setting["Effect2DEditor"] == "1";
@@ -468,7 +466,7 @@ namespace PPDUpdater
             }
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void Button1_Click(object sender, EventArgs e)
         {
             if (CheckFinish() || ShowMessageBox(askfinish, askfinishcaption, MessageBoxButtons.YesNo, DialogResult.Yes) == DialogResult.Yes)
             {
@@ -503,7 +501,7 @@ namespace PPDUpdater
             textBox1.AppendText("\r\n");
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void Button2_Click(object sender, EventArgs e)
         {
             if (!IsLogOpen)
             {

@@ -52,7 +52,6 @@ namespace PPDMultiServer.Tcp
         }
 
         public MenuContext(ServerContextBase previousContext, PPDServer server)
-            : base(previousContext)
         {
             this.server = server;
             version = FileVersionInfo.GetVersionInfo(Assembly.GetAssembly(this.GetType()).Location).FileVersion;
@@ -256,10 +255,10 @@ namespace PPDMultiServer.Tcp
             if (ContextManager.WebManager != null)
             {
                 var createRoomExecutor = new CreateRoomExecutor(ContextManager.WebManager, ContextManager.RoomInfo);
-                createRoomExecutor.Finished += createRoomExecutor_Finished;
+                createRoomExecutor.Finished += CreateRoomExecutor_Finished;
                 createRoomExecutor.Start();
             }
-            pingTimerID = ContextManager.TimerManager.AddTimerCallBack(pingTimerCallBack, 5000, false, true);
+            pingTimerID = ContextManager.TimerManager.AddTimerCallBack(PingTimerCallBack, 5000, false, true);
         }
 
         private void SendCommonSongInfo()
@@ -288,7 +287,7 @@ namespace PPDMultiServer.Tcp
                         list.Remove(songInfo);
                     }
                 }
-                Host.Write(MessagePackSerializer.Serialize(new SendScoreListNetworkData { SongInfos = list.ToArray() }));
+                Host.Write(MessagePackSerializer.Serialize(new SendScoreListNetworkData { SongInfos = [.. list] }));
             }
         }
 
@@ -394,7 +393,7 @@ namespace PPDMultiServer.Tcp
 
                 if (ok && userList.Any(u => u.HasSong))
                 {
-                    playUserList = userList.Where(u => u.HasSong).ToArray();
+                    playUserList = [.. userList.Where(u => u.HasSong)];
                     state = State.Prepare;
                     foreach (UserInfo user in playUserList)
                     {
@@ -449,7 +448,7 @@ namespace PPDMultiServer.Tcp
             stopWatch.Stop();
         }
 
-        void createRoomExecutor_Finished(object sender, EventArgs e)
+        void CreateRoomExecutor_Finished(object sender, EventArgs e)
         {
             var executor = sender as ExecutorBase;
 
@@ -459,11 +458,11 @@ namespace PPDMultiServer.Tcp
             }
             else
             {
-                updateTimerID = ContextManager.TimerManager.AddTimerCallBack(updateTimerCallBack, 15000, false, true);
+                updateTimerID = ContextManager.TimerManager.AddTimerCallBack(UpdateTimerCallBack, 15000, false, true);
             }
         }
 
-        void updateTimerCallBack(int obj)
+        void UpdateTimerCallBack(int obj)
         {
             var updateExecutor = new UpdateRoomInfoExecutor(ContextManager.WebManager, userList.Count,
                 currentSong != null ? CryptographyUtility.Getx2Encoding(currentSong.Hash) : "");
@@ -482,7 +481,7 @@ namespace PPDMultiServer.Tcp
             }
         }
 
-        void pingTimerCallBack(int obj)
+        void PingTimerCallBack(int obj)
         {
             Host.Write(MessagePackSerializer.Serialize(new PingNetworkData { Time = stopWatch.ElapsedMilliseconds }));
         }

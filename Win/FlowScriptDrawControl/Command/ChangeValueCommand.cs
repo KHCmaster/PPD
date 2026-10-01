@@ -2,17 +2,11 @@
 
 namespace FlowScriptDrawControl.Command
 {
-    class ChangeValueCommand : CommandBase
+    class ChangeValueCommand(Item item, string newValue) : CommandBase
     {
-        private readonly string newValue;
+        private readonly string newValue = newValue;
         private string oldValue;
-        private readonly Item item;
-
-        public ChangeValueCommand(Item item, string newValue)
-        {
-            this.item = item;
-            this.newValue = newValue;
-        }
+        private readonly Item item = item;
 
         public override void Execute()
         {

@@ -9,19 +9,14 @@ namespace PPDFramework
     /// <summary>
     /// 1x1の色付きテクスチャを作成するクラスです
     /// </summary>
-    public class ColorTextureAllcator : DisposableComponent
+    /// <remarks>
+    /// コンストラクタです。
+    /// </remarks>
+    /// <param name="device"></param>
+    public class ColorTextureAllcator(PPDDevice device) : DisposableComponent
     {
-        readonly PPDDevice device;
+        readonly PPDDevice device = device;
         readonly Dictionary<Color4, TextureBase> cache = [];
-
-        /// <summary>
-        /// コンストラクタです。
-        /// </summary>
-        /// <param name="device"></param>
-        public ColorTextureAllcator(PPDDevice device)
-        {
-            this.device = device;
-        }
 
         /// <summary>
         /// テクスチャを作成します
@@ -52,7 +47,7 @@ namespace PPDFramework
                 }
             }
             var texture = TextureFactoryManager.Factory.Create(device, 1, 1, 1, true);
-            texture.Write(new byte[] { (byte)(255 * color.Blue), (byte)(255 * color.Green), (byte)(255 * color.Red), (byte)(255 * color.Alpha) });
+            texture.Write([(byte)(255 * color.Blue), (byte)(255 * color.Green), (byte)(255 * color.Red), (byte)(255 * color.Alpha)]);
             if (withCache)
             {
                 lock (cache)

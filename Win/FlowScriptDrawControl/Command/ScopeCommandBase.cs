@@ -2,18 +2,11 @@
 
 namespace FlowScriptDrawControl.Command
 {
-    abstract class ScopeCommandBase : CommandBase
+    abstract class ScopeCommandBase(FlowAreaControl flowAreaControl, ScopeControl scopeControl, ScopeControl parentScopeControl) : CommandBase
     {
-        protected FlowAreaControl flowAreaControl;
-        protected ScopeControl scopeControl;
-        protected ScopeControl parentScopeControl;
-
-        protected ScopeCommandBase(FlowAreaControl flowAreaControl, ScopeControl scopeControl, ScopeControl parentScopeControl)
-        {
-            this.flowAreaControl = flowAreaControl;
-            this.scopeControl = scopeControl;
-            this.parentScopeControl = parentScopeControl;
-        }
+        protected FlowAreaControl flowAreaControl = flowAreaControl;
+        protected ScopeControl scopeControl = scopeControl;
+        protected ScopeControl parentScopeControl = parentScopeControl;
 
         protected void AddScope()
         {

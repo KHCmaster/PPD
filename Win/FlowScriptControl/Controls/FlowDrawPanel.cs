@@ -187,23 +187,23 @@ namespace FlowScriptControl.Controls
             }
 
             areaControl = new FlowAreaControl();
-            areaControl.DragEnter += areaControl_DragEnter;
-            areaControl.Drop += areaControl_Drop;
+            areaControl.DragEnter += AreaControl_DragEnter;
+            areaControl.Drop += AreaControl_Drop;
             elementHost1.Child = areaControl;
-            areaControl.SelectionChanged += areaControl_SelectionChanged;
-            areaControl.CanConvert += areaControl_CanConvert;
-            areaControl.Modified += areaControl_Modified;
-            areaControl.GetSource += areaControl_GetSource;
+            areaControl.SelectionChanged += AreaControl_SelectionChanged;
+            areaControl.CanConvert += AreaControl_CanConvert;
+            areaControl.Modified += AreaControl_Modified;
+            areaControl.GetSource += AreaControl_GetSource;
 
             FinishInitialize();
         }
 
-        void areaControl_Modified()
+        void AreaControl_Modified()
         {
             OnModified(this, EventArgs.Empty);
         }
 
-        bool areaControl_CanConvert(string arg1, string arg2)
+        bool AreaControl_CanConvert(string arg1, string arg2)
         {
             Type from = FlowSourceDumper.GetTypeFromString(arg1),
                 to = FlowSourceDumper.GetTypeFromString(arg2);
@@ -214,7 +214,7 @@ namespace FlowScriptControl.Controls
             return TypeConverterManager.CanConvert(from, to);
         }
 
-        void areaControl_SelectionChanged(string arg1, Dictionary<string, string> arg2)
+        void AreaControl_SelectionChanged(string arg1, Dictionary<string, string> arg2)
         {
             if (String.IsNullOrEmpty(arg1))
             {
@@ -228,7 +228,7 @@ namespace FlowScriptControl.Controls
             SelectionChanged?.Invoke(this, EventArgs.Empty);
         }
 
-        Source areaControl_GetSource(string arg)
+        Source AreaControl_GetSource(string arg)
         {
             if (toolStripDictionary.ContainsKey(arg))
             {
@@ -278,7 +278,7 @@ namespace FlowScriptControl.Controls
 
         public static void EnumerateClass(string filePath)
         {
-            foreach (AssemblyAndType asmAndType in FlowSourceEnumerator.EnumerateFromFile(filePath, new Type[] { typeof(FlowSourceObjectBase), typeof(TypeColorBase), typeof(TypeAliasBase) }))
+            foreach (AssemblyAndType asmAndType in FlowSourceEnumerator.EnumerateFromFile(filePath, [typeof(FlowSourceObjectBase), typeof(TypeColorBase), typeof(TypeAliasBase)]))
             {
                 if (asmAndType.Type.IsSubclassOf(typeof(FlowSourceObjectBase)))
                 {
@@ -325,7 +325,7 @@ namespace FlowScriptControl.Controls
                     {
                         FlowTreeView.ReprecateMenuToTree(menu);
                     }
-                    FlowTreeView.SetFilters(filters.ToArray());
+                    FlowTreeView.SetFilters([.. filters]);
                     FlowTreeView.SelectedFilterChanged += FlowTreeView_SelectedFilterChanged;
                 }
 #if DEBUG
@@ -464,7 +464,7 @@ namespace FlowScriptControl.Controls
                     {
                         Name = nameSplits[^1]
                     };
-                    cloneMenu.Click += newMenu_Click;
+                    cloneMenu.Click += NewMenu_Click;
                     existingMenuItem.DropDownItems.Add(cloneMenu);
                 }
                 var newText = CreateTextFromDumper(source.Dumper);
@@ -473,7 +473,7 @@ namespace FlowScriptControl.Controls
             }
             toolStripDictionary.Add(source.AssemblyAndType.Type.FullName, newMenu);
             newMenu.Name = nameSplits[^1];
-            newMenu.Click += newMenu_Click;
+            newMenu.Click += NewMenu_Click;
         }
 
         private string CreateTextFromDumper(FlowSourceDumper dumper)
@@ -496,7 +496,7 @@ namespace FlowScriptControl.Controls
             return ret.ToString();
         }
 
-        void newMenu_Click(object sender, EventArgs e)
+        void NewMenu_Click(object sender, EventArgs e)
         {
             var ctsmi = sender as CustomToolStripMenuItem;
             FlowSourceDumper dumper = ctsmi.Dumper;
@@ -557,7 +557,7 @@ namespace FlowScriptControl.Controls
             return null;
         }
 
-        private void contextMenuStrip1_Opening(object sender, CancelEventArgs e)
+        private void ContextMenuStrip1_Opening(object sender, CancelEventArgs e)
         {
             切り取りToolStripMenuItem.Enabled = areaControl.CanCut;
             コピーToolStripMenuItem.Enabled = areaControl.CanCopy;
@@ -640,9 +640,9 @@ namespace FlowScriptControl.Controls
         {
             if (areaControl != null)
             {
-                return areaControl.GetAllSourceControls().Select(s => s.CurrentSource).ToArray();
+                return [.. areaControl.GetAllSourceControls().Select(s => s.CurrentSource)];
             }
-            return new Source[0];
+            return [];
         }
 
         public void LoadXML(Stream stream)
@@ -678,7 +678,7 @@ namespace FlowScriptControl.Controls
             {
                 return areaControl.GetBreakPoints();
             }
-            return new int[0];
+            return [];
         }
 
         public SearchResult Search(string query)
@@ -719,7 +719,7 @@ namespace FlowScriptControl.Controls
             {
                 return areaControl.SelectedSourceId;
             }
-            return new int[0];
+            return [];
         }
 
         public void Focus(Selectable selectable)
@@ -967,7 +967,7 @@ namespace FlowScriptControl.Controls
             areaControl?.CollapseAll();
         }
 
-        void areaControl_Drop(object sender, System.Windows.DragEventArgs e)
+        void AreaControl_Drop(object sender, System.Windows.DragEventArgs e)
         {
             if (e.Data.GetDataPresent(typeof(CustomTreeNode)) && !(e.Data.GetData(typeof(CustomTreeNode)) as CustomTreeNode).Data.IsFolder)
             {
@@ -977,7 +977,7 @@ namespace FlowScriptControl.Controls
             }
         }
 
-        void areaControl_DragEnter(object sender, System.Windows.DragEventArgs e)
+        void AreaControl_DragEnter(object sender, System.Windows.DragEventArgs e)
         {
             if (e.Data.GetDataPresent(typeof(CustomTreeNode)) && !(e.Data.GetData(typeof(CustomTreeNode)) as CustomTreeNode).Data.IsFolder)
             {

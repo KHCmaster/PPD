@@ -3,31 +3,24 @@ using System;
 
 namespace PPDExpansion.Model
 {
-    class Item
+    class Item(ItemType itemType, string userName, TimeSpan timeSpan)
     {
         public ItemType ItemType
         {
             get;
             private set;
-        }
+        } = itemType;
 
         public string UserName
         {
             get;
             private set;
-        }
+        } = userName;
 
         public TimeSpan TimeSpan
         {
             get;
             private set;
-        }
-
-        public Item(ItemType itemType, string userName, TimeSpan timeSpan)
-        {
-            ItemType = itemType;
-            UserName = userName;
-            TimeSpan = timeSpan;
-        }
+        } = timeSpan;
     }
 }

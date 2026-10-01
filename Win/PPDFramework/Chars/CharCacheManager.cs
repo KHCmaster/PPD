@@ -7,24 +7,16 @@ namespace PPDFramework.Chars
     /// <summary>
     /// 文字画像をキャッシュするマネージャーです。
     /// </summary>
-    public class CharCacheManager : DisposableComponent
+    /// <remarks>
+    /// コンストラクタです。
+    /// </remarks>
+    /// <param name="device"></param>
+    public class CharCacheManager(PPDDevice device) : DisposableComponent
     {
-        readonly Dictionary<char, Dictionary<float, Dictionary<string, CharCacheInfo>>> cache;
-        readonly Dictionary<float, Dictionary<string, SizeTextureManager>> sizeTextures;
-        readonly PPDDevice device;
-        Direct2DImageEncoder encoder;
-
-        /// <summary>
-        /// コンストラクタです。
-        /// </summary>
-        /// <param name="device"></param>
-        public CharCacheManager(PPDDevice device)
-        {
-            this.device = device;
-            cache = [];
-            sizeTextures = [];
-            encoder = new Direct2DImageEncoder(2048, 2048, 96);
-        }
+        readonly Dictionary<char, Dictionary<float, Dictionary<string, CharCacheInfo>>> cache = [];
+        readonly Dictionary<float, Dictionary<string, SizeTextureManager>> sizeTextures = [];
+        readonly PPDDevice device = device;
+        Direct2DImageEncoder encoder = new Direct2DImageEncoder(2048, 2048, 96);
 
         internal CharCacheInfo Get(float fontsize, string facename, char c)
         {

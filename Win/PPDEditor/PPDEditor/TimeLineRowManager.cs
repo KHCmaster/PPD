@@ -20,7 +20,7 @@ namespace PPDEditor
         {
             get
             {
-                return currentRow.RowOrders.Where(r => currentRow.RowVisibilities[r]).ToArray();
+                return [.. currentRow.RowOrders.Where(r => currentRow.RowVisibilities[r])];
             }
         }
 

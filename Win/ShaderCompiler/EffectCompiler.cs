@@ -290,58 +290,56 @@ namespace ShaderCompiler
 
         private static void Reflect(byte[] bytecode, Dictionary<string, VariableInfo> variables, ref int constantBufferSize, SortedDictionary<string, int> textures)
         {
-            using (var reflection = Compiler.Reflect<ID3D11ShaderReflection>(bytecode))
+            using var reflection = Compiler.Reflect<ID3D11ShaderReflection>(bytecode);
+            var description = reflection.Description;
+            for (var i = 0; i < description.BoundResources; i++)
             {
-                var description = reflection.Description;
-                for (var i = 0; i < description.BoundResources; i++)
+                var binding = reflection.GetResourceBindingDescription((uint)i);
+                if (binding.Type == ShaderInputType.Texture)
                 {
-                    var binding = reflection.GetResourceBindingDescription((uint)i);
-                    if (binding.Type == ShaderInputType.Texture)
+                    if (textures.TryGetValue(binding.Name, out int slot) && slot != (int)binding.BindPoint)
                     {
-                        if (textures.TryGetValue(binding.Name, out int slot) && slot != (int)binding.BindPoint)
-                        {
-                            throw new Exception(binding.Name + " のスロットがシェーダーによって異なります。register で明示してください");
-                        }
-                        textures[binding.Name] = (int)binding.BindPoint;
+                        throw new Exception(binding.Name + " のスロットがシェーダーによって異なります。register で明示してください");
                     }
-                    else if (binding.Type == ShaderInputType.ConstantBuffer && binding.Name != ConstantBufferName)
-                    {
-                        throw new Exception("定数は cbuffer " + ConstantBufferName + " にまとめてください: " + binding.Name);
-                    }
+                    textures[binding.Name] = (int)binding.BindPoint;
                 }
-                for (var i = 0; i < description.ConstantBuffers; i++)
+                else if (binding.Type == ShaderInputType.ConstantBuffer && binding.Name != ConstantBufferName)
                 {
-                    var buffer = reflection.GetConstantBufferByIndex((uint)i);
-                    var bufferDescription = buffer.Description;
-                    if (bufferDescription.Name != ConstantBufferName)
+                    throw new Exception("定数は cbuffer " + ConstantBufferName + " にまとめてください: " + binding.Name);
+                }
+            }
+            for (var i = 0; i < description.ConstantBuffers; i++)
+            {
+                var buffer = reflection.GetConstantBufferByIndex((uint)i);
+                var bufferDescription = buffer.Description;
+                if (bufferDescription.Name != ConstantBufferName)
+                {
+                    continue;
+                }
+                constantBufferSize = Math.Max(constantBufferSize, (int)bufferDescription.Size);
+                for (var j = 0; j < bufferDescription.VariableCount; j++)
+                {
+                    var variable = buffer.GetVariableByIndex((uint)j);
+                    var variableDescription = variable.Description;
+                    var typeDescription = variable.VariableType.Description;
+                    var info = new VariableInfo
                     {
-                        continue;
-                    }
-                    constantBufferSize = Math.Max(constantBufferSize, (int)bufferDescription.Size);
-                    for (var j = 0; j < bufferDescription.VariableCount; j++)
+                        Name = variableDescription.Name,
+                        Offset = (int)variableDescription.StartOffset,
+                        Size = (int)variableDescription.Size,
+                        Elements = (int)typeDescription.ElementCount,
+                        BaseType = typeDescription.Class == ShaderVariableClass.Struct ? BaseType.Other :
+                            typeDescription.Type == ShaderVariableType.Int ? BaseType.Int :
+                            typeDescription.Type == ShaderVariableType.Float ? BaseType.Float : BaseType.Other
+                    };
+                    // cbuffer 内の配列は要素ごとに 16 バイト境界に揃えられる
+                    var elementSize = typeDescription.Class == ShaderVariableClass.Struct ? info.Size : (int)(typeDescription.RowCount * typeDescription.ColumnCount) * 4;
+                    info.Stride = info.Elements > 0 ? (elementSize + 15) / 16 * 16 : info.Size;
+                    if (variables.TryGetValue(info.Name, out VariableInfo existing) && (existing.Offset != info.Offset || existing.Size != info.Size))
                     {
-                        var variable = buffer.GetVariableByIndex((uint)j);
-                        var variableDescription = variable.Description;
-                        var typeDescription = variable.VariableType.Description;
-                        var info = new VariableInfo
-                        {
-                            Name = variableDescription.Name,
-                            Offset = (int)variableDescription.StartOffset,
-                            Size = (int)variableDescription.Size,
-                            Elements = (int)typeDescription.ElementCount,
-                            BaseType = typeDescription.Class == ShaderVariableClass.Struct ? BaseType.Other :
-                                typeDescription.Type == ShaderVariableType.Int ? BaseType.Int :
-                                typeDescription.Type == ShaderVariableType.Float ? BaseType.Float : BaseType.Other
-                        };
-                        // cbuffer 内の配列は要素ごとに 16 バイト境界に揃えられる
-                        var elementSize = typeDescription.Class == ShaderVariableClass.Struct ? info.Size : (int)(typeDescription.RowCount * typeDescription.ColumnCount) * 4;
-                        info.Stride = info.Elements > 0 ? (elementSize + 15) / 16 * 16 : info.Size;
-                        if (variables.TryGetValue(info.Name, out VariableInfo existing) && (existing.Offset != info.Offset || existing.Size != info.Size))
-                        {
-                            throw new Exception(info.Name + " の配置がシェーダーによって異なります");
-                        }
-                        variables[info.Name] = info;
+                        throw new Exception(info.Name + " の配置がシェーダーによって異なります");
                     }
+                    variables[info.Name] = info;
                 }
             }
         }
@@ -359,14 +357,9 @@ namespace ShaderCompiler
         /// <summary>
         /// #include をエフェクトファイルと同じフォルダから解決します。
         /// </summary>
-        class FileInclude : CallbackBase, Include
+        class FileInclude(string directory) : CallbackBase, Include
         {
-            readonly string directory;
-
-            public FileInclude(string directory)
-            {
-                this.directory = directory;
-            }
+            readonly string directory = directory;
 
             public Stream Open(IncludeType type, string fileName, Stream parentStream)
             {

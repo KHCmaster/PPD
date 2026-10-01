@@ -16,7 +16,7 @@ namespace BMSTOPPD
             InitializeComponent();
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void Button1_Click(object sender, EventArgs e)
         {
             this.openFileDialog1.Filter = "BMSファイル(*.bms):DTXファイル(*.dtx)|*.bms;*.dtx|すべてのファイル(*.*)|*.*";
             this.openFileDialog1.RestoreDirectory = true;
@@ -26,7 +26,7 @@ namespace BMSTOPPD
                 this.textBox1.Text = this.openFileDialog1.FileName;
             }
         }
-        private void button2_Click(object sender, EventArgs e)
+        private void Button2_Click(object sender, EventArgs e)
         {
             if (File.Exists(this.textBox1.Text))
             {
@@ -37,7 +37,7 @@ namespace BMSTOPPD
                 data = data.Replace("\r", "");
                 try
                 {
-                    analysis(data);
+                    Analysis(data);
                 }
                 catch (Exception)
                 {
@@ -49,7 +49,7 @@ namespace BMSTOPPD
                 MessageBox.Show("file not exist");
             }
         }
-        private void analysis(string data)
+        private void Analysis(string data)
         {
             double.TryParse(this.textBox2.Text, out double timeoffset);
             var bpmpos = data.IndexOf("#BPM");
@@ -90,10 +90,9 @@ namespace BMSTOPPD
                             i++;
                         }
                         var sdata = data[start..i];
-                        double scale = 1;
                         if (channel == 2)
                         {
-                            scale = double.Parse(sdata);
+                            double scale = double.Parse(sdata);
                             scalechangedata.Add(syousetu, scale);
                         }
                         if (channel == 3)
@@ -113,7 +112,7 @@ namespace BMSTOPPD
                             {
                                 if (sdata.Substring(2 * j, 2) != "00")
                                 {
-                                    times[conv(channel)].Add(calctime(bpmchangedata, scalechangedata, syousetu + (double)j * 2 / sdata.Length) + timeoffset);
+                                    times[Conv(channel)].Add(Calctime(bpmchangedata, scalechangedata, syousetu + (double)j * 2 / sdata.Length) + timeoffset);
                                 }
                             }
                         }
@@ -127,7 +126,7 @@ namespace BMSTOPPD
                 File.Delete(path);
             }
             var fs = File.Create(path);
-            var sign = new byte[] { (byte)'P', (byte)'P', (byte)'D' };
+            var sign = "PPD"u8.ToArray();
             fs.Write(sign, 0, sign.Length);
             int markcount = 0;
             for (int i = 0; i < times.Length; i++)
@@ -173,7 +172,7 @@ namespace BMSTOPPD
             fs.Close();
             MessageBox.Show(path + "\nを生成しました");
         }
-        private double calctime(SortedList<double, double> bpmchangedata, SortedList<int, double> scalechangedata, double syousetu)
+        private double Calctime(SortedList<double, double> bpmchangedata, SortedList<int, double> scalechangedata, double syousetu)
         {
             double ret = 0;
             var numsyousetu = (int)syousetu;
@@ -185,7 +184,7 @@ namespace BMSTOPPD
                     scale = 1;
                 }
                 bpm = bpmchangedata.Values[0];
-                int j = 0;
+                int j;
                 for (j = 0; j < bpmchangedata.Count; j++)
                 {
                     if (bpmchangedata.Keys[j] < i)
@@ -240,7 +239,7 @@ namespace BMSTOPPD
             ret += 60 / bpm * 4 * (syousetu - sss) * Scale;
             return ret;
         }
-        private int conv(int num)
+        private int Conv(int num)
         {
             if (this.checkBox1.Checked)
             {
@@ -267,14 +266,14 @@ namespace BMSTOPPD
             }
         }
 
-        private void button3_Click(object sender, EventArgs e)
+        private void Button3_Click(object sender, EventArgs e)
         {
             setting.Show();
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            setting.savedata();
+            setting.Savedata();
         }
     }
 }

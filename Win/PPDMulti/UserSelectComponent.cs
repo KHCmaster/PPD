@@ -75,10 +75,10 @@ namespace PPDMulti
                 userSprite.AddChild(new UserComponent(device, resourceManager, user));
             }
             AdjustPosition();
-            users.ItemChanged += users_ItemChanged;
+            users.ItemChanged += Users_ItemChanged;
         }
 
-        void users_ItemChanged(User[] addedItems, User[] removedItems)
+        void Users_ItemChanged(User[] addedItems, User[] removedItems)
         {
             foreach (var user in addedItems)
             {
@@ -141,7 +141,7 @@ namespace PPDMulti
                 if (CurrentUser != null)
                 {
                     var dialog = new UserMenuDialog(device, resourceManager);
-                    dialog.LostFocused += dialog_LostFocused;
+                    dialog.LostFocused += Dialog_LostFocused;
                     dialog.Position = CurrentUser.ScreenPos + new Vector2(20, 40);
                     if (dialog.Position.Y + dialog.Height >= 450)
                     {
@@ -186,7 +186,7 @@ namespace PPDMulti
             sound.Play(PPDSetting.DefaultSounds[0], -1000);
         }
 
-        void dialog_LostFocused(IFocusable sender, FocusEventArgs args)
+        void Dialog_LostFocused(IFocusable sender, FocusEventArgs args)
         {
             var dialog = sender as UserMenuDialog;
 

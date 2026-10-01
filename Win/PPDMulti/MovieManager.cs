@@ -3,13 +3,14 @@ using System;
 
 namespace PPDMulti
 {
-    sealed class MovieManager : IDisposable
+    sealed class MovieManager(PPDDevice device, IGameHost gameHost) : IDisposable
     {
         MovieComponent movie;
         SongInformation currentSongInformation;
         SongInformation lastSongInformation;
-        readonly PPDDevice device;
-        readonly IGameHost gameHost;
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2213:Disposable fields should be disposed", Justification = "外部から渡されるもので、このクラスは所有しない")]
+        readonly PPDDevice device = device;
+        readonly IGameHost gameHost = gameHost;
 
         public MovieComponent Movie
         {
@@ -21,13 +22,6 @@ namespace PPDMulti
 
         public event EventHandler MovieChanged;
         public event EventHandler MovieChangeFailed;
-
-
-        public MovieManager(PPDDevice device, IGameHost gameHost)
-        {
-            this.device = device;
-            this.gameHost = gameHost;
-        }
 
         public void Stop()
         {

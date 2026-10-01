@@ -22,7 +22,7 @@ namespace PPDEditor
         KeyConfigManager keyConfigManager;
         SoundManager sm;
         Vector2 mousepos = new(-1, -1);
-        readonly float[] eval = { 0.05f, 0.1f, 0.15f, 0.2f };
+        readonly float[] eval = [0.05f, 0.1f, 0.15f, 0.2f];
         Vector2[] circlepoints;
 
         public IMovie Movie
@@ -72,7 +72,7 @@ namespace PPDEditor
             resourceManager = new PPDFramework.Resource.SpriteResourceManager(device, @"img\PPDEditor");
             CreateResource();
             sm = this.Window.SoundManager;
-            sm.setSound(this.sound);
+            sm.SetSound(this.sound);
             this.Window.ResourceManager.SetSound(sound);
             mg = new MainGame(device, this, resourceManager, Window.Grid);
             mg.Dummy.Drawing += Dummy_Drawing;
@@ -147,7 +147,7 @@ namespace PPDEditor
             playing = false;
         }
 
-        void m_Finished(object sender, EventArgs e)
+        void M_Finished(object sender, EventArgs e)
         {
             if (playing)
             {
@@ -192,7 +192,7 @@ namespace PPDEditor
                 var ret = this.Window.Updatemark(this.Window.CurrentTime);
                 if (playing)
                 {
-                    sm.playsound(ret);
+                    sm.Playsound(ret);
                 }
             }
             mg.UpdateAssist(this.Window.MarkSelectMode, this.Window.OnMouseMarkSelectMode);
@@ -216,7 +216,7 @@ namespace PPDEditor
             try
             {
                 mg.InitializeMovie(fileName);
-                mg.Movie.Finished += m_Finished;
+                mg.Movie.Finished += M_Finished;
             }
             catch (Exception ex)
             {

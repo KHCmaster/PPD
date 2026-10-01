@@ -30,9 +30,9 @@ namespace FlowScriptEnginePPD.FlowSourceObjects.Mod
             {
                 if (modInfos == null)
                 {
-                    return new object[0];
+                    return [];
                 }
-                return modInfos.Cast<object>().ToArray();
+                return [.. modInfos.Cast<object>()];
             }
         }
     }

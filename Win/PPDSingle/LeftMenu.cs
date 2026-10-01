@@ -173,11 +173,11 @@ namespace PPDSingle
                 sm = new ScoreManager(device, resourceManager, textBox, sound, ssm.Filter);
                 pr = new PlayRecord(device, resourceManager, sound);
                 mp = new ModPanel(device, gameHost, resourceManager, sound);
-                mp.LostFocused += mp_LostFocused;
+                mp.LostFocused += Mp_LostFocused;
                 fc = new FilterControl(device, resourceManager, sound, ssm.Filter);
-                fc.Changed += fc_Changed;
+                fc.Changed += Fc_Changed;
                 usc = new UpdateScoreControl(device, resourceManager, sound);
-                usc.LostFocused += usc_LostFocused;
+                usc.LostFocused += Usc_LostFocused;
                 ilc = new ItemListComponent(device, gameHost, resourceManager, sound);
                 rlc = new ReplayListComponent(device, gameHost, resourceManager, sound);
 
@@ -202,11 +202,11 @@ namespace PPDSingle
                     Position = new Vector2(30, 220)
                 };
                 randomSelect = new MultiSelectableText(device, gameHost, resourceManager, Utility.Language["Random"],
-                    new string[] { Utility.Language["InAll"], Utility.Language["InList"] }, 16)
+                    [Utility.Language["InAll"], Utility.Language["InList"]], 16)
                 {
                     Position = new Vector2(30, 250)
                 };
-                randomSelect.Selected += randomSelect_Selected;
+                randomSelect.Selected += RandomSelect_Selected;
                 itemList = new TextureString(device, Utility.Language["ItemList"], 16, PPDColors.White)
                 {
                     Position = new Vector2(30, 280)
@@ -375,7 +375,7 @@ namespace PPDSingle
             select.Position = new Vector2(select.Position.X, selectY);
         }
 
-        void fc_Changed()
+        void Fc_Changed()
         {
             OnFilterChanged();
         }
@@ -396,7 +396,7 @@ namespace PPDSingle
             webScoreUpdated = true;
         }
 
-        void usc_LostFocused(IFocusable sender, FocusEventArgs args)
+        void Usc_LostFocused(IFocusable sender, FocusEventArgs args)
         {
             SongInformation.Update(usc.UpdatedSongInformations);
             UpdateUpdatableCount();
@@ -441,12 +441,12 @@ namespace PPDSingle
             }
         }
 
-        void mp_LostFocused(IFocusable sender, FocusEventArgs args)
+        void Mp_LostFocused(IFocusable sender, FocusEventArgs args)
         {
             CheckUpdatableMod();
         }
 
-        void randomSelect_Selected()
+        void RandomSelect_Selected()
         {
             OnRandomSelected((RandomSelectType)randomSelect.SelectedIndex);
             FocusManager.RemoveFocus();

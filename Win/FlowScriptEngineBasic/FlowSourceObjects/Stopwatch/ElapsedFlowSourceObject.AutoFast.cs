@@ -9,15 +9,12 @@ namespace FlowScriptEngineBasic.FlowSourceObjects.Stopwatch
     {
         public override object GetPropertyValue(string propertyName)
         {
-            switch (propertyName)
+            return propertyName switch
             {
-                case "ExactSeconds":
-                    return ExactSeconds;
-                case "Milliseconds":
-                    return Milliseconds;
-                default:
-                    return null;
-            }
+                "ExactSeconds" => ExactSeconds,
+                "Milliseconds" => Milliseconds,
+                _ => null,
+            };
         }
 
         protected override void SetPropertyValue(string propertyName, object value)

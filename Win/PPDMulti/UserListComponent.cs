@@ -6,9 +6,9 @@ using System.Linq;
 
 namespace PPDMulti
 {
-    class UserListComponent : GameComponent
+    class UserListComponent(PPDDevice device, PPDFramework.Resource.ResourceManager resourceManager) : GameComponent(device)
     {
-        readonly PPDFramework.Resource.ResourceManager resourceManager;
+        readonly PPDFramework.Resource.ResourceManager resourceManager = resourceManager;
         int nameAnimCount;
         float nameAlpha = 1;
         float idAlpha;
@@ -46,11 +46,6 @@ namespace PPDMulti
                     idAlpha = value;
                 }
             }
-        }
-
-        public UserListComponent(PPDDevice device, PPDFramework.Resource.ResourceManager resourceManager) : base(device)
-        {
-            this.resourceManager = resourceManager;
         }
 
         public void AddUser(User user)

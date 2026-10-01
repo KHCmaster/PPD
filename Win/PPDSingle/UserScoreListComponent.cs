@@ -7,23 +7,16 @@ using System.Linq;
 
 namespace PPDSingle
 {
-    class UserScoreListComponent : GameComponent
+    class UserScoreListComponent(PPDDevice device, PPDFramework.Resource.ResourceManager resourceManager) : GameComponent(device)
     {
         const int ItemHeight = 45;
 
-        readonly List<PlayUserIcon> list;
-        readonly PPDFramework.Resource.ResourceManager resourceManager;
+        readonly List<PlayUserIcon> list = [];
+        readonly PPDFramework.Resource.ResourceManager resourceManager = resourceManager;
 
         public PlayUserIcon[] Players
         {
-            get { return list.ToArray(); }
-        }
-
-        public UserScoreListComponent(PPDDevice device, PPDFramework.Resource.ResourceManager resourceManager) : base(device)
-        {
-            this.resourceManager = resourceManager;
-
-            list = [];
+            get { return [.. list]; }
         }
 
         public void AddUser(UserPlayState userPlayState, bool showScore, bool showEvaluate, bool showLife)

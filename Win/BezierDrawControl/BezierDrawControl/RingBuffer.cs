@@ -1,6 +1,6 @@
 ﻿namespace BezierDrawControl
 {
-    class RingBuffer<T>
+    class RingBuffer<T>(int a)
     {
         class CustomList<C>
         {
@@ -44,14 +44,9 @@
 
         CustomList<T> head;
         CustomList<T> tail;
-        readonly int maximumSize;
+        readonly int maximumSize = a;
         int currentSize;
         int index = -1;
-
-        public RingBuffer(int a)
-        {
-            maximumSize = a;
-        }
 
         public void Add(T s)
         {

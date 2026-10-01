@@ -9,9 +9,9 @@ using System.Windows.Threading;
 
 namespace PPDExpansion.ViewModel
 {
-    abstract class PlotViewModel : PlayViewModel
+    abstract class PlotViewModel(MainWindowViewModel mainWindowViewModel) : PlayViewModel(mainWindowViewModel)
     {
-        protected readonly Dispatcher dispatcher;
+        protected readonly Dispatcher dispatcher = Dispatcher.CurrentDispatcher;
         protected readonly DateTime baseTime = new(2000, 1, 1);
 
         protected ScoreInfo currentScoreInfo;
@@ -121,13 +121,6 @@ namespace PPDExpansion.ViewModel
                     PanCommand_Execute);
             }
         }
-
-        protected PlotViewModel(MainWindowViewModel mainWindowViewModel)
-            : base(mainWindowViewModel)
-        {
-            this.dispatcher = Dispatcher.CurrentDispatcher;
-        }
-
 
         private void ZoomCommand_Execute(MouseWheelEventArgs e)
         {

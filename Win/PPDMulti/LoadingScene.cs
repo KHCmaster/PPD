@@ -9,14 +9,10 @@ namespace PPDMulti
     /// <summary>
     /// ロード中用のシーン
     /// </summary>
-    public class LoadingScene : LoadingSceneWithImage
+    public class LoadingScene(PPDDevice device) : LoadingSceneWithImage(device)
     {
         EffectObject anim;
 
-        public LoadingScene(PPDDevice device) : base(device)
-        {
-
-        }
         public override bool Load()
         {
             anim = new EffectObject(device, ResourceManager, Utility.Path.Combine("Loading.etd"))

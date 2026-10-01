@@ -48,7 +48,7 @@ namespace PPDEditor
         {
             get
             {
-                return keyConfigs.ToArray();
+                return [.. keyConfigs];
             }
         }
 

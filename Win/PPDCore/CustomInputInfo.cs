@@ -2,21 +2,12 @@
 
 namespace PPDCore
 {
-    class CustomInputInfo : InputInfoBase
+    class CustomInputInfo(int[] pressCount, bool[] pressed, bool[] released, InputInfoBase inputInfo) : InputInfoBase(false)
     {
-        private readonly int[] pressCount;
-        private readonly bool[] pressed;
-        private readonly bool[] released;
-        private readonly InputInfoBase baseInputInfo;
-
-        public CustomInputInfo(int[] pressCount, bool[] pressed, bool[] released, InputInfoBase inputInfo)
-            : base(false)
-        {
-            this.pressCount = pressCount;
-            this.pressed = pressed;
-            this.released = released;
-            this.baseInputInfo = inputInfo;
-        }
+        private readonly int[] pressCount = pressCount;
+        private readonly bool[] pressed = pressed;
+        private readonly bool[] released = released;
+        private readonly InputInfoBase baseInputInfo = inputInfo;
 
         public override bool IsPressed(ButtonType buttonType)
         {

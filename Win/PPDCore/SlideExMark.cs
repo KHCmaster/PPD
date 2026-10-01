@@ -10,7 +10,8 @@ using System.Linq;
 
 namespace PPDCore
 {
-    class SlideExMark : ExMarkBase
+    class SlideExMark(PPDDevice device, PPDFramework.Resource.ResourceManager resourceManager, MarkImagePathsBase filenames, ExMarkData emd, ButtonType type, float[] eval,
+        float gap, DisplayState dState, NoteType noteType, float slideScale, int sameTimingMarks, KeyValuePair<string, string>[] parameters, PostDrawManager postDrawManager) : ExMarkBase(device, resourceManager, filenames, emd, type, eval, gap, dState, noteType, sameTimingMarks, parameters, postDrawManager)
     {
         public const float ExFrameSec = 1 / 24f;
         public const float ExFrameInvert = 24;
@@ -19,7 +20,7 @@ namespace PPDCore
         GameComponent[] exMarks;
         SlideColorMarkInfo[] colorExMarkInfos;
         float lastPressedTime = float.MaxValue;
-        readonly float slideScale;
+        readonly float slideScale = slideScale;
 
         public ColorMarkInfo FirstSlideColorMarkInfo
         {
@@ -43,13 +44,6 @@ namespace PPDCore
                 }
                 return colorExMarkInfos[^1];
             }
-        }
-
-        public SlideExMark(PPDDevice device, PPDFramework.Resource.ResourceManager resourceManager, MarkImagePathsBase filenames, ExMarkData emd, ButtonType type, float[] eval,
-            float gap, DisplayState dState, NoteType noteType, float slideScale, int sameTimingMarks, KeyValuePair<string, string>[] parameters, PostDrawManager postDrawManager)
-            : base(device, resourceManager, filenames, emd, type, eval, gap, dState, noteType, sameTimingMarks, parameters, postDrawManager)
-        {
-            this.slideScale = slideScale;
         }
 
         public override void Initialize(CreateMarkFunc createMark, GetScriptAllowedButtonsFunc getScriptAllowedButtons)

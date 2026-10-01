@@ -112,7 +112,7 @@ namespace PPDEditor
                     infos.Add(new PosAndAngleInfo(angle.Value));
                 }
             }
-            return infos.ToArray();
+            return [.. infos];
         }
 
         public static void Save(PosAndAngleInfo[] infos, string filePath)

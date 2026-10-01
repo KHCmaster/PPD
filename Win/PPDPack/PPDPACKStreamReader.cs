@@ -3,18 +3,13 @@ using System.IO;
 
 namespace PPDPack
 {
-    public class PPDPackStreamReader : Stream
+    public class PPDPackStreamReader(Stream baseStream, int length, int offset) : Stream
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2213:Disposable fields should be disposed", Justification = "元のストリームは PackReader が所有し、破棄する")]
-        readonly Stream _baseStream;
-        readonly int _length;
-        readonly int _offset;
-        public PPDPackStreamReader(Stream baseStream, int length, int offset)
-        {
-            this._length = length;
-            this._baseStream = baseStream;
-            this._offset = offset;
-        }
+        readonly Stream _baseStream = baseStream;
+        readonly int _length = length;
+        readonly int _offset = offset;
+
         public override bool CanRead
         {
             get { return true; }

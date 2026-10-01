@@ -2,24 +2,18 @@
 
 namespace PPDSound
 {
-    class BufferInfo
+    class BufferInfo(IDirectSoundBuffer buffer)
     {
         public IDirectSoundBuffer Buffer
         {
             get;
             private set;
-        }
+        } = buffer;
 
         public int Frequency
         {
             get;
             private set;
-        }
-
-        public BufferInfo(IDirectSoundBuffer buffer)
-        {
-            Buffer = buffer;
-            Frequency = buffer.Frequency;
-        }
+        } = buffer.Frequency;
     }
 }

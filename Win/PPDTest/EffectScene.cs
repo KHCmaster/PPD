@@ -8,7 +8,7 @@ namespace PPDTest
     /// <summary>
     /// ガラス、モザイク、ボーダー、ブレンドとフィルタとマスクの組み合わせを確認するシーンです。
     /// </summary>
-    class EffectScene : TestSceneBase
+    class EffectScene(TestSceneManager testSceneManager, PPDDevice device) : TestSceneBase(testSceneManager, device)
     {
         protected override string Title
         {
@@ -16,11 +16,6 @@ namespace PPDTest
             {
                 return "特殊効果テスト";
             }
-        }
-
-        public EffectScene(TestSceneManager testSceneManager, PPDDevice device) : base(testSceneManager, device)
-        {
-
         }
 
         protected override void OnInitialize()

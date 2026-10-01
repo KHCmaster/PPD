@@ -108,13 +108,13 @@ namespace PPDEditor
             ld.PPDData.DisplayName = layername;
             ld.PPDData.DisplayMode = displayMode;
             ld.PPDData.BeatType = beatType;
-            ld.MouseDown += ld_MouseDown;
-            ld.MouseMove += ld_MouseMove;
-            ld.MouseUp += ld_MouseUp;
-            ld.SelectStateChanged += ld_SelectStateChanged;
-            ld.Deleted += ld_Deleted;
-            ld.Duplicated += ld_Duplicated;
-            ld.VisibleStateChanged += ld_VisibleStateChanged;
+            ld.MouseDown += Ld_MouseDown;
+            ld.MouseMove += Ld_MouseMove;
+            ld.MouseUp += Ld_MouseUp;
+            ld.SelectStateChanged += Ld_SelectStateChanged;
+            ld.Deleted += Ld_Deleted;
+            ld.Duplicated += Ld_Duplicated;
+            ld.VisibleStateChanged += Ld_VisibleStateChanged;
             ld.PPDData.DisplayDataChanged += PPDData_DisplayDataChanged;
             ld.PPDData.CommandChanged += PPDData_CommandChanged;
             return ld;
@@ -125,7 +125,7 @@ namespace PPDEditor
             WindowUtility.TimeLineForm?.ContentChanged();
         }
 
-        void ld_MouseUp(object sender, MouseEventArgs e)
+        void Ld_MouseUp(object sender, MouseEventArgs e)
         {
             if (mousedown && tpf != null)
             {
@@ -166,7 +166,7 @@ namespace PPDEditor
                 bb = null;
             }
         }
-        void ld_MouseMove(object sender, MouseEventArgs e)
+        void Ld_MouseMove(object sender, MouseEventArgs e)
         {
             if (mousedown)
             {
@@ -231,7 +231,7 @@ namespace PPDEditor
             VerticalScroll.Value = value;
         }
 
-        void ld_MouseDown(object sender, MouseEventArgs e)
+        void Ld_MouseDown(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
             {
@@ -264,12 +264,12 @@ namespace PPDEditor
                 WindowUtility.MainForm.BeatType = lastBeatType;
             }
         }
-        void ld_VisibleStateChanged(object sender, EventArgs e)
+        void Ld_VisibleStateChanged(object sender, EventArgs e)
         {
             WindowUtility.Seekmain.DrawAndRefresh();
         }
 
-        void ld_Duplicated(object sender, EventArgs e)
+        void Ld_Duplicated(object sender, EventArgs e)
         {
             if (sender is LayerDisplay senderld)
             {
@@ -285,11 +285,11 @@ namespace PPDEditor
                     {
                         if (mk is ExMark exmk)
                         {
-                            ld.PPDData.AddExMark(exmk.Time, exmk.EndTime, exmk.Position.X, exmk.Position.Y, exmk.Rotation, (int)exmk.Type, exmk.ID, exmk.Parameters.ToArray());
+                            ld.PPDData.AddExMark(exmk.Time, exmk.EndTime, exmk.Position.X, exmk.Position.Y, exmk.Rotation, (int)exmk.Type, exmk.ID, [.. exmk.Parameters]);
                         }
                         else
                         {
-                            ld.PPDData.AddMark(mk.Time, mk.Position.X, mk.Position.Y, mk.Rotation, (int)mk.Type, mk.ID, mk.Parameters.ToArray());
+                            ld.PPDData.AddMark(mk.Time, mk.Position.X, mk.Position.Y, mk.Rotation, (int)mk.Type, mk.ID, [.. mk.Parameters]);
                         }
                     }
                 }
@@ -304,7 +304,7 @@ namespace PPDEditor
             }
         }
 
-        void ld_Deleted(object sender, EventArgs e)
+        void Ld_Deleted(object sender, EventArgs e)
         {
             var senderld = sender as LayerDisplay;
             var index = layers.IndexOf(senderld);
@@ -322,7 +322,7 @@ namespace PPDEditor
             ContentChanged();
         }
 
-        void ld_SelectStateChanged(object sender, EventArgs e)
+        void Ld_SelectStateChanged(object sender, EventArgs e)
         {
             var senderld = sender as LayerDisplay;
             foreach (LayerDisplay layer in layers)
@@ -452,14 +452,14 @@ namespace PPDEditor
         {
             get
             {
-                return layers.Where(l => l.DisplayVisible).Select(l => l.PPDData).ToArray();
+                return [.. layers.Where(l => l.DisplayVisible).Select(l => l.PPDData)];
             }
         }
         public LayerDisplay[] AllLayerDisplay
         {
             get
             {
-                return layers.ToArray();
+                return [.. layers];
             }
         }
         public float BPM

@@ -4,7 +4,16 @@
     /// 数値の設定を扱うクラスです。
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public abstract class NumberModSetting<T> : TemplateModSetting<T> where T : struct
+    /// <remarks>
+    /// コンストラクタです。
+    /// </remarks>
+    /// <param name="key"></param>
+    /// <param name="name"></param>
+    /// <param name="description"></param>
+    /// <param name="defaultValue"></param>
+    /// <param name="minValue"></param>
+    /// <param name="maxValue"></param>
+    public abstract class NumberModSetting<T>(string key, string name, string description, T defaultValue, T minValue, T maxValue) : TemplateModSetting<T>(key, name, description, defaultValue) where T : struct
     {
         /// <summary>
         /// 最小値を取得します。
@@ -13,7 +22,7 @@
         {
             get;
             private set;
-        }
+        } = minValue;
 
         /// <summary>
         /// クラスの最小値を取得します。
@@ -41,7 +50,7 @@
         {
             get;
             private set;
-        }
+        } = maxValue;
 
         /// <summary>
         /// クラスの最大値を取得します。
@@ -60,22 +69,6 @@
             {
                 return MaxValue.Equals(ClassMaxValue);
             }
-        }
-
-        /// <summary>
-        /// コンストラクタです。
-        /// </summary>
-        /// <param name="key"></param>
-        /// <param name="name"></param>
-        /// <param name="description"></param>
-        /// <param name="defaultValue"></param>
-        /// <param name="minValue"></param>
-        /// <param name="maxValue"></param>
-        protected NumberModSetting(string key, string name, string description, T defaultValue, T minValue, T maxValue)
-            : base(key, name, description, defaultValue)
-        {
-            MinValue = minValue;
-            MaxValue = maxValue;
         }
     }
 }

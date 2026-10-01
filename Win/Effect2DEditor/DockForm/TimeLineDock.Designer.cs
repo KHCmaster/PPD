@@ -132,7 +132,7 @@
             this.toolStripButton1.Name = "toolStripButton1";
             this.toolStripButton1.Size = new System.Drawing.Size(23, 22);
             this.toolStripButton1.ToolTipText = "追加";
-            this.toolStripButton1.Click += new System.EventHandler(this.toolStripButton1_Click);
+            this.toolStripButton1.Click += new System.EventHandler(this.ToolStripButton1_Click);
             // 
             // toolStripButton2
             // 
@@ -141,7 +141,7 @@
             this.toolStripButton2.Name = "toolStripButton2";
             this.toolStripButton2.Size = new System.Drawing.Size(23, 22);
             this.toolStripButton2.ToolTipText = "削除";
-            this.toolStripButton2.Click += new System.EventHandler(this.toolStripButton2_Click);
+            this.toolStripButton2.Click += new System.EventHandler(this.ToolStripButton2_Click);
             // 
             // toolStripSeparator1
             // 
@@ -163,7 +163,7 @@
             this.exToolStripSplitButton1.Size = new System.Drawing.Size(32, 22);
             this.exToolStripSplitButton1.Text = "exToolStripSplitButton1";
             this.exToolStripSplitButton1.ToolTipText = "１回再生";
-            this.exToolStripSplitButton1.Click += new System.EventHandler(this.exToolStripSplitButton1_ButtonClick);
+            this.exToolStripSplitButton1.Click += new System.EventHandler(this.ExToolStripSplitButton1_ButtonClick);
             // 
             // 回再生ToolStripMenuItem
             // 
@@ -206,7 +206,7 @@
             this.toolStripButton5.Name = "toolStripButton5";
             this.toolStripButton5.Size = new System.Drawing.Size(23, 22);
             this.toolStripButton5.ToolTipText = "停止";
-            this.toolStripButton5.Click += new System.EventHandler(this.toolStripButton5_Click);
+            this.toolStripButton5.Click += new System.EventHandler(this.ToolStripButton5_Click);
             // 
             // toolStripTextBox1
             // 
@@ -214,7 +214,7 @@
             this.toolStripTextBox1.Size = new System.Drawing.Size(100, 25);
             this.toolStripTextBox1.Text = "60";
             this.toolStripTextBox1.ToolTipText = "FPS";
-            this.toolStripTextBox1.TextChanged += new System.EventHandler(this.toolStripTextBox1_TextChanged);
+            this.toolStripTextBox1.TextChanged += new System.EventHandler(this.ToolStripTextBox1_TextChanged);
             // 
             // toolStripSeparator2
             // 
@@ -230,7 +230,7 @@
             this.toolStripButton3.Size = new System.Drawing.Size(23, 22);
             this.toolStripButton3.Text = "順番を逆転";
             this.toolStripButton3.ToolTipText = "順番を逆転";
-            this.toolStripButton3.Click += new System.EventHandler(this.toolStripButton3_Click);
+            this.toolStripButton3.Click += new System.EventHandler(this.ToolStripButton3_Click);
             // 
             // toolStripButton4
             // 
@@ -240,7 +240,7 @@
             this.toolStripButton4.Name = "toolStripButton4";
             this.toolStripButton4.Size = new System.Drawing.Size(23, 22);
             this.toolStripButton4.Text = "コピー";
-            this.toolStripButton4.Click += new System.EventHandler(this.toolStripButton4_Click);
+            this.toolStripButton4.Click += new System.EventHandler(this.ToolStripButton4_Click);
             // 
             // toolStripButton6
             // 
@@ -250,7 +250,7 @@
             this.toolStripButton6.Name = "toolStripButton6";
             this.toolStripButton6.Size = new System.Drawing.Size(23, 22);
             this.toolStripButton6.Text = "全てクリア";
-            this.toolStripButton6.Click += new System.EventHandler(this.toolStripButton6_Click);
+            this.toolStripButton6.Click += new System.EventHandler(this.ToolStripButton6_Click);
             // 
             // toolStripContainer1
             // 

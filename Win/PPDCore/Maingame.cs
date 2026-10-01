@@ -10,7 +10,7 @@ using System.Collections.Generic;
 
 namespace PPDCore
 {
-    public class MainGame : SceneBase, IBlueSkyManager, IReviewManager
+    public class MainGame(PPDDevice device) : SceneBase(device), IBlueSkyManager, IReviewManager
     {
         enum FadeOutAction
         {
@@ -55,10 +55,6 @@ namespace PPDCore
         public override string SpriteDir
         {
             get { return Utility.Path.BaseDir; }
-        }
-
-        public MainGame(PPDDevice device) : base(device)
-        {
         }
 
         public override bool Load()
@@ -121,26 +117,26 @@ namespace PPDCore
 
             mainGameComponent = new MainGameComponent(device, GameHost, ResourceManager, Sound, this,
                 gameUtility, cgi, (MarkImagePathsBase)Param["MarkImagePath"], gr, pd, MainGameConfigBase.Default, startTime, mmStartTime);
-            mainGameComponent.Finished += mainGameComponent_Finished;
-            mainGameComponent.Paused += mainGameComponent_Paused;
-            mainGameComponent.Drawed += mainGameComponent_Drawed;
+            mainGameComponent.Finished += MainGameComponent_Finished;
+            mainGameComponent.Paused += MainGameComponent_Paused;
+            mainGameComponent.Drawed += MainGameComponent_Drawed;
 
-            pd.Resumed += pd_Resumed;
-            pd.Retryed += pd_Retryed;
-            pd.Replayed += pd_Replayed;
-            pd.Returned += pd_Returned;
+            pd.Resumed += Pd_Resumed;
+            pd.Retryed += Pd_Retryed;
+            pd.Replayed += Pd_Replayed;
+            pd.Returned += Pd_Returned;
 
             if (gr != null)
             {
-                gr.Returned += gr_Returned;
-                gr.Retryed += gr_Retryed;
+                gr.Returned += Gr_Returned;
+                gr.Retryed += Gr_Retryed;
             }
 
             ConnectExpansion();
             OnBeforeInitialize();
-            mainGameComponent.CannotStartPerfectTrial += mainGameComponent_CannotStartPerfectTrial;
-            mainGameComponent.PerfectTrialError += mainGameComponent_PerfectTrialError;
-            mainGameComponent.PerfectTrialStart += mainGameComponent_PerfectTrialStart;
+            mainGameComponent.CannotStartPerfectTrial += MainGameComponent_CannotStartPerfectTrial;
+            mainGameComponent.PerfectTrialError += MainGameComponent_PerfectTrialError;
+            mainGameComponent.PerfectTrialStart += MainGameComponent_PerfectTrialStart;
             try
             {
                 mainGameComponent.Initialize(true);
@@ -160,17 +156,17 @@ namespace PPDCore
             return true;
         }
 
-        void mainGameComponent_PerfectTrialStart(int arg1, int arg2)
+        void MainGameComponent_PerfectTrialStart(int arg1, int arg2)
         {
             PerfectTrialStart?.Invoke(arg1, arg2);
         }
 
-        void mainGameComponent_PerfectTrialError(ErrorReason obj)
+        void MainGameComponent_PerfectTrialError(ErrorReason obj)
         {
             PerfectTrialError?.Invoke(obj);
         }
 
-        void mainGameComponent_CannotStartPerfectTrial()
+        void MainGameComponent_CannotStartPerfectTrial()
         {
             CannotStartPerfectTrial?.Invoke();
         }
@@ -225,7 +221,7 @@ namespace PPDCore
             });
         }
 
-        void gr_Retryed(object sender, EventArgs e)
+        void Gr_Retryed(object sender, EventArgs e)
         {
             isResult = false;
             PostFinish = PostSuccess = false;
@@ -236,12 +232,12 @@ namespace PPDCore
             }
         }
 
-        void gr_Returned(object sender, EventArgs e)
+        void Gr_Returned(object sender, EventArgs e)
         {
             ReturnToMenu();
         }
 
-        void mainGameComponent_Drawed(LayerType layerType)
+        void MainGameComponent_Drawed(LayerType layerType)
         {
             if (layerType == LayerType.AfterInterface && paused)
             {
@@ -255,23 +251,23 @@ namespace PPDCore
             }
         }
 
-        void mainGameComponent_Paused(object sender, EventArgs e)
+        void MainGameComponent_Paused(object sender, EventArgs e)
         {
             paused = true;
         }
 
-        void pd_Resumed(object sender, EventArgs e)
+        void Pd_Resumed(object sender, EventArgs e)
         {
             paused = false;
         }
 
-        void pd_Returned(object sender, EventArgs e)
+        void Pd_Returned(object sender, EventArgs e)
         {
             paused = false;
             ReturnToMenu();
         }
 
-        void pd_Retryed(object sender, EventArgs e)
+        void Pd_Retryed(object sender, EventArgs e)
         {
             paused = false;
             fadeOutAction = FadeOutAction.Retry;
@@ -285,7 +281,7 @@ namespace PPDCore
             }
         }
 
-        void pd_Replayed(object sender, EventArgs e)
+        void Pd_Replayed(object sender, EventArgs e)
         {
             paused = false;
             fadeOutAction = FadeOutAction.Replay;
@@ -294,7 +290,7 @@ namespace PPDCore
             black.Alpha = 0;
         }
 
-        void mainGameComponent_Finished(object sender, EventArgs e)
+        void MainGameComponent_Finished(object sender, EventArgs e)
         {
             mainGameComponent.MovieFadeOut();
             fadeOutAction = FadeOutAction.SetResult;

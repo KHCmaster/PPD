@@ -52,18 +52,14 @@ namespace PPDFramework.Texture.DX11
         /// <returns></returns>
         public TextureBase FromStream(PPDDevice device, Stream stream, int width, int height, bool pa, bool keepCpuData)
         {
-            using (var bitmap = new System.Drawing.Bitmap(stream))
-            {
-                return FromBitmap(device, bitmap, width, height, pa, keepCpuData);
-            }
+            using var bitmap = new System.Drawing.Bitmap(stream);
+            return FromBitmap(device, bitmap, width, height, pa, keepCpuData);
         }
 
         public TextureBase FromFile(PPDDevice device, string filename, int width, int height, bool pa)
         {
-            using (var stream = File.OpenRead(filename))
-            {
-                return FromStream(device, stream, width, height, pa, false);
-            }
+            using var stream = File.OpenRead(filename);
+            return FromStream(device, stream, width, height, pa, false);
         }
 
         private TextureBase FromBitmap(PPDDevice device, System.Drawing.Bitmap bitmap, int width, int height, bool pa, bool keepCpuData)
@@ -82,13 +78,11 @@ namespace PPDFramework.Texture.DX11
                 if (bitmap.Width != width || bitmap.Height != height || bitmap.PixelFormat != System.Drawing.Imaging.PixelFormat.Format32bppArgb)
                 {
                     source = new System.Drawing.Bitmap(width, height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
-                    using (var graphics = System.Drawing.Graphics.FromImage(source))
-                    {
-                        graphics.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceCopy;
-                        graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.Bilinear;
-                        graphics.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.Half;
-                        graphics.DrawImage(bitmap, new System.Drawing.Rectangle(0, 0, width, height));
-                    }
+                    using var graphics = System.Drawing.Graphics.FromImage(source);
+                    graphics.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceCopy;
+                    graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.Bilinear;
+                    graphics.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.Half;
+                    graphics.DrawImage(bitmap, new System.Drawing.Rectangle(0, 0, width, height));
                 }
                 var pixels = new byte[width * height * 4];
                 var bitmapData = source.LockBits(new System.Drawing.Rectangle(0, 0, width, height),

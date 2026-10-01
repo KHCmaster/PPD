@@ -31,7 +31,7 @@ namespace PPDFramework.Sprites
         /// <summary>
         /// 許可された拡張子の一覧です。
         /// </summary>
-        protected string[] allowedExtensions = { ".jpg", ".jpeg", ".png", ".gif" };
+        protected string[] allowedExtensions = [".jpg", ".jpeg", ".png", ".gif"];
 
         /// <summary>
         /// スプライト辞書の一覧を取得します。
@@ -155,7 +155,7 @@ namespace PPDFramework.Sprites
                     }
                 }
             }
-            return dicts.ToArray();
+            return [.. dicts];
         }
 
         private void Write(ImageInfo[] imageInfos)
@@ -299,7 +299,7 @@ namespace PPDFramework.Sprites
                     }
                 }
                 nextIndex = i;
-                return packInfos.ToArray();
+                return [.. packInfos];
             }
         }
 

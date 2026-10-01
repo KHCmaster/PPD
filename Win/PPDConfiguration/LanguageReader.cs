@@ -31,13 +31,13 @@ namespace PPDConfiguration
             if (File.Exists(path))
             {
                 analyzer = new SettingReader(File.ReadAllText(path));
-                appendedAnalyzers = GetAppendedLangPaths(componentName, langISO).Select(s => new SettingReader(File.ReadAllText(s))).ToArray();
+                appendedAnalyzers = [.. GetAppendedLangPaths(componentName, langISO).Select(s => new SettingReader(File.ReadAllText(s)))];
             }
             path = GetLangPath(componentName, mainLangIso);
             if (File.Exists(path))
             {
                 mainAnalyzer = new SettingReader(File.ReadAllText(path));
-                appendedMainAnalyzers = GetAppendedLangPaths(componentName, mainLangIso).Select(s => new SettingReader(File.ReadAllText(s))).ToArray();
+                appendedMainAnalyzers = [.. GetAppendedLangPaths(componentName, mainLangIso).Select(s => new SettingReader(File.ReadAllText(s)))];
             }
         }
 

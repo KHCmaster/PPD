@@ -9,8 +9,8 @@ namespace ShaderCompiler
     class Parser
     {
         readonly List<Element> elements;
-        readonly Type[] parsableElementTypes = { typeof(Params), typeof(Foreach) };
-        readonly Type[] parsableExpTypes = { typeof(ArrayExp), typeof(HashExp) };
+        readonly Type[] parsableElementTypes = [typeof(Params), typeof(Foreach)];
+        readonly Type[] parsableExpTypes = [typeof(ArrayExp), typeof(HashExp)];
 
         public Parser()
         {
@@ -23,7 +23,7 @@ namespace ShaderCompiler
             var lineIndex = 0;
             while (lineIndex < lines.Length)
             {
-                var nextLineIndex = -1;
+                int nextLineIndex;
                 var foundElement = Parse(lines, lineIndex, out nextLineIndex);
                 elements.Add(foundElement);
                 lineIndex = nextLineIndex;
@@ -78,14 +78,9 @@ namespace ShaderCompiler
         }
     }
 
-    abstract class Element
+    abstract class Element(Parser parser)
     {
-        protected Parser parser;
-
-        protected Element(Parser parser)
-        {
-            this.parser = parser;
-        }
+        protected Parser parser = parser;
 
         public virtual string ToStr(Scope scope)
         {
@@ -98,18 +93,13 @@ namespace ShaderCompiler
         public abstract string ToStr();
     }
 
-    class Text : Value
+    class Text(string text) : Value
     {
         public string Value
         {
             get;
             private set;
-        }
-
-        public Text(string text)
-        {
-            Value = text;
-        }
+        } = text;
 
         public override bool Equals(object obj)
         {
@@ -133,18 +123,13 @@ namespace ShaderCompiler
         }
     }
 
-    class Array : Value
+    class Array(Value[] values) : Value
     {
         public Value[] Values
         {
             get;
             private set;
-        }
-
-        public Array(Value[] values)
-        {
-            Values = values;
-        }
+        } = values;
 
         public override string ToStr()
         {
@@ -152,18 +137,13 @@ namespace ShaderCompiler
         }
     }
 
-    class Hash : Value
+    class Hash(Dictionary<Value, Value> values) : Value
     {
         public Dictionary<Value, Value> Values
         {
             get;
             private set;
-        }
-
-        public Hash(Dictionary<Value, Value> values)
-        {
-            Values = values;
-        }
+        } = values;
 
         public override string ToStr()
         {
@@ -171,15 +151,10 @@ namespace ShaderCompiler
         }
     }
 
-    class TextElement : Element
+    class TextElement(Parser parser, string text) : Element(parser)
     {
-        readonly string text;
+        readonly string text = text;
         readonly Regex replaceRegex = new(@"\$\((?<key>[_a-zA-Z0-9][_a-zA-Z0-9]*)\)");
-
-        public TextElement(Parser parser, string text) : base(parser)
-        {
-            this.text = text;
-        }
 
         public override string ToStr(Scope scope)
         {
@@ -281,17 +256,12 @@ namespace ShaderCompiler
         }
     }
 
-    abstract class ParsableElement : Element
+    abstract class ParsableElement(Parser parser) : Element(parser)
     {
-        protected ParsableElement(Parser parser) : base(parser)
-        {
-
-        }
-
         public abstract bool Parse(string[] lines, int lineIndex, out int nextLineIndex);
     }
 
-    class Params : ParsableElement
+    class Params(Parser parser) : ParsableElement(parser)
     {
         static readonly Regex startRegex = new(@"^#params\s+(?<name>[_a-zA-Z][_a-zA-Z0-9]*)\s+(?<value>.+)\s*$");
 
@@ -307,11 +277,6 @@ namespace ShaderCompiler
             private set;
         }
 
-        public Params(Parser parser) : base(parser)
-        {
-
-        }
-
         public override bool Parse(string[] lines, int lineIndex, out int nextLineIndex)
         {
             nextLineIndex = -1;
@@ -323,7 +288,7 @@ namespace ShaderCompiler
             }
             Name = startMatch.Groups["name"].Value;
             var value = startMatch.Groups["value"].Value;
-            Value = ParseValue(value, 0, new char[0], out int nextIndex);
+            Value = ParseValue(value, 0, [], out int nextIndex);
             lineIndex++;
             nextLineIndex = lineIndex;
             return true;
@@ -338,7 +303,7 @@ namespace ShaderCompiler
                     var dict = new Dictionary<Value, Value>();
                     while (index + 1 < str.Length)
                     {
-                        var key = ParseValue(str, index + 1, new[] { ':', ',', '}' }, out nextIndex);
+                        var key = ParseValue(str, index + 1, [':', ',', '}'], out nextIndex);
                         if (nextIndex >= str.Length)
                         {
                             dict[key] = key;
@@ -348,7 +313,7 @@ namespace ShaderCompiler
                         switch (c)
                         {
                             case ':':
-                                var value = ParseValue(str, nextIndex + 1, new[] { ',', '}' }, out nextIndex);
+                                var value = ParseValue(str, nextIndex + 1, [',', '}'], out nextIndex);
                                 dict[key] = value;
                                 break;
                             case ',':
@@ -370,7 +335,7 @@ namespace ShaderCompiler
                     var arr = new List<Value>();
                     while (index + 1 < str.Length)
                     {
-                        var value = ParseValue(str, index + 1, new[] { ',', ']' }, out nextIndex);
+                        var value = ParseValue(str, index + 1, [',', ']'], out nextIndex);
                         var c = str[nextIndex];
                         switch (c)
                         {
@@ -389,7 +354,7 @@ namespace ShaderCompiler
                         }
                         index = nextIndex;
                     }
-                    return new Array(arr.ToArray());
+                    return new Array([.. arr]);
                 default:
                     return new Text(ReadASCIIOrNumber(str, index, terminaters, out nextIndex));
             }
@@ -491,7 +456,7 @@ namespace ShaderCompiler
         }
     }
 
-    class Foreach : ParsableElement
+    class Foreach(Parser parser) : ParsableElement(parser)
     {
         static readonly Regex startRegex = new(@"^#foreach\s*\(\s*(?<arg>[_a-zA-Z][_a-zA-Z0-9]*)\s*,\s*(?<exp>.*)\s*\)\s*$");
         static readonly Regex endRegex = new(@"^\s*#end\s*$");
@@ -512,11 +477,6 @@ namespace ShaderCompiler
         {
             get;
             private set;
-        }
-
-        public Foreach(Parser parser) : base(parser)
-        {
-
         }
 
         public override bool Parse(string[] lines, int lineIndex, out int nextLineIndex)
@@ -545,7 +505,7 @@ namespace ShaderCompiler
                 }
                 lineIndex = nextLineIndex;
             }
-            Elements = contentElements.ToArray();
+            Elements = [.. contentElements];
             nextLineIndex = lineIndex;
             return true;
         }

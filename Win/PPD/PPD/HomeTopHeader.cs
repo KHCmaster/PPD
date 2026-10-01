@@ -30,7 +30,7 @@ namespace PPD
                 this.AddChild(strings[i]);
             }
 
-            hbm.ModeChanged += hbm_ModeChanged;
+            hbm.ModeChanged += Hbm_ModeChanged;
 
             this.AddChild(new PictureObject(device, resourceManager, Utility.Path.Combine("l.png"))
             {
@@ -43,7 +43,7 @@ namespace PPD
             this.AddChild(new PictureObject(device, resourceManager, Utility.Path.Combine("header.png")));
         }
 
-        void hbm_ModeChanged(object sender, EventArgs e)
+        void Hbm_ModeChanged(object sender, EventArgs e)
         {
             operated = true;
             drawCount = 0;

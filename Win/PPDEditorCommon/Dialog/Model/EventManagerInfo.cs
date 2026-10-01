@@ -12,7 +12,7 @@ namespace PPDEditorCommon.Dialog.Model
         {
             get
             {
-                return events.ToArray();
+                return [.. events];
             }
         }
 

@@ -89,7 +89,7 @@ namespace DirectShow
         {
             get
             {
-                m_BasicVideo.get_VideoWidth(out int width);
+                m_BasicVideo.Get_VideoWidth(out int width);
                 return width;
             }
         }
@@ -98,7 +98,7 @@ namespace DirectShow
         {
             get
             {
-                m_BasicVideo.get_VideoHeight(out int height);
+                m_BasicVideo.Get_VideoHeight(out int height);
                 return height;
             }
         }
@@ -110,7 +110,7 @@ namespace DirectShow
                 if (m_MediaControl != null)
                 {
                     FilterState _state;
-                    int hr = 0;
+                    int hr;
                     do
                     {
                         hr = m_MediaControl.GetState(200, out _state);
@@ -132,7 +132,7 @@ namespace DirectShow
                 if (m_MediaControl != null)
                 {
                     FilterState _state;
-                    int hr = 0;
+                    int hr;
                     do
                     {
                         hr = m_MediaControl.GetState(200, out _state);
@@ -154,7 +154,7 @@ namespace DirectShow
                 if (m_MediaControl != null)
                 {
                     FilterState _state;
-                    int hr = 0;
+                    int hr;
                     do
                     {
                         hr = m_MediaControl.GetState(200, out _state);
@@ -175,7 +175,7 @@ namespace DirectShow
             {
                 if (m_MediaPosition != null)
                 {
-                    int hr = m_MediaPosition.get_CurrentPosition(out double _time);
+                    int hr = m_MediaPosition.Get_CurrentPosition(out double _time);
                     Debug.Assert(hr == 0);
                     if (hr == 0) return _time;
                 }
@@ -185,7 +185,7 @@ namespace DirectShow
             {
                 if (m_MediaSeeking != null)
                 {
-                    int hr = m_MediaPosition.put_CurrentPosition(value);
+                    int hr = m_MediaPosition.Put_CurrentPosition(value);
                     Debug.Assert(hr >= 0);
                     OnPositionChange?.Invoke(this, EventArgs.Empty);
                 }
@@ -198,7 +198,7 @@ namespace DirectShow
             {
                 if (m_MediaPosition != null)
                 {
-                    int hr = m_MediaPosition.get_Duration(out double _time);
+                    int hr = m_MediaPosition.Get_Duration(out double _time);
                     Debug.Assert(hr == 0);
                     if (hr == 0) return _time;
                 }
@@ -286,8 +286,8 @@ namespace DirectShow
                     m_bShouldPreview = value;
                     if (m_VideoWindow != null)
                     {
-                        m_VideoWindow.put_AutoShow(m_bShouldPreview ? -1 : 0);
-                        m_VideoWindow.put_Visible(m_bShouldPreview ? -1 : 0);
+                        m_VideoWindow.Put_AutoShow(m_bShouldPreview ? -1 : 0);
+                        m_VideoWindow.Put_Visible(m_bShouldPreview ? -1 : 0);
                     }
                 }
             }
@@ -434,7 +434,7 @@ namespace DirectShow
 
         public virtual HRESULT Pause()
         {
-            int hr = 0;
+            int hr;
             if (m_MediaControl == null)
             {
                 hr = Load();
@@ -523,7 +523,7 @@ namespace DirectShow
                     m_BasicAudio = (IBasicAudio)m_GraphBuilder;
                 }
             }
-            m_BasicAudio.put_Volume(_volume);
+            m_BasicAudio.Put_Volume(_volume);
         }
 
         private HRESULT InitInterfaces()
@@ -582,8 +582,8 @@ namespace DirectShow
                 m_MediaEventEx = null;
                 if (m_VideoWindow != null)
                 {
-                    m_VideoWindow.put_Visible(0);
-                    m_VideoWindow.put_Owner(IntPtr.Zero);
+                    m_VideoWindow.Put_Visible(0);
+                    m_VideoWindow.Put_Owner(IntPtr.Zero);
                     m_VideoWindow = null;
                 }
                 m_MediaSeeking = null;
@@ -646,13 +646,13 @@ namespace DirectShow
             {
                 if (m_VideoControl != null)
                 {
-                    m_VideoWindow.put_Owner(m_VideoControl.Handle);
-                    m_VideoWindow.put_MessageDrain(m_VideoControl.Handle);
-                    m_VideoWindow.put_WindowStyle(0x40000000 | 0x04000000);
+                    m_VideoWindow.Put_Owner(m_VideoControl.Handle);
+                    m_VideoWindow.Put_MessageDrain(m_VideoControl.Handle);
+                    m_VideoWindow.Put_WindowStyle(0x40000000 | 0x04000000);
                     ResizeVideoWindow();
                 }
-                m_VideoWindow.put_AutoShow(Visible ? -1 : 0);
-                m_VideoWindow.put_Visible(Visible ? -1 : 0);
+                m_VideoWindow.Put_AutoShow(Visible ? -1 : 0);
+                m_VideoWindow.Put_Visible(Visible ? -1 : 0);
             }
         }
 
@@ -720,8 +720,8 @@ namespace DirectShow
         {
             if (m_VideoWindow != null && m_VideoControl != null && m_bShouldPreview)
             {
-                m_VideoWindow.put_AutoShow(m_VideoControl.Visible ? -1 : 0);
-                m_VideoWindow.put_Visible(m_VideoControl.Visible ? -1 : 0);
+                m_VideoWindow.Put_AutoShow(m_VideoControl.Visible ? -1 : 0);
+                m_VideoWindow.Put_Visible(m_VideoControl.Visible ? -1 : 0);
             }
         }
 

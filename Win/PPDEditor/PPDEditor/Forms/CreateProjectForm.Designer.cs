@@ -210,7 +210,7 @@
             this.button4.TabIndex = 21;
             this.button4.Text = "変更";
             this.button4.UseVisualStyleBackColor = true;
-            this.button4.Click += new System.EventHandler(this.button4_Click);
+            this.button4.Click += new System.EventHandler(this.Button4_Click);
             // 
             // textBox1
             // 
@@ -229,7 +229,7 @@
             this.button1.TabIndex = 17;
             this.button1.Text = "戻る";
             this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.button1.Click += new System.EventHandler(this.Button1_Click);
             // 
             // button2
             // 
@@ -239,7 +239,7 @@
             this.button2.TabIndex = 18;
             this.button2.Text = "次へ";
             this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
+            this.button2.Click += new System.EventHandler(this.Button2_Click);
             // 
             // button3
             // 
@@ -250,7 +250,7 @@
             this.button3.TabIndex = 19;
             this.button3.Text = "スキップ";
             this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.button3_Click);
+            this.button3.Click += new System.EventHandler(this.Button3_Click);
             // 
             // panel2
             // 
@@ -285,7 +285,7 @@
             this.button5.TabIndex = 24;
             this.button5.Text = "変更";
             this.button5.UseVisualStyleBackColor = true;
-            this.button5.Click += new System.EventHandler(this.button5_Click);
+            this.button5.Click += new System.EventHandler(this.Button5_Click);
             // 
             // textBox2
             // 
@@ -388,7 +388,7 @@
             this.button6.TabIndex = 25;
             this.button6.Text = "変更";
             this.button6.UseVisualStyleBackColor = true;
-            this.button6.Click += new System.EventHandler(this.button6_Click);
+            this.button6.Click += new System.EventHandler(this.Button6_Click);
             // 
             // textBox4
             // 

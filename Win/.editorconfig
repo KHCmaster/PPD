@@ -1,3 +1,16 @@
+# このファイルがリポジトリのコードスタイルの設定の最上位
+root = true
+
+[*.cs]
+# 使われていない引数（IDE0060）は、非公開のメンバーだけを対象にする（公開メンバーの引数を消すと、呼び出し側との互換がなくなる）
+dotnet_code_quality_unused_parameters = non_public
+# インスタンスのデータを使わないメンバーを static にする（CA1822）のは、非公開のメンバーだけを対象にする（公開メンバーを static にすると、呼び出し方が変わる）
+dotnet_code_quality.CA1822.api_surface = private, internal
+
+# FlowScript のノードのクラスは、名前空間を含む完全な名前でスクリプト（.fsml）に保存されるので、名前空間をフォルダーに合わせない
+[FlowScriptEngine*/**.cs]
+dotnet_style_namespace_match_folder = false
+
 # 外部から取り込んだコードは、元のコードとの差分を小さく保つため、アナライザー（CA 規則）の対象外にする。
 # - PPDSound/fmod*.cs: FMOD Ex の C# ラッパー（Firelight Technologies）。文字列は FMOD の仕様どおり ANSI で渡す必要がある
 # - WinFormsUI: DockPanel Suite。子コントロールは Controls コレクションで破棄されるため、CA2213 などは誤検知になる

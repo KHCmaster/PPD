@@ -20,7 +20,7 @@ namespace Effect2DEditor
                 button5.Text = setting["RCFButton5"];
             }
         }
-        public BezierControlPoint[] bcps
+        public BezierControlPoint[] Bcps
         {
             get
             {
@@ -41,24 +41,24 @@ namespace Effect2DEditor
         {
             get { return bezierRatioDrawer1.IsLinear; }
         }
-        private void button1_Click(object sender, EventArgs e)
+        private void Button1_Click(object sender, EventArgs e)
         {
             this.DialogResult = DialogResult.OK;
             this.Close();
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void Button2_Click(object sender, EventArgs e)
         {
             this.DialogResult = DialogResult.No;
             this.Close();
         }
 
-        private void button3_Click(object sender, EventArgs e)
+        private void Button3_Click(object sender, EventArgs e)
         {
             bezierRatioDrawer1.SetLinearRatio();
         }
 
-        private void button3_VisibleChanged(object sender, EventArgs e)
+        private void Button3_VisibleChanged(object sender, EventArgs e)
         {
             if (Visible)
             {
@@ -66,7 +66,7 @@ namespace Effect2DEditor
             }
         }
 
-        private void button4_Click(object sender, EventArgs e)
+        private void Button4_Click(object sender, EventArgs e)
         {
             BezierControlPoint[] bcps = new BezierControlPoint[2];
             for (int i = 0; i < bcps.Length; i++)
@@ -76,7 +76,7 @@ namespace Effect2DEditor
             MainForm.CopiedBezier = bcps;
         }
 
-        private void button5_Click(object sender, EventArgs e)
+        private void Button5_Click(object sender, EventArgs e)
         {
             if (MainForm.CopiedBezier != null)
             {

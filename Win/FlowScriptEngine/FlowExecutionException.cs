@@ -2,18 +2,12 @@
 
 namespace FlowScriptEngine
 {
-    public class FlowExecutionException : Exception
+    public class FlowExecutionException(Exception e, FlowSourceObjectBase sourceObject) : Exception("Error in flow execution", e)
     {
         public FlowSourceObjectBase SourceObject
         {
             get;
             private set;
-        }
-
-        public FlowExecutionException(Exception e, FlowSourceObjectBase sourceObject)
-            : base("Error in flow execution", e)
-        {
-            SourceObject = sourceObject;
-        }
+        } = sourceObject;
     }
 }

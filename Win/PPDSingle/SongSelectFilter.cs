@@ -135,7 +135,7 @@ namespace PPDSingle
 
         public SongInformation[] GetFiltered(SongInformation[] infos)
         {
-            infos = infos.Where(Filter).ToArray();
+            infos = [.. infos.Where(Filter)];
             Array.Sort(infos, Compare);
             return infos;
         }

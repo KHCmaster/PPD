@@ -9,43 +9,26 @@ namespace FlowScriptEnginePPD.FlowSourceObjects.GameResult
     {
         public override object GetPropertyValue(string propertyName)
         {
-            switch (propertyName)
+            return propertyName switch
             {
-                case "CoolCount":
-                    return CoolCount;
-                case "CurrentCombo":
-                    return CurrentCombo;
-                case "CurrentLife":
-                    return CurrentLife;
-                case "CurrentScore":
-                    return CurrentScore;
-                case "ExpectedTotalSlideBonus":
-                    return ExpectedTotalSlideBonus;
-                case "GoodCount":
-                    return GoodCount;
-                case "HoldBonus":
-                    return HoldBonus;
-                case "IsReplaying":
-                    return IsReplaying;
-                case "IsRetrying":
-                    return IsRetrying;
-                case "MaxCombo":
-                    return MaxCombo;
-                case "MaxLife":
-                    return MaxLife;
-                case "MinLife":
-                    return MinLife;
-                case "SadCount":
-                    return SadCount;
-                case "SafeCount":
-                    return SafeCount;
-                case "SlideBonus":
-                    return SlideBonus;
-                case "WorstCount":
-                    return WorstCount;
-                default:
-                    return null;
-            }
+                "CoolCount" => CoolCount,
+                "CurrentCombo" => CurrentCombo,
+                "CurrentLife" => CurrentLife,
+                "CurrentScore" => CurrentScore,
+                "ExpectedTotalSlideBonus" => ExpectedTotalSlideBonus,
+                "GoodCount" => GoodCount,
+                "HoldBonus" => HoldBonus,
+                "IsReplaying" => IsReplaying,
+                "IsRetrying" => IsRetrying,
+                "MaxCombo" => MaxCombo,
+                "MaxLife" => MaxLife,
+                "MinLife" => MinLife,
+                "SadCount" => SadCount,
+                "SafeCount" => SafeCount,
+                "SlideBonus" => SlideBonus,
+                "WorstCount" => WorstCount,
+                _ => null,
+            };
         }
 
 

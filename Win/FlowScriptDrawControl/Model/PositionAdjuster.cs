@@ -6,18 +6,11 @@ using System.Windows;
 
 namespace FlowScriptDrawControl.Model
 {
-    class PositionAdjuster
+    class PositionAdjuster(SourceControl[] sources, Command.CommandManager commandManager)
     {
-        private readonly SourceControl[] sources;
-        private readonly Dictionary<Source, SourceControl> sourceDict;
-        private readonly Command.CommandManager commandManager;
-
-        public PositionAdjuster(SourceControl[] sources, Command.CommandManager commandManager)
-        {
-            this.sources = sources;
-            this.commandManager = commandManager;
-            sourceDict = sources.ToDictionary(s => s.CurrentSource, s => s);
-        }
+        private readonly SourceControl[] sources = sources;
+        private readonly Dictionary<Source, SourceControl> sourceDict = sources.ToDictionary(s => s.CurrentSource, s => s);
+        private readonly Command.CommandManager commandManager = commandManager;
 
         public void Adjust()
         {
@@ -64,7 +57,7 @@ namespace FlowScriptDrawControl.Model
                 selectables.Add(pair.Key.CurrentSource);
                 tempPositions.Add(pair.Value);
             }
-            var command = new Command.MovePositionablesCommand(selectables.ToArray(), tempPositions.ToArray());
+            var command = new Command.MovePositionablesCommand(selectables.ToArray(), [.. tempPositions]);
             commandManager.AddCommand(command);
         }
 

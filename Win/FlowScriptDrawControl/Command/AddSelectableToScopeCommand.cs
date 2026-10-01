@@ -3,16 +3,10 @@ using FlowScriptDrawControl.Model;
 
 namespace FlowScriptDrawControl.Command
 {
-    class AddSelectableToScopeCommand : EditScopeCommandBase
+    class AddSelectableToScopeCommand(FlowAreaControl flowAreaControl, ScopeControl scopeControl,
+        PositionableControl positionableControl) : EditScopeCommandBase(flowAreaControl, scopeControl, positionableControl)
     {
         private Scope previousScope;
-
-        public AddSelectableToScopeCommand(FlowAreaControl flowAreaControl, ScopeControl scopeControl,
-            PositionableControl positionableControl)
-            : base(flowAreaControl, scopeControl, positionableControl)
-        {
-
-        }
 
         public override void Execute()
         {

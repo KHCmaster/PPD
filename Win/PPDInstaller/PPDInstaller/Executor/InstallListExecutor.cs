@@ -5,15 +5,11 @@ using System.Windows.Forms;
 
 namespace PPDInstaller.Executor
 {
-    class InstallListExecutor : CExecutor
+    class InstallListExecutor(Control control) : CExecutor(control)
     {
         public static Uri directshowliburi = new("http://projectdxxx.me/installer/InstallURL.txt");
         readonly FileDownloader downloadClient = new();
         readonly string filePath = "./InstallURL.txt";
-        public InstallListExecutor(Control control)
-            : base(control)
-        {
-        }
 
         public override void Execute()
         {

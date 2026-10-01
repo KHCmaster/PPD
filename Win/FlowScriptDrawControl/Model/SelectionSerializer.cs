@@ -208,8 +208,8 @@ namespace FlowScriptDrawControl.Model
             {
                 scope.Parent = scopes.FirstOrDefault(s => s.Id == scope.ParentScopeId);
             }
-            return new Selection(guid, sources.ToArray(), comments.ToArray(),
-                connections.ToArray(), externalConnections.ToArray(), scopes.ToArray());
+            return new Selection(guid, [.. sources], [.. comments],
+                [.. connections], [.. externalConnections], [.. scopes]);
         }
 
         public static Source DeserializeSource(XmlNode node, Func<string, Source> sourceGenerateFunc)

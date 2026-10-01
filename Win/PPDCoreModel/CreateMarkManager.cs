@@ -3,14 +3,8 @@ using PPDFramework;
 
 namespace PPDCoreModel
 {
-    public class CreateMarkManager : TemplateManager<ICreateMark>
+    public class CreateMarkManager(Engine engine) : TemplateManager<ICreateMark>(engine)
     {
-        public CreateMarkManager(Engine engine)
-            : base(engine)
-        {
-
-        }
-
         public bool CreateMark(IMarkInfo markInfo, out GameComponent mark, out GameComponent colorMark,
             out GameComponent axis, out GameComponent slideMark, out GameComponent slideColorMark, out PictureObject trace)
         {

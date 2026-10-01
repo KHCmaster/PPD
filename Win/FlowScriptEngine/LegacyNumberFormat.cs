@@ -88,27 +88,18 @@ namespace FlowScriptEngine
         /// </summary>
         public static string ToString(object value)
         {
-            switch (value)
+            return value switch
             {
-                case null:
-                    return null;
-                case float f:
-                    return ToString(f);
-                case double d:
-                    return ToString(d);
-                default:
-                    return value.ToString();
-            }
+                null => null,
+                float f => ToString(f),
+                double d => ToString(d),
+                _ => value.ToString(),
+            };
         }
 
-        private class Provider : IFormatProvider, ICustomFormatter
+        private class Provider(IFormatProvider inner) : IFormatProvider, ICustomFormatter
         {
-            private readonly IFormatProvider inner;
-
-            public Provider(IFormatProvider inner)
-            {
-                this.inner = inner;
-            }
+            private readonly IFormatProvider inner = inner;
 
             public object GetFormat(Type formatType)
             {

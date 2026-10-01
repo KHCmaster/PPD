@@ -3,24 +3,18 @@ using PPDMath;
 
 namespace PPDFramework.Sprites
 {
-    class PackInfo
+    class PackInfo(ImageInfo imageInfo, Vector2 position)
     {
         public ImageInfo ImageInfo
         {
             get;
             private set;
-        }
+        } = imageInfo;
 
         public Vector2 Position
         {
             get;
             private set;
-        }
-
-        public PackInfo(ImageInfo imageInfo, Vector2 position)
-        {
-            ImageInfo = imageInfo;
-            Position = position;
-        }
+        } = position;
     }
 }

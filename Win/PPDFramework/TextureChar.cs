@@ -137,12 +137,12 @@ namespace PPDFramework
                 float posX0 = Position.X + startX, posX1 = Position.X + endX,
                     posY0 = Position.Y, posY1 = Position.Y + cci.Height;
                 var rect = cci.GetActualUVRectangle(startX / (float)cci.Width, 0, endX / (float)cci.Width, 1);
-                vertices.Write(new[] {
+                vertices.Write([
                     new ColoredTexturedVertex(new Vector3(posX0, posY0, 0.5f), rect.TopLeft),
                     new ColoredTexturedVertex(new Vector3(posX1, posY0, 0.5f), rect.TopRight),
                     new ColoredTexturedVertex(new Vector3(posX0, posY1, 0.5f), rect.BottomLeft),
                     new ColoredTexturedVertex(new Vector3(posX1, posY1, 0.5f), rect.BottomRight)
-                });
+                ]);
             }
             alphaBlendContext.Texture = cci.Texture;
             alphaBlendContext.Vertex = vertices;

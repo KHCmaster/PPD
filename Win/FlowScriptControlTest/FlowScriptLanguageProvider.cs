@@ -3,16 +3,10 @@ using PPDConfiguration;
 
 namespace FlowScriptControlTest
 {
-    class FlowScriptLanguageProvider : ILanguageProvider
+    class FlowScriptLanguageProvider(SettingReader lang, SettingReader flowLang) : ILanguageProvider
     {
-        private readonly SettingReader lang;
-        private readonly SettingReader flowLang;
-
-        public FlowScriptLanguageProvider(SettingReader lang, SettingReader flowLang)
-        {
-            this.lang = lang;
-            this.flowLang = flowLang;
-        }
+        private readonly SettingReader lang = lang;
+        private readonly SettingReader flowLang = flowLang;
 
         #region ILanguageProvider メンバ
 

@@ -218,7 +218,7 @@ namespace PPDFramework.Mod
                     continue;
                 }
 
-                foreach (AssemblyAndType asm in FlowSourceEnumerator.EnumerateFromFile(dllFile, new Type[0]))
+                foreach (AssemblyAndType asm in FlowSourceEnumerator.EnumerateFromFile(dllFile, []))
                 {
 
                 }

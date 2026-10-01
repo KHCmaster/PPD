@@ -81,27 +81,23 @@ namespace PPDFramework.Web
             try
             {
                 var req = CreateRequest(url);
-                using (var res = req.GetResponse())
+                using var res = req.GetResponse();
+                using XmlReader reader = GetXmlReader(res);
+                while (reader.Read())
                 {
-                    using (XmlReader reader = GetXmlReader(res))
+                    if (reader.IsStartElement("Root"))
                     {
-                        while (reader.Read())
+                        var result = reader.GetAttribute("Result");
+                        if (result != "0")
                         {
-                            if (reader.IsStartElement("Root"))
-                            {
-                                var result = reader.GetAttribute("Result");
-                                if (result != "0")
-                                {
-                                    return (ErrorReason)int.Parse(result);
-                                }
-                                string accountId = reader.GetAttribute("AccountID"),
-                                    nickname = reader.GetAttribute("Nickname"),
-                                    token = reader.GetAttribute("Token"),
-                                    ppdy = reader.GetAttribute("PPDY");
-                                currentAccount = new AccountInfo(accountId, nickname, token, int.Parse(ppdy));
-                                break;
-                            }
+                            return (ErrorReason)int.Parse(result);
                         }
+                        string accountId = reader.GetAttribute("AccountID"),
+                            nickname = reader.GetAttribute("Nickname"),
+                            token = reader.GetAttribute("Token"),
+                            ppdy = reader.GetAttribute("PPDY");
+                        currentAccount = new AccountInfo(accountId, nickname, token, int.Parse(ppdy));
+                        break;
                     }
                 }
             }
@@ -132,7 +128,6 @@ namespace PPDFramework.Web
                 return;
             }
 
-            ErrorReason reason = ErrorReason.OK;
             var url = String.Format("{0}/api/update-account-info", BaseUrl);
             try
             {
@@ -145,46 +140,43 @@ namespace PPDFramework.Web
                 query["validatekey"] = validateKey;
                 query.Remove("token");
                 var req = CreatePostRequest(url, query);
-                using (var res = req.GetResponse())
+                using var res = req.GetResponse();
+                using XmlReader reader = GetXmlReader(res);
+                while (reader.Read())
                 {
-                    using (XmlReader reader = GetXmlReader(res))
+                    if (reader.IsStartElement("Root"))
                     {
-                        while (reader.Read())
+                        while (reader.MoveToNextAttribute())
                         {
-                            if (reader.IsStartElement("Root"))
+                            data.Add(reader.Name, reader.Value);
+                        }
+
+                        ErrorReason reason;
+                        if (!data.ContainsKey("Result"))
+                        {
+                            reason = ErrorReason.NetworkError;
+                        }
+                        else
+                        {
+                            if (int.TryParse(data["Result"], out int val))
                             {
-                                while (reader.MoveToNextAttribute())
-                                {
-                                    data.Add(reader.Name, reader.Value);
-                                }
-                                if (!data.ContainsKey("Result"))
-                                {
-                                    reason = ErrorReason.NetworkError;
-                                }
-                                else
-                                {
-                                    if (int.TryParse(data["Result"], out int val))
-                                    {
-                                        reason = (ErrorReason)val;
-                                    }
-                                    else
-                                    {
-                                        reason = ErrorReason.NetworkError;
-                                    }
-                                }
-                                if (reason == ErrorReason.OK)
-                                {
-                                    currentAccount.UserName = data["Nickname"];
-                                    currentAccount.PPDY = int.Parse(data["PPDY"]);
-                                }
+                                reason = (ErrorReason)val;
                             }
+                            else
+                            {
+                                reason = ErrorReason.NetworkError;
+                            }
+                        }
+                        if (reason == ErrorReason.OK)
+                        {
+                            currentAccount.UserName = data["Nickname"];
+                            currentAccount.PPDY = int.Parse(data["PPDY"]);
                         }
                     }
                 }
             }
             catch
             {
-                reason = ErrorReason.NetworkError;
             }
         }
 
@@ -227,33 +219,29 @@ namespace PPDFramework.Web
                 query["validatekey"] = validateKey;
                 query.Remove("token");
                 var req = CreatePostRequest(url, query);
-                using (var res = req.GetResponse())
+                using var res = req.GetResponse();
+                using XmlReader reader = GetXmlReader(res);
+                while (reader.Read())
                 {
-                    using (XmlReader reader = GetXmlReader(res))
+                    if (reader.IsStartElement("Root"))
                     {
-                        while (reader.Read())
+                        while (reader.MoveToNextAttribute())
                         {
-                            if (reader.IsStartElement("Root"))
+                            data.Add(reader.Name, reader.Value);
+                        }
+                        if (!data.ContainsKey("Result"))
+                        {
+                            reason = ErrorReason.NetworkError;
+                        }
+                        else
+                        {
+                            if (int.TryParse(data["Result"], out int val))
                             {
-                                while (reader.MoveToNextAttribute())
-                                {
-                                    data.Add(reader.Name, reader.Value);
-                                }
-                                if (!data.ContainsKey("Result"))
-                                {
-                                    reason = ErrorReason.NetworkError;
-                                }
-                                else
-                                {
-                                    if (int.TryParse(data["Result"], out int val))
-                                    {
-                                        reason = (ErrorReason)val;
-                                    }
-                                    else
-                                    {
-                                        reason = ErrorReason.NetworkError;
-                                    }
-                                }
+                                reason = (ErrorReason)val;
+                            }
+                            else
+                            {
+                                reason = ErrorReason.NetworkError;
                             }
                         }
                     }
@@ -279,7 +267,7 @@ namespace PPDFramework.Web
         {
             if (!currentAccount.IsValid)
             {
-                ghosts = new GhostInfo[0];
+                ghosts = [];
                 return ErrorReason.AuthFailed;
             }
 
@@ -299,33 +287,27 @@ namespace PPDFramework.Web
                 query["validatekey"] = validateKey;
                 query.Remove("token");
                 var req = CreatePostRequest(url, query);
-                using (var res = req.GetResponse())
+                using var res = req.GetResponse();
+                using XmlReader reader = GetXmlReader(res);
+                while (reader.Read())
                 {
-                    using (XmlReader reader = GetXmlReader(res))
+                    if (reader.IsStartElement("Root"))
                     {
-                        while (reader.Read())
+                        var result = int.Parse(reader.GetAttribute("Result"));
+                        using var subReader = reader.ReadSubtree();
+                        while (subReader.Read())
                         {
-                            if (reader.IsStartElement("Root"))
+                            if (subReader.IsStartElement("Ghost"))
                             {
-                                var result = int.Parse(reader.GetAttribute("Result"));
-                                using (var subReader = reader.ReadSubtree())
-                                {
-                                    while (subReader.Read())
-                                    {
-                                        if (subReader.IsStartElement("Ghost"))
-                                        {
-                                            var id = int.Parse(subReader.GetAttribute("ID"));
-                                            var accountId = subReader.GetAttribute("AccountID");
-                                            var accountName = subReader.GetAttribute("AccountName");
-                                            var showScore = subReader.GetAttribute("ShowScore") == "1";
-                                            var showEvaluate = subReader.GetAttribute("ShowEvaluate") == "1";
-                                            var showLife = subReader.GetAttribute("ShowLife") == "1";
-                                            var data = subReader.ReadString();
-                                            ret.Add(new GhostInfo(id, accountId, accountName,
-                                                CryptographyUtility.GetBytesFromBase64String(data), showScore, showEvaluate, showLife));
-                                        }
-                                    }
-                                }
+                                var id = int.Parse(subReader.GetAttribute("ID"));
+                                var accountId = subReader.GetAttribute("AccountID");
+                                var accountName = subReader.GetAttribute("AccountName");
+                                var showScore = subReader.GetAttribute("ShowScore") == "1";
+                                var showEvaluate = subReader.GetAttribute("ShowEvaluate") == "1";
+                                var showLife = subReader.GetAttribute("ShowLife") == "1";
+                                var data = subReader.ReadString();
+                                ret.Add(new GhostInfo(id, accountId, accountName,
+                                    CryptographyUtility.GetBytesFromBase64String(data), showScore, showEvaluate, showLife));
                             }
                         }
                     }
@@ -336,7 +318,7 @@ namespace PPDFramework.Web
                 reason = ErrorReason.NetworkError;
             }
 
-            ghosts = ret.ToArray();
+            ghosts = [.. ret];
             return reason;
         }
 
@@ -426,33 +408,29 @@ namespace PPDFramework.Web
                 query.Remove("token");
                 query["perfecttrialtoken"] = perfectTrialToken;
                 var req = CreatePostRequest(url, query);
-                using (var res = req.GetResponse())
+                using var res = req.GetResponse();
+                using XmlReader reader = GetXmlReader(res);
+                while (reader.Read())
                 {
-                    using (XmlReader reader = GetXmlReader(res))
+                    if (reader.IsStartElement("Root"))
                     {
-                        while (reader.Read())
+                        while (reader.MoveToNextAttribute())
                         {
-                            if (reader.IsStartElement("Root"))
+                            data.Add(reader.Name, reader.Value);
+                        }
+                        if (!data.ContainsKey("Result"))
+                        {
+                            reason = ErrorReason.NetworkError;
+                        }
+                        else
+                        {
+                            if (int.TryParse(data["Result"], out int val))
                             {
-                                while (reader.MoveToNextAttribute())
-                                {
-                                    data.Add(reader.Name, reader.Value);
-                                }
-                                if (!data.ContainsKey("Result"))
-                                {
-                                    reason = ErrorReason.NetworkError;
-                                }
-                                else
-                                {
-                                    if (int.TryParse(data["Result"], out int val))
-                                    {
-                                        reason = (ErrorReason)val;
-                                    }
-                                    else
-                                    {
-                                        reason = ErrorReason.NetworkError;
-                                    }
-                                }
+                                reason = (ErrorReason)val;
+                            }
+                            else
+                            {
+                                reason = ErrorReason.NetworkError;
                             }
                         }
                     }
@@ -481,49 +459,35 @@ namespace PPDFramework.Web
             try
             {
                 var req = CreateRequest(url);
-                using (var res = req.GetResponse())
+                using var res = req.GetResponse();
+                using XmlReader reader = GetXmlReader(res);
+                while (reader.Read())
                 {
-                    using (XmlReader reader = GetXmlReader(res))
+                    if (reader.IsStartElement("Root"))
                     {
-                        while (reader.Read())
+                        if (reader.GetAttribute("Result") != "0")
                         {
-                            if (reader.IsStartElement("Root"))
+                            return null;
+                        }
+                    }
+                    else if (reader.IsStartElement("Ranks"))
+                    {
+                        var difficulty = reader.GetAttribute("Difficulty");
+                        List<RankingInfo> target = null;
+                        target = difficulty switch
+                        {
+                            "0" => easy,
+                            "1" => normal,
+                            "2" => hard,
+                            _ => extreme,
+                        };
+                        using XmlReader subReader = reader.ReadSubtree();
+                        while (subReader.Read())
+                        {
+                            if (subReader.IsStartElement("Rank"))
                             {
-                                if (reader.GetAttribute("Result") != "0")
-                                {
-                                    return null;
-                                }
-                            }
-                            else if (reader.IsStartElement("Ranks"))
-                            {
-                                var difficulty = reader.GetAttribute("Difficulty");
-                                List<RankingInfo> target = null;
-                                switch (difficulty)
-                                {
-                                    case "0":
-                                        target = easy;
-                                        break;
-                                    case "1":
-                                        target = normal;
-                                        break;
-                                    case "2":
-                                        target = hard;
-                                        break;
-                                    default:
-                                        target = extreme;
-                                        break;
-                                }
-                                using (XmlReader subReader = reader.ReadSubtree())
-                                {
-                                    while (subReader.Read())
-                                    {
-                                        if (subReader.IsStartElement("Rank"))
-                                        {
-                                            target.Add(new RankingInfo(subReader.GetAttribute("Nickname"), int.Parse(subReader.GetAttribute("Score")),
-                                                subReader.GetAttribute("ID"), int.Parse(subReader.GetAttribute("Rank"))));
-                                        }
-                                    }
-                                }
+                                target.Add(new RankingInfo(subReader.GetAttribute("Nickname"), int.Parse(subReader.GetAttribute("Score")),
+                                    subReader.GetAttribute("ID"), int.Parse(subReader.GetAttribute("Rank"))));
                             }
                         }
                     }
@@ -534,7 +498,7 @@ namespace PPDFramework.Web
                 return null;
             }
 
-            return new Ranking(easy.ToArray(), normal.ToArray(), hard.ToArray(), extreme.ToArray());
+            return new Ranking([.. easy], [.. normal], [.. hard], [.. extreme]);
         }
 
         /// <summary>
@@ -546,7 +510,7 @@ namespace PPDFramework.Web
         {
             if (!currentAccount.IsValid)
             {
-                return new Ranking(new RankingInfo[0], new RankingInfo[0], new RankingInfo[0], new RankingInfo[0]);
+                return new Ranking([], [], [], []);
             }
 
             var easy = new List<RankingInfo>();
@@ -566,49 +530,35 @@ namespace PPDFramework.Web
                 query["validatekey"] = validateKey;
                 query.Remove("token");
                 var req = CreatePostRequest(url, query);
-                using (var res = req.GetResponse())
+                using var res = req.GetResponse();
+                using XmlReader reader = GetXmlReader(res);
+                while (reader.Read())
                 {
-                    using (XmlReader reader = GetXmlReader(res))
+                    if (reader.IsStartElement("Root"))
                     {
-                        while (reader.Read())
+                        if (reader.GetAttribute("Result") != "0")
                         {
-                            if (reader.IsStartElement("Root"))
+                            return null;
+                        }
+                    }
+                    else if (reader.IsStartElement("Ranks"))
+                    {
+                        var difficulty = reader.GetAttribute("Difficulty");
+                        List<RankingInfo> target = null;
+                        target = difficulty switch
+                        {
+                            "0" => easy,
+                            "1" => normal,
+                            "2" => hard,
+                            _ => extreme,
+                        };
+                        using XmlReader subReader = reader.ReadSubtree();
+                        while (subReader.Read())
+                        {
+                            if (subReader.IsStartElement("Rank"))
                             {
-                                if (reader.GetAttribute("Result") != "0")
-                                {
-                                    return null;
-                                }
-                            }
-                            else if (reader.IsStartElement("Ranks"))
-                            {
-                                var difficulty = reader.GetAttribute("Difficulty");
-                                List<RankingInfo> target = null;
-                                switch (difficulty)
-                                {
-                                    case "0":
-                                        target = easy;
-                                        break;
-                                    case "1":
-                                        target = normal;
-                                        break;
-                                    case "2":
-                                        target = hard;
-                                        break;
-                                    default:
-                                        target = extreme;
-                                        break;
-                                }
-                                using (XmlReader subReader = reader.ReadSubtree())
-                                {
-                                    while (subReader.Read())
-                                    {
-                                        if (subReader.IsStartElement("Rank"))
-                                        {
-                                            target.Add(new RankingInfo(subReader.GetAttribute("Nickname"), int.Parse(subReader.GetAttribute("Score")),
-                                                subReader.GetAttribute("ID"), int.Parse(subReader.GetAttribute("Rank"))));
-                                        }
-                                    }
-                                }
+                                target.Add(new RankingInfo(subReader.GetAttribute("Nickname"), int.Parse(subReader.GetAttribute("Score")),
+                                    subReader.GetAttribute("ID"), int.Parse(subReader.GetAttribute("Rank"))));
                             }
                         }
                     }
@@ -619,7 +569,7 @@ namespace PPDFramework.Web
                 return null;
             }
 
-            return new Ranking(easy.ToArray(), normal.ToArray(), hard.ToArray(), extreme.ToArray());
+            return new Ranking([.. easy], [.. normal], [.. hard], [.. extreme]);
         }
 
         /// <summary>
@@ -631,10 +581,9 @@ namespace PPDFramework.Web
             var data = new Dictionary<string, string>();
             if (!currentAccount.IsValid)
             {
-                return new PerfectTrialInfo[0];
+                return [];
             }
 
-            ErrorReason reason = ErrorReason.OK;
             var url = String.Format("{0}/api/get-perfect-trial-list", BaseUrl);
             try
             {
@@ -650,55 +599,54 @@ namespace PPDFramework.Web
                 var trials = new List<PerfectTrialInfo>();
                 using (var res = req.GetResponse())
                 {
-                    using (XmlReader reader = GetXmlReader(res))
+                    using XmlReader reader = GetXmlReader(res);
+                    while (reader.Read())
                     {
-                        while (reader.Read())
+                        if (reader.IsStartElement("Root"))
                         {
-                            if (reader.IsStartElement("Root"))
+                            while (reader.MoveToNextAttribute())
                             {
-                                while (reader.MoveToNextAttribute())
+                                data.Add(reader.Name, reader.Value);
+                            }
+
+                            ErrorReason reason;
+                            if (!data.ContainsKey("Result"))
+                            {
+                                reason = ErrorReason.NetworkError;
+                            }
+                            else
+                            {
+                                if (int.TryParse(data["Result"], out int val))
                                 {
-                                    data.Add(reader.Name, reader.Value);
-                                }
-                                if (!data.ContainsKey("Result"))
-                                {
-                                    reason = ErrorReason.NetworkError;
+                                    reason = (ErrorReason)val;
                                 }
                                 else
                                 {
-                                    if (int.TryParse(data["Result"], out int val))
-                                    {
-                                        reason = (ErrorReason)val;
-                                    }
-                                    else
-                                    {
-                                        reason = ErrorReason.NetworkError;
-                                    }
-                                }
-                                if (reason != ErrorReason.OK)
-                                {
-                                    return new PerfectTrialInfo[0];
+                                    reason = ErrorReason.NetworkError;
                                 }
                             }
-                            else if (reader.IsStartElement("Trial"))
+                            if (reason != ErrorReason.OK)
                             {
-                                trials.Add(new PerfectTrialInfo(
-                                    int.Parse(reader.GetAttribute("Id")),
-                                    reader.GetAttribute("ScoreLibraryId"),
-                                    reader.GetAttribute("ScoreHash"),
-                                    (Difficulty)int.Parse(reader.GetAttribute("Difficulty"))));
+                                return [];
                             }
+                        }
+                        else if (reader.IsStartElement("Trial"))
+                        {
+                            trials.Add(new PerfectTrialInfo(
+                                int.Parse(reader.GetAttribute("Id")),
+                                reader.GetAttribute("ScoreLibraryId"),
+                                reader.GetAttribute("ScoreHash"),
+                                (Difficulty)int.Parse(reader.GetAttribute("Difficulty"))));
                         }
                     }
                 }
-                return trials.ToArray();
+                return [.. trials];
             }
             catch
             {
-                reason = ErrorReason.NetworkError;
             }
 
-            return new PerfectTrialInfo[0];
+            return [];
         }
 
         /// <summary>
@@ -710,7 +658,7 @@ namespace PPDFramework.Web
             var data = new Dictionary<string, string>();
             if (!currentAccount.IsValid)
             {
-                return new ListInfo[0];
+                return [];
             }
 
             var url = String.Format("{0}/api/get-list-info", BaseUrl);
@@ -728,26 +676,24 @@ namespace PPDFramework.Web
                 var lists = new List<ListInfo>();
                 using (var res = req.GetResponse())
                 {
-                    using (XmlReader reader = GetXmlReader(res))
+                    using XmlReader reader = GetXmlReader(res);
+                    while (reader.Read())
                     {
-                        while (reader.Read())
+                        if (reader.IsStartElement("List"))
                         {
-                            if (reader.IsStartElement("List"))
-                            {
-                                var title = reader.GetAttribute("Title");
-                                var isWatch = reader.GetAttribute("Watch") == "1";
-                                var list = new ListInfo(title, isWatch);
-                                lists.Add(list);
-                                ReadListInfo(reader.ReadSubtree(), list);
-                            }
+                            var title = reader.GetAttribute("Title");
+                            var isWatch = reader.GetAttribute("Watch") == "1";
+                            var list = new ListInfo(title, isWatch);
+                            lists.Add(list);
+                            ReadListInfo(reader.ReadSubtree(), list);
                         }
                     }
                 }
-                return lists.ToArray();
+                return [.. lists];
             }
             catch
             {
-                return new ListInfo[0];
+                return [];
             }
         }
 
@@ -776,10 +722,9 @@ namespace PPDFramework.Web
             var data = new Dictionary<string, string>();
             if (!currentAccount.IsValid)
             {
-                return new ReplayInfo[0];
+                return [];
             }
 
-            ErrorReason reason = ErrorReason.OK;
             var url = String.Format("{0}/api/get-replay-list", BaseUrl);
             try
             {
@@ -795,63 +740,62 @@ namespace PPDFramework.Web
                 var replays = new List<ReplayInfo>();
                 using (var res = req.GetResponse())
                 {
-                    using (XmlReader reader = GetXmlReader(res))
+                    using XmlReader reader = GetXmlReader(res);
+                    while (reader.Read())
                     {
-                        while (reader.Read())
+                        if (reader.IsStartElement("Root"))
                         {
-                            if (reader.IsStartElement("Root"))
+                            while (reader.MoveToNextAttribute())
                             {
-                                while (reader.MoveToNextAttribute())
+                                data.Add(reader.Name, reader.Value);
+                            }
+
+                            ErrorReason reason;
+                            if (!data.ContainsKey("Result"))
+                            {
+                                reason = ErrorReason.NetworkError;
+                            }
+                            else
+                            {
+                                if (int.TryParse(data["Result"], out int val))
                                 {
-                                    data.Add(reader.Name, reader.Value);
-                                }
-                                if (!data.ContainsKey("Result"))
-                                {
-                                    reason = ErrorReason.NetworkError;
+                                    reason = (ErrorReason)val;
                                 }
                                 else
                                 {
-                                    if (int.TryParse(data["Result"], out int val))
-                                    {
-                                        reason = (ErrorReason)val;
-                                    }
-                                    else
-                                    {
-                                        reason = ErrorReason.NetworkError;
-                                    }
-                                }
-                                if (reason != ErrorReason.OK)
-                                {
-                                    return new ReplayInfo[0];
+                                    reason = ErrorReason.NetworkError;
                                 }
                             }
-                            else if (reader.IsStartElement("Purchase"))
+                            if (reason != ErrorReason.OK)
                             {
-                                replays.Add(new ReplayInfo(
-                                    int.Parse(reader.GetAttribute("Id")),
-                                    int.Parse(reader.GetAttribute("ResultId")),
-                                    int.Parse(reader.GetAttribute("Score")),
-                                    int.Parse(reader.GetAttribute("CoolCount")),
-                                    int.Parse(reader.GetAttribute("GoodCount")),
-                                    int.Parse(reader.GetAttribute("SafeCount")),
-                                    int.Parse(reader.GetAttribute("SadCount")),
-                                    int.Parse(reader.GetAttribute("WorstCount")),
-                                    int.Parse(reader.GetAttribute("MaxCombo")),
-                                    reader.GetAttribute("ScoreLibraryId"),
-                                    reader.GetAttribute("ScoreHash"),
-                                    reader.GetAttribute("Nickname")));
+                                return [];
                             }
+                        }
+                        else if (reader.IsStartElement("Purchase"))
+                        {
+                            replays.Add(new ReplayInfo(
+                                int.Parse(reader.GetAttribute("Id")),
+                                int.Parse(reader.GetAttribute("ResultId")),
+                                int.Parse(reader.GetAttribute("Score")),
+                                int.Parse(reader.GetAttribute("CoolCount")),
+                                int.Parse(reader.GetAttribute("GoodCount")),
+                                int.Parse(reader.GetAttribute("SafeCount")),
+                                int.Parse(reader.GetAttribute("SadCount")),
+                                int.Parse(reader.GetAttribute("WorstCount")),
+                                int.Parse(reader.GetAttribute("MaxCombo")),
+                                reader.GetAttribute("ScoreLibraryId"),
+                                reader.GetAttribute("ScoreHash"),
+                                reader.GetAttribute("Nickname")));
                         }
                     }
                 }
-                return replays.ToArray();
+                return [.. replays];
             }
             catch
             {
-                reason = ErrorReason.NetworkError;
             }
 
-            return new ReplayInfo[0];
+            return [];
         }
 
         /// <summary>
@@ -880,24 +824,22 @@ namespace PPDFramework.Web
                 query["validatekey"] = validateKey;
                 query.Remove("token");
                 var req = CreatePostRequest(url, query);
-                using (var res = req.GetResponse())
+                using var res = req.GetResponse();
+                var memoryStream = new MemoryStream();
+                byte[] buffer = new byte[1024];
+                using (var stream = res.GetResponseStream())
                 {
-                    var memoryStream = new MemoryStream();
-                    byte[] buffer = new byte[1024];
-                    using (var stream = res.GetResponseStream())
+                    while (true)
                     {
-                        while (true)
+                        var readSize = stream.Read(buffer, 0, buffer.Length);
+                        if (readSize == 0)
                         {
-                            var readSize = stream.Read(buffer, 0, buffer.Length);
-                            if (readSize == 0)
-                            {
-                                break;
-                            }
-                            memoryStream.Write(buffer, 0, readSize);
+                            break;
                         }
+                        memoryStream.Write(buffer, 0, readSize);
                     }
-                    return memoryStream.ToArray();
                 }
+                return memoryStream.ToArray();
             }
             catch
             {
@@ -954,22 +896,18 @@ namespace PPDFramework.Web
             try
             {
                 var req = CreateRequest(url);
-                using (var res = req.GetResponse())
+                using var res = req.GetResponse();
+                using XmlReader reader = GetXmlReader(res);
+                while (reader.Read())
                 {
-                    using (XmlReader reader = GetXmlReader(res))
+                    if (reader.IsStartElement("Root"))
                     {
-                        while (reader.Read())
+                        if (reader.GetAttribute("Result") == "0")
                         {
-                            if (reader.IsStartElement("Root"))
-                            {
-                                if (reader.GetAttribute("Result") == "0")
-                                {
-                                    var id = reader.GetAttribute("ID");
-                                    float startTime = float.Parse(reader.GetAttribute("StartTime"), NumberStyles.Float, CultureInfo.InvariantCulture),
-                                        endTime = float.Parse(reader.GetAttribute("EndTime"), NumberStyles.Float, CultureInfo.InvariantCulture);
-                                    return new WebSongInformationDetail(id, startTime, endTime);
-                                }
-                            }
+                            var id = reader.GetAttribute("ID");
+                            float startTime = float.Parse(reader.GetAttribute("StartTime"), NumberStyles.Float, CultureInfo.InvariantCulture),
+                                endTime = float.Parse(reader.GetAttribute("EndTime"), NumberStyles.Float, CultureInfo.InvariantCulture);
+                            return new WebSongInformationDetail(id, startTime, endTime);
                         }
                     }
                 }
@@ -1006,7 +944,7 @@ namespace PPDFramework.Web
         {
             if (!currentAccount.IsValid)
             {
-                return new ItemInfo[0];
+                return [];
             }
 
             var ret = new List<ItemInfo>();
@@ -1022,30 +960,24 @@ namespace PPDFramework.Web
                 query["validatekey"] = validateKey;
                 query.Remove("token");
                 var req = CreateRequest(url, query);
-                using (var res = req.GetResponse())
+                using var res = req.GetResponse();
+                using XmlReader reader = GetXmlReader(res);
+                while (reader.Read())
                 {
-                    using (XmlReader reader = GetXmlReader(res))
+                    if (reader.IsStartElement("Root"))
                     {
-                        while (reader.Read())
+                        if (reader.GetAttribute("Result") != "0")
                         {
-                            if (reader.IsStartElement("Root"))
+                            break;
+                        }
+                        using XmlReader subtree = reader.ReadSubtree();
+                        while (subtree.Read())
+                        {
+                            if (reader.IsStartElement("Item"))
                             {
-                                if (reader.GetAttribute("Result") != "0")
-                                {
-                                    break;
-                                }
-                                using (XmlReader subtree = reader.ReadSubtree())
-                                {
-                                    while (subtree.Read())
-                                    {
-                                        if (reader.IsStartElement("Item"))
-                                        {
-                                            var itemId = int.Parse(reader.GetAttribute("ID"));
-                                            var itemType = (ItemType)int.Parse(reader.GetAttribute("Type"));
-                                            ret.Add(new ItemInfo(itemId, itemType));
-                                        }
-                                    }
-                                }
+                                var itemId = int.Parse(reader.GetAttribute("ID"));
+                                var itemType = (ItemType)int.Parse(reader.GetAttribute("Type"));
+                                ret.Add(new ItemInfo(itemId, itemType));
                             }
                         }
                     }
@@ -1054,7 +986,7 @@ namespace PPDFramework.Web
             catch
             {
             }
-            return ret.ToArray();
+            return [.. ret];
         }
 
         /// <summary>
@@ -1083,17 +1015,13 @@ namespace PPDFramework.Web
                 query["validatekey"] = validateKey;
                 query.Remove("token");
                 var req = CreatePostRequest(url, query);
-                using (var res = req.GetResponse())
+                using var res = req.GetResponse();
+                using XmlReader reader = GetXmlReader(res);
+                while (reader.Read())
                 {
-                    using (XmlReader reader = GetXmlReader(res))
+                    if (reader.IsStartElement("Root"))
                     {
-                        while (reader.Read())
-                        {
-                            if (reader.IsStartElement("Root"))
-                            {
-                                ret = reader.GetAttribute("Result") == "0";
-                            }
-                        }
+                        ret = reader.GetAttribute("Result") == "0";
                     }
                 }
             }
@@ -1136,17 +1064,13 @@ namespace PPDFramework.Web
                 query["validatekey"] = validateKey;
                 query.Remove("token");
                 var req = CreatePostRequest(url, query);
-                using (var res = req.GetResponse())
+                using var res = req.GetResponse();
+                using XmlReader reader = GetXmlReader(res);
+                while (reader.Read())
                 {
-                    using (XmlReader reader = GetXmlReader(res))
+                    if (reader.IsStartElement("Root"))
                     {
-                        while (reader.Read())
-                        {
-                            if (reader.IsStartElement("Root"))
-                            {
-                                ret = reader.GetAttribute("Result") == "0";
-                            }
-                        }
+                        ret = reader.GetAttribute("Result") == "0";
                     }
                 }
             }
@@ -1205,33 +1129,31 @@ namespace PPDFramework.Web
             try
             {
                 var str = GetString(String.Format("{0}/api/all-score-list", BaseUrl));
-                using (XmlReader reader = GetXmlReader(str))
+                using XmlReader reader = GetXmlReader(str);
+                while (reader.Read())
                 {
-                    while (reader.Read())
+                    if (reader.IsStartElement("Score"))
                     {
-                        if (reader.IsStartElement("Score"))
-                        {
-                            string title = reader.GetAttribute("Title"),
-                                hash = reader.GetAttribute("Hash"),
-                                movieUrl = reader.GetAttribute("MovieUrl"),
-                                revision = reader.GetAttribute("Revision");
+                        string title = reader.GetAttribute("Title"),
+                            hash = reader.GetAttribute("Hash"),
+                            movieUrl = reader.GetAttribute("MovieUrl"),
+                            revision = reader.GetAttribute("Revision");
 
-                            var info = new WebSongInformation(title, hash, movieUrl, int.Parse(revision));
-                            if (filter != null && !filter(info))
-                            {
-                                continue;
-                            }
-                            list.Add(info);
-                            ParseDifficulty(reader.ReadSubtree(), info);
-                            info.CheckNewOrCanUpdate();
+                        var info = new WebSongInformation(title, hash, movieUrl, int.Parse(revision));
+                        if (filter != null && !filter(info))
+                        {
+                            continue;
                         }
+                        list.Add(info);
+                        ParseDifficulty(reader.ReadSubtree(), info);
+                        info.CheckNewOrCanUpdate();
                     }
                 }
             }
             catch
             {
             }
-            return list.ToArray();
+            return [.. list];
         }
 
         private void ParseDifficulty(XmlReader reader, WebSongInformation songInfo)
@@ -1259,25 +1181,23 @@ namespace PPDFramework.Web
             try
             {
                 var str = GetString(String.Format("{0}/api/active-score", BaseUrl));
-                using (XmlReader reader = GetXmlReader(str))
+                using XmlReader reader = GetXmlReader(str);
+                while (reader.Read())
                 {
-                    while (reader.Read())
+                    if (reader.IsStartElement("Entry"))
                     {
-                        if (reader.IsStartElement("Entry"))
-                        {
-                            string title = reader.GetAttribute("Title"),
-                                hash = reader.GetAttribute("ID");
+                        string title = reader.GetAttribute("Title"),
+                            hash = reader.GetAttribute("ID");
 
-                            var info = new WebSongInformation(title, hash, null, -1);
-                            list.Add(info);
-                        }
+                        var info = new WebSongInformation(title, hash, null, -1);
+                        list.Add(info);
                     }
                 }
             }
             catch
             {
             }
-            return list.ToArray();
+            return [.. list];
         }
 
         /// <summary>
@@ -1290,27 +1210,25 @@ namespace PPDFramework.Web
             try
             {
                 var str = GetString(String.Format("{0}/api/all-mod-list", BaseUrl));
-                using (XmlReader reader = GetXmlReader(str))
+                using XmlReader reader = GetXmlReader(str);
+                while (reader.Read())
                 {
-                    while (reader.Read())
+                    if (reader.IsStartElement("Mod"))
                     {
-                        if (reader.IsStartElement("Mod"))
-                        {
-                            string name = reader.GetAttribute("Name"),
-                                id = reader.GetAttribute("ID"),
-                            revision = reader.GetAttribute("Revision");
+                        string name = reader.GetAttribute("Name"),
+                            id = reader.GetAttribute("ID"),
+                        revision = reader.GetAttribute("Revision");
 
-                            var info = new WebModInfo(name, id, int.Parse(revision));
-                            list.Add(info);
-                            ParseDetail(reader.ReadSubtree(), info);
-                        }
+                        var info = new WebModInfo(name, id, int.Parse(revision));
+                        list.Add(info);
+                        ParseDetail(reader.ReadSubtree(), info);
                     }
                 }
             }
             catch
             {
             }
-            return list.ToArray();
+            return [.. list];
         }
 
         private void ParseDetail(XmlReader reader, WebModInfo modInfo)
@@ -1349,34 +1267,30 @@ namespace PPDFramework.Web
             try
             {
                 var req = CreateRequest(url);
-                using (var res = req.GetResponse())
+                using var res = req.GetResponse();
+                using MemoryStream memoryStream = new();
+                byte[] buffer = new byte[1024];
+                using (Stream stream = res.GetResponseStream())
                 {
-                    using (MemoryStream memoryStream = new())
+                    while (true)
                     {
-                        byte[] buffer = new byte[1024];
-                        using (Stream stream = res.GetResponseStream())
+                        var readSize = stream.Read(buffer, 0, buffer.Length);
+                        if (readSize == 0)
                         {
-                            while (true)
-                            {
-                                var readSize = stream.Read(buffer, 0, buffer.Length);
-                                if (readSize == 0)
-                                {
-                                    break;
-                                }
-
-                                memoryStream.Write(buffer, 0, readSize);
-                            }
+                            break;
                         }
 
-                        return memoryStream.ToArray();
+                        memoryStream.Write(buffer, 0, readSize);
                     }
                 }
+
+                return memoryStream.ToArray();
             }
             catch
             {
             }
 
-            return new byte[0];
+            return [];
         }
 
         /// <summary>
@@ -1429,25 +1343,19 @@ namespace PPDFramework.Web
         public void DownloadFile(string url, string filePath)
         {
             var req = CreateRequest(url);
-            using (var response = req.GetResponse())
+            using var response = req.GetResponse();
+            using FileStream fs = File.Open(filePath, FileMode.Create);
+            using Stream stream = response.GetResponseStream();
+            byte[] buffer = new byte[512];
+            while (true)
             {
-                using (FileStream fs = File.Open(filePath, FileMode.Create))
+                var readSize = stream.Read(buffer, 0, buffer.Length);
+                if (readSize == 0)
                 {
-                    using (Stream stream = response.GetResponseStream())
-                    {
-                        byte[] buffer = new byte[512];
-                        while (true)
-                        {
-                            var readSize = stream.Read(buffer, 0, buffer.Length);
-                            if (readSize == 0)
-                            {
-                                break;
-                            }
-
-                            fs.Write(buffer, 0, readSize);
-                        }
-                    }
+                    break;
                 }
+
+                fs.Write(buffer, 0, readSize);
             }
         }
 
@@ -1460,18 +1368,16 @@ namespace PPDFramework.Web
             try
             {
                 var str = GetString(String.Format("{0}/api/get-latest-contest", BaseUrl));
-                using (XmlReader reader = GetXmlReader(str))
+                using XmlReader reader = GetXmlReader(str);
+                while (reader.Read())
                 {
-                    while (reader.Read())
+                    if (reader.IsStartElement("Root"))
                     {
-                        if (reader.IsStartElement("Root"))
-                        {
-                            var info = new ContestInfo(int.Parse(reader.GetAttribute("Id")), reader.GetAttribute("ScoreLibraryId"), reader.GetAttribute("ScoreHash"),
-                                (Difficulty)int.Parse(reader.GetAttribute("Difficulty")), ParseDateString(reader.GetAttribute("StartTime")),
-                                ParseDateString(reader.GetAttribute("CurrentTime")), ParseDateString(reader.GetAttribute("EndTime")), reader.GetAttribute("Title"));
+                        var info = new ContestInfo(int.Parse(reader.GetAttribute("Id")), reader.GetAttribute("ScoreLibraryId"), reader.GetAttribute("ScoreHash"),
+                            (Difficulty)int.Parse(reader.GetAttribute("Difficulty")), ParseDateString(reader.GetAttribute("StartTime")),
+                            ParseDateString(reader.GetAttribute("CurrentTime")), ParseDateString(reader.GetAttribute("EndTime")), reader.GetAttribute("Title"));
 
-                            return info;
-                        }
+                        return info;
                     }
                 }
             }
@@ -1492,22 +1398,20 @@ namespace PPDFramework.Web
             try
             {
                 var str = GetString(String.Format("{0}/api/get-latest-contest-result", BaseUrl));
-                using (XmlReader reader = GetXmlReader(str))
+                using XmlReader reader = GetXmlReader(str);
+                while (reader.Read())
                 {
-                    while (reader.Read())
+                    if (reader.IsStartElement("Result"))
                     {
-                        if (reader.IsStartElement("Result"))
-                        {
-                            ret.Add(new RankingInfo(reader.GetAttribute("Nickname"), int.Parse(reader.GetAttribute("Score")),
-                                reader.GetAttribute("AccountId"), int.Parse(reader.GetAttribute("Rank"))));
-                        }
+                        ret.Add(new RankingInfo(reader.GetAttribute("Nickname"), int.Parse(reader.GetAttribute("Score")),
+                            reader.GetAttribute("AccountId"), int.Parse(reader.GetAttribute("Rank"))));
                     }
                 }
             }
             catch
             {
             }
-            return ret.ToArray();
+            return [.. ret];
         }
 
         private DateTime ParseDateString(string str)
@@ -1533,13 +1437,9 @@ namespace PPDFramework.Web
         private string GetString(string url)
         {
             var req = CreateRequest(url);
-            using (var response = req.GetResponse())
-            {
-                using (StreamReader reader = new(response.GetResponseStream()))
-                {
-                    return reader.ReadToEnd();
-                }
-            }
+            using var response = req.GetResponse();
+            using StreamReader reader = new(response.GetResponseStream());
+            return reader.ReadToEnd();
         }
 
         private Request CreatePostRequest(string url, IDictionary<string, string> param)
@@ -1594,17 +1494,11 @@ namespace PPDFramework.Web
         /// <summary>
         /// 送る前のリクエストです（HttpWebRequest の代わり）。
         /// </summary>
-        private sealed class Request
+        private sealed class Request(string url, byte[] postData)
         {
             private static readonly TimeSpan timeout = TimeSpan.FromMilliseconds(15000);
-            private readonly string url;
-            private readonly byte[] postData;
-
-            public Request(string url, byte[] postData)
-            {
-                this.url = url;
-                this.postData = postData;
-            }
+            private readonly string url = url;
+            private readonly byte[] postData = postData;
 
             public HttpResponse GetResponse()
             {

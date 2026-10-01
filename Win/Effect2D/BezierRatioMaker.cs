@@ -21,7 +21,7 @@ namespace Effect2D
         /// <param name="p2">ベジエ頂点２</param>
         public BezierRatioMaker(BezierControlPoint p1, BezierControlPoint p2)
         {
-            Analyzer = new BezierAnalyzer(new BezierControlPoint[] { p1, p2 });
+            Analyzer = new BezierAnalyzer([p1, p2]);
         }
         /// <summary>
         /// ベジエアナライザー

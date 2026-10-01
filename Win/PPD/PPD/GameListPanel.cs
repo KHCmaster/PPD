@@ -7,22 +7,17 @@ using System.Linq;
 
 namespace PPD
 {
-    class GameListPanel : HomePanelBase
+    class GameListPanel(PPDDevice device, PPDFramework.Resource.ResourceManager resourceManager, ISound sound) : HomePanelBase(device)
     {
         public event EventHandler<GameEventArgs> GameStarted;
         GameList gameList;
         SpriteObject listSprite;
         LineRectangleComponent select;
-        readonly PPDFramework.Resource.ResourceManager resourceManager;
-        readonly ISound sound;
+        readonly PPDFramework.Resource.ResourceManager resourceManager = resourceManager;
+        readonly ISound sound = sound;
 
         int currentIndex;
         int scrollIndex;
-        public GameListPanel(PPDDevice device, PPDFramework.Resource.ResourceManager resourceManager, ISound sound) : base(device)
-        {
-            this.resourceManager = resourceManager;
-            this.sound = sound;
-        }
 
         public override void Load()
         {
@@ -182,17 +177,12 @@ namespace PPD
         }
     }
 
-    class GameEventArgs : EventArgs
+    class GameEventArgs(GameLoader gl) : EventArgs
     {
-        public GameEventArgs(GameLoader gl)
-        {
-            GameLoader = gl;
-        }
-
         public GameLoader GameLoader
         {
             get;
             private set;
-        }
+        } = gl;
     }
 }

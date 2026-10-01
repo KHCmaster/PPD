@@ -15,13 +15,13 @@ namespace Effect2DEditor
             {
                 Interval = 20
             };
-            timer.Tick += timer_Tick;
+            timer.Tick += Timer_Tick;
             this.Cursor = System.Windows.Forms.Cursors.SizeWE;
             this.MouseDown += ChangeValueLabel_MouseDown;
             this.MouseUp += ChangeValueLabel_MouseUp;
         }
 
-        void timer_Tick(object sender, EventArgs e)
+        void Timer_Tick(object sender, EventArgs e)
         {
             Point currentpos = Cursor.Position;
             if (lastpos.X != currentpos.X)

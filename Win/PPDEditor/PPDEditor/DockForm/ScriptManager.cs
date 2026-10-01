@@ -30,7 +30,7 @@ namespace PPDEditor
         {
             get
             {
-                return dockPanel1.Documents.OfType<FlowDrawDockForm>().ToArray();
+                return [.. dockPanel1.Documents.OfType<FlowDrawDockForm>()];
             }
         }
 
@@ -53,51 +53,51 @@ namespace PPDEditor
             executingPropertyForm = new FlowExecutingPropertyDockForm();
             logForm = new FlowLogDockForm();
 
-            propertyForm.VisibleChanged += windowVisibleChanged;
-            treeViewForm.VisibleChanged += windowVisibleChanged;
-            scriptListForm.VisibleChanged += windowVisibleChanged;
-            searchForm.VisibleChanged += windowVisibleChanged;
-            executingPropertyForm.VisibleChanged += windowVisibleChanged;
-            logForm.VisibleChanged += windowVisibleChanged;
+            propertyForm.VisibleChanged += WindowVisibleChanged;
+            treeViewForm.VisibleChanged += WindowVisibleChanged;
+            scriptListForm.VisibleChanged += WindowVisibleChanged;
+            searchForm.VisibleChanged += WindowVisibleChanged;
+            executingPropertyForm.VisibleChanged += WindowVisibleChanged;
+            logForm.VisibleChanged += WindowVisibleChanged;
 
-            scriptListForm.Renamed += scriptListForm_Renamed;
-            scriptListForm.Deleted += scriptListForm_Deleted;
-            scriptListForm.ScriptSelected += scriptListForm_ScriptSelected;
-            scriptListForm.Reloaded += scriptListForm_Reloaded;
+            scriptListForm.Renamed += ScriptListForm_Renamed;
+            scriptListForm.Deleted += ScriptListForm_Deleted;
+            scriptListForm.ScriptSelected += ScriptListForm_ScriptSelected;
+            scriptListForm.Reloaded += ScriptListForm_Reloaded;
 
             searchForm.FlowSearchPanel.Searched += FlowSearchPanel_Searched;
             searchForm.FlowSearchPanel.SelectionChanged += FlowSearchPanel_SelectionChanged;
 
-            dockPanel1.ActiveDocumentChanged += dockPanel1_ActiveDocumentChanged;
+            dockPanel1.ActiveDocumentChanged += DockPanel1_ActiveDocumentChanged;
 
-            FlowDrawPanel.EnumerateClasses("dlls", new string[] { "FlowScriptEngineConsole" });
-            FlowDrawPanel.AddFilter(new NodeFilterInfo("PPD", new Regex[] {
+            FlowDrawPanel.EnumerateClasses("dlls", ["FlowScriptEngineConsole"]);
+            FlowDrawPanel.AddFilter(new NodeFilterInfo("PPD", [
                 new("^FlowScriptEngineBasic\\."),
                 new("^FlowScriptEngineBasicExtension\\."),
                 new("^FlowScriptEngineSlimDX\\."),
                 new("^FlowScriptEnginePPD\\."),
-                new("^FlowScriptEngineData\\.")},
+                new("^FlowScriptEngineData\\.")],
                 null));
-            FlowDrawPanel.AddFilter(new NodeFilterInfo("PPD(Script)", new Regex[] {
+            FlowDrawPanel.AddFilter(new NodeFilterInfo("PPD(Script)", [
                 new("^FlowScriptEngineBasic\\."),
                 new("^FlowScriptEngineBasicExtension\\."),
                 new("^FlowScriptEngineSlimDX\\."),
                 new("^FlowScriptEnginePPD\\."),
-                new("^FlowScriptEngineData\\.")},
-                null, null, new Regex[] { new("^PPD\\.Mod") }));
-            FlowDrawPanel.AddFilter(new NodeFilterInfo("PPD(Mod)", new Regex[] {
+                new("^FlowScriptEngineData\\.")],
+                null, null, [new("^PPD\\.Mod")]));
+            FlowDrawPanel.AddFilter(new NodeFilterInfo("PPD(Mod)", [
                 new("^FlowScriptEngineBasic\\."),
                 new("^FlowScriptEngineBasicExtension\\."),
                 new("^FlowScriptEngineSlimDX\\."),
                 new("^FlowScriptEnginePPD\\."),
-                new("^FlowScriptEngineData\\.")},
+                new("^FlowScriptEngineData\\.")],
                 null));
-            FlowDrawPanel.AddFilter(new NodeFilterInfo("PPDEditor", new Regex[] {
+            FlowDrawPanel.AddFilter(new NodeFilterInfo("PPDEditor", [
                 new("^FlowScriptEngineBasic\\."),
                 new("^FlowScriptEngineBasicExtension\\."),
                 new("^FlowScriptEngineSlimDX\\."),
                 new("^FlowScriptEnginePPDEditor\\."),
-                new("^FlowScriptEngineData\\.")},
+                new("^FlowScriptEngineData\\.")],
                 null));
 
             Load += ScriptManager_Load;
@@ -132,7 +132,7 @@ namespace PPDEditor
                         break;
                     }
                 }
-                breakPoints ??= new int[0];
+                breakPoints ??= [];
                 infos.Add(scriptFilePath, breakPoints);
             }
             EnableControllerHost(infos);
@@ -143,10 +143,10 @@ namespace PPDEditor
             toolStrip1.Visible = true;
             toolStripButton1.Enabled = toolStripButton2.Enabled = false;
             controllerHost = new TcpDebugControllerHost(infos);
-            controllerHost.SourceChanged += controllerHost_SourceChanged;
-            controllerHost.OperationWaited += controllerHost_OperationWaited;
-            controllerHost.OperationAccepted += controllerHost_OperationAccepted;
-            controllerHost.ErrorOccurred += controllerHost_ErrorOccurred;
+            controllerHost.SourceChanged += ControllerHost_SourceChanged;
+            controllerHost.OperationWaited += ControllerHost_OperationWaited;
+            controllerHost.OperationAccepted += ControllerHost_OperationAccepted;
+            controllerHost.ErrorOccurred += ControllerHost_ErrorOccurred;
             controllerHost.LogReceived += ControllerHost_LogReceived;
             controllerHost.Create();
         }
@@ -161,7 +161,7 @@ namespace PPDEditor
                 currentSources = flowDrawDockForm.FlowDrawPanel.GetSources();
                 foreach (var source in currentSources)
                 {
-                    source.PropertyChanged -= source_PropertyChanged;
+                    source.PropertyChanged -= Source_PropertyChanged;
                 }
             }
         }
@@ -190,13 +190,13 @@ namespace PPDEditor
             return FlowDrawForms.FirstOrDefault(f => f.FilePath.ToLower().IndexOf(fileName.ToLower()) >= 0);
         }
 
-        private void toolStripButton1_Click(object sender, EventArgs e)
+        private void ToolStripButton1_Click(object sender, EventArgs e)
         {
             controllerHost.Continue();
             toolStripButton1.Enabled = toolStripButton2.Enabled = false;
         }
 
-        private void toolStripButton2_Click(object sender, EventArgs e)
+        private void ToolStripButton2_Click(object sender, EventArgs e)
         {
             controllerHost.StepIn();
             toolStripButton1.Enabled = toolStripButton2.Enabled = false;
@@ -210,7 +210,7 @@ namespace PPDEditor
             }));
         }
 
-        void controllerHost_ErrorOccurred(string arg1, int arg2, string arg3)
+        void ControllerHost_ErrorOccurred(string arg1, int arg2, string arg3)
         {
             this.Invoke((Action)(() =>
             {
@@ -232,7 +232,7 @@ namespace PPDEditor
             }));
         }
 
-        void controllerHost_OperationAccepted(string obj)
+        void ControllerHost_OperationAccepted(string obj)
         {
             this.Invoke((Action)(() =>
             {
@@ -242,7 +242,7 @@ namespace PPDEditor
                 {
                     foreach (var source in currentSources)
                     {
-                        source.PropertyChanged -= source_PropertyChanged;
+                        source.PropertyChanged -= Source_PropertyChanged;
                     }
                     currentSources = null;
                 }
@@ -250,7 +250,7 @@ namespace PPDEditor
             }));
         }
 
-        void controllerHost_OperationWaited(string obj)
+        void ControllerHost_OperationWaited(string obj)
         {
             this.Invoke((Action)(() =>
             {
@@ -268,14 +268,14 @@ namespace PPDEditor
                     currentSources = flowDrawDockForm.FlowDrawPanel.GetSources();
                     foreach (var source in currentSources)
                     {
-                        source.PropertyChanged += source_PropertyChanged;
+                        source.PropertyChanged += Source_PropertyChanged;
                     }
                 }
                 toolStripButton1.Enabled = toolStripButton2.Enabled = true;
             }));
         }
 
-        void source_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        void Source_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             if (e.PropertyName == "IsBreakPointSet")
             {
@@ -301,7 +301,7 @@ namespace PPDEditor
             }
         }
 
-        void controllerHost_SourceChanged(string arg1, string arg2)
+        void ControllerHost_SourceChanged(string arg1, string arg2)
         {
             this.Invoke((Action)(() =>
             {
@@ -359,7 +359,7 @@ namespace PPDEditor
             return CurrentFlowDrawForm.FlowDrawPanel.Search(arg);
         }
 
-        void dockPanel1_ActiveDocumentChanged(object sender, EventArgs e)
+        void DockPanel1_ActiveDocumentChanged(object sender, EventArgs e)
         {
             propertyForm.FlowPropertyPanel.MakeEmpty();
         }
@@ -378,8 +378,8 @@ namespace PPDEditor
             }
 
             drawForm = new FlowDrawDockForm();
-            drawForm.VisibleChanged += windowVisibleChanged;
-            drawForm.Modified += drawForm_Modified;
+            drawForm.VisibleChanged += WindowVisibleChanged;
+            drawForm.Modified += DrawForm_Modified;
             drawForm.FlowDrawPanel.SearchRequired += FlowDrawPanel_SearchRequired;
             drawForm.FlowDrawPanel.FlowPropertyPanel = propertyForm.FlowPropertyPanel;
             drawForm.FlowDrawPanel.FlowTreeView = treeViewForm.FlowTreeView;
@@ -426,7 +426,7 @@ namespace PPDEditor
             }
         }
 
-        void drawForm_Modified(object sender, EventArgs e)
+        void DrawForm_Modified(object sender, EventArgs e)
         {
             var drawForm = sender as FlowDrawDockForm;
             if (!IsUnderFunctions(drawForm.FilePath) && !IsUnderCommands(drawForm.FilePath))
@@ -450,12 +450,12 @@ namespace PPDEditor
             return child.ToLower().Contains(parent.ToLower());
         }
 
-        void scriptListForm_ScriptSelected(string obj)
+        void ScriptListForm_ScriptSelected(string obj)
         {
             AddFlowDrawForm(obj);
         }
 
-        void scriptListForm_Reloaded()
+        void ScriptListForm_Reloaded()
         {
             foreach (FlowDrawDockForm drawForm in FlowDrawForms.Where(d => !File.Exists(d.FilePath)))
             {
@@ -463,7 +463,7 @@ namespace PPDEditor
             }
         }
 
-        void scriptListForm_Renamed(string arg1, string arg2)
+        void ScriptListForm_Renamed(string arg1, string arg2)
         {
             if (Path.GetExtension(arg1) != "")
             {
@@ -489,7 +489,7 @@ namespace PPDEditor
             }
         }
 
-        void scriptListForm_Deleted(string obj)
+        void ScriptListForm_Deleted(string obj)
         {
             var removeTargets = new List<FlowDrawDockForm>();
             foreach (FlowDrawDockForm drawForm in FlowDrawForms)
@@ -571,25 +571,19 @@ namespace PPDEditor
 
         private IDockContent DeserializeForm(string persistentString)
         {
-            switch (persistentString)
+            return persistentString switch
             {
-                case "PPDEditor.DockForm.Script.FlowPropertyDockForm":
-                    return propertyForm;
-                case "PPDEditor.DockForm.Script.FlowTreeViewDockForm":
-                    return treeViewForm;
-                case "PPDEditor.DockForm.Script.ScriptListDockForm":
-                    return scriptListForm;
-                case "PPDEditor.DockForm.Script.FlowSearchDockForm":
-                    return searchForm;
-                case "PPDEditor.DockForm.Script.FlowExecutingPropertyDockForm":
-                    return executingPropertyForm;
-                case "PPDEditor.DockForm.Script.FlowLogDockForm":
-                    return logForm;
-            }
-            return null;
+                "PPDEditor.DockForm.Script.FlowPropertyDockForm" => propertyForm,
+                "PPDEditor.DockForm.Script.FlowTreeViewDockForm" => treeViewForm,
+                "PPDEditor.DockForm.Script.ScriptListDockForm" => scriptListForm,
+                "PPDEditor.DockForm.Script.FlowSearchDockForm" => searchForm,
+                "PPDEditor.DockForm.Script.FlowExecutingPropertyDockForm" => executingPropertyForm,
+                "PPDEditor.DockForm.Script.FlowLogDockForm" => logForm,
+                _ => null,
+            };
         }
 
-        private void windowVisibleChanged(object sender, EventArgs e)
+        private void WindowVisibleChanged(object sender, EventArgs e)
         {
             this.スクリプトリストToolStripMenuItem.Checked = Utility.CheckVisible(scriptListForm);
             this.ソースリストToolStripMenuItem.Checked = Utility.CheckVisible(treeViewForm);

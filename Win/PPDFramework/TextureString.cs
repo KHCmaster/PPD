@@ -23,7 +23,7 @@ namespace PPDFramework
         readonly string facename;
         bool multiline;
         Color4 color;
-        TextureChar[] chars = new TextureChar[0];
+        TextureChar[] chars = [];
 
         TextureChar sparechar;
 

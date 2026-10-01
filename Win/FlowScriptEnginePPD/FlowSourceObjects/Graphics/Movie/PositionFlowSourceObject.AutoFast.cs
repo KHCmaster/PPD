@@ -9,13 +9,11 @@ namespace FlowScriptEnginePPD.FlowSourceObjects.Graphics.Movie
     {
         public override object GetPropertyValue(string propertyName)
         {
-            switch (propertyName)
+            return propertyName switch
             {
-                case "Value":
-                    return Value;
-                default:
-                    return null;
-            }
+                "Value" => Value,
+                _ => null,
+            };
         }
 
 

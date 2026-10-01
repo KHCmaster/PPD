@@ -61,8 +61,8 @@ namespace PPDShareComponent
             GotFocused += DxTextBox_GotFocused;
             LostFocused += DxTextBox_LostFocused;
             Inputed += DxTextBox_Inputed;
-            host.IMEStarted += host_IMEStarted;
-            host.TextBoxEnabledChanged += host_TextBoxEnabledChanged;
+            host.IMEStarted += Host_IMEStarted;
+            host.TextBoxEnabledChanged += Host_TextBoxEnabledChanged;
             this.AddChild(border);
             this.AddChild(caret);
             this.AddChild(stringObj);
@@ -85,7 +85,7 @@ namespace PPDShareComponent
             }
         }
 
-        void host_TextBoxEnabledChanged(object sender, EventArgs e)
+        void Host_TextBoxEnabledChanged(object sender, EventArgs e)
         {
             if (!host.TextBoxEnabled && FocusManager != null && FocusManager.CurrentFocusObject == this)
             {
@@ -93,7 +93,7 @@ namespace PPDShareComponent
             }
         }
 
-        void host_IMEStarted(object sender, EventArgs e)
+        void Host_IMEStarted(object sender, EventArgs e)
         {
             var p1 = stringObj.GetWidthToIndex(host.TextBoxSelection.SelectionStart);
             host.TextBoxLocation = new Vector2(stringObj.ScreenPos.X + p1, stringObj.ScreenPos.Y);
@@ -145,8 +145,8 @@ namespace PPDShareComponent
                 }
                 else
                 {
-                    float tempWidth = 0;
                     scrollIndex--;
+                    float tempWidth;
                     do
                     {
                         scrollIndex++;
@@ -274,8 +274,8 @@ namespace PPDShareComponent
 
         protected override void DisposeResource()
         {
-            host.IMEStarted -= host_IMEStarted;
-            host.TextBoxEnabledChanged -= host_TextBoxEnabledChanged;
+            host.IMEStarted -= Host_IMEStarted;
+            host.TextBoxEnabledChanged -= Host_TextBoxEnabledChanged;
         }
 
         public int TextBoxWidth

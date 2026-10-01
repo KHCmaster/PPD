@@ -5,11 +5,11 @@ using System.Threading.Tasks;
 
 namespace BlueSky
 {
-    public class Client
+    public class Client(string id, string password)
     {
-        private readonly string id;
-        private readonly string password;
-        private readonly HttpClient client;
+        private readonly string id = id;
+        private readonly string password = password;
+        private readonly HttpClient client = new HttpClient();
         private readonly JsonSerializerSettings jsonSerializerSettings = new()
         {
             MetadataPropertyHandling = MetadataPropertyHandling.Ignore,
@@ -19,13 +19,6 @@ namespace BlueSky
         private string accessJwt;
         private string refreshJwt;
         private Jwt jwt;
-
-        public Client(string id, string password)
-        {
-            this.id = id;
-            this.password = password;
-            this.client = new HttpClient();
-        }
 
         public async Task Post(string message)
         {
@@ -67,13 +60,13 @@ namespace BlueSky
                     Embed = new RecordEmbed
                     {
                         Type = "app.bsky.embed.images",
-                        Images = new RecordImage[]
-                        {
+                        Images =
+                        [
                             new() {
                                 Alt = "",
                                 Image = uploadResponse.Blob,
                             }
-                        }
+                        ]
                     },
                 },
             });

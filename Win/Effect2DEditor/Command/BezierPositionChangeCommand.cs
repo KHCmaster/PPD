@@ -4,20 +4,15 @@ using System.Drawing;
 
 namespace Effect2DEditor.Command
 {
-    class BezierPositionChangeCommand : CommandBase
+    class BezierPositionChangeCommand(EffectManager manager, string exp, SelectedManager SManager, BezierControlPoint[] bcps) : CommandBase(manager, exp)
     {
         PointF laststartpoint;
         PointF lastendpoint;
         bool lastbcpsavailable;
         BezierControlPoint[] lastbcps;
-        BezierControlPoint[] bcps;
-        readonly SelectedManager SManager;
-        public BezierPositionChangeCommand(EffectManager manager, string exp, SelectedManager SManager, BezierControlPoint[] bcps)
-            : base(manager, exp)
-        {
-            this.SManager = SManager;
-            this.bcps = bcps;
-        }
+        BezierControlPoint[] bcps = bcps;
+        readonly SelectedManager SManager = SManager;
+
         public BezierControlPoint[] BCPS
         {
             get

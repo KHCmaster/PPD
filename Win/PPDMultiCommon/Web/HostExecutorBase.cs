@@ -1,11 +1,7 @@
 ﻿namespace PPDMultiCommon.Web
 {
-    public abstract class HostExecutorBase : ExecutorBase
+    public abstract class HostExecutorBase(WebManager webManager) : ExecutorBase
     {
-        protected WebManager webManager;
-        protected HostExecutorBase(WebManager webManager)
-        {
-            this.webManager = webManager;
-        }
+        protected WebManager webManager = webManager;
     }
 }

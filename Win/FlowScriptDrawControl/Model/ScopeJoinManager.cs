@@ -19,11 +19,11 @@ namespace FlowScriptDrawControl.Model
             this.commandManager = commandManager;
             this.moveManager = moveManager;
             commandSet = new CommandSet();
-            moveManager.ControlPressed += moveManager_ControlPressed;
-            moveManager.MoveEnd += moveManager_MoveEnd;
+            moveManager.ControlPressed += MoveManager_ControlPressed;
+            moveManager.MoveEnd += MoveManager_MoveEnd;
         }
 
-        void moveManager_MoveEnd(object sender, EventArgs e)
+        void MoveManager_MoveEnd(object sender, EventArgs e)
         {
             if (commandSet.CommandCount > 0)
             {
@@ -31,7 +31,7 @@ namespace FlowScriptDrawControl.Model
             }
         }
 
-        void moveManager_ControlPressed(object sender, EventArgs e)
+        void MoveManager_ControlPressed(object sender, EventArgs e)
         {
             var moveManager = sender as MoveManager;
             var control = moveManager.Controls.FirstOrDefault(c => (c.CurrentPositionable as ScopeChild).Scope != null);

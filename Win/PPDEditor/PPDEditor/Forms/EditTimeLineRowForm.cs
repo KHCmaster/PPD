@@ -17,7 +17,7 @@ namespace PPDEditor.Forms
 
         public void SetRowManager(TimeLineRowManager rowManager)
         {
-            rows = rowManager.RowOrders.Select(row => new RowItem(row, rowManager.RowVisibilities[row])).ToArray();
+            rows = [.. rowManager.RowOrders.Select(row => new RowItem(row, rowManager.RowVisibilities[row]))];
             dataGridView1.DataSource = rows;
         }
 
@@ -31,23 +31,23 @@ namespace PPDEditor.Forms
 
         public void UpdateRowManager(TimeLineRowManager rowManager)
         {
-            rowManager.RowOrders = rows.Select(r => r.RowIndex).ToArray();
-            rowManager.RowVisibilities = rows.OrderBy(r => r.RowIndex).Select(r => r.IsVisible).ToArray();
+            rowManager.RowOrders = [.. rows.Select(r => r.RowIndex)];
+            rowManager.RowVisibilities = [.. rows.OrderBy(r => r.RowIndex).Select(r => r.IsVisible)];
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void Button1_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.OK;
             Close();
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void Button2_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.Cancel;
             Close();
         }
 
-        private void button3_Click(object sender, EventArgs e)
+        private void Button3_Click(object sender, EventArgs e)
         {
             if (dataGridView1.SelectedRows.Count <= 0)
             {
@@ -64,7 +64,7 @@ namespace PPDEditor.Forms
             dataGridView1.Rows[rowIndex - 1].Selected = true;
         }
 
-        private void button4_Click(object sender, EventArgs e)
+        private void Button4_Click(object sender, EventArgs e)
         {
             if (dataGridView1.SelectedRows.Count <= 0)
             {
@@ -81,19 +81,19 @@ namespace PPDEditor.Forms
             dataGridView1.Rows[rowIndex + 1].Selected = true;
         }
 
-        class RowItem
+        class RowItem(int rowIndex, bool isVisible)
         {
             public int RowIndex
             {
                 get;
                 private set;
-            }
+            } = rowIndex;
 
             public bool IsVisible
             {
                 get;
                 set;
-            }
+            } = isVisible;
 
             public string Name
             {
@@ -101,12 +101,6 @@ namespace PPDEditor.Forms
                 {
                     return Utility.Language[((ButtonType)RowIndex).ToString()];
                 }
-            }
-
-            public RowItem(int rowIndex, bool isVisible)
-            {
-                RowIndex = rowIndex;
-                IsVisible = isVisible;
             }
         }
     }

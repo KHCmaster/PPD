@@ -8,18 +8,11 @@ using System.Collections.Generic;
 
 namespace PPDCore
 {
-    class MarkConnection : GameComponent
+    class MarkConnection(PPDDevice device, MarkConnectionCommon connectionCommon) : GameComponent(device)
     {
-        readonly List<Mark> convexMarks;
-        readonly List<Mark> inMarks;
-        readonly MarkConnectionCommon connectionCommon;
-
-        public MarkConnection(PPDDevice device, MarkConnectionCommon connectionCommon) : base(device)
-        {
-            this.connectionCommon = connectionCommon;
-            convexMarks = [];
-            inMarks = [];
-        }
+        readonly List<Mark> convexMarks = [];
+        readonly List<Mark> inMarks = [];
+        readonly MarkConnectionCommon connectionCommon = connectionCommon;
 
         public void AddConvex(Mark mk)
         {

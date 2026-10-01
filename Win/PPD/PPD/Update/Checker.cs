@@ -122,14 +122,12 @@ namespace PPD.Update
                 var byteContent = Encoding.ASCII.GetBytes(content);
                 stream.Write(byteContent, 0, byteContent.Length);
                 stream.Seek(0, SeekOrigin.Begin);
-                using (XmlReader reader = XmlReader.Create(stream))
+                using XmlReader reader = XmlReader.Create(stream);
+                while (reader.Read())
                 {
-                    while (reader.Read())
+                    if (reader.IsStartElement("Assembly"))
                     {
-                        if (reader.IsStartElement("Assembly"))
-                        {
-                            asms.Add(new AssemblyInfo(reader.GetAttribute("FileName"), reader.GetAttribute("Version")));
-                        }
+                        asms.Add(new AssemblyInfo(reader.GetAttribute("FileName"), reader.GetAttribute("Version")));
                     }
                 }
             }
@@ -250,25 +248,19 @@ namespace PPD.Update
             return SyncHttpClient.GetString(url);
         }
 
-        class AssemblyInfo
+        class AssemblyInfo(string fileName, string version)
         {
             public string FileName
             {
                 get;
                 private set;
-            }
+            } = fileName;
 
             public string Version
             {
                 get;
                 private set;
-            }
-
-            public AssemblyInfo(string fileName, string version)
-            {
-                FileName = fileName;
-                Version = version;
-            }
+            } = version;
         }
     }
 }

@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace PPD
 {
-    class HomeScene : SceneBase
+    class HomeScene(PPDDevice device) : SceneBase(device)
     {
         public event Action<int> LoadProgressed;
 
@@ -28,11 +28,6 @@ namespace PPD
         long startTime;
         GameLoader currentGame;
 
-        public HomeScene(PPDDevice device) : base(device)
-        {
-
-        }
-
         public override bool Load()
         {
             base.Load();
@@ -48,13 +43,13 @@ namespace PPD
             mp = new MoviePanel(device, GameHost as MyGame, ResourceManager, Sound);
             glp = new GameListPanel(device, ResourceManager, Sound);
             fp = new FeedPanel(device, GameHost, ResourceManager, Sound);
-            sp.LoadProgressed += panel_LoadProgressed;
-            mp.LoadProgressed += panel_LoadProgressed;
-            glp.LoadProgressed += panel_LoadProgressed;
-            fp.LoadProgressed += panel_LoadProgressed;
+            sp.LoadProgressed += Panel_LoadProgressed;
+            mp.LoadProgressed += Panel_LoadProgressed;
+            glp.LoadProgressed += Panel_LoadProgressed;
+            fp.LoadProgressed += Panel_LoadProgressed;
 
-            glp.GameStarted += glp_GameStarted;
-            hbm.ModeChanged += hbm_ModeChanged;
+            glp.GameStarted += Glp_GameStarted;
+            hbm.ModeChanged += Hbm_ModeChanged;
 
             panelList = new SortedList<HomeBottomMenu.Mode, HomePanelBase>
             {
@@ -87,7 +82,7 @@ namespace PPD
             else
             {
                 startPanel = new StartPanel(device, GameHost as MyGame, ResourceManager);
-                startPanel.SettingFinished += startPanel_SettingFinished;
+                startPanel.SettingFinished += StartPanel_SettingFinished;
                 this.AddChild(startPanel);
             }
             this.AddChild(back);
@@ -98,7 +93,7 @@ namespace PPD
             return true;
         }
 
-        void panel_LoadProgressed(int obj)
+        void Panel_LoadProgressed(int obj)
         {
             int sum = 0;
             foreach (HomePanelBase panel in panelList.Values)
@@ -132,7 +127,7 @@ namespace PPD
             }
         }
 
-        void glp_GameStarted(object sender, GameEventArgs e)
+        void Glp_GameStarted(object sender, GameEventArgs e)
         {
             mp.StopMovie();
             if (GameHost is MyGame myGame)
@@ -162,7 +157,7 @@ namespace PPD
             }
         }
 
-        void startPanel_SettingFinished(object sender, EventArgs e)
+        void StartPanel_SettingFinished(object sender, EventArgs e)
         {
             this.ClearChildren();
             focusManager.Focus(hbm);
@@ -181,7 +176,7 @@ namespace PPD
             (GameHost as MyGame).Input.AssignMode = false;
         }
 
-        void hbm_ModeChanged(object sender, EventArgs e)
+        void Hbm_ModeChanged(object sender, EventArgs e)
         {
             if (currentPanel != null)
             {

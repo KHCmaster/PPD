@@ -3,27 +3,20 @@ using System.IO;
 
 namespace PPDPack
 {
-    public class PPDPackStreamWriter : Stream
+    public class PPDPackStreamWriter(Stream stream, string filename) : Stream
     {
         public Stream BaseStream
         {
             get;
             private set;
-        }
+        } = stream;
         public string Filename
         {
             get;
             private set;
-        }
+        } = filename;
 
-        private readonly long startpos;
-
-        public PPDPackStreamWriter(Stream stream, string filename)
-        {
-            BaseStream = stream;
-            Filename = filename;
-            startpos = stream.Position;
-        }
+        private readonly long startpos = stream.Position;
 
         public override bool CanRead
         {

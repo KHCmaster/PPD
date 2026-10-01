@@ -132,16 +132,9 @@ namespace PPDFramework
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct RECT
+        public struct RECT(Rectangle rect)
         {
-            public RECT(Rectangle rect)
-            {
-                left = rect.Left;
-                top = rect.Top;
-                right = rect.Right;
-                bottom = rect.Bottom;
-            }
-            public Int32 left, top, right, bottom;
+            public Int32 left = rect.Left, top = rect.Top, right = rect.Right, bottom = rect.Bottom;
         }
 
         [StructLayout(LayoutKind.Sequential)]
@@ -342,7 +335,7 @@ namespace PPDFramework
             else
             {
                 ImmReleaseContext(window, imContext);
-                return new string[0];
+                return [];
             }
         }
 

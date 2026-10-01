@@ -5,7 +5,7 @@ using System;
 
 namespace PPDTest
 {
-    class FilterScene : TestSceneBase
+    class FilterScene(TestSceneManager testSceneManager, PPDDevice device) : TestSceneBase(testSceneManager, device)
     {
         protected override string Title
         {
@@ -13,11 +13,6 @@ namespace PPDTest
             {
                 return "フィルター表示テスト";
             }
-        }
-
-        public FilterScene(TestSceneManager testSceneManager, PPDDevice device) : base(testSceneManager, device)
-        {
-
         }
 
         protected override void OnInitialize()

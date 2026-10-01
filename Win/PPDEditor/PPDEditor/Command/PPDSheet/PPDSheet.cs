@@ -19,7 +19,7 @@ namespace PPDEditor.Command.PPDSheet
             Down = 2,
             Right = 3
         }
-        readonly int[] defaultDrawingOrder = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+        readonly int[] defaultDrawingOrder = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
         public event EventHandler DisplayDataChanged;
         public event EventHandler CommandChanged;
         string name;
@@ -30,7 +30,7 @@ namespace PPDEditor.Command.PPDSheet
         private int defaultinterval = 240;
         private DisplayLineMode displayMode = DisplayLineMode.Fourth;
         private DisplayBeatType beatType = DisplayBeatType.Fourth;
-        int[] focusedmark = { -1, -1 };
+        int[] focusedmark = [-1, -1];
         readonly SortedList<float, Mark>[] data;
         readonly SortedList<float, SameTimingMarks> data2;
         readonly List<Mark> dataForColorDraw;
@@ -40,7 +40,7 @@ namespace PPDEditor.Command.PPDSheet
         {
             dataForColorDraw = [];
             commandManager = new CommandManager();
-            commandManager.CommandChanged += commandManager_CommandChanged;
+            commandManager.CommandChanged += CommandManager_CommandChanged;
             data = new SortedList<float, Mark>[buttonnum];
             for (int i = 0; i < buttonnum; i++)
             {
@@ -49,7 +49,7 @@ namespace PPDEditor.Command.PPDSheet
             data2 = [];
         }
 
-        void commandManager_CommandChanged(CommandType commandType)
+        void CommandManager_CommandChanged(CommandType commandType)
         {
             if ((commandType & CommandType.Time) == CommandType.Time)
             {
@@ -251,7 +251,7 @@ namespace PPDEditor.Command.PPDSheet
         {
             if (recstart.X == -1 || recstart.Y == -1)
             {
-                return new Mark[0];
+                return [];
             }
             var rows = WindowUtility.TimeLineForm.RowManager.OrderedVisibleRows;
             var width = Math.Abs(recstart.X - recend.X);
@@ -321,7 +321,7 @@ namespace PPDEditor.Command.PPDSheet
                     startnum[minimumnum]++;
                     if (onlyHead)
                     {
-                        return new Mark[] { mks[0] };
+                        return [mks[0]];
                     }
                 }
             }
@@ -350,7 +350,7 @@ namespace PPDEditor.Command.PPDSheet
             rotation = NormalizeAngle(rotation);
             if (num >= 0 && num < 10)
             {
-                if (!data[num].ContainsKey(time) && !checklongmark(num, time))
+                if (!data[num].ContainsKey(time) && !Checklongmark(num, time))
                 {
                     var mk = CreateMark(position.X, position.Y, (ButtonType)num, time, rotation, id);
                     if (parameters != null)
@@ -386,7 +386,7 @@ namespace PPDEditor.Command.PPDSheet
             rotation = NormalizeAngle(rotation);
             if (num >= 0 && num < 10)
             {
-                if (!data[num].ContainsKey(time) && !checklongmark(num, time))
+                if (!data[num].ContainsKey(time) && !Checklongmark(num, time))
                 {
                     Mark mk = CreateExMark(position.X, position.Y, (ButtonType)num, time, endtime, rotation, id);
                     if (parameters != null)
@@ -497,7 +497,7 @@ namespace PPDEditor.Command.PPDSheet
                 {
                     if (mk is ExMark exmk)
                     {
-                        exmk.gageDraw();
+                        exmk.GageDraw();
                     }
                 }
                 foreach (Mark mk in dataForColorDraw)
@@ -605,7 +605,7 @@ namespace PPDEditor.Command.PPDSheet
         private float GetNormalizedRotation(Vector2 pos1, Vector2 pos2, bool shiftKey, bool ctrlKey, bool altKey)
         {
             float rotation = 0;
-            int restriction = 0;
+            int restriction;
             if (shiftKey && ctrlKey && altKey)
             {
                 restriction = PPDStaticSetting.Angles[7];
@@ -653,7 +653,7 @@ namespace PPDEditor.Command.PPDSheet
             {
                 Vector2 vec = pos1 - pos2;
                 var length = vec.Length();
-                int anglebase = 0;
+                int anglebase;
                 if (vec.X >= 0)
                 {
                     if (vec.Y >= 0)
@@ -897,7 +897,7 @@ namespace PPDEditor.Command.PPDSheet
             {
                 if (mk is ExMark exmk)
                 {
-                    if (!checklongmark(focusedmark[0], time))
+                    if (!Checklongmark(focusedmark[0], time))
                     {
                         var newexmk = CreateExMark(exmk.Position.X, exmk.Position.Y, (ButtonType)focusedmark[0], time, time + exmk.EndTime - exmk.Time, exmk.Rotation, GetCorrectID(mk));
                         newexmk.CopyParameters(exmk);
@@ -943,7 +943,7 @@ namespace PPDEditor.Command.PPDSheet
                 return WindowUtility.LayerManager.IDProvider.Next();
             }
         }
-        private bool checklongmark(int num, float time)
+        private bool Checklongmark(int num, float time)
         {
             foreach (Mark mk in data[num].Values)
             {
@@ -1041,7 +1041,7 @@ namespace PPDEditor.Command.PPDSheet
         {
             if (focusedmark[0] >= 0 && focusedmark[0] < 10)
             {
-                var command = new DeleteMarksCommand(data, new Mark[] { data[focusedmark[0]].Values[focusedmark[1]] });
+                var command = new DeleteMarksCommand(data, [data[focusedmark[0]].Values[focusedmark[1]]]);
                 commandManager.AddCommand(command);
                 focusedmark[0] = -1;
                 focusedmark[1] = -1;
@@ -1296,10 +1296,10 @@ namespace PPDEditor.Command.PPDSheet
 
         public void AssignID()
         {
-            Mark[] marks = null;
+            Mark[] marks;
             if (SelectedMark != null)
             {
-                marks = new Mark[] { SelectedMark };
+                marks = [SelectedMark];
             }
             else
             {
@@ -1330,7 +1330,7 @@ namespace PPDEditor.Command.PPDSheet
             Mark[] marks = null;
             if (SelectedMark != null)
             {
-                marks = new Mark[] { SelectedMark };
+                marks = [SelectedMark];
             }
             else
             {
@@ -1390,7 +1390,7 @@ namespace PPDEditor.Command.PPDSheet
             {
                 focusedmark[0] = focusedmark[1] = -1;
             }
-            var command = new DeleteMarksCommand(data, new Mark[] { mk });
+            var command = new DeleteMarksCommand(data, [mk]);
             commandManager.AddCommand(command);
         }
 
@@ -1399,7 +1399,7 @@ namespace PPDEditor.Command.PPDSheet
             var found = data[(int)mark.Type].Select(p => p.Value).FirstOrDefault(m => m == mark);
             if (found != null)
             {
-                var command = new DeleteMarksCommand(data, new Mark[] { mark });
+                var command = new DeleteMarksCommand(data, [mark]);
                 commandManager.AddCommand(command);
             }
         }

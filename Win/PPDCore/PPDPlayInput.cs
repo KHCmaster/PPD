@@ -53,7 +53,7 @@ namespace PPDCore
                         ret.AddRange(BitConverter.GetBytes(PressCount[i]));
                     }
                 }
-                return ret.ToArray();
+                return [.. ret];
             }
         }
 

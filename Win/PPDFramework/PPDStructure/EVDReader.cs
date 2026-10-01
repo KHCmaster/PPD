@@ -17,7 +17,7 @@ namespace PPDFramework.PPDStructure
         /// <returns></returns>
         public static IEVDData[] Read(string path)
         {
-            IEVDData[] ret = new IEVDData[0];
+            IEVDData[] ret = [];
             if (File.Exists(path))
             {
                 var fs = File.Open(path, FileMode.Open);
@@ -110,7 +110,7 @@ namespace PPDFramework.PPDStructure
                 }
                 if (evddata != null) data.Add(evddata);
             }
-            return data.ToArray();
+            return [.. data];
         }
     }
 }

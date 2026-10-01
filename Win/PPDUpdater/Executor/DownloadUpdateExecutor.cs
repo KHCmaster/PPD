@@ -53,8 +53,8 @@ namespace PPDUpdater.Executor
             FilePath = Path.Combine(Dir, URL.Segments[^1]);
             updateInfo.FilePath = FilePath;
             downloadClient = new FileDownloader();
-            downloadClient.ProgressChanged += downloadClient_DownloadProgressChanged;
-            downloadClient.Completed += downloadClient_DownloadFileCompleted;
+            downloadClient.ProgressChanged += DownloadClient_DownloadProgressChanged;
+            downloadClient.Completed += DownloadClient_DownloadFileCompleted;
         }
 
         public override void Execute()
@@ -71,13 +71,13 @@ namespace PPDUpdater.Executor
             }
         }
 
-        private void downloadClient_DownloadProgressChanged(int progressPercentage)
+        private void DownloadClient_DownloadProgressChanged(int progressPercentage)
         {
             Progress = progressPercentage;
             OnProgress();
         }
 
-        private void downloadClient_DownloadFileCompleted(Exception error)
+        private void DownloadClient_DownloadFileCompleted(Exception error)
         {
             Success = error == null;
             if (!Success)

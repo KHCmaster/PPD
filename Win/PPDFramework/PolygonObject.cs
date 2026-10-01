@@ -8,22 +8,16 @@ namespace PPDFramework
     /// <summary>
     /// 頂点を指定して画像を描画するコンポーネントです。
     /// </summary>
-    public class PolygonObject : GameComponent
+    /// <remarks>
+    /// コンストラクタです。
+    /// </remarks>
+    /// <param name="device">デバイス。</param>
+    /// <param name="imageResource">描画する画像。</param>
+    /// <param name="vertex">頂点。</param>
+    public class PolygonObject(PPDDevice device, ImageResourceBase imageResource, Vertex.VertexInfo vertex) : GameComponent(device)
     {
-        readonly ImageResourceBase imageResource;
-        readonly Vertex.VertexInfo vertex;
-
-        /// <summary>
-        /// コンストラクタです。
-        /// </summary>
-        /// <param name="device">デバイス。</param>
-        /// <param name="imageResource">描画する画像。</param>
-        /// <param name="vertex">頂点。</param>
-        public PolygonObject(PPDDevice device, ImageResourceBase imageResource, Vertex.VertexInfo vertex) : base(device)
-        {
-            this.imageResource = imageResource;
-            this.vertex = vertex;
-        }
+        readonly ImageResourceBase imageResource = imageResource;
+        readonly Vertex.VertexInfo vertex = vertex;
 
         /// <summary>
         /// テクスチャ座標を、画像（スプライト）の実際のテクスチャ座標に変換します。

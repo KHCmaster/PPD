@@ -528,7 +528,7 @@ namespace DirectShow
 
         private const ushort m_usB = 0x0000;
         private const ushort m_usC = 0x0010;
-        private static readonly byte[] m_abtD = { 0x80, 0x00, 0x00, 0xAA, 0x00, 0x38, 0x9B, 0x71 };
+        private static readonly byte[] m_abtD = [0x80, 0x00, 0x00, 0xAA, 0x00, 0x38, 0x9B, 0x71];
 
         #endregion
 
@@ -556,7 +556,7 @@ namespace DirectShow
         public FOURCC(Guid _guid)
         {
             byte[] _data = _guid.ToByteArray();
-            byte[] _result = { _data[0], _data[1], _data[2], _data[3] };
+            byte[] _result = [_data[0], _data[1], _data[2], _data[3]];
             m_uiFourcc = BitConverter.ToUInt32(_result, 0);
         }
 
@@ -1246,7 +1246,6 @@ namespace DirectShow
                 if (_property != null)
                 {
                     Marshal.ReleaseComObject(_property);
-                    _property = null;
                 }
             }
             return null;
@@ -1427,7 +1426,7 @@ namespace DirectShow
         #endregion
     }
 
-    public class DSCategory : DSEnumerator<DSDevice>
+    public class DSCategory(Guid _category) : DSEnumerator<DSDevice>(_category)
     {
         #region Properties
 
@@ -1471,14 +1470,7 @@ namespace DirectShow
         }
 
         #endregion
-
         #region Constructor
-
-        public DSCategory(Guid _category)
-            : base(_category)
-        {
-
-        }
 
         #endregion
     }
@@ -1487,15 +1479,10 @@ namespace DirectShow
 
     #region Pin Helper
 
-    public class DSPin : DSObject<IPin>
+    public class DSPin(IPin _pin) : DSObject<IPin>(_pin)
     {
+
         #region Constructor
-
-        public DSPin(IPin _pin)
-            : base(_pin)
-        {
-
-        }
 
         #endregion
 
@@ -1686,7 +1673,6 @@ namespace DirectShow
                 finally
                 {
                     Marshal.FreeCoTaskMem(ipOut);
-                    ipOut = IntPtr.Zero;
                 }
                 return _result;
             }
@@ -1816,7 +1802,6 @@ namespace DirectShow
                 if (_pin)
                 {
                     _pin.Dispose();
-                    _pin = null;
                 }
             }
         }
@@ -2254,10 +2239,8 @@ namespace DirectShow
 
         public DSPin RemoveFiltersChain()
         {
-            DSPin _input = null;
-            DSPin _output = null;
-            _output = RemoveFiltersChain(PinDirection.Output);
-            _input = RemoveFiltersChain(PinDirection.Input);
+            DSPin _output = RemoveFiltersChain(PinDirection.Output);
+            DSPin _input = RemoveFiltersChain(PinDirection.Input);
             if (_output != null) return _output;
             return _input;
         }

@@ -7,14 +7,14 @@ using System.Threading;
 
 namespace PPDMultiCommon.Tcp
 {
-    public abstract class ConnectionBase
+    public abstract class ConnectionBase(TcpClient client, NetworkStream net)
     {
-        private readonly object syncRoot = new();
-        protected TcpClient client;
-        NetworkStream net;
+        private readonly Lock syncRoot = new();
+        protected TcpClient client = client;
+        NetworkStream net = net;
         Thread readThread;
         Thread writeThread;
-        readonly Queue<byte[]> jobs;
+        readonly Queue<byte[]> jobs = new Queue<byte[]>();
 
         volatile bool disposed;
 
@@ -28,15 +28,7 @@ namespace PPDMultiCommon.Tcp
         {
             get;
             protected set;
-        }
-
-        protected ConnectionBase(TcpClient client, NetworkStream net)
-        {
-            this.client = client;
-            this.net = net;
-            jobs = new Queue<byte[]>();
-            LastDataReceivedTime = DateTime.Now;
-        }
+        } = DateTime.Now;
 
         ~ConnectionBase()
         {
@@ -58,42 +50,40 @@ namespace PPDMultiCommon.Tcp
             byte[] resBytes = new byte[client.ReceiveBufferSize];
             while (true)
             {
-                using (MemoryStream ms = new())
+                using MemoryStream ms = new();
+                int resSize;
+                try
                 {
-                    int resSize;
-                    try
+                    do
                     {
-                        do
+                        resSize = net.Read(resBytes, 0, resBytes.Length);
+                        if (resSize == 0)
                         {
-                            resSize = net.Read(resBytes, 0, resBytes.Length);
-                            if (resSize == 0)
-                            {
-                                IsClosed = true;
-                                return;
-                            }
-                            ms.Write(resBytes, 0, resSize);
-                        } while (net.DataAvailable);
-                    }
-                    catch (ThreadAbortException)
-                    {
-                        break;
-                    }
-                    catch
-                    {
-                        IsClosed = true;
-                        return;
-                    }
+                            IsClosed = true;
+                            return;
+                        }
+                        ms.Write(resBytes, 0, resSize);
+                    } while (net.DataAvailable);
+                }
+                catch (ThreadAbortException)
+                {
+                    break;
+                }
+                catch
+                {
+                    IsClosed = true;
+                    return;
+                }
 
-                    if (IsClosed)
-                    {
-                        return;
-                    }
+                if (IsClosed)
+                {
+                    return;
+                }
 
-                    if (ms.Length > 0)
-                    {
-                        OnRead(ms.ToArray());
-                        LastDataReceivedTime = DateTime.Now;
-                    }
+                if (ms.Length > 0)
+                {
+                    OnRead(ms.ToArray());
+                    LastDataReceivedTime = DateTime.Now;
                 }
             }
         }

@@ -47,21 +47,19 @@ namespace PPDUpdater
         {
             try
             {
-                using (StreamWriter writer = new("error.log", true))
+                using StreamWriter writer = new("error.log", true);
+                writer.WriteLine("------------------------------------------------------------------");
+                writer.WriteLine(String.Format("{0}", DateTime.Now));
+                WriteAssembly(Assembly.GetEntryAssembly(), writer);
+                if (e != null)
                 {
-                    writer.WriteLine("------------------------------------------------------------------");
-                    writer.WriteLine(String.Format("{0}", DateTime.Now));
-                    WriteAssembly(Assembly.GetEntryAssembly(), writer);
-                    if (e != null)
-                    {
-                        WriteErrorImpl(e, writer);
-                    }
-                    else
-                    {
-                        writer.WriteLine("Exception is Null.");
-                    }
-                    writer.WriteLine("------------------------------------------------------------------");
+                    WriteErrorImpl(e, writer);
                 }
+                else
+                {
+                    writer.WriteLine("Exception is Null.");
+                }
+                writer.WriteLine("------------------------------------------------------------------");
             }
             catch
             {

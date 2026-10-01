@@ -94,7 +94,7 @@ namespace PPDEditor
         {
             get
             {
-                return list.ToArray();
+                return [.. list];
             }
         }
     }

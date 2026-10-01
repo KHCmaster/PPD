@@ -7,7 +7,7 @@ using System.Windows.Forms;
 
 namespace FolderDiffChecker
 {
-    class DiffFinder
+    class DiffFinder(string oldFolderPath, string newFolderPath, Regex[] exceptFilePatterns, Regex[] forceIncludeFilePatterns, Control control)
     {
         public delegate void VoidDelegate();
         public delegate void DiffEventHandler(DiffModel diffModel);
@@ -50,36 +50,27 @@ namespace FolderDiffChecker
         {
             get;
             private set;
-        }
+        } = oldFolderPath;
 
         public string NewFolderPath
         {
             get;
             private set;
-        }
+        } = newFolderPath;
 
         public Regex[] ExceptFilePatterns
         {
             get;
             private set;
-        }
+        } = exceptFilePatterns;
 
         public Regex[] ForceIncludeFilePatterns
         {
             get;
             private set;
-        }
+        } = forceIncludeFilePatterns;
 
-        readonly Control control;
-
-        public DiffFinder(string oldFolderPath, string newFolderPath, Regex[] exceptFilePatterns, Regex[] forceIncludeFilePatterns, Control control)
-        {
-            OldFolderPath = oldFolderPath;
-            NewFolderPath = newFolderPath;
-            ExceptFilePatterns = exceptFilePatterns;
-            ForceIncludeFilePatterns = forceIncludeFilePatterns;
-            this.control = control;
-        }
+        readonly Control control = control;
 
         public void Execute()
         {
@@ -87,13 +78,13 @@ namespace FolderDiffChecker
             OnFinished();
         }
 
-        private bool isShouldBeIgnored(string filePath)
+        private bool IsShouldBeIgnored(string filePath)
         {
             var fileName = Path.GetFileName(filePath);
             return ExceptFilePatterns.Any(e => e.IsMatch(fileName));
         }
 
-        private bool isShouldBeAdded(string filePath)
+        private bool IsShouldBeAdded(string filePath)
         {
             var fileName = Path.GetFileName(filePath);
             return ForceIncludeFilePatterns.Any(e => e.IsMatch(fileName));
@@ -115,7 +106,7 @@ namespace FolderDiffChecker
             }
             foreach (string newFile in Directory.GetFiles(newPath))
             {
-                if (isShouldBeIgnored(newFile))
+                if (IsShouldBeIgnored(newFile))
                 {
                     continue;
                 }
@@ -132,7 +123,7 @@ namespace FolderDiffChecker
                     {
                         FileEdited(Path.Combine(newPath, newFile));
                     }*/
-                    if (isShouldBeAdded(newFile) || !CheckSameFileContent(checkPath, newFile))
+                    if (IsShouldBeAdded(newFile) || !CheckSameFileContent(checkPath, newFile))
                     {
                         FileEdited(Path.Combine(newPath, newFile));
                     }
@@ -203,20 +194,18 @@ namespace FolderDiffChecker
                 var fi1 = new FileInfo(filePath1);
                 var fi2 = new FileInfo(filePath2);
                 if (fi1.Length != fi2.Length) return false;
-                using (FileStream fs1 = fi1.Open(FileMode.Open))
-                using (FileStream fs2 = fi2.Open(FileMode.Open))
+                using FileStream fs1 = fi1.Open(FileMode.Open);
+                using FileStream fs2 = fi2.Open(FileMode.Open);
+                byte[] buffer1 = new byte[bufferSize], buffer2 = new byte[bufferSize];
+                while (fs1.Position < fs1.Length)
                 {
-                    byte[] buffer1 = new byte[bufferSize], buffer2 = new byte[bufferSize];
-                    while (fs1.Position < fs1.Length)
+                    var readSize = fs1.Read(buffer1, 0, buffer1.Length);
+                    fs2.ReadAtLeast(buffer2, buffer2.Length, throwOnEndOfStream: false);
+                    for (int i = 0; i < readSize; i++)
                     {
-                        var readSize = fs1.Read(buffer1, 0, buffer1.Length);
-                        fs2.ReadAtLeast(buffer2, buffer2.Length, throwOnEndOfStream: false);
-                        for (int i = 0; i < readSize; i++)
+                        if (buffer1[i] != buffer2[i])
                         {
-                            if (buffer1[i] != buffer2[i])
-                            {
-                                return false;
-                            }
+                            return false;
                         }
                     }
                 }

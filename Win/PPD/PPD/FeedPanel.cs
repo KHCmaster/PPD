@@ -10,11 +10,11 @@ using System.Xml;
 
 namespace PPD
 {
-    class FeedPanel : HomePanelBase
+    class FeedPanel(PPDDevice device, IGameHost gameHost, PPDFramework.Resource.ResourceManager resourceManager, ISound sound) : HomePanelBase(device)
     {
-        readonly IGameHost gameHost;
-        readonly PPDFramework.Resource.ResourceManager resourceManager;
-        readonly ISound sound;
+        readonly IGameHost gameHost = gameHost;
+        readonly PPDFramework.Resource.ResourceManager resourceManager = resourceManager;
+        readonly ISound sound = sound;
 
         PictureObject left;
         PictureObject leftSelection;
@@ -24,13 +24,6 @@ namespace PPD
 
         private bool initialized;
         int currentIndex;
-
-        public FeedPanel(PPDDevice device, IGameHost gameHost, PPDFramework.Resource.ResourceManager resourceManager, ISound sound) : base(device)
-        {
-            this.gameHost = gameHost;
-            this.resourceManager = resourceManager;
-            this.sound = sound;
-        }
 
         public override void Load()
         {
@@ -187,16 +180,11 @@ namespace PPD
                 try
                 {
                     string targetLanguage = "";
-                    switch (PPDSetting.Setting.LangISO)
+                    targetLanguage = PPDSetting.Setting.LangISO switch
                     {
-                        case "jp":
-                            targetLanguage = "ja";
-                            break;
-                        default:
-                            targetLanguage = "en";
-                            break;
-                    }
-
+                        "jp" => "ja",
+                        _ => "en",
+                    };
                     var res = SyncHttpClient.Get(String.Format(@"http://projectdxxx.me/feed/{0}", feed.Path));
 
                     var sb = new StringBuilder();
@@ -310,7 +298,7 @@ namespace PPD
             {
                 get
                 {
-                    return feedList.ToArray();
+                    return [.. feedList];
                 }
             }
 

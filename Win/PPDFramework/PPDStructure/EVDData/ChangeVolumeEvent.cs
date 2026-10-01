@@ -3,20 +3,14 @@
     /// <summary>
     /// ボリューム変更イベント
     /// </summary>
-    public class ChangeVolumeEvent : IEVDData
+    /// <remarks>
+    /// コンストラクタ
+    /// </remarks>
+    /// <param name="time">時間</param>
+    /// <param name="volume">ボリューム</param>
+    /// <param name="channel">チャンネル</param>
+    public class ChangeVolumeEvent(float time, int volume, int channel) : IEVDData(time, EventType.ChangeVolume)
     {
-        /// <summary>
-        /// コンストラクタ
-        /// </summary>
-        /// <param name="time">時間</param>
-        /// <param name="volume">ボリューム</param>
-        /// <param name="channel">チャンネル</param>
-        public ChangeVolumeEvent(float time, int volume, int channel)
-            : base(time, EventType.ChangeVolume)
-        {
-            Volume = volume;
-            Channel = channel;
-        }
 
         /// <summary>
         /// ボリューム
@@ -25,7 +19,7 @@
         {
             get;
             private set;
-        }
+        } = volume;
 
         /// <summary>
         /// チャンネル
@@ -34,6 +28,6 @@
         {
             get;
             private set;
-        }
+        } = channel;
     }
 }

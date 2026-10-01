@@ -3,15 +3,9 @@ using System.Diagnostics;
 
 namespace PPDInput
 {
-    class InputAction : InputActionBase
+    class InputAction(ButtonType buttonType, double time, bool isPressed, Stopwatch stopwatch) : InputActionBase(buttonType, time, isPressed)
     {
-        private readonly Stopwatch stopwatch;
-
-        public InputAction(ButtonType buttonType, double time, bool isPressed, Stopwatch stopwatch)
-            : base(buttonType, time, isPressed)
-        {
-            this.stopwatch = stopwatch;
-        }
+        private readonly Stopwatch stopwatch = stopwatch;
 
         public override double GetAccurateTime(double currentTime)
         {

@@ -10,7 +10,7 @@ namespace PPDEditor.Controls
         {
             InitializeComponent();
         }
-        private void trackBar1_ValueChanged(object sender, EventArgs e)
+        private void TrackBar1_ValueChanged(object sender, EventArgs e)
         {
             this.label1.Text = trackBar1.Value.ToString();
         }

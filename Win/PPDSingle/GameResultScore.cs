@@ -49,7 +49,7 @@ namespace PPDSingle
         readonly Button[] buttons;
 
         readonly int scorex = 388;
-        readonly int[] scorey = { 150, 180, 210, 240, 270, 300, 373 };
+        readonly int[] scorey = [150, 180, 210, 240, 270, 300, 373];
         readonly GridSelection gridSelection = new();
 
         readonly ISound Sound;
@@ -91,24 +91,14 @@ namespace PPDSingle
                 result[i] = anim;
             }
             string filename = "";
-            switch (ppdGameUtility.Difficulty)
+            filename = ppdGameUtility.Difficulty switch
             {
-                case Difficulty.Easy:
-                    filename = "easy.png";
-                    break;
-                case Difficulty.Normal:
-                    filename = "normal.png";
-                    break;
-                case Difficulty.Hard:
-                    filename = "hard.png";
-                    break;
-                case Difficulty.Extreme:
-                    filename = "extreme.png";
-                    break;
-                default:
-                    filename = "normal.png";
-                    break;
-            }
+                Difficulty.Easy => "easy.png",
+                Difficulty.Normal => "normal.png",
+                Difficulty.Hard => "hard.png",
+                Difficulty.Extreme => "extreme.png",
+                _ => "normal.png",
+            };
             difficulty = new PictureObject(device, resourceManager, Utility.Path.Combine("result", filename))
             {
                 Position = new Vector2(45, 105)

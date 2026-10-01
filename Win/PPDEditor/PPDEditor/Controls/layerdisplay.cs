@@ -22,7 +22,7 @@ namespace PPDEditor.Controls
         {
             data = new PPDSheet();
             InitializeComponent();
-            this.textBox1.LostFocus += textBox1_LostFocus;
+            this.textBox1.LostFocus += TextBox1_LostFocus;
             MarkColor = PPDEditorSkin.Skin.TimeLineMarkColor;
         }
         public void SetLang()
@@ -32,14 +32,14 @@ namespace PPDEditor.Controls
             deleteconfirm = Utility.Language["LMDeleteConfirm"];
             confirm = Utility.Language["LMConfirm"];
         }
-        private void panel1_MouseDown(object sender, MouseEventArgs e)
+        private void Panel1_MouseDown(object sender, MouseEventArgs e)
         {
             this.pictureBox1.Visible = !this.pictureBox1.Visible;
             visible = this.pictureBox1.Visible;
             VisibleChange();
         }
 
-        private void pictureBox1_MouseDown(object sender, MouseEventArgs e)
+        private void PictureBox1_MouseDown(object sender, MouseEventArgs e)
         {
             this.pictureBox1.Visible = !this.pictureBox1.Visible;
             visible = this.pictureBox1.Visible;
@@ -49,7 +49,7 @@ namespace PPDEditor.Controls
         {
             VisibleStateChanged?.Invoke(this, EventArgs.Empty);
         }
-        private void label2_MouseClick(object sender, MouseEventArgs e)
+        private void Label2_MouseClick(object sender, MouseEventArgs e)
         {
             selected = true;
             this.Focus();
@@ -57,7 +57,7 @@ namespace PPDEditor.Controls
             ChangeDisplayMode();
         }
 
-        private void label3_MouseClick(object sender, MouseEventArgs e)
+        private void Label3_MouseClick(object sender, MouseEventArgs e)
         {
             selected = true;
             this.Focus();
@@ -65,14 +65,14 @@ namespace PPDEditor.Controls
             ChangeDisplayMode();
         }
 
-        private void label4_MouseClick(object sender, MouseEventArgs e)
+        private void Label4_MouseClick(object sender, MouseEventArgs e)
         {
             selected = true;
             this.Focus();
             SelectStateChanged?.Invoke(this, EventArgs.Empty);
             ChangeDisplayMode();
         }
-        private void layerdisplay_MouseDown(object sender, MouseEventArgs e)
+        private void Layerdisplay_MouseDown(object sender, MouseEventArgs e)
         {
             selected = true;
             this.Focus();
@@ -80,7 +80,7 @@ namespace PPDEditor.Controls
             ChangeDisplayMode();
 
         }
-        private void layerdisplay_MouseClick(object sender, MouseEventArgs e)
+        private void Layerdisplay_MouseClick(object sender, MouseEventArgs e)
         {
             /*selected = true;
             this.Focus();
@@ -101,25 +101,25 @@ namespace PPDEditor.Controls
                 this.BackColor = Color.LightGray;
             }
         }
-        private void label1_MouseDoubleClick(object sender, MouseEventArgs e)
+        private void Label1_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             this.textBox1.Text = DisplayName;
             this.textBox1.Visible = true;
             this.textBox1.Focus();
         }
-        private void textBox1_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+        private void TextBox1_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
         {
             if (e.KeyCode == Keys.Return)
             {
                 e.IsInputKey = true;
-                hidetextbox();
+                Hidetextbox();
             }
         }
-        void textBox1_LostFocus(object sender, EventArgs e)
+        void TextBox1_LostFocus(object sender, EventArgs e)
         {
-            hidetextbox();
+            Hidetextbox();
         }
-        private void hidetextbox()
+        private void Hidetextbox()
         {
             if (this.textBox1.Visible)
             {
@@ -129,7 +129,7 @@ namespace PPDEditor.Controls
             }
         }
 
-        private void contextMenuStrip1_Opened(object sender, EventArgs e)
+        private void ContextMenuStrip1_Opened(object sender, EventArgs e)
         {
             selected = true;
             this.Focus();
@@ -237,16 +237,14 @@ namespace PPDEditor.Controls
             }
         }
 
-        private void panel2_MouseDoubleClick(object sender, MouseEventArgs e)
+        private void Panel2_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            using (ColorDialog cd = new())
+            using ColorDialog cd = new();
+            cd.Color = panel2.BackColor;
+            if (cd.ShowDialog() == DialogResult.OK)
             {
-                cd.Color = panel2.BackColor;
-                if (cd.ShowDialog() == DialogResult.OK)
-                {
-                    MarkColor = cd.Color;
-                    WindowUtility.TimeLineForm.Seekmain.DrawAndRefresh();
-                }
+                MarkColor = cd.Color;
+                WindowUtility.TimeLineForm.Seekmain.DrawAndRefresh();
             }
         }
     }

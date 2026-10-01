@@ -47,7 +47,7 @@
             set;
         }
 
-        public bool ffdshow
+        public bool Ffdshow
         {
             get;
             set;

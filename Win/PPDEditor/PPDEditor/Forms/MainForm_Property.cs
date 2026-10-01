@@ -58,7 +58,7 @@ namespace PPDEditor.Forms
         {
             get
             {
-                return ke.askcurrentkasi();
+                return ke.Askcurrentkasi();
             }
         }
 
@@ -400,25 +400,17 @@ namespace PPDEditor.Forms
         {
             get
             {
-                switch (toolStripComboBox2.SelectedIndex)
+                return toolStripComboBox2.SelectedIndex switch
                 {
-                    case 0:
-                        return 0.5f;
-                    case 1:
-                        return 0.75f;
-                    case 2:
-                        return 1;
-                    case 3:
-                        return 1.25f;
-                    case 4:
-                        return 1.5f;
-                    case 5:
-                        return 1.75f;
-                    case 6:
-                        return 2;
-                    default:
-                        return 1;
-                }
+                    0 => 0.5f,
+                    1 => 0.75f,
+                    2 => 1,
+                    3 => 1.25f,
+                    4 => 1.5f,
+                    5 => 1.75f,
+                    6 => 2,
+                    _ => 1,
+                };
             }
         }
 

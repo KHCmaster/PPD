@@ -6,66 +6,49 @@ namespace BezierDrawControl
 {
     public partial class BezierControl : UserControl
     {
-        public class Context : IBezierDrawContext
+        public class Context(Graphics g) : IBezierDrawContext
         {
             public Graphics Graphics
             {
                 get;
                 private set;
-            }
-
-            public Context(Graphics g)
-            {
-                Graphics = g;
-            }
+            } = g;
 
             public void DrawString(string text, Color color, float fontSize, PointF point)
             {
-                using (var font = new Font(DefaultFont.FontFamily, fontSize))
-                using (var brush = new SolidBrush(color))
-                {
-                    Graphics.DrawString(text, font, brush, point);
-                }
+                using var font = new Font(DefaultFont.FontFamily, fontSize);
+                using var brush = new SolidBrush(color);
+                Graphics.DrawString(text, font, brush, point);
             }
 
             public void DrawLines(Color color, PointF[] points)
             {
-                using (var pen = new Pen(color))
-                {
-                    Graphics.DrawLines(pen, points);
-                }
+                using var pen = new Pen(color);
+                Graphics.DrawLines(pen, points);
             }
 
             public void DrawLine(Color color, PointF p1, PointF p2)
             {
-                using (var pen = new Pen(color))
-                {
-                    Graphics.DrawLine(pen, p1, p2);
-                }
+                using var pen = new Pen(color);
+                Graphics.DrawLine(pen, p1, p2);
             }
 
             public void DrawEllipse(Color color, RectangleF rect)
             {
-                using (var pen = new Pen(color))
-                {
-                    Graphics.DrawEllipse(pen, rect);
-                }
+                using var pen = new Pen(color);
+                Graphics.DrawEllipse(pen, rect);
             }
 
             public void DrawRectangle(Color color, float x, float y, float width, float height)
             {
-                using (var pen = new Pen(color))
-                {
-                    Graphics.DrawRectangle(pen, x, y, width, height);
-                }
+                using var pen = new Pen(color);
+                Graphics.DrawRectangle(pen, x, y, width, height);
             }
 
             public void FillRectangle(Color color, float x, float y, float width, float height)
             {
-                using (var brush = new SolidBrush(color))
-                {
-                    Graphics.FillRectangle(brush, x, y, width, height);
-                }
+                using var brush = new SolidBrush(color);
+                Graphics.FillRectangle(brush, x, y, width, height);
             }
         }
 

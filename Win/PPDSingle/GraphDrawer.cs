@@ -275,7 +275,7 @@ namespace PPDSingle
                         }
                     }
                 }
-                line.Points = poses.ToArray();
+                line.Points = [.. poses];
 
                 yAxis.Position = new Vector2(drawStartPos.X + 5, drawStartPos.Y);
                 yAxis.RectangleHeight = height;

@@ -245,29 +245,29 @@ namespace PPDSingle
         {
             back.Stop();
             back.PlayType = Effect2D.EffectManager.PlayType.ReverseOnce;
-            back.Finish += back_ReverseFinish;
+            back.Finish += Back_ReverseFinish;
             back.Play();
         }
 
-        void back_ReverseFinish(object sender, EventArgs e)
+        void Back_ReverseFinish(object sender, EventArgs e)
         {
             back.Hidden = true;
-            back.Finish -= back_ReverseFinish;
+            back.Finish -= Back_ReverseFinish;
         }
 
         void PreviewPlayDialog_GotFocused(IFocusable sender, FocusEventArgs args)
         {
             back.Stop();
             back.PlayType = Effect2D.EffectManager.PlayType.Once;
-            back.Finish += back_NormalFinish;
+            back.Finish += Back_NormalFinish;
             back.Play();
             back.Hidden = false;
         }
 
-        void back_NormalFinish(object sender, EventArgs e)
+        void Back_NormalFinish(object sender, EventArgs e)
         {
             sprite.Hidden = false;
-            back.Finish -= back_NormalFinish;
+            back.Finish -= Back_NormalFinish;
         }
 
         protected override void UpdateImpl()

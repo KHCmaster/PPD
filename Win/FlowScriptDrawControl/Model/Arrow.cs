@@ -44,9 +44,9 @@ namespace FlowScriptDrawControl.Model
             {
                 if (srcItem != value)
                 {
-                    srcItem?.PropertyChanged -= srcItem_PropertyChanged;
+                    srcItem?.PropertyChanged -= SrcItem_PropertyChanged;
                     srcItem = value;
-                    srcItem?.PropertyChanged += srcItem_PropertyChanged;
+                    srcItem?.PropertyChanged += SrcItem_PropertyChanged;
                     OnPropertyChanged("SrcItem");
                     UpdateStroke();
                 }
@@ -60,9 +60,9 @@ namespace FlowScriptDrawControl.Model
             {
                 if (destItem != value)
                 {
-                    destItem?.PropertyChanged -= destItem_PropertyChanged;
+                    destItem?.PropertyChanged -= DestItem_PropertyChanged;
                     destItem = value;
-                    destItem?.PropertyChanged += destItem_PropertyChanged;
+                    destItem?.PropertyChanged += DestItem_PropertyChanged;
                     OnPropertyChanged("DestItem");
                 }
             }
@@ -84,7 +84,7 @@ namespace FlowScriptDrawControl.Model
             Stroke = new SolidColorBrush(color);
         }
 
-        void srcItem_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        void SrcItem_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == "IsMouseOver")
             {
@@ -92,7 +92,7 @@ namespace FlowScriptDrawControl.Model
             }
         }
 
-        void destItem_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        void DestItem_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == "IsMouseOver")
             {

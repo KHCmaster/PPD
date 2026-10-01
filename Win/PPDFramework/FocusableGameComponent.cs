@@ -18,16 +18,12 @@ namespace PPDFramework
     /// <summary>
     /// 入力イベント引数です
     /// </summary>
-    public class InputEventArgs
+    /// <remarks>
+    /// コンストラクタです
+    /// </remarks>
+    /// <param name="inputInfo"></param>
+    public class InputEventArgs(InputInfoBase inputInfo)
     {
-        /// <summary>
-        /// コンストラクタです
-        /// </summary>
-        /// <param name="inputInfo"></param>
-        public InputEventArgs(InputInfoBase inputInfo)
-        {
-            InputInfo = inputInfo;
-        }
 
         /// <summary>
         /// 入力情報を取得します。
@@ -36,7 +32,7 @@ namespace PPDFramework
         {
             get;
             private set;
-        }
+        } = inputInfo;
 
         /// <summary>
         /// どれかのボタンが押されたかどうか
@@ -73,16 +69,12 @@ namespace PPDFramework
     /// <summary>
     /// フォーカスイベント引数です
     /// </summary>
-    public class FocusEventArgs
+    /// <remarks>
+    /// コンストラクタです
+    /// </remarks>
+    /// <param name="ifObj"></param>
+    public class FocusEventArgs(IFocusable ifObj)
     {
-        /// <summary>
-        /// コンストラクタです
-        /// </summary>
-        /// <param name="ifObj"></param>
-        public FocusEventArgs(IFocusable ifObj)
-        {
-            FocusObject = ifObj;
-        }
 
         /// <summary>
         /// フォーカス対象のオブジェクトです
@@ -91,13 +83,17 @@ namespace PPDFramework
         {
             get;
             private set;
-        }
+        } = ifObj;
     }
 
     /// <summary>
     /// フォーカス可能なGameComponentです
     /// </summary>
-    public class FocusableGameComponent : GameComponent, IFocusable
+    /// <remarks>
+    /// コンストラクタです。
+    /// </remarks>
+    /// <param name="device"></param>
+    public class FocusableGameComponent(PPDDevice device) : GameComponent(device), IFocusable
     {
         /// <summary>
         /// フォーカスが与えられた時のイベントです
@@ -111,15 +107,6 @@ namespace PPDFramework
         /// 入力があったときのイベントです
         /// </summary>
         public event InputEventHandler Inputed;
-
-        /// <summary>
-        /// コンストラクタです。
-        /// </summary>
-        /// <param name="device"></param>
-        public FocusableGameComponent(PPDDevice device) : base(device)
-        {
-
-        }
 
         /// <summary>
         /// フォーカスされたときに呼ばれます

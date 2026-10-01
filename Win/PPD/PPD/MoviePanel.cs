@@ -15,7 +15,7 @@ using System.Windows.Forms;
 
 namespace PPD
 {
-    class MoviePanel : HomePanelBase
+    class MoviePanel(PPDDevice device, MyGame myGame, PPDFramework.Resource.ResourceManager resourceManager, ISound sound) : HomePanelBase(device)
     {
         public enum MovieLoopType
         {
@@ -24,9 +24,9 @@ namespace PPD
             Random
         }
 
-        readonly PPDFramework.Resource.ResourceManager resourceManager;
-        readonly ISound sound;
-        readonly MyGame myGame;
+        readonly PPDFramework.Resource.ResourceManager resourceManager = resourceManager;
+        readonly ISound sound = sound;
+        readonly MyGame myGame = myGame;
 
         bool initialized;
 
@@ -46,13 +46,6 @@ namespace PPD
 
         int updateCount;
         bool playing;
-
-        public MoviePanel(PPDDevice device, MyGame myGame, PPDFramework.Resource.ResourceManager resourceManager, ISound sound) : base(device)
-        {
-            this.resourceManager = resourceManager;
-            this.myGame = myGame;
-            this.sound = sound;
-        }
 
         public override void Load()
         {
@@ -148,7 +141,7 @@ namespace PPD
             }
         }
 
-        void moviePlayer_PlayNext(object sender, EventArgs e)
+        void MoviePlayer_PlayNext(object sender, EventArgs e)
         {
             StopMovie();
             switch (PPDGeneralSetting.Setting.MovieLoopType)
@@ -202,7 +195,7 @@ namespace PPD
                     StopMovie();
                     var movie = myGame.GetMovie(current);
                     var moviePlayer = new MoviePlayer(device, movie, current, CurrentThumbList[CurrentThumbList.CurrentIndex] as LoadablePictureComponent);
-                    moviePlayer.PlayNext += moviePlayer_PlayNext;
+                    moviePlayer.PlayNext += MoviePlayer_PlayNext;
                     movieSprite.AddChild(moviePlayer);
                     playing = true;
                     currentPlaying = current;
@@ -397,8 +390,8 @@ namespace PPD
                     p.Value.Alpha = p.Key == PPDGeneralSetting.Setting.MovieLoopType ? 1 : 0;
                 }
 
-                list = new FadableButton[]
-                {
+                list =
+                [
                     changeTrimming,
                     seekBackward,
                     pause,
@@ -406,7 +399,7 @@ namespace PPD
                     seekForward,
                     getThumb,
                     oneLoop
-                };
+                ];
 
                 this.Position = new System.Numerics.Vector2(400, 420);
 
@@ -550,14 +543,14 @@ namespace PPD
                 movie.Initialize();
                 movie.Volume = songInfo.MovieVolume;
                 movie.Seek(songInfo.StartTime);
-                movie.Finished += movie_Finished;
+                movie.Finished += Movie_Finished;
                 movie.Play();
 
                 Movie = movie;
                 this.AddChild(movie as GameComponent);
             }
 
-            void movie_Finished(object sender, EventArgs e)
+            void Movie_Finished(object sender, EventArgs e)
             {
                 switch (PPDGeneralSetting.Setting.MovieLoopType)
                 {
@@ -695,16 +688,12 @@ namespace PPD
             }
         }
 
-        class ThumbList : GameComponent
+        class ThumbList(PPDDevice device) : GameComponent(device)
         {
             public int CurrentIndex
             {
                 get;
                 set;
-            }
-
-            public ThumbList(PPDDevice device) : base(device)
-            {
             }
 
             protected override bool OnCanUpdateChild(int childIndex)
@@ -721,7 +710,7 @@ namespace PPD
         class LoadablePictureComponent : GameComponent
         {
             // isLoading は全インスタンスで共有するので、ロックも共有する
-            static readonly object loadingLock = new();
+            static readonly Lock loadingLock = new();
             static bool isLoading;
 
             readonly PPDFramework.Resource.ResourceManager resourceManager;

@@ -5,14 +5,11 @@ using System.Windows.Forms;
 
 namespace PPDCore
 {
-    class ExSound
+    class ExSound(ISound sound)
     {
         int count = 1;
-        readonly ISound sound;
-        public ExSound(ISound sound)
-        {
-            this.sound = sound;
-        }
+        readonly ISound sound = sound;
+
         public bool ExAddSound(string filename)
         {
             if (File.Exists(filename))

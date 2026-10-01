@@ -20,8 +20,8 @@ namespace PPDEditor
 
         string error1 = "整数ではありません";
         string error2 = "3以上の数値を入力してください";
-        Vector2[] poses = new Vector2[0];
-        Vector2[] dirs = new Vector2[0];
+        Vector2[] poses = [];
+        Vector2[] dirs = [];
 
         readonly Timer hinttimergc;
         string gchintnormal = @"クリック  アンカー追加
@@ -44,24 +44,24 @@ Enter  変形終了";
         public GeometryCreator()
         {
             InitializeComponent();
-            radioButton3.CheckedChanged += radioButtongroup2_CheckedChanged;
-            radioButton4.CheckedChanged += radioButtongroup2_CheckedChanged;
-            radioButton5.CheckedChanged += radioButtongroup2_CheckedChanged;
-            radioButton6.CheckedChanged += radioButtongroup2_CheckedChanged;
-            radioButton7.CheckedChanged += radioButtongroup2_CheckedChanged;
-            radioButton8.CheckedChanged += radioButtongroup2_CheckedChanged;
-            radioButton9.CheckedChanged += radioButtongroup2_CheckedChanged;
-            radioButton10.CheckedChanged += radioButtongroup2_CheckedChanged;
-            this.toolStripTextBox1.TextChanged += toolStripTextBox1_TextChanged;
-            this.toolStripTextBox2.TextChanged += toolStripTextBox1_TextChanged;
-            this.toolStripTextBox3.TextChanged += toolStripTextBox1_TextChanged;
-            this.toolStripTextBox4.TextChanged += toolStripTextBox1_TextChanged;
-            this.toolStripTextBox5.TextChanged += toolStripTextBox1_TextChanged;
+            radioButton3.CheckedChanged += RadioButtongroup2_CheckedChanged;
+            radioButton4.CheckedChanged += RadioButtongroup2_CheckedChanged;
+            radioButton5.CheckedChanged += RadioButtongroup2_CheckedChanged;
+            radioButton6.CheckedChanged += RadioButtongroup2_CheckedChanged;
+            radioButton7.CheckedChanged += RadioButtongroup2_CheckedChanged;
+            radioButton8.CheckedChanged += RadioButtongroup2_CheckedChanged;
+            radioButton9.CheckedChanged += RadioButtongroup2_CheckedChanged;
+            radioButton10.CheckedChanged += RadioButtongroup2_CheckedChanged;
+            this.toolStripTextBox1.TextChanged += ToolStripTextBox1_TextChanged;
+            this.toolStripTextBox2.TextChanged += ToolStripTextBox1_TextChanged;
+            this.toolStripTextBox3.TextChanged += ToolStripTextBox1_TextChanged;
+            this.toolStripTextBox4.TextChanged += ToolStripTextBox1_TextChanged;
+            this.toolStripTextBox5.TextChanged += ToolStripTextBox1_TextChanged;
             hinttimergc = new Timer
             {
                 Interval = 2000
             };
-            hinttimergc.Tick += hinttimergc_Tick;
+            hinttimergc.Tick += Hinttimergc_Tick;
             SquareGrid = new SquareGrid
             {
                 GridColor = System.Drawing.Color.Green,
@@ -72,7 +72,7 @@ Enter  変形終了";
             };
         }
 
-        void toolStripTextBox1_TextChanged(object sender, EventArgs e)
+        void ToolStripTextBox1_TextChanged(object sender, EventArgs e)
         {
             if (!ignore)
             {
@@ -88,7 +88,7 @@ Enter  変形終了";
         private float GetValue(string data, string enddata)
         {
             if (data == null || enddata == null) return 0;
-            float ret = 0;
+            float ret;
             if (data.EndsWith(enddata))
             {
                 var temp = data[..^enddata.Length];
@@ -101,7 +101,7 @@ Enter  変形終了";
             return ret;
         }
 
-        void radioButtongroup2_CheckedChanged(object sender, EventArgs e)
+        void RadioButtongroup2_CheckedChanged(object sender, EventArgs e)
         {
             bezierControl1.DrawAndRefresh();
         }
@@ -161,28 +161,26 @@ Enter  変形終了";
             this.radioButton10.ForeColor = PPDEditorSkin.Skin.TransparentTextColor;
         }
 
-        private void bezierControl1_BeforePaint(object sender, UserPaintEventArgs e)
+        private void BezierControl1_BeforePaint(object sender, UserPaintEventArgs e)
         {
             var graphics = ((BezierControl.Context)e.Context).Graphics;
             if (SquareGrid != null && SquareGridEnabled)
             {
-                using (Pen pen = new(SquareGrid.GridColor))
+                using Pen pen = new(SquareGrid.GridColor);
+                for (int i = (-SquareGrid.NormalizedOffsetX - StartX) / SquareGrid.Width; i <= bezierControl1.Width / SquareGrid.Width; i++)
                 {
-                    for (int i = (-SquareGrid.NormalizedOffsetX - StartX) / SquareGrid.Width; i <= bezierControl1.Width / SquareGrid.Width; i++)
-                    {
-                        graphics.DrawLine(pen, new System.Drawing.Point(i * SquareGrid.Width + SquareGrid.OffsetX + StartX, 0),
-                            new System.Drawing.Point(i * SquareGrid.Width + SquareGrid.OffsetX + StartX, bezierControl1.Height));
-                    }
-                    for (int i = (-SquareGrid.NormalizedOffsetY - StartY) / SquareGrid.Height; i <= bezierControl1.Height / SquareGrid.Height; i++)
-                    {
-                        graphics.DrawLine(pen, new System.Drawing.Point(0, i * SquareGrid.Height + SquareGrid.OffsetY + StartY),
-                            new System.Drawing.Point(bezierControl1.Width, i * SquareGrid.Height + SquareGrid.OffsetY + StartY));
-                    }
+                    graphics.DrawLine(pen, new System.Drawing.Point(i * SquareGrid.Width + SquareGrid.OffsetX + StartX, 0),
+                        new System.Drawing.Point(i * SquareGrid.Width + SquareGrid.OffsetX + StartX, bezierControl1.Height));
+                }
+                for (int i = (-SquareGrid.NormalizedOffsetY - StartY) / SquareGrid.Height; i <= bezierControl1.Height / SquareGrid.Height; i++)
+                {
+                    graphics.DrawLine(pen, new System.Drawing.Point(0, i * SquareGrid.Height + SquareGrid.OffsetY + StartY),
+                        new System.Drawing.Point(bezierControl1.Width, i * SquareGrid.Height + SquareGrid.OffsetY + StartY));
                 }
             }
         }
 
-        private void bezierControl1_AfterPaint(object sender, BezierDrawControl.UserPaintEventArgs e)
+        private void BezierControl1_AfterPaint(object sender, BezierDrawControl.UserPaintEventArgs e)
         {
             var graphics = ((BezierControl.Context)e.Context).Graphics;
             CheckData();
@@ -242,8 +240,8 @@ Enter  変形終了";
             PPDSheet data = WindowUtility.LayerManager.SelectedPpdSheet;
             if (data == null)
             {
-                poses = new Vector2[0];
-                dirs = new Vector2[0];
+                poses = [];
+                dirs = [];
                 return;
             }
             //areaselection
@@ -258,8 +256,8 @@ Enter  変形終了";
                     float all = mks[^1].Time - mks[0].Time;
                     if (all == 0)
                     {
-                        poses = new Vector2[0];
-                        dirs = new Vector2[0];
+                        poses = [];
+                        dirs = [];
                         return;
                     }
                     for (int i = 0; i < mks.Length; i++)
@@ -367,30 +365,30 @@ Enter  変形終了";
             ignore = false;
         }
 
-        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        private void CheckBox1_CheckedChanged(object sender, EventArgs e)
         {
             bezierControl1.AntialiasEnabled = checkBox1.Checked;
             bezierControl1.DrawAndRefresh();
         }
-        private void checkBox2_CheckedChanged(object sender, EventArgs e)
+        private void CheckBox2_CheckedChanged(object sender, EventArgs e)
         {
             bezierControl1.DrawAndRefresh();
         }
-        private void checkBox3_CheckedChanged(object sender, EventArgs e)
+        private void CheckBox3_CheckedChanged(object sender, EventArgs e)
         {
             bezierControl1.DrawAndRefresh();
         }
-        private void checkBox4_CheckedChanged(object sender, EventArgs e)
+        private void CheckBox4_CheckedChanged(object sender, EventArgs e)
         {
             button1.Enabled = !checkBox4.Checked;
         }
 
-        private void label1_ValueChange(object sender, ValueChangeEventArgs e)
+        private void Label1_ValueChange(object sender, ValueChangeEventArgs e)
         {
             textBox1.Text = (int.Parse(textBox1.Text) + e.ChangedValue).ToString();
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void Button2_Click(object sender, EventArgs e)
         {
             if (radioButton1.Checked)
             {
@@ -459,7 +457,7 @@ Enter  変形終了";
             };
             data.Add(bcp);
             data.Add(data[0]);
-            bezierControl1.Controller.BCPS = data.ToArray();
+            bezierControl1.Controller.BCPS = [.. data];
         }
         private void CreatePolygon(int num)
         {
@@ -476,15 +474,15 @@ Enter  変形終了";
                 data.Add(bcp);
             }
             data.Add(data[0]);
-            bezierControl1.Controller.BCPS = data.ToArray();
+            bezierControl1.Controller.BCPS = [.. data];
         }
 
-        private void button3_Click(object sender, EventArgs e)
+        private void Button3_Click(object sender, EventArgs e)
         {
             if (!bezierControl1.Controller.IsTransformMode) bezierControl1.Controller.Clear();
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void Button1_Click(object sender, EventArgs e)
         {
             Apply();
         }
@@ -590,51 +588,51 @@ Enter  変形終了";
             }
         }
 
-        private void textBox2_TextChanged(object sender, EventArgs e)
+        private void TextBox2_TextChanged(object sender, EventArgs e)
         {
             if (FixedDistance != 0) bezierControl1.DrawAndRefresh();
         }
 
-        private void radioButton11_CheckedChanged(object sender, EventArgs e)
+        private void RadioButton11_CheckedChanged(object sender, EventArgs e)
         {
             textBox2.Enabled = radioButton11.Checked;
         }
 
-        void hinttimergc_Tick(object sender, EventArgs e)
+        void Hinttimergc_Tick(object sender, EventArgs e)
         {
             hinttimergc.Stop();
-            toolTip1.Show(bezierControl1.Controller.IsTransformMode ? gchinttrans : gchintnormal, gettarget(), getpoint());
+            toolTip1.Show(bezierControl1.Controller.IsTransformMode ? gchinttrans : gchintnormal, Gettarget(), Getpoint());
         }
-        private void bezierControl1_MouseLeave(object sender, EventArgs e)
+        private void BezierControl1_MouseLeave(object sender, EventArgs e)
         {
             hinttimergc.Stop();
-            toolTip1.Hide(gettarget());
+            toolTip1.Hide(Gettarget());
         }
 
-        private void bezierControl1_MouseMove(object sender, MouseEventArgs e)
+        private void BezierControl1_MouseMove(object sender, MouseEventArgs e)
         {
             hinttimergc.Stop();
-            var p = getpoint();
+            var p = Getpoint();
             if (toolTip1.Active)
             {
-                toolTip1.Hide(gettarget());
+                toolTip1.Hide(Gettarget());
             }
             hinttimergc.Start();
         }
 
-        private IWin32Window gettarget()
+        private IWin32Window Gettarget()
         {
             if (this.DockState == DockState.Float) return this;
             return WindowUtility.MainForm;
         }
-        private System.Drawing.Point getpoint()
+        private System.Drawing.Point Getpoint()
         {
             var p = new System.Drawing.Point(Cursor.Position.X + 10, Cursor.Position.Y + 10);
             if (this.DockState == DockState.Float) return this.PointToClient(p);
             return WindowUtility.MainForm.PointToClient(p);
         }
 
-        private void toolStripButton4_Click(object sender, EventArgs e)
+        private void ToolStripButton4_Click(object sender, EventArgs e)
         {
             if (bezierControl1.Controller.IsTransformMode)
             {
@@ -645,7 +643,7 @@ Enter  変形終了";
             }
         }
 
-        private void numericUpDown1_ValueChanged(object sender, EventArgs e)
+        private void NumericUpDown1_ValueChanged(object sender, EventArgs e)
         {
             if (numericUpDown1.Value == 0)
             {
@@ -657,12 +655,12 @@ Enter  変形終了";
             }
         }
 
-        private void checkBox5_CheckedChanged(object sender, EventArgs e)
+        private void CheckBox5_CheckedChanged(object sender, EventArgs e)
         {
             bezierControl1.DrawAndRefresh();
         }
 
-        private void button4_Click(object sender, EventArgs e)
+        private void Button4_Click(object sender, EventArgs e)
         {
             var gsf = new GridSettingForm();
             gsf.SetLang();
@@ -688,7 +686,7 @@ Enter  変形終了";
             }
         }
 
-        private PointF bezierControl1_PreprocessPoint(PointF arg)
+        private PointF BezierControl1_PreprocessPoint(PointF arg)
         {
             if (SquareGrid == null || !SquareGridEnabled)
             {

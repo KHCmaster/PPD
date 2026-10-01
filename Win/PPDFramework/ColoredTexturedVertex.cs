@@ -127,7 +127,7 @@ namespace PPDFramework
         /// <returns>
         /// true if <paramref name="obj"/> and this instance are the same type and represent the same value; otherwise, false.
         /// </returns>
-        public override bool Equals(object obj)
+        public override readonly bool Equals(object obj)
         {
             if (obj == null)
                 return false;

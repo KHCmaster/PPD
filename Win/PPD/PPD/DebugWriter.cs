@@ -9,11 +9,9 @@ namespace PPD
         const string filename = "debug.dat";
         public static void Write(string str)
         {
-            using (StreamWriter sw = new(filename, true))
-            {
-                sw.WriteLine(DateTime.Now);
-                sw.WriteLine(str);
-            }
+            using StreamWriter sw = new(filename, true);
+            sw.WriteLine(DateTime.Now);
+            sw.WriteLine(str);
         }
     }
 }

@@ -6,7 +6,11 @@ namespace PPDFramework
     /// <summary>
     /// 後でまとめて描画するマネージャークラスです。
     /// </summary>
-    public class PostDrawManager : GameComponent
+    /// <remarks>
+    /// コンストラクタです。
+    /// </remarks>
+    /// <param name="device"></param>
+    public class PostDrawManager(PPDDevice device) : GameComponent(device)
     {
         class Context
         {
@@ -15,16 +19,7 @@ namespace PPDFramework
             public int Depth { get; set; }
         }
 
-        readonly Queue<Context> contexts;
-
-        /// <summary>
-        /// コンストラクタです。
-        /// </summary>
-        /// <param name="device"></param>
-        public PostDrawManager(PPDDevice device) : base(device)
-        {
-            contexts = new Queue<Context>();
-        }
+        readonly Queue<Context> contexts = new Queue<Context>();
 
         /// <summary>
         /// 追加します。

@@ -9,13 +9,11 @@ namespace FlowScriptEngineBasic.FlowSourceObjects.Enumerable.Grouping
     {
         public override object GetPropertyValue(string propertyName)
         {
-            switch (propertyName)
+            return propertyName switch
             {
-                case "Key":
-                    return Key;
-                default:
-                    return null;
-            }
+                "Key" => Key,
+                _ => null,
+            };
         }
 
         protected override void SetPropertyValue(string propertyName, object value)

@@ -263,7 +263,7 @@ namespace PPDEditor
 
         public static void CopyDirectory(string sourceDirName, string destDirName, Regex[] exceptFiles, Func<string, bool> overwriteConfirm)
         {
-            exceptFiles ??= new Regex[0];
+            exceptFiles ??= [];
             if (!Directory.Exists(destDirName))
             {
                 Directory.CreateDirectory(destDirName);
@@ -370,7 +370,7 @@ namespace PPDEditor
                     commanParameters.Remove(removeKey);
                 }
             }
-            existKeys = keys.ToArray();
+            existKeys = [.. keys];
             return commanParameters;
         }
 
@@ -379,13 +379,13 @@ namespace PPDEditor
             var sheet = WindowUtility.LayerManager.SelectedPpdSheet;
             if (sheet == null)
             {
-                return new Mark[0];
+                return [];
             }
             var mark = sheet.SelectedMark;
             Mark[] marks;
             if (mark != null)
             {
-                marks = new Mark[] { mark };
+                marks = [mark];
             }
             else
             {

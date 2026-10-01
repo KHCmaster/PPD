@@ -10,11 +10,11 @@ namespace PPDEditor
         public MemoWindow()
         {
             InitializeComponent();
-            textBox1.KeyDown += textBox1_KeyDown;
-            textBox1.MouseWheel += textBox1_MouseWheel;
+            textBox1.KeyDown += TextBox1_KeyDown;
+            textBox1.MouseWheel += TextBox1_MouseWheel;
         }
 
-        void textBox1_MouseWheel(object sender, MouseEventArgs e)
+        void TextBox1_MouseWheel(object sender, MouseEventArgs e)
         {
             if (e.Delta > 0)
             {
@@ -27,7 +27,7 @@ namespace PPDEditor
 
         }
 
-        void textBox1_KeyDown(object sender, KeyEventArgs e)
+        void TextBox1_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Control)
             {
@@ -81,7 +81,7 @@ namespace PPDEditor
             }
         }
 
-        private void textBox1_TextChanged(object sender, EventArgs e)
+        private void TextBox1_TextChanged(object sender, EventArgs e)
         {
             ContentChanged();
         }

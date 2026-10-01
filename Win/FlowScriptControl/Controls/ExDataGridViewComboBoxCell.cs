@@ -40,7 +40,7 @@ namespace FlowScriptControl
                 dgv[e.ColumnIndex, e.RowIndex].Value = e.FormattedValue;
             }
 
-            this.dataGridViewComboBox?.SelectedIndexChanged -= dataGridViewComboBox_SelectedIndexChanged;
+            this.dataGridViewComboBox?.SelectedIndexChanged -= DataGridViewComboBox_SelectedIndexChanged;
             this.dataGridViewComboBox = null;
         }
 
@@ -61,11 +61,11 @@ namespace FlowScriptControl
                         (DataGridViewComboBoxEditingControl)e.Control;
                     //SelectedIndexChangedイベントハンドラを追加
                     this.dataGridViewComboBox.SelectedIndexChanged +=
-dataGridViewComboBox_SelectedIndexChanged;
+DataGridViewComboBox_SelectedIndexChanged;
                 }
             }
         }
-        private void dataGridViewComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        private void DataGridViewComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             //選択されたアイテムを表示
             var cb = (DataGridViewComboBoxEditingControl)sender;

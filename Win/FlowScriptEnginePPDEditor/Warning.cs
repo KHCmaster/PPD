@@ -2,15 +2,10 @@
 
 namespace FlowScriptEnginePPDEditor
 {
-    public class Warning : IWarning
+    public class Warning(string key) : IWarning
     {
-        private readonly string key;
-        private readonly string text;
-        public Warning(string key)
-        {
-            this.key = key;
-            this.text = FlowScriptEnginePPDEditor.Properties.Resources.ResourceManager.GetString(key);
-        }
+        private readonly string key = key;
+        private readonly string text = FlowScriptEnginePPDEditor.Properties.Resources.ResourceManager.GetString(key);
 
         public override string TextKey
         {

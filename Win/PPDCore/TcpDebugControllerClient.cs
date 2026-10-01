@@ -42,16 +42,16 @@ namespace PPDCore
             breakPoints = [];
             dict = [];
 
-            debugController.OperationWaited += debugController_OperationWaited;
-            debugController.OperationAccepted += debugController_OperationAccepted;
-            debugController.SourceChanged += debugController_SourceChanged;
-            debugController.ErrorOccurred += debugController_ErrorOccurred;
+            debugController.OperationWaited += DebugController_OperationWaited;
+            debugController.OperationAccepted += DebugController_OperationAccepted;
+            debugController.SourceChanged += DebugController_SourceChanged;
+            debugController.ErrorOccurred += DebugController_ErrorOccurred;
             LogManager.Instance.LogReceived += Instance_LogReceived;
         }
 
         private void Instance_LogReceived(LogInfo obj)
         {
-            var bytes = GetBytes(new string[] { MethodName, LogType, LogText }, writer =>
+            var bytes = GetBytes([MethodName, LogType, LogText], writer =>
             {
                 switch (writer.Filename)
                 {
@@ -80,7 +80,7 @@ namespace PPDCore
             {
                 tcpClient = new TcpClient(LocalHost, Port);
 
-                var bytes = GetBytes(new string[] { MethodName }, writer =>
+                var bytes = GetBytes([MethodName], writer =>
                 {
                     switch (writer.Filename)
                     {
@@ -101,7 +101,7 @@ namespace PPDCore
 
                 foreach (var fileName in fileNames)
                 {
-                    bytes = GetBytes(new string[] { MethodName, FileName }, writer =>
+                    bytes = GetBytes([MethodName, FileName], writer =>
                     {
                         switch (writer.Filename)
                         {
@@ -115,14 +115,12 @@ namespace PPDCore
                     });
                     Send(bytes);
                     bytes = Read(tcpClient.GetStream());
-                    using (MemoryStream stream = new(bytes))
-                    using (PackReader reader = new(stream))
+                    using MemoryStream stream = new(bytes);
+                    using PackReader reader = new(stream);
+                    var ret = ParseString(reader, Return);
+                    if (!String.IsNullOrEmpty(ret))
                     {
-                        var ret = ParseString(reader, Return);
-                        if (!String.IsNullOrEmpty(ret))
-                        {
-                            breakPoints.Add(fileName, ret.Split(',').Select(s => int.Parse(s)).ToArray());
-                        }
+                        breakPoints.Add(fileName, [.. ret.Split(',').Select(s => int.Parse(s))]);
                     }
                 }
 
@@ -155,9 +153,9 @@ namespace PPDCore
             return dict.FirstOrDefault(kvp => kvp.Value == flowSourceManager).Key;
         }
 
-        void debugController_ErrorOccurred(FlowSourceManager arg1, FlowExecutionException arg2)
+        void DebugController_ErrorOccurred(FlowSourceManager arg1, FlowExecutionException arg2)
         {
-            var bytes = GetBytes(new string[] { MethodName, FileName, ErrorText, ErrorId }, writer =>
+            var bytes = GetBytes([MethodName, FileName, ErrorText, ErrorId], writer =>
             {
                 switch (writer.Filename)
                 {
@@ -178,9 +176,9 @@ namespace PPDCore
             Send(bytes);
         }
 
-        void debugController_SourceChanged(string arg1, FlowSourceManager arg2)
+        void DebugController_SourceChanged(string arg1, FlowSourceManager arg2)
         {
-            var bytes = GetBytes(new string[] { MethodName, SerializedText, FileName }, writer =>
+            var bytes = GetBytes([MethodName, SerializedText, FileName], writer =>
             {
                 switch (writer.Filename)
                 {
@@ -198,9 +196,9 @@ namespace PPDCore
             Send(bytes);
         }
 
-        void debugController_OperationAccepted(FlowSourceManager obj)
+        void DebugController_OperationAccepted(FlowSourceManager obj)
         {
-            var bytes = GetBytes(new string[] { MethodName, FileName }, writer =>
+            var bytes = GetBytes([MethodName, FileName], writer =>
             {
                 switch (writer.Filename)
                 {
@@ -215,9 +213,9 @@ namespace PPDCore
             Send(bytes);
         }
 
-        void debugController_OperationWaited(FlowSourceManager obj)
+        void DebugController_OperationWaited(FlowSourceManager obj)
         {
-            var bytes = GetBytes(new string[] { MethodName, FileName }, writer =>
+            var bytes = GetBytes([MethodName, FileName], writer =>
             {
                 switch (writer.Filename)
                 {
@@ -232,44 +230,42 @@ namespace PPDCore
             Send(bytes);
             AsyncRead(b =>
             {
-                using (MemoryStream stream = new(b))
-                using (PackReader reader = new(stream))
+                using MemoryStream stream = new(b);
+                using PackReader reader = new(stream);
+                var methodName = ParseString(reader, MethodName);
+                switch (methodName)
                 {
-                    var methodName = ParseString(reader, MethodName);
-                    switch (methodName)
-                    {
-                        case ContinueMethod:
-                            debugController.Continue();
-                            return true;
-                        case StepInMethod:
-                            debugController.StepIn();
-                            return true;
-                        case AddBreakPointMethod:
-                            var fileName = ParseString(reader, FileName);
-                            FlowSourceManager manager;
-                            if (dict.TryGetValue(fileName, out manager))
-                            {
-                                var id = ParseInt(reader, SourceId);
-                                manager.AddBreakPoint(id);
-                            }
-                            break;
-                        case RemoveBreakPointMethod:
-                            fileName = ParseString(reader, FileName);
-                            if (dict.TryGetValue(fileName, out manager))
-                            {
-                                var id = ParseInt(reader, SourceId);
-                                manager.RemoveBreakPoint(id);
-                            }
-                            break;
-                        case ChangeSourceMethod:
-                            fileName = ParseString(reader, FileName);
-                            if (dict.TryGetValue(fileName, out manager))
-                            {
-                                var id = ParseInt(reader, SourceId);
-                                debugController.ChangeSource(id);
-                            }
-                            break;
-                    }
+                    case ContinueMethod:
+                        debugController.Continue();
+                        return true;
+                    case StepInMethod:
+                        debugController.StepIn();
+                        return true;
+                    case AddBreakPointMethod:
+                        var fileName = ParseString(reader, FileName);
+                        FlowSourceManager manager;
+                        if (dict.TryGetValue(fileName, out manager))
+                        {
+                            var id = ParseInt(reader, SourceId);
+                            manager.AddBreakPoint(id);
+                        }
+                        break;
+                    case RemoveBreakPointMethod:
+                        fileName = ParseString(reader, FileName);
+                        if (dict.TryGetValue(fileName, out manager))
+                        {
+                            var id = ParseInt(reader, SourceId);
+                            manager.RemoveBreakPoint(id);
+                        }
+                        break;
+                    case ChangeSourceMethod:
+                        fileName = ParseString(reader, FileName);
+                        if (dict.TryGetValue(fileName, out manager))
+                        {
+                            var id = ParseInt(reader, SourceId);
+                            debugController.ChangeSource(id);
+                        }
+                        break;
                 }
                 return false;
             });

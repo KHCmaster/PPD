@@ -8,29 +8,21 @@ using System.Windows.Forms;
 
 namespace PPDInput
 {
-    public abstract class InputBase : IDisposable
+    public abstract class InputBase(Form window) : IDisposable
     {
-        protected Form window;
-        readonly IDirectInput8 di;
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2213:Disposable fields should be disposed", Justification = "外部から渡されるもので、このクラスは所有しない")]
+        protected Form window = window;
+        readonly IDirectInput8 di = DInput.DirectInput8Create();
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2213:Disposable fields should be disposed", Justification = "Dispose から呼ばれる ReleaseObjects で破棄する")]
         protected IDirectInputDevice8 keyboard;
-        readonly List<IDirectInputDevice8> joysticks;
-        readonly List<string> joystickNames;
+        readonly List<IDirectInputDevice8> joysticks = [];
+        readonly List<string> joystickNames = [];
         bool disposed;
         protected const int threshold = 500;
         int currentJoyStickIndex = -1;
 
         protected bool loaded;
         private bool assignMode;
-
-        protected InputBase(Form window)
-        {
-            this.window = window;
-            joysticks = [];
-            joystickNames = [];
-            //DirectInput の初期化
-            di = DInput.DirectInput8Create();
-        }
 
         public virtual void Load()
         {
@@ -134,7 +126,7 @@ namespace PPDInput
         {
             get
             {
-                return joystickNames.ToArray();
+                return [.. joystickNames];
             }
         }
 

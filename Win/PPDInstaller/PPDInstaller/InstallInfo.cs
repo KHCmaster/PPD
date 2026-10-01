@@ -3,13 +3,13 @@
     public class InstallInfo
     {
 
-        public static string[] InstallationInfoData = {
+        public static string[] InstallationInfoData = [
             "PPD",
             "IPAFont",
             "BMSTOPPD",
             "LAVFilters",
             "RegisterStartMenu"
-        };
+        ];
 
         public bool PPD
         {
@@ -43,20 +43,15 @@
 
         public bool GetInstalled(string key)
         {
-            switch (key)
+            return key switch
             {
-                case "PPD":
-                    return PPD;
-                case "IPAFont":
-                    return IPAFont;
-                case "BMSTOPPD":
-                    return BMSTOPPD;
-                case "LAVFilters":
-                    return LAVFilters;
-                case "RegisterStartMenu":
-                    return RegisterToMenu;
-            }
-            return false;
+                "PPD" => PPD,
+                "IPAFont" => IPAFont,
+                "BMSTOPPD" => BMSTOPPD,
+                "LAVFilters" => LAVFilters,
+                "RegisterStartMenu" => RegisterToMenu,
+                _ => false,
+            };
         }
     }
 }

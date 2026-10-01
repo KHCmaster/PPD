@@ -34,7 +34,7 @@ namespace PPDSingle
         readonly PictureObject triangle;
 
         readonly TextureString difficulty;
-        readonly string[] difficultyStrings = { "Easy", "Normal", "Hard", "Extreme" };
+        readonly string[] difficultyStrings = ["Easy", "Normal", "Hard", "Extreme"];
         Difficulty selectedDifficulty;
         SongInformation selectedSongInformation;
 
@@ -69,7 +69,7 @@ namespace PPDSingle
             this.sound = sound;
             this.resourceManager = resourceManager;
 
-            graphNameStrings = new string[] { Utility.Language["Score"], "Cool", "Good", "Safe", "Sad", "Worst", "MaxCombo", Utility.Language["FinishTime"] };
+            graphNameStrings = [Utility.Language["Score"], "Cool", "Good", "Safe", "Sad", "Worst", "MaxCombo", Utility.Language["FinishTime"]];
 
             back = new PictureObject(device, resourceManager, Utility.Path.Combine("playrecord", "back.png"));
             back.AddChild(new TextureString(device, Utility.Language["PlayRecord"], 20, PPDColors.White)
@@ -318,7 +318,7 @@ namespace PPDSingle
             {
                 gd.Formatter = FloatToIntFormatter.Formatter;
             }
-            gd.Data = values.ToArray();
+            gd.Data = [.. values];
 
             gd.Name = graphNameStrings[(int)graphDrawType];
             gd.NamePositionCenter = new Vector2(220, 285);
@@ -476,7 +476,7 @@ namespace PPDSingle
                     };
                     FocusManager.Focus(ppd);
                     this.InsertChild(ppd, 0);
-                    ppd.LostFocused += ppd_LostFocused;
+                    ppd.LostFocused += Ppd_LostFocused;
                 }
             }
             else if (args.InputInfo.IsPressed(ButtonType.Square))
@@ -486,12 +486,12 @@ namespace PPDSingle
                     var drd = new GeneralDialog(device, resourceManager, sound, Utility.Language["DeleteRecordConfirm"], GeneralDialog.ButtonTypes.OkCancel);
                     FocusManager.Focus(drd);
                     this.InsertChild(drd, 0);
-                    drd.LostFocused += drd_LostFocused;
+                    drd.LostFocused += Drd_LostFocused;
                 }
             }
         }
 
-        void drd_LostFocused(IFocusable sender, FocusEventArgs args)
+        void Drd_LostFocused(IFocusable sender, FocusEventArgs args)
         {
             var drd = sender as GeneralDialog;
             if (drd.OK)
@@ -500,7 +500,7 @@ namespace PPDSingle
                 {
                     PPDFramework.ResultInfo resultInfo = currentDifficultyRecults[selectedIndex];
                     resultInfo.Delete();
-                    results = results.Where(r => r != resultInfo).ToArray();
+                    results = [.. results.Where(r => r != resultInfo)];
                     selectedIndex--;
                     if (selectedIndex < 0)
                     {
@@ -519,7 +519,7 @@ namespace PPDSingle
             drd.Dispose();
         }
 
-        void ppd_LostFocused(IFocusable sender, FocusEventArgs args)
+        void Ppd_LostFocused(IFocusable sender, FocusEventArgs args)
         {
             var ppd = sender as PreviewPlayDialog;
             if (ppd.OK)
@@ -535,18 +535,14 @@ namespace PPDSingle
 
         private bool CheckExist()
         {
-            switch (selectedDifficulty)
+            return selectedDifficulty switch
             {
-                case Difficulty.Easy:
-                    return (selectedSongInformation.Difficulty & SongInformation.AvailableDifficulty.Easy) == SongInformation.AvailableDifficulty.Easy;
-                case Difficulty.Normal:
-                    return (selectedSongInformation.Difficulty & SongInformation.AvailableDifficulty.Normal) == SongInformation.AvailableDifficulty.Normal;
-                case Difficulty.Hard:
-                    return (selectedSongInformation.Difficulty & SongInformation.AvailableDifficulty.Hard) == SongInformation.AvailableDifficulty.Hard;
-                case Difficulty.Extreme:
-                    return (selectedSongInformation.Difficulty & SongInformation.AvailableDifficulty.Extreme) == SongInformation.AvailableDifficulty.Extreme;
-            }
-            return false;
+                Difficulty.Easy => (selectedSongInformation.Difficulty & SongInformation.AvailableDifficulty.Easy) == SongInformation.AvailableDifficulty.Easy,
+                Difficulty.Normal => (selectedSongInformation.Difficulty & SongInformation.AvailableDifficulty.Normal) == SongInformation.AvailableDifficulty.Normal,
+                Difficulty.Hard => (selectedSongInformation.Difficulty & SongInformation.AvailableDifficulty.Hard) == SongInformation.AvailableDifficulty.Hard,
+                Difficulty.Extreme => (selectedSongInformation.Difficulty & SongInformation.AvailableDifficulty.Extreme) == SongInformation.AvailableDifficulty.Extreme,
+                _ => false,
+            };
         }
 
         protected override void UpdateImpl()

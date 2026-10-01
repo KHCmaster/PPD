@@ -9,7 +9,7 @@ using System.Xml.Linq;
 
 namespace PPDMulti
 {
-    public class IPSelectScene : SceneBase
+    public class IPSelectScene(PPDDevice device) : SceneBase(device)
     {
         bool asHost;
         string ip;
@@ -40,10 +40,6 @@ namespace PPDMulti
 
         RoomInfo lastCreatedRoom;
 
-        public IPSelectScene(PPDDevice device) : base(device)
-        {
-        }
-
         public override bool Load()
         {
             this.AddChild((allSlideSprite = new SpriteObject(device)));
@@ -64,7 +60,7 @@ namespace PPDMulti
 
             this.AddChild(new PictureObject(device, ResourceManager, Utility.Path.Combine("background.png")));
 
-            firstSprite.Selected += slideSprite_Selected;
+            firstSprite.Selected += SlideSprite_Selected;
 
             return true;
         }
@@ -111,7 +107,7 @@ namespace PPDMulti
             {
                 DrawOnlyFocus = false
             };
-            roomNameTextBox.LostFocused += roomNameTextBox_LostFocused;
+            roomNameTextBox.LostFocused += RoomNameTextBox_LostFocused;
             roomNameTextBox.Position = new System.Numerics.Vector2(300, 250);
             roomNameTextBox.TextBoxHeight = 20;
             roomNameTextBox.TextBoxWidth = roomNameTextBox.MaxWidth = 200;
@@ -122,14 +118,14 @@ namespace PPDMulti
             {
                 Position = new System.Numerics.Vector2(400, 300)
             });
-            roomSprite.Inputed += slideSprite_Inputed;
-            roomSprite.LostFocused += slideSprite_LostFocused;
+            roomSprite.Inputed += SlideSprite_Inputed;
+            roomSprite.LostFocused += SlideSprite_LostFocused;
             allSlideSprite.AddChild(roomSprite);
             focusManager.Focus(roomSprite);
             focusManager.Focus(roomNameTextBox);
         }
 
-        void slideSprite_Selected(object sender, EventArgs e)
+        void SlideSprite_Selected(object sender, EventArgs e)
         {
             currentIndex++;
 
@@ -165,8 +161,8 @@ namespace PPDMulti
                         {
                             Position = new System.Numerics.Vector2(300, 260)
                         });
-                        confirmSprite.LostFocused += slideSprite_LostFocused;
-                        confirmSprite.Inputed += confirmSprite_Inputed2;
+                        confirmSprite.LostFocused += SlideSprite_LostFocused;
+                        confirmSprite.Inputed += ConfirmSprite_Inputed2;
                         allSlideSprite.AddChild(confirmSprite);
                         focusManager.Focus(confirmSprite);
                     }
@@ -174,9 +170,9 @@ namespace PPDMulti
                 case 1:
                     var roomListSplite = new SlideSprite(device, ResourceManager, Sound) { Position = new System.Numerics.Vector2(800 * currentIndex, 0) };
                     var roomList = new RoomListComponent(device, ResourceManager, Sound, GameHost);
-                    roomList.RoomSelected += roomList_RoomSelected;
+                    roomList.RoomSelected += RoomList_RoomSelected;
                     roomListSplite.AddUserComponent(roomList);
-                    roomListSplite.LostFocused += slideSprite_LostFocused;
+                    roomListSplite.LostFocused += SlideSprite_LostFocused;
                     allSlideSprite.AddChild(roomListSplite);
                     focusManager.Focus(roomListSplite);
                     focusManager.Focus(roomList);
@@ -196,7 +192,7 @@ namespace PPDMulti
                     {
                         DrawOnlyFocus = false
                     };
-                    ipTextBox.LostFocused += ipTextBox_LostFocused;
+                    ipTextBox.LostFocused += IpTextBox_LostFocused;
                     ipTextBox.Position = new System.Numerics.Vector2(300, 250);
                     ipTextBox.TextBoxHeight = 20;
                     ipTextBox.TextBoxWidth = ipTextBox.MaxWidth = 200;
@@ -207,8 +203,8 @@ namespace PPDMulti
                     {
                         Position = new System.Numerics.Vector2(400, 300)
                     });
-                    ipSprite.Inputed += slideSprite_Inputed;
-                    ipSprite.LostFocused += slideSprite_LostFocused;
+                    ipSprite.Inputed += SlideSprite_Inputed;
+                    ipSprite.LostFocused += SlideSprite_LostFocused;
                     allSlideSprite.AddChild(ipSprite);
                     focusManager.Focus(ipSprite);
                     focusManager.Focus(ipTextBox);
@@ -216,7 +212,7 @@ namespace PPDMulti
             }
         }
 
-        void roomList_RoomSelected(RoomInfo obj)
+        void RoomList_RoomSelected(RoomInfo obj)
         {
             asHost = false;
             ip = obj.IP;
@@ -224,7 +220,7 @@ namespace PPDMulti
             GoNextScene(false);
         }
 
-        void slideSprite_Inputed(IFocusable sender, InputEventArgs args)
+        void SlideSprite_Inputed(IFocusable sender, InputEventArgs args)
         {
             if (args.InputInfo.IsPressed(ButtonType.Start))
             {
@@ -252,11 +248,11 @@ namespace PPDMulti
             };
             if (!toConfirm)
             {
-                portTextBox.LostFocused += portTextBox_LostFocused;
+                portTextBox.LostFocused += PortTextBox_LostFocused;
             }
             else
             {
-                portTextBox.LostFocused += portToConfirmTextBox_LostFocused;
+                portTextBox.LostFocused += PortToConfirmTextBox_LostFocused;
             }
             portTextBox.Position = new System.Numerics.Vector2(300, 250);
             portTextBox.TextBoxHeight = 20;
@@ -272,8 +268,8 @@ namespace PPDMulti
             {
                 Position = new System.Numerics.Vector2(400, 220)
             });
-            portSprite.LostFocused += slideSprite_LostFocused;
-            portSprite.Inputed += slideSprite_Inputed;
+            portSprite.LostFocused += SlideSprite_LostFocused;
+            portSprite.Inputed += SlideSprite_Inputed;
             allSlideSprite.AddChild(portSprite);
             focusManager.Focus(portSprite);
             focusManager.Focus(portTextBox);
@@ -301,13 +297,13 @@ namespace PPDMulti
             {
                 Position = new System.Numerics.Vector2(300, 260)
             });
-            confirmSprite.LostFocused += slideSprite_LostFocused;
-            confirmSprite.Inputed += confirmSprite_Inputed;
+            confirmSprite.LostFocused += SlideSprite_LostFocused;
+            confirmSprite.Inputed += ConfirmSprite_Inputed;
             allSlideSprite.AddChild(confirmSprite);
             focusManager.Focus(confirmSprite);
         }
 
-        void confirmSprite_Inputed(IFocusable sender, InputEventArgs args)
+        void ConfirmSprite_Inputed(IFocusable sender, InputEventArgs args)
         {
             if (args.InputInfo.IsPressed(ButtonType.Circle))
             {
@@ -315,7 +311,7 @@ namespace PPDMulti
             }
         }
 
-        void confirmSprite_Inputed2(IFocusable sender, InputEventArgs args)
+        void ConfirmSprite_Inputed2(IFocusable sender, InputEventArgs args)
         {
             roomName = lastCreatedRoom.RoomName;
             password = lastCreatedRoom.PasswordHash;
@@ -342,7 +338,7 @@ namespace PPDMulti
             {
                 DrawOnlyFocus = false
             };
-            passwordTextBox.LostFocused += passwordTextBox_LostFocused;
+            passwordTextBox.LostFocused += PasswordTextBox_LostFocused;
             passwordTextBox.Position = new System.Numerics.Vector2(300, 250);
             passwordTextBox.TextBoxHeight = 20;
             passwordTextBox.TextBoxWidth = passwordTextBox.MaxWidth = 200;
@@ -353,14 +349,14 @@ namespace PPDMulti
             {
                 Position = new System.Numerics.Vector2(400, 300)
             });
-            passwordSprite.LostFocused += slideSprite_LostFocused;
-            passwordSprite.Inputed += slideSprite_Inputed;
+            passwordSprite.LostFocused += SlideSprite_LostFocused;
+            passwordSprite.Inputed += SlideSprite_Inputed;
             allSlideSprite.AddChild(passwordSprite);
             focusManager.Focus(passwordSprite);
             focusManager.Focus(passwordTextBox);
         }
 
-        void passwordTextBox_LostFocused(IFocusable sender, FocusEventArgs args)
+        void PasswordTextBox_LostFocused(IFocusable sender, FocusEventArgs args)
         {
             oneFramePassedAfterRemoveFocus = false;
             if (sender is DxTextBox textBox)
@@ -373,7 +369,7 @@ namespace PPDMulti
             }
         }
 
-        void roomNameTextBox_LostFocused(IFocusable sender, FocusEventArgs args)
+        void RoomNameTextBox_LostFocused(IFocusable sender, FocusEventArgs args)
         {
             oneFramePassedAfterRemoveFocus = false;
             if (sender is DxTextBox textBox)
@@ -401,7 +397,7 @@ namespace PPDMulti
             }
         }
 
-        void ipTextBox_LostFocused(IFocusable sender, FocusEventArgs args)
+        void IpTextBox_LostFocused(IFocusable sender, FocusEventArgs args)
         {
             oneFramePassedAfterRemoveFocus = false;
             if (sender is DxTextBox textBox)
@@ -461,7 +457,7 @@ namespace PPDMulti
             return true;
         }
 
-        void portTextBox_LostFocused(IFocusable sender, FocusEventArgs args)
+        void PortTextBox_LostFocused(IFocusable sender, FocusEventArgs args)
         {
             oneFramePassedAfterRemoveFocus = false;
             if (sender is DxTextBox textBox)
@@ -487,7 +483,7 @@ namespace PPDMulti
             }
         }
 
-        void portToConfirmTextBox_LostFocused(IFocusable sender, FocusEventArgs args)
+        void PortToConfirmTextBox_LostFocused(IFocusable sender, FocusEventArgs args)
         {
             oneFramePassedAfterRemoveFocus = false;
             if (sender is DxTextBox textBox)
@@ -515,7 +511,7 @@ namespace PPDMulti
             }
         }
 
-        void slideSprite_LostFocused(IFocusable sender, FocusEventArgs args)
+        void SlideSprite_LostFocused(IFocusable sender, FocusEventArgs args)
         {
             if (sender is SlideSprite slide && !slide.OverFocused)
             {
@@ -720,13 +716,13 @@ namespace PPDMulti
                 currentIndex = 0;
             }
 
-            void textureString_MouseLeftClick(GameComponent sender, MouseEvent mouseEvent)
+            void TextureString_MouseLeftClick(GameComponent sender, MouseEvent mouseEvent)
             {
                 currentIndex = textSprite.IndexOf(sender);
                 Selected?.Invoke(this, EventArgs.Empty);
             }
 
-            void textureString_MouseEnter(GameComponent sender, MouseEvent mouseEvent)
+            void TextureString_MouseEnter(GameComponent sender, MouseEvent mouseEvent)
             {
                 currentIndex = textSprite.IndexOf(sender);
             }

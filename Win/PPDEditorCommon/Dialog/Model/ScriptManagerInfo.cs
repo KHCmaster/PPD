@@ -10,7 +10,7 @@ namespace PPDEditorCommon.Dialog.Model
         {
             get
             {
-                return scripts.ToArray();
+                return [.. scripts];
             }
         }
 
@@ -25,24 +25,18 @@ namespace PPDEditorCommon.Dialog.Model
         }
     }
 
-    public class ScriptInfo
+    public class ScriptInfo(string src, string dest)
     {
         public string Src
         {
             get;
             private set;
-        }
+        } = src;
 
         public string Dest
         {
             get;
             private set;
-        }
-
-        public ScriptInfo(string src, string dest)
-        {
-            Src = src;
-            Dest = dest;
-        }
+        } = dest;
     }
 }

@@ -50,9 +50,9 @@ namespace PPDSingle
             {
                 if (informations == null)
                 {
-                    return new WebSongInformation[0];
+                    return [];
                 }
-                return informations.Where(info => info.CanUpdate).ToArray();
+                return [.. informations.Where(info => info.CanUpdate)];
             }
         }
 
@@ -207,7 +207,7 @@ namespace PPDSingle
                         Utility.FastZip.ExtractZip(tempPath, unzipDir, "");
                         foreach (string dir in Directory.GetDirectories(unzipDir))
                         {
-                            Utility.CopyDirectory(dir, target.DirectoryPath, new System.Text.RegularExpressions.Regex[0]);
+                            Utility.CopyDirectory(dir, target.DirectoryPath, []);
                         }
                         UpdateLastTime(target.DirectoryPath);
 

@@ -121,7 +121,7 @@ namespace FlowScriptDrawControl.Control
                         parentScopeIdList.Add(scopeControl, scope.ParentScopeId);
                     }
                 }
-                SolveScopeDependencyAndAdd(parentScopeIdList, addedScopes.ToArray());
+                SolveScopeDependencyAndAdd(parentScopeIdList, [.. addedScopes]);
                 foreach (SourceControl source in GetAllSourceControls())
                 {
                     try
@@ -162,7 +162,7 @@ namespace FlowScriptDrawControl.Control
             {
                 commandManager.Clear();
                 UpdateMaxId();
-                errorList = errors.ToArray();
+                errorList = [.. errors];
                 Utility.IsLoading = false;
             }
         }

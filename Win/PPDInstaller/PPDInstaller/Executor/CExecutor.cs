@@ -3,13 +3,13 @@ using System.Windows.Forms;
 
 namespace PPDInstaller.Executor
 {
-    abstract class CExecutor
+    abstract class CExecutor(Control control)
     {
         public delegate void VoidDelegate();
 
         public event EventHandler Finished;
         public event EventHandler Progressed;
-        readonly Control control;
+        readonly Control control = control;
 
         public bool Success
         {
@@ -39,11 +39,6 @@ namespace PPDInstaller.Executor
         {
             get;
             set;
-        }
-
-        protected CExecutor(Control control)
-        {
-            this.control = control;
         }
 
         public virtual void Execute()

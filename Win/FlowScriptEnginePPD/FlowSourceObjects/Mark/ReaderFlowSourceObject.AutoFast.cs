@@ -9,27 +9,18 @@ namespace FlowScriptEnginePPD.FlowSourceObjects.Mark
     {
         public override object GetPropertyValue(string propertyName)
         {
-            switch (propertyName)
+            return propertyName switch
             {
-                case "Angle":
-                    return Angle;
-                case "EndOfStream":
-                    return EndOfStream;
-                case "EndTime":
-                    return EndTime;
-                case "IsLong":
-                    return IsLong;
-                case "MarkID":
-                    return MarkID;
-                case "MarkType":
-                    return MarkType;
-                case "Position":
-                    return Position;
-                case "Time":
-                    return Time;
-                default:
-                    return null;
-            }
+                "Angle" => Angle,
+                "EndOfStream" => EndOfStream,
+                "EndTime" => EndTime,
+                "IsLong" => IsLong,
+                "MarkID" => MarkID,
+                "MarkType" => MarkType,
+                "Position" => Position,
+                "Time" => Time,
+                _ => null,
+            };
         }
 
         protected override void SetPropertyValue(string propertyName, object value)

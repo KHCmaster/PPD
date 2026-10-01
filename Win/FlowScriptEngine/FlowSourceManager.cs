@@ -31,7 +31,7 @@ namespace FlowScriptEngine
 
         readonly List<FunctionScope> scopes;
         readonly HashSet<int> breakPoints;
-        private readonly object breakPointLock = new();
+        private readonly Lock breakPointLock = new();
 
         private bool evaluating;
         private readonly DebugController debugController;
@@ -100,7 +100,7 @@ namespace FlowScriptEngine
         {
             if (callBackDictionary.TryGetValue(callBackName, out List<FlowCallEventHandler> callBacks))
             {
-                args ??= new object[0];
+                args ??= [];
                 foreach (FlowCallEventHandler callBack in callBacks)
                 {
                     var source = GetTargetSource(callBack);

@@ -86,16 +86,13 @@ namespace PPDMulti
         {
             get
             {
-                switch (mode)
+                return mode switch
                 {
-                    case Mode.CommonSongInfo:
-                        return commonSongStack;
-                    case Mode.LogicInformation:
-                        return logicStack;
-                    case Mode.SongInformation:
-                        return songStack;
-                }
-                return null;
+                    Mode.CommonSongInfo => commonSongStack,
+                    Mode.LogicInformation => logicStack,
+                    Mode.SongInformation => songStack,
+                    _ => null,
+                };
             }
         }
 
@@ -155,7 +152,7 @@ namespace PPDMulti
 
             Inputed += SongSelectComponent_Inputed;
             SongInformation.Updated += SongInformation_Updated;
-            movieManager.MovieChanged += movieManager_MovieChanged;
+            movieManager.MovieChanged += MovieManager_MovieChanged;
         }
 
         private void InitializeSelection()
@@ -330,7 +327,7 @@ namespace PPDMulti
                     if (CurrentComponent.SongInformation != null && CurrentComponent.SongInformation.IsPPDSong)
                     {
                         var dialog = new DifficultyDialog(device, resourceManager, sound, CurrentComponent.SongInformation);
-                        dialog.LostFocused += dialog_LostFocused;
+                        dialog.LostFocused += Dialog_LostFocused;
                         dialog.Position = CurrentComponent.ScreenPos + new Vector2(20, 20);
                         if (dialog.Position.Y + dialog.Height >= 450)
                         {
@@ -598,7 +595,7 @@ namespace PPDMulti
             waitingMovieChangeCount = 0;
         }
 
-        void movieManager_MovieChanged(object sender, EventArgs e)
+        void MovieManager_MovieChanged(object sender, EventArgs e)
         {
             if (movie != null)
             {
@@ -701,7 +698,7 @@ namespace PPDMulti
             }
         }
 
-        void dialog_LostFocused(IFocusable sender, FocusEventArgs args)
+        void Dialog_LostFocused(IFocusable sender, FocusEventArgs args)
         {
             var dialog = sender as DifficultyDialog;
 
@@ -936,10 +933,10 @@ namespace PPDMulti
                         IsHorizontal = true
                     }
                 ));
-                easyTexts = new TextureString[] { easyText, easyPtText, easyDifficultyText };
-                normalTexts = new TextureString[] { normalText, normalPtText, normalDifficultyText };
-                hardTexts = new TextureString[] { hardText, hardPtText, hardDifficultyText };
-                extremeTexts = new TextureString[] { extremeText, extremePtText, extremeDifficultyText };
+                easyTexts = [easyText, easyPtText, easyDifficultyText];
+                normalTexts = [normalText, normalPtText, normalDifficultyText];
+                hardTexts = [hardText, hardPtText, hardDifficultyText];
+                extremeTexts = [extremeText, extremePtText, extremeDifficultyText];
             }
 
             private void UpdateColor(TextureString[] texts, Color4 color)
@@ -1010,7 +1007,7 @@ namespace PPDMulti
                 }
             }
 
-            class DifficultyMeasureWorker
+            class DifficultyMeasureWorker(SongInformation songInfo)
             {
                 private Thread thread;
 
@@ -1018,7 +1015,7 @@ namespace PPDMulti
                 {
                     get;
                     private set;
-                }
+                } = songInfo;
 
                 public bool IsWorking
                 {
@@ -1048,11 +1045,6 @@ namespace PPDMulti
                 {
                     get;
                     private set;
-                }
-
-                public DifficultyMeasureWorker(SongInformation songInfo)
-                {
-                    SongInformation = songInfo;
                 }
 
                 public void Start()
@@ -1214,18 +1206,14 @@ namespace PPDMulti
 
             private bool DifficultyAvailable()
             {
-                switch (index)
+                return index switch
                 {
-                    case 0:
-                        return (songInfo.Difficulty & SongInformation.AvailableDifficulty.Easy) == SongInformation.AvailableDifficulty.Easy;
-                    case 1:
-                        return (songInfo.Difficulty & SongInformation.AvailableDifficulty.Normal) == SongInformation.AvailableDifficulty.Normal;
-                    case 2:
-                        return (songInfo.Difficulty & SongInformation.AvailableDifficulty.Hard) == SongInformation.AvailableDifficulty.Hard;
-                    case 3:
-                        return (songInfo.Difficulty & SongInformation.AvailableDifficulty.Extreme) == SongInformation.AvailableDifficulty.Extreme;
-                }
-                return false;
+                    0 => (songInfo.Difficulty & SongInformation.AvailableDifficulty.Easy) == SongInformation.AvailableDifficulty.Easy,
+                    1 => (songInfo.Difficulty & SongInformation.AvailableDifficulty.Normal) == SongInformation.AvailableDifficulty.Normal,
+                    2 => (songInfo.Difficulty & SongInformation.AvailableDifficulty.Hard) == SongInformation.AvailableDifficulty.Hard,
+                    3 => (songInfo.Difficulty & SongInformation.AvailableDifficulty.Extreme) == SongInformation.AvailableDifficulty.Extreme,
+                    _ => false,
+                };
             }
 
             void DifficultyDialog_Inputed(IFocusable sender, InputEventArgs args)

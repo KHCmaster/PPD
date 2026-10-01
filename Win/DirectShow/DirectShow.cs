@@ -888,79 +888,79 @@ namespace DirectShow
     public interface IVideoWindow
     {
         [PreserveSig]
-        int put_Caption(string caption);
+        int Put_Caption(string caption);
         [PreserveSig]
-        int get_Caption([Out] out string caption);
+        int Get_Caption([Out] out string caption);
 
         [PreserveSig]
-        int put_WindowStyle(int windowStyle);
+        int Put_WindowStyle(int windowStyle);
         [PreserveSig]
-        int get_WindowStyle(out int windowStyle);
+        int Get_WindowStyle(out int windowStyle);
 
         [PreserveSig]
-        int put_WindowStyleEx(int windowStyleEx);
+        int Put_WindowStyleEx(int windowStyleEx);
         [PreserveSig]
-        int get_WindowStyleEx(out int windowStyleEx);
+        int Get_WindowStyleEx(out int windowStyleEx);
 
         [PreserveSig]
-        int put_AutoShow(int autoShow);
+        int Put_AutoShow(int autoShow);
         [PreserveSig]
-        int get_AutoShow(out int autoShow);
+        int Get_AutoShow(out int autoShow);
 
         [PreserveSig]
-        int put_WindowState(int windowState);
+        int Put_WindowState(int windowState);
         [PreserveSig]
-        int get_WindowState(out int windowState);
+        int Get_WindowState(out int windowState);
 
         [PreserveSig]
-        int put_BackgroundPalette(int backgroundPalette);
+        int Put_BackgroundPalette(int backgroundPalette);
         [PreserveSig]
-        int get_BackgroundPalette(out int backgroundPalette);
+        int Get_BackgroundPalette(out int backgroundPalette);
 
         [PreserveSig]
-        int put_Visible(int visible);
+        int Put_Visible(int visible);
         [PreserveSig]
-        int get_Visible(out int visible);
+        int Get_Visible(out int visible);
 
         [PreserveSig]
-        int put_Left(int left);
+        int Put_Left(int left);
         [PreserveSig]
-        int get_Left(out int left);
+        int Get_Left(out int left);
 
         [PreserveSig]
-        int put_Width(int width);
+        int Put_Width(int width);
         [PreserveSig]
-        int get_Width(out int width);
+        int Get_Width(out int width);
 
         [PreserveSig]
-        int put_Top(int top);
+        int Put_Top(int top);
         [PreserveSig]
-        int get_Top(out int top);
+        int Get_Top(out int top);
 
         [PreserveSig]
-        int put_Height(int height);
+        int Put_Height(int height);
         [PreserveSig]
-        int get_Height(out int height);
+        int Get_Height(out int height);
 
         [PreserveSig]
-        int put_Owner(IntPtr owner);
+        int Put_Owner(IntPtr owner);
         [PreserveSig]
-        int get_Owner(out IntPtr owner);
+        int Get_Owner(out IntPtr owner);
 
         [PreserveSig]
-        int put_MessageDrain(IntPtr drain);
+        int Put_MessageDrain(IntPtr drain);
         [PreserveSig]
-        int get_MessageDrain(out IntPtr drain);
+        int Get_MessageDrain(out IntPtr drain);
 
         [PreserveSig]
-        int get_BorderColor(out int color);
+        int Get_BorderColor(out int color);
         [PreserveSig]
-        int put_BorderColor(int color);
+        int Put_BorderColor(int color);
 
         [PreserveSig]
-        int get_FullScreenMode(out int fullScreenMode);
+        int Get_FullScreenMode(out int fullScreenMode);
         [PreserveSig]
-        int put_FullScreenMode(int fullScreenMode);
+        int Put_FullScreenMode(int fullScreenMode);
 
         [PreserveSig]
         int SetWindowForeground(int focus);
@@ -997,47 +997,47 @@ namespace DirectShow
     public interface IBasicVideo
     {
         [PreserveSig]
-        int get_AvgTimePerFrame(out double pAvgTimePerFrame);
+        int Get_AvgTimePerFrame(out double pAvgTimePerFrame);
         [PreserveSig]
-        int get_BitRate(out int pBitRate);
+        int Get_BitRate(out int pBitRate);
         [PreserveSig]
-        int get_BitErrorRate(out int pBitRate);
+        int Get_BitErrorRate(out int pBitRate);
         [PreserveSig]
-        int get_VideoWidth(out int pVideoWidth);
+        int Get_VideoWidth(out int pVideoWidth);
         [PreserveSig]
-        int get_VideoHeight(out int pVideoHeight);
+        int Get_VideoHeight(out int pVideoHeight);
         [PreserveSig]
-        int put_SourceLeft([In] int SourceLeft);
+        int Put_SourceLeft([In] int SourceLeft);
         [PreserveSig]
-        int get_SourceLeft(out int pSourceLeft);
+        int Get_SourceLeft(out int pSourceLeft);
         [PreserveSig]
-        int put_SourceWidth([In] int SourceWidth);
+        int Put_SourceWidth([In] int SourceWidth);
         [PreserveSig]
-        int get_SourceWidth(out int pSourceWidth);
+        int Get_SourceWidth(out int pSourceWidth);
         [PreserveSig]
-        int put_SourceTop([In] int SourceTop);
+        int Put_SourceTop([In] int SourceTop);
         [PreserveSig]
-        int get_SourceTop(out int pSourceTop);
+        int Get_SourceTop(out int pSourceTop);
         [PreserveSig]
-        int put_SourceHeight([In] int SourceHeight);
+        int Put_SourceHeight([In] int SourceHeight);
         [PreserveSig]
-        int get_SourceHeight(out int pSourceHeight);
+        int Get_SourceHeight(out int pSourceHeight);
         [PreserveSig]
-        int put_DestinationLeft([In] int DestinationLeft);
+        int Put_DestinationLeft([In] int DestinationLeft);
         [PreserveSig]
-        int get_DestinationLeft(out int pDestinationLeft);
+        int Get_DestinationLeft(out int pDestinationLeft);
         [PreserveSig]
-        int put_DestinationWidth([In] int DestinationWidth);
+        int Put_DestinationWidth([In] int DestinationWidth);
         [PreserveSig]
-        int get_DestinationWidth(out int pDestinationWidth);
+        int Get_DestinationWidth(out int pDestinationWidth);
         [PreserveSig]
-        int put_DestinationTop([In] int DestinationTop);
+        int Put_DestinationTop([In] int DestinationTop);
         [PreserveSig]
-        int get_DestinationTop(out int pDestinationTop);
+        int Get_DestinationTop(out int pDestinationTop);
         [PreserveSig]
-        int put_DestinationHeight([In] int DestinationHeight);
+        int Put_DestinationHeight([In] int DestinationHeight);
         [PreserveSig]
-        int get_DestinationHeight(out int pDestinationHeight);
+        int Get_DestinationHeight(out int pDestinationHeight);
         [PreserveSig]
         int SetSourcePosition([In] int left, [In] int top, [In] int width, [In] int height);
         [PreserveSig]
@@ -1093,46 +1093,46 @@ namespace DirectShow
 
 
         [PreserveSig]
-        int put_SourceLeft(int SourceLeft);
+        int Put_SourceLeft(int SourceLeft);
         [PreserveSig]
-        int get_SourceLeft(out int pSourceLeft);
+        int Get_SourceLeft(out int pSourceLeft);
 
         [PreserveSig]
-        int put_SourceWidth(int SourceWidth);
+        int Put_SourceWidth(int SourceWidth);
         [PreserveSig]
-        int get_SourceWidth(out int pSourceWidth);
+        int Get_SourceWidth(out int pSourceWidth);
 
         [PreserveSig]
-        int put_SourceTop(int SourceTop);
+        int Put_SourceTop(int SourceTop);
         [PreserveSig]
-        int get_SourceTop(out int pSourceTop);
+        int Get_SourceTop(out int pSourceTop);
 
         [PreserveSig]
-        int put_SourceHeight(int SourceHeight);
+        int Put_SourceHeight(int SourceHeight);
         [PreserveSig]
-        int get_SourceHeight(out int pSourceHeight);
+        int Get_SourceHeight(out int pSourceHeight);
 
 
 
         [PreserveSig]
-        int put_DestinationLeft(int DestinationLeft);
+        int Put_DestinationLeft(int DestinationLeft);
         [PreserveSig]
-        int get_DestinationLeft(out int pDestinationLeft);
+        int Get_DestinationLeft(out int pDestinationLeft);
 
         [PreserveSig]
-        int put_DestinationWidth(int DestinationWidth);
+        int Put_DestinationWidth(int DestinationWidth);
         [PreserveSig]
-        int get_DestinationWidth(out int pDestinationWidth);
+        int Get_DestinationWidth(out int pDestinationWidth);
 
         [PreserveSig]
-        int put_DestinationTop(int DestinationTop);
+        int Put_DestinationTop(int DestinationTop);
         [PreserveSig]
-        int get_DestinationTop(out int pDestinationTop);
+        int Get_DestinationTop(out int pDestinationTop);
 
         [PreserveSig]
-        int put_DestinationHeight(int DestinationHeight);
+        int Put_DestinationHeight(int DestinationHeight);
         [PreserveSig]
-        int get_DestinationHeight(out int pDestinationHeight);
+        int Get_DestinationHeight(out int pDestinationHeight);
 
         [PreserveSig]
         int SetSourcePosition(int left, int top, int width, int height);
@@ -1174,27 +1174,27 @@ namespace DirectShow
     public interface IMediaPosition
     {
         [PreserveSig]
-        int get_Duration(out double pLength);
+        int Get_Duration(out double pLength);
 
         [PreserveSig]
-        int put_CurrentPosition(double llTime);
+        int Put_CurrentPosition(double llTime);
         [PreserveSig]
-        int get_CurrentPosition(out double pllTime);
+        int Get_CurrentPosition(out double pllTime);
 
         [PreserveSig]
-        int get_StopTime(out double pllTime);
+        int Get_StopTime(out double pllTime);
         [PreserveSig]
-        int put_StopTime(double llTime);
+        int Put_StopTime(double llTime);
 
         [PreserveSig]
-        int get_PrerollTime(out double pllTime);
+        int Get_PrerollTime(out double pllTime);
         [PreserveSig]
-        int put_PrerollTime(double llTime);
+        int Put_PrerollTime(double llTime);
 
         [PreserveSig]
-        int put_Rate(double dRate);
+        int Put_Rate(double dRate);
         [PreserveSig]
-        int get_Rate(out double pdRate);
+        int Get_Rate(out double pdRate);
 
         [PreserveSig]
         int CanSeekForward(out int pCanSeekForward);
@@ -1264,11 +1264,11 @@ namespace DirectShow
             [Out, MarshalAs(UnmanagedType.IDispatch)]   out object ppUnk);
 
         [PreserveSig]
-        int get_FilterCollection(
+        int Get_FilterCollection(
             [Out, MarshalAs(UnmanagedType.IDispatch)]   out object ppUnk);
 
         [PreserveSig]
-        int get_RegFilterCollection(
+        int Get_RegFilterCollection(
             [Out, MarshalAs(UnmanagedType.IDispatch)]   out object ppUnk);
 
         [PreserveSig]
@@ -2602,14 +2602,14 @@ namespace DirectShow
     public interface IBasicAudio
     {
         [PreserveSig]
-        int put_Volume(int lVolume);
+        int Put_Volume(int lVolume);
         [PreserveSig]
-        int get_Volume(out int plVolume);
+        int Get_Volume(out int plVolume);
 
         [PreserveSig]
-        int put_Balance(int lBalance);
+        int Put_Balance(int lBalance);
         [PreserveSig]
-        int get_Balance(out int plBalance);
+        int Get_Balance(out int plBalance);
     }
 
 
@@ -2698,13 +2698,9 @@ namespace DirectShow
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    public class DsLong
+    public class DsLong(long Value)
     {
-        private readonly long Value;
-        public DsLong(long Value)
-        {
-            this.Value = Value;
-        }
+        private readonly long Value = Value;
 
         public override string ToString()
         {
@@ -3172,7 +3168,6 @@ namespace DirectShow
             finally
             {
                 Marshal.FreeCoTaskMem(ipOut);
-                ipOut = IntPtr.Zero;
             }
 
             return guidRet;

@@ -151,7 +151,7 @@ namespace PPDSingle
             renamemenu = Utility.Language["Rename"];
 
             cm = new ContextMenu(device, resourceManager, sound);
-            cm.Selected += cm_Selected;
+            cm.Selected += Cm_Selected;
 
             Inputed += ScoreManager_Inputed;
 
@@ -168,7 +168,7 @@ namespace PPDSingle
             CreateInformation();
         }
 
-        void cm_Selected(object sender, EventArgs e)
+        void Cm_Selected(object sender, EventArgs e)
         {
             if (sender is MenuItem menuItem)
             {
@@ -632,7 +632,6 @@ namespace PPDSingle
             if (Disposed || Hidden || !OverFocused) return;
             base.Update();
             cm.Update();
-            int iter = 0;
             if (first)
             {
                 first = false;
@@ -647,7 +646,7 @@ namespace PPDSingle
                 cm.AddMenu(renamemenu);
             }
 
-            iter = -leftInfo.Scroll;
+            int iter = -leftInfo.Scroll;
             RecursiveUpdate(siTreeView.Items, ref iter);
             if (leftInfo.Selection < 0 || leftInfo.Selection >= maxHeightNumber)
             {
@@ -679,7 +678,7 @@ namespace PPDSingle
 
             int iter = 0;
             siTreeView = new TreeView(new SongInfoTreeViewItem());
-            siTreeView.SelectionChanged += treeview_SelectionChanged;
+            siTreeView.SelectionChanged += Treeview_SelectionChanged;
             RecursiveCreate(filter.GetFiltered(SongInformation.Root.Children), ref iter, siTreeView.Root);
             if (siTreeView.ItemCount > 0)
             {
@@ -691,7 +690,7 @@ namespace PPDSingle
                 LogicFolderInfo = LogicFolderInfomation.Root
             };
             lfTreeView = new TreeView(lfroot);
-            lfTreeView.SelectionChanged += lfTreeView_SelectionChanged;
+            lfTreeView.SelectionChanged += LfTreeView_SelectionChanged;
             iter = 0;
             LFRecursiveCreate(LogicFolderInfomation.Root.Children, ref iter, lfTreeView.Root);
             if (lfTreeView.ItemCount > 0)
@@ -715,7 +714,7 @@ namespace PPDSingle
 
         #region LOGICFOLDER
 
-        void lfTreeView_SelectionChanged(object sender, SelectionEventArgs args)
+        void LfTreeView_SelectionChanged(object sender, SelectionEventArgs args)
         {
             if (args.Prev is LogicFolderTreeViewItem prev)
             {
@@ -842,7 +841,7 @@ namespace PPDSingle
 
         #region SONGINFO
 
-        void treeview_SelectionChanged(object sender, SelectionEventArgs args)
+        void Treeview_SelectionChanged(object sender, SelectionEventArgs args)
         {
             if (args.Prev is SongInfoTreeViewItem prev)
             {

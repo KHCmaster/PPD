@@ -3,7 +3,16 @@
     /// <summary>
     /// 単精度浮動小数の設定を扱うクラスです。
     /// </summary>
-    public class FloatModSetting : NumberModSetting<float>
+    /// <remarks>
+    /// コンストラクタです。
+    /// </remarks>
+    /// <param name="key"></param>
+    /// <param name="name"></param>
+    /// <param name="description"></param>
+    /// <param name="defaultValue"></param>
+    /// <param name="minValue"></param>
+    /// <param name="maxValue"></param>
+    public class FloatModSetting(string key, string name, string description, float defaultValue, float minValue, float maxValue) : NumberModSetting<float>(key, name, description, defaultValue, minValue, maxValue)
     {
         /// <summary>
         /// 最小値がクラスの最小値かどうかを取得します。
@@ -19,20 +28,6 @@
         protected override float ClassMaxValue
         {
             get { return float.MaxValue; }
-        }
-
-        /// <summary>
-        /// コンストラクタです。
-        /// </summary>
-        /// <param name="key"></param>
-        /// <param name="name"></param>
-        /// <param name="description"></param>
-        /// <param name="defaultValue"></param>
-        /// <param name="minValue"></param>
-        /// <param name="maxValue"></param>
-        public FloatModSetting(string key, string name, string description, float defaultValue, float minValue, float maxValue)
-            : base(key, name, description, defaultValue, minValue, maxValue)
-        {
         }
 
         /// <summary>

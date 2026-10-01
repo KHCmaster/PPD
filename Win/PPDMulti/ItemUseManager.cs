@@ -50,7 +50,7 @@ namespace PPDMulti
         {
             get
             {
-                return autoUseItemTypes.ToArray();
+                return [.. autoUseItemTypes];
             }
         }
 

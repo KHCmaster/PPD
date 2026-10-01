@@ -3,20 +3,14 @@
     /// <summary>
     /// 効果音再生方法変更イベント
     /// </summary>
-    public class ChangeSoundPlayModeEvent : IEVDData
+    /// <remarks>
+    /// コンストラクタ
+    /// </remarks>
+    /// <param name="time">時間</param>
+    /// <param name="keepplaying">押している間か</param>
+    /// <param name="channel">チャンネル</param>
+    public class ChangeSoundPlayModeEvent(float time, bool keepplaying, int channel) : IEVDData(time, EventType.ChangeSoundPlayMode)
     {
-        /// <summary>
-        /// コンストラクタ
-        /// </summary>
-        /// <param name="time">時間</param>
-        /// <param name="keepplaying">押している間か</param>
-        /// <param name="channel">チャンネル</param>
-        public ChangeSoundPlayModeEvent(float time, bool keepplaying, int channel)
-            : base(time, EventType.ChangeSoundPlayMode)
-        {
-            KeepPlaying = keepplaying;
-            Channel = channel;
-        }
 
         /// <summary>
         /// 押している間か
@@ -25,7 +19,7 @@
         {
             get;
             private set;
-        }
+        } = keepplaying;
 
         /// <summary>
         /// チャンネル
@@ -34,6 +28,6 @@
         {
             get;
             private set;
-        }
+        } = channel;
     }
 }

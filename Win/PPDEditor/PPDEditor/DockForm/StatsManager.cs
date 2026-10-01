@@ -28,17 +28,13 @@ namespace PPDEditor
         {
             get
             {
-                switch (comboBox1.SelectedIndex)
+                return comboBox1.SelectedIndex switch
                 {
-                    case 0:
-                        return ChartMode.Both;
-                    case 1:
-                        return ChartMode.Normal;
-                    case 2:
-                        return ChartMode.Long;
-                }
-
-                return ChartMode.None;
+                    0 => ChartMode.Both,
+                    1 => ChartMode.Normal,
+                    2 => ChartMode.Long,
+                    _ => ChartMode.None,
+                };
             }
         }
 
@@ -46,7 +42,7 @@ namespace PPDEditor
         {
             InitializeComponent();
             comboBox1.SelectedIndex = 0;
-            comboBox1.SelectedIndexChanged += comboBox1_SelectedIndexChanged;
+            comboBox1.SelectedIndexChanged += ComboBox1_SelectedIndexChanged;
         }
 
         public void SetEvent()
@@ -152,7 +148,7 @@ namespace PPDEditor
             return Utility.Language[((ButtonType)i).ToString()];
         }
 
-        void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        void ComboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (currentStats == null)
             {
@@ -199,7 +195,7 @@ namespace PPDEditor
                 allStats.LongCounts[i] = statsList.Sum(stats => stats.LongCounts[i]);
             }
             statsList.Insert(0, allStats);
-            currentStats = statsList.ToArray();
+            currentStats = [.. statsList];
 
             listBox1.Items.Clear();
             foreach (LayerStats stats in currentStats)
@@ -210,7 +206,7 @@ namespace PPDEditor
             listBox1.SelectedIndex = 0;
         }
 
-        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
+        private void ListBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (currentStats == null)
             {
@@ -225,7 +221,7 @@ namespace PPDEditor
             }
         }
 
-        private void chart2_FormatNumber(object sender, FormatNumberEventArgs e)
+        private void Chart2_FormatNumber(object sender, FormatNumberEventArgs e)
         {
             if (e.ElementType == ChartElementType.AxisLabels && e.Format == "MyAxisXCustomFormat")
             {
@@ -251,24 +247,16 @@ namespace PPDEditor
             }
         }
 
-        class LayerStats
+        class LayerStats(string name, ScoreDifficultyMeasureResult result)
         {
-            readonly int[] normalCounts;
-            readonly int[] longCounts;
-
-            public LayerStats(string name, ScoreDifficultyMeasureResult result)
-            {
-                Result = result;
-                Name = name;
-                normalCounts = new int[10];
-                longCounts = new int[10];
-            }
+            readonly int[] normalCounts = new int[10];
+            readonly int[] longCounts = new int[10];
 
             public string Name
             {
                 get;
                 private set;
-            }
+            } = name;
 
             public int[] NormalCounts
             {
@@ -314,7 +302,7 @@ namespace PPDEditor
             {
                 get;
                 private set;
-            }
+            } = result;
         }
     }
 }

@@ -96,7 +96,7 @@ namespace PPDFramework
                 MessageBox.Show("Failed to load effect:" + filename);
                 return;
             }
-            manager.Finish += manager_Finish;
+            manager.Finish += Manager_Finish;
             Alignment = EffectAlignment.Center;
             PlayType = EffectManager.PlayType.Once;
         }
@@ -111,7 +111,7 @@ namespace PPDFramework
         {
             this.resourceManager = resourceManager;
             this.manager = manager;
-            manager.Finish += manager_Finish;
+            manager.Finish += Manager_Finish;
             Alignment = EffectAlignment.Center;
             PlayType = EffectManager.PlayType.Once;
         }
@@ -125,7 +125,7 @@ namespace PPDFramework
             }
         }
 
-        void manager_Finish(object sender, EventArgs e)
+        void Manager_Finish(object sender, EventArgs e)
         {
             Finish?.Invoke(this, EventArgs.Empty);
         }
@@ -212,7 +212,7 @@ namespace PPDFramework
         protected override void DisposeResource()
         {
             base.DisposeResource();
-            manager?.Finish -= manager_Finish;
+            manager?.Finish -= Manager_Finish;
             manager = null;
         }
     }

@@ -80,8 +80,7 @@ namespace PPDFrameworkCore
         {
             if (srcPropertyInfo != null && destPropertyInfo != null && propertyName == srcPropertyLast)
             {
-                object srcValue = null;
-                srcValue = srcPropertyInfo.GetValue(srcObject, null);
+                object srcValue = srcPropertyInfo.GetValue(srcObject, null);
 
                 if (srcValue != null)
                 {
@@ -106,8 +105,7 @@ namespace PPDFrameworkCore
         {
             if (srcPropertyInfo != null && destPropertyInfo != null)
             {
-                object srcValue = null;
-                srcValue = srcPropertyInfo.GetValue(srcObject, null);
+                object srcValue = srcPropertyInfo.GetValue(srcObject, null);
 
                 if (srcValue != null)
                 {

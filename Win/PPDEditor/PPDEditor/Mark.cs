@@ -377,7 +377,7 @@ namespace PPDEditor
 
         public KeyValuePair<string, string>[] Parameters
         {
-            get { return parameters.ToArray(); }
+            get { return [.. parameters]; }
         }
 
         public string this[string key]

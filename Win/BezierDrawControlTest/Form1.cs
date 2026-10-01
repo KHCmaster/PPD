@@ -24,8 +24,8 @@ namespace BezierDrawControlTest
         {
             InitializeComponent();
             // bezierControl1.AntialiasEnabled = true;
-            bezierControl1.Controller.AfterPaint += bezierControl1_UserPaint;
-            bezierControl1.Controller.PreprocessPoint += bezierControl1_PreprocessPoint;
+            bezierControl1.Controller.AfterPaint += BezierControl1_UserPaint;
+            bezierControl1.Controller.PreprocessPoint += BezierControl1_PreprocessPoint;
             bezierControl1.Controller.RestrictAngleSplit = 3;
             //CreateCircle();
         }
@@ -72,10 +72,10 @@ namespace BezierDrawControlTest
             };
             data.Add(bcp);
             data.Add(data[0]);
-            bezierControl1.Controller.BCPS = data.ToArray();
+            bezierControl1.Controller.BCPS = [.. data];
         }
 
-        void bezierControl1_UserPaint(object sender, UserPaintEventArgs e)
+        void BezierControl1_UserPaint(object sender, UserPaintEventArgs e)
         {
             if (bezierControl1.Controller.BCPSCount >= 2)
             {
@@ -111,7 +111,7 @@ namespace BezierDrawControlTest
             }
         }
 
-        PointF bezierControl1_PreprocessPoint(PointF arg)
+        PointF BezierControl1_PreprocessPoint(PointF arg)
         {
             int offsetx = grid.NormalizedOffsetX;
             int offsety = grid.NormalizedOffsetY;

@@ -60,53 +60,52 @@ namespace PPDEditor.Controls
         {
             if (propertyName.Contains("Time") && propertyType == typeof(float))
             {
-                return ShowSuggest(new KeyValuePair<string, string>[] {
-                    new(Utility.Language["CurrentMovieTime"], ((float)WindowUtility.MainForm.CurrentTime).ToString())                });
+                return ShowSuggest([
+                    new(Utility.Language["CurrentMovieTime"], ((float)WindowUtility.MainForm.CurrentTime).ToString())                ]);
             }
             if (sourceName.Contains("ByID") && propertyType == typeof(int))
             {
                 Mark mark = WindowUtility.LayerManager.SelectedPpdSheet.SelectedMark;
                 if (mark != null)
                 {
-                    return ShowSuggest(new KeyValuePair<string, string>[] {
-                        new(Utility.Language["SelectedMarkID"], mark.ID.ToString())                    });
+                    return ShowSuggest([
+                        new(Utility.Language["SelectedMarkID"], mark.ID.ToString())                    ]);
                 }
             }
             if ((sourceName.Contains("Effect.Value") && propertyName == "Path") ||
                 (sourceName.Contains("Effect.Pool.Value") && propertyName == "Path"))
             {
                 var effects = WindowUtility.ResourceManager.GetEffectList();
-                return ShowSuggest(effects.Select(s => new KeyValuePair<string, string>(s, s)).ToArray());
+                return ShowSuggest([.. effects.Select(s => new KeyValuePair<string, string>(s, s))]);
             }
             if (sourceName.Contains("Image.Value") && propertyName == "Path")
             {
                 var images = WindowUtility.ResourceManager.GetImageList();
-                return ShowSuggest(images.Select(s => new KeyValuePair<string, string>(s, s)).ToArray());
+                return ShowSuggest([.. images.Select(s => new KeyValuePair<string, string>(s, s))]);
             }
             if (sourceName.Contains("Number.Value") && propertyName == "Path")
             {
                 var images = WindowUtility.ResourceManager.GetImageList();
-                return ShowSuggest(images.Select(s => new KeyValuePair<string, string>(s, s)).ToArray());
+                return ShowSuggest([.. images.Select(s => new KeyValuePair<string, string>(s, s))]);
             }
             if (sourceName.Contains("Audio.Sound.Value") && propertyName == "Path")
             {
                 var sounds = WindowUtility.ResourceManager.GetSoundList();
-                return ShowSuggest(sounds.Select(s => new KeyValuePair<string, string>(s, s)).ToArray());
+                return ShowSuggest([.. sounds.Select(s => new KeyValuePair<string, string>(s, s))]);
             }
             if (sourceName.Contains("Resource.Value") && propertyName == "Path")
             {
                 var others = WindowUtility.ResourceManager.GetOthersList();
-                return ShowSuggest(others.Select(s => new KeyValuePair<string, string>(s, s)).ToArray());
+                return ShowSuggest([.. others.Select(s => new KeyValuePair<string, string>(s, s))]);
             }
             if (sourceName.Contains("Polygon.Value") && propertyName == "Path")
             {
                 var images = WindowUtility.ResourceManager.GetImageList();
-                return ShowSuggest(images.Select(s => new KeyValuePair<string, string>(s, s)).ToArray());
+                return ShowSuggest([.. images.Select(s => new KeyValuePair<string, string>(s, s))]);
             }
             if (sourceName.Contains("PPDEditor.Mark.PosAndRotation") && propertyName == "FileName")
             {
-                return ShowSuggest(Directory.GetFiles("posdat", "*.txt").Select(f => Path.GetFileNameWithoutExtension(f))
-                    .Select(s => new KeyValuePair<string, string>(s, s)).ToArray());
+                return ShowSuggest([.. Directory.GetFiles("posdat", "*.txt").Select(f => Path.GetFileNameWithoutExtension(f)).Select(s => new KeyValuePair<string, string>(s, s))]);
             }
 
             return base.ValueButtonClicked(sourceName, propertyName, propertyType);

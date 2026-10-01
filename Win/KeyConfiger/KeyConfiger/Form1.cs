@@ -112,7 +112,7 @@ namespace KeyConfiger
             var tsmi = new ToolStripMenuItem(keyConfig.Name);
             tsmi.Text = tsmi.ToolTipText = keyConfig.Name;
             tsmi.Tag = keyConfig;
-            tsmi.Click += tsmi_Click1;
+            tsmi.Click += Tsmi_Click1;
             this.設定ToolStripMenuItem.DropDownItems.Add(tsmi);
         }
 
@@ -211,13 +211,13 @@ namespace KeyConfiger
                         Name = fileName.ToLower(),
                         Checked = Path.GetFileName(fileName).ToLower() == String.Format("lang_{0}_{1}.ini", this.GetType().Assembly.GetName().Name, langFileISO).ToLower()
                     };
-                    tsmi.Click += tsmi_Click;
+                    tsmi.Click += Tsmi_Click;
                     言語ToolStripMenuItem.DropDownItems.Add(tsmi);
                 }
             }
         }
 
-        void tsmi_Click(object sender, EventArgs e)
+        void Tsmi_Click(object sender, EventArgs e)
         {
             if (sender is ToolStripMenuItem tsmi)
             {
@@ -294,7 +294,7 @@ namespace KeyConfiger
             }
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void Button1_Click(object sender, EventArgs e)
         {
             WaitForInput();
         }
@@ -305,17 +305,17 @@ namespace KeyConfiger
             this.label1.Visible = true;
         }
 
-        private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
+        private void DataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             WaitForInput();
         }
 
-        private void dataGridView1_KeyDown(object sender, KeyEventArgs e)
+        private void DataGridView1_KeyDown(object sender, KeyEventArgs e)
         {
             e.Handled |= waitinginput;
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void Button2_Click(object sender, EventArgs e)
         {
             var writer = XmlWriter.Create(keyConfigFileName, new XmlWriterSettings
             {
@@ -359,16 +359,14 @@ namespace KeyConfiger
             var setting = new SettingReader(sr.ReadToEnd());
             sr.Close();
             setting.ReplaceOrAdd("Language", langFileISO);
-            using (SettingWriter sw = new(iniFileName, false))
+            using SettingWriter sw = new(iniFileName, false);
+            foreach (KeyValuePair<string, string> kvp in setting.Dictionary)
             {
-                foreach (KeyValuePair<string, string> kvp in setting.Dictionary)
-                {
-                    sw.Write(kvp.Key, kvp.Value);
-                }
+                sw.Write(kvp.Key, kvp.Value);
             }
         }
 
-        private void button3_Click(object sender, EventArgs e)
+        private void Button3_Click(object sender, EventArgs e)
         {
             this.Close();
         }
@@ -389,7 +387,7 @@ namespace KeyConfiger
             }
         }
 
-        void tsmi_Click1(object sender, EventArgs e)
+        void Tsmi_Click1(object sender, EventArgs e)
         {
             if (sender is ToolStripMenuItem tsmi && tsmi.Tag is KeyConfig)
             {
@@ -457,7 +455,7 @@ namespace KeyConfiger
                 tsmi.Text = tsmi.ToolTipText = controllerName;
                 tsmi.Tag = iter;
                 コントローラーToolStripMenuItem.DropDownItems.Add(tsmi);
-                tsmi.Click += tsmi_Click2;
+                tsmi.Click += Tsmi_Click2;
                 iter++;
             }
 #pragma warning disable RECS0033 // Convert 'if' to '||' expression
@@ -468,7 +466,7 @@ namespace KeyConfiger
             }
         }
 
-        void tsmi_Click2(object sender, EventArgs e)
+        void Tsmi_Click2(object sender, EventArgs e)
         {
             var tsmi = sender as ToolStripMenuItem;
             UncheckAllMenuItem(tsmi, 2);

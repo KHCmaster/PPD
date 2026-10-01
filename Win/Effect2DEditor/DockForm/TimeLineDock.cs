@@ -81,7 +81,7 @@ namespace Effect2DEditor.DockForm
             リバースループ再生ToolStripMenuItem.Text = lang["PlayReverseLoop"];
         }
 
-        private void toolStripButton1_Click(object sender, EventArgs e)
+        private void ToolStripButton1_Click(object sender, EventArgs e)
         {
             openFileDialog1.Filter = "JPEG, GIF, PNG, ETD|*.jpg;*.jpeg;*.gif;*.png;*.etd|JPEG|*.jpg;*.jpeg|GIF|*.gif|PNG|*.png|ETD|*.etd";
             openFileDialog1.FileName = "";
@@ -95,29 +95,29 @@ namespace Effect2DEditor.DockForm
             }
         }
 
-        private void toolStripButton2_Click(object sender, EventArgs e)
+        private void ToolStripButton2_Click(object sender, EventArgs e)
         {
             EffectDeleted?.Invoke();
         }
 
-        private void toolStripButton3_Click(object sender, EventArgs e)
+        private void ToolStripButton3_Click(object sender, EventArgs e)
         {
             EffectReversed?.Invoke();
         }
 
-        private void toolStripButton4_Click(object sender, EventArgs e)
+        private void ToolStripButton4_Click(object sender, EventArgs e)
         {
             EffectCopyed?.Invoke();
         }
 
-        private void toolStripButton5_Click(object sender, EventArgs e)
+        private void ToolStripButton5_Click(object sender, EventArgs e)
         {
             MainForm.CanvasDock.Stop();
             exToolStripSplitButton1.Checked = false;
             ChangeImage();
         }
 
-        private void toolStripButton6_Click(object sender, EventArgs e)
+        private void ToolStripButton6_Click(object sender, EventArgs e)
         {
             EffectCleared?.Invoke();
         }
@@ -165,7 +165,7 @@ namespace Effect2DEditor.DockForm
             }
         }
 
-        private void exToolStripSplitButton1_ButtonClick(object sender, EventArgs e)
+        private void ExToolStripSplitButton1_ButtonClick(object sender, EventArgs e)
         {
             exToolStripSplitButton1.Checked = !exToolStripSplitButton1.Checked;
             if (exToolStripSplitButton1.Checked)
@@ -219,7 +219,7 @@ namespace Effect2DEditor.DockForm
             MainForm.CanvasDock.Play();
         }
 
-        private void toolStripTextBox1_TextChanged(object sender, EventArgs e)
+        private void ToolStripTextBox1_TextChanged(object sender, EventArgs e)
         {
             if (float.TryParse(toolStripTextBox1.Text, out float val))
             {

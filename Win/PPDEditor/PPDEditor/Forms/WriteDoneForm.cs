@@ -15,7 +15,7 @@ namespace PPDEditor.Forms
             {
                 Interval = 10
             };
-            timer.Tick += timer_Tick;
+            timer.Tick += Timer_Tick;
 
             VisibleChanged += WriteDoneForm_VisibleChanged;
         }
@@ -25,7 +25,7 @@ namespace PPDEditor.Forms
             this.label1.Text = Utility.Language["WDFLabel1"];
         }
 
-        void timer_Tick(object sender, EventArgs e)
+        void Timer_Tick(object sender, EventArgs e)
         {
             tickCount++;
 

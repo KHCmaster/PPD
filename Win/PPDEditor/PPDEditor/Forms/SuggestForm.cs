@@ -34,7 +34,7 @@ namespace PPDEditor.Forms
             dataGridView1.Rows.Add(name, value);
         }
 
-        private void okButton_Click(object sender, EventArgs e)
+        private void OkButton_Click(object sender, EventArgs e)
         {
             SelectedName = dataGridView1[0, dataGridView1.SelectedRows[0].Index].Value.ToString();
             SelectedValue = dataGridView1[1, dataGridView1.SelectedRows[0].Index].Value.ToString();
@@ -42,12 +42,12 @@ namespace PPDEditor.Forms
             this.Close();
         }
 
-        private void cancelButton_Click(object sender, EventArgs e)
+        private void CancelButton_Click(object sender, EventArgs e)
         {
             this.Close();
         }
 
-        private void dataGridView1_SelectionChanged(object sender, EventArgs e)
+        private void DataGridView1_SelectionChanged(object sender, EventArgs e)
         {
             okButton.Enabled = dataGridView1.SelectedRows.Count == 1;
         }

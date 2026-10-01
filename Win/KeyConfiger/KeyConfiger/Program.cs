@@ -16,17 +16,15 @@ namespace KeyConfiger
             errorHandler.Initialize();
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            using (MyGame game = new(new PPDExecuteArg(new string[] { })))
+            using MyGame game = new(new PPDExecuteArg([]));
+            try
             {
-                try
-                {
-                    game.Run();
-                }
-                catch (Exception e)
-                {
-                    errorHandler.ProcessError(e);
-                    game.Form.MainForm.Close();
-                }
+                game.Run();
+            }
+            catch (Exception e)
+            {
+                errorHandler.ProcessError(e);
+                game.Form.MainForm.Close();
             }
         }
     }

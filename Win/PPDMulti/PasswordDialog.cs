@@ -29,7 +29,7 @@ namespace PPDMulti
             {
                 DrawOnlyFocus = false
             };
-            textBox.LostFocused += textBox_LostFocused;
+            textBox.LostFocused += TextBox_LostFocused;
             textBox.Position = new System.Numerics.Vector2(300, 250);
             textBox.TextBoxHeight = 20;
             textBox.TextBoxWidth = textBox.MaxWidth = 200;
@@ -60,7 +60,7 @@ namespace PPDMulti
             }
         }
 
-        void textBox_LostFocused(IFocusable sender, FocusEventArgs args)
+        void TextBox_LostFocused(IFocusable sender, FocusEventArgs args)
         {
             string text = textBox.Text;
             IsValid = roomInfo.PasswordHash == WebManager.GetPasswordHash(text);

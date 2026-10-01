@@ -72,7 +72,7 @@ namespace PPDEditor
             this.listBox1.ScrollAlwaysVisible = true;
             this.listBox1.Size = new System.Drawing.Size(230, 220);
             this.listBox1.TabIndex = 0;
-            this.listBox1.SelectedIndexChanged += new System.EventHandler(this.listBox1_SelectedIndexChanged);
+            this.listBox1.SelectedIndexChanged += new System.EventHandler(this.ListBox1_SelectedIndexChanged);
             // 
             // checkBox1
             // 
@@ -94,7 +94,7 @@ namespace PPDEditor
             this.button1.TabIndex = 3;
             this.button1.Text = "現在の選択点以降に適用";
             this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.button1.Click += new System.EventHandler(this.Button1_Click);
             // 
             // button2
             // 
@@ -105,7 +105,7 @@ namespace PPDEditor
             this.button2.TabIndex = 4;
             this.button2.Text = "現在の選択点以前に適用";
             this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
+            this.button2.Click += new System.EventHandler(this.Button2_Click);
             // 
             // button3
             // 
@@ -116,7 +116,7 @@ namespace PPDEditor
             this.button3.TabIndex = 5;
             this.button3.Text = "現在の選択範囲内で前から適用";
             this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.button3_Click);
+            this.button3.Click += new System.EventHandler(this.Button3_Click);
             // 
             // button4
             // 
@@ -127,7 +127,7 @@ namespace PPDEditor
             this.button4.TabIndex = 6;
             this.button4.Text = "現在の選択範囲内で後ろから適用";
             this.button4.UseVisualStyleBackColor = true;
-            this.button4.Click += new System.EventHandler(this.button4_Click);
+            this.button4.Click += new System.EventHandler(this.Button4_Click);
             // 
             // button5
             // 
@@ -138,7 +138,7 @@ namespace PPDEditor
             this.button5.TabIndex = 7;
             this.button5.Text = "現在の選択点以降を保存";
             this.button5.UseVisualStyleBackColor = true;
-            this.button5.Click += new System.EventHandler(this.button5_Click);
+            this.button5.Click += new System.EventHandler(this.Button5_Click);
             // 
             // button6
             // 
@@ -149,7 +149,7 @@ namespace PPDEditor
             this.button6.TabIndex = 8;
             this.button6.Text = "現在の選択点以前を保存";
             this.button6.UseVisualStyleBackColor = true;
-            this.button6.Click += new System.EventHandler(this.button6_Click);
+            this.button6.Click += new System.EventHandler(this.Button6_Click);
             // 
             // button7
             // 
@@ -160,7 +160,7 @@ namespace PPDEditor
             this.button7.TabIndex = 9;
             this.button7.Text = "現在の選択範囲を前から保存";
             this.button7.UseVisualStyleBackColor = true;
-            this.button7.Click += new System.EventHandler(this.button7_Click);
+            this.button7.Click += new System.EventHandler(this.Button7_Click);
             // 
             // button8
             // 
@@ -171,7 +171,7 @@ namespace PPDEditor
             this.button8.TabIndex = 10;
             this.button8.Text = "現在の選択範囲を後ろから保存";
             this.button8.UseVisualStyleBackColor = true;
-            this.button8.Click += new System.EventHandler(this.button8_Click);
+            this.button8.Click += new System.EventHandler(this.Button8_Click);
             // 
             // button9
             // 
@@ -182,7 +182,7 @@ namespace PPDEditor
             this.button9.TabIndex = 11;
             this.button9.Text = "リストを更新";
             this.button9.UseVisualStyleBackColor = true;
-            this.button9.Click += new System.EventHandler(this.button9_Click);
+            this.button9.Click += new System.EventHandler(this.Button9_Click);
             // 
             // button10
             // 
@@ -193,7 +193,7 @@ namespace PPDEditor
             this.button10.TabIndex = 12;
             this.button10.Text = "選択した行を削除";
             this.button10.UseVisualStyleBackColor = true;
-            this.button10.Click += new System.EventHandler(this.button10_Click);
+            this.button10.Click += new System.EventHandler(this.Button10_Click);
             // 
             // groupBox1
             // 
@@ -239,7 +239,7 @@ namespace PPDEditor
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(121, 20);
             this.comboBox1.TabIndex = 23;
-            this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
+            this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.ComboBox1_SelectedIndexChanged);
             // 
             // checkBox2
             // 
@@ -252,7 +252,7 @@ namespace PPDEditor
             this.checkBox2.TabIndex = 22;
             this.checkBox2.Text = "角度も対称に";
             this.checkBox2.UseVisualStyleBackColor = false;
-            this.checkBox2.CheckedChanged += new System.EventHandler(this.checkBox2_CheckedChanged);
+            this.checkBox2.CheckedChanged += new System.EventHandler(this.CheckBox2_CheckedChanged);
             // 
             // label5
             // 
@@ -264,7 +264,7 @@ namespace PPDEditor
             this.label5.Size = new System.Drawing.Size(18, 12);
             this.label5.TabIndex = 21;
             this.label5.Text = "X2";
-            this.label5.ValueChange += new ValueChangeEventHandler(this.label5_ValueChange);
+            this.label5.ValueChange += new ValueChangeEventHandler(this.Label5_ValueChange);
             // 
             // textBox5
             // 
@@ -285,7 +285,7 @@ namespace PPDEditor
             this.label6.Size = new System.Drawing.Size(18, 12);
             this.label6.TabIndex = 19;
             this.label6.Text = "Y2";
-            this.label6.ValueChange += new ValueChangeEventHandler(this.label6_ValueChange);
+            this.label6.ValueChange += new ValueChangeEventHandler(this.Label6_ValueChange);
             // 
             // textBox6
             // 
@@ -306,7 +306,7 @@ namespace PPDEditor
             this.label4.Size = new System.Drawing.Size(18, 12);
             this.label4.TabIndex = 17;
             this.label4.Text = "Y1";
-            this.label4.ValueChange += new ValueChangeEventHandler(this.label4_ValueChange);
+            this.label4.ValueChange += new ValueChangeEventHandler(this.Label4_ValueChange);
             // 
             // textBox4
             // 
@@ -327,7 +327,7 @@ namespace PPDEditor
             this.label3.Size = new System.Drawing.Size(18, 12);
             this.label3.TabIndex = 15;
             this.label3.Text = "X1";
-            this.label3.ValueChange += new ValueChangeEventHandler(this.label3_ValueChange);
+            this.label3.ValueChange += new ValueChangeEventHandler(this.Label3_ValueChange);
             // 
             // textBox3
             // 
@@ -348,7 +348,7 @@ namespace PPDEditor
             this.label2.Size = new System.Drawing.Size(12, 12);
             this.label2.TabIndex = 13;
             this.label2.Text = "Y";
-            this.label2.ValueChange += new ValueChangeEventHandler(this.label2_ValueChange);
+            this.label2.ValueChange += new ValueChangeEventHandler(this.Label2_ValueChange);
             // 
             // textBox2
             // 
@@ -369,7 +369,7 @@ namespace PPDEditor
             this.label1.Size = new System.Drawing.Size(12, 12);
             this.label1.TabIndex = 11;
             this.label1.Text = "X";
-            this.label1.ValueChange += new ValueChangeEventHandler(this.label1_ValueChange);
+            this.label1.ValueChange += new ValueChangeEventHandler(this.Label1_ValueChange);
             // 
             // textBox1
             // 

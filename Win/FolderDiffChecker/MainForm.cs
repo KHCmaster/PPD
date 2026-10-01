@@ -57,7 +57,7 @@ namespace FolderDiffChecker
             outPath = folderBrowserDialog1.SelectedPath = path;
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void Button1_Click(object sender, EventArgs e)
         {
             if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
             {
@@ -65,7 +65,7 @@ namespace FolderDiffChecker
             }
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void Button2_Click(object sender, EventArgs e)
         {
             if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
             {
@@ -73,7 +73,7 @@ namespace FolderDiffChecker
             }
         }
 
-        private void button3_Click(object sender, EventArgs e)
+        private void Button3_Click(object sender, EventArgs e)
         {
             if (Directory.Exists(this.textBox1.Text) && Directory.Exists(this.textBox2.Text))
             {
@@ -81,16 +81,16 @@ namespace FolderDiffChecker
                 dataGridView1.RowCount = 0;
 
                 var df = new DiffFinder(this.textBox1.Text, this.textBox2.Text,
-                    new Regex[]{
+                    [
                         new("thumbs\\.db", RegexOptions.IgnoreCase),
                         new("PPDUpdater\\.exe", RegexOptions.IgnoreCase),
                         new("PPDInstaller\\.exe", RegexOptions.IgnoreCase)
-                    },
-                    textBox3.Text.Split(new string[] { ":" }, StringSplitOptions.RemoveEmptyEntries).Select(s => new Regex(Regex.Escape(s), RegexOptions.IgnoreCase)).ToArray(),
+                    ],
+                    [.. textBox3.Text.Split([":"], StringSplitOptions.RemoveEmptyEntries).Select(s => new Regex(Regex.Escape(s), RegexOptions.IgnoreCase))],
                     this);
-                df.Finished += df_Finished;
-                df.DiffFound += df_DiffFound;
-                df.BeforeCompare += df_BeforeCompare;
+                df.Finished += Df_Finished;
+                df.DiffFound += Df_DiffFound;
+                df.BeforeCompare += Df_BeforeCompare;
                 var t = new Thread(new ThreadStart(df.Execute));
                 t.Start();
                 startTime = Environment.TickCount;
@@ -101,19 +101,19 @@ namespace FolderDiffChecker
             }
         }
 
-        void df_BeforeCompare(string obj)
+        void Df_BeforeCompare(string obj)
         {
             toolStripStatusLabel1.Text = obj;
         }
 
-        void df_Finished(object sender, EventArgs e)
+        void Df_Finished(object sender, EventArgs e)
         {
             Console.WriteLine("Finished:{0}", Environment.TickCount - startTime);
             this.button3.Enabled = this.button4.Enabled = this.button5.Enabled = true;
             toolStripStatusLabel1.Text = "";
         }
 
-        void df_DiffFound(DiffModel diffModel)
+        void Df_DiffFound(DiffModel diffModel)
         {
             var fileName = Path.GetFileName(diffModel.FilePath);
             if (diffModel.IsFile)
@@ -127,7 +127,7 @@ namespace FolderDiffChecker
             dataGridView1.Rows.Add(diffModel, fileName, diffModel.IsFile, diffModel.Mode, diffModel.FilePath);
         }
 
-        private void button4_Click(object sender, EventArgs e)
+        private void Button4_Click(object sender, EventArgs e)
         {
             if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
             {
@@ -168,7 +168,7 @@ namespace FolderDiffChecker
             File.Copy(src, dest, true);
         }
 
-        private void button5_Click(object sender, EventArgs e)
+        private void Button5_Click(object sender, EventArgs e)
         {
             var regex = new Regex("(\\d+)\\.(\\d+)\\.(\\d+)\\.(\\d+)\\\\PPDInstaller\\(x(\\d{2})\\)");
             var m = regex.Match(textBox2.Text);
@@ -188,7 +188,7 @@ namespace FolderDiffChecker
             }
         }
 
-        private void button6_Click(object sender, EventArgs e)
+        private void Button6_Click(object sender, EventArgs e)
         {
             var regex = new Regex("(\\d+)\\.(\\d+)\\.(\\d+)\\.(\\d+)\\\\PPDInstaller");
             var m = regex.Match(textBox2.Text);
@@ -207,7 +207,7 @@ namespace FolderDiffChecker
                     m.Groups[3].Value,
                     m.Groups[4].Value,
                     assemble);
-                    Utility.Zip(Path.Combine(dir, installerName), installerDir, new Regex[] { new("^Data$") });
+                    Utility.Zip(Path.Combine(dir, installerName), installerDir, [new("^Data$")]);
                 }
 
                 // diff zip
@@ -229,7 +229,7 @@ namespace FolderDiffChecker
             }
         }
 
-        private void button7_Click(object sender, EventArgs e)
+        private void Button7_Click(object sender, EventArgs e)
         {
             var regex = new Regex("(\\d+)\\.(\\d+)\\.(\\d+)\\.(\\d+)\\\\PPDInstaller");
             var m = regex.Match(textBox2.Text);
@@ -253,7 +253,7 @@ namespace FolderDiffChecker
             }
         }
 
-        private void button8_Click(object sender, EventArgs e)
+        private void Button8_Click(object sender, EventArgs e)
         {
             var regex = new Regex("(\\d+)\\.(\\d+)\\.(\\d+)\\.(\\d+)\\\\PPDInstaller\\(x(\\d{2})\\)");
             var m = regex.Match(textBox2.Text);
@@ -277,7 +277,7 @@ namespace FolderDiffChecker
             }
             using (session)
             {
-                SendFiles(new UploadFileInfo[]{
+                SendFiles([
                     new() {
                         FilePath = Path.Combine(dir, String.Format("PPDInstaller{0}(x64).zip",version)),
                         DestDir = "installer/"
@@ -294,13 +294,13 @@ namespace FolderDiffChecker
                         FilePath = Path.Combine(dir, "beta_updatelist.xml"),
                         DestDir = "update/"
                     }
-                },
+                ],
                 session);
                 ExecuteCommand(String.Format(@"ln -s -f PPDInstaller{0}\(x64\).zip installer/PPDInstaller_x64_beta.zip", version), session);
             }
         }
 
-        private void button9_Click(object sender, EventArgs e)
+        private void Button9_Click(object sender, EventArgs e)
         {
             var regex = new Regex("(\\d+)\\.(\\d+)\\.(\\d+)\\.(\\d+)\\\\PPDInstaller\\(x(\\d{2})\\)");
             var m = regex.Match(textBox2.Text);
@@ -323,7 +323,7 @@ namespace FolderDiffChecker
                         m.Groups[2].Value,
                         m.Groups[3].Value,
                         m.Groups[4].Value));
-                SendFiles(new UploadFileInfo[]{
+                SendFiles([
                     new() {
                         FilePath = Path.Combine(dir, "updatelist.xml"),
                         DestDir = "update/"
@@ -331,7 +331,7 @@ namespace FolderDiffChecker
                     new() {
                         FilePath = Path.Combine(dir, "assembly_x64.xml"),
                         DestDir = "update/"
-                    }                }, session);
+                    }                ], session);
                 ExecuteCommand(String.Format(@"ln -s -f PPDInstaller{0}\(x64\).zip installer/PPDInstaller_x64.zip", version), session);
             }
         }
@@ -435,7 +435,7 @@ namespace FolderDiffChecker
             }
         }
 
-        private void button10_Click(object sender, EventArgs e)
+        private void Button10_Click(object sender, EventArgs e)
         {
             var session = CreateSession();
             if (session == null)

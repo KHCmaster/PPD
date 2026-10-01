@@ -1,15 +1,9 @@
 ﻿namespace FlowScriptControl.Classes
 {
-    class FlowSourceFolder : IToolTipText
+    class FlowSourceFolder(string toolTipTextKey) : IToolTipText
     {
         private string toolTipText = "";
-        private readonly string toolTipTextKey = "";
-
-        public FlowSourceFolder(string toolTipTextKey)
-        {
-            this.toolTipTextKey = toolTipTextKey;
-            this.toolTipText = "";
-        }
+        private readonly string toolTipTextKey = toolTipTextKey;
 
         #region IToolTipText メンバー
 

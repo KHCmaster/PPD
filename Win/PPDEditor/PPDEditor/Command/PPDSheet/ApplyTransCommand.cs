@@ -23,7 +23,7 @@ namespace PPDEditor.Command.PPDSheet
             lastState = new float[mks.Length][];
             for (int i = 0; i < mks.Length; i++)
             {
-                lastState[i] = new float[] { mks[i].Position.X, mks[i].Position.Y, mks[i].Rotation };
+                lastState[i] = [mks[i].Position.X, mks[i].Position.Y, mks[i].Rotation];
             }
         }
 

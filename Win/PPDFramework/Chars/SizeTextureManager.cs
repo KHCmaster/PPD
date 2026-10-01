@@ -5,16 +5,10 @@ using System.Collections.Generic;
 
 namespace PPDFramework.Chars
 {
-    class SizeTextureManager : DisposableComponent
+    class SizeTextureManager(PPDDevice device) : DisposableComponent
     {
-        readonly PPDDevice device;
-        readonly List<SizeTexture> textures;
-
-        public SizeTextureManager(PPDDevice device)
-        {
-            this.device = device;
-            textures = [];
-        }
+        readonly PPDDevice device = device;
+        readonly List<SizeTexture> textures = [];
 
         public SizeTexture Write(TextureBase texture, int width, int height, out Vector2 uv, out Vector2 uvSize, out AvailableSpace usingAvailableSpace)
         {

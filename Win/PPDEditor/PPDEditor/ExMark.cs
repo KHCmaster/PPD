@@ -229,7 +229,7 @@ namespace PPDEditor
             markc.Draw();
         }
 
-        public void gageDraw()
+        public void GageDraw()
         {
             if (Hidden || noteType == NoteType.AC || noteType == NoteType.ACFT) return;
             if (lasttime >= this.time)

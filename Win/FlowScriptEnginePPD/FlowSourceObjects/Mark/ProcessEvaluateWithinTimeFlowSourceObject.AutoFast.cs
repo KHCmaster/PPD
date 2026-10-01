@@ -9,47 +9,28 @@ namespace FlowScriptEnginePPD.FlowSourceObjects.Mark
     {
         public override object GetPropertyValue(string propertyName)
         {
-            switch (propertyName)
+            return propertyName switch
             {
-                case "EffectType":
-                    return EffectType;
-                case "HasSameTimingMark":
-                    return HasSameTimingMark;
-                case "IsAC":
-                    return IsAC;
-                case "IsACFT":
-                    return IsACFT;
-                case "IsLong":
-                    return IsLong;
-                case "IsMissPress":
-                    return IsMissPress;
-                case "IsRelease":
-                    return IsRelease;
-                case "IsRight":
-                    return IsRight;
-                case "IsScratch":
-                    return IsScratch;
-                case "MarkID":
-                    return MarkID;
-                case "Parameters":
-                    return Parameters;
-                case "Position":
-                    return Position;
-                case "ReleaseTime":
-                    return ReleaseTime;
-                case "Rotation":
-                    return Rotation;
-                case "SameTimingMarks":
-                    return SameTimingMarks;
-                case "SlideScale":
-                    return SlideScale;
-                case "Time":
-                    return Time;
-                case "Type":
-                    return Type;
-                default:
-                    return null;
-            }
+                "EffectType" => EffectType,
+                "HasSameTimingMark" => HasSameTimingMark,
+                "IsAC" => IsAC,
+                "IsACFT" => IsACFT,
+                "IsLong" => IsLong,
+                "IsMissPress" => IsMissPress,
+                "IsRelease" => IsRelease,
+                "IsRight" => IsRight,
+                "IsScratch" => IsScratch,
+                "MarkID" => MarkID,
+                "Parameters" => Parameters,
+                "Position" => Position,
+                "ReleaseTime" => ReleaseTime,
+                "Rotation" => Rotation,
+                "SameTimingMarks" => SameTimingMarks,
+                "SlideScale" => SlideScale,
+                "Time" => Time,
+                "Type" => Type,
+                _ => null,
+            };
         }
 
         protected override void SetPropertyValue(string propertyName, object value)

@@ -3,25 +3,20 @@ using System.Windows.Forms;
 
 namespace PPDInstaller.Executor
 {
-    class LAVFiltersInstallExecutor : CExecutor
+    class LAVFiltersInstallExecutor(string filePath, Control control) : CExecutor(control)
     {
         public static Uri lavFiltersUri = new("http://lavfilters.googlecode.com/files/LAVFilters-0.58.2.exe");
         readonly FileDownloader downloadClient = new();
 
-        private readonly string filePath;
-        public LAVFiltersInstallExecutor(string filePath, Control control)
-            : base(control)
-        {
-            this.filePath = filePath;
-        }
+        private readonly string filePath = filePath;
 
         public override void Execute()
         {
             base.Execute();
             try
             {
-                downloadClient.ProgressChanged += downloadClient_DownloadProgressChanged;
-                downloadClient.Completed += downloadClient_DownloadFileCompleted;
+                downloadClient.ProgressChanged += DownloadClient_DownloadProgressChanged;
+                downloadClient.Completed += DownloadClient_DownloadFileCompleted;
                 downloadClient.DownloadFileAsync(lavFiltersUri, filePath);
                 System.Threading.Thread.Sleep(1000);
             }
@@ -32,12 +27,12 @@ namespace PPDInstaller.Executor
             }
         }
 
-        void downloadClient_DownloadFileCompleted(Exception error)
+        void DownloadClient_DownloadFileCompleted(Exception error)
         {
             try
             {
-                downloadClient.ProgressChanged -= downloadClient_DownloadProgressChanged;
-                downloadClient.Completed -= downloadClient_DownloadFileCompleted;
+                downloadClient.ProgressChanged -= DownloadClient_DownloadProgressChanged;
+                downloadClient.Completed -= DownloadClient_DownloadFileCompleted;
                 var p = new System.Diagnostics.Process();
                 var psi = new System.Diagnostics.ProcessStartInfo
                 {
@@ -56,7 +51,7 @@ namespace PPDInstaller.Executor
             OnFinish();
         }
 
-        void downloadClient_DownloadProgressChanged(int progressPercentage)
+        void DownloadClient_DownloadProgressChanged(int progressPercentage)
         {
             Progress = progressPercentage.ToString();
             OnProgress();

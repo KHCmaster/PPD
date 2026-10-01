@@ -3,18 +3,13 @@
     /// <summary>
     /// BPM変更イベント
     /// </summary>
-    public class ChangeBPMEvent : IEVDData
+    /// <remarks>
+    /// コンストラクタ
+    /// </remarks>
+    /// <param name="time">時間</param>
+    /// <param name="bpm">BPM</param>
+    public class ChangeBPMEvent(float time, float bpm) : IEVDData(time, EventType.ChangeBPM)
     {
-        /// <summary>
-        /// コンストラクタ
-        /// </summary>
-        /// <param name="time">時間</param>
-        /// <param name="bpm">BPM</param>
-        public ChangeBPMEvent(float time, float bpm)
-            : base(time, EventType.ChangeBPM)
-        {
-            BPM = bpm;
-        }
 
         /// <summary>
         /// BPM
@@ -23,6 +18,6 @@
         {
             get;
             private set;
-        }
+        } = bpm;
     }
 }

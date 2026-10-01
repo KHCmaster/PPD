@@ -12,7 +12,7 @@ namespace PPDEditorCommon.Dialog.Model
         {
             get
             {
-                return sounds.ToArray();
+                return [.. sounds];
             }
         }
 
@@ -20,7 +20,7 @@ namespace PPDEditorCommon.Dialog.Model
         {
             get
             {
-                return changes.ToArray();
+                return [.. changes];
             }
         }
 

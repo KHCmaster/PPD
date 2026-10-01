@@ -5,12 +5,17 @@ namespace PPDFramework.Vertex
     /// <summary>
     /// マネージドな頂点バッファークラスです。
     /// </summary>
-    public class ManagedVertexBuffer : DisposableComponent
+    /// <remarks>
+    /// コンストラクタです。
+    /// </remarks>
+    /// <param name="device"></param>
+    /// <param name="sizeInBytes"></param>
+    public class ManagedVertexBuffer(PPDDevice device, int sizeInBytes) : DisposableComponent
     {
         /// <summary>
         /// デバイスです。
         /// </summary>
-        protected PPDDevice device;
+        protected PPDDevice device = device;
 
         /// <summary>
         /// 頂点情報です。
@@ -19,18 +24,7 @@ namespace PPDFramework.Vertex
         {
             get;
             private set;
-        }
-
-        /// <summary>
-        /// コンストラクタです。
-        /// </summary>
-        /// <param name="device"></param>
-        /// <param name="sizeInBytes"></param>
-        public ManagedVertexBuffer(PPDDevice device, int sizeInBytes)
-        {
-            this.device = device;
-            Vertices = new ColoredTexturedVertex[sizeInBytes / ColoredTexturedVertex.Size];
-        }
+        } = new ColoredTexturedVertex[sizeInBytes / ColoredTexturedVertex.Size];
 
         /// <summary>
         /// 書き込みます。

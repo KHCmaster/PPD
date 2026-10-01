@@ -153,7 +153,7 @@ namespace PPDFramework
         /// <returns></returns>
         public static ResultInfo[] GetInfoFromSongInformation(SongInformation songInfo)
         {
-            if (songInfo == null || !songInfo.IsPPDSong) return new ResultInfo[0];
+            if (songInfo == null || !songInfo.IsPPDSong) return [];
             return PPDDatabase.DB.GetResults(songInfo.ID);
         }
 

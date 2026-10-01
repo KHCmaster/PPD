@@ -8,16 +8,12 @@ namespace PPDCore
     /// ゲームのインタフェースクラスです
     /// 必ずpublic実装する必要があります
     /// </summary>
-    public abstract class GameInterfaceBase : GameComponent
+    /// <remarks>
+    /// コンストラクタです。
+    /// </remarks>
+    /// <param name="device"></param>
+    public abstract class GameInterfaceBase(PPDDevice device) : GameComponent(device)
     {
-        /// <summary>
-        /// コンストラクタです。
-        /// </summary>
-        /// <param name="device"></param>
-        protected GameInterfaceBase(PPDDevice device) : base(device)
-        {
-
-        }
 
         /// <summary>
         /// 最小動画位置

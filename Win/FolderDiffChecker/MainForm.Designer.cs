@@ -145,7 +145,7 @@
             this.button10.TabIndex = 15;
             this.button10.Text = "SessonTest";
             this.button10.UseVisualStyleBackColor = true;
-            this.button10.Click += new System.EventHandler(this.button10_Click);
+            this.button10.Click += new System.EventHandler(this.Button10_Click);
             // 
             // button9
             // 
@@ -155,7 +155,7 @@
             this.button9.TabIndex = 14;
             this.button9.Text = "Upload";
             this.button9.UseVisualStyleBackColor = true;
-            this.button9.Click += new System.EventHandler(this.button9_Click);
+            this.button9.Click += new System.EventHandler(this.Button9_Click);
             // 
             // button8
             // 
@@ -165,7 +165,7 @@
             this.button8.TabIndex = 13;
             this.button8.Text = "Upload(beta)";
             this.button8.UseVisualStyleBackColor = true;
-            this.button8.Click += new System.EventHandler(this.button8_Click);
+            this.button8.Click += new System.EventHandler(this.Button8_Click);
             // 
             // label3
             // 
@@ -191,7 +191,7 @@
             this.button7.TabIndex = 10;
             this.button7.Text = "UpdateList";
             this.button7.UseVisualStyleBackColor = true;
-            this.button7.Click += new System.EventHandler(this.button7_Click);
+            this.button7.Click += new System.EventHandler(this.Button7_Click);
             // 
             // button6
             // 
@@ -201,7 +201,7 @@
             this.button6.TabIndex = 9;
             this.button6.Text = "ZipAll";
             this.button6.UseVisualStyleBackColor = true;
-            this.button6.Click += new System.EventHandler(this.button6_Click);
+            this.button6.Click += new System.EventHandler(this.Button6_Click);
             // 
             // button5
             // 
@@ -211,7 +211,7 @@
             this.button5.TabIndex = 8;
             this.button5.Text = "CopyDiff(clever)";
             this.button5.UseVisualStyleBackColor = true;
-            this.button5.Click += new System.EventHandler(this.button5_Click);
+            this.button5.Click += new System.EventHandler(this.Button5_Click);
             // 
             // button4
             // 
@@ -221,7 +221,7 @@
             this.button4.TabIndex = 7;
             this.button4.Text = "CopyDiff";
             this.button4.UseVisualStyleBackColor = true;
-            this.button4.Click += new System.EventHandler(this.button4_Click);
+            this.button4.Click += new System.EventHandler(this.Button4_Click);
             // 
             // button3
             // 
@@ -231,7 +231,7 @@
             this.button3.TabIndex = 6;
             this.button3.Text = "DiffCheck";
             this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.button3_Click);
+            this.button3.Click += new System.EventHandler(this.Button3_Click);
             // 
             // button2
             // 
@@ -241,7 +241,7 @@
             this.button2.TabIndex = 5;
             this.button2.Text = "...";
             this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
+            this.button2.Click += new System.EventHandler(this.Button2_Click);
             // 
             // label2
             // 
@@ -267,7 +267,7 @@
             this.button1.TabIndex = 2;
             this.button1.Text = "...";
             this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.button1.Click += new System.EventHandler(this.Button1_Click);
             // 
             // dataGridView1
             // 

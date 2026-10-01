@@ -10,14 +10,14 @@ namespace PPDShareComponent
     public abstract class LoadingSceneWithImage : LoadingBase
     {
         readonly string[] imageFiles;
-        readonly string[] allowedImageExtensions = { ".png", ".gif", ".jpg", ".jpeg" };
+        readonly string[] allowedImageExtensions = [".png", ".gif", ".jpg", ".jpeg"];
         PictureObject currentImage;
 
         protected LoadingSceneWithImage(PPDDevice device) : base(device)
         {
             if (Directory.Exists("img\\loading"))
             {
-                imageFiles = Directory.GetFiles("img\\loading").Where(f => Array.IndexOf(allowedImageExtensions, Path.GetExtension(f)) >= 0).ToArray();
+                imageFiles = [.. Directory.GetFiles("img\\loading").Where(f => Array.IndexOf(allowedImageExtensions, Path.GetExtension(f)) >= 0)];
             }
         }
 

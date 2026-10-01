@@ -25,16 +25,16 @@ namespace PPDEditor
         {
             InitializeComponent();
             this.SizeChanged += TimeLineForm_SizeChanged;
-            seekex1.setseekmain(seekmain1);
-            seekex1.MouseDown += seekex1_MouseDown;
-            seekmain1.MouseDown += seekmain1_MouseDown;
-            seekmain1.KeyDown += seekmain1_KeyDown;
-            seekex1.KeyDown += seekex1_KeyDown;
+            seekex1.Setseekmain(seekmain1);
+            seekex1.MouseDown += Seekex1_MouseDown;
+            seekmain1.MouseDown += Seekmain1_MouseDown;
+            seekmain1.KeyDown += Seekmain1_KeyDown;
+            seekex1.KeyDown += Seekex1_KeyDown;
             timer = new Timer
             {
                 Interval = 1000
             };
-            timer.Tick += timer_Tick;
+            timer.Tick += Timer_Tick;
         }
 
         public void SetLang()
@@ -48,7 +48,7 @@ namespace PPDEditor
             this.パラメーターToolStripMenuItem.Text = Utility.Language["Parameter"];
         }
 
-        void timer_Tick(object sender, EventArgs e)
+        void Timer_Tick(object sender, EventArgs e)
         {
             this.SuspendLayout();
             GetBackground();
@@ -56,7 +56,7 @@ namespace PPDEditor
             this.ResumeLayout();
         }
 
-        void seekex1_KeyDown(object sender, KeyEventArgs e)
+        void Seekex1_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Space && this.DockPanel.ActiveContent == this)
             {
@@ -67,7 +67,7 @@ namespace PPDEditor
             }
         }
 
-        void seekmain1_KeyDown(object sender, KeyEventArgs e)
+        void Seekmain1_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Space && this.DockPanel.ActiveContent == this)
             {
@@ -86,12 +86,12 @@ namespace PPDEditor
             seekex1.DrawAndRefresh();
             seekmain1.DrawAndRefresh();
         }
-        void seekmain1_MouseDown(object sender, MouseEventArgs e)
+        void Seekmain1_MouseDown(object sender, MouseEventArgs e)
         {
             this.Pane.Activate();
         }
 
-        void seekex1_MouseDown(object sender, MouseEventArgs e)
+        void Seekex1_MouseDown(object sender, MouseEventArgs e)
         {
             this.Pane.Activate();
         }
@@ -223,7 +223,7 @@ namespace PPDEditor
             Seekmain.PositionInterpolation();
         }
 
-        private void contextMenuStrip1_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        private void ContextMenuStrip1_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
             if (presetsLoadTime != WindowUtility.InfoForm.PresetsLoadTime)
             {
@@ -243,7 +243,7 @@ namespace PPDEditor
                 if (menuItem != null)
                 {
                     child = commandMenuItem.Clone();
-                    child.Click += child_Click;
+                    child.Click += Child_Click;
                 }
                 else
                 {
@@ -254,7 +254,7 @@ namespace PPDEditor
             }
         }
 
-        void child_Click(object sender, EventArgs e)
+        void Child_Click(object sender, EventArgs e)
         {
             if (sender is InfoForm.CommandToolStripMenuItem menuItem)
             {

@@ -1,26 +1,20 @@
 ﻿using System.Collections.Generic;
+using System.Threading;
 
 namespace PPDFramework.Vertex
 {
-    class VertexBucket : DisposableComponent
+    class VertexBucket(PPDDevice device) : DisposableComponent
     {
         const int BucketSize = 1024 * 32;
-        int restCount;
-        readonly Dictionary<int, Stack<int>> deallocatedSpaces;
-        readonly object restCountLock = new();
+        int restCount = BucketSize;
+        readonly Dictionary<int, Stack<int>> deallocatedSpaces = [];
+        readonly Lock restCountLock = new();
 
         internal VertexBufferBase VertexBuffer
         {
             get;
             private set;
-        }
-
-        public VertexBucket(PPDDevice device)
-        {
-            VertexBuffer = VertexBufferFactoryManager.Factory.Create(device, BucketSize * ColoredTexturedVertex.Size);
-            restCount = BucketSize;
-            deallocatedSpaces = [];
-        }
+        } = VertexBufferFactoryManager.Factory.Create(device, BucketSize * ColoredTexturedVertex.Size);
 
         public VertexInfo Allocate(int count)
         {

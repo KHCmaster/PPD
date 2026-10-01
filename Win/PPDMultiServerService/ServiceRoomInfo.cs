@@ -48,7 +48,7 @@ namespace PPDMultiServerService
         public static ServiceRoomInfo[] Parse(string filePath)
         {
             XDocument doc = XDocument.Load(filePath);
-            return doc.Element("Rooms").Elements("Room").Select(room =>
+            return [.. doc.Element("Rooms").Elements("Room").Select(room =>
                 new ServiceRoomInfo
                 {
                     Port = int.Parse(room.Element("Port").Value),
@@ -56,11 +56,11 @@ namespace PPDMultiServerService
                     UserName = room.Element("UserName").Value,
                     Password = room.Element("Password").Value,
                     RoomName = room.Element("RoomName").Value,
-                    AllowedModIds = room.Element("AllowedMods").Elements("Mod").Select(mod =>
+                    AllowedModIds = [.. room.Element("AllowedMods").Elements("Mod").Select(mod =>
                         mod.Element("ID").Value
-                    ).Where(id => !String.IsNullOrEmpty(id)).ToArray(),
+                    ).Where(id => !String.IsNullOrEmpty(id))],
                 }
-            ).ToArray();
+            )];
         }
     }
 }

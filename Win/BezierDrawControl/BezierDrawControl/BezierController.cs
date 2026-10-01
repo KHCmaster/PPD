@@ -102,12 +102,12 @@ namespace BezierDrawControl
                 }
                 else
                 {
-                    return Copy(data).ToArray();
+                    return [.. Copy(data)];
                 }
             }
             set
             {
-                data = new List<BezierControlPoint>(value);
+                data = [.. value];
                 bufferData.Add(Copy(data));
                 OnDrawRequired();
             }
@@ -122,7 +122,7 @@ namespace BezierDrawControl
                 {
                     ret.Add(bcp);
                 }
-                return ret.ToArray();
+                return [.. ret];
             }
         }
 
@@ -210,7 +210,7 @@ namespace BezierDrawControl
 
         private void DrawTransData(IBezierDrawContext context)
         {
-            context.DrawLines(Color.Black, new PointF[] { transBeziers.TransformRectange.TopLeft, transBeziers.TransformRectange.TopRight, transBeziers.TransformRectange.BottomRight, transBeziers.TransformRectange.BottomLeft, transBeziers.TransformRectange.TopLeft });
+            context.DrawLines(Color.Black, [transBeziers.TransformRectange.TopLeft, transBeziers.TransformRectange.TopRight, transBeziers.TransformRectange.BottomRight, transBeziers.TransformRectange.BottomLeft, transBeziers.TransformRectange.TopLeft]);
             DrawSquare(transBeziers.TransformRectange.TopLeft, context);
             DrawSquare(transBeziers.TransformRectange.TopRight, context);
             DrawSquare(transBeziers.TransformRectange.BottomLeft, context);
@@ -1044,7 +1044,7 @@ namespace BezierDrawControl
                             if (neiborbcp != null)
                             {
                                 var vec = Substruct(mousePos, neiborbcp.Second);
-                                int anglebase = 0;
+                                int anglebase;
                                 if (vec.X >= 0)
                                 {
                                     if (vec.Y >= 0)
@@ -1216,7 +1216,7 @@ namespace BezierDrawControl
             else
             {
                 tmode = TransformMode.Still;
-                transBeziers = new TransformBezierControlPoints(data.ToArray());
+                transBeziers = new TransformBezierControlPoints([.. data]);
                 OnDrawRequired();
             }
         }

@@ -9,13 +9,11 @@ namespace FlowScriptEngineBasic.FlowSourceObjects.Scope
     {
         public override object GetPropertyValue(string propertyName)
         {
-            switch (propertyName)
+            return propertyName switch
             {
-                case "Arg":
-                    return Arg;
-                default:
-                    return null;
-            }
+                "Arg" => Arg,
+                _ => null,
+            };
         }
 
         protected override void SetPropertyValue(string propertyName, object value)

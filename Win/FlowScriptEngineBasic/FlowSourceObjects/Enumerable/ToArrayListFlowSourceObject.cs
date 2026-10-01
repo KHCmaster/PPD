@@ -29,7 +29,7 @@ namespace FlowScriptEngineBasic.FlowSourceObjects.Enumerable
                 {
                     return [];
                 }
-                return Enumerable.ToList();
+                return [.. Enumerable];
             }
         }
     }

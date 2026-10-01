@@ -161,7 +161,7 @@ namespace PPDFramework.Mod
         {
             get
             {
-                return settings.ToArray();
+                return [.. settings];
             }
         }
 
@@ -244,13 +244,11 @@ namespace PPDFramework.Mod
                 FlowScriptDataVersion = ReadVersion(reader, "Mod\\FlowScriptDataVersion");
                 AnalyzeMod(reader);
             }
-            using (FileStream fs = File.Open(ModPath, FileMode.Open))
-            {
-                byte[] data = new byte[fs.Length];
-                fs.ReadAtLeast(data, data.Length, throwOnEndOfStream: false);
-                FileHash = CryptographyUtility.CalcSha256Hash(data);
-                FileHashString = CryptographyUtility.Getx2Encoding(FileHash);
-            }
+            using FileStream fs = File.Open(ModPath, FileMode.Open);
+            byte[] data = new byte[fs.Length];
+            fs.ReadAtLeast(data, data.Length, throwOnEndOfStream: false);
+            FileHash = CryptographyUtility.CalcSha256Hash(data);
+            FileHashString = CryptographyUtility.Getx2Encoding(FileHash);
         }
 
         private void AnalyzeMod(PackReader reader)
@@ -259,14 +257,12 @@ namespace PPDFramework.Mod
             modSettingManager = new ModSettingManager();
             foreach (string content in reader.FileList)
             {
-                using (PPDPackStreamReader ppdpsr = reader.Read(content))
+                using PPDPackStreamReader ppdpsr = reader.Read(content);
+                if (content.StartsWith("Scripts"))
                 {
-                    if (content.StartsWith("Scripts"))
-                    {
-                        var manager = engine.Load(ppdpsr, false);
-                        manager.Items["ModSettingManager"] = modSettingManager;
-                        manager.Initialize();
-                    }
+                    var manager = engine.Load(ppdpsr, false);
+                    manager.Items["ModSettingManager"] = modSettingManager;
+                    manager.Initialize();
                 }
             }
 
@@ -348,13 +344,11 @@ namespace PPDFramework.Mod
         /// <returns></returns>
         public bool NotModified()
         {
-            using (FileStream fs = File.Open(ModPath, FileMode.Open))
-            {
-                byte[] data = new byte[fs.Length];
-                fs.ReadAtLeast(data, data.Length, throwOnEndOfStream: false);
-                var hash = SHA256.HashData(data);
-                return CompareArray(hash, FileHash);
-            }
+            using FileStream fs = File.Open(ModPath, FileMode.Open);
+            byte[] data = new byte[fs.Length];
+            fs.ReadAtLeast(data, data.Length, throwOnEndOfStream: false);
+            var hash = SHA256.HashData(data);
+            return CompareArray(hash, FileHash);
         }
 
         /// <summary>
@@ -433,16 +427,14 @@ namespace PPDFramework.Mod
 
         private string ReadString(PackReader reader, string key, string defaultValue = "")
         {
-            using (PPDPackStreamReader packReader = reader.Read(key))
+            using PPDPackStreamReader packReader = reader.Read(key);
+            if (packReader == null)
             {
-                if (packReader == null)
-                {
-                    return defaultValue;
-                }
-                byte[] bytes = new byte[packReader.Length];
-                packReader.ReadAtLeast(bytes, bytes.Length, throwOnEndOfStream: false);
-                return Encoding.UTF8.GetString(bytes);
+                return defaultValue;
             }
+            byte[] bytes = new byte[packReader.Length];
+            packReader.ReadAtLeast(bytes, bytes.Length, throwOnEndOfStream: false);
+            return Encoding.UTF8.GetString(bytes);
         }
 
         private Version ReadVersion(PackReader reader, string key)

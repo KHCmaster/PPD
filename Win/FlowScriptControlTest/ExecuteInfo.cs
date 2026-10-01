@@ -42,7 +42,7 @@ namespace FlowScriptControlTest
 
             foreach (var source in sources)
             {
-                source.PropertyChanged += source_PropertyChanged;
+                source.PropertyChanged += Source_PropertyChanged;
             }
         }
 
@@ -50,11 +50,11 @@ namespace FlowScriptControlTest
         {
             foreach (var source in Sources)
             {
-                source.PropertyChanged -= source_PropertyChanged;
+                source.PropertyChanged -= Source_PropertyChanged;
             }
         }
 
-        void source_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        void Source_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             if (e.PropertyName == "IsBreakPointSet")
             {

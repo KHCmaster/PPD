@@ -3,7 +3,12 @@
     /// <summary>
     /// ログの情報です。
     /// </summary>
-    public class LogInfo
+    /// <remarks>
+    /// コンストラクターです。
+    /// </remarks>
+    /// <param name="logLevel">ログレベルです。</param>
+    /// <param name="message">メッセージです。</param>
+    public class LogInfo(LogLevel logLevel, string message)
     {
         /// <summary>
         /// ログレベルを取得します。
@@ -12,7 +17,7 @@
         {
             get;
             private set;
-        }
+        } = logLevel;
 
         /// <summary>
         /// メッセージを取得します。
@@ -21,17 +26,6 @@
         {
             get;
             private set;
-        }
-
-        /// <summary>
-        /// コンストラクターです。
-        /// </summary>
-        /// <param name="logLevel">ログレベルです。</param>
-        /// <param name="message">メッセージです。</param>
-        public LogInfo(LogLevel logLevel, string message)
-        {
-            LogLevel = logLevel;
-            Message = message;
-        }
+        } = message;
     }
 }

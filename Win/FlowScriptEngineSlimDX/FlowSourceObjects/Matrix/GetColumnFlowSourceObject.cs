@@ -32,18 +32,14 @@ namespace FlowScriptEngineSlimDX.FlowSourceObjects.Matrix
             {
                 SetValue(nameof(A));
                 SetValue(nameof(Index));
-                switch (Index)
+                return Index switch
                 {
-                    case 0:
-                        return A.Column1;
-                    case 1:
-                        return A.Column2;
-                    case 2:
-                        return A.Column3;
-                    case 3:
-                        return A.Column4;
-                }
-                return System.Numerics.Vector4.Zero;
+                    0 => A.Column1,
+                    1 => A.Column2,
+                    2 => A.Column3,
+                    3 => A.Column4,
+                    _ => System.Numerics.Vector4.Zero,
+                };
             }
         }
     }

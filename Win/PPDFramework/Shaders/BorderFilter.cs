@@ -62,34 +62,32 @@ namespace PPDFramework.Shaders
 
         private void Draw(PPDDevice device, WorkspaceTexture filterTexture, Border border, BorderType type, float thickness)
         {
-            using (var workspaceTexture = device.Workspace.Get())
-            {
+            using var workspaceTexture = device.Workspace.Get();
 #if BENCHMARK
                 using (var handler = Benchmark.Instance.Start("Copy"))
                 {
 #endif
-                    device.StretchRectangle(device.GetRenderTarget(), workspaceTexture);
+            device.StretchRectangle(device.GetRenderTarget(), workspaceTexture);
 #if BENCHMARK
                 }
 #endif
-                effect.Technique = String.Format("{0}{1}Border", type, border.Blend);
-                effect.SetTexture(filterTextureHandle, filterTexture.Texture);
-                effect.SetTexture(lastRenderTargetTextureHandle, workspaceTexture.Texture);
-                effect.SetValue(colorHandle, border.Color);
-                var intThickness = (int)Math.Ceiling(thickness * 2 + 1);
-                effect.SetValue(thicknessHandle, (float)intThickness);
-                effect.SetValue(thickness2Handle, (int)Math.Pow(intThickness, 2));
-                effect.SetValue(actualThicknessHandle, thickness);
-                var passCount = effect.Begin();
-                effect.BeginPass(0);
-                effect.CommitChanges();
-                device.VertexDeclaration = effect.VertexDeclaration;
-                var screenVertex = device.GetModule<ShaderCommon>().ScreenVertex;
-                device.SetStreamSource(screenVertex.VertexBucket.VertexBuffer);
-                device.DrawPrimitives(PrimitiveType.TriangleStrip, screenVertex.Offset, 2);
-                effect.EndPass();
-                effect.End();
-            }
+            effect.Technique = String.Format("{0}{1}Border", type, border.Blend);
+            effect.SetTexture(filterTextureHandle, filterTexture.Texture);
+            effect.SetTexture(lastRenderTargetTextureHandle, workspaceTexture.Texture);
+            effect.SetValue(colorHandle, border.Color);
+            var intThickness = (int)Math.Ceiling(thickness * 2 + 1);
+            effect.SetValue(thicknessHandle, (float)intThickness);
+            effect.SetValue(thickness2Handle, (int)Math.Pow(intThickness, 2));
+            effect.SetValue(actualThicknessHandle, thickness);
+            var passCount = effect.Begin();
+            effect.BeginPass(0);
+            effect.CommitChanges();
+            device.VertexDeclaration = effect.VertexDeclaration;
+            var screenVertex = device.GetModule<ShaderCommon>().ScreenVertex;
+            device.SetStreamSource(screenVertex.VertexBucket.VertexBuffer);
+            device.DrawPrimitives(PrimitiveType.TriangleStrip, screenVertex.Offset, 2);
+            effect.EndPass();
+            effect.End();
         }
 
         /// <summary>

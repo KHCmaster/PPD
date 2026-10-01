@@ -89,7 +89,7 @@ namespace PPDMultiCommon.Web
         {
             if (String.IsNullOrEmpty(str))
             {
-                return new byte[0];
+                return [];
             }
 
             byte[] ret = new byte[32];
@@ -102,19 +102,14 @@ namespace PPDMultiCommon.Web
 
         private byte[] GetHash(Difficulty difficulty)
         {
-            switch (difficulty)
+            return difficulty switch
             {
-                case Difficulty.Easy:
-                    return Easy;
-                case Difficulty.Normal:
-                    return Normal;
-                case Difficulty.Hard:
-                    return Hard;
-                case Difficulty.Extreme:
-                    return Extreme;
-            }
-
-            return null;
+                Difficulty.Easy => Easy,
+                Difficulty.Normal => Normal,
+                Difficulty.Hard => Hard,
+                Difficulty.Extreme => Extreme,
+                _ => null,
+            };
         }
 
         public string CreateUrl()

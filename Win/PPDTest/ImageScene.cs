@@ -4,7 +4,7 @@ using System;
 
 namespace PPDTest
 {
-    class ImageScene : TestSceneBase
+    class ImageScene(TestSceneManager testSceneManager, PPDDevice device) : TestSceneBase(testSceneManager, device)
     {
         protected override string Title
         {
@@ -12,11 +12,6 @@ namespace PPDTest
             {
                 return "画像表示テスト";
             }
-        }
-
-        public ImageScene(TestSceneManager testSceneManager, PPDDevice device) : base(testSceneManager, device)
-        {
-
         }
 
         protected override void OnInitialize()

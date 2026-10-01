@@ -3,7 +3,7 @@ using PPDFrameworkCore;
 
 namespace PPDSingle
 {
-    public class UserPlayState : IPropertyChanged
+    public class UserPlayState(UserInfo user) : IPropertyChanged
     {
         const int MIN = 0;
         const int MAX = 1023;
@@ -12,17 +12,11 @@ namespace PPDSingle
         MarkEvaluateType evaluate = (MarkEvaluateType)(-1);
         bool isMissPress;
 
-        public UserPlayState(UserInfo user)
-        {
-            User = user;
-            Rank = 1;
-        }
-
         public UserInfo User
         {
             get;
             private set;
-        }
+        } = user;
 
         public int Score
         {
@@ -83,7 +77,7 @@ namespace PPDSingle
         {
             get;
             set;
-        }
+        } = 1;
 
         protected void OnPropertyChanged(string propertyName)
         {

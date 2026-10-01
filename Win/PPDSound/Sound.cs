@@ -202,13 +202,12 @@ namespace PPDSound
 
         private Stream GetStream(FMODEX.Sound sound)
         {
-            IntPtr data = IntPtr.Zero;
             MemoryStream stream = null;
             try
             {
                 FMODEX.RESULT result;
                 byte[] buffer = new byte[CHUNKSIZE];
-                data = Marshal.AllocHGlobal(CHUNKSIZE);
+                nint data = Marshal.AllocHGlobal(CHUNKSIZE);
                 uint length = 0, read = 0;
                 uint bytesread = 0;
                 FMODEX.SOUND_FORMAT format = FMODEX.SOUND_FORMAT.AT9;

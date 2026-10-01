@@ -3,7 +3,13 @@
     /// <summary>
     /// 譜面情報の詳細
     /// </summary>
-    public class WebSongInformationDetail
+    /// <remarks>
+    /// コンストラクタ
+    /// </remarks>
+    /// <param name="id">ID</param>
+    /// <param name="startTime">開始時間</param>
+    /// <param name="endTime">終了時間</param>
+    public class WebSongInformationDetail(string id, float startTime, float endTime)
     {
         /// <summary>
         /// 開始時間
@@ -12,7 +18,7 @@
         {
             get;
             private set;
-        }
+        } = startTime;
 
         /// <summary>
         /// 終了時間
@@ -21,7 +27,7 @@
         {
             get;
             private set;
-        }
+        } = endTime;
 
         /// <summary>
         /// ID
@@ -30,19 +36,6 @@
         {
             get;
             private set;
-        }
-
-        /// <summary>
-        /// コンストラクタ
-        /// </summary>
-        /// <param name="id">ID</param>
-        /// <param name="startTime">開始時間</param>
-        /// <param name="endTime">終了時間</param>
-        public WebSongInformationDetail(string id, float startTime, float endTime)
-        {
-            Id = id;
-            StartTime = startTime;
-            EndTime = endTime;
-        }
+        } = id;
     }
 }

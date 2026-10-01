@@ -5,14 +5,8 @@ using System;
 
 namespace PPDSingle
 {
-    class ContestSelectedSongInfo : SelectedSongInfo
+    class ContestSelectedSongInfo(ContestInfo contestInfo) : SelectedSongInfo(SongInformation.FindSongInformationByHash(CryptographyUtility.Parsex2String(contestInfo.ScoreHash), contestInfo.Difficulty))
     {
-        public ContestSelectedSongInfo(ContestInfo contestInfo)
-            : base(SongInformation.FindSongInformationByHash(CryptographyUtility.Parsex2String(contestInfo.ScoreHash), contestInfo.Difficulty))
-        {
-            ContestInfo = contestInfo;
-        }
-
         public void UpdateSongInfo()
         {
             SongInfo = SongInformation.FindSongInformationByHash(CryptographyUtility.Parsex2String(ContestInfo.ScoreHash), ContestInfo.Difficulty);
@@ -22,7 +16,7 @@ namespace PPDSingle
         {
             get;
             private set;
-        }
+        } = contestInfo;
 
         public override string Text
         {

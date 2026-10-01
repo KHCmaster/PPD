@@ -56,12 +56,12 @@ namespace FlowScriptControl.Controls
             {
                 Interval = 1000
             };
-            timer.Tick += timer_Tick;
+            timer.Tick += Timer_Tick;
             MouseEnter += CustomToolStripMenuItem_MouseEnter;
             MouseLeave += CustomToolStripMenuItem_MouseLeave;
         }
 
-        void timer_Tick(object sender, EventArgs e)
+        void Timer_Tick(object sender, EventArgs e)
         {
             timer.Stop();
             var form = panel.FindForm();

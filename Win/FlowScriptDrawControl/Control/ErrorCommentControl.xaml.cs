@@ -67,19 +67,19 @@ namespace FlowScriptDrawControl.Control
             if (e.OldValue != null)
             {
                 var comment = (Comment)e.NewValue;
-                comment.PropertyChanged -= comment_PropertyChanged;
+                comment.PropertyChanged -= Comment_PropertyChanged;
             }
             if (e.NewValue != null)
             {
                 var comment = (Comment)e.NewValue;
-                comment.PropertyChanged += comment_PropertyChanged;
+                comment.PropertyChanged += Comment_PropertyChanged;
             }
             UpdateFrame();
             UpdateLayout();
             UpdatePosition();
         }
 
-        void comment_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        void Comment_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == "Text")
             {

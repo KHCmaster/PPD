@@ -45,8 +45,8 @@ namespace PPDMulti
             this.userPlayState = userPlayState;
             this.itemManager = itemManager;
 
-            itemManager.EffectAdded += itemManager_EffectAdded;
-            itemManager.EffectRemoved += itemManager_EffectRemoved;
+            itemManager.EffectAdded += ItemManager_EffectAdded;
+            itemManager.EffectRemoved += ItemManager_EffectRemoved;
 
             InnerStruct();
         }
@@ -120,7 +120,7 @@ namespace PPDMulti
             ChangeUserIconScale();
         }
 
-        void itemManager_EffectRemoved(ItemEffect obj)
+        void ItemManager_EffectRemoved(ItemEffect obj)
         {
             if (itemPictureDict.TryGetValue(obj, out PictureObject pic))
             {
@@ -130,7 +130,7 @@ namespace PPDMulti
             ChangeItemPosition();
         }
 
-        void itemManager_EffectAdded(ItemEffect obj)
+        void ItemManager_EffectAdded(ItemEffect obj)
         {
             var pic = new PictureObject(device, resourceManager, Utility.Path.Combine("item", String.Format("{0}.png", obj.ItemType)))
             {

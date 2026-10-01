@@ -29,22 +29,22 @@ namespace PPDFramework
             this.scale = scale;
             mouseEvents = [];
             mouseInfos = new Queue<MouseInfo>();
-            control.MouseDown += control_MouseDown;
-            control.MouseUp += control_MouseUp;
-            control.MouseWheel += control_MouseWheel;
+            control.MouseDown += Control_MouseDown;
+            control.MouseUp += Control_MouseUp;
+            control.MouseWheel += Control_MouseWheel;
         }
 
-        void control_MouseWheel(object sender, MouseEventArgs e)
+        void Control_MouseWheel(object sender, MouseEventArgs e)
         {
             mouseEvents.Add(new MouseEvent(ConvertToVector2(e.X, e.Y), e.Delta, MouseEvent.MouseEventType.Wheel));
         }
 
-        void control_MouseUp(object sender, MouseEventArgs e)
+        void Control_MouseUp(object sender, MouseEventArgs e)
         {
             mouseEvents.Add(new MouseEvent(ConvertToVector2(e.X, e.Y), true, ConvertToEventType(e.Button)));
         }
 
-        void control_MouseDown(object sender, MouseEventArgs e)
+        void Control_MouseDown(object sender, MouseEventArgs e)
         {
             mouseEvents.Add(new MouseEvent(ConvertToVector2(e.X, e.Y), false, ConvertToEventType(e.Button)));
         }
@@ -80,7 +80,7 @@ namespace PPDFramework
             control.Invoke(() =>
             {
                 var p = control.PointToClient(Cursor.Position);
-                var mouseInfo = new MouseInfo(ConvertToVector2(p.X, p.Y), mouseEvents.ToArray());
+                var mouseInfo = new MouseInfo(ConvertToVector2(p.X, p.Y), [.. mouseEvents]);
                 mouseEvents.Clear();
                 lock (mouseInfos)
                 {

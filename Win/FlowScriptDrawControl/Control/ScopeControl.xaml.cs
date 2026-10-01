@@ -28,16 +28,16 @@ namespace FlowScriptDrawControl.Control
         {
             get
             {
-                return childScopes.ToArray();
+                return [.. childScopes];
             }
         }
 
-        void parentScope_TransformChanged(object sender, EventArgs e)
+        void ParentScope_TransformChanged(object sender, EventArgs e)
         {
             UpdateSize();
         }
 
-        void parentScope_SizeChanged(object sender, SizeChangedEventArgs e)
+        void ParentScope_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             UpdateSize();
         }

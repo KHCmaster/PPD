@@ -3,18 +3,13 @@
     /// <summary>
     /// パスの情報を表すクラスです。
     /// </summary>
-    public class PathObject
+    /// <remarks>
+    /// コンストラクタです。
+    /// </remarks>
+    /// <param name="path"></param>
+    public class PathObject(string path)
     {
-        readonly string path;
-
-        /// <summary>
-        /// コンストラクタです。
-        /// </summary>
-        /// <param name="path"></param>
-        public PathObject(string path)
-        {
-            this.path = path;
-        }
+        readonly string path = path;
 
         /// <summary>
         /// 文字列化します。

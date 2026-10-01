@@ -2,16 +2,11 @@
 
 namespace FlowScriptDrawControl.Command
 {
-    class AddFlowCommand : FlowCommand
+    class AddFlowCommand(FlowAreaControl areaControl, ArrowControl arrowControl, SourceItemControl src,
+        SourceItemControl dest) : FlowCommand(areaControl, arrowControl, src, dest)
     {
         private ArrowControl removedArrow;
         private SourceItemControl removedSrcItem;
-
-        public AddFlowCommand(FlowAreaControl areaControl, ArrowControl arrowControl, SourceItemControl src,
-            SourceItemControl dest)
-            : base(areaControl, arrowControl, src, dest)
-        {
-        }
 
         public override void Execute()
         {

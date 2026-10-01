@@ -8,7 +8,7 @@ namespace FolderDiffChecker
     {
         public static void CopyDirectory(string sourceDirName, string destDirName)
         {
-            CopyDirectory(sourceDirName, destDirName, new Regex[0]);
+            CopyDirectory(sourceDirName, destDirName, []);
         }
 
         public static void CopyDirectory(string sourceDirName, string destDirName, Regex[] exceptFiles)
@@ -66,7 +66,7 @@ namespace FolderDiffChecker
 
         public static void Zip(string fileName, string sourceDir)
         {
-            Zip(fileName, sourceDir, new Regex[0]);
+            Zip(fileName, sourceDir, []);
         }
 
         public static void Zip(string fileName, string sourceDir, Regex[] exceptFiles)

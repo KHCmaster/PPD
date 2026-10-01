@@ -5,7 +5,14 @@ namespace PPDFramework.Web
     /// <summary>
     /// パーフェクトトライアルの情報を表すクラスです。
     /// </summary>
-    public class PerfectTrialInfo
+    /// <remarks>
+    /// コンストラクターです。
+    /// </remarks>
+    /// <param name="id"></param>
+    /// <param name="scoreLibraryId"></param>
+    /// <param name="scoreHash"></param>
+    /// <param name="difficulty"></param>
+    public class PerfectTrialInfo(int id, string scoreLibraryId, string scoreHash, Difficulty difficulty)
     {
         /// <summary>
         /// IDを取得します。
@@ -14,7 +21,7 @@ namespace PPDFramework.Web
         {
             get;
             private set;
-        }
+        } = id;
 
         /// <summary>
         /// 譜面IDを取得します。
@@ -23,7 +30,7 @@ namespace PPDFramework.Web
         {
             get;
             private set;
-        }
+        } = scoreLibraryId;
 
         /// <summary>
         /// 譜面ハッシュを取得します。
@@ -32,7 +39,7 @@ namespace PPDFramework.Web
         {
             get;
             private set;
-        }
+        } = scoreHash;
 
         /// <summary>
         /// 難易度を取得します。
@@ -41,21 +48,6 @@ namespace PPDFramework.Web
         {
             get;
             private set;
-        }
-
-        /// <summary>
-        /// コンストラクターです。
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="scoreLibraryId"></param>
-        /// <param name="scoreHash"></param>
-        /// <param name="difficulty"></param>
-        public PerfectTrialInfo(int id, string scoreLibraryId, string scoreHash, Difficulty difficulty)
-        {
-            Id = id;
-            ScoreLibraryId = scoreLibraryId;
-            ScoreHash = scoreHash;
-            Difficulty = difficulty;
-        }
+        } = difficulty;
     }
 }

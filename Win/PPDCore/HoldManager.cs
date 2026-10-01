@@ -42,7 +42,7 @@ namespace PPDCore
         readonly EffectObject maxeffect;
 
         int notMaxBonusCount;
-        readonly int[] checkindex = { 9, 7, 4, 5, 6, 3, 0, 1, 2, 8 };
+        readonly int[] checkindex = [9, 7, 4, 5, 6, 3, 0, 1, 2, 8];
 
         bool isDrawn;
         int maxHoldFrames;
@@ -437,7 +437,7 @@ namespace PPDCore
                     ret.Add((MarkType)i);
                 }
             }
-            return ret.ToArray();
+            return [.. ret];
         }
     }
 }

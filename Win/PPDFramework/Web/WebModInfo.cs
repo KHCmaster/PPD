@@ -5,9 +5,15 @@ namespace PPDFramework.Web
     /// <summary>
     /// Web上のModの情報を表すクラスです。
     /// </summary>
-    public class WebModInfo
+    /// <remarks>
+    /// コンストラクターです。
+    /// </remarks>
+    /// <param name="name">名前。</param>
+    /// <param name="id">ID。</param>
+    /// <param name="revision">リビジョン。</param>
+    public class WebModInfo(string name, string id, int revision)
     {
-        readonly List<WebModInfoDetail> details;
+        readonly List<WebModInfoDetail> details = [];
 
         /// <summary>
         /// 名前を取得します。
@@ -16,7 +22,7 @@ namespace PPDFramework.Web
         {
             get;
             private set;
-        }
+        } = name;
 
         /// <summary>
         /// IDを取得します。
@@ -25,7 +31,7 @@ namespace PPDFramework.Web
         {
             get;
             private set;
-        }
+        } = id;
 
         /// <summary>
         /// リビジョンを取得します。
@@ -34,7 +40,7 @@ namespace PPDFramework.Web
         {
             get;
             private set;
-        }
+        } = revision;
 
         /// <summary>
         /// 詳細の一覧を取得します。
@@ -43,22 +49,8 @@ namespace PPDFramework.Web
         {
             get
             {
-                return details.ToArray();
+                return [.. details];
             }
-        }
-
-        /// <summary>
-        /// コンストラクターです。
-        /// </summary>
-        /// <param name="name">名前。</param>
-        /// <param name="id">ID。</param>
-        /// <param name="revision">リビジョン。</param>
-        public WebModInfo(string name, string id, int revision)
-        {
-            details = [];
-            Name = name;
-            Id = id;
-            Revision = revision;
         }
 
         /// <summary>

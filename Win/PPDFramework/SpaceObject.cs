@@ -3,10 +3,16 @@
     /// <summary>
     /// スペースを空けるオブジェクトです。
     /// </summary>
-    public class SpaceObject : SpriteObject
+    /// <remarks>
+    /// コンストラクターです。
+    /// </remarks>
+    /// <param name="device"></param>
+    /// <param name="width">幅。</param>
+    /// <param name="height">高さ。</param>
+    public class SpaceObject(PPDDevice device, float width, float height) : SpriteObject(device)
     {
-        readonly float width;
-        readonly float height;
+        readonly float width = width;
+        readonly float height = height;
 
         /// <summary>
         /// 幅を取得します。
@@ -28,18 +34,6 @@
             {
                 return height;
             }
-        }
-
-        /// <summary>
-        /// コンストラクターです。
-        /// </summary>
-        /// <param name="device"></param>
-        /// <param name="width">幅。</param>
-        /// <param name="height">高さ。</param>
-        public SpaceObject(PPDDevice device, float width, float height) : base(device)
-        {
-            this.width = width;
-            this.height = height;
         }
     }
 }

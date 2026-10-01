@@ -3,7 +3,7 @@ using PPDExpansionCore;
 
 namespace PPDExpansion.ViewModel
 {
-    abstract class PlayViewModel : ObservableObject
+    abstract class PlayViewModel(MainWindowViewModel mainWindowViewModel) : ObservableObject
     {
         public abstract PlayType PlayType { get; }
         public abstract void ProcessData(PackableBase packable);
@@ -12,11 +12,6 @@ namespace PPDExpansion.ViewModel
         {
             get;
             private set;
-        }
-
-        protected PlayViewModel(MainWindowViewModel mainWindowViewModel)
-        {
-            MainWindowViewModel = mainWindowViewModel;
-        }
+        } = mainWindowViewModel;
     }
 }

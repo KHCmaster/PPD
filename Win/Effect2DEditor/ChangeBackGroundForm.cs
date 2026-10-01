@@ -56,12 +56,12 @@ namespace Effect2DEditor
             get { return textBox1.Text; }
             set { textBox1.Text = value; }
         }
-        private void button1_Click(object sender, EventArgs e)
+        private void Button1_Click(object sender, EventArgs e)
         {
             radioButton2.Checked |= colorDialog1.ShowDialog() == DialogResult.OK;
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void Button2_Click(object sender, EventArgs e)
         {
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
@@ -70,13 +70,13 @@ namespace Effect2DEditor
             }
         }
 
-        private void button3_Click(object sender, EventArgs e)
+        private void Button3_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.OK;
             Close();
         }
 
-        private void button4_Click(object sender, EventArgs e)
+        private void Button4_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.Cancel;
             Close();
