@@ -36,5 +36,15 @@ namespace PPDFramework.Vertex
         {
             Array.Copy(vertex, 0, Vertices, offset, count);
         }
+
+        /// <summary>
+        /// 書き込みます。
+        /// </summary>
+        /// <param name="vertex"></param>
+        /// <param name="offset"></param>
+        public virtual void Write(ReadOnlySpan<ColoredTexturedVertex> vertex, int offset)
+        {
+            vertex.CopyTo(Vertices.AsSpan(offset));
+        }
     }
 }

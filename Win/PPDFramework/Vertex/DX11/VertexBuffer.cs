@@ -27,16 +27,30 @@ namespace PPDFramework.Vertex.DX11
             lock (writeLock)
             {
                 base.Write(vertex, count, offset);
-                if (dirtyEnd <= dirtyStart)
-                {
-                    dirtyStart = offset;
-                    dirtyEnd = offset + count;
-                }
-                else
-                {
-                    dirtyStart = Math.Min(dirtyStart, offset);
-                    dirtyEnd = Math.Max(dirtyEnd, offset + count);
-                }
+                MarkDirty(offset, count);
+            }
+        }
+
+        public override void Write(ReadOnlySpan<ColoredTexturedVertex> vertex, int offset)
+        {
+            lock (writeLock)
+            {
+                base.Write(vertex, offset);
+                MarkDirty(offset, vertex.Length);
+            }
+        }
+
+        private void MarkDirty(int offset, int count)
+        {
+            if (dirtyEnd <= dirtyStart)
+            {
+                dirtyStart = offset;
+                dirtyEnd = offset + count;
+            }
+            else
+            {
+                dirtyStart = Math.Min(dirtyStart, offset);
+                dirtyEnd = Math.Max(dirtyEnd, offset + count);
             }
         }
 

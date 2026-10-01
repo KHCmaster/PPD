@@ -13,6 +13,8 @@ namespace PPDCore
         readonly PictureObject trace;
         int drawVerticesCount1;
         int drawVerticesCount2;
+        // 頂点の作業用の配列。毎フレームの確保を避けるため使い回す（書き込む要素はすべてのフィールドを設定する）
+        readonly ColoredTexturedVertex[] dataVertices = new ColoredTexturedVertex[80];
 
         public int VerticesCount
         {
@@ -73,7 +75,6 @@ namespace PPDCore
 
         private int UpdateVerticesImpl(VertexInfo vertices, int verticesCount, Vector2[] pos)
         {
-            ColoredTexturedVertex[] dataVertices = new ColoredTexturedVertex[verticesCount * 2];
             if (verticesCount < 2)
             {
                 return 0;

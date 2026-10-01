@@ -7,19 +7,27 @@ using Color4 = Vortice.Mathematics.Color4;
 using Rectangle = Vortice.Mathematics.RectI;
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
 namespace PPDFramework.Sprites
 {
     class SpriteBatch : DisposableComponent
     {
+        // スプライトがこの数以上のときだけ、頂点の変換を並列にする（少ないときは並列化のコストのほうが大きい）
+        const int ParallelTransformThreshold = 1024;
+
         readonly ColoredTexturedVertex[] _vertices = new ColoredTexturedVertex[1024 * 32];
         readonly int[] _indices = new int[1024 * 32 * 3];
 
         readonly PPDDevice device;
         VertexBufferBase vertices;
         IndexBufferBase indices;
+        // 毎フレームの確保を避けるため、スプライトとバッチの情報は構造体にして、リストを使い回す
         readonly List<SpriteInfo> spriteInfos;
+        readonly List<BatchInfo> batches = [];
+        readonly Action<int> transformAt;
+        int spriteVertexCount;
         readonly List<ScissorRectState> scissorRectStates;
         Effect.EffectBase effect;
         Effect.EffectHandleBase textureHandle;
@@ -39,6 +47,7 @@ namespace PPDFramework.Sprites
             vertices = Vertex.VertexBufferFactoryManager.Factory.Create(device, _vertices.Length * ColoredTexturedVertex.Size);
             indices = Vertex.IndexBufferFactoryManager.Factory.Create(device, _indices.Length * sizeof(int));
             spriteInfos = [];
+            transformAt = TransformAt;
             scissorRectStates = [];
             techniques = new Dictionary<bool, string>
             {
@@ -53,7 +62,9 @@ namespace PPDFramework.Sprites
             {
                 return;
             }
-            spriteInfos.Add(new SpriteInfo(texture, matrix, alpha, overlayColor, primitiveType, vertices, offset, count, scissorRectStates.Count - 1));
+            // 頂点は Flush のときに読む（それまでに呼び出し側が配列を書き換えても、Flush のときの内容を使う）
+            spriteInfos.Add(new SpriteInfo(texture, matrix, alpha, overlayColor, primitiveType, vertices, offset, count, scissorRectStates.Count - 1, spriteVertexCount));
+            spriteVertexCount += count;
         }
 
         public void SetScissorRect(Rectangle rectangle, bool enabled)
@@ -79,8 +90,18 @@ namespace PPDFramework.Sprites
 
         private void FlushImpl()
         {
-            Parallel.ForEach(spriteInfos, new ParallelOptions { MaxDegreeOfParallelism = Environment.ProcessorCount }, spriteInfo => spriteInfo.Transform());
-            var batches = new List<BatchInfo>();
+            if (spriteInfos.Count >= ParallelTransformThreshold)
+            {
+                Parallel.For(0, spriteInfos.Count, transformAt);
+            }
+            else
+            {
+                for (var i = 0; i < spriteInfos.Count; i++)
+                {
+                    TransformAt(i);
+                }
+            }
+            batches.Clear();
             var vertexPos = 0;
             var vertexEndPos = 0;
             var indexPos = 0;
@@ -94,16 +115,17 @@ namespace PPDFramework.Sprites
                 if (prev.Texture != current.Texture || prev.Texture.PA != current.Texture.PA ||
                     prev.OverlayColor != current.OverlayColor || lastScissorRectIndex != current.ScissorRectIndex)
                 {
-                    WriteToVertex(spriteIndex, i - spriteIndex, ref vertexEndPos, ref indexEndPos);
-                    batches.Add(new BatchInfo(prev, vertexPos, vertexEndPos - vertexPos, indexPos, indexEndPos - indexPos, lastScissorRectIndex));
+                    WriteIndices(spriteIndex, i - spriteIndex, ref vertexEndPos, ref indexEndPos);
+                    batches.Add(new BatchInfo(prev.Texture, prev.OverlayColor, vertexPos, vertexEndPos - vertexPos, indexPos, indexEndPos - indexPos, lastScissorRectIndex));
                     vertexPos = vertexEndPos;
                     indexPos = indexEndPos;
                     spriteIndex = i;
                     lastScissorRectIndex = current.ScissorRectIndex;
                 }
             }
-            WriteToVertex(spriteIndex, spriteInfos.Count - spriteIndex, ref vertexEndPos, ref indexEndPos);
-            batches.Add(new BatchInfo(spriteInfos[^1], vertexPos, vertexEndPos - vertexPos, indexPos, indexEndPos - indexPos, lastScissorRectIndex));
+            WriteIndices(spriteIndex, spriteInfos.Count - spriteIndex, ref vertexEndPos, ref indexEndPos);
+            var last = spriteInfos[^1];
+            batches.Add(new BatchInfo(last.Texture, last.OverlayColor, vertexPos, vertexEndPos - vertexPos, indexPos, indexEndPos - indexPos, lastScissorRectIndex));
             PrepareBatchDraw(vertexEndPos, indexEndPos, batches[0].PA);
             SetScissorImpl(0);
             lastScissorRectIndex = 0;
@@ -124,12 +146,33 @@ namespace PPDFramework.Sprites
             }
 
             spriteInfos.Clear();
+            batches.Clear();
+            spriteVertexCount = 0;
         }
 
         public void End()
         {
             spriteInfos.Clear();
+            spriteVertexCount = 0;
             scissorRectStates.Clear();
+        }
+
+        /// <summary>
+        /// スプライトの頂点を変換して、共有の頂点配列の決まった位置に書き込みます（スプライトごとに範囲が重ならないので並列に呼べる）。
+        /// </summary>
+        private void TransformAt(int index)
+        {
+            ref readonly var spriteInfo = ref CollectionsMarshal.AsSpan(spriteInfos)[index];
+            var source = spriteInfo.Vertices;
+            for (var i = 0; i < spriteInfo.Count; i++)
+            {
+                var vertex = source[i + spriteInfo.Offset];
+                vertex.Position = Vector3.TransformCoordinate(vertex.Position, spriteInfo.Matrix);
+                // BGRA の A だけに Alpha を掛ける（SharpDX の ColorBGRA を使っていたときと同じ計算）
+                var alpha = (byte)((byte)((vertex.Color >> 24) & 0xFF) * spriteInfo.Alpha);
+                vertex.Color = (vertex.Color & 0x00FFFFFF) | (alpha << 24);
+                _vertices[spriteInfo.VertexStart + i] = vertex;
+            }
         }
 
         private void SetScissorImpl(int scissorRectIndex)
@@ -153,10 +196,10 @@ namespace PPDFramework.Sprites
             effect.Technique = techniques[pa];
         }
 
-        private void DrawBatch(BatchInfo batchInfo)
+        private void DrawBatch(in BatchInfo batchInfo)
         {
-            effect.SetTexture(textureHandle, batchInfo.SpriteInfo.Texture);
-            effect.SetValue(overlayColorHandle, batchInfo.SpriteInfo.OverlayColor);
+            effect.SetTexture(textureHandle, batchInfo.Texture);
+            effect.SetValue(overlayColorHandle, batchInfo.OverlayColor);
             _ = effect.Begin();
             effect.BeginPass(0);
             effect.CommitChanges();
@@ -166,16 +209,19 @@ namespace PPDFramework.Sprites
             effect.SetTexture(textureHandle, null);
         }
 
-        private void WriteToVertex(int spriteOffset, int spriteCount, ref int vertexPos, ref int indexPos)
+        /// <summary>
+        /// インデックスを書き込みます。頂点は TransformAt で書き込み済み（スプライトの順に並んでいる）。
+        /// </summary>
+        private void WriteIndices(int spriteOffset, int spriteCount, ref int vertexPos, ref int indexPos)
         {
             for (var i = 0; i < spriteCount; i++)
             {
-                var spriteInfo = spriteInfos[spriteOffset + i];
-                Array.Copy(spriteInfo.Vertices, 0, _vertices, vertexPos, spriteInfo.Vertices.Length);
+                ref readonly var spriteInfo = ref CollectionsMarshal.AsSpan(spriteInfos)[spriteOffset + i];
+                var vertexCount = spriteInfo.Count;
                 switch (spriteInfo.PrimitiveType)
                 {
                     case PrimitiveType.TriangleFan:
-                        for (var j = 0; j < spriteInfo.Vertices.Length - 2; j++)
+                        for (var j = 0; j < vertexCount - 2; j++)
                         {
                             var vertexOffset = vertexPos + j;
                             _indices[indexPos++] = vertexPos;
@@ -184,7 +230,7 @@ namespace PPDFramework.Sprites
                         }
                         break;
                     case PrimitiveType.TriangleList:
-                        var maxCount = spriteInfo.Vertices.Length / 3;
+                        var maxCount = vertexCount / 3;
                         for (var j = 0; j < maxCount; j++)
                         {
                             var vertexOffset = vertexPos + 3 * j;
@@ -194,7 +240,7 @@ namespace PPDFramework.Sprites
                         }
                         break;
                     case PrimitiveType.TriangleStrip:
-                        for (var j = 0; j < spriteInfo.Vertices.Length - 2; j++)
+                        for (var j = 0; j < vertexCount - 2; j++)
                         {
                             var vertexOffset = vertexPos + j;
                             _indices[indexPos++] = vertexOffset;
@@ -205,7 +251,7 @@ namespace PPDFramework.Sprites
                     default:
                         throw new NotImplementedException();
                 }
-                vertexPos += spriteInfo.Vertices.Length;
+                vertexPos += vertexCount;
             }
         }
 
@@ -226,42 +272,31 @@ namespace PPDFramework.Sprites
             indices = null;
         }
 
-        class SpriteInfo(Texture.TextureBase texture, Matrix matrix, float alpha, Color4 overlayColor, PrimitiveType primitiveType, ColoredTexturedVertex[] vertices, int offset, int count, int scissorRectIndex)
+        readonly struct SpriteInfo(Texture.TextureBase texture, Matrix matrix, float alpha, Color4 overlayColor, PrimitiveType primitiveType, ColoredTexturedVertex[] vertices, int offset, int count, int scissorRectIndex, int vertexStart)
         {
-            public Texture.TextureBase Texture { get; private set; } = texture;
-            public Matrix Matrix { get; private set; } = matrix;
-            public float Alpha { get; private set; } = alpha;
-            public ColoredTexturedVertex[] Vertices { get; private set; } = vertices;
-            public Color4 OverlayColor { get; private set; } = overlayColor;
-            public PrimitiveType PrimitiveType { get; private set; } = primitiveType;
-            public int Offset { get; private set; } = offset;
-            public int Count { get; private set; } = count;
-            public int ScissorRectIndex { get; private set; } = scissorRectIndex;
-
-            public void Transform()
-            {
-                var temp = new ColoredTexturedVertex[Count];
-                for (var i = 0; i < Count; i++)
-                {
-                    temp[i] = Vertices[i + Offset];
-                    temp[i].Position = Vector3.TransformCoordinate(temp[i].Position, Matrix);
-                    // BGRA の A だけに Alpha を掛ける（SharpDX の ColorBGRA を使っていたときと同じ計算）
-                    var alpha = (byte)((byte)((temp[i].Color >> 24) & 0xFF) * Alpha);
-                    temp[i].Color = (temp[i].Color & 0x00FFFFFF) | (alpha << 24);
-                }
-                Vertices = temp;
-            }
+            public readonly Texture.TextureBase Texture = texture;
+            public readonly Matrix Matrix = matrix;
+            public readonly float Alpha = alpha;
+            public readonly ColoredTexturedVertex[] Vertices = vertices;
+            public readonly Color4 OverlayColor = overlayColor;
+            public readonly PrimitiveType PrimitiveType = primitiveType;
+            public readonly int Offset = offset;
+            public readonly int Count = count;
+            public readonly int ScissorRectIndex = scissorRectIndex;
+            // 変換後の頂点を書き込む、共有の頂点配列の位置
+            public readonly int VertexStart = vertexStart;
         }
 
-        class BatchInfo(SpriteBatch.SpriteInfo spriteInfo, int vertexPos, int vertexCount, int indexPos, int indexCount, int scissorRectIndex)
+        readonly struct BatchInfo(Texture.TextureBase texture, Color4 overlayColor, int vertexPos, int vertexCount, int indexPos, int indexCount, int scissorRectIndex)
         {
-            public SpriteInfo SpriteInfo { get; private set; } = spriteInfo;
-            public int VertexPos { get; private set; } = vertexPos;
-            public int IndexPos { get; private set; } = indexPos;
-            public int VertexCount { get; private set; } = vertexCount;
-            public int IndexCount { get; private set; } = indexCount;
-            public int ScissorRectIndex { get; private set; } = scissorRectIndex;
-            public bool PA { get { return SpriteInfo.Texture.PA; } }
+            public readonly Texture.TextureBase Texture = texture;
+            public readonly Color4 OverlayColor = overlayColor;
+            public readonly int VertexPos = vertexPos;
+            public readonly int IndexPos = indexPos;
+            public readonly int VertexCount = vertexCount;
+            public readonly int IndexCount = indexCount;
+            public readonly int ScissorRectIndex = scissorRectIndex;
+            public bool PA { get { return Texture.PA; } }
         }
 
         class ScissorRectState(Rectangle rectangle, bool enabled)

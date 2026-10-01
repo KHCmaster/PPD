@@ -926,7 +926,8 @@ namespace PPDFramework
             var currentAlpha = alphaBlendContext.Alpha;
             var currentBlendMode = alphaBlendContext.BlendMode;
             var currentFilterCount = alphaBlendContext.FilterCount;
-            var enabledRenderMask = renderMasks.Where(m => m.Enabled).ToArray();
+            // ほとんどのコンポーネントはレンダーマスクを持たないので、そのときは LINQ の確保を避ける
+            RenderMaskBase[] enabledRenderMask = renderMasks.Count == 0 ? [] : [.. renderMasks.Where(m => m.Enabled)];
 
             WorkspaceTexture renderMaskTexture = null;
             if (enabledRenderMask.Length > 0)

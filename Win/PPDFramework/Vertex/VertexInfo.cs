@@ -1,4 +1,6 @@
-﻿namespace PPDFramework.Vertex
+﻿using System;
+
+namespace PPDFramework.Vertex
 {
     /// <summary>
     /// 頂点情報です。
@@ -52,6 +54,16 @@
         public void Write(ColoredTexturedVertex[] vertex, int count, int offset = 0)
         {
             VertexBucket.VertexBuffer.Write(vertex, count, Offset + offset);
+        }
+
+        /// <summary>
+        /// 頂点情報を書き込みます。コレクション式（[...]）で渡すと、配列を確保せずに書き込めます。
+        /// </summary>
+        /// <param name="vertex"></param>
+        /// <param name="offset"></param>
+        public void Write(ReadOnlySpan<ColoredTexturedVertex> vertex, int offset = 0)
+        {
+            VertexBucket.VertexBuffer.Write(vertex, Offset + offset);
         }
 
         /// <summary>

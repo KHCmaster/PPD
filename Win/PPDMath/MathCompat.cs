@@ -43,7 +43,7 @@ namespace PPDMath
                 left.M41 * right.M14 + left.M42 * right.M24 + left.M43 * right.M34 + left.M44 * right.M44);
         }
 
-        private static Matrix4x4 Mul(params Matrix4x4[] matrices)
+        private static Matrix4x4 Mul(params ReadOnlySpan<Matrix4x4> matrices)
         {
             var result = matrices[0];
             for (var i = 1; i < matrices.Length; i++)
