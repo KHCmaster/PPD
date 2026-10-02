@@ -1,0 +1,20 @@
+﻿<Window x:Class="BMSTOPPD.SettingWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="setting" Width="453" Height="373" ResizeMode="CanMinimize" ShowInTaskbar="False"
+        Closing="Window_Closing">
+    <DataGrid x:Name="dataGrid" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False"
+              CanUserSortColumns="False" CanUserReorderColumns="False" HeadersVisibility="All"
+              RowHeaderWidth="70" SelectionUnit="Cell">
+        <DataGrid.RowHeaderTemplate>
+            <DataTemplate>
+                <TextBlock Text="{Binding DataContext.Name, RelativeSource={RelativeSource AncestorType=DataGridRow}}" />
+            </DataTemplate>
+        </DataGrid.RowHeaderTemplate>
+        <DataGrid.Columns>
+            <DataGridTextColumn Header="X" Binding="{Binding X}" Width="*" />
+            <DataGridTextColumn Header="Y" Binding="{Binding Y}" Width="*" />
+            <DataGridTextColumn Header="Angle" Binding="{Binding Angle}" Width="*" />
+        </DataGrid.Columns>
+    </DataGrid>
+</Window>

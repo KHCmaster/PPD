@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Windows.Forms;
+using System.Windows;
 
 namespace BMSTOPPD
 {
@@ -11,9 +11,9 @@ namespace BMSTOPPD
         [STAThread]
         static void Main()
         {
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+            // 設定のウィンドウは閉じても隠れるだけなので、メインのウィンドウを閉じたら終了する
+            var application = new Application { ShutdownMode = ShutdownMode.OnMainWindowClose };
+            application.Run(new MainWindow());
         }
     }
 }

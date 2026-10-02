@@ -3,41 +3,50 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using System.Windows.Forms;
+using System.Windows;
 
 namespace BMSTOPPD
 {
-    public partial class Form1 : Form
+    public partial class MainWindow : Window
     {
         double bpm = 130;
-        static readonly Form2 setting = new();
-        public Form1()
+        readonly SettingWindow setting = new();
+
+        public MainWindow()
         {
             InitializeComponent();
         }
 
-        private void Button1_Click(object sender, EventArgs e)
+        private bool IsDtx
         {
-            this.openFileDialog1.Filter = "BMSファイル(*.bms):DTXファイル(*.dtx)|*.bms;*.dtx|すべてのファイル(*.*)|*.*";
-            this.openFileDialog1.RestoreDirectory = true;
-            this.openFileDialog1.FileName = "";
-            if (this.openFileDialog1.ShowDialog() == DialogResult.OK)
+            get { return dtxCheckBox.IsChecked == true; }
+        }
+
+        private void OpenButton_Click(object sender, RoutedEventArgs e)
+        {
+            var dialog = new Microsoft.Win32.OpenFileDialog
             {
-                this.textBox1.Text = this.openFileDialog1.FileName;
+                Filter = "BMSファイル(*.bms):DTXファイル(*.dtx)|*.bms;*.dtx|すべてのファイル(*.*)|*.*",
+                RestoreDirectory = true,
+            };
+            if (dialog.ShowDialog(this) == true)
+            {
+                this.fileNameTextBox.Text = dialog.FileName;
             }
         }
-        private void Button2_Click(object sender, EventArgs e)
+
+        private void ConvertButton_Click(object sender, RoutedEventArgs e)
         {
-            if (File.Exists(this.textBox1.Text))
+            if (File.Exists(this.fileNameTextBox.Text))
             {
 
-                var sr = new StreamReader(this.textBox1.Text, Encoding.GetEncoding(932));
+                var sr = new StreamReader(this.fileNameTextBox.Text, Encoding.GetEncoding(932));
                 var data = sr.ReadToEnd();
                 sr.Close();
                 data = data.Replace("\r", "");
                 try
                 {
-                    Analysis(data);
+                    Analysis(data, this.fileNameTextBox.Text);
                 }
                 catch (Exception)
                 {
@@ -49,11 +58,11 @@ namespace BMSTOPPD
                 MessageBox.Show("file not exist");
             }
         }
-        private void Analysis(string data)
+        private void Analysis(string data, string filePath)
         {
-            _ = double.TryParse(this.textBox2.Text, out double timeoffset);
+            _ = double.TryParse(this.timeOffsetTextBox.Text, out double timeoffset);
             var bpmpos = data.IndexOf("#BPM");
-            int zure = (this.checkBox1.Checked ? 1 : 0);
+            int zure = (IsDtx ? 1 : 0);
             if (bpmpos != -1)
             {
                 var kaigyou = data.IndexOf('\n', bpmpos);
@@ -83,7 +92,7 @@ namespace BMSTOPPD
                     if (int.TryParse(data.AsSpan(anchor + 1, 3), out int a))
                     {
                         int syousetu = a;
-                        var channel = int.Parse(data.Substring(anchor + 4, 2), (this.checkBox1.Checked ? System.Globalization.NumberStyles.HexNumber : System.Globalization.NumberStyles.Integer));
+                        var channel = int.Parse(data.Substring(anchor + 4, 2), (IsDtx ? System.Globalization.NumberStyles.HexNumber : System.Globalization.NumberStyles.Integer));
                         int start = i + 1 + zure;
                         while (data[i] != '\n')
                         {
@@ -106,7 +115,7 @@ namespace BMSTOPPD
                             }
                         }
 
-                        if ((!this.checkBox1.Checked && channel >= 11 && channel <= 19) || (this.checkBox1.Checked && channel >= 11 && channel <= 26))
+                        if ((!IsDtx && channel >= 11 && channel <= 19) || (IsDtx && channel >= 11 && channel <= 26))
                         {
                             for (int j = 0; j * 2 < sdata.Length; j++)
                             {
@@ -120,7 +129,8 @@ namespace BMSTOPPD
                 }
 
             }
-            string path = Path.GetDirectoryName(openFileDialog1.FileName) + "\\trans.ppd";
+            // 変換したファイルと同じフォルダーに出力する
+            string path = Path.Combine(Path.GetDirectoryName(Path.GetFullPath(filePath)), "trans.ppd");
             if (File.Exists(path))
             {
                 File.Delete(path);
@@ -241,7 +251,7 @@ namespace BMSTOPPD
         }
         private int Conv(int num)
         {
-            if (this.checkBox1.Checked)
+            if (IsDtx)
             {
                 return num - 17;
             }
@@ -266,12 +276,14 @@ namespace BMSTOPPD
             }
         }
 
-        private void Button3_Click(object sender, EventArgs e)
+        private void SettingButton_Click(object sender, RoutedEventArgs e)
         {
+            setting.Owner ??= this;
             setting.Show();
+            setting.Activate();
         }
 
-        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             setting.Savedata();
         }
