@@ -30,6 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             this.flowDrawPanel1 = new FlowScriptControl.Controls.FlowDrawPanel();
+            this.flowDrawPanel1Host = new System.Windows.Forms.Integration.ElementHost();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.保存ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.閉じるToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -38,14 +39,12 @@
             // 
             // flowDrawPanel1
             // 
-            this.flowDrawPanel1.AllowDrop = true;
-            this.flowDrawPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowDrawPanel1.FlowPropertyPanel = null;
-            this.flowDrawPanel1.FlowTreeView = null;
-            this.flowDrawPanel1.Location = new System.Drawing.Point(0, 0);
-            this.flowDrawPanel1.Name = "flowDrawPanel1";
-            this.flowDrawPanel1.Size = new System.Drawing.Size(292, 267);
-            this.flowDrawPanel1.TabIndex = 0;
+            this.flowDrawPanel1Host.Child = this.flowDrawPanel1;
+            this.flowDrawPanel1Host.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flowDrawPanel1Host.Location = new System.Drawing.Point(0, 0);
+            this.flowDrawPanel1Host.Name = "flowDrawPanel1Host";
+            this.flowDrawPanel1Host.Size = new System.Drawing.Size(292, 267);
+            this.flowDrawPanel1Host.TabIndex = 0;
             // 
             // contextMenuStrip1
             // 
@@ -74,7 +73,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(292, 267);
-            this.Controls.Add(this.flowDrawPanel1);
+            this.Controls.Add(this.flowDrawPanel1Host);
             this.DockAreas = WeifenLuo.WinFormsUI.Docking.DockAreas.Document;
             this.Font = new System.Drawing.Font("MS UI Gothic", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.Name = "FlowDrawDockForm";
@@ -88,6 +87,7 @@
         #endregion
 
         private FlowScriptControl.Controls.FlowDrawPanel flowDrawPanel1;
+        private System.Windows.Forms.Integration.ElementHost flowDrawPanel1Host;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem 保存ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 閉じるToolStripMenuItem;

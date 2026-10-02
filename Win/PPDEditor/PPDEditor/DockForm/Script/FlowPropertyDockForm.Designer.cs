@@ -29,22 +29,24 @@
         private void InitializeComponent()
         {
             this.flowPropertyPanel1 = new PPDEditor.Controls.CustomFlowPropertyPanel();
+            this.flowPropertyPanel1Host = new System.Windows.Forms.Integration.ElementHost();
             this.SuspendLayout();
             // 
             // flowPropertyPanel1
             // 
-            this.flowPropertyPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowPropertyPanel1.Location = new System.Drawing.Point(0, 0);
-            this.flowPropertyPanel1.Name = "flowPropertyPanel1";
-            this.flowPropertyPanel1.Size = new System.Drawing.Size(292, 267);
-            this.flowPropertyPanel1.TabIndex = 0;
+            this.flowPropertyPanel1Host.Child = this.flowPropertyPanel1;
+            this.flowPropertyPanel1Host.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flowPropertyPanel1Host.Location = new System.Drawing.Point(0, 0);
+            this.flowPropertyPanel1Host.Name = "flowPropertyPanel1Host";
+            this.flowPropertyPanel1Host.Size = new System.Drawing.Size(292, 267);
+            this.flowPropertyPanel1Host.TabIndex = 0;
             // 
             // FlowPropertyDockForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(292, 267);
-            this.Controls.Add(this.flowPropertyPanel1);
+            this.Controls.Add(this.flowPropertyPanel1Host);
             this.Font = new System.Drawing.Font("MS UI Gothic", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.HideOnClose = true;
             this.Name = "FlowPropertyDockForm";
@@ -56,5 +58,6 @@
         #endregion
 
         private PPDEditor.Controls.CustomFlowPropertyPanel flowPropertyPanel1;
+        private System.Windows.Forms.Integration.ElementHost flowPropertyPanel1Host;
     }
 }

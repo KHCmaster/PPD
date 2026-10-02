@@ -2037,7 +2037,7 @@ namespace FlowScriptDrawControl.Control
                 currentShiftX = itemPositionManager.CurrentShiftX - diffX;
                 currentShiftY = itemPositionManager.CurrentShiftY - diffY;
                 UpdateTransform();
-                System.Windows.Forms.Cursor.Position = new System.Drawing.Point((int)(pos.X - diffX), (int)(pos.Y - diffY));
+                MoveCursorTo(new Point(nextPos.X - diffX, nextPos.Y - diffY));
             }
         }
 
@@ -2085,7 +2085,16 @@ namespace FlowScriptDrawControl.Control
             currentShiftX -= diffX;
             currentShiftY -= diffY;
             UpdateTransform();
-            System.Windows.Forms.Cursor.Position = new System.Drawing.Point((int)(pos.X - diffX), (int)(pos.Y - diffY));
+            MoveCursorTo(new Point(nextPos.X - diffX, nextPos.Y - diffY));
+        }
+
+        /// <summary>
+        /// マウスカーソルを、このコントロールの座標の位置に移動します（スクリーンの物理ピクセルに変換して移動する）。
+        /// </summary>
+        private void MoveCursorTo(Point localPosition)
+        {
+            var screen = PointToScreen(localPosition);
+            _ = NativeMethods.SetCursorPos((int)Math.Round(screen.X), (int)Math.Round(screen.Y));
         }
 
         public bool CanGetNodeName(double x, double y)

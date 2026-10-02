@@ -29,22 +29,24 @@
         private void InitializeComponent()
         {
             this.flowExecutingPropertyPanel1 = new FlowScriptControl.Controls.FlowExecutingPropertyPanel();
+            this.flowExecutingPropertyPanel1Host = new System.Windows.Forms.Integration.ElementHost();
             this.SuspendLayout();
             // 
             // flowExecutingPropertyPanel1
             // 
-            this.flowExecutingPropertyPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowExecutingPropertyPanel1.Location = new System.Drawing.Point(0, 0);
-            this.flowExecutingPropertyPanel1.Name = "flowExecutingPropertyPanel1";
-            this.flowExecutingPropertyPanel1.Size = new System.Drawing.Size(284, 262);
-            this.flowExecutingPropertyPanel1.TabIndex = 0;
+            this.flowExecutingPropertyPanel1Host.Child = this.flowExecutingPropertyPanel1;
+            this.flowExecutingPropertyPanel1Host.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flowExecutingPropertyPanel1Host.Location = new System.Drawing.Point(0, 0);
+            this.flowExecutingPropertyPanel1Host.Name = "flowExecutingPropertyPanel1Host";
+            this.flowExecutingPropertyPanel1Host.Size = new System.Drawing.Size(284, 262);
+            this.flowExecutingPropertyPanel1Host.TabIndex = 0;
             // 
             // FlowExecutionPropertyDockForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(284, 262);
-            this.Controls.Add(this.flowExecutingPropertyPanel1);
+            this.Controls.Add(this.flowExecutingPropertyPanel1Host);
             this.Font = new System.Drawing.Font("MS UI Gothic", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.HideOnClose = true;
             this.Name = "FlowExecutionPropertyDockForm";
@@ -56,5 +58,6 @@
         #endregion
 
         private FlowScriptControl.Controls.FlowExecutingPropertyPanel flowExecutingPropertyPanel1;
+        private System.Windows.Forms.Integration.ElementHost flowExecutingPropertyPanel1Host;
     }
 }

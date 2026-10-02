@@ -670,8 +670,7 @@ namespace PPDEditor
                 return;
             }
 
-            var p = CurrentFlowDrawForm.FlowDrawPanel.PointToClient(System.Windows.Forms.Cursor.Position);
-            CurrentFlowDrawForm.FlowDrawPanel.PasteAt(p.X, p.Y);
+            CurrentFlowDrawForm.FlowDrawPanel.PasteAtCursor();
         }
 
         private void リンクも貼り付けToolStripMenuItem_Click(object sender, EventArgs e)
@@ -681,8 +680,7 @@ namespace PPDEditor
                 return;
             }
 
-            var p = CurrentFlowDrawForm.FlowDrawPanel.PointToClient(System.Windows.Forms.Cursor.Position);
-            CurrentFlowDrawForm.FlowDrawPanel.PasteWithLinksAt(p.X, p.Y);
+            CurrentFlowDrawForm.FlowDrawPanel.PasteWithLinksAtCursor();
         }
 
         private void 削除ToolStripMenuItem_Click(object sender, EventArgs e)

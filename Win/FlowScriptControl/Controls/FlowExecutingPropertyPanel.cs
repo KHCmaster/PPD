@@ -1,19 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Forms;
+using System.Windows.Controls;
 using System.Xml.Linq;
 
 namespace FlowScriptControl.Controls
 {
-    public partial class FlowExecutingPropertyPanel : UserControl
+    /// <summary>
+    /// デバッグ実行中のノードとスコープのプロパティの値を表示するパネルです。
+    /// </summary>
+    /// <remarks>
+    /// ノードを切り替えても、ファイルとノードごとにツリーの展開の状態を覚えておき、同じノードに戻ったときに元に戻す。
+    /// </remarks>
+    public class FlowExecutingPropertyPanel : UserControl
     {
-        private readonly Dictionary<string, Dictionary<int, ExpandInfo>> expandInfos;
+        private readonly TreeView treeView;
+        private readonly Dictionary<string, Dictionary<int, ExpandInfo>> expandInfos = [];
 
         public FlowExecutingPropertyPanel()
         {
-            InitializeComponent();
-            expandInfos = [];
+            treeView = new TreeView();
+            Content = treeView;
         }
 
         public string FileName
@@ -30,58 +37,46 @@ namespace FlowScriptControl.Controls
 
         public void ChangeSource(string fileName, string text)
         {
-            // save expand
-            if (treeView1.Nodes.Count > 0 && !String.IsNullOrEmpty(FileName))
+            if (treeView.Items.Count > 0 && !String.IsNullOrEmpty(FileName))
             {
-                var savedInfo = new ExpandInfo(treeView1.Nodes, FileName, SourceId);
-                SaveExpandInfo(savedInfo);
+                SaveExpandInfo(new ExpandInfo(treeView.Items, FileName, SourceId));
             }
 
-            treeView1.Nodes.Clear();
+            treeView.Items.Clear();
             var document = XDocument.Parse(text);
             var sourceElem = document.Root.Element("Source");
             var sourceId = sourceElem.Attribute("ID").Value;
             SourceId = int.Parse(sourceId);
             FileName = fileName;
-            var sourceNode = new TreeNode(String.Format("Source(ID:{0})", sourceId));
-            treeView1.Nodes.Add(sourceNode);
+            var sourceNode = new TreeViewItem { Header = String.Format("Source(ID:{0})", sourceId) };
+            treeView.Items.Add(sourceNode);
             foreach (var elm in sourceElem.Elements("Property"))
             {
                 ParseProperty(sourceNode, elm);
             }
-            sourceNode.Expand();
+            sourceNode.IsExpanded = true;
 
             var scopeElem = document.Root.Element("Scope");
-            var scopeNode = new TreeNode(String.Format("Scope(ID:{0})", scopeElem.Attribute("ID").Value));
-            treeView1.Nodes.Add(scopeNode);
+            var scopeNode = new TreeViewItem { Header = String.Format("Scope(ID:{0})", scopeElem.Attribute("ID").Value) };
+            treeView.Items.Add(scopeNode);
             foreach (var elm in scopeElem.Elements("Property"))
             {
                 ParseProperty(scopeNode, elm);
             }
-            scopeNode.Expand();
+            scopeNode.IsExpanded = true;
 
-            var expandInfo = GetExpandInfo(FileName, SourceId);
-            expandInfo?.Restore(treeView1.Nodes);
+            GetExpandInfo(FileName, SourceId)?.Restore(treeView.Items);
         }
 
-        public void ParseProperty(TreeNode node, XElement element)
+        private static void ParseProperty(TreeViewItem node, XElement element)
         {
             var name = element.Attribute("Name").Value;
             var valueElems = element.Elements("Value");
             if (valueElems.Elements().Any())
             {
-                var valueElem = valueElems.First();
-                var type = valueElem.Attribute("Type").Value;
-                if (FlowDrawPanel.TypeAliasDictionary.TryGetValue(type, out string value))
-                {
-                    type = value;
-                }
-                else
-                {
-                    type = "";
-                }
-                var propertyNode = new TreeNode(String.Format("{0}{1}", name, String.IsNullOrEmpty(type) ? "" : String.Format("({0})", type)));
-                node.Nodes.Add(propertyNode);
+                var type = GetTypeAlias(valueElems.First().Attribute("Type").Value);
+                var propertyNode = new TreeViewItem { Header = String.Format("{0}{1}", name, String.IsNullOrEmpty(type) ? "" : String.Format("({0})", type)) };
+                node.Items.Add(propertyNode);
                 foreach (var elm in valueElems.Elements("Property"))
                 {
                     ParseProperty(propertyNode, elm);
@@ -89,37 +84,31 @@ namespace FlowScriptControl.Controls
             }
             else
             {
-                TreeNode valueNode;
+                string header;
                 if (valueElems.Any())
                 {
                     var valueElem = valueElems.First();
-                    var type = valueElem.Attribute("Type").Value;
-                    if (FlowDrawPanel.TypeAliasDictionary.TryGetValue(type, out string value))
-                    {
-                        type = value;
-                    }
-                    else
-                    {
-                        type = "";
-                    }
-                    valueNode = new TreeNode(String.Format("{0}{1}: {2}", name, String.IsNullOrEmpty(type) ? "" : String.Format("({0})", type), valueElem.Value));
+                    var type = GetTypeAlias(valueElem.Attribute("Type").Value);
+                    header = String.Format("{0}{1}: {2}", name, String.IsNullOrEmpty(type) ? "" : String.Format("({0})", type), valueElem.Value);
                 }
                 else
                 {
-                    valueNode = new TreeNode(String.Format("{0}", name));
+                    header = name;
                 }
-                node.Nodes.Add(valueNode);
+                node.Items.Add(new TreeViewItem { Header = header });
             }
+        }
+
+        private static string GetTypeAlias(string type)
+        {
+            return FlowDrawPanel.TypeAliasDictionary.TryGetValue(type, out string value) ? value : "";
         }
 
         private ExpandInfo GetExpandInfo(string fileName, int sourceId)
         {
-            if (expandInfos.TryGetValue(fileName, out Dictionary<int, ExpandInfo> dict))
+            if (expandInfos.TryGetValue(fileName, out Dictionary<int, ExpandInfo> dict) && dict.TryGetValue(sourceId, out ExpandInfo ret))
             {
-                if (dict.TryGetValue(sourceId, out ExpandInfo ret))
-                {
-                    return ret;
-                }
+                return ret;
             }
             return null;
         }
@@ -134,104 +123,53 @@ namespace FlowScriptControl.Controls
             dict[expandInfo.SourceId] = expandInfo;
         }
 
-        private void RestoreExpandInfo(ExpandInfo expandInfo)
-        {
-            expandInfo.Restore(treeView1.Nodes);
-        }
-
         class ExpandInfo
         {
-            private readonly ExpandInfoChild root;
+            private readonly ExpandInfoChild root = new();
 
-            public string FileName
-            {
-                get;
-                private set;
-            }
+            public string FileName { get; }
 
-            public int SourceId
-            {
-                get;
-                private set;
-            }
+            public int SourceId { get; }
 
-            public ExpandInfo(TreeNodeCollection nodes, string fileName, int sourceId)
+            public ExpandInfo(ItemCollection items, string fileName, int sourceId)
             {
                 FileName = fileName;
                 SourceId = sourceId;
-                root = new ExpandInfoChild();
-                Check(nodes, root);
+                Check(items, root);
             }
 
-            public void Restore(TreeNodeCollection nodes)
+            public void Restore(ItemCollection items)
             {
-                Restore(nodes, root);
+                Restore(items, root);
             }
 
-            private static void Restore(TreeNodeCollection nodes, ExpandInfoChild info)
+            private static void Restore(ItemCollection items, ExpandInfoChild info)
             {
-                for (int i = 0; i < Math.Min(nodes.Count, info.ChildrenCount); i++)
+                for (int i = 0; i < Math.Min(items.Count, info.Children.Count); i++)
                 {
-                    if (info.Children[i].IsExpanded)
+                    if (items[i] is TreeViewItem item)
                     {
-                        nodes[i].Expand();
+                        item.IsExpanded = info.Children[i].IsExpanded;
+                        Restore(item.Items, info.Children[i]);
                     }
-                    else
-                    {
-                        nodes[i].Collapse();
-                    }
-                    Restore(nodes[i].Nodes, info.Children[i]);
                 }
             }
 
-            private static void Check(TreeNodeCollection nodes, ExpandInfoChild info)
+            private static void Check(ItemCollection items, ExpandInfoChild info)
             {
-                foreach (TreeNode childNode in nodes)
+                foreach (var child in items.OfType<TreeViewItem>())
                 {
-                    var child = new ExpandInfoChild
-                    {
-                        IsExpanded = childNode.IsExpanded
-                    };
-                    info.Add(child);
-                    Check(childNode.Nodes, child);
+                    var childInfo = new ExpandInfoChild { IsExpanded = child.IsExpanded };
+                    info.Children.Add(childInfo);
+                    Check(child.Items, childInfo);
                 }
             }
 
             class ExpandInfoChild
             {
-                readonly List<ExpandInfoChild> children;
+                public bool IsExpanded { get; set; }
 
-                public bool IsExpanded
-                {
-                    get;
-                    set;
-                }
-
-                public int ChildrenCount
-                {
-                    get
-                    {
-                        return children.Count;
-                    }
-                }
-
-                public ExpandInfoChild[] Children
-                {
-                    get
-                    {
-                        return [.. children];
-                    }
-                }
-
-                public ExpandInfoChild()
-                {
-                    children = [];
-                }
-
-                public void Add(ExpandInfoChild child)
-                {
-                    children.Add(child);
-                }
+                public List<ExpandInfoChild> Children { get; } = [];
             }
         }
     }

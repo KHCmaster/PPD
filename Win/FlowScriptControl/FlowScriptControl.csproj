@@ -5,7 +5,7 @@
     <RootNamespace>FlowScriptControl</RootNamespace>
     <AssemblyName>FlowScriptControl</AssemblyName>
     <Platforms>x64</Platforms>
-    <UseWindowsForms>true</UseWindowsForms>
+    <UseWPF>true</UseWPF>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
     <DebugSymbols>true</DebugSymbols>
@@ -31,30 +31,7 @@
     <ProjectReference Include="..\FlowScriptEngine\FlowScriptEngine.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Update="Controls\CustomButton.resx">
-      <DependentUpon>CustomButton.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Controls\FlowDrawPanel.resx">
-      <DependentUpon>FlowDrawPanel.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Controls\FlowExecutingPropertyPanel.resx">
-      <DependentUpon>FlowExecutingPropertyPanel.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Controls\FlowPropertyPanel.resx">
-      <DependentUpon>FlowPropertyPanel.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Controls\FlowSearchPanel.resx">
-      <DependentUpon>FlowSearchPanel.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Controls\FlowTreeView.resx">
-      <DependentUpon>FlowTreeView.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="LoadingForm.resx">
-      <DependentUpon>LoadingForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
+    <Resource Include="Img\flowsource.png" />
+    <Resource Include="Img\folder.png" />
   </ItemGroup>
 </Project>

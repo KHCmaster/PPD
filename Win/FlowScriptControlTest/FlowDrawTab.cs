@@ -1,22 +1,31 @@
 ﻿using FlowScriptControl.Controls;
 using System;
 using System.IO;
-using System.Windows.Forms;
+using System.Windows.Controls;
 
 namespace FlowScriptControlTest
 {
-    public class FlowDrawTab : TabPage
+    /// <summary>
+    /// スクリプトを 1 つ編集するタブです。見出しの右クリックで閉じられます。
+    /// </summary>
+    public class FlowDrawTab : TabItem
     {
         private string filePath;
-        readonly FlowDrawPanel flowDrawPanel;
 
-        public FlowDrawPanel FlowDrawPanel
+        public event EventHandler CloseRequested;
+
+        public FlowDrawTab()
         {
-            get
-            {
-                return flowDrawPanel;
-            }
+            FlowDrawPanel = new FlowDrawPanel();
+            Content = FlowDrawPanel;
+            var closeMenuItem = new MenuItem { Header = "タブを閉じる" };
+            closeMenuItem.Click += (sender, e) => CloseRequested?.Invoke(this, EventArgs.Empty);
+            var headerText = new TextBlock { ContextMenu = new ContextMenu { Items = { closeMenuItem } } };
+            Header = headerText;
+            FilePath = Guid.NewGuid().ToString();
         }
+
+        public FlowDrawPanel FlowDrawPanel { get; }
 
         public string FilePath
         {
@@ -26,28 +35,9 @@ namespace FlowScriptControlTest
                 if (filePath != value)
                 {
                     filePath = value;
-                    this.Text = Path.GetFileName(filePath);
+                    ((TextBlock)Header).Text = Path.GetFileName(filePath);
                 }
             }
-        }
-
-        public FlowDrawTab()
-        {
-            flowDrawPanel = new FlowDrawPanel
-            {
-                Dock = DockStyle.Fill
-            };
-            this.Controls.Add(flowDrawPanel);
-            FilePath = Guid.NewGuid().ToString();
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                flowDrawPanel?.Dispose();
-            }
-            base.Dispose(disposing);
         }
     }
 }

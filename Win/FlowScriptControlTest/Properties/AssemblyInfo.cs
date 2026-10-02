@@ -18,10 +18,6 @@ using System.Runtime.InteropServices;
 // その型の ComVisible 属性を true に設定してください。
 [assembly: ComVisible(false)]
 
-// WPF のコントロール（FlowScript のエディターなど）を使うと、WPF がプロセスを DPI 対応に切り替え、
-// ほかのアプリ（DPI 非対応で、Windows が拡大して表示する）と画面の大きさが変わってしまうので、切り替えさせない
-[assembly: System.Windows.Media.DisableDpiAwareness]
-
 // 次の GUID は、このプロジェクトが COM に公開される場合の、typelib の ID です
 [assembly: Guid("bc23d1f3-bf08-495a-930f-d1723ce76419")]
 

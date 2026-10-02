@@ -2,23 +2,22 @@
 using FlowScriptEngine;
 using System;
 using System.IO;
-using System.Windows.Forms;
+using System.Windows;
 
 namespace FlowScriptControlTest
 {
     static class Program
     {
         /// <summary>
-        /// アプリケーションのメイン エントリ ポイントです。
+        /// アプリケーションのメイン エントリ ポイントです。引数にスクリプトのファイルを渡すと、ウィンドウを出さずに実行します。
         /// </summary>
         [STAThread]
         static void Main(string[] args)
         {
             if (args.Length == 0)
             {
-                Application.EnableVisualStyles();
-                Application.SetCompatibleTextRenderingDefault(false);
-                Application.Run(new Form1());
+                var application = new Application();
+                application.Run(new MainWindow());
             }
             else
             {

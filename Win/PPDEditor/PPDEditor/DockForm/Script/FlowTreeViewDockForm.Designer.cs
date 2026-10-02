@@ -29,22 +29,24 @@
         private void InitializeComponent()
         {
             this.flowTreeView1 = new FlowScriptControl.Controls.FlowTreeView();
+            this.flowTreeView1Host = new System.Windows.Forms.Integration.ElementHost();
             this.SuspendLayout();
             // 
             // flowTreeView1
             // 
-            this.flowTreeView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowTreeView1.Location = new System.Drawing.Point(0, 0);
-            this.flowTreeView1.Name = "flowTreeView1";
-            this.flowTreeView1.Size = new System.Drawing.Size(292, 267);
-            this.flowTreeView1.TabIndex = 0;
+            this.flowTreeView1Host.Child = this.flowTreeView1;
+            this.flowTreeView1Host.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flowTreeView1Host.Location = new System.Drawing.Point(0, 0);
+            this.flowTreeView1Host.Name = "flowTreeView1Host";
+            this.flowTreeView1Host.Size = new System.Drawing.Size(292, 267);
+            this.flowTreeView1Host.TabIndex = 0;
             // 
             // FlowTreeViewDockForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(292, 267);
-            this.Controls.Add(this.flowTreeView1);
+            this.Controls.Add(this.flowTreeView1Host);
             this.Font = new System.Drawing.Font("MS UI Gothic", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.HideOnClose = true;
             this.Name = "FlowTreeViewDockForm";
@@ -56,5 +58,6 @@
         #endregion
 
         private FlowScriptControl.Controls.FlowTreeView flowTreeView1;
+        private System.Windows.Forms.Integration.ElementHost flowTreeView1Host;
     }
 }

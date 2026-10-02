@@ -21,6 +21,10 @@ namespace FlowScriptDrawControl
         static extern IntPtr SendMessage(IntPtr hwnd, uint msg,
                    IntPtr wParam, IntPtr lParam);
 
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        internal static extern bool SetCursorPos(int x, int y);
+
         const int GWL_EXSTYLE = -20;
         const int WS_EX_DLGMODALFRAME = 0x0001;
         const int SWP_NOSIZE = 0x0001;

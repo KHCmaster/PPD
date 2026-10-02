@@ -530,6 +530,21 @@ Phase 7  配布・更新の仕組みの対応、リリース
 - アプリはどれも .NET Framework のときと同じく DPI 非対応（Windows が拡大して表示する）。
 - WPF のコントロールを使うアプリでは、WPF が初期化のときにプロセスを DPI 対応に切り替えるため、FlowScriptControlTest だけ画面の大きさが違っていた。
   WPF を使う exe（FlowScriptControlTest、PPDEditor）に `[assembly: System.Windows.Media.DisableDpiAwareness]` を付けて、切り替えさせないようにした
+  （FlowScriptControlTest は、下の WPF への移行で WPF だけになったので外した）
+
+### WinForms から WPF への移行（2026-10-02 開始、PPD.exe を除く）
+
+WinForms と WPF の混在をなくすため、PPD.exe 以外を段階的に WPF に移す。
+
+- [x] FlowScriptControl（スクリプトのエディターの部品）を WPF にした。公開のクラス名とメンバーは変えていない
+  - FlowDrawPanel（ノードを配置する領域と右クリックのメニュー）、FlowTreeView（ノードの一覧）、FlowPropertyPanel、FlowExecutingPropertyPanel、FlowSearchPanel、読み込み中の表示
+  - ノードの一覧からのドラッグのデータは、ノードの型の完全な名前（文字列）にした（以前は TreeNode を GCHandle で渡していた）
+  - 貼り付けの位置は WPF の座標になったので、マウスカーソルの位置に貼り付ける `PasteAtCursor` / `PasteWithLinksAtCursor` を追加した
+- [x] FlowScriptDrawControl から WinForms の参照をなくした（カーソルの移動を Win32 の SetCursorPos にした）
+- [x] FlowScriptControlTest を WPF だけのアプリにした（DPI 対応で表示される）
+- [x] PPDEditor のスクリプト用のドックは、WPF の部品を ElementHost で表示する（PPDEditor を移すまでの間）
+- [ ] 小さいツール（BMSTOPPD、KeyConfiger、PPDConfig、PPDUpdater、FolderDiffChecker、BezierDrawControlTest、PPDInstaller）
+- [ ] Effect2DEditor、PPDEditor（作業量に見合うかを、上が終わってから判断する）
 
 ### Phase 7: 配布・更新の仕組みとリリース
 

@@ -71,6 +71,8 @@ namespace PPDEditor.DockForm.Script
             FormClosing += FlowDrawDockForm_FormClosing;
             Load += FlowDrawDockForm_Load;
             flowDrawPanel1.Modified += FlowDrawPanel1_Modified;
+            // WPF のパネルは ElementHost では破棄されないので、フォームと一緒に破棄する
+            Disposed += (sender, e) => flowDrawPanel1.Dispose();
         }
 
         void FlowDrawDockForm_FormClosing(object sender, FormClosingEventArgs e)

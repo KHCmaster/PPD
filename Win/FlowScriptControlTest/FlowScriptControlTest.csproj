@@ -5,8 +5,6 @@
     <RootNamespace>FlowScriptControlTest</RootNamespace>
     <AssemblyName>FlowScriptControlTest</AssemblyName>
     <Platforms>x64</Platforms>
-    <UseWindowsForms>true</UseWindowsForms>
-    <!-- DisableDpiAwareness 属性（Properties/AssemblyInfo.cs）のために WPF を参照する -->
     <UseWPF>true</UseWPF>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
@@ -29,8 +27,6 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\FlowScriptControl\FlowScriptControl.csproj" />
     <ProjectReference Include="..\FlowScriptDrawControl\FlowScriptDrawControl.csproj" />
     <ProjectReference Include="..\FlowScriptEngineBasicExtension\FlowScriptEngineBasicExtension.csproj" />
@@ -44,19 +40,8 @@
     <ProjectReference Include="..\PPDConfiguration\PPDConfiguration.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Update="Form1.resx">
-      <DependentUpon>Form1.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="StdinForm.resx">
-      <DependentUpon>StdinForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <None Update="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
+    <Resource Include="img\playonce.png" />
+    <Resource Include="img\stepin.png" />
+    <Resource Include="img\stop.png" />
   </ItemGroup>
 </Project>

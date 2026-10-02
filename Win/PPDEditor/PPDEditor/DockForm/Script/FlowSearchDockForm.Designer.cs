@@ -29,22 +29,24 @@
         private void InitializeComponent()
         {
             this.flowSearchPanel1 = new FlowScriptControl.Controls.FlowSearchPanel();
+            this.flowSearchPanel1Host = new System.Windows.Forms.Integration.ElementHost();
             this.SuspendLayout();
             // 
             // flowSearchPanel1
             // 
-            this.flowSearchPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowSearchPanel1.Location = new System.Drawing.Point(0, 0);
-            this.flowSearchPanel1.Name = "flowSearchPanel1";
-            this.flowSearchPanel1.Size = new System.Drawing.Size(284, 262);
-            this.flowSearchPanel1.TabIndex = 0;
+            this.flowSearchPanel1Host.Child = this.flowSearchPanel1;
+            this.flowSearchPanel1Host.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flowSearchPanel1Host.Location = new System.Drawing.Point(0, 0);
+            this.flowSearchPanel1Host.Name = "flowSearchPanel1Host";
+            this.flowSearchPanel1Host.Size = new System.Drawing.Size(284, 262);
+            this.flowSearchPanel1Host.TabIndex = 0;
             // 
             // FlowSearchDockForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(284, 262);
-            this.Controls.Add(this.flowSearchPanel1);
+            this.Controls.Add(this.flowSearchPanel1Host);
             this.Font = new System.Drawing.Font("MS UI Gothic", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.HideOnClose = true;
             this.Name = "FlowSearchDockForm";
@@ -56,5 +58,6 @@
         #endregion
 
         private FlowScriptControl.Controls.FlowSearchPanel flowSearchPanel1;
+        private System.Windows.Forms.Integration.ElementHost flowSearchPanel1Host;
     }
 }
