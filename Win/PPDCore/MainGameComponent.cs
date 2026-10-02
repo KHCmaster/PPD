@@ -255,6 +255,7 @@ namespace PPDCore
             effectManager = new PPDEffectManager(device, resourceManager);
             kasiManager = new KasiManager(gameUtility);
             kasiManager.KasiChanged += Km_KasiChanged;
+            gameInterface?.PrefetchKasi(kasiManager.LyricCharacters);
             soundManager = new SoundManager(new ExSound(sound), gameUtility);
             combo = new Combo(device, resourceManager);
             scoreStorage = ScoreStorage.GetStorageFromSongInformation(gameUtility.SongInformation);

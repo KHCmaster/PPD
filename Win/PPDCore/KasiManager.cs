@@ -3,6 +3,7 @@ using PPDFramework;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 
 namespace PPDCore
 {
@@ -45,6 +46,17 @@ namespace PPDCore
                     starttime = nexttime;
                 }
                 initialized = true;
+            }
+        }
+
+        /// <summary>
+        /// 歌詞で使われる文字（重複なし）を取得します。
+        /// </summary>
+        public string LyricCharacters
+        {
+            get
+            {
+                return new string([.. string.Concat(pool.Values).Distinct()]);
             }
         }
 

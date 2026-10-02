@@ -6,6 +6,8 @@ using Color4 = Vortice.Mathematics.Color4;
 using Color = Vortice.Mathematics.Color;
 using Size2F = Vortice.Mathematics.Size;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace PPDFramework
 {
@@ -26,6 +28,7 @@ namespace PPDFramework
         TextureChar[] chars = [];
 
         TextureChar sparechar;
+        readonly List<TextureChar> prefetchedChars = [];
 
         float justwidth;
         readonly float maxwidth;
@@ -184,6 +187,30 @@ namespace PPDFramework
             }
             ChangePosition();
             colorChanged = textChanged = allowScrollChanged = false;
+        }
+
+        /// <summary>
+        /// 後で表示する文字のテクスチャを、先に作っておきます（このオブジェクトが破棄されるまで保持します）。
+        /// </summary>
+        /// <remarks>
+        /// 表示する文字列を切り替えた瞬間に、まだ作っていない文字のテクスチャを作ると、そのフレームが重くなる。
+        /// 読み込みのときなど、止まってよいときに呼びます。フォントと大きさは、今のこのオブジェクトの設定を使います。
+        /// </remarks>
+        /// <param name="characters">文字。</param>
+        public void PrefetchCharacters(string characters)
+        {
+            if (string.IsNullOrEmpty(characters))
+            {
+                return;
+            }
+            foreach (var c in characters.Distinct())
+            {
+                if (char.IsWhiteSpace(c))
+                {
+                    continue;
+                }
+                prefetchedChars.Add(new TextureChar(device, c, 0, 0, characterHeight * Math.Max(Scale.X, Scale.Y), facename, color));
+            }
         }
 
         private void CreateText()
@@ -420,6 +447,11 @@ namespace PPDFramework
 
             sparechar?.Dispose();
             sparechar = null;
+            foreach (var c in prefetchedChars)
+            {
+                c.Dispose();
+            }
+            prefetchedChars.Clear();
         }
 
         /// <summary>

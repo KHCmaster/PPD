@@ -62,6 +62,11 @@ namespace PPDCore
             }
         }
 
+        public void PrefetchKasi(string characters)
+        {
+            kasi.PrefetchCharacters(characters);
+        }
+
         public GameInterfaceBottom(PPDDevice device, PPDFramework.Resource.ResourceManager resourceManager, PPDGameUtility gameUtility) : base(device)
         {
             bottom = new PictureObject(device, resourceManager, Utility.Path.Combine("bottom.png"));

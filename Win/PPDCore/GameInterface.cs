@@ -49,6 +49,15 @@ namespace PPDCore
         }
 
         /// <summary>
+        /// 歌詞で使われる文字を先に用意する
+        /// </summary>
+        /// <param name="characters"></param>
+        public override void PrefetchKasi(string characters)
+        {
+            mgb.PrefetchKasi(characters);
+        }
+
+        /// <summary>
         /// 動画の位置変更
         /// </summary>
         /// <param name="position"></param>

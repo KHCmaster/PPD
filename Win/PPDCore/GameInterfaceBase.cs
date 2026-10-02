@@ -52,6 +52,14 @@ namespace PPDCore
         public abstract void ChangeKasi(string kasi);
 
         /// <summary>
+        /// 歌詞で使われる文字を、先に用意します（歌詞が切り替わったフレームが重くならないように、読み込みのときに呼ばれます）。
+        /// </summary>
+        /// <param name="characters">歌詞で使われる文字。</param>
+        public virtual void PrefetchKasi(string characters)
+        {
+        }
+
+        /// <summary>
         /// コンボが変更された
         /// </summary>
         /// <param name="pos"></param>
