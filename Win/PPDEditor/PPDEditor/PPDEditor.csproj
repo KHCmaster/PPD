@@ -7,6 +7,8 @@
     <ApplicationIcon>ed.ico</ApplicationIcon>
     <Platforms>x64</Platforms>
     <UseWindowsForms>true</UseWindowsForms>
+    <!-- DisableDpiAwareness 属性（Properties/AssemblyInfo.cs）のために WPF を参照する -->
+    <UseWPF>true</UseWPF>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
     <DebugSymbols>true</DebugSymbols>
