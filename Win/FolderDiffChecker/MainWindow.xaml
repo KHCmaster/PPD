@@ -1,0 +1,73 @@
+﻿<Window x:Class="FolderDiffChecker.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="FolderDiffChecker" Width="749" Height="579" Loaded="Window_Loaded">
+    <DockPanel>
+        <StatusBar DockPanel.Dock="Bottom">
+            <StatusBarItem>
+                <TextBlock x:Name="statusText" />
+            </StatusBarItem>
+        </StatusBar>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="4" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid Margin="12,8,12,8">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Text="古いフォルダ" />
+                <TextBox x:Name="oldFolderTextBox" Grid.Row="1" Margin="0,2,0,4" />
+                <Button Grid.Row="1" Grid.Column="1" Content="..." Width="37" Margin="12,2,0,4" Click="OldFolderButton_Click" />
+                <TextBlock Grid.Row="2" Text="新しいフォルダ" />
+                <TextBox x:Name="newFolderTextBox" Grid.Row="3" Margin="0,2,0,4" />
+                <Button Grid.Row="3" Grid.Column="1" Content="..." Width="37" Margin="12,2,0,4" Click="NewFolderButton_Click" />
+                <TextBlock Grid.Row="4" Text="強制的に変更済みにするファイルリスト(:区切り)" />
+                <TextBox x:Name="forceIncludeTextBox" Grid.Row="5" Margin="0,2,0,4" />
+                <TextBlock Grid.Row="6" Text="無視するファイル名(:区切り)" />
+                <TextBox x:Name="ignoreFilesTextBox" Grid.Row="7" Margin="0,2,0,4" Text="PPD.ini:Data.pak" />
+                <WrapPanel Grid.Row="8" Grid.ColumnSpan="2" Margin="0,14,0,0">
+                    <WrapPanel.Resources>
+                        <Style TargetType="Button">
+                            <Setter Property="MinWidth" Value="75" />
+                            <Setter Property="Margin" Value="0,0,6,6" />
+                            <Setter Property="Padding" Value="6,1" />
+                        </Style>
+                    </WrapPanel.Resources>
+                    <Button x:Name="diffCheckButton" Content="DiffCheck" Click="DiffCheckButton_Click" />
+                    <Button x:Name="copyDiffButton" Content="CopyDiff" Click="CopyDiffButton_Click" />
+                    <Button x:Name="copyDiffCleverButton" Content="CopyDiff(clever)" Click="CopyDiffCleverButton_Click" />
+                    <Button Content="ZipAll" Click="ZipAllButton_Click" />
+                    <Button Content="UpdateList" Click="UpdateListButton_Click" />
+                    <Button Content="Upload(beta)" Click="UploadBetaButton_Click" />
+                    <Button Content="Upload" Click="UploadButton_Click" />
+                    <Button Content="SessonTest" Click="SessionTestButton_Click" />
+                </WrapPanel>
+            </Grid>
+            <GridSplitter Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+            <DataGrid x:Name="diffGrid" Grid.Row="2" AutoGenerateColumns="False" IsReadOnly="True" CanUserAddRows="False">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="名前" Binding="{Binding Name}" Width="*" />
+                    <DataGridCheckBoxColumn Header="ファイルかどうか" Binding="{Binding Model.IsFile}" Width="*" />
+                    <DataGridTextColumn Header="状態" Binding="{Binding Model.Mode}" Width="*" />
+                    <DataGridTextColumn Header="パス" Binding="{Binding Model.FilePath}" Width="*" />
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+    </DockPanel>
+</Window>

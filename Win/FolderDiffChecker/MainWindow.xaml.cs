@@ -1,31 +1,34 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading;
-using System.Windows.Forms;
+using System.Windows;
 using System.Xml.Linq;
 using WinSCP;
 
 namespace FolderDiffChecker
 {
-    public partial class MainForm : Form
+    public partial class MainWindow : Window
     {
         const string credentialsPpkFilePath = "credentials.ppk";
 
         private long startTime;
         private string outPath;
+        private string lastFolder;
+        private readonly ObservableCollection<DiffRow> rows = [];
 
-        public MainForm()
+        public MainWindow()
         {
             InitializeComponent();
-            Load += Form1_Load;
+            diffGrid.ItemsSource = rows;
         }
 
-        void Form1_Load(object sender, EventArgs e)
+        void Window_Loaded(object sender, RoutedEventArgs e)
         {
             string path = Assembly.GetExecutingAssembly().Location;
             for (int i = 0; i < 5; i++)
@@ -51,43 +54,57 @@ namespace FolderDiffChecker
             });
             if (dirs.Count >= 2)
             {
-                textBox1.Text = Path.Combine(path, Path.Combine(dirs[^2], "PPDInstaller(x64)"));
-                textBox2.Text = Path.Combine(path, Path.Combine(dirs[^1], "PPDInstaller(x64)"));
+                oldFolderTextBox.Text = Path.Combine(path, Path.Combine(dirs[^2], "PPDInstaller(x64)"));
+                newFolderTextBox.Text = Path.Combine(path, Path.Combine(dirs[^1], "PPDInstaller(x64)"));
             }
-            outPath = folderBrowserDialog1.SelectedPath = path;
+            outPath = lastFolder = path;
         }
 
-        private void Button1_Click(object sender, EventArgs e)
+        // フォルダーを選ぶ。前回選んだフォルダーから始める
+        private string SelectFolder()
         {
-            if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
+            var dialog = new Microsoft.Win32.OpenFolderDialog { InitialDirectory = lastFolder };
+            if (dialog.ShowDialog(this) == true)
             {
-                this.textBox1.Text = folderBrowserDialog1.SelectedPath;
+                lastFolder = dialog.FolderName;
+                return dialog.FolderName;
+            }
+            return null;
+        }
+
+        private void OldFolderButton_Click(object sender, RoutedEventArgs e)
+        {
+            var folder = SelectFolder();
+            if (folder != null)
+            {
+                this.oldFolderTextBox.Text = folder;
             }
         }
 
-        private void Button2_Click(object sender, EventArgs e)
+        private void NewFolderButton_Click(object sender, RoutedEventArgs e)
         {
-            if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
+            var folder = SelectFolder();
+            if (folder != null)
             {
-                this.textBox2.Text = folderBrowserDialog1.SelectedPath;
+                this.newFolderTextBox.Text = folder;
             }
         }
 
-        private void Button3_Click(object sender, EventArgs e)
+        private void DiffCheckButton_Click(object sender, RoutedEventArgs e)
         {
-            if (Directory.Exists(this.textBox1.Text) && Directory.Exists(this.textBox2.Text))
+            if (Directory.Exists(this.oldFolderTextBox.Text) && Directory.Exists(this.newFolderTextBox.Text))
             {
-                this.button3.Enabled = this.button4.Enabled = this.button5.Enabled = false;
-                dataGridView1.RowCount = 0;
+                this.diffCheckButton.IsEnabled = this.copyDiffButton.IsEnabled = this.copyDiffCleverButton.IsEnabled = false;
+                rows.Clear();
 
-                var df = new DiffFinder(this.textBox1.Text, this.textBox2.Text,
+                var df = new DiffFinder(this.oldFolderTextBox.Text, this.newFolderTextBox.Text,
                     [
                         ThumbsDbRegex(),
                         PPDUpdaterExeRegex(),
                         PPDInstallerExeRegex()
                     ],
-                    [.. textBox3.Text.Split([":"], StringSplitOptions.RemoveEmptyEntries).Select(s => new Regex(Regex.Escape(s), RegexOptions.IgnoreCase))],
-                    this);
+                    [.. forceIncludeTextBox.Text.Split([":"], StringSplitOptions.RemoveEmptyEntries).Select(s => new Regex(Regex.Escape(s), RegexOptions.IgnoreCase))],
+                    Dispatcher);
                 df.Finished += Df_Finished;
                 df.DiffFound += Df_DiffFound;
                 df.BeforeCompare += Df_BeforeCompare;
@@ -103,14 +120,14 @@ namespace FolderDiffChecker
 
         void Df_BeforeCompare(string obj)
         {
-            toolStripStatusLabel1.Text = obj;
+            statusText.Text = obj;
         }
 
         void Df_Finished(object sender, EventArgs e)
         {
             Console.WriteLine("Finished:{0}", Environment.TickCount - startTime);
-            this.button3.Enabled = this.button4.Enabled = this.button5.Enabled = true;
-            toolStripStatusLabel1.Text = "";
+            this.diffCheckButton.IsEnabled = this.copyDiffButton.IsEnabled = this.copyDiffCleverButton.IsEnabled = true;
+            statusText.Text = "";
         }
 
         void Df_DiffFound(DiffModel diffModel)
@@ -118,29 +135,30 @@ namespace FolderDiffChecker
             var fileName = Path.GetFileName(diffModel.FilePath);
             if (diffModel.IsFile)
             {
-                var ignoreFiles = this.textBox4.Text.Split(':');
+                var ignoreFiles = this.ignoreFilesTextBox.Text.Split(':');
                 if (Array.IndexOf(ignoreFiles, fileName) >= 0)
                 {
                     return;
                 }
             }
-            dataGridView1.Rows.Add(diffModel, fileName, diffModel.IsFile, diffModel.Mode, diffModel.FilePath);
+            rows.Add(new DiffRow(diffModel, fileName));
         }
 
-        private void Button4_Click(object sender, EventArgs e)
+        private void CopyDiffButton_Click(object sender, RoutedEventArgs e)
         {
-            if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
+            var folder = SelectFolder();
+            if (folder != null)
             {
-                CopyToDir(folderBrowserDialog1.SelectedPath);
+                CopyToDir(folder);
             }
         }
 
         private void CopyToDir(string outDir)
         {
-            string srcDir = this.textBox2.Text + (this.textBox2.Text.EndsWith(Path.DirectorySeparatorChar.ToString()) ? "" : Path.DirectorySeparatorChar.ToString());
-            for (int i = 0; i < dataGridView1.RowCount; i++)
+            string srcDir = this.newFolderTextBox.Text + (this.newFolderTextBox.Text.EndsWith(Path.DirectorySeparatorChar.ToString()) ? "" : Path.DirectorySeparatorChar.ToString());
+            foreach (var row in rows)
             {
-                var model = dataGridView1[0, i].Value as DiffModel;
+                var model = row.Model;
                 var path = Path.Combine(outDir, model.FilePath[srcDir.Length..]);
                 if (model.IsFile)
                 {
@@ -168,10 +186,10 @@ namespace FolderDiffChecker
             File.Copy(src, dest, true);
         }
 
-        private void Button5_Click(object sender, EventArgs e)
+        private void CopyDiffCleverButton_Click(object sender, RoutedEventArgs e)
         {
             var regex = InstallerWithArchitectureRegex();
-            var m = regex.Match(textBox2.Text);
+            var m = regex.Match(newFolderTextBox.Text);
             if (m.Success)
             {
                 var outDir = Path.Combine(outPath, String.Format("PPDDiff{0}{1}{2}{3}_x{4}",
@@ -188,14 +206,14 @@ namespace FolderDiffChecker
             }
         }
 
-        private void Button6_Click(object sender, EventArgs e)
+        private void ZipAllButton_Click(object sender, RoutedEventArgs e)
         {
             var regex = InstallerRegex();
-            var m = regex.Match(textBox2.Text);
+            var m = regex.Match(newFolderTextBox.Text);
             if (m.Success)
             {
                 // installer zip
-                var dir = Path.GetDirectoryName(textBox2.Text);
+                var dir = Path.GetDirectoryName(newFolderTextBox.Text);
                 var assemblies = new string[] { "x64" };
                 foreach (var assemble in assemblies)
                 {
@@ -211,7 +229,7 @@ namespace FolderDiffChecker
                 }
 
                 // diff zip
-                dir = Path.GetDirectoryName(Path.GetDirectoryName(textBox2.Text));
+                dir = Path.GetDirectoryName(Path.GetDirectoryName(newFolderTextBox.Text));
                 foreach (var assemble in assemblies)
                 {
                     var childDirName = String.Format("PPDDiff{0}{1}{2}{3}_{4}", m.Groups[1].Value,
@@ -229,14 +247,14 @@ namespace FolderDiffChecker
             }
         }
 
-        private void Button7_Click(object sender, EventArgs e)
+        private void UpdateListButton_Click(object sender, RoutedEventArgs e)
         {
             var regex = InstallerRegex();
-            var m = regex.Match(textBox2.Text);
+            var m = regex.Match(newFolderTextBox.Text);
             if (m.Success)
             {
-                var dir = Path.GetDirectoryName(textBox1.Text);
-                var targetDir = Path.GetDirectoryName(textBox2.Text);
+                var dir = Path.GetDirectoryName(oldFolderTextBox.Text);
+                var targetDir = Path.GetDirectoryName(newFolderTextBox.Text);
                 var assemblies = new string[] { "x64" };
                 var fileNames = new string[] { "updatelist.xml", "beta_updatelist.xml" };
                 foreach (var fileName in fileNames)
@@ -253,10 +271,10 @@ namespace FolderDiffChecker
             }
         }
 
-        private void Button8_Click(object sender, EventArgs e)
+        private void UploadBetaButton_Click(object sender, RoutedEventArgs e)
         {
             var regex = InstallerWithArchitectureRegex();
-            var m = regex.Match(textBox2.Text);
+            var m = regex.Match(newFolderTextBox.Text);
             if (!m.Success)
             {
                 return;
@@ -300,10 +318,10 @@ namespace FolderDiffChecker
             }
         }
 
-        private void Button9_Click(object sender, EventArgs e)
+        private void UploadButton_Click(object sender, RoutedEventArgs e)
         {
             var regex = InstallerWithArchitectureRegex();
-            var m = regex.Match(textBox2.Text);
+            var m = regex.Match(newFolderTextBox.Text);
             if (!m.Success)
             {
                 return;
@@ -338,13 +356,13 @@ namespace FolderDiffChecker
 
         private static Session CreateSession()
         {
-            var userForm = new UserForm();
-            if (userForm.ShowDialog() != DialogResult.OK)
+            var userWindow = new UserWindow { Owner = Application.Current.MainWindow };
+            if (userWindow.ShowDialog() != true)
             {
                 return null;
             }
 
-            return CreateSession(userForm.UserName);
+            return CreateSession(userWindow.UserName);
         }
 
         private static Session CreateSession(string userName)
@@ -420,6 +438,16 @@ namespace FolderDiffChecker
             Console.WriteLine(result.ErrorOutput);
         }
 
+        /// <summary>
+        /// 差分の一覧の 1 行です。
+        /// </summary>
+        class DiffRow(DiffModel model, string name)
+        {
+            public DiffModel Model { get; } = model;
+
+            public string Name { get; } = name;
+        }
+
         class UploadFileInfo
         {
             public string FilePath
@@ -435,7 +463,7 @@ namespace FolderDiffChecker
             }
         }
 
-        private void Button10_Click(object sender, EventArgs e)
+        private void SessionTestButton_Click(object sender, RoutedEventArgs e)
         {
             var session = CreateSession();
             if (session == null)

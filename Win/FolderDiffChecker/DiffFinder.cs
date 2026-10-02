@@ -3,13 +3,12 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Windows.Forms;
+using System.Windows.Threading;
 
 namespace FolderDiffChecker
 {
-    class DiffFinder(string oldFolderPath, string newFolderPath, Regex[] exceptFilePatterns, Regex[] forceIncludeFilePatterns, Control control)
+    class DiffFinder(string oldFolderPath, string newFolderPath, Regex[] exceptFilePatterns, Regex[] forceIncludeFilePatterns, Dispatcher dispatcher)
     {
-        public delegate void VoidDelegate();
         public delegate void DiffEventHandler(DiffModel diffModel);
         public event DiffEventHandler DiffFound;
         public event EventHandler Finished;
@@ -17,9 +16,9 @@ namespace FolderDiffChecker
 
         protected void OnDiffFind(DiffModel diffModel)
         {
-            if (control.InvokeRequired)
+            if (!dispatcher.CheckAccess())
             {
-                control.Invoke(new DiffEventHandler(OnDiffFind), diffModel);
+                dispatcher.Invoke(() => OnDiffFind(diffModel));
                 return;
             }
             DiffFound?.Invoke(diffModel);
@@ -27,9 +26,9 @@ namespace FolderDiffChecker
 
         protected void OnFinished()
         {
-            if (control.InvokeRequired)
+            if (!dispatcher.CheckAccess())
             {
-                control.Invoke(new VoidDelegate(OnFinished));
+                dispatcher.Invoke(OnFinished);
                 return;
             }
             Finished?.Invoke(this, EventArgs.Empty);
@@ -37,9 +36,9 @@ namespace FolderDiffChecker
 
         protected void OnBeforeCompare(string text)
         {
-            if (control.InvokeRequired)
+            if (!dispatcher.CheckAccess())
             {
-                control.Invoke(new Action<string>(OnBeforeCompare), text);
+                dispatcher.Invoke(() => OnBeforeCompare(text));
                 return;
             }
 
@@ -70,7 +69,7 @@ namespace FolderDiffChecker
             private set;
         } = forceIncludeFilePatterns;
 
-        readonly Control control = control;
+        readonly Dispatcher dispatcher = dispatcher;
 
         public void Execute()
         {
