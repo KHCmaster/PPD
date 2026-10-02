@@ -57,6 +57,7 @@ namespace PPDFramework.Chars
                         sizeTextureManager = GetSizeTextureManager(fontSize, faceName);
                     }
                     info.CreateTexture(device, encoder, sizeTextureManager);
+                    FrameProfiler.Note(String.Format("char[{0} {1} {2}]", c, fontSize, faceName));
                     faceCache[faceName] = info;
                 }
             }

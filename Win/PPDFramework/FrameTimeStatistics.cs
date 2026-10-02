@@ -101,6 +101,7 @@ namespace PPDFramework
                     spike.GCs = gcs;
                     spike.Sections ??= new float[FrameProfiler.SectionCount];
                     FrameProfiler.CopyMilliseconds(spike.Sections);
+                    spike.Notes = FrameProfiler.GetNotes();
                 }
                 else
                 {
@@ -153,6 +154,10 @@ namespace PPDFramework
                     var spike = spikes[i];
                     var sections = String.Join(" ", names.Select((name, j) => spike.Sections[j] >= 0.05f ? String.Format("{0}={1:F2}", name, spike.Sections[j]) : null).Where(s => s != null));
                     lines.Add(String.Format("    spike at={0:F2}s update={1:F2} draw={2:F2} gc={3} {4}", spike.Time, spike.Update, spike.Draw, spike.GCs, sections));
+                    if (!String.IsNullOrEmpty(spike.Notes))
+                    {
+                        lines.Add("      " + spike.Notes);
+                    }
                 }
             }
             return [.. lines];
@@ -165,6 +170,7 @@ namespace PPDFramework
             public float Draw;
             public int GCs;
             public float[] Sections;
+            public string Notes;
         }
 
         private static string Format(string name, float[] values)

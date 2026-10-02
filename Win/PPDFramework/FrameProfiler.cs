@@ -49,6 +49,9 @@ namespace PPDFramework
         static readonly int[] depths = new int[SectionCount];
         static volatile bool enabled;
         static int mainThreadId;
+        // このフレームで起きた、重い処理の内容（文字のテクスチャの作成など）。重いフレームのログに出す
+        static readonly System.Text.StringBuilder notes = new();
+        const int MaxNotesLength = 200;
 
         /// <summary>
         /// 区間を計測します。using で囲んで使います。
@@ -76,6 +79,31 @@ namespace PPDFramework
             mainThreadId = Environment.CurrentManagedThreadId;
             Array.Clear(ticks);
             Array.Clear(depths);
+            notes.Clear();
+        }
+
+        /// <summary>
+        /// このフレームで行った重い処理の内容を記録します（メインスレッドで、記録中のときだけ）。
+        /// </summary>
+        internal static void Note(string note)
+        {
+            if (!enabled || Environment.CurrentManagedThreadId != mainThreadId || notes.Length >= MaxNotesLength)
+            {
+                return;
+            }
+            if (notes.Length > 0)
+            {
+                notes.Append(' ');
+            }
+            notes.Append(note);
+        }
+
+        /// <summary>
+        /// このフレームの記録を取得します。
+        /// </summary>
+        internal static string GetNotes()
+        {
+            return notes.ToString();
         }
 
         /// <summary>
