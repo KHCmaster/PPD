@@ -39,14 +39,16 @@ namespace FlowScriptDrawControl.Model
         public void Initialize()
         {
             controls[0].IsMoved = false;
-            mouseDownPos = controls[0].PointToScreen(Mouse.GetPosition(controls[0]));
+            areaControl = Utility.GetParent<FlowAreaControl>(controls[0]);
+            // マウスの位置は、ノードを配置する領域の座標（WPF の単位）で扱う。スクリーンの座標（物理ピクセル）を使うと、
+            // DPI が 100% でないときに、移動量がノードの位置やスクロールの量（WPF の単位）と合わなくなる
+            mouseDownPos = Mouse.GetPosition(areaControl);
             moveInfos = [.. controls.Select(c => new MoveInfo
             {
                 OffsetX = c.CurrentPositionable.Position.X,
                 OffsetY = c.CurrentPositionable.Position.Y
             })];
 
-            areaControl = Utility.GetParent<FlowAreaControl>(controls[0]);
             areaControl.MouseMove += AreaControl_MouseMove;
             areaControl.MouseUp += AreaControl_MouseUp;
             areaControl.MouseLeave += AreaControl_MouseLeave;
@@ -65,7 +67,7 @@ namespace FlowScriptDrawControl.Model
 
         private void MoveImpl()
         {
-            var currentPos = controls[0].PointToScreen(Mouse.GetPosition(controls[0]));
+            var currentPos = Mouse.GetPosition(areaControl);
             if (command == null && mouseDownPos == currentPos)
             {
                 return;
