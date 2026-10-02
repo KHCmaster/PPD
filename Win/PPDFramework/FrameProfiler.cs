@@ -32,6 +32,18 @@ namespace PPDFramework
         /// 画像の読み込み
         /// </summary>
         ImageLoad,
+        /// <summary>
+        /// ノーツの作成（スクリプトの処理を含む）
+        /// </summary>
+        MarkCreate,
+        /// <summary>
+        /// ノーツを作るときのスクリプトの処理
+        /// </summary>
+        MarkScript,
+        /// <summary>
+        /// 表示中のノーツの更新
+        /// </summary>
+        MarkUpdate,
     }
 
     /// <summary>
@@ -52,6 +64,17 @@ namespace PPDFramework
         // このフレームで起きた、重い処理の内容（文字のテクスチャの作成など）。重いフレームのログに出す
         static readonly System.Text.StringBuilder notes = new();
         const int MaxNotesLength = 200;
+
+        /// <summary>
+        /// 計測中かどうかを取得します（メインスレッドで、記録中のとき）。Note に渡す文字列を作る前の判定に使います。
+        /// </summary>
+        public static bool IsRecording
+        {
+            get
+            {
+                return enabled && Environment.CurrentManagedThreadId == mainThreadId;
+            }
+        }
 
         /// <summary>
         /// 区間を計測します。using で囲んで使います。
@@ -85,7 +108,7 @@ namespace PPDFramework
         /// <summary>
         /// このフレームで行った重い処理の内容を記録します（メインスレッドで、記録中のときだけ）。
         /// </summary>
-        internal static void Note(string note)
+        public static void Note(string note)
         {
             if (!enabled || Environment.CurrentManagedThreadId != mainThreadId || notes.Length >= MaxNotesLength)
             {

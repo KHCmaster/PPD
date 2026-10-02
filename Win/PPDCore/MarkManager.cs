@@ -42,6 +42,8 @@ namespace PPDCore
         readonly string[] effectfilenames = new string[(int)EffectType.MaxSlide + 1];
         MarkDataBase[] ppdat;
         int iter;
+        // 作ったノーツの数（重いフレームのログ用）
+        int createdMarkCount;
         readonly float sametimeing = 0.01f;
         readonly HashSet<Mark> removeMarks = [];
         Dictionary<float, SameTimingMarks> markgroups = [];
@@ -603,6 +605,8 @@ namespace PPDCore
 
         private Mark CreateMark(MarkDataBase ipdata, bool hasSameTimingMark, int sameTimingMarks)
         {
+            using var profile = FrameProfiler.Measure(FrameSection.MarkCreate);
+            createdMarkCount++;
             Mark mk = null;
             if (ipdata is ExMarkData emd)
             {
@@ -639,6 +643,7 @@ namespace PPDCore
                     EventManager.GetCorrectDisplaystate(ipdata.Time), EventManager.GetNoteType(ipdata.Time), sameTimingMarks, ipdata.Parameters, postDrawManager);
             }
             mk.HasSameTimingMark = hasSameTimingMark;
+            using var scriptProfile = FrameProfiler.Measure(FrameSection.MarkScript);
             if (scriptManager.ProcessMarkBPMManager.Process(mk, out float bpm))
             {
                 mk.FixedBPM = bpm;
@@ -673,10 +678,20 @@ namespace PPDCore
         {
             using var profile = FrameProfiler.Measure(FrameSection.Marks);
             if (!initialized) return;
+            var createdBefore = createdMarkCount;
             ReadPpdData(time, SpeedScale * EventManager.BPM);
             ReadExternalPpdData(time);
-            Logger.Instance.AddLog("Time:{0}, pressed:{1}, released:{2}", time, String.Join(",", b.Select(v => v ? "1" : "0").ToArray()),
-                String.Join(",", released.Select(v => v ? "1" : "0").ToArray()));
+            if (createdMarkCount != createdBefore && FrameProfiler.IsRecording)
+            {
+                FrameProfiler.Note(String.Format("marks+{0}(layer={1})", createdMarkCount - createdBefore, MarkLayer.ChildrenCount));
+            }
+            // ログを取らないときに、入力の状態の文字列を毎フレーム作らない
+            if (PPDSetting.Setting.CollectLog)
+            {
+                Logger.Instance.AddLog("Time:{0}, pressed:{1}, released:{2}", time, String.Join(",", b.Select(v => v ? "1" : "0").ToArray()),
+                    String.Join(",", released.Select(v => v ? "1" : "0").ToArray()));
+            }
+            using var updateProfile = FrameProfiler.Measure(FrameSection.MarkUpdate);
             foreach (Mark mk in MarkLayer.Children.Reverse().Cast<Mark>())
             {
                 if (removeMarks.Contains(mk))
