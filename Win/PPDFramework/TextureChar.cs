@@ -25,6 +25,7 @@ namespace PPDFramework
         float prevStartX;
         float prevEndX;
         Vector2 prevPosition;
+        bool verticesWritten;
 
         /// <summary>
         /// コンストラクタ
@@ -128,9 +129,15 @@ namespace PPDFramework
             {
                 return;
             }
-
-            if (prevPosition != Position || prevStartX != startX || prevEndX != endX)
+            // 文字のテクスチャを別のスレッドで作っている間は描かない（大きさは決まっているので、配置は変わらない）
+            if (!cci.Ready)
             {
+                return;
+            }
+
+            if (!verticesWritten || prevPosition != Position || prevStartX != startX || prevEndX != endX)
+            {
+                verticesWritten = true;
                 prevPosition = Position;
                 prevStartX = startX;
                 prevEndX = endX;

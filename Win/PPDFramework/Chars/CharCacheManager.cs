@@ -17,6 +17,16 @@ namespace PPDFramework.Chars
         readonly Dictionary<float, Dictionary<string, SizeTextureManager>> sizeTextures = [];
         readonly PPDDevice device = device;
         Direct2DImageEncoder encoder = new(2048, 2048, 96);
+        CharTextureWorker worker;
+
+        /// <summary>
+        /// 描画のループを回しているスレッドです。このスレッドで必要になった文字は、別のスレッドで作ります（0 のときは、常にその場で作る）。
+        /// </summary>
+        internal static int RenderThreadId
+        {
+            get;
+            set;
+        }
 
         internal CharCacheInfo Get(float fontsize, string facename, char c)
         {
@@ -56,12 +66,24 @@ namespace PPDFramework.Chars
                     {
                         sizeTextureManager = GetSizeTextureManager(fontSize, faceName);
                     }
-                    info.CreateTexture(device, encoder, sizeTextureManager);
+                    info.CreateTexture(device, encoder, sizeTextureManager, GetWorker());
                     FrameProfiler.Note(String.Format("char[{0} {1} {2}]", c, fontSize, faceName));
                     faceCache[faceName] = info;
                 }
             }
             return info;
+        }
+
+        /// <summary>
+        /// 描画のスレッドから呼ばれたときだけ、文字を作るスレッドを返します（読み込みのスレッドなどでは、その場で作る）。
+        /// </summary>
+        private CharTextureWorker GetWorker()
+        {
+            if (RenderThreadId == 0 || Environment.CurrentManagedThreadId != RenderThreadId || Disposed)
+            {
+                return null;
+            }
+            return worker ??= new CharTextureWorker();
         }
 
         private SizeTextureManager GetSizeTextureManager(float fontSize, string faceName)
@@ -130,6 +152,9 @@ namespace PPDFramework.Chars
         protected override void DisposeResource()
         {
             base.DisposeResource();
+            // 文字を作るスレッドを先に止める（破棄したテクスチャやエンコーダーを使わないように）
+            worker?.Dispose();
+            worker = null;
             lock (cache)
             {
                 foreach (CharCacheInfo info in cache.SelectMany(c => c.Value.SelectMany(sc => sc.Value).Select(fc => fc.Value)))

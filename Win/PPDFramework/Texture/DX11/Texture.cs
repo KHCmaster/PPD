@@ -196,6 +196,34 @@ namespace PPDFramework.Texture.DX11
         }
 
         /// <summary>
+        /// 画素（BGRA、幅 × 4 バイトの行）を、CPU 側のデータの指定した位置に書き込みます。
+        /// </summary>
+        /// <param name="pixels"></param>
+        /// <param name="srcWidth"></param>
+        /// <param name="srcHeight"></param>
+        /// <param name="destPoint"></param>
+        internal void WritePixels(byte[] pixels, int srcWidth, int srcHeight, Int2 destPoint)
+        {
+            lock (cpuDataLock)
+            {
+                EnsureCpuData();
+                var copyWidth = Math.Min(srcWidth, Width - destPoint.X);
+                var copyHeight = Math.Min(srcHeight, Height - destPoint.Y);
+                if (copyWidth <= 0 || copyHeight <= 0)
+                {
+                    return;
+                }
+                for (var y = 0; y < copyHeight; y++)
+                {
+                    System.Buffer.BlockCopy(pixels, y * srcWidth * BytesPerPixel,
+                        cpuData, ((destPoint.Y + y) * Width + destPoint.X) * BytesPerPixel,
+                        copyWidth * BytesPerPixel);
+                }
+                MarkDirty(destPoint.Y, destPoint.Y + copyHeight);
+            }
+        }
+
+        /// <summary>
         /// CPU側で書き込まれたデータをGPUへ転送します。描画スレッドから呼ぶ必要があります。
         /// </summary>
         /// <param name="context"></param>

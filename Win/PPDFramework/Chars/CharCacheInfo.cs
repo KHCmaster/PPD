@@ -19,6 +19,13 @@ namespace PPDFramework.Chars
         int t_height;
         AvailableSpace availableSpace;
         float fontScale;
+        // テクスチャを別のスレッドで作るので、できたかどうかと破棄の状態はロックで守る
+        readonly System.Threading.Lock stateLock = new();
+        volatile bool ready;
+        volatile bool stateDisposed;
+        PPDDevice device;
+        Direct2DImageEncoder encoder;
+        SizeTextureManager sizeTextureManager;
 
         public float FontSize
         {
@@ -98,17 +105,32 @@ namespace PPDFramework.Chars
             }
         }
 
+        /// <summary>
+        /// テクスチャができているかどうかを取得します。大きさ（Width、Height）は、できる前から正しい値になっています。
+        /// </summary>
+        public bool Ready
+        {
+            get
+            {
+                return ready;
+            }
+        }
+
         protected override void DisposeResource()
         {
             base.DisposeResource();
-            if (PPDSetting.Setting.CharacterTexturePackingDisabled)
+            lock (stateLock)
             {
-                Texture?.Dispose();
-                Texture = null;
-            }
-            else
-            {
-                availableSpace?.Dispose();
+                stateDisposed = true;
+                if (PPDSetting.Setting.CharacterTexturePackingDisabled)
+                {
+                    Texture?.Dispose();
+                    Texture = null;
+                }
+                else
+                {
+                    availableSpace?.Dispose();
+                }
             }
         }
 
@@ -119,83 +141,164 @@ namespace PPDFramework.Chars
             Character = c;
         }
 
-        internal void CreateTexture(PPDDevice device, Direct2DImageEncoder encoder, SizeTextureManager sizeTextureManager)
+        /// <summary>
+        /// テクスチャを作ります。worker を渡したときは、大きさだけをすぐに求め、描く処理は worker のスレッドで行います。
+        /// </summary>
+        internal void CreateTexture(PPDDevice device, Direct2DImageEncoder encoder, SizeTextureManager sizeTextureManager, CharTextureWorker worker)
         {
             using var profile = FrameProfiler.Measure(FrameSection.CharTexture);
             fontScale = PPDSetting.Setting.FontScaleDisabled ? 1 : Math.Max(1, device.Scale.X);
             ActualFontSize = FontSize * fontScale;
-            TextureBase texture = null;
-            switch (PPDSetting.Setting.TextureCharMode)
+            if (worker != null && PPDSetting.Setting.TextureCharMode == TextureCharMode.D2D && d2dFailedCount <= 10)
             {
-                case TextureCharMode.D2D:
-                    if (d2dFailedCount > 10)
-                    {
-                        goto case TextureCharMode.WinAPI;
-                    }
-                    texture = CreateTextureByD2D(device, encoder);
-                    if (texture == null)
-                    {
-                        d2dFailedCount++;
-                        goto case TextureCharMode.WinAPI;
-                    }
-                    else
-                    {
-                        d2dFailedCount = 0;
-                    }
-                    break;
-                case TextureCharMode.WinAPI:
-                    texture = CreateTextureByWinAPI(device);
-                    break;
-            }
-            if (texture != null)
-            {
-                if (PPDSetting.Setting.CharacterTexturePackingDisabled)
+                try
                 {
-                    Texture = texture;
-                    UV = Vector2.Zero;
-                    UVSize = Vector2.One;
-                    ActualUVSize = Vector2.One;
-                    HalfPixel = new Vector2(0.5f / t_width, 0.5f / t_height);
+                    // 幅と高さは、描いたときと同じ DirectWrite の計測で求める（文字列の配置は、テクスチャができる前から正しい）
+                    encoder.Measure(new string(Character, 1), FaceName, ActualFontSize, out int measuredWidth, out int measuredHeight);
+                    SetSize(measuredWidth, measuredHeight);
+                    this.device = device;
+                    this.encoder = encoder;
+                    this.sizeTextureManager = sizeTextureManager;
+                    worker.Enqueue(this);
+                    return;
+                }
+                catch
+                {
+                    // 計測できなければ、その場で作る
+                }
+            }
+            CreateTextureNow(device, encoder, sizeTextureManager);
+        }
+
+        /// <summary>
+        /// worker のスレッドから呼ばれ、テクスチャを作ります。
+        /// </summary>
+        internal void CreateTextureOnWorker()
+        {
+            if (stateDisposed)
+            {
+                return;
+            }
+            var pixels = RenderByD2D(encoder, out int width, out int height);
+            lock (stateLock)
+            {
+                if (stateDisposed)
+                {
+                    return;
+                }
+                if (pixels != null)
+                {
+                    d2dFailedCount = 0;
+                    PublishPixels(device, sizeTextureManager, pixels, width, height);
                 }
                 else
                 {
-                    var sizeTexture = sizeTextureManager.Write(texture, t_width, t_height, out Vector2 uv, out Vector2 uvSize, out availableSpace);
-                    texture.Dispose();
-                    Texture = sizeTexture.Texture;
-                    UV = uv;
-                    UVSize = uvSize;
-                    ActualUVSize = new Vector2(uvSize.X * width / t_width, uvSize.Y * height / t_height);
-                    HalfPixel = SizeTexture.HalfPixel;
+                    d2dFailedCount++;
+                    PublishTexture(sizeTextureManager, CreateTextureByWinAPI(device));
+                }
+            }
+            device = null;
+            encoder = null;
+            sizeTextureManager = null;
+        }
+
+        private void CreateTextureNow(PPDDevice device, Direct2DImageEncoder encoder, SizeTextureManager sizeTextureManager)
+        {
+            lock (stateLock)
+            {
+                switch (PPDSetting.Setting.TextureCharMode)
+                {
+                    case TextureCharMode.D2D:
+                        if (d2dFailedCount > 10)
+                        {
+                            goto case TextureCharMode.WinAPI;
+                        }
+                        var pixels = RenderByD2D(encoder, out int width, out int height);
+                        if (pixels == null)
+                        {
+                            d2dFailedCount++;
+                            goto case TextureCharMode.WinAPI;
+                        }
+                        d2dFailedCount = 0;
+                        PublishPixels(device, sizeTextureManager, pixels, width, height);
+                        break;
+                    case TextureCharMode.WinAPI:
+                        PublishTexture(sizeTextureManager, CreateTextureByWinAPI(device));
+                        break;
                 }
             }
         }
 
-        private TextureBase CreateTextureByD2D(PPDDevice device, Direct2DImageEncoder encoder)
+        private void SetSize(int width, int height)
         {
-            var retryCount = 0;
-            while (true)
+            this.width = width;
+            this.height = height;
+            this.t_width = Utility.UpperPowerOfTwo(width);
+            this.t_height = Utility.UpperPowerOfTwo(height);
+        }
+
+        /// <summary>
+        /// Direct2D で描いた画素を、文字のテクスチャに書き込みます（一時的なテクスチャは作らない）。
+        /// </summary>
+        private void PublishPixels(PPDDevice device, SizeTextureManager sizeTextureManager, byte[] pixels, int width, int height)
+        {
+            SetSize(width, height);
+            if (PPDSetting.Setting.CharacterTexturePackingDisabled)
+            {
+                PublishTexture(sizeTextureManager, PPDFramework.Texture.DX11.TextureFactory.CreateFromPixels(device, pixels, width, height, true, true));
+                return;
+            }
+            var sizeTexture = sizeTextureManager.WritePixels(pixels, width, height, t_width, t_height, out Vector2 uv, out Vector2 uvSize, out availableSpace);
+            Texture = sizeTexture.Texture;
+            UV = uv;
+            UVSize = uvSize;
+            ActualUVSize = new Vector2(uvSize.X * width / t_width, uvSize.Y * height / t_height);
+            HalfPixel = SizeTexture.HalfPixel;
+            ready = true;
+        }
+
+        private void PublishTexture(SizeTextureManager sizeTextureManager, TextureBase texture)
+        {
+            if (texture == null)
+            {
+                return;
+            }
+            if (PPDSetting.Setting.CharacterTexturePackingDisabled)
+            {
+                Texture = texture;
+                UV = Vector2.Zero;
+                UVSize = Vector2.One;
+                ActualUVSize = Vector2.One;
+                HalfPixel = new Vector2(0.5f / t_width, 0.5f / t_height);
+            }
+            else
+            {
+                var sizeTexture = sizeTextureManager.Write(texture, t_width, t_height, out Vector2 uv, out Vector2 uvSize, out availableSpace);
+                texture.Dispose();
+                Texture = sizeTexture.Texture;
+                UV = uv;
+                UVSize = uvSize;
+                ActualUVSize = new Vector2(uvSize.X * width / t_width, uvSize.Y * height / t_height);
+                HalfPixel = SizeTexture.HalfPixel;
+            }
+            ready = true;
+        }
+
+        private byte[] RenderByD2D(Direct2DImageEncoder encoder, out int width, out int height)
+        {
+            for (var retryCount = 0; retryCount < 5; retryCount++)
             {
                 try
                 {
-                    // 描いた画素をそのままテクスチャにする（以前は PNG の保存と読み込みを 2 往復していた）
-                    var pixels = encoder.RenderBgra(new string(Character, 1), FaceName, ActualFontSize, out int width, out int height);
+                    var pixels = encoder.RenderBgra(new string(Character, 1), FaceName, ActualFontSize, out width, out height);
                     Utility.PreMultiplyAlpha(pixels);
-                    var texture = PPDFramework.Texture.DX11.TextureFactory.CreateFromPixels(device, pixels, width, height, true, true);
-                    this.width = width;
-                    this.height = height;
-                    this.t_width = Utility.UpperPowerOfTwo(width);
-                    this.t_height = Utility.UpperPowerOfTwo(height);
-                    return texture;
+                    return pixels;
                 }
                 catch
                 {
-                    retryCount++;
-                    if (retryCount >= 5)
-                    {
-                        break;
-                    }
                 }
             }
+            width = height = 0;
             return null;
         }
 

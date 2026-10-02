@@ -16,9 +16,34 @@ namespace PPDFramework.Chars
 
         private readonly int imageWidth = imageWidth, imageHeight = imageHeight, imageDpi = imageDpi;
 
+        // Direct2D のファクトリーはシングルスレッド用なので、描く処理は 1 つずつ行う（読み込みのスレッドと、文字を作るスレッドから呼ばれる）
+        private readonly System.Threading.Lock renderLock = new();
+        private bool disposed;
+
         public void Dispose()
         {
-            factoryManager.Dispose();
+            lock (renderLock)
+            {
+                disposed = true;
+                factoryManager.Dispose();
+            }
+        }
+
+        /// <summary>
+        /// 文字列を描いたときの大きさだけを求めます（描かないので軽い。DirectWrite のファクトリーはスレッドセーフ）。
+        /// </summary>
+        public void Measure(string text, string faceName, float fontSize, out int width, out int height)
+        {
+            using var textFormat = factoryManager.DwFactory.CreateTextFormat(faceName, fontSize * 1.3f);
+            using var layout = factoryManager.DwFactory.CreateTextLayout(text, textFormat, 4000, 4000);
+            GetSize(layout, out width, out height);
+        }
+
+        private static void GetSize(IDWriteTextLayout layout, out int width, out int height)
+        {
+            var metrics = layout.Metrics;
+            width = (int)Math.Ceiling(metrics.WidthIncludingTrailingWhitespace);
+            height = (int)Math.Ceiling(metrics.Height);
         }
 
         public void Save(Stream systemStream, Direct2DImageFormat format, string text, string faceName, float fontSize, out int width, out int height)
@@ -26,6 +51,8 @@ namespace PPDFramework.Chars
 #if BENCHMARK
             using var handler = Benchmark.Instance.Start("DirectWrite", "Save");
 #endif
+            using var renderScope = renderLock.EnterScope();
+            ObjectDisposedException.ThrowIf(disposed, this);
             using var wicBitmap = Render(text, faceName, fontSize, out width, out height);
             using var encoder = factoryManager.WicFactory.CreateEncoder(Direct2DConverter.ConvertImageFormat(format));
             using var stream = factoryManager.WicFactory.CreateStream(systemStream);
@@ -53,6 +80,8 @@ namespace PPDFramework.Chars
 #if BENCHMARK
             using var handler = Benchmark.Instance.Start("DirectWrite", "Render");
 #endif
+            using var renderScope = renderLock.EnterScope();
+            ObjectDisposedException.ThrowIf(disposed, this);
             using var wicBitmap = Render(text, faceName, fontSize, out width, out height);
             using var converter = factoryManager.WicFactory.CreateFormatConverter();
             converter.Initialize(wicBitmap, Vortice.WIC.PixelFormat.Format32bppBGRA, BitmapDitherType.None, null, 0, BitmapPaletteType.Custom);
@@ -65,9 +94,7 @@ namespace PPDFramework.Chars
         {
             using var textFormat = factoryManager.DwFactory.CreateTextFormat(faceName, fontSize * 1.3f);
             using var layout = factoryManager.DwFactory.CreateTextLayout(text, textFormat, 4000, 4000);
-            var metrics = layout.Metrics;
-            width = (int)Math.Ceiling(metrics.WidthIncludingTrailingWhitespace);
-            height = (int)Math.Ceiling(metrics.Height);
+            GetSize(layout, out width, out height);
             var wicBitmap = factoryManager.WicFactory.CreateBitmap((uint)width, (uint)height, Vortice.WIC.PixelFormat.Format32bppPRGBA, BitmapCreateCacheOption.CacheOnLoad);
             try
             {
