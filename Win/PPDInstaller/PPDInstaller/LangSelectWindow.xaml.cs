@@ -1,16 +1,21 @@
 ﻿using System;
-using System.Windows.Forms;
+using System.Windows;
 
 namespace PPDInstaller
 {
-    public partial class LangSelectForm : Form
+    public partial class LangSelectWindow : Window
     {
-        public LangSelectForm()
+        public LangSelectWindow()
         {
             InitializeComponent();
         }
 
-        private void Button1_Click(object sender, EventArgs e)
+        private void Window_SourceInitialized(object sender, EventArgs e)
+        {
+            NativeMethods.HideSystemMenu(this);
+        }
+
+        private void Button1_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
         }

@@ -1,10 +1,10 @@
 ﻿using PPDConfiguration;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Drawing;
 using System.IO;
 using System.Reflection;
-using System.Windows.Forms;
+using System.Windows;
+using System.Windows.Media;
 
 namespace PPDInstaller.Controls
 {
@@ -37,17 +37,17 @@ namespace PPDInstaller.Controls
             base.SetLang(setting);
             this.label5.Text = setting["Label5"];
             this.label6.Text = setting["Label6"];
-            this.ppdCheckBox.Text = setting["CheckBox1"];
-            this.ipaFontCheckBox.Text = setting["CheckBox4"];
-            this.bmsTOPPDCheckBox.Text = setting["CheckBox6"];
-            this.groupBox1.Text = setting["GroupBox1"];
+            this.ppdCheckBox.Content = setting["CheckBox1"];
+            this.ipaFontCheckBox.Content = setting["CheckBox4"];
+            this.bmsTOPPDCheckBox.Content = setting["CheckBox6"];
+            this.groupBox1.Header = setting["GroupBox1"];
             this.linkLabel1.Text = setting["LinkLabel"];
         }
 
         public override void OnShown(bool skip)
         {
             CheckInstallVersion();
-            this.ipaFontCheckBox.Checked = !fontinstalled;
+            this.ipaFontCheckBox.IsChecked = !fontinstalled;
         }
 
         public InstallInfo InstallInfo
@@ -56,24 +56,24 @@ namespace PPDInstaller.Controls
             {
                 return new InstallInfo
                 {
-                    PPD = ppdCheckBox.Checked,
-                    IPAFont = ipaFontCheckBox.Checked,
-                    BMSTOPPD = bmsTOPPDCheckBox.Checked,
-                    LAVFilters = lavFiltersCheckBox.Checked
+                    PPD = ppdCheckBox.IsChecked == true,
+                    IPAFont = ipaFontCheckBox.IsChecked == true,
+                    BMSTOPPD = bmsTOPPDCheckBox.IsChecked == true,
+                    LAVFilters = lavFiltersCheckBox.IsChecked == true
                 };
             }
         }
 
         private static bool CheckFont()
         {
-            var ifc =
-                new System.Drawing.Text.InstalledFontCollection();
-            FontFamily[] ffs = ifc.Families;
-            foreach (FontFamily ff in ffs)
+            foreach (FontFamily ff in Fonts.SystemFontFamilies)
             {
-                if (ff.GetName(0) == "IPAGothic" || ff.GetName(0) == "IPAゴシック")
+                foreach (string name in ff.FamilyNames.Values)
                 {
-                    return true;
+                    if (name == "IPAGothic" || name == "IPAゴシック")
+                    {
+                        return true;
+                    }
                 }
             }
             return false;
@@ -88,8 +88,8 @@ namespace PPDInstaller.Controls
             sr.Close();
             var setting = new SettingReader(s);
             string temp;
-            if ((temp = setting["PPDVersion"].Trim()) != "") ppdCheckBox.Checked = PPDVersion != temp;
-            if ((temp = setting["BMSTOPPDVersion"].Trim()) != "") bmsTOPPDCheckBox.Checked = BMSTOPPDVersion != temp;
+            if ((temp = setting["PPDVersion"].Trim()) != "") ppdCheckBox.IsChecked = PPDVersion != temp;
+            if ((temp = setting["BMSTOPPDVersion"].Trim()) != "") bmsTOPPDCheckBox.IsChecked = BMSTOPPDVersion != temp;
         }
         void GetVersions()
         {
@@ -116,7 +116,7 @@ namespace PPDInstaller.Controls
             }
         }
 
-        private void LinkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void LinkLabel1_Click(object sender, RoutedEventArgs e)
         {
             System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo("http://ossipedia.ipa.go.jp/ipafont/index.html") { UseShellExecute = true });
         }

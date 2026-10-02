@@ -1,4 +1,5 @@
 ﻿using PPDConfiguration;
+using System.Windows;
 
 namespace PPDInstaller.Controls
 {
@@ -56,8 +57,8 @@ namespace PPDInstaller.Controls
                 if (!string.IsNullOrEmpty(value))
                 {
                     this.textBox2.Text = value;
-                    this.label9.Visible = true;
-                    textBox2.Visible = true;
+                    this.label9.Visibility = Visibility.Visible;
+                    textBox2.Visibility = Visibility.Visible;
                 }
             }
         }

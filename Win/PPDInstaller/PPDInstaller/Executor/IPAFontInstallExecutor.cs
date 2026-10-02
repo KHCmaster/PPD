@@ -1,11 +1,11 @@
 ﻿using System;
 using System.IO;
 using System.Text;
-using System.Windows.Forms;
+using System.Windows.Threading;
 
 namespace PPDInstaller.Executor
 {
-    class IPAFontInstallExecutor(string filePath, string unzipPath, Control control) : CExecutor(control)
+    class IPAFontInstallExecutor(string filePath, string unzipPath, Dispatcher dispatcher) : CExecutor(dispatcher)
     {
         public static Uri ipafonturi = new("http://ossipedia.ipa.go.jp/ipafont/ipag00303.php");
         readonly FileDownloader downloadClient = new();

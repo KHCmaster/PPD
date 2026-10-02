@@ -1,0 +1,34 @@
+<Window x:Class="PPDInstaller.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:PPDInstaller.Controls"
+        Title="PPDInstaller" SizeToContent="WidthAndHeight" ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen"
+        Icon="ppdinst.ico" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" Closing="Window_Closing">
+    <Grid Width="600" Height="300">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200" />
+            <ColumnDefinition Width="1" />
+            <ColumnDefinition Width="399" />
+        </Grid.ColumnDefinitions>
+        <Image Source="img/inst.png" Stretch="None" HorizontalAlignment="Left" VerticalAlignment="Top" />
+        <Grid Grid.Column="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="270" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <!-- ページは 1 つだけ表示する -->
+            <controls:StartPanel x:Name="startPanel1" />
+            <controls:InstallPanel x:Name="installPanel1" Visibility="Collapsed" />
+            <controls:InstallComponentPanel x:Name="installComponentPanel1" Visibility="Collapsed" />
+            <controls:LinkCreatePanel x:Name="linkCreatePanel1" Visibility="Collapsed" />
+            <controls:ConfirmPanel x:Name="confirmPanel1" Visibility="Collapsed" />
+            <controls:FinishPanel x:Name="finishPanel1" Visibility="Collapsed" />
+            <controls:InstallAbortedPanel x:Name="installAbortedPanel1" Visibility="Collapsed" />
+            <Canvas Grid.Row="1">
+                <Button x:Name="previousButton" Canvas.Left="61" Canvas.Top="3" Width="85" Height="23" Content="前へ" IsEnabled="False" Click="PreviousButton_Click" />
+                <Button x:Name="nextButton" Canvas.Left="152" Canvas.Top="3" Width="87" Height="23" Content="次へ" Click="NextButton_Click" />
+                <Button x:Name="cancelButton" Canvas.Left="276" Canvas.Top="3" MinWidth="90" Height="23" Padding="6,1" Content="キャンセル" Click="CancelButton_Click" />
+            </Canvas>
+        </Grid>
+    </Grid>
+</Window>

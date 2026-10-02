@@ -1,7 +1,6 @@
 ﻿using ErrorHandle;
 using System;
-using System.IO;
-using System.Windows.Forms;
+using System.Windows;
 
 namespace PPDInstaller
 {
@@ -15,12 +14,17 @@ namespace PPDInstaller
         {
             var errorHandler = new ErrorHandler();
             errorHandler.Initialize();
-            System.Environment.CurrentDirectory = Path.GetDirectoryName(Application.ExecutablePath) + "\\";
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
+            System.Environment.CurrentDirectory = AppContext.BaseDirectory;
             try
             {
-                Application.Run(new MainForm());
+                var application = new Application
+                {
+                    // メインウィンドウの前に言語の選択と展開のウィンドウを出すので、それらを閉じても終了しないようにする
+                    ShutdownMode = ShutdownMode.OnExplicitShutdown
+                };
+                var window = new MainWindow();
+                application.ShutdownMode = ShutdownMode.OnMainWindowClose;
+                application.Run(window);
             }
             catch (Exception e)
             {

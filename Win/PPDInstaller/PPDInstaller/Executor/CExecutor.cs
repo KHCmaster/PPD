@@ -1,15 +1,16 @@
 ﻿using System;
-using System.Windows.Forms;
+using System.Windows.Threading;
 
 namespace PPDInstaller.Executor
 {
-    abstract class CExecutor(Control control)
+    /// <summary>
+    /// インストールの処理の基底クラスです。終了と進み具合は UI のスレッドに通知します。
+    /// </summary>
+    abstract class CExecutor(Dispatcher dispatcher)
     {
-        public delegate void VoidDelegate();
-
         public event EventHandler Finished;
         public event EventHandler Progressed;
-        readonly Control control = control;
+        readonly Dispatcher dispatcher = dispatcher;
 
         public bool Success
         {
@@ -48,9 +49,9 @@ namespace PPDInstaller.Executor
 
         protected void OnFinish()
         {
-            if (control.InvokeRequired)
+            if (!dispatcher.CheckAccess())
             {
-                control.Invoke(new VoidDelegate(OnFinish));
+                dispatcher.Invoke(OnFinish);
                 return;
             }
             Finished?.Invoke(this, EventArgs.Empty);
@@ -58,9 +59,9 @@ namespace PPDInstaller.Executor
 
         protected void OnProgress()
         {
-            if (control.InvokeRequired)
+            if (!dispatcher.CheckAccess())
             {
-                control.Invoke(new VoidDelegate(OnProgress));
+                dispatcher.Invoke(OnProgress);
                 return;
             }
             Progressed?.Invoke(this, EventArgs.Empty);

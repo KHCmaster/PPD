@@ -2,12 +2,13 @@
 using PPDInstaller.Controls;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
-using System.Windows.Forms;
+using System.Windows;
 
 namespace PPDInstaller
 {
-    public partial class MainForm : Form, IPanelManager
+    public partial class MainWindow : Window, IPanelManager
     {
         bool interrupted;
         bool ifinstall;
@@ -59,7 +60,7 @@ namespace PPDInstaller
             }
         }
 
-        public MainForm()
+        public MainWindow()
         {
             InitializeComponent();
             panels = [];
@@ -79,7 +80,7 @@ namespace PPDInstaller
                 }
                 sr.Close();
                 var fns = filenames.ToArray();
-                var fm2 = new LangSelectForm();
+                var fm2 = new LangSelectWindow();
                 fm2.SetLang(fns);
                 fm2.ShowDialog();
                 if (File.Exists(String.Format("Lang\\{0}.ini", fm2.SelectedIndex)))
@@ -96,7 +97,7 @@ namespace PPDInstaller
             }
 
             var path = Path.GetRandomFileName();
-            var extractDialog = new ExtractDialog
+            var extractDialog = new ExtractWindow
             {
                 ExtractDir = Path.Combine(Path.GetTempPath(), path)
             };
@@ -122,7 +123,6 @@ namespace PPDInstaller
         {
             panels.Add(panelBase);
             panelBase.PanelManager = this;
-            this.splitContainer2.Panel1.Controls.Add(panelBase);
         }
 
         void ReadLang(string filename)
@@ -134,9 +134,9 @@ namespace PPDInstaller
             var lang = new SettingReader(s);
             askfinishtext = lang["AskFinishText"];
             askfinishcaption = lang["AskFinishCaption"];
-            this.cancelButton.Text = lang["Button1"];
-            this.nextButton.Text = lang["Button2"];
-            this.previousButton.Text = lang["Button3"];
+            this.cancelButton.Content = lang["Button1"];
+            this.nextButton.Content = lang["Button2"];
+            this.previousButton.Content = lang["Button3"];
             NoDataFile = lang["NonExistDataFile"];
             config = lang["Config"];
             keyconfig = lang["KeyConfig"];
@@ -166,13 +166,13 @@ namespace PPDInstaller
             if (currentPanel is ConfirmPanel && !confirmPanel1.IsInstallFinishsd)
             {
                 ifinstall = true;
-                previousButton.Enabled = nextButton.Enabled = cancelButton.Enabled = false;
+                previousButton.IsEnabled = nextButton.IsEnabled = cancelButton.IsEnabled = false;
                 confirmPanel1.Install();
             }
             else
             {
-                currentPanel.Visible = false;
-                nextPanel.Visible = true;
+                currentPanel.Visibility = Visibility.Collapsed;
+                nextPanel.Visibility = Visibility.Visible;
                 currentIndex++;
                 panels[currentIndex].OnShown(false);
                 ApplyPanelProperty(panels[currentIndex]);
@@ -184,19 +184,19 @@ namespace PPDInstaller
             PanelBase currentPanel = panels[currentIndex];
             var previousPanel = panels[currentIndex - 1] as PanelBase;
 
-            previousPanel.Visible = true;
-            currentPanel.Visible = false;
+            previousPanel.Visibility = Visibility.Visible;
+            currentPanel.Visibility = Visibility.Collapsed;
             currentIndex--;
             panels[currentIndex].OnShown(false);
             ApplyPanelProperty(panels[currentIndex]);
         }
 
-        private void Button1_Click(object sender, EventArgs e)
+        private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
         }
 
-        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        private void Window_Closing(object sender, CancelEventArgs e)
         {
             if (ifinstall)
             {
@@ -206,21 +206,21 @@ namespace PPDInstaller
             if (!interrupted)
             {
                 e.Cancel = true;
-                if (MessageBox.Show(askfinishtext, askfinishcaption, MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes)
+                if (MessageBox.Show(this, askfinishtext, askfinishcaption, MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.Yes)
                 {
                     interrupted = true;
                     foreach (var panel in panels)
                     {
-                        panel.Visible = false;
+                        panel.Visibility = Visibility.Collapsed;
                     }
                     currentIndex = panels.Count - 1;
-                    panels[currentIndex].Visible = true;
+                    panels[currentIndex].Visibility = Visibility.Visible;
                     ApplyPanelProperty(panels[currentIndex]);
                 }
             }
         }
 
-        private void Button2_Click(object sender, EventArgs e)
+        private void NextButton_Click(object sender, RoutedEventArgs e)
         {
             if (interrupted)
             {
@@ -232,18 +232,18 @@ namespace PPDInstaller
 
         private void ApplyPanelProperty(PanelBase panel)
         {
-            nextButton.Enabled = panel.CanNext;
-            nextButton.Visible = panel.IsNextVisible;
-            nextButton.Text = panel.NextText;
-            previousButton.Enabled = panel.CanPrevious;
-            previousButton.Visible = panel.IsPreviousVisible;
-            previousButton.Text = panel.PreviousText;
-            cancelButton.Enabled = panel.CanCancel;
-            cancelButton.Visible = panel.IsCancelVisible;
-            cancelButton.Text = panel.CancelText;
+            nextButton.IsEnabled = panel.CanNext;
+            nextButton.Visibility = panel.IsNextVisible ? Visibility.Visible : Visibility.Hidden;
+            nextButton.Content = panel.NextText;
+            previousButton.IsEnabled = panel.CanPrevious;
+            previousButton.Visibility = panel.IsPreviousVisible ? Visibility.Visible : Visibility.Hidden;
+            previousButton.Content = panel.PreviousText;
+            cancelButton.IsEnabled = panel.CanCancel;
+            cancelButton.Visibility = panel.IsCancelVisible ? Visibility.Visible : Visibility.Hidden;
+            cancelButton.Content = panel.CancelText;
         }
 
-        private void Button3_Click(object sender, EventArgs e)
+        private void PreviousButton_Click(object sender, RoutedEventArgs e)
         {
             Previous();
         }

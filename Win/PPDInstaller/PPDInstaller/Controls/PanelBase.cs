@@ -1,9 +1,12 @@
 ﻿using PPDConfiguration;
-using System.Windows.Forms;
+using System.Windows.Controls;
 
 namespace PPDInstaller.Controls
 {
-    public partial class PanelBase : UserControl
+    /// <summary>
+    /// インストーラーの 1 ページの基底クラスです（XAML は持たず、各ページの XAML のルートになる）。
+    /// </summary>
+    public class PanelBase : UserControl
     {
         public IPanelManager PanelManager
         {
@@ -57,11 +60,6 @@ namespace PPDInstaller.Controls
         {
             get;
             protected set;
-        }
-
-        public PanelBase()
-        {
-            InitializeComponent();
         }
 
         public virtual void SetLang(SettingReader setting)

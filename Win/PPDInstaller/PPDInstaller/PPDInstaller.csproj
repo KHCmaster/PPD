@@ -7,7 +7,7 @@
     <ApplicationIcon>ppdinst.ico</ApplicationIcon>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <Platforms>x64</Platforms>
-    <UseWindowsForms>true</UseWindowsForms>
+    <UseWPF>true</UseWPF>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
     <DebugSymbols>true</DebugSymbols>
@@ -46,40 +46,6 @@
     <ProjectReference Include="..\..\PPDConfiguration\PPDConfiguration.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Update="Controls\ConfirmPanel.resx">
-      <DependentUpon>ConfirmPanel.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Controls\FinishPanel.resx">
-      <DependentUpon>FinishPanel.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Controls\InstallAbortedPanel.resx">
-      <DependentUpon>InstallAbortedPanel.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Controls\InstallComponentPanel.resx">
-      <DependentUpon>InstallComponentPanel.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Controls\InstallPanel.resx">
-      <DependentUpon>InstallPanel.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Controls\LinkCreatePanel.resx">
-      <DependentUpon>LinkCreatePanel.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Controls\StartPanel.resx">
-      <DependentUpon>StartPanel.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="ExtractDialog.resx">
-      <DependentUpon>ExtractDialog.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="MainForm.resx">
-      <DependentUpon>MainForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="LangSelectForm.resx">
-      <DependentUpon>LangSelectForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
     <None Update="Lang\1.ini">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -101,9 +67,13 @@
     <None Update="Lang\0.ini">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="ppdinst.ico" />
+    <Resource Include="img\inst.png" />
+    <Resource Include="img\nothing.png" />
+    <Resource Include="img\ok.png" />
+    <Resource Include="img\notok.png" />
+    <Resource Include="img\progress.png" />
   </ItemGroup>
 </Project>

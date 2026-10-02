@@ -12,14 +12,14 @@ namespace PPDInstaller.Controls
         public override void SetLang(SettingReader setting)
         {
             base.SetLang(setting);
-            registerStartMenuCheckBox.Text = setting["RegisterStartMenu"];
+            registerStartMenuCheckBox.Content = setting["RegisterStartMenu"];
         }
 
         public bool CreateStartMenu
         {
             get
             {
-                return registerStartMenuCheckBox.Checked;
+                return registerStartMenuCheckBox.IsChecked == true;
             }
         }
     }

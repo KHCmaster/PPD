@@ -1,6 +1,6 @@
 ﻿using PPDConfiguration;
-using System;
-using System.Windows.Forms;
+using Microsoft.Win32;
+using System.Windows;
 
 namespace PPDInstaller.Controls
 {
@@ -36,10 +36,13 @@ namespace PPDInstaller.Controls
             }
         }
 
-        private void Button4_Click(object sender, EventArgs e)
+        private void Button4_Click(object sender, RoutedEventArgs e)
         {
-            folderBrowserDialog1.SelectedPath = this.textBox1.Text;
-            if (folderBrowserDialog1.ShowDialog() == DialogResult.OK) this.textBox1.Text = folderBrowserDialog1.SelectedPath + "\\KHC";
+            var dialog = new OpenFolderDialog
+            {
+                InitialDirectory = this.textBox1.Text
+            };
+            if (dialog.ShowDialog(Window.GetWindow(this)) == true) this.textBox1.Text = dialog.FolderName + "\\KHC";
         }
     }
 }

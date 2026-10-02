@@ -1,0 +1,10 @@
+<local:PanelBase x:Class="PPDInstaller.Controls.InstallAbortedPanel"
+                 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                 xmlns:local="clr-namespace:PPDInstaller.Controls">
+    <Canvas>
+        <TextBlock x:Name="label3" Canvas.Left="12" Canvas.Top="19" FontSize="16" Text="インストールは中断されました" />
+        <TextBlock x:Name="label4" Canvas.Left="13" Canvas.Top="78" Width="373" Height="101" TextWrapping="Wrap"
+                   Text="PPD、および関連ソフトのインストールは中断されました。プログラムをインストールする際には、再度このプログラムを実行してください。終了ボタンを押すことでセットアップを終了します。" />
+    </Canvas>
+</local:PanelBase>

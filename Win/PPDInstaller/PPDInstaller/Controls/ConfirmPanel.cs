@@ -2,20 +2,23 @@
 using PPDInstaller.Executor;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.IO;
 using System.Threading;
-using System.Windows.Forms;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace PPDInstaller.Controls
 {
     public partial class ConfirmPanel : PanelBase
     {
         public event EventHandler InstallFinished;
-        const string NotYet = "notyet";
-        const string OK = "ok";
-        const string NotOK = "notok";
-        const string Progress = "progress";
+
+        static readonly ImageSource NotYet = LoadIcon("nothing.png");
+        static readonly ImageSource OK = LoadIcon("ok.png");
+        static readonly ImageSource NotOK = LoadIcon("notok.png");
+        static readonly ImageSource Progress = LoadIcon("progress.png");
 
         readonly string cachefolder = "Cache\\";
 
@@ -35,20 +38,20 @@ namespace PPDInstaller.Controls
         string effect2DEditor = "Effect2DEditor";
         readonly string lavFilters = "LAVFilters";
 
+        readonly ObservableCollection<InstallNode> nodes = [];
         InstallInfo installInfo;
 
         public ConfirmPanel()
         {
             InitializeComponent();
-            treeView1.ImageList = new ImageList
-            {
-                ColorDepth = ColorDepth.Depth32Bit,
-                ImageSize = new Size(16, 16)
-            };
-            treeView1.ImageList.Images.Add(NotYet, PPDInstaller.Properties.Resources.nothing);
-            treeView1.ImageList.Images.Add(OK, PPDInstaller.Properties.Resources.ok);
-            treeView1.ImageList.Images.Add(NotOK, PPDInstaller.Properties.Resources.notok);
-            treeView1.ImageList.Images.Add(Progress, PPDInstaller.Properties.Resources.progress);
+            treeView1.ItemsSource = nodes;
+        }
+
+        private static BitmapImage LoadIcon(string fileName)
+        {
+            var image = new BitmapImage(new Uri("pack://application:,,,/img/" + fileName));
+            image.Freeze();
+            return image;
         }
 
         public override void SetLang(SettingReader setting)
@@ -79,16 +82,15 @@ namespace PPDInstaller.Controls
         {
             base.OnShown(skip);
 
-            treeView1.Nodes.Clear();
-            treeView1.Nodes.Add(necessary);
-            treeView1.Nodes.Add(optional);
+            nodes.Clear();
+            nodes.Add(new InstallNode(necessary));
+            nodes.Add(new InstallNode(optional));
             var icp = PanelManager.GetPanel<InstallComponentPanel>();
             installInfo = icp.InstallInfo;
-            if (installInfo.PPD) treeView1.Nodes[0].Nodes.Add(NotYet, ppd);
-            if (installInfo.IPAFont) treeView1.Nodes[0].Nodes.Add(NotYet, ipaFont);
-            if (installInfo.BMSTOPPD) treeView1.Nodes[1].Nodes.Add(NotYet, bmsToPpd);
-            if (installInfo.LAVFilters) treeView1.Nodes[1].Nodes.Add(NotYet, lavFilters);
-            treeView1.ExpandAll();
+            if (installInfo.PPD) nodes[0].Children.Add(new InstallNode(ppd));
+            if (installInfo.IPAFont) nodes[0].Children.Add(new InstallNode(ipaFont));
+            if (installInfo.BMSTOPPD) nodes[1].Children.Add(new InstallNode(bmsToPpd));
+            if (installInfo.LAVFilters) nodes[1].Children.Add(new InstallNode(lavFilters));
         }
 
         public bool IsInstallFinishsd
@@ -104,7 +106,7 @@ namespace PPDInstaller.Controls
         {
             executeQueues = new Queue<CExecutor>();
 
-            var installListExecutor = new InstallListExecutor(this);
+            var installListExecutor = new InstallListExecutor(Dispatcher);
             installListExecutor.Finished += InstallListExecutor_Finished;
             installListExecutor.Execute();
         }
@@ -114,19 +116,19 @@ namespace PPDInstaller.Controls
             var ip = PanelManager.GetPanel<InstallPanel>();
             if (installInfo.PPD)
             {
-                executeQueues.Enqueue(new PPDInstallExecutor(PanelManager.DataDirectory, ip.InstallDirectory, this) { Name = ppd });
+                executeQueues.Enqueue(new PPDInstallExecutor(PanelManager.DataDirectory, ip.InstallDirectory, Dispatcher) { Name = ppd });
             }
             if (installInfo.IPAFont)
             {
-                executeQueues.Enqueue(new IPAFontInstallExecutor(Path.Combine(cachefolder, ipafontname), Path.Combine(cachefolder, Path.GetFileNameWithoutExtension(ipafontname)), this) { Name = ipaFont });
+                executeQueues.Enqueue(new IPAFontInstallExecutor(Path.Combine(cachefolder, ipafontname), Path.Combine(cachefolder, Path.GetFileNameWithoutExtension(ipafontname)), Dispatcher) { Name = ipaFont });
             }
             if (installInfo.BMSTOPPD)
             {
-                executeQueues.Enqueue(new BMSTOPPDInstallExecutor(PanelManager.DataDirectory, ip.InstallDirectory, this) { Name = bmsToPpd });
+                executeQueues.Enqueue(new BMSTOPPDInstallExecutor(PanelManager.DataDirectory, ip.InstallDirectory, Dispatcher) { Name = bmsToPpd });
             }
             if (installInfo.LAVFilters)
             {
-                executeQueues.Enqueue(new LAVFiltersInstallExecutor(Path.Combine(cachefolder, lavFiltersName), this) { Name = lavFilters });
+                executeQueues.Enqueue(new LAVFiltersInstallExecutor(Path.Combine(cachefolder, lavFiltersName), Dispatcher) { Name = lavFilters });
             }
             InnerInstall();
         }
@@ -137,30 +139,30 @@ namespace PPDInstaller.Controls
             {
                 var executor = executeQueues.Dequeue();
                 string targetText = executor.Name;
-                TreeNode targetNode = null;
+                InstallNode targetNode = null;
                 if (executor is PPDInstallExecutor)
                 {
                     executor.ProgressText = installing;
-                    targetNode = treeView1.Nodes[0];
+                    targetNode = nodes[0];
                 }
                 else if (executor is IPAFontInstallExecutor)
                 {
                     executor.ProgressText = downloading;
-                    targetNode = treeView1.Nodes[0];
+                    targetNode = nodes[0];
                 }
                 else if (executor is BMSTOPPDInstallExecutor)
                 {
                     executor.ProgressText = installing;
-                    targetNode = treeView1.Nodes[1];
+                    targetNode = nodes[1];
                 }
                 else if (executor is LAVFiltersInstallExecutor)
                 {
                     executor.ProgressText = downloading;
-                    targetNode = treeView1.Nodes[1];
+                    targetNode = nodes[1];
                 }
                 label7.Text = String.Format("{0} {1} {2}%", executor.ProgressText, executor.Name, executor.Progress);
                 var node = GetNodeFromText(targetNode, targetText);
-                node?.ImageKey = Progress;
+                node?.Icon = Progress;
                 executor.Progressed += Executor_Progressed;
                 executor.Finished += Executor_Finished;
 
@@ -181,13 +183,13 @@ namespace PPDInstaller.Controls
             }
             if (executor.Success)
             {
-                SetOk(treeView1.Nodes[0], executor.Name);
-                SetOk(treeView1.Nodes[1], executor.Name);
+                SetIcon(nodes[0], executor.Name, OK);
+                SetIcon(nodes[1], executor.Name, OK);
             }
             else
             {
-                SetNotOk(treeView1.Nodes[0], executor.Name);
-                SetNotOk(treeView1.Nodes[1], executor.Name);
+                SetIcon(nodes[0], executor.Name, NotOK);
+                SetIcon(nodes[1], executor.Name, NotOK);
             }
             InnerInstall();
         }
@@ -198,37 +200,53 @@ namespace PPDInstaller.Controls
             label7.Text = String.Format("{0} {1} {2}%", executor.ProgressText, executor.Name, executor.Progress);
         }
 
-        static void SetOk(TreeNode Node, string targetText)
+        static void SetIcon(InstallNode parent, string targetText, ImageSource icon)
         {
-            var node = GetNodeFromText(Node, targetText);
-            node?.ImageKey = OK;
+            var node = GetNodeFromText(parent, targetText);
+            node?.Icon = icon;
         }
 
-        static void SetNotOk(TreeNode Node, string targetText)
+        static InstallNode GetNodeFromText(InstallNode node, string text)
         {
-            var node = GetNodeFromText(Node, targetText);
-            node?.ImageKey = NotOK;
-        }
-
-        static TreeNode GetNodeFromText(TreeNode node, string text)
-        {
-            TreeNode ret = null;
-            if (node == null | text == null) return ret;
-            foreach (TreeNode tn in node.Nodes)
+            if (node == null || text == null) return null;
+            foreach (var child in node.Children)
             {
-                if (tn.Text == text)
+                if (child.Text == text)
                 {
-                    ret = tn;
-                    break;
+                    return child;
                 }
             }
-            return ret;
+            return null;
         }
 
         public string ErrorText
         {
             get;
             private set;
+        }
+
+        /// <summary>
+        /// インストールする項目の一覧の 1 項目です。
+        /// </summary>
+        public class InstallNode(string text) : INotifyPropertyChanged
+        {
+            private ImageSource icon = NotYet;
+
+            public event PropertyChangedEventHandler PropertyChanged;
+
+            public string Text { get; } = text;
+
+            public ObservableCollection<InstallNode> Children { get; } = [];
+
+            public ImageSource Icon
+            {
+                get { return icon; }
+                set
+                {
+                    icon = value;
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Icon)));
+                }
+            }
         }
     }
 }

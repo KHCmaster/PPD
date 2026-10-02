@@ -1,5 +1,5 @@
 ﻿using PPDConfiguration;
-using System;
+using System.Windows;
 
 namespace PPDInstaller.Controls
 {
@@ -46,11 +46,11 @@ namespace PPDInstaller.Controls
         {
             base.SetLang(setting);
             this.label1.Text = setting["Label1"];
-            this.button1.Text = setting["EasyInstall"];
-            this.button2.Text = setting["CustomInstall"];
+            this.button1.Content = setting["EasyInstall"];
+            this.button2.Content = setting["CustomInstall"];
         }
 
-        private void Button1_Click(object sender, EventArgs e)
+        private void Button1_Click(object sender, RoutedEventArgs e)
         {
             while (PanelManager.CurrentPanel is not ConfirmPanel)
             {
@@ -59,7 +59,7 @@ namespace PPDInstaller.Controls
             PanelManager.Next();
         }
 
-        private void Button2_Click(object sender, EventArgs e)
+        private void Button2_Click(object sender, RoutedEventArgs e)
         {
             PanelManager.Next();
         }

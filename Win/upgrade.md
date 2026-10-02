@@ -543,11 +543,15 @@ WinForms と WPF の混在をなくすため、PPD.exe 以外を段階的に WPF
 - [x] FlowScriptDrawControl から WinForms の参照をなくした（カーソルの移動を Win32 の SetCursorPos にした）
 - [x] FlowScriptControlTest を WPF だけのアプリにした（DPI 対応で表示される）
 - [x] PPDEditor のスクリプト用のドックは、WPF の部品を ElementHost で表示する（PPDEditor を移すまでの間）
-- [ ] 小さいツール（BMSTOPPD、KeyConfiger、PPDConfig、PPDUpdater、FolderDiffChecker、BezierDrawControlTest、PPDInstaller）
-  - 済み: BMSTOPPD、FolderDiffChecker、KeyConfiger、PPDConfig、PPDUpdater。ファイルの形式と設定（ini）は変えていない
+- [x] 小さいツール（BMSTOPPD、KeyConfiger、PPDConfig、PPDUpdater、FolderDiffChecker、PPDInstaller）
+  - ファイルの形式と設定（ini）は変えていない
   - PPDUpdater: 一覧は DataGrid にして、進み具合は行のデータ（`INotifyPropertyChanged`）から ProgressBar に表示する。
     別のスレッドの処理の通知は `Dispatcher` で UI のスレッドに戻す。`-d` / `-i` のときにウィンドウを出さない動作は同じ
-  - 残り: PPDInstaller。BezierDrawControlTest は BezierDrawControl を使うので、Effect2DEditor と一緒に判断する
+  - PPDInstaller: 各ページは `PanelBase`（XAML を持たない UserControl）を元にした XAML にして、配置は以前の位置のまま Canvas に置いた。
+    言語の選択と展開のウィンドウはメインウィンドウより先に出すので、その間は `ShutdownMode.OnExplicitShutdown` にしている。
+    確認したこと（管理者でなく実行し、ダミーの Data.pak を使用）: 言語の選択 → 各ページ → キャンセル → 中断のページ → 終了。インストールそのものは行っていない
+  - BezierDrawControlTest は BezierDrawControl を使うので、Effect2DEditor と一緒に判断する
+  - ErrorHandle（PPD.exe と共有）は WinForms のままなので、PPDConfig と PPDInstaller は WinForms のアセンブリも参照している（画面には使っていない）
 - [ ] Effect2DEditor、PPDEditor（作業量に見合うかを、上が終わってから判断する）
 
 ### Phase 7: 配布・更新の仕組みとリリース
