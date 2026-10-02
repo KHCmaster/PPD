@@ -1,6 +1,6 @@
 ﻿using PPDFramework;
 using System;
-using System.Windows.Forms;
+using System.Windows;
 
 namespace PPDConfig
 {
@@ -21,11 +21,10 @@ namespace PPDConfig
             ErrorHandler = new ErrorHandlerPPD();
             ErrorHandler.Initialize();
 
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
+            var application = new Application();
             try
             {
-                Application.Run(new Form1());
+                application.Run(new MainWindow());
             }
             catch (Exception e)
             {

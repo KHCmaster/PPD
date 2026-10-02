@@ -6,7 +6,7 @@
     <AssemblyName>PPDConfig</AssemblyName>
     <ApplicationIcon>ppdconfigicon.ico</ApplicationIcon>
     <Platforms>x64</Platforms>
-    <UseWindowsForms>true</UseWindowsForms>
+    <UseWPF>true</UseWPF>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
     <PlatformTarget>x64</PlatformTarget>
@@ -20,21 +20,12 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\ErrorHandler\ErrorHandle.csproj" />
     <ProjectReference Include="..\PPDConfiguration\PPDConfiguration.csproj" />
     <ProjectReference Include="..\PPDFramework\PPDFramework.csproj" />
     <ProjectReference Include="..\PPDInput\PPDInput.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Update="Form1.resx">
-      <DependentUpon>Form1.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
     <None Update="Lang\lang_PPDConfig_en.ini">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -53,9 +44,8 @@
     <None Update="Lang\lang_PPDConfig_zh2.ini">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="ppdconfigicon.ico" />
   </ItemGroup>
 </Project>
