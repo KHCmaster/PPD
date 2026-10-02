@@ -26,22 +26,9 @@ namespace PPDFramework.Chars
 #if BENCHMARK
             using var handler = Benchmark.Instance.Start("DirectWrite", "Save");
 #endif
-            using var textFormat = factoryManager.DwFactory.CreateTextFormat(faceName, fontSize * 1.3f);
-            using var layout = factoryManager.DwFactory.CreateTextLayout(text, textFormat, 4000, 4000);
-            var metrics = layout.Metrics;
-            width = (int)Math.Ceiling(metrics.WidthIncludingTrailingWhitespace);
-            height = (int)Math.Ceiling(metrics.Height);
-            using var wicBitmap = factoryManager.WicFactory.CreateBitmap((uint)width, (uint)height, Vortice.WIC.PixelFormat.Format32bppPRGBA, BitmapCreateCacheOption.CacheOnLoad);
-            var renderTargetProperties = new RenderTargetProperties(RenderTargetType.Default,
-                new Vortice.DCommon.PixelFormat(Format.R8G8B8A8_UNorm, Vortice.DCommon.AlphaMode.Unknown), imageDpi, imageDpi, RenderTargetUsage.None, Vortice.Direct2D1.FeatureLevel.Default);
-            using var renderTarget = factoryManager.D2DFactory.CreateWicBitmapRenderTarget(wicBitmap, renderTargetProperties);
-            using var brush = renderTarget.CreateSolidColorBrush(new Color4(1f, 1f, 1f, 1f), null);
+            using var wicBitmap = Render(text, faceName, fontSize, out width, out height);
             using var encoder = factoryManager.WicFactory.CreateEncoder(Direct2DConverter.ConvertImageFormat(format));
             using var stream = factoryManager.WicFactory.CreateStream(systemStream);
-            renderTarget.BeginDraw();
-            renderTarget.Clear(new Color4(1, 1, 1, 0));
-            renderTarget.DrawTextLayout(new Vector2(0, 0), layout, brush);
-            renderTarget.EndDraw().CheckError();
             encoder.Initialize(stream, BitmapEncoderCacheOption.NoCache);
             using (var bitmapFrameEncode = encoder.CreateNewFrame(out var encoderOptions))
             {
@@ -52,6 +39,53 @@ namespace PPDFramework.Chars
                 bitmapFrameEncode.Commit();
             }
             encoder.Commit();
+        }
+
+        /// <summary>
+        /// 文字列を描き、ストレートアルファの BGRA の画素（幅 × 4 バイトの行）を返します。
+        /// </summary>
+        /// <remarks>
+        /// PNG に保存して System.Drawing で読み直したときと同じ画素になるように、PNG のエンコーダーと同じく
+        /// WIC の形式の変換（乗算済み RGBA → ストレートの BGRA）を使う。
+        /// </remarks>
+        public byte[] RenderBgra(string text, string faceName, float fontSize, out int width, out int height)
+        {
+#if BENCHMARK
+            using var handler = Benchmark.Instance.Start("DirectWrite", "Render");
+#endif
+            using var wicBitmap = Render(text, faceName, fontSize, out width, out height);
+            using var converter = factoryManager.WicFactory.CreateFormatConverter();
+            converter.Initialize(wicBitmap, Vortice.WIC.PixelFormat.Format32bppBGRA, BitmapDitherType.None, null, 0, BitmapPaletteType.Custom);
+            var pixels = new byte[width * height * 4];
+            converter.CopyPixels((uint)(width * 4), pixels);
+            return pixels;
+        }
+
+        private IWICBitmap Render(string text, string faceName, float fontSize, out int width, out int height)
+        {
+            using var textFormat = factoryManager.DwFactory.CreateTextFormat(faceName, fontSize * 1.3f);
+            using var layout = factoryManager.DwFactory.CreateTextLayout(text, textFormat, 4000, 4000);
+            var metrics = layout.Metrics;
+            width = (int)Math.Ceiling(metrics.WidthIncludingTrailingWhitespace);
+            height = (int)Math.Ceiling(metrics.Height);
+            var wicBitmap = factoryManager.WicFactory.CreateBitmap((uint)width, (uint)height, Vortice.WIC.PixelFormat.Format32bppPRGBA, BitmapCreateCacheOption.CacheOnLoad);
+            try
+            {
+                var renderTargetProperties = new RenderTargetProperties(RenderTargetType.Default,
+                    new Vortice.DCommon.PixelFormat(Format.R8G8B8A8_UNorm, Vortice.DCommon.AlphaMode.Unknown), imageDpi, imageDpi, RenderTargetUsage.None, Vortice.Direct2D1.FeatureLevel.Default);
+                using var renderTarget = factoryManager.D2DFactory.CreateWicBitmapRenderTarget(wicBitmap, renderTargetProperties);
+                using var brush = renderTarget.CreateSolidColorBrush(new Color4(1f, 1f, 1f, 1f), null);
+                renderTarget.BeginDraw();
+                renderTarget.Clear(new Color4(1, 1, 1, 0));
+                renderTarget.DrawTextLayout(new Vector2(0, 0), layout, brush);
+                renderTarget.EndDraw().CheckError();
+                return wicBitmap;
+            }
+            catch
+            {
+                wicBitmap.Dispose();
+                throw;
+            }
         }
     }
 }

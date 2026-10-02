@@ -26,6 +26,17 @@ namespace PPDFramework
                 PixelFormat.Format32bppArgb);
             byte[] buf = new byte[bitmap.Width * bitmap.Height * 4];
             Marshal.Copy(data.Scan0, buf, 0, buf.Length);
+            PreMultiplyAlpha(buf);
+            Marshal.Copy(buf, 0, data.Scan0, buf.Length);
+            bitmap.UnlockBits(data);
+        }
+
+        /// <summary>
+        /// BGRA（ストレートアルファ）の画素に、アルファを乗算します。
+        /// </summary>
+        /// <param name="buf">画素。</param>
+        internal static void PreMultiplyAlpha(byte[] buf)
+        {
             for (int i = 0; i < buf.Length;)
             {
                 var alpha = buf[i + 3];
@@ -34,8 +45,6 @@ namespace PPDFramework
                 buf[i + 2] = (byte)(buf[i + 2] * alpha / 255f);
                 i += 4;
             }
-            Marshal.Copy(buf, 0, data.Scan0, buf.Length);
-            bitmap.UnlockBits(data);
         }
     }
 }

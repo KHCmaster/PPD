@@ -110,7 +110,7 @@ namespace PPDFramework.Texture.DX11
             }
         }
 
-        private static TextureBase CreateFromPixels(PPDDevice device, byte[] pixels, int width, int height, bool pa, bool keepCpuData)
+        internal static TextureBase CreateFromPixels(PPDDevice device, byte[] pixels, int width, int height, bool pa, bool keepCpuData)
         {
             var handle = GCHandle.Alloc(pixels, GCHandleType.Pinned);
             try

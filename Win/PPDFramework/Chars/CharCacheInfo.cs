@@ -177,15 +177,10 @@ namespace PPDFramework.Chars
             {
                 try
                 {
-                    using var stream = new MemoryStream();
-                    encoder.Save(stream, Direct2DImageFormat.Png, new string(Character, 1), FaceName, ActualFontSize, out int width, out int height);
-                    stream.Seek(0, SeekOrigin.Begin);
-                    var bitmap = new Bitmap(stream);
-                    Utility.PreMultiplyAlpha(bitmap);
-                    var tempStream = new MemoryStream();
-                    bitmap.Save(tempStream, System.Drawing.Imaging.ImageFormat.Png);
-                    tempStream.Seek(0, SeekOrigin.Begin);
-                    var texture = CreateTemporaryTexture(device, tempStream, width, height);
+                    // 描いた画素をそのままテクスチャにする（以前は PNG の保存と読み込みを 2 往復していた）
+                    var pixels = encoder.RenderBgra(new string(Character, 1), FaceName, ActualFontSize, out int width, out int height);
+                    Utility.PreMultiplyAlpha(pixels);
+                    var texture = PPDFramework.Texture.DX11.TextureFactory.CreateFromPixels(device, pixels, width, height, true, true);
                     this.width = width;
                     this.height = height;
                     this.t_width = Utility.UpperPowerOfTwo(width);
@@ -282,14 +277,6 @@ namespace PPDFramework.Chars
                 }
             }
             return texture;
-        }
-
-        /// <summary>
-        /// 文字テクスチャに書き込む前の一時テクスチャを作成します。後で CPU 側でコピーするので、CPU 側にデータを保持させます。
-        /// </summary>
-        private static TextureBase CreateTemporaryTexture(PPDDevice device, Stream stream, int width, int height)
-        {
-            return PPDFramework.Texture.DX11.TextureFactory.FromStream(device, stream, width, height, true, true);
         }
 
         private static TextureBase CreateTemporaryTexture(PPDDevice device, int width, int height)
