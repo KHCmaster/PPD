@@ -1,6 +1,6 @@
 ﻿using PPDFramework;
 using System;
-using System.Windows.Forms;
+using System.Windows;
 
 namespace KeyConfiger
 {
@@ -14,17 +14,14 @@ namespace KeyConfiger
         {
             var errorHandler = new ErrorHandlerPPD();
             errorHandler.Initialize();
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            using MyGame game = new(new PPDExecuteArg([]));
+            var application = new Application();
             try
             {
-                game.Run();
+                application.Run(new MainWindow());
             }
             catch (Exception e)
             {
                 errorHandler.ProcessError(e);
-                game.Form.MainForm.Close();
             }
         }
     }

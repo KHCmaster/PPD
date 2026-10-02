@@ -8,10 +8,11 @@ using System.Windows.Forms;
 
 namespace PPDInput
 {
-    public abstract class InputBase(Form window) : IDisposable
+    public abstract class InputBase : IDisposable
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2213:Disposable fields should be disposed", Justification = "外部から渡されるもので、このクラスは所有しない")]
-        protected Form window = window;
+        protected Form window;
+        private readonly IntPtr windowHandle;
         readonly IDirectInput8 di = DInput.DirectInput8Create();
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2213:Disposable fields should be disposed", Justification = "Dispose から呼ばれる ReleaseObjects で破棄する")]
         protected IDirectInputDevice8 keyboard;
@@ -24,6 +25,33 @@ namespace PPDInput
         protected bool loaded;
         private bool assignMode;
 
+        /// <summary>
+        /// WinForms のウィンドウで入力を受け取ります。
+        /// </summary>
+        protected InputBase(Form window)
+        {
+            this.window = window;
+        }
+
+        /// <summary>
+        /// ウィンドウのハンドルで入力を受け取ります（WPF のウィンドウなど）。
+        /// </summary>
+        protected InputBase(IntPtr windowHandle)
+        {
+            this.windowHandle = windowHandle;
+        }
+
+        /// <summary>
+        /// 入力を受け取るウィンドウのハンドルです。
+        /// </summary>
+        protected IntPtr WindowHandle
+        {
+            get
+            {
+                return window != null ? window.Handle : windowHandle;
+            }
+        }
+
         public virtual void Load()
         {
             ReleaseObjects();
@@ -33,7 +61,7 @@ namespace PPDInput
                 this.keyboard = di.CreateDevice(PredefinedDevice.SysKeyboard);
                 this.keyboard.SetDataFormat<RawKeyboardState>().CheckError();
                 this.keyboard.SetCooperativeLevel(
-                  window.Handle,
+                  WindowHandle,
                   CooperativeLevel.Foreground |
                   CooperativeLevel.NonExclusive |
                   CooperativeLevel.NoWinKey).CheckError();
@@ -56,7 +84,7 @@ namespace PPDInput
                     IDirectInputDevice8 joystick;
                     joystick = di.CreateDevice(d.InstanceGuid);
                     joystick.SetDataFormat<RawJoystickState>().CheckError();
-                    joystick.SetCooperativeLevel(window.Handle, CooperativeLevel.Foreground | CooperativeLevel.Exclusive).CheckError();
+                    joystick.SetCooperativeLevel(WindowHandle, CooperativeLevel.Foreground | CooperativeLevel.Exclusive).CheckError();
 
                     // バッファ方式を使う場合は、バッファサイズを指定しなければならない。
                     joystick.Properties.BufferSize = 16;

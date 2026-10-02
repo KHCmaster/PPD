@@ -6,10 +6,24 @@ using System.Windows.Forms;
 
 namespace PPDInput
 {
-    public class Input(Form window) : InputBase(window)
+    public class Input : InputBase
     {
         int[] keyCount;
         readonly List<int[]> buttonCount = [];
+
+        /// <summary>
+        /// WinForms のウィンドウで入力を受け取ります。
+        /// </summary>
+        public Input(Form window) : base(window)
+        {
+        }
+
+        /// <summary>
+        /// ウィンドウのハンドルで入力を受け取ります（WPF のウィンドウなど）。
+        /// </summary>
+        public Input(IntPtr windowHandle) : base(windowHandle)
+        {
+        }
 
         public override void Load()
         {
