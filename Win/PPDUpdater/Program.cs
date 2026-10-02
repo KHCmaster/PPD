@@ -1,5 +1,5 @@
-﻿using System;
-using System.Windows.Forms;
+using System;
+using System.Windows;
 
 namespace PPDUpdater
 {
@@ -19,21 +19,21 @@ namespace PPDUpdater
                 return;
             }
 
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            var form = new Form1();
-
-            WorkState ws = WorkState.None;
-            if (Array.IndexOf(args, "-d") != -1) ws |= WorkState.DownLoad;
-            if (Array.IndexOf(args, "-i") != -1) ws |= WorkState.Install;
-
-            if (ws != WorkState.None)
-            {
-                form.WorkState = ws;
-            }
             try
             {
-                Application.Run(form);
+                var app = new Application();
+                errorHandler.Attach(app);
+                var window = new MainWindow();
+
+                WorkState ws = WorkState.None;
+                if (Array.IndexOf(args, "-d") != -1) ws |= WorkState.DownLoad;
+                if (Array.IndexOf(args, "-i") != -1) ws |= WorkState.Install;
+
+                if (ws != WorkState.None)
+                {
+                    window.WorkState = ws;
+                }
+                app.Run(window);
             }
             catch (Exception e)
             {

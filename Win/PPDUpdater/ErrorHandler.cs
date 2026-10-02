@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Threading;
-using System.Windows.Forms;
+using System.Windows;
 
 namespace PPDUpdater
 {
@@ -12,13 +12,19 @@ namespace PPDUpdater
 
         public void Initialize()
         {
-            Application.ThreadException += Application_ThreadException;
             Thread.GetDomain().UnhandledException += Program_UnhandledException;
         }
 
-        void Application_ThreadException(object sender, System.Threading.ThreadExceptionEventArgs e)
+        /// <summary>
+        /// UI のスレッドで起きた例外も処理します（以前の WinForms の Application.ThreadException と同じく、処理を続ける）。
+        /// </summary>
+        public void Attach(Application application)
         {
-            ProcessError(e.Exception);
+            application.DispatcherUnhandledException += (sender, e) =>
+            {
+                ProcessError(e.Exception);
+                e.Handled = true;
+            };
         }
 
         void Program_UnhandledException(object sender, UnhandledExceptionEventArgs e)

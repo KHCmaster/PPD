@@ -1,15 +1,16 @@
 ﻿using System;
-using System.Windows.Forms;
+using System.Windows.Threading;
 
 namespace PPDUpdater.Executor
 {
-    abstract class CExecutor(Control control)
+    /// <summary>
+    /// 別のスレッドで処理を行い、終了と進み具合を UI のスレッドに通知する処理の基底クラスです。
+    /// </summary>
+    abstract class CExecutor(Dispatcher dispatcher)
     {
-        public delegate void VoidDelegate();
-
         public event EventHandler Finished;
         public event EventHandler Progressed;
-        readonly Control control = control;
+        readonly Dispatcher dispatcher = dispatcher;
 
         public bool Success
         {
@@ -36,9 +37,9 @@ namespace PPDUpdater.Executor
 
         protected void OnFinish()
         {
-            if (control.InvokeRequired)
+            if (!dispatcher.CheckAccess())
             {
-                control.Invoke(new VoidDelegate(OnFinish));
+                dispatcher.Invoke(OnFinish);
                 return;
             }
             Finished?.Invoke(this, EventArgs.Empty);
@@ -46,9 +47,9 @@ namespace PPDUpdater.Executor
 
         protected void OnProgress()
         {
-            if (control.InvokeRequired)
+            if (!dispatcher.CheckAccess())
             {
-                control.Invoke(new VoidDelegate(OnProgress));
+                dispatcher.Invoke(OnProgress);
                 return;
             }
             Progressed?.Invoke(this, EventArgs.Empty);

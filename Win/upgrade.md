@@ -544,6 +544,10 @@ WinForms と WPF の混在をなくすため、PPD.exe 以外を段階的に WPF
 - [x] FlowScriptControlTest を WPF だけのアプリにした（DPI 対応で表示される）
 - [x] PPDEditor のスクリプト用のドックは、WPF の部品を ElementHost で表示する（PPDEditor を移すまでの間）
 - [ ] 小さいツール（BMSTOPPD、KeyConfiger、PPDConfig、PPDUpdater、FolderDiffChecker、BezierDrawControlTest、PPDInstaller）
+  - 済み: BMSTOPPD、FolderDiffChecker、KeyConfiger、PPDConfig、PPDUpdater。ファイルの形式と設定（ini）は変えていない
+  - PPDUpdater: 一覧は DataGrid にして、進み具合は行のデータ（`INotifyPropertyChanged`）から ProgressBar に表示する。
+    別のスレッドの処理の通知は `Dispatcher` で UI のスレッドに戻す。`-d` / `-i` のときにウィンドウを出さない動作は同じ
+  - 残り: PPDInstaller。BezierDrawControlTest は BezierDrawControl を使うので、Effect2DEditor と一緒に判断する
 - [ ] Effect2DEditor、PPDEditor（作業量に見合うかを、上が終わってから判断する）
 
 ### Phase 7: 配布・更新の仕組みとリリース

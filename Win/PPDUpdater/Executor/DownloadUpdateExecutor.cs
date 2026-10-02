@@ -1,7 +1,7 @@
 ﻿using PPDUpdater.Model;
 using System;
 using System.IO;
-using System.Windows.Forms;
+using System.Windows.Threading;
 
 namespace PPDUpdater.Executor
 {
@@ -39,8 +39,8 @@ namespace PPDUpdater.Executor
             private set;
         }
 
-        public DownloadUpdateExecutor(UpdateInfo updateInfo, Control control, int index)
-            : base(control)
+        public DownloadUpdateExecutor(UpdateInfo updateInfo, Dispatcher dispatcher, int index)
+            : base(dispatcher)
         {
             this.UpdateInfo = updateInfo;
             this.Index = index;

@@ -6,7 +6,7 @@
     <AssemblyName>PPDUpdater</AssemblyName>
     <ApplicationIcon>ppdupdatericon.ico</ApplicationIcon>
     <Platforms>x64</Platforms>
-    <UseWindowsForms>true</UseWindowsForms>
+    <UseWPF>true</UseWPF>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
     <DebugSymbols>true</DebugSymbols>
@@ -31,13 +31,6 @@
     <PackageReference Include="SharpZipLib" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Update="Form1.resx">
-      <DependentUpon>Form1.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
     <None Update="Lang\lang_PPDUpdater_en.ini">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -56,10 +49,8 @@
     <None Update="Lang\lang_PPDUpdater_zh2.ini">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
-    <EmbeddedResource Include="img\loader.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="ppdupdatericon.ico" />
   </ItemGroup>
 </Project>
