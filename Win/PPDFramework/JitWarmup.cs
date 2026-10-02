@@ -106,6 +106,64 @@ namespace PPDFramework
             return Path.GetFullPath(assembly.Location).StartsWith(baseDirectory, StringComparison.OrdinalIgnoreCase);
         }
 
+        static readonly string[] wpfAssemblyNames = ["PresentationFramework", "PresentationCore", "WindowsBase", "System.Xaml", "UIAutomationProvider", "UIAutomationTypes"];
+        static readonly Dictionary<string, bool> wpfReferenceCache = new(StringComparer.OrdinalIgnoreCase);
+
+        /// <summary>
+        /// アセンブリが WPF を参照しているかを、メタデータだけを読んで調べます（アセンブリは読み込まない）。
+        /// アプリのフォルダーにある参照先は、たどって調べます。
+        /// </summary>
+        private static bool ReferencesWpf(string path, HashSet<string> visiting)
+        {
+            lock (wpfReferenceCache)
+            {
+                if (wpfReferenceCache.TryGetValue(path, out var cached))
+                {
+                    return cached;
+                }
+            }
+            if (!visiting.Add(path))
+            {
+                return false;
+            }
+            var result = false;
+            try
+            {
+                using var stream = File.OpenRead(path);
+                using var peReader = new System.Reflection.PortableExecutable.PEReader(stream);
+                var reader = System.Reflection.Metadata.PEReaderExtensions.GetMetadataReader(peReader);
+                foreach (var handle in reader.AssemblyReferences)
+                {
+                    var name = reader.GetString(reader.GetAssemblyReference(handle).Name);
+                    if (Array.IndexOf(wpfAssemblyNames, name) >= 0)
+                    {
+                        result = true;
+                        break;
+                    }
+                    var referencePath = Path.Combine(Path.GetDirectoryName(path), name + ".dll");
+                    if (!File.Exists(referencePath))
+                    {
+                        referencePath = Path.Combine(baseDirectory, name + ".dll");
+                    }
+                    if (File.Exists(referencePath) && ReferencesWpf(referencePath, visiting))
+                    {
+                        result = true;
+                        break;
+                    }
+                }
+            }
+            catch
+            {
+                // 調べられないものは、安全のため対象にしない
+                result = true;
+            }
+            lock (wpfReferenceCache)
+            {
+                wpfReferenceCache[path] = result;
+            }
+            return result;
+        }
+
         private static void Run()
         {
             while (true)
@@ -118,6 +176,12 @@ namespace PPDFramework
                         Monitor.Wait(queue);
                     }
                     assembly = queue.Dequeue();
+                }
+                // WPF を（間接的にも）参照するものは除く。コンパイルするだけで WPF が読み込まれて初期化され、
+                // プロセスの DPI の扱いが変わって、ウィンドウの大きさや表示がおかしくなる
+                if (ReferencesWpf(assembly.Location, []))
+                {
+                    continue;
                 }
                 var start = Stopwatch.GetTimestamp();
                 Prepare(assembly);
