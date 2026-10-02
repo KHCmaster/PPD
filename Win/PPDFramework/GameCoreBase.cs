@@ -178,6 +178,7 @@ namespace PPDFramework
         {
             // 1 フレームの処理時間の記録（プレイ中でログが有効なときだけ記録される）
             var frameSession = FrameTimeStatistics.CurrentSession;
+            FrameProfiler.BeginFrame(frameSession != 0);
             var frameStart = Stopwatch.GetTimestamp();
             nextframe = gameTimer.ElapsedTickTime;
             PreventScreenSaver();

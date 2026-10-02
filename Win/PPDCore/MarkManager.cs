@@ -671,6 +671,7 @@ namespace PPDCore
         }
         public void Update(float time, bool[] b, bool[] released)
         {
+            using var profile = FrameProfiler.Measure(FrameSection.Marks);
             if (!initialized) return;
             ReadPpdData(time, SpeedScale * EventManager.BPM);
             ReadExternalPpdData(time);

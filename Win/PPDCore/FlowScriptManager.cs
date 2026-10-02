@@ -286,6 +286,7 @@ namespace PPDCore
 
         public void Update(bool dontUpdateExtraProcess)
         {
+            using var profile = FrameProfiler.Measure(FrameSection.FlowScript);
             engine.Update();
             if (!dontUpdateExtraProcess)
             {

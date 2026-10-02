@@ -188,6 +188,7 @@ namespace PPDFramework
 
         private void CreateText()
         {
+            using var profile = FrameProfiler.Measure(FrameSection.Text);
             foreach (TextureChar c in chars)
             {
                 c.Dispose();

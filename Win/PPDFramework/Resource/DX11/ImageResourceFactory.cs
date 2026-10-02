@@ -6,11 +6,13 @@ namespace PPDFramework.Resource.DX11
     {
         public ImageResourceBase Create(PPDDevice device, string filename, bool pa)
         {
+            using var profile = FrameProfiler.Measure(FrameSection.ImageLoad);
             return new ImageResource(device, filename, pa);
         }
 
         public ImageResourceBase Create(PPDDevice device, Stream stream, bool pa)
         {
+            using var profile = FrameProfiler.Measure(FrameSection.ImageLoad);
             return new ImageResource(device, stream, pa);
         }
     }

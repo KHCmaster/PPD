@@ -23,6 +23,15 @@ namespace PPDFramework
         static readonly float[] intervals = new float[Capacity];
         static int count;
         static long lastFrameStart;
+        static long sessionStart;
+        static int lastGCCount;
+
+        // 更新か描画がこの時間以上かかったフレームは、区間ごとの内訳を残す
+        const float SpikeThreshold = 4;
+        const int SpikeCapacity = 256;
+        static readonly Spike[] spikes = new Spike[SpikeCapacity];
+        static int spikeCount;
+        static int spikeOverflow;
         static volatile bool recording;
         // 記録の区間の番号。フレームの途中で区間が変わった（リトライなど）フレームは記録しない
         static volatile int session;
@@ -46,6 +55,10 @@ namespace PPDFramework
             recording = false;
             count = 0;
             lastFrameStart = 0;
+            sessionStart = Stopwatch.GetTimestamp();
+            lastGCCount = GC.CollectionCount(0);
+            spikeCount = 0;
+            spikeOverflow = 0;
             session++;
             recording = enabled;
         }
@@ -73,6 +86,27 @@ namespace PPDFramework
             presentTimes[count] = ToMilliseconds(afterPresent - afterSleep);
             intervals[count] = lastFrameStart == 0 ? float.NaN : ToMilliseconds(start - lastFrameStart);
             lastFrameStart = start;
+            // 前のフレームの記録からこのフレームまでに起きた GC の回数（第 0 世代の数には、上の世代の GC も含まれる）
+            var gcCount = GC.CollectionCount(0);
+            var gcs = gcCount - lastGCCount;
+            lastGCCount = gcCount;
+            if (updateTimes[count] >= SpikeThreshold || drawTimes[count] >= SpikeThreshold)
+            {
+                if (spikeCount < SpikeCapacity)
+                {
+                    ref var spike = ref spikes[spikeCount++];
+                    spike.Time = ToMilliseconds(start - sessionStart) / 1000;
+                    spike.Update = updateTimes[count];
+                    spike.Draw = drawTimes[count];
+                    spike.GCs = gcs;
+                    spike.Sections ??= new float[FrameProfiler.SectionCount];
+                    FrameProfiler.CopyMilliseconds(spike.Sections);
+                }
+                else
+                {
+                    spikeOverflow++;
+                }
+            }
             count++;
         }
 
@@ -108,7 +142,29 @@ namespace PPDFramework
                 var median = Percentile(interval.OrderBy(x => x).ToArray(), 0.5);
                 lines.Add(String.Format("  frame slow frames (interval > {0:F2}ms): {1}", median * 1.5, interval.Count(x => x > median * 1.5)));
             }
+            if (spikeCount > 0)
+            {
+                // 区間は入れ子になりうる（包含時間）。other は、更新と描画のうち、どの区間にも入らなかった時間の目安
+                lines.Add(String.Format("  spike frames (update or draw >= {0}ms): {1}{2}", SpikeThreshold, spikeCount + spikeOverflow,
+                    spikeOverflow > 0 ? String.Format(" (first {0} shown)", spikeCount) : ""));
+                var names = Enum.GetNames<FrameSection>();
+                for (var i = 0; i < spikeCount; i++)
+                {
+                    var spike = spikes[i];
+                    var sections = String.Join(" ", names.Select((name, j) => spike.Sections[j] >= 0.05f ? String.Format("{0}={1:F2}", name, spike.Sections[j]) : null).Where(s => s != null));
+                    lines.Add(String.Format("    spike at={0:F2}s update={1:F2} draw={2:F2} gc={3} {4}", spike.Time, spike.Update, spike.Draw, spike.GCs, sections));
+                }
+            }
             return [.. lines];
+        }
+
+        struct Spike
+        {
+            public float Time;
+            public float Update;
+            public float Draw;
+            public int GCs;
+            public float[] Sections;
         }
 
         private static string Format(string name, float[] values)

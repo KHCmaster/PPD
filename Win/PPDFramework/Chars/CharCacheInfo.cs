@@ -121,6 +121,7 @@ namespace PPDFramework.Chars
 
         internal void CreateTexture(PPDDevice device, Direct2DImageEncoder encoder, SizeTextureManager sizeTextureManager)
         {
+            using var profile = FrameProfiler.Measure(FrameSection.CharTexture);
             fontScale = PPDSetting.Setting.FontScaleDisabled ? 1 : Math.Max(1, device.Scale.X);
             ActualFontSize = FontSize * fontScale;
             TextureBase texture = null;

@@ -167,6 +167,7 @@ namespace PPDFramework
         /// </summary>
         protected override void UpdateImpl()
         {
+            using var profile = FrameProfiler.Measure(FrameSection.Effect2D);
             manager.Update();
         }
 
