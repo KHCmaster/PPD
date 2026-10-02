@@ -125,6 +125,7 @@ namespace PPDFramework
                     GC.GetTotalMemory(false) / 1024.0 / 1024.0);
             }
             PerformanceLog.Write(log);
+            PerformanceLog.Write(String.Format("  jit warmup: methods={0} time={1:F0}ms", JitWarmup.PreparedCount, JitWarmup.ElapsedMilliseconds));
             foreach (var line in frames)
             {
                 PerformanceLog.Write(line);

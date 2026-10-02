@@ -131,6 +131,8 @@ namespace PPDFramework
         {
             // 最初の COM オブジェクトの破棄より前に設定する必要がある
             ComDiagnostics.Configure();
+            // プレイ中に初めて動く処理のコンパイルで止まらないように、先にコンパイルしておく
+            JitWarmup.Start();
             gameTimer = new GameTimer();
             Control = control;
             Args = args;
