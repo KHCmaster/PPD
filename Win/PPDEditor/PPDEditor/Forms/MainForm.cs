@@ -54,6 +54,7 @@ namespace PPDEditor.Forms
         static InfoForm infof;
         static LayerManager lm;
         static EventManager em;
+        static WpfDockShell emDock;
         static GeometryCreator gc;
         static MemoWindow mw;
         static WpfDockShell mwDock;
@@ -152,6 +153,7 @@ namespace PPDEditor.Forms
             lm = new LayerManager();
             SplashWindow.ChangeStatus(String.Format(Utility.Language["InitializingStart"], Utility.Language["EventManager"]));
             em = new EventManager();
+            emDock = new WpfDockShell(em, "PPDEditor.EventManager");
             SplashWindow.ChangeStatus(String.Format(Utility.Language["InitializingStart"], Utility.Language["GeometryCreator"]));
             gc = new GeometryCreator();
             SplashWindow.ChangeStatus(String.Format(Utility.Language["InitializingStart"], Utility.Language["Memo"]));
@@ -200,7 +202,7 @@ namespace PPDEditor.Forms
             dxf.VisibleChanged += Windowvisiblechanged;
             infof.VisibleChanged += Windowvisiblechanged;
             lm.VisibleChanged += Windowvisiblechanged;
-            em.VisibleChanged += Windowvisiblechanged;
+            emDock.VisibleChanged += Windowvisiblechanged;
             gc.VisibleChanged += Windowvisiblechanged;
             mwDock.VisibleChanged += Windowvisiblechanged;
             hfDock.VisibleChanged += Windowvisiblechanged;
@@ -589,7 +591,7 @@ namespace PPDEditor.Forms
             dxf.DockPanel = null;
             infof.DockPanel = null;
             lm.DockPanel = null;
-            em.DockPanel = null;
+            emDock.DockPanel = null;
             gc.DockPanel = null;
             mwDock.DockPanel = null;
             hfDock.DockPanel = null;
@@ -677,7 +679,7 @@ namespace PPDEditor.Forms
             this.歌詞エディターToolStripMenuItem.Checked = Utility.CheckVisible(keDock);
             this.設定ファイルライターToolStripMenuItem.Checked = Utility.CheckVisible(ifwDock);
             this.レイヤーマネージャーToolStripMenuItem.Checked = Utility.CheckVisible(lm);
-            this.イベントマネージャーToolStripMenuItem.Checked = Utility.CheckVisible(em);
+            this.イベントマネージャーToolStripMenuItem.Checked = Utility.CheckVisible(emDock);
             this.幾何クリエーターToolStripMenuItem.Checked = Utility.CheckVisible(gc);
             this.メモToolStripMenuItem.Checked = Utility.CheckVisible(mwDock);
             this.ヘルプToolStripMenuItem.Checked = Utility.CheckVisible(hfDock);
@@ -699,7 +701,7 @@ namespace PPDEditor.Forms
                 "PPDEditor.TimeLineForm" => tlf,
                 "PPDEditor.IniFileWriter" => ifwDock,
                 "PPDEditor.LayerManager" => lm,
-                "PPDEditor.EventManager" => em,
+                "PPDEditor.EventManager" => emDock,
                 "PPDEditor.GeometryCreator" => gc,
                 "PPDEditor.MemoWindow" => mwDock,
                 "PPDEditor.HelpForm" => hfDock,
@@ -2400,7 +2402,7 @@ namespace PPDEditor.Forms
 
         private void イベントマネージャーToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Utility.ShowOrHideWindow(dockPanel1, em, ModifierKeys);
+            Utility.ShowOrHideWindow(dockPanel1, emDock, ModifierKeys);
         }
         private void 幾何クリエーターToolStripMenuItem_Click(object sender, EventArgs e)
         {

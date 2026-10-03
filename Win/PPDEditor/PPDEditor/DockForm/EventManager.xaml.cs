@@ -3,11 +3,12 @@ using PPDEditorCommon;
 using PPDFramework.PPDStructure.EVDData;
 using System;
 using System.Collections.Generic;
-using System.Windows.Forms;
+using System.Linq;
+using System.Windows;
 
 namespace PPDEditor
 {
-    public partial class EventManager : ScrollableForm
+    public partial class EventManager : DockView
     {
         SortedList<float, EventData> changeData;
         int currentnum;
@@ -37,12 +38,12 @@ namespace PPDEditor
         }
         public void SetLang()
         {
-            this.dataGridView1.Columns[0].HeaderText = Utility.Language["EMDataGridColumn1"];
-            this.dataGridView1.Columns[1].HeaderText = Utility.Language["EMDataGridColumn2"];
-            this.button1.Text = Utility.Language["EMButton1"];
-            this.button2.Text = Utility.Language["EMButton2"];
-            this.button3.Text = Utility.Language["EMButton3"];
-            this.button4.Text = Utility.Language["EMButton4"];
+            this.Column1.Header = Utility.Language["EMDataGridColumn1"];
+            this.Column2.Header = Utility.Language["EMDataGridColumn2"];
+            this.button1.Content = Utility.Language["EMButton1"];
+            this.button2.Content = Utility.Language["EMButton2"];
+            this.button3.Content = Utility.Language["EMButton3"];
+            this.button4.Content = Utility.Language["EMButton4"];
             this.label1.Text = Utility.Language["EMLabel1"];
             alreadyadded = Utility.Language["EMAlreadyAdded"];
             confirmdelete = Utility.Language["EMDeleteConfirm"];
@@ -80,8 +81,6 @@ namespace PPDEditor
                 if (changeData != value)
                 {
                     changeData = value;
-                    this.dataGridView1.RowCount = 0;
-                    this.dataGridView1.Rows.Add(changeData.Count);
                     UpdateDataGrid();
                     ContentChanged();
                 }
@@ -126,9 +125,9 @@ namespace PPDEditor
                 var index = changeData.IndexOfKey(time);
                 if (index >= 0)
                 {
-                    dataGridView1.Rows[index].Selected = true;
-                    dataGridView1.FirstDisplayedScrollingRowIndex = index;
-                    ShowOrHideWindow(this);
+                    dataGridView1.SelectedIndex = index;
+                    dataGridView1.ScrollIntoView(dataGridView1.SelectedItem);
+                    ShowDock();
                 }
             }
         }
@@ -180,7 +179,7 @@ namespace PPDEditor
         {
             stopList.Clear();
             changeData.Clear();
-            this.dataGridView1.RowCount = 0;
+            UpdateDataGrid();
             for (int i = 0; i < Volpercents.Length; i++)
             {
                 Volpercents[i] = 90;
@@ -367,8 +366,8 @@ namespace PPDEditor
             if (!changeData.ContainsKey(time))
             {
                 changeData.Add(time, data);
-                this.dataGridView1.Rows.Add(1);
                 UpdateDataGrid();
+                ContentChanged();
             }
         }
         private void Sm_onmoveseek(object sender, EventArgs e)
@@ -396,15 +395,15 @@ namespace PPDEditor
             {
                 i = 0;
             }*/
-            if (i >= 0 && i < dataGridView1.RowCount)
+            if (i >= 0 && i < changeData.Count)
             {
-                dataGridView1.CurrentCell = dataGridView1[0, i];
+                dataGridView1.SelectedIndex = i;
                 SetEvent(changeData.Values[i]);
                 currentnum = i;
             }
             else
             {
-                dataGridView1.CurrentCell = null;
+                dataGridView1.SelectedIndex = -1;
                 var temp = new EventData();
                 SetEvent(temp);
                 currentnum = -1;
@@ -436,7 +435,7 @@ namespace PPDEditor
             WindowUtility.MainForm.ChangeVolume(-100 * (100 - data.MovieVolumePercent));
             dstate = data.DisplayState;
         }
-        private void Button1_Click(object sender, EventArgs e)
+        private void Button1_Click(object sender, RoutedEventArgs e)
         {
             //add
             var time = (float)WindowUtility.Seekmain.Currenttime;
@@ -462,24 +461,28 @@ namespace PPDEditor
                 if (WpfDialog.ShowDialog(eef))
                 {
                     changeData.Add(time, eef.EventData);
-                    this.dataGridView1.Rows.Add(1);
                     UpdateDataGrid();
                     ContentChanged();
                 }
             }
             else
             {
-                MessageBox.Show(alreadyadded);
+                MessageBox.Show(Window.GetWindow(this), alreadyadded);
             }
         }
         private void UpdateDataGrid()
         {
             stopList.Clear();
             float stopstarttime = -1;
+            // 選んでいる行は、行の番号で保つ（以前の DataGridView と同じ）
+            var selectedIndex = dataGridView1.SelectedIndex;
+            dataGridView1.ItemsSource = changeData.Select(p => new KeyValuePair<float, string>(p.Key, p.Value.ToString())).ToList();
+            if (selectedIndex >= 0 && selectedIndex < changeData.Count)
+            {
+                dataGridView1.SelectedIndex = selectedIndex;
+            }
             for (int i = 0; i < changeData.Count; i++)
             {
-                this.dataGridView1[0, i].Value = changeData.Keys[i];
-                this.dataGridView1[1, i].Value = changeData.Values[i].ToString();
                 if (stopstarttime < 0)
                 {
                     if (changeData.Values[i].MoveState == MoveState.Stop)
@@ -499,13 +502,21 @@ namespace PPDEditor
             }
         }
 
+        /// <summary>
+        /// 選んでいる行の番号です。選んでいないときは -1 です。
+        /// </summary>
+        private int CurrentIndex
+        {
+            get { return dataGridView1.SelectedIndex; }
+        }
+
         public void CheckInitialBpm(float bpm)
         {
             if (changeData.ContainsKey(0))
             {
                 if (changeData[0].BPM != bpm)
                 {
-                    if (MessageBox.Show(Utility.Language["EMCheckBpmText"], Utility.Language["EMCheckBpm"], MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
+                    if (MessageBox.Show(Window.GetWindow(this), Utility.Language["EMCheckBpmText"], Utility.Language["EMCheckBpm"], MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                     {
                         changeData[0].BPM = bpm;
                         UpdateDataGrid();
@@ -515,55 +526,52 @@ namespace PPDEditor
             }
         }
 
-        private void Button3_Click(object sender, EventArgs e)
+        private void Button3_Click(object sender, RoutedEventArgs e)
         {
             //edit
-            if (dataGridView1.CurrentRow != null)
+            if (CurrentIndex >= 0)
             {
                 var eef = new EventEditWindow();
                 eef.SetLang();
-                eef.EventData = changeData.Values[dataGridView1.CurrentRow.Index].Clone();
+                eef.EventData = changeData.Values[CurrentIndex].Clone();
                 if (WpfDialog.ShowDialog(eef))
                 {
-                    float time = changeData.Keys[dataGridView1.CurrentRow.Index];
-                    changeData.RemoveAt(dataGridView1.CurrentRow.Index);
-                    dataGridView1.Rows.RemoveAt(this.dataGridView1.CurrentRow.Index);
+                    float time = changeData.Keys[CurrentIndex];
+                    changeData.RemoveAt(CurrentIndex);
                     changeData.Add(time, eef.EventData);
-                    this.dataGridView1.Rows.Add(1);
                     UpdateDataGrid();
                     ContentChanged();
                 }
             }
         }
 
-        private void Button2_Click(object sender, EventArgs e)
+        private void Button2_Click(object sender, RoutedEventArgs e)
         {
             //delete
-            if (dataGridView1.CurrentRow != null)
+            if (CurrentIndex >= 0)
             {
-                if (MessageBox.Show(confirmdelete, confirm, MessageBoxButtons.OKCancel) == DialogResult.OK)
+                if (MessageBox.Show(Window.GetWindow(this), confirmdelete, confirm, MessageBoxButton.OKCancel) == MessageBoxResult.OK)
                 {
-                    changeData.RemoveAt(dataGridView1.CurrentRow.Index);
-                    dataGridView1.Rows.RemoveAt(this.dataGridView1.CurrentRow.Index);
+                    changeData.RemoveAt(CurrentIndex);
                     UpdateDataGrid();
                     ContentChanged();
                 }
             }
         }
 
-        private void Button4_Click(object sender, EventArgs e)
+        private void Button4_Click(object sender, RoutedEventArgs e)
         {
-            if (this.dataGridView1.CurrentRow == null)
+            if (CurrentIndex < 0)
             {
-                MessageBox.Show(noselectedline);
+                MessageBox.Show(Window.GetWindow(this), noselectedline);
             }
             else
             {
-                float time = changeData.Keys[this.dataGridView1.CurrentRow.Index];
+                float time = changeData.Keys[CurrentIndex];
                 if (!changeData.ContainsKey(time + (float)this.numericUpDown1.Value))
                 {
-                    EventData eve = changeData.Values[this.dataGridView1.CurrentRow.Index];
-                    changeData.RemoveAt(this.dataGridView1.CurrentRow.Index);
+                    EventData eve = changeData.Values[CurrentIndex];
+                    changeData.RemoveAt(CurrentIndex);
                     changeData.Add(time + (float)this.numericUpDown1.Value, eve);
                     UpdateDataGrid();
                     ContentChanged();
