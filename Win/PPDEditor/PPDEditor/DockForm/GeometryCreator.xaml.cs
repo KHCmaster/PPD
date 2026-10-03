@@ -7,13 +7,16 @@ using System.Numerics;
 using PPDMath;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Windows.Forms;
-using WeifenLuo.WinFormsUI.Docking;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
+using DrawingColor = System.Drawing.Color;
+using PointF = System.Drawing.PointF;
+using RectangleF = System.Drawing.RectangleF;
 
 namespace PPDEditor
 {
-    public partial class GeometryCreator : ScrollableForm
+    public partial class GeometryCreator : DockView
     {
         const int StartX = 100;
         const int StartY = 50;
@@ -23,7 +26,6 @@ namespace PPDEditor
         Vector2[] poses = [];
         Vector2[] dirs = [];
 
-        readonly Timer hinttimergc;
         string gchintnormal = @"クリック  アンカー追加
 Ctrl+クリック  アンカー選択
 Ctrl+ドラッグ  アンカー,ハンドル移動
@@ -44,24 +46,9 @@ Enter  変形終了";
         public GeometryCreator()
         {
             InitializeComponent();
-            radioButton3.CheckedChanged += RadioButtongroup2_CheckedChanged;
-            radioButton4.CheckedChanged += RadioButtongroup2_CheckedChanged;
-            radioButton5.CheckedChanged += RadioButtongroup2_CheckedChanged;
-            radioButton6.CheckedChanged += RadioButtongroup2_CheckedChanged;
-            radioButton7.CheckedChanged += RadioButtongroup2_CheckedChanged;
-            radioButton8.CheckedChanged += RadioButtongroup2_CheckedChanged;
-            radioButton9.CheckedChanged += RadioButtongroup2_CheckedChanged;
-            radioButton10.CheckedChanged += RadioButtongroup2_CheckedChanged;
-            this.toolStripTextBox1.TextChanged += ToolStripTextBox1_TextChanged;
-            this.toolStripTextBox2.TextChanged += ToolStripTextBox1_TextChanged;
-            this.toolStripTextBox3.TextChanged += ToolStripTextBox1_TextChanged;
-            this.toolStripTextBox4.TextChanged += ToolStripTextBox1_TextChanged;
-            this.toolStripTextBox5.TextChanged += ToolStripTextBox1_TextChanged;
-            hinttimergc = new Timer
-            {
-                Interval = 2000
-            };
-            hinttimergc.Tick += Hinttimergc_Tick;
+            bezierControl1.Controller.BeforePaint += BezierControl1_BeforePaint;
+            bezierControl1.Controller.AfterPaint += BezierControl1_AfterPaint;
+            bezierControl1.Controller.PreprocessPoint += BezierControl1_PreprocessPoint;
             SquareGrid = new SquareGrid
             {
                 GridColor = System.Drawing.Color.Green,
@@ -72,9 +59,9 @@ Enter  変形終了";
             };
         }
 
-        void ToolStripTextBox1_TextChanged(object sender, EventArgs e)
+        void ToolStripTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (!ignore)
+            if (!ignore && IsInitialized)
             {
                 var scale = new PointF(GetValue(this.toolStripTextBox1.Text, "%") / 100, GetValue(this.toolStripTextBox2.Text, "%") / 100);
                 var move = new PointF(GetValue(this.toolStripTextBox4.Text, "px"), GetValue(this.toolStripTextBox5.Text, "px"));
@@ -101,88 +88,76 @@ Enter  変形終了";
             return ret;
         }
 
-        void RadioButtongroup2_CheckedChanged(object sender, EventArgs e)
+        private void Redraw(object sender, RoutedEventArgs e)
         {
-            bezierControl1.DrawAndRefresh();
+            bezierControl1?.DrawAndRefresh();
         }
         public void SetLang()
         {
             this.label1.Text = Utility.Language["GCLabel1"];
             this.label2.Text = Utility.Language["GCLabel2"];
-            this.checkBox1.Text = Utility.Language["GCCheckBox1"];
-            this.checkBox2.Text = Utility.Language["GCCheckBox2"];
-            this.checkBox3.Text = Utility.Language["GCCheckBox3"];
-            this.checkBox4.Text = Utility.Language["GCCheckBox4"];
-            this.groupBox1.Text = Utility.Language["GCGroup1"];
-            this.groupBox2.Text = Utility.Language["GCGroup2"];
-            this.groupBox3.Text = Utility.Language["GCGroup3"];
-            this.radioButton1.Text = Utility.Language["GCRadioButton1"];
-            this.radioButton2.Text = Utility.Language["GCRadioButton2"];
-            this.radioButton3.Text = Utility.Language["GCRadioButton3"];
-            this.radioButton4.Text = Utility.Language["GCRadioButton4"];
-            this.radioButton5.Text = Utility.Language["GCRadioButton5"];
-            this.radioButton6.Text = Utility.Language["GCRadioButton6"];
-            this.radioButton7.Text = Utility.Language["GCRadioButton7"];
-            this.radioButton8.Text = Utility.Language["GCRadioButton8"];
-            this.radioButton9.Text = Utility.Language["GCRadioButton9"];
-            this.radioButton10.Text = Utility.Language["GCRadioButton10"];
-            this.radioButton11.Text = Utility.Language["GCRadioButton11"];
-            this.button1.Text = Utility.Language["GCButton1"];
-            this.button2.Text = Utility.Language["GCButton2"];
-            this.button3.Text = Utility.Language["GCButton3"];
+            this.checkBox1.Content = Utility.Language["GCCheckBox1"];
+            this.checkBox2.Content = Utility.Language["GCCheckBox2"];
+            this.checkBox3.Content = Utility.Language["GCCheckBox3"];
+            this.checkBox4.Content = Utility.Language["GCCheckBox4"];
+            this.groupBox1.Header = Utility.Language["GCGroup1"];
+            this.groupBox2.Header = Utility.Language["GCGroup2"];
+            this.groupBox3.Header = Utility.Language["GCGroup3"];
+            this.radioButton1.Content = Utility.Language["GCRadioButton1"];
+            this.radioButton2.Content = Utility.Language["GCRadioButton2"];
+            this.radioButton3.Content = Utility.Language["GCRadioButton3"];
+            this.radioButton4.Content = Utility.Language["GCRadioButton4"];
+            this.radioButton5.Content = Utility.Language["GCRadioButton5"];
+            this.radioButton6.Content = Utility.Language["GCRadioButton6"];
+            this.radioButton7.Content = Utility.Language["GCRadioButton7"];
+            this.radioButton8.Content = Utility.Language["GCRadioButton8"];
+            this.radioButton9.Content = Utility.Language["GCRadioButton9"];
+            this.radioButton10.Content = Utility.Language["GCRadioButton10"];
+            this.radioButton11.Content = Utility.Language["GCRadioButton11"];
+            this.button1.Content = Utility.Language["GCButton1"];
+            this.button2.Content = Utility.Language["GCButton2"];
+            this.button3.Content = Utility.Language["GCButton3"];
             error1 = Utility.Language["GCError1"];
             error2 = Utility.Language["GCError2"];
             gchintnormal = Utility.Language["GCHint1"];
             gchinttrans = Utility.Language["GCHint2"];
-            label1.Location = new System.Drawing.Point(textBox1.Location.X - label1.Width - 10, textBox1.Location.Y);
-            this.toolStripButton4.Text = Utility.Language["GCSetDefault"];
-            this.toolStripButton4.ToolTipText = this.toolStripButton4.Text;
+            this.toolStripButton4.Content = Utility.Language["GCSetDefault"];
+            this.toolStripButton4.ToolTip = Utility.Language["GCSetDefault"];
         }
         public void SetSkin()
         {
-            this.label1.ForeColor = PPDEditorSkin.Skin.TransparentTextColor;
-            this.checkBox1.ForeColor = PPDEditorSkin.Skin.TransparentTextColor;
-            this.checkBox2.ForeColor = PPDEditorSkin.Skin.TransparentTextColor;
-            this.checkBox3.ForeColor = PPDEditorSkin.Skin.TransparentTextColor;
-            this.checkBox4.ForeColor = PPDEditorSkin.Skin.TransparentTextColor;
-            this.checkBox5.ForeColor = PPDEditorSkin.Skin.TransparentTextColor;
-            this.groupBox1.ForeColor = PPDEditorSkin.Skin.TransparentTextColor;
-            this.groupBox2.ForeColor = PPDEditorSkin.Skin.TransparentTextColor;
-            this.groupBox3.ForeColor = PPDEditorSkin.Skin.TransparentTextColor;
-            this.radioButton1.ForeColor = PPDEditorSkin.Skin.TransparentTextColor;
-            this.radioButton2.ForeColor = PPDEditorSkin.Skin.TransparentTextColor;
-            this.radioButton3.ForeColor = PPDEditorSkin.Skin.TransparentTextColor;
-            this.radioButton4.ForeColor = PPDEditorSkin.Skin.TransparentTextColor;
-            this.radioButton5.ForeColor = PPDEditorSkin.Skin.TransparentTextColor;
-            this.radioButton6.ForeColor = PPDEditorSkin.Skin.TransparentTextColor;
-            this.radioButton7.ForeColor = PPDEditorSkin.Skin.TransparentTextColor;
-            this.radioButton8.ForeColor = PPDEditorSkin.Skin.TransparentTextColor;
-            this.radioButton9.ForeColor = PPDEditorSkin.Skin.TransparentTextColor;
-            this.radioButton10.ForeColor = PPDEditorSkin.Skin.TransparentTextColor;
+            var brush = WpfSkin.TransparentTextBrush;
+            foreach (var control in new Control[] { checkBox1, checkBox2, checkBox3, checkBox4, checkBox5, groupBox1, groupBox2, groupBox3,
+                radioButton1, radioButton2, radioButton3, radioButton4, radioButton5, radioButton6, radioButton7, radioButton8, radioButton9, radioButton10 })
+            {
+                control.Foreground = brush;
+            }
+            this.label1.Foreground = brush;
         }
 
         private void BezierControl1_BeforePaint(object sender, UserPaintEventArgs e)
         {
-            var graphics = ((BezierControl.Context)e.Context).Graphics;
+            var context = e.Context;
             if (SquareGrid != null && SquareGridEnabled)
             {
-                using Pen pen = new(SquareGrid.GridColor);
-                for (int i = (-SquareGrid.NormalizedOffsetX - StartX) / SquareGrid.Width; i <= bezierControl1.Width / SquareGrid.Width; i++)
+                var width = (int)bezierControl1.ActualWidth;
+                var height = (int)bezierControl1.ActualHeight;
+                for (int i = (-SquareGrid.NormalizedOffsetX - StartX) / SquareGrid.Width; i <= width / SquareGrid.Width; i++)
                 {
-                    graphics.DrawLine(pen, new System.Drawing.Point(i * SquareGrid.Width + SquareGrid.OffsetX + StartX, 0),
-                        new System.Drawing.Point(i * SquareGrid.Width + SquareGrid.OffsetX + StartX, bezierControl1.Height));
+                    context.DrawLine(SquareGrid.GridColor, new PointF(i * SquareGrid.Width + SquareGrid.OffsetX + StartX, 0),
+                        new PointF(i * SquareGrid.Width + SquareGrid.OffsetX + StartX, height));
                 }
-                for (int i = (-SquareGrid.NormalizedOffsetY - StartY) / SquareGrid.Height; i <= bezierControl1.Height / SquareGrid.Height; i++)
+                for (int i = (-SquareGrid.NormalizedOffsetY - StartY) / SquareGrid.Height; i <= height / SquareGrid.Height; i++)
                 {
-                    graphics.DrawLine(pen, new System.Drawing.Point(0, i * SquareGrid.Height + SquareGrid.OffsetY + StartY),
-                        new System.Drawing.Point(bezierControl1.Width, i * SquareGrid.Height + SquareGrid.OffsetY + StartY));
+                    context.DrawLine(SquareGrid.GridColor, new PointF(0, i * SquareGrid.Height + SquareGrid.OffsetY + StartY),
+                        new PointF(width, i * SquareGrid.Height + SquareGrid.OffsetY + StartY));
                 }
             }
         }
 
-        private void BezierControl1_AfterPaint(object sender, BezierDrawControl.UserPaintEventArgs e)
+        private void BezierControl1_AfterPaint(object sender, UserPaintEventArgs e)
         {
-            var graphics = ((BezierControl.Context)e.Context).Graphics;
+            var context = e.Context;
             CheckData();
             if (bezierControl1.Controller.BCPSCount < 2 || bezierControl1.Controller.IsTransformMode)
             {
@@ -190,41 +165,33 @@ Enter  変形終了";
             }
             else
             {
-                if (checkBox2.Checked)
+                if (checkBox2.IsChecked == true)
                 {
                     foreach (var pos in poses)
                     {
-                        if (pos == poses[0])
-                        {
-                            graphics.DrawEllipse(Pens.Green, pos.X - 5, pos.Y - 5, 10, 10);
-                        }
-                        else
-                        {
-                            graphics.DrawEllipse(Pens.Black, pos.X - 5, pos.Y - 5, 10, 10);
-                        }
+                        context.DrawEllipse(pos == poses[0] ? DrawingColor.Green : DrawingColor.Black, new RectangleF(pos.X - 5, pos.Y - 5, 10, 10));
                     }
                 }
-                if (checkBox3.Checked && !radioButton7.Checked)
+                if (checkBox3.IsChecked == true && radioButton7.IsChecked != true)
                 {
                     for (int i = 0; i < dirs.Length; i++)
                     {
-                        DrawAllow(new System.Drawing.PointF(poses[i].X, poses[i].Y),
-                            new System.Drawing.PointF(dirs[i].X, dirs[i].Y), graphics);
+                        DrawAllow(new PointF(poses[i].X, poses[i].Y), new PointF(dirs[i].X, dirs[i].Y), context);
                     }
                 }
             }
 
-            graphics.DrawRectangle(Pens.Red, new System.Drawing.Rectangle(StartX, StartY, 400, 225));
+            context.DrawRectangle(DrawingColor.Red, StartX, StartY, 400, 225);
         }
-        private static void DrawAllow(PointF pos, PointF dir, Graphics g)
+        private static void DrawAllow(PointF pos, PointF dir, IBezierDrawContext context)
         {
             float length = 100;
             float length2 = 30;
-            g.DrawLine(Pens.Blue, pos, new PointF(pos.X - dir.X * length, pos.Y - dir.Y * length));
+            context.DrawLine(DrawingColor.Blue, pos, new PointF(pos.X - dir.X * length, pos.Y - dir.Y * length));
             var r1 = Rotate(new Vector2(dir.X, dir.Y), (float)(Math.PI / 6));
             var r2 = Rotate(new Vector2(dir.X, dir.Y), (float)(-Math.PI / 6));
-            g.DrawLine(Pens.Blue, pos, new PointF(pos.X - r1.X * length2, pos.Y - r1.Y * length2));
-            g.DrawLine(Pens.Blue, pos, new PointF(pos.X - r2.X * length2, pos.Y - r2.Y * length2));
+            context.DrawLine(DrawingColor.Blue, pos, new PointF(pos.X - r1.X * length2, pos.Y - r1.Y * length2));
+            context.DrawLine(DrawingColor.Blue, pos, new PointF(pos.X - r2.X * length2, pos.Y - r2.Y * length2));
         }
         private static Vector2 Rotate(Vector2 p, float r)
         {
@@ -251,7 +218,7 @@ Enter  変形終了";
             float[] ratios = new float[mks.Length];
             if (bezierControl1.Controller.BCPSCount >= 2 && poses.Length >= 2)
             {
-                if (radioButton8.Checked)
+                if (radioButton8.IsChecked == true)
                 {
                     float all = mks[^1].Time - mks[0].Time;
                     if (all == 0)
@@ -271,15 +238,15 @@ Enter  変形終了";
                 {
                     PointF pos;
                     PointF dir;
-                    if (radioButton8.Checked)
+                    if (radioButton8.IsChecked == true)
                     {
                         ba.GetPoint(ratios[i], out pos, out dir);
                     }
-                    else if (radioButton9.Checked)
+                    else if (radioButton9.IsChecked == true)
                     {
                         ba.GetPoint(i * 99.9999f / (poses.Length - 1), out pos, out dir);
                     }
-                    else if (radioButton10.Checked)
+                    else if (radioButton10.IsChecked == true)
                     {
                         ba.GetPoint(i * 99.9999f / poses.Length, out pos, out dir);
                     }
@@ -294,7 +261,7 @@ Enter  変形終了";
                     dirs[i] = TransDirection(new Vector2(dir.X, dir.Y));
                 }
             }
-            if (checkBox4.Checked)
+            if (checkBox4.IsChecked == true)
             {
                 Apply();
             }
@@ -302,52 +269,62 @@ Enter  変形終了";
 
         private Vector2 TransDirection(Vector2 dir)
         {
-            if (radioButton3.Checked)
+            if (radioButton3.IsChecked == true)
             {
                 return dir;
             }
-            else if (radioButton4.Checked)
+            else if (radioButton4.IsChecked == true)
             {
                 return Rotate(dir, (float)Math.PI / 2);
             }
-            else if (radioButton5.Checked)
+            else if (radioButton5.IsChecked == true)
             {
                 return Rotate(dir, (float)Math.PI);
             }
-            else if (radioButton6.Checked)
+            else if (radioButton6.IsChecked == true)
             {
                 return Rotate(dir, (float)Math.PI / 2 * 3);
             }
             return dir;
         }
-        private void GeometryCreator_KeyDown(object sender, KeyEventArgs e)
+        private void GeometryCreator_PreviewKeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Control)
+            // 文字を入力しているときは、その入力を優先する
+            if (e.OriginalSource is TextBox)
             {
-                switch (e.KeyCode)
+                return;
+            }
+            if (Keyboard.Modifiers.HasFlag(ModifierKeys.Control))
+            {
+                switch (e.Key)
                 {
-                    case Keys.Z:
+                    case Key.Z:
                         bezierControl1.Controller.Undo();
+                        e.Handled = true;
                         break;
-                    case Keys.Y:
+                    case Key.Y:
                         bezierControl1.Controller.Redo();
+                        e.Handled = true;
                         break;
-                    case Keys.T:
-                        toolStrip1.Visible = true;
+                    case Key.T:
+                        toolStrip1.Visibility = Visibility.Visible;
                         bezierControl1.Controller.StartTransform();
+                        e.Handled = true;
                         break;
                 }
             }
             else
             {
-                if (e.KeyCode == Keys.Delete)
+                if (e.Key == Key.Delete)
                 {
                     bezierControl1.Controller.Delete();
+                    e.Handled = true;
                 }
-                if (e.KeyCode == Keys.Return)
+                if (e.Key == Key.Return)
                 {
                     bezierControl1.Controller.EndTransform();
-                    toolStrip1.Visible = false;
+                    toolStrip1.Visibility = Visibility.Collapsed;
+                    e.Handled = true;
                 }
             }
         }
@@ -365,42 +342,37 @@ Enter  変形終了";
             ignore = false;
         }
 
-        private void CheckBox1_CheckedChanged(object sender, EventArgs e)
+        private void CheckBox1_CheckedChanged(object sender, RoutedEventArgs e)
         {
-            bezierControl1.AntialiasEnabled = checkBox1.Checked;
+            bezierControl1.AntialiasEnabled = checkBox1.IsChecked == true;
             bezierControl1.DrawAndRefresh();
         }
-        private void CheckBox2_CheckedChanged(object sender, EventArgs e)
+        private void CheckBox4_CheckedChanged(object sender, RoutedEventArgs e)
         {
-            bezierControl1.DrawAndRefresh();
-        }
-        private void CheckBox3_CheckedChanged(object sender, EventArgs e)
-        {
-            bezierControl1.DrawAndRefresh();
-        }
-        private void CheckBox4_CheckedChanged(object sender, EventArgs e)
-        {
-            button1.Enabled = !checkBox4.Checked;
+            button1.IsEnabled = checkBox4.IsChecked != true;
         }
 
         private void Label1_ValueChange(object sender, ValueChangeEventArgs e)
         {
-            textBox1.Text = (int.Parse(textBox1.Text) + e.ChangedValue).ToString();
+            if (int.TryParse(textBox1.Text, out int value))
+            {
+                textBox1.Text = (value + e.ChangedValue).ToString();
+            }
         }
 
-        private void Button2_Click(object sender, EventArgs e)
+        private void Button2_Click(object sender, RoutedEventArgs e)
         {
-            if (radioButton1.Checked)
+            if (radioButton1.IsChecked == true)
             {
                 CreateCircle();
             }
-            else if (radioButton2.Checked)
+            else if (radioButton2.IsChecked == true)
             {
                 if (int.TryParse(textBox1.Text, out int num))
                 {
                     if (num < 3)
                     {
-                        MessageBox.Show(error2);
+                        MessageBox.Show(Window.GetWindow(this), error2);
                     }
                     else
                     {
@@ -409,7 +381,7 @@ Enter  変形終了";
                 }
                 else
                 {
-                    MessageBox.Show(error1);
+                    MessageBox.Show(Window.GetWindow(this), error1);
                 }
             }
         }
@@ -477,12 +449,12 @@ Enter  変形終了";
             bezierControl1.Controller.BCPS = [.. data];
         }
 
-        private void Button3_Click(object sender, EventArgs e)
+        private void Button3_Click(object sender, RoutedEventArgs e)
         {
             if (!bezierControl1.Controller.IsTransformMode) bezierControl1.Controller.Clear();
         }
 
-        private void Button1_Click(object sender, EventArgs e)
+        private void Button1_Click(object sender, RoutedEventArgs e)
         {
             Apply();
         }
@@ -495,7 +467,7 @@ Enter  変形終了";
                 return false;
             }
             //areaselection
-            data.ApplyTrans(poses, dirs, !radioButton7.Checked);
+            data.ApplyTrans(poses, dirs, !radioButton7.IsChecked == true);
             return true;
         }
 
@@ -503,11 +475,11 @@ Enter  変形終了";
         {
             get
             {
-                return checkBox1.Checked;
+                return checkBox1.IsChecked == true;
             }
             set
             {
-                checkBox1.Checked = value;
+                checkBox1.IsChecked = value;
             }
         }
         public bool DrawPos
@@ -515,11 +487,11 @@ Enter  変形終了";
 
             get
             {
-                return checkBox2.Checked;
+                return checkBox2.IsChecked == true;
             }
             set
             {
-                checkBox2.Checked = value;
+                checkBox2.IsChecked = value;
             }
         }
         public bool DrawAngle
@@ -527,22 +499,22 @@ Enter  変形終了";
 
             get
             {
-                return checkBox3.Checked;
+                return checkBox3.IsChecked == true;
             }
             set
             {
-                checkBox3.Checked = value;
+                checkBox3.IsChecked = value;
             }
         }
         public bool ApplyMoved
         {
             get
             {
-                return checkBox4.Checked;
+                return checkBox4.IsChecked == true;
             }
             set
             {
-                checkBox4.Checked = value;
+                checkBox4.IsChecked = value;
             }
         }
         public int FixedDistance
@@ -580,59 +552,32 @@ Enter  変形終了";
         {
             get
             {
-                return checkBox5.Checked;
+                return checkBox5.IsChecked == true;
             }
             set
             {
-                checkBox5.Checked = value;
+                checkBox5.IsChecked = value;
             }
         }
 
-        private void TextBox2_TextChanged(object sender, EventArgs e)
+        private void TextBox2_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (FixedDistance != 0) bezierControl1.DrawAndRefresh();
+            if (FixedDistance != 0) bezierControl1?.DrawAndRefresh();
         }
 
-        private void RadioButton11_CheckedChanged(object sender, EventArgs e)
+        private void RadioButton11_CheckedChanged(object sender, RoutedEventArgs e)
         {
-            textBox2.Enabled = radioButton11.Checked;
+            textBox2.IsEnabled = radioButton11.IsChecked == true;
+            bezierControl1.DrawAndRefresh();
         }
 
-        void Hinttimergc_Tick(object sender, EventArgs e)
+        private void BezierControl1_ToolTipOpening(object sender, ToolTipEventArgs e)
         {
-            hinttimergc.Stop();
-            toolTip1.Show(bezierControl1.Controller.IsTransformMode ? gchinttrans : gchintnormal, Gettarget(), Getpoint());
-        }
-        private void BezierControl1_MouseLeave(object sender, EventArgs e)
-        {
-            hinttimergc.Stop();
-            toolTip1.Hide(Gettarget());
+            // マウスを止めてしばらくすると、今のモードの操作方法を出す
+            toolTip1.Content = bezierControl1.Controller.IsTransformMode ? gchinttrans : gchintnormal;
         }
 
-        private void BezierControl1_MouseMove(object sender, MouseEventArgs e)
-        {
-            hinttimergc.Stop();
-            _ = Getpoint();
-            if (toolTip1.Active)
-            {
-                toolTip1.Hide(Gettarget());
-            }
-            hinttimergc.Start();
-        }
-
-        private IWin32Window Gettarget()
-        {
-            if (this.DockState == DockState.Float) return this;
-            return WindowUtility.MainForm;
-        }
-        private System.Drawing.Point Getpoint()
-        {
-            var p = new System.Drawing.Point(Cursor.Position.X + 10, Cursor.Position.Y + 10);
-            if (this.DockState == DockState.Float) return this.PointToClient(p);
-            return WindowUtility.MainForm.PointToClient(p);
-        }
-
-        private void ToolStripButton4_Click(object sender, EventArgs e)
+        private void ToolStripButton4_Click(object sender, RoutedEventArgs e)
         {
             if (bezierControl1.Controller.IsTransformMode)
             {
@@ -655,12 +600,7 @@ Enter  変形終了";
             }
         }
 
-        private void CheckBox5_CheckedChanged(object sender, EventArgs e)
-        {
-            bezierControl1.DrawAndRefresh();
-        }
-
-        private void Button4_Click(object sender, EventArgs e)
+        private void Button4_Click(object sender, RoutedEventArgs e)
         {
             var gsf = new GridSettingWindow();
             gsf.SetLang();

@@ -1,0 +1,121 @@
+<forms:DockView x:Class="PPDEditor.GeometryCreator"
+                xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                xmlns:forms="clr-namespace:PPDEditor.Forms"
+                xmlns:controls="clr-namespace:PPDEditor.Controls"
+                xmlns:bezier="clr-namespace:BezierDrawControl;assembly=BezierDrawControl"
+                PreviewKeyDown="GeometryCreator_PreviewKeyDown">
+    <forms:DockView.Resources>
+        <Style TargetType="CheckBox">
+            <Setter Property="Margin" Value="0,0,0,6" />
+        </Style>
+        <Style TargetType="GroupBox">
+            <Setter Property="Margin" Value="0,6,0,0" />
+            <Setter Property="Padding" Value="4" />
+        </Style>
+        <Style TargetType="Button">
+            <Setter Property="Height" Value="23" />
+            <Setter Property="Padding" Value="6,0" />
+        </Style>
+        <Style x:Key="TransformBox" TargetType="TextBox">
+            <Setter Property="Width" Value="80" />
+            <Setter Property="Margin" Value="2,0,6,0" />
+            <Setter Property="TextAlignment" Value="Right" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+        </Style>
+    </forms:DockView.Resources>
+    <DockPanel>
+        <!-- 変形モードのときだけ出す -->
+        <Border x:Name="toolStrip1" DockPanel.Dock="Top" Visibility="Collapsed" Background="{x:Static SystemColors.ControlBrush}" Padding="4,2">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="W:" VerticalAlignment="Center" />
+                <TextBox x:Name="toolStripTextBox1" Style="{StaticResource TransformBox}" TextChanged="ToolStripTextBox_TextChanged" />
+                <TextBlock Text="H:" VerticalAlignment="Center" />
+                <TextBox x:Name="toolStripTextBox2" Style="{StaticResource TransformBox}" TextChanged="ToolStripTextBox_TextChanged" />
+                <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
+                <Image Source="/img/angle.png" Stretch="None" VerticalAlignment="Center" Margin="4,0,0,0" />
+                <TextBox x:Name="toolStripTextBox3" Style="{StaticResource TransformBox}" TextChanged="ToolStripTextBox_TextChanged" />
+                <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
+                <TextBlock Text="X:" VerticalAlignment="Center" />
+                <TextBox x:Name="toolStripTextBox4" Style="{StaticResource TransformBox}" TextChanged="ToolStripTextBox_TextChanged" />
+                <TextBlock Text="Y:" VerticalAlignment="Center" />
+                <TextBox x:Name="toolStripTextBox5" Style="{StaticResource TransformBox}" TextChanged="ToolStripTextBox_TextChanged" />
+                <Button x:Name="toolStripButton4" Content="既定値に戻す" Click="ToolStripButton4_Click" />
+            </StackPanel>
+        </Border>
+        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+            <Grid Margin="12,5,12,12" HorizontalAlignment="Left" VerticalAlignment="Top">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="600" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="325" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <bezier:WpfBezierControl x:Name="bezierControl1" ToolTipService.InitialShowDelay="2000" ToolTipService.ShowDuration="60000"
+                                         ToolTipOpening="BezierControl1_ToolTipOpening">
+                    <bezier:WpfBezierControl.ToolTip>
+                        <ToolTip x:Name="toolTip1" />
+                    </bezier:WpfBezierControl.ToolTip>
+                </bezier:WpfBezierControl>
+
+                <StackPanel Grid.Column="1" Grid.RowSpan="2" Width="174" Margin="6,0,0,0">
+                    <CheckBox x:Name="checkBox1" Content="アンチエイリアスをかける" Checked="CheckBox1_CheckedChanged" Unchecked="CheckBox1_CheckedChanged" />
+                    <CheckBox x:Name="checkBox2" Content="位置を描画する" IsChecked="True" Checked="Redraw" Unchecked="Redraw" />
+                    <CheckBox x:Name="checkBox3" Content="角度を描画する" IsChecked="True" Checked="Redraw" Unchecked="Redraw" />
+                    <CheckBox x:Name="checkBox5" Content="グリッドを表示" Checked="Redraw" Unchecked="Redraw" />
+                    <Button x:Name="button4" Content="グリッドの設定" HorizontalAlignment="Right" MinWidth="110" Click="Button4_Click" />
+                    <CheckBox x:Name="checkBox4" Content="パスを動かす度に適用する" Margin="0,8,0,6" Checked="CheckBox4_CheckedChanged" Unchecked="CheckBox4_CheckedChanged" />
+                    <Button x:Name="button1" Content="選択範囲に適用する" Click="Button1_Click" />
+                    <GroupBox x:Name="groupBox1" Header="幾何生成">
+                        <StackPanel>
+                            <DockPanel>
+                                <RadioButton x:Name="radioButton2" DockPanel.Dock="Right" GroupName="Shape" Content="多角形" />
+                                <RadioButton x:Name="radioButton1" GroupName="Shape" Content="円" IsChecked="True" />
+                            </DockPanel>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,4,0,0">
+                                <controls:DragValueLabel x:Name="label1" Text="角数" VerticalAlignment="Center" Margin="0,0,6,0" ValueChange="Label1_ValueChange" />
+                                <TextBox x:Name="textBox1" Text="3" Width="47" />
+                            </StackPanel>
+                            <Button x:Name="button2" Content="生成" HorizontalAlignment="Left" MinWidth="110" Margin="0,4,0,0" Click="Button2_Click" />
+                        </StackPanel>
+                    </GroupBox>
+                    <GroupBox x:Name="groupBox3" Header="間隔の決定">
+                        <StackPanel>
+                            <RadioButton x:Name="radioButton8" GroupName="Interval" Content="時間間隔に合わせる" IsChecked="True" Margin="0,0,0,4" Checked="Redraw" />
+                            <RadioButton x:Name="radioButton9" GroupName="Interval" Content="均等にする１" Margin="0,0,0,4" Checked="Redraw" />
+                            <RadioButton x:Name="radioButton10" GroupName="Interval" Content="均等にする２" Margin="0,0,0,4" Checked="Redraw" />
+                            <DockPanel>
+                                <TextBox x:Name="textBox2" DockPanel.Dock="Right" Text="30" Width="40" IsEnabled="False" TextChanged="TextBox2_TextChanged" />
+                                <RadioButton x:Name="radioButton11" GroupName="Interval" Content="４分固定距離" VerticalAlignment="Center"
+                                             Checked="RadioButton11_CheckedChanged" Unchecked="RadioButton11_CheckedChanged" />
+                            </DockPanel>
+                        </StackPanel>
+                    </GroupBox>
+                </StackPanel>
+
+                <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,6,0,0" VerticalAlignment="Top">
+                    <GroupBox x:Name="groupBox2" Header="角度の決定" Width="322" Margin="0">
+                        <StackPanel>
+                            <UniformGrid Columns="4">
+                                <RadioButton x:Name="radioButton3" GroupName="Angle" Content="接線1" IsChecked="True" Checked="Redraw" />
+                                <RadioButton x:Name="radioButton5" GroupName="Angle" Content="接線2" Checked="Redraw" />
+                                <RadioButton x:Name="radioButton4" GroupName="Angle" Content="法線1" Checked="Redraw" />
+                                <RadioButton x:Name="radioButton6" GroupName="Angle" Content="法線2" Checked="Redraw" />
+                            </UniformGrid>
+                            <RadioButton x:Name="radioButton7" GroupName="Angle" Content="角度には適用しない" Margin="0,6,0,0" Checked="Redraw" />
+                        </StackPanel>
+                    </GroupBox>
+                    <StackPanel Margin="8,4,0,0">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock x:Name="label2" Text="Shift+ドラッグで動かす時の角度の刻み(0:なし)" VerticalAlignment="Center" Margin="0,0,6,0" />
+                            <controls:NumericUpDown x:Name="numericUpDown1" Width="50" Minimum="0" Maximum="90" ValueChanged="NumericUpDown1_ValueChanged" />
+                        </StackPanel>
+                        <Button x:Name="button3" Content="クリア" HorizontalAlignment="Left" MinWidth="110" Margin="0,8,0,0" Click="Button3_Click" />
+                    </StackPanel>
+                </StackPanel>
+            </Grid>
+        </ScrollViewer>
+    </DockPanel>
+</forms:DockView>

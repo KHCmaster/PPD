@@ -5,8 +5,6 @@
     <RootNamespace>BezierDrawControl</RootNamespace>
     <AssemblyName>BezierDrawControl</AssemblyName>
     <Platforms>x64</Platforms>
-    <UseWindowsForms>true</UseWindowsForms>
-    <!-- WinForms の BezierControl は PPDEditor が WPF に移るまで残す -->
     <UseWPF>true</UseWPF>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
@@ -36,13 +34,6 @@
     <ProjectReference Include="..\..\PPDShareComponent\PPDShareComponent.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Update="BezierControl.resx">
-      <DependentUpon>BezierControl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
     <None Update="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

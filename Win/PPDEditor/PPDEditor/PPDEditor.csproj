@@ -99,9 +99,6 @@
     <EmbeddedResource Update="DockForm\DXForm.resx">
       <DependentUpon>DXForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Update="DockForm\GeometryCreator.resx">
-      <DependentUpon>GeometryCreator.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Update="Forms\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -239,6 +236,7 @@
   </ItemGroup>
   <ItemGroup>
     <!-- WPF の画面で使う画像 -->
+    <Resource Include="img\angle.png" />
     <Resource Include="img\eye.png" />
     <Resource Include="img\next.png" />
     <Resource Include="img\back.png" />
