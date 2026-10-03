@@ -1,0 +1,87 @@
+<forms:DockView x:Class="PPDEditor.SoundManager"
+                xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                xmlns:forms="clr-namespace:PPDEditor.Forms">
+    <forms:DockView.Resources>
+        <Style TargetType="ComboBox">
+            <Setter Property="Width" Value="121" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="Margin" Value="0,2,0,4" />
+        </Style>
+        <Style x:Key="ActionButton" TargetType="Button">
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="MinWidth" Value="75" />
+            <Setter Property="Height" Value="23" />
+            <Setter Property="Margin" Value="0,6,0,0" />
+            <Setter Property="Padding" Value="6,0" />
+        </Style>
+    </forms:DockView.Resources>
+    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+        <StackPanel Width="284" HorizontalAlignment="Left">
+            <DataGrid x:Name="dataGridView1" Height="132" AutoGenerateColumns="False" IsReadOnly="True" SelectionMode="Single"
+                      SelectionUnit="FullRow" HeadersVisibility="Column" CanUserSortColumns="False" CanUserAddRows="False"
+                      SelectionChanged="DataGridView1_SelectionChanged">
+                <DataGrid.Columns>
+                    <DataGridTextColumn x:Name="Column1" Header="時間" Binding="{Binding Time}" Width="Auto" />
+                    <DataGridTextColumn x:Name="Column2" Header="サウンド" Binding="{Binding Sounds}" Width="*" />
+                </DataGrid.Columns>
+            </DataGrid>
+            <GroupBox x:Name="groupBox1" Margin="5,6,7,0">
+                <Grid Margin="4,2,4,6">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="132" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel>
+                        <TextBlock x:Name="label1" Text="スクエア" />
+                        <ComboBox x:Name="comboBox1" />
+                        <TextBlock x:Name="label2" Text="クロス" />
+                        <ComboBox x:Name="comboBox2" />
+                        <TextBlock x:Name="label3" Text="サークル" />
+                        <ComboBox x:Name="comboBox3" />
+                        <TextBlock x:Name="label4" Text="トライアングル" />
+                        <ComboBox x:Name="comboBox4" />
+                        <Button x:Name="button1" Content="サウンド追加" Style="{StaticResource ActionButton}" Click="Button1_Click" />
+                        <Button x:Name="button3" Content="変更追加" Style="{StaticResource ActionButton}" Click="Button3_Click" />
+                        <Button x:Name="button4" Content="選択した行の変更削除" Style="{StaticResource ActionButton}" Click="Button4_Click" />
+                        <Button x:Name="button7" Content="選択した行を編集" Style="{StaticResource ActionButton}" Click="Button7_Click" />
+                    </StackPanel>
+                    <StackPanel Grid.Column="1">
+                        <TextBlock x:Name="label5" Text="レフト" />
+                        <ComboBox x:Name="comboBox5" />
+                        <TextBlock x:Name="label6" Text="ダウン" />
+                        <ComboBox x:Name="comboBox6" />
+                        <TextBlock x:Name="label7" Text="ライト" />
+                        <ComboBox x:Name="comboBox7" />
+                        <TextBlock x:Name="label8" Text="アップ" />
+                        <ComboBox x:Name="comboBox8" />
+                        <TextBlock x:Name="label9" Text="アール" />
+                        <ComboBox x:Name="comboBox9" />
+                        <TextBlock x:Name="label10" Text="エル" />
+                        <ComboBox x:Name="comboBox10" />
+                    </StackPanel>
+                </Grid>
+            </GroupBox>
+            <GroupBox x:Name="groupBox2" Margin="5,6,7,0">
+                <Grid Margin="4,4,4,6">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="132" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Button x:Name="button5" Grid.Column="1" Content="視聴" Style="{StaticResource ActionButton}" Margin="0" Click="Button5_Click" />
+                    <ComboBox x:Name="comboBox11" Grid.Row="1" Margin="0,6,0,0" />
+                    <Button x:Name="button2" Grid.Row="1" Grid.Column="1" Content="サウンド削除" Style="{StaticResource ActionButton}" Click="Button2_Click" />
+                    <Button x:Name="button6" Grid.Row="2" Grid.Column="1" Content="サウンド再読込み" Style="{StaticResource ActionButton}" Click="Button6_Click" />
+                </Grid>
+            </GroupBox>
+            <CheckBox x:Name="checkBox1" Margin="5,8,7,12">
+                <TextBlock x:Name="checkBox1Text" Text="コンボボックスの内容を選択行に同期" TextWrapping="Wrap" />
+            </CheckBox>
+        </StackPanel>
+    </ScrollViewer>
+</forms:DockView>

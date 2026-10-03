@@ -108,9 +108,6 @@
     <EmbeddedResource Update="DockForm\LayerManager.resx">
       <DependentUpon>LayerManager.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Update="DockForm\SoundManager.resx">
-      <DependentUpon>SoundManager.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Update="DockForm\EventManager.resx">
       <DependentUpon>EventManager.cs</DependentUpon>
     </EmbeddedResource>

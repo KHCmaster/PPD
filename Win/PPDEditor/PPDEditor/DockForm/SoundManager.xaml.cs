@@ -7,11 +7,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Windows.Forms;
+using System.Windows;
+using System.Windows.Controls;
+using Microsoft.Win32;
 
 namespace PPDEditor
 {
-    public partial class SoundManager : ScrollableForm
+    public partial class SoundManager : DockView
     {
         Sound sou;
         List<string> data = new(100);
@@ -36,7 +38,7 @@ namespace PPDEditor
         }
         public void SetLang()
         {
-            this.Text = Utility.Language["SM"];
+            this.TabText = Utility.Language["SM"];
             this.label1.Text = Utility.Language["SMLabel1"];
             this.label2.Text = Utility.Language["SMLabel2"];
             this.label3.Text = Utility.Language["SMLabel3"];
@@ -47,16 +49,16 @@ namespace PPDEditor
             this.label8.Text = Utility.Language["SMLabel8"];
             this.label9.Text = Utility.Language["SMLabel9"];
             this.label10.Text = Utility.Language["SMLabel10"];
-            this.button1.Text = Utility.Language["SMButton1"];
-            this.button2.Text = Utility.Language["SMButton2"];
-            this.button3.Text = Utility.Language["SMButton3"];
-            this.button4.Text = Utility.Language["SMButton4"];
-            this.button5.Text = Utility.Language["SMButton5"];
-            this.button6.Text = Utility.Language["SMButton6"];
-            this.button7.Text = Utility.Language["EditSelectedRow"];
-            this.checkBox1.Text = Utility.Language["SMCheckBox"];
-            this.dataGridView1.Columns[0].HeaderText = Utility.Language["SMDataGridColumn1"];
-            this.dataGridView1.Columns[1].HeaderText = Utility.Language["SMDataGridColumn2"];
+            this.button1.Content = Utility.Language["SMButton1"];
+            this.button2.Content = Utility.Language["SMButton2"];
+            this.button3.Content = Utility.Language["SMButton3"];
+            this.button4.Content = Utility.Language["SMButton4"];
+            this.button5.Content = Utility.Language["SMButton5"];
+            this.button6.Content = Utility.Language["SMButton6"];
+            this.button7.Content = Utility.Language["EditSelectedRow"];
+            this.checkBox1Text.Text = Utility.Language["SMCheckBox"];
+            this.Column1.Header = Utility.Language["SMDataGridColumn1"];
+            this.Column2.Header = Utility.Language["SMDataGridColumn2"];
             nosound = Utility.Language["SMNoSound"];
             wavefilter = Utility.Language["SMWaveFilter"];
             cannotdeletesound = Utility.Language["SMDeleteNosound"];
@@ -64,33 +66,26 @@ namespace PPDEditor
             alreadyadded = Utility.Language["SMAlreadyAdded"];
             data.RemoveAt(0);
             data.Insert(0, nosound);
+            // 以前はここで無音を各コンボボックスの最後にもう一つ加えていて、項目の番号がずれていたので、加えないようにした
             for (int i = 0; i < cbs.Length; i++)
             {
-                var index = cbs[i].SelectedIndex;
                 cbs[i].Items.Clear();
-                cbs[i].Items.AddRange([.. data.Select(s => Path.GetFileNameWithoutExtension(s))]);
-                cbs[i].SelectedIndex = index;
-            }
-            for (int i = 0; i < cbs.Length; i++)
-            {
-                cbs[i].Items.Add(data[0]);
+                cbs[i].Items.Add(new SoundItem(data[0]));
+                foreach (var s in data.Skip(1))
+                {
+                    cbs[i].Items.Add(new SoundItem(Path.GetFileNameWithoutExtension(s)));
+                }
                 cbs[i].SelectedIndex = 0;
             }
             Updatedatagrid();
         }
         public void SetSkin()
         {
-            this.label1.ForeColor = PPDEditorSkin.Skin.TransparentTextColor;
-            this.label2.ForeColor = PPDEditorSkin.Skin.TransparentTextColor;
-            this.label3.ForeColor = PPDEditorSkin.Skin.TransparentTextColor;
-            this.label4.ForeColor = PPDEditorSkin.Skin.TransparentTextColor;
-            this.label5.ForeColor = PPDEditorSkin.Skin.TransparentTextColor;
-            this.label6.ForeColor = PPDEditorSkin.Skin.TransparentTextColor;
-            this.label7.ForeColor = PPDEditorSkin.Skin.TransparentTextColor;
-            this.label8.ForeColor = PPDEditorSkin.Skin.TransparentTextColor;
-            this.label9.ForeColor = PPDEditorSkin.Skin.TransparentTextColor;
-            this.label10.ForeColor = PPDEditorSkin.Skin.TransparentTextColor;
-            this.checkBox1.ForeColor = PPDEditorSkin.Skin.TransparentTextColor;
+            var brush = WpfSkin.TransparentTextBrush;
+            foreach (var label in new TextBlock[] { label1, label2, label3, label4, label5, label6, label7, label8, label9, label10, checkBox1Text })
+            {
+                label.Foreground = brush;
+            }
         }
         public SoundManager()
         {
@@ -109,22 +104,21 @@ namespace PPDEditor
             cbs[10] = this.comboBox11;
             for (int i = 0; i < cbs.Length; i++)
             {
-                cbs[i].Items.Add(data[0]);
+                cbs[i].Items.Add(new SoundItem(data[0]));
                 cbs[i].SelectedIndex = 0;
             }
             Addchange(0);
-            foreach (DataGridViewColumn c in dataGridView1.Columns) c.SortMode = DataGridViewColumnSortMode.NotSortable;
             ContentSaved();
         }
         public bool Fixedcombo
         {
             get
             {
-                return this.checkBox1.Checked;
+                return this.checkBox1.IsChecked == true;
             }
             set
             {
-                this.checkBox1.Checked = value;
+                this.checkBox1.IsChecked = value;
             }
         }
         public void Clear()
@@ -148,10 +142,9 @@ namespace PPDEditor
         {
             while (changedata.Count > 1)
             {
-                var removeIndex = changedata.Count - 1;
-                changedata.RemoveAt(removeIndex);
-                dataGridView1.Rows.RemoveAt(removeIndex);
+                changedata.RemoveAt(changedata.Count - 1);
             }
+            Updatedatagrid();
             ContentSaved();
         }
         public void SetSound(Sound sou)
@@ -232,9 +225,9 @@ namespace PPDEditor
                 var index = changedata.IndexOfKey(time);
                 if (index >= 0)
                 {
-                    dataGridView1.Rows[index].Selected = true;
-                    dataGridView1.FirstDisplayedScrollingRowIndex = index;
-                    ShowOrHideWindow(this);
+                    dataGridView1.SelectedIndex = index;
+                    dataGridView1.ScrollIntoView(dataGridView1.SelectedItem);
+                    ShowDock();
                 }
             }
         }
@@ -260,15 +253,16 @@ namespace PPDEditor
                 }
             }
         }
-        private void Button1_Click(object sender, EventArgs e)
+        private void Button1_Click(object sender, RoutedEventArgs e)
         {
-            this.openFileDialog1.Filter = wavefilter;
-            this.openFileDialog1.RestoreDirectory = true;
-            this.openFileDialog1.FileName = "";
-            this.openFileDialog1.Multiselect = true;
-            if (this.openFileDialog1.ShowDialog() == DialogResult.OK)
+            var openFileDialog1 = new OpenFileDialog
             {
-                Readsounds(this.openFileDialog1.FileNames);
+                Filter = wavefilter,
+                Multiselect = true
+            };
+            if (openFileDialog1.ShowDialog(Window.GetWindow(this)) == true)
+            {
+                Readsounds(openFileDialog1.FileNames);
             }
         }
         public void Readsounds(string[] filenames)
@@ -278,7 +272,7 @@ namespace PPDEditor
                 var s = Path.GetFileNameWithoutExtension(filenames[i]);
                 for (int j = 0; j < cbs.Length; j++)
                 {
-                    cbs[j].Items.Add(s);
+                    cbs[j].Items.Add(new SoundItem(s));
                 }
                 if (!data.Contains(filenames[i]))
                 {
@@ -298,13 +292,12 @@ namespace PPDEditor
                 }
                 else
                 {
-                    this.dataGridView1.Rows.Add(1);
                     changedata.Add(times[i], changes[i]);
                 }
             }
             Updatedatagrid();
         }
-        private void Button5_Click(object sender, EventArgs e)
+        private void Button5_Click(object sender, RoutedEventArgs e)
         {
             if (this.comboBox11.SelectedIndex > 0)
             {
@@ -312,7 +305,7 @@ namespace PPDEditor
             }
         }
 
-        private void Button2_Click(object sender, EventArgs e)
+        private void Button2_Click(object sender, RoutedEventArgs e)
         {
             if (this.comboBox11.SelectedIndex < 0)
             {
@@ -320,13 +313,13 @@ namespace PPDEditor
             }
             if (this.comboBox11.SelectedIndex == 0)
             {
-                MessageBox.Show(cannotdeletesound);
+                MessageBox.Show(Window.GetWindow(this), cannotdeletesound);
                 return;
             }
             bool changeOtherDifficultySoundSetting = false;
             if (WindowUtility.MainForm.IsProjectLoaded && WindowUtility.MainForm.AvailableDifficultyCount > 1)
             {
-                if (MessageBox.Show(Utility.Language["DeleteSoundConfirmContent"], Utility.Language["DeleteSoundConfirm"], MessageBoxButtons.OKCancel) == System.Windows.Forms.DialogResult.Cancel)
+                if (MessageBox.Show(Window.GetWindow(this), Utility.Language["DeleteSoundConfirmContent"], Utility.Language["DeleteSoundConfirm"], MessageBoxButton.OKCancel) == MessageBoxResult.Cancel)
                 {
                     return;
                 }
@@ -430,24 +423,57 @@ namespace PPDEditor
         {
             if (changedata.ContainsKey(time))
             {
-                MessageBox.Show(alreadyadded);
+                MessageBox.Show(Window.GetWindow(this), alreadyadded);
             }
             else
             {
-                this.dataGridView1.Rows.Add(1);
                 changedata.Add(time, Cbselectednums());
                 Updatedatagrid();
+                ContentChanged();
             }
         }
         private void Updatedatagrid()
         {
+            // 選んでいる行は、行の番号で保つ（以前の DataGridView と同じ）
+            var selectedIndex = dataGridView1.SelectedIndex;
+            var rows = new List<ChangeRow>();
             for (int i = 0; i < changedata.Count; i++)
             {
-                this.dataGridView1[0, i].Value = changedata.Keys[i];
-                this.dataGridView1[1, i].Value = Cbvalue(i);
+                rows.Add(new ChangeRow(changedata.Keys[i], Cbvalue(i)));
+            }
+            dataGridView1.ItemsSource = rows;
+            if (selectedIndex >= 0 && selectedIndex < rows.Count)
+            {
+                dataGridView1.SelectedIndex = selectedIndex;
             }
         }
-        private void Button3_Click(object sender, EventArgs e)
+
+        /// <summary>
+        /// 選んでいる行の番号です。選んでいないときは -1 です。
+        /// </summary>
+        private int CurrentIndex
+        {
+            get { return dataGridView1.SelectedIndex; }
+        }
+
+        /// <summary>
+        /// 変更の一覧の 1 行です。
+        /// </summary>
+        record ChangeRow(float Time, string Sounds);
+
+        /// <summary>
+        /// コンボボックスの項目です。同じ名前の音があっても選ぶ項目がずれないように、文字列ではなくこれを入れる。
+        /// </summary>
+        sealed class SoundItem(string name)
+        {
+            public string Name { get; } = name;
+
+            public override string ToString()
+            {
+                return Name;
+            }
+        }
+        private void Button3_Click(object sender, RoutedEventArgs e)
         {
             Addchange((float)WindowUtility.Seekmain.Currenttime);
         }
@@ -455,7 +481,7 @@ namespace PPDEditor
         {
             var time = (float)WindowUtility.Seekmain.Currenttime;
             Changedatagridselectindex(time);
-            if (this.checkBox1.Checked)
+            if (this.checkBox1.IsChecked == true)
             {
                 Synccombobox();
             }
@@ -480,14 +506,17 @@ namespace PPDEditor
             {
                 i = 0;
             }
-            dataGridView1.CurrentCell = dataGridView1[0, i];
+            if (i < changedata.Count)
+            {
+                dataGridView1.SelectedIndex = i;
+            }
             currentnum = i;
         }
         private void Synccombobox()
         {
-            if (dataGridView1.CurrentRow != null)
+            if (CurrentIndex >= 0)
             {
-                int num = dataGridView1.CurrentRow.Index;
+                int num = CurrentIndex;
                 UInt16[] temp = changedata.Values[num];
                 for (int i = 0; i < temp.Length; i++)
                 {
@@ -495,29 +524,28 @@ namespace PPDEditor
                 }
             }
         }
-        private void Button4_Click(object sender, EventArgs e)
+        private void Button4_Click(object sender, RoutedEventArgs e)
         {
-            if (dataGridView1.CurrentRow != null)
+            if (CurrentIndex >= 0)
             {
-                if (dataGridView1.CurrentRow.Index == 0)
+                if (CurrentIndex == 0)
                 {
-                    MessageBox.Show(cannotdeletefirst);
+                    MessageBox.Show(Window.GetWindow(this), cannotdeletefirst);
                 }
                 else
                 {
-                    changedata.RemoveAt(dataGridView1.CurrentRow.Index);
-                    dataGridView1.Rows.RemoveAt(this.dataGridView1.CurrentRow.Index);
+                    changedata.RemoveAt(CurrentIndex);
                     Updatedatagrid();
                     ContentChanged();
                 }
             }
         }
 
-        private void Button7_Click(object sender, EventArgs e)
+        private void Button7_Click(object sender, RoutedEventArgs e)
         {
-            if (dataGridView1.CurrentRow != null && dataGridView1.CurrentRow.Index > 0)
+            if (CurrentIndex > 0)
             {
-                var time = (float)dataGridView1[0, dataGridView1.CurrentRow.Index].Value;
+                var time = changedata.Keys[CurrentIndex];
                 var change = changedata[time];
                 var form = new SoundChangeEditWindow();
                 form.SetLang();
@@ -528,7 +556,6 @@ namespace PPDEditor
                     return;
                 }
 
-                var index = dataGridView1.CurrentRow.Index;
                 changedata[time] = form.Change;
                 Updatedatagrid();
                 ContentChanged();
@@ -540,39 +567,29 @@ namespace PPDEditor
             sou.Play(obj, -1000);
         }
 
-        private void DataGridView1_SelectionChanged(object sender, EventArgs e)
+        private void DataGridView1_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (this.checkBox1.Checked)
+            if (this.checkBox1.IsChecked == true)
             {
                 Synccombobox();
             }
         }
 
-        private void DataGridView1_RowsRemoved(object sender, DataGridViewRowsRemovedEventArgs e)
-        {
-            ContentChanged();
-        }
-
-        private void DataGridView1_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
-        {
-            ContentChanged();
-        }
-
-        private void Button6_Click(object sender, EventArgs e)
+        private void Button6_Click(object sender, RoutedEventArgs e)
         {
             if (this.comboBox11.SelectedIndex == 0)
             {
-                MessageBox.Show(cannotdeletesound);
+                MessageBox.Show(Window.GetWindow(this), cannotdeletesound);
             }
             else if (this.comboBox11.SelectedIndex > 0)
             {
-                this.openFileDialog1.Filter = wavefilter;
-                this.openFileDialog1.RestoreDirectory = true;
-                this.openFileDialog1.FileName = "";
-                this.openFileDialog1.Multiselect = false;
-                if (this.openFileDialog1.ShowDialog() == DialogResult.OK)
+                var openFileDialog1 = new OpenFileDialog
                 {
-                    ChangeSound(this.openFileDialog1.FileName);
+                    Filter = wavefilter
+                };
+                if (openFileDialog1.ShowDialog(Window.GetWindow(this)) == true)
+                {
+                    ChangeSound(openFileDialog1.FileName);
                 }
             }
         }
@@ -587,7 +604,10 @@ namespace PPDEditor
             var s = Path.GetFileNameWithoutExtension(filename);
             for (int j = 0; j < cbs.Length; j++)
             {
-                cbs[j].Items[num] = s;
+                // 選んでいる項目を入れ替えると選択が外れるので、選び直す
+                var selected = cbs[j].SelectedIndex;
+                cbs[j].Items[num] = new SoundItem(s);
+                cbs[j].SelectedIndex = selected;
             }
             if (!data.Contains(filename))
             {

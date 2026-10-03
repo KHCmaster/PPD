@@ -44,6 +44,7 @@ namespace PPDEditor.Forms
         static KasiEditor ke;
         static WpfDockShell keDock;
         static SoundManager sm;
+        static WpfDockShell smDock;
         static IniFileWriter ifw;
         static WpfDockShell ifwDock;
         static BPMMeasure bm;
@@ -134,6 +135,7 @@ namespace PPDEditor.Forms
             keDock = new WpfDockShell(ke, "PPDEditor.KasiEditor");
             SplashWindow.ChangeStatus(String.Format(Utility.Language["InitializingStart"], Utility.Language["SM"]));
             sm = new SoundManager();
+            smDock = new WpfDockShell(sm, "PPDEditor.SoundManager");
             SplashWindow.ChangeStatus(String.Format(Utility.Language["InitializingStart"], Utility.Language["SFW"]));
             ifw = new IniFileWriter();
             ifwDock = new WpfDockShell(ifw, "PPDEditor.IniFileWriter");
@@ -191,7 +193,7 @@ namespace PPDEditor.Forms
 
             paalsDock.VisibleChanged += Windowvisiblechanged;
             keDock.VisibleChanged += Windowvisiblechanged;
-            sm.VisibleChanged += Windowvisiblechanged;
+            smDock.VisibleChanged += Windowvisiblechanged;
             ifwDock.VisibleChanged += Windowvisiblechanged;
             bmDock.VisibleChanged += Windowvisiblechanged;
             tlf.VisibleChanged += Windowvisiblechanged;
@@ -580,7 +582,7 @@ namespace PPDEditor.Forms
             dockPanel1.SuspendLayout();
             paalsDock.DockPanel = null;
             keDock.DockPanel = null;
-            sm.DockPanel = null;
+            smDock.DockPanel = null;
             ifwDock.DockPanel = null;
             bmDock.DockPanel = null;
             tlf.DockPanel = null;
@@ -668,7 +670,7 @@ namespace PPDEditor.Forms
         {
             this.bPMToolStripMenuItem.Checked = Utility.CheckVisible(bmDock);
             this.ゲームウィンドウToolStripMenuItem.Checked = Utility.CheckVisible(dxf);
-            this.サウンドマネージャーToolStripMenuItem.Checked = Utility.CheckVisible(sm);
+            this.サウンドマネージャーToolStripMenuItem.Checked = Utility.CheckVisible(smDock);
             this.タイムラインウィンドウToolStripMenuItem.Checked = Utility.CheckVisible(tlf);
             this.プロパティウィンドウToolStripMenuItem.Checked = Utility.CheckVisible(infof);
             this.位置角度ローダーセーバーToolStripMenuItem.Checked = Utility.CheckVisible(paalsDock);
@@ -693,7 +695,7 @@ namespace PPDEditor.Forms
                 "PPDEditor.InfoForm" => infof,
                 "PPDEditor.KasiEditor" => keDock,
                 "PPDEditor.PosAndAngleLoaderSaver" => paalsDock,
-                "PPDEditor.SoundManager" => sm,
+                "PPDEditor.SoundManager" => smDock,
                 "PPDEditor.TimeLineForm" => tlf,
                 "PPDEditor.IniFileWriter" => ifwDock,
                 "PPDEditor.LayerManager" => lm,
@@ -2354,7 +2356,7 @@ namespace PPDEditor.Forms
         }
         private void サウンドマネージャーToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Utility.ShowOrHideWindow(dockPanel1, sm, ModifierKeys);
+            Utility.ShowOrHideWindow(dockPanel1, smDock, ModifierKeys);
         }
 
         private void 設定ファイルライターToolStripMenuItem_Click(object sender, EventArgs e)
