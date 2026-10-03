@@ -555,6 +555,8 @@ WinForms と WPF の混在をなくすため、PPD.exe 以外を段階的に WPF
   - DirectX の描画を WPF に表示する方法: 表示しないウィンドウにスワップチェーンを作って描画し、バックバッファーを読み出して `WriteableBitmap` に写す
     （`GameCoreBase` のウィンドウハンドルを受け取るコンストラクタ、`RenderWithoutPresent`、`PPDDevice.CopyBackBuffer`）。
     HwndHost で HWND を埋め込む方法は、ドッキングで別のウィンドウに移すと HWND が作り直されてスワップチェーンが壊れ、スクロールでも切り取られないので使わない
+  - 描き直しは 1 フレームに 1 回にまとめる（`CompositionTarget.Rendering` で描く。Rendering は同じフレームで何回も来るので、`RenderingTime` が同じなら描かない）。
+    マウスが動くたびに描いていたときは、ドラッグした制御点が遅れてついてきた
   - ドッキングのライブラリは AvalonDock（Dirkster.AvalonDock 4.74.1、MS-PL）にした。配置のファイルは形式が変わるので、以前の WinForms 版のファイルは読み込めず、一度だけ既定の配置に戻る
   - BezierDrawControl: 編集の処理（`BezierController`）から WinForms をなくし、修飾キーとカーソルは `BezierModifierKeys` / `BezierCursor` にした。
     `DXBezierControl` は WPF にした（Effect2DEditor と BezierDrawControlTest が使う）。GDI+ で描く `BezierControl`（WinForms）は PPDEditor が使うので、PPDEditor を移すまで残す

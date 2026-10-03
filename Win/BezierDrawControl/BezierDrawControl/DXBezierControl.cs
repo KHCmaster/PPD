@@ -11,6 +11,7 @@ using System.Windows.Media.Imaging;
 using Color = System.Drawing.Color;
 using PointF = System.Drawing.PointF;
 using RectangleF = System.Drawing.RectangleF;
+using System.Diagnostics;
 
 namespace BezierDrawControl
 {
@@ -175,6 +176,8 @@ namespace BezierDrawControl
 
         HiddenRenderWindow renderWindow;
         WriteableBitmap bitmap;
+        bool renderScheduled;
+        TimeSpan lastRenderingTime = TimeSpan.MinValue;
 
         public BezierDrawer Drawer
         {
@@ -240,7 +243,39 @@ namespace BezierDrawControl
             DrawAndRefresh();
         }
 
+        /// <summary>
+        /// 描き直しを予約します。次に画面を更新する直前に 1 回だけ描きます。
+        /// </summary>
+        /// <remarks>
+        /// ドラッグ中はマウスが動くたびに呼ばれるので、そのたびに描くと（描画とバックバッファーの読み出しで GPU を待つため）
+        /// マウスのメッセージが溜まって、表示が遅れてついてくるようになる。
+        /// </remarks>
         public void DrawAndRefresh()
+        {
+            if (Drawer == null || renderScheduled)
+            {
+                return;
+            }
+            renderScheduled = true;
+            CompositionTarget.Rendering += CompositionTarget_Rendering;
+        }
+
+        private void CompositionTarget_Rendering(object sender, EventArgs e)
+        {
+            // Rendering は WPF が描画するたびに呼ばれ、同じフレームの中で何回も来ることがある（ビットマップを更新するとまた来る）。
+            // フレームの時刻が前に描いたときと同じなら描かずに、次のフレームを待つ
+            var renderingTime = (e as RenderingEventArgs)?.RenderingTime ?? TimeSpan.Zero;
+            if (renderingTime == lastRenderingTime)
+            {
+                return;
+            }
+            lastRenderingTime = renderingTime;
+            CompositionTarget.Rendering -= CompositionTarget_Rendering;
+            renderScheduled = false;
+            Render();
+        }
+
+        private void Render()
         {
             if (Drawer == null)
             {
@@ -317,6 +352,11 @@ namespace BezierDrawControl
 
         private void DisposeDrawer()
         {
+            if (renderScheduled)
+            {
+                CompositionTarget.Rendering -= CompositionTarget_Rendering;
+                renderScheduled = false;
+            }
             Drawer?.Dispose();
             Drawer = null;
             renderWindow?.Dispose();
