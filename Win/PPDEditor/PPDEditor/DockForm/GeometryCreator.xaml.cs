@@ -1,4 +1,5 @@
-﻿using BezierCaliculator;
+﻿using PPDEditor.ViewModels.Dialogs;
+using BezierCaliculator;
 using BezierDrawControl;
 using PPDEditor.Command.PPDSheet;
 using PPDEditor.Controls;
@@ -602,17 +603,15 @@ Enter  変形終了";
 
         private void Button4_Click(object sender, RoutedEventArgs e)
         {
-            var gsf = new GridSettingWindow();
-            gsf.SetLang();
-            gsf.Grid = new PPDEditor.SquareGrid
+            var gsf = new GridSettingViewModel(new PPDEditor.SquareGrid
             {
                 Width = SquareGrid.Width * 2,
                 Height = SquareGrid.Height * 2,
                 GridColor = SquareGrid.GridColor,
                 OffsetX = SquareGrid.OffsetX * 2,
                 OffsetY = SquareGrid.OffsetY * 2
-            };
-            if (WpfDialog.ShowDialog(gsf))
+            });
+            if (WpfDialog.ShowDialog(new GridSettingWindow(gsf)))
             {
                 SquareGrid = new SquareGrid
                 {

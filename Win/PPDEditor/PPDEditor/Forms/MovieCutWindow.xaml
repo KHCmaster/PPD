@@ -1,8 +1,13 @@
 <Window x:Class="PPDEditor.Forms.MovieCutWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="切り取り" SizeToContent="WidthAndHeight" ResizeMode="NoResize" ShowInTaskbar="False"
-        FocusManager.FocusedElement="{Binding ElementName=textBox1}">
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:PPDEditor.ViewModels.Dialogs"
+        xmlns:conv="clr-namespace:PPDEditor.Converters"
+        mc:Ignorable="d" d:DataContext="{d:DesignInstance Type=vm:MovieCutViewModel}"
+        Title="{Binding Texts[Cut]}" SizeToContent="WidthAndHeight" ResizeMode="NoResize" ShowInTaskbar="False"
+        FocusManager.FocusedElement="{Binding ElementName=leftBox}">
     <Window.Resources>
         <Style TargetType="TextBox">
             <Setter Property="Width" Value="100" />
@@ -16,7 +21,7 @@
         </Style>
     </Window.Resources>
     <StackPanel Margin="9">
-        <TextBlock x:Name="label5" Text="それぞれピクセルで指定してください" />
+        <TextBlock Text="{Binding Texts[CutLabel5]}" />
         <Grid HorizontalAlignment="Center" Margin="0,10,0,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
@@ -28,19 +33,19 @@
                 <RowDefinition Height="35" />
                 <RowDefinition Height="35" />
             </Grid.RowDefinitions>
-            <TextBlock x:Name="label1" Text="左" Style="{StaticResource SideLabel}" />
-            <TextBox x:Name="textBox1" Grid.Column="1" KeyDown="TextBox_KeyDown" />
-            <TextBlock x:Name="label2" Grid.Row="1" Text="右" Style="{StaticResource SideLabel}" />
-            <TextBox x:Name="textBox2" Grid.Row="1" Grid.Column="1" KeyDown="TextBox_KeyDown" />
-            <TextBlock x:Name="label3" Grid.Row="2" Text="上" Style="{StaticResource SideLabel}" />
-            <TextBox x:Name="textBox3" Grid.Row="2" Grid.Column="1" KeyDown="TextBox_KeyDown" />
-            <TextBlock x:Name="label4" Grid.Row="3" Text="下" Style="{StaticResource SideLabel}" />
-            <TextBox x:Name="textBox4" Grid.Row="3" Grid.Column="1" KeyDown="TextBox_KeyDown" />
+            <TextBlock Text="{Binding Texts[CutLabel1]}" Style="{StaticResource SideLabel}" />
+            <TextBox x:Name="leftBox" Grid.Column="1" Text="{Binding Left, UpdateSourceTrigger=PropertyChanged}" KeyDown="TextBox_KeyDown" />
+            <TextBlock Grid.Row="1" Text="{Binding Texts[CutLabel2]}" Style="{StaticResource SideLabel}" />
+            <TextBox x:Name="rightBox" Grid.Row="1" Grid.Column="1" Text="{Binding Right, UpdateSourceTrigger=PropertyChanged}" KeyDown="TextBox_KeyDown" />
+            <TextBlock Grid.Row="2" Text="{Binding Texts[CutLabel3]}" Style="{StaticResource SideLabel}" />
+            <TextBox x:Name="topBox" Grid.Row="2" Grid.Column="1" Text="{Binding Top, UpdateSourceTrigger=PropertyChanged}" KeyDown="TextBox_KeyDown" />
+            <TextBlock Grid.Row="3" Text="{Binding Texts[CutLabel4]}" Style="{StaticResource SideLabel}" />
+            <TextBox x:Name="bottomBox" Grid.Row="3" Grid.Column="1" Text="{Binding Bottom, UpdateSourceTrigger=PropertyChanged}" KeyDown="TextBox_KeyDown" />
         </Grid>
-        <CheckBox x:Name="applyIniCheckBox" Content="設定ファイルライターに反映させる" HorizontalAlignment="Center" Margin="0,4,0,0" />
+        <CheckBox Content="設定ファイルライターに反映させる" IsChecked="{Binding ApplyToIni}" HorizontalAlignment="Center" Margin="0,4,0,0" />
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,6,0,0">
-            <Button x:Name="button1" Content="OK" Width="75" Height="23" Click="Button1_Click" />
-            <Button x:Name="button2" Content="Cancel" Width="75" Height="23" Margin="6,0,0,0" IsCancel="True" />
+            <Button Content="OK" Width="75" Height="23" Command="{Binding OkCommand}" />
+            <Button Content="Cancel" Width="75" Height="23" Margin="6,0,0,0" IsCancel="True" />
         </StackPanel>
     </StackPanel>
 </Window>

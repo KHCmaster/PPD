@@ -1,4 +1,5 @@
-﻿using Microsoft.Win32;
+﻿using PPDEditor.ViewModels.Dialogs;
+using Microsoft.Win32;
 using PPDEditor.Forms;
 using PPDEditorCommon;
 using System;
@@ -121,11 +122,8 @@ namespace PPDEditor
             }
 
             var commanParameters = Utility.GetCommonParameters(marks, out string[] existKeys);
-            var form = new EditParameterWindow();
-            form.SetLang();
-            form.Parameters = commanParameters;
-            form.ExistKeys = existKeys;
-            if (WpfDialog.ShowDialog(form))
+            var form = new EditParameterViewModel(commanParameters, existKeys);
+            if (WpfDialog.ShowDialog(new EditParameterWindow(form)))
             {
                 var newParameters = form.Parameters;
                 var removeParameters = new HashSet<string>();

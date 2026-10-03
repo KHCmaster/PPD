@@ -1,25 +1,33 @@
 <Window x:Class="PPDEditor.Forms.EditParameterWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="EditParameterForm" SizeToContent="WidthAndHeight" ResizeMode="NoResize" ShowInTaskbar="False"
-        Closing="Window_Closing">
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:PPDEditor.ViewModels.Dialogs"
+        xmlns:conv="clr-namespace:PPDEditor.Converters"
+        mc:Ignorable="d" d:DataContext="{d:DesignInstance Type=vm:EditParameterViewModel}"
+        Title="{Binding Texts[EditParameter]}" SizeToContent="WidthAndHeight" ResizeMode="NoResize" ShowInTaskbar="False">
+    <Window.Resources>
+        <conv:BindingProxy x:Key="Proxy" Data="{Binding}" />
+    </Window.Resources>
     <Grid Margin="12">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
-        <DataGrid x:Name="dataGridView1" Width="260" Height="238" AutoGenerateColumns="False" SelectionMode="Extended" SelectionUnit="FullRow"
+        <DataGrid x:Name="parameterGrid" ItemsSource="{Binding Items}" Width="260" Height="238" AutoGenerateColumns="False" SelectionMode="Extended" SelectionUnit="FullRow"
                   HeadersVisibility="Column" CanUserAddRows="False" CanUserDeleteRows="False" CanUserSortColumns="False">
             <DataGrid.Columns>
-                <DataGridTextColumn x:Name="KeyColumn" Header="Key" Binding="{Binding Key, UpdateSourceTrigger=PropertyChanged}" Width="*" />
-                <DataGridTextColumn x:Name="ValueColumn" Header="Value" Binding="{Binding Value, UpdateSourceTrigger=PropertyChanged}" Width="*" />
+                <DataGridTextColumn Header="{Binding Data.Texts[Key], Source={StaticResource Proxy}}" Binding="{Binding Key, UpdateSourceTrigger=PropertyChanged}" Width="*" />
+                <DataGridTextColumn Header="{Binding Data.Texts[Value], Source={StaticResource Proxy}}" Binding="{Binding Value, UpdateSourceTrigger=PropertyChanged}" Width="*" />
             </DataGrid.Columns>
         </DataGrid>
         <DockPanel Grid.Column="1" Margin="12,0,0,0" LastChildFill="False">
-            <Button x:Name="addButton" DockPanel.Dock="Top" Content="Add" MinWidth="75" Height="23" Click="AddButton_Click" />
-            <Button x:Name="removeButton" DockPanel.Dock="Top" Content="Remove" MinWidth="75" Height="23" Margin="0,6,0,0" Click="RemoveButton_Click" />
-            <Button x:Name="cancelButton" DockPanel.Dock="Bottom" Content="Cancel" MinWidth="75" Height="23" Margin="0,6,0,0" IsCancel="True" />
-            <Button x:Name="okButton" DockPanel.Dock="Bottom" Content="OK" MinWidth="75" Height="23" Click="OkButton_Click" />
+            <Button DockPanel.Dock="Top" Content="{Binding Texts[Add]}" MinWidth="75" Height="23" Command="{Binding AddCommand}" />
+            <Button DockPanel.Dock="Top" Content="{Binding Texts[Remove]}" MinWidth="75" Height="23" Margin="0,6,0,0"
+                    Command="{Binding RemoveCommand}" CommandParameter="{Binding SelectedItems, ElementName=parameterGrid}" />
+            <Button DockPanel.Dock="Bottom" Content="Cancel" MinWidth="75" Height="23" Margin="0,6,0,0" IsCancel="True" />
+            <Button DockPanel.Dock="Bottom" Content="OK" MinWidth="75" Height="23" Click="OkButton_Click" />
         </DockPanel>
     </Grid>
 </Window>

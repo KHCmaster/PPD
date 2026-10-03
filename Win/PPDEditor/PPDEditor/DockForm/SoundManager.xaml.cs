@@ -1,4 +1,5 @@
-﻿using PPDEditor.Forms;
+﻿using PPDEditor.ViewModels.Dialogs;
+using PPDEditor.Forms;
 using PPDFramework;
 using PPDFramework.PPDStructure;
 using PPDSound;
@@ -547,11 +548,9 @@ namespace PPDEditor
             {
                 var time = changedata.Keys[CurrentIndex];
                 var change = changedata[time];
-                var form = new SoundChangeEditWindow();
-                form.SetLang();
-                form.SetInfo(change, [.. data]);
+                var form = new SoundChangeEditViewModel(change, [.. data]);
                 form.PlaySound += Form_PlaySound;
-                if (!WpfDialog.ShowDialog(form))
+                if (!WpfDialog.ShowDialog(new SoundChangeEditWindow(form)))
                 {
                     return;
                 }

@@ -1,7 +1,12 @@
 <Window x:Class="PPDEditor.Forms.SoundChangeEditWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="サウンド変更編集" SizeToContent="WidthAndHeight" ResizeMode="NoResize" ShowInTaskbar="False">
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:PPDEditor.ViewModels.Dialogs"
+        xmlns:conv="clr-namespace:PPDEditor.Converters"
+        mc:Ignorable="d" d:DataContext="{d:DesignInstance Type=vm:SoundChangeEditViewModel}"
+        Title="{Binding Texts[EditSoundChange]}" SizeToContent="WidthAndHeight" ResizeMode="NoResize" ShowInTaskbar="False">
     <Window.Resources>
         <Style TargetType="ComboBox">
             <Setter Property="Width" Value="121" />
@@ -16,36 +21,36 @@
                 <ColumnDefinition Width="121" />
             </Grid.ColumnDefinitions>
             <StackPanel>
-                <TextBlock x:Name="label1" Text="スクエア" />
-                <ComboBox x:Name="comboBox1" />
-                <TextBlock x:Name="label2" Text="クロス" />
-                <ComboBox x:Name="comboBox2" />
-                <TextBlock x:Name="label3" Text="サークル" />
-                <ComboBox x:Name="comboBox3" />
-                <TextBlock x:Name="label4" Text="トライアングル" />
-                <ComboBox x:Name="comboBox4" />
+                <TextBlock Text="{Binding Texts[SMLabel1]}" />
+                <ComboBox ItemsSource="{Binding SoundNames}" SelectedIndex="{Binding Slots[0].SelectedIndex}" />
+                <TextBlock Text="{Binding Texts[SMLabel2]}" />
+                <ComboBox ItemsSource="{Binding SoundNames}" SelectedIndex="{Binding Slots[1].SelectedIndex}" />
+                <TextBlock Text="{Binding Texts[SMLabel3]}" />
+                <ComboBox ItemsSource="{Binding SoundNames}" SelectedIndex="{Binding Slots[2].SelectedIndex}" />
+                <TextBlock Text="{Binding Texts[SMLabel4]}" />
+                <ComboBox ItemsSource="{Binding SoundNames}" SelectedIndex="{Binding Slots[3].SelectedIndex}" />
                 <!-- 視聴する音を選ぶ -->
-                <ComboBox x:Name="comboBox11" Margin="0,16,0,6" />
-                <Button x:Name="button5" Content="視聴" MinWidth="75" Height="23" HorizontalAlignment="Left" Click="Button5_Click" />
+                <ComboBox ItemsSource="{Binding SoundNames}" SelectedIndex="{Binding PreviewIndex}" Margin="0,16,0,6" />
+                <Button Content="{Binding Texts[SMButton5]}" MinWidth="75" Height="23" HorizontalAlignment="Left" Command="{Binding PlayCommand}" />
             </StackPanel>
             <StackPanel Grid.Column="1">
-                <TextBlock x:Name="label5" Text="レフト" />
-                <ComboBox x:Name="comboBox5" />
-                <TextBlock x:Name="label6" Text="ダウン" />
-                <ComboBox x:Name="comboBox6" />
-                <TextBlock x:Name="label7" Text="ライト" />
-                <ComboBox x:Name="comboBox7" />
-                <TextBlock x:Name="label8" Text="アップ" />
-                <ComboBox x:Name="comboBox8" />
-                <TextBlock x:Name="label9" Text="アール" />
-                <ComboBox x:Name="comboBox9" />
-                <TextBlock x:Name="label10" Text="エル" />
-                <ComboBox x:Name="comboBox10" />
+                <TextBlock Text="{Binding Texts[SMLabel5]}" />
+                <ComboBox ItemsSource="{Binding SoundNames}" SelectedIndex="{Binding Slots[4].SelectedIndex}" />
+                <TextBlock Text="{Binding Texts[SMLabel6]}" />
+                <ComboBox ItemsSource="{Binding SoundNames}" SelectedIndex="{Binding Slots[5].SelectedIndex}" />
+                <TextBlock Text="{Binding Texts[SMLabel7]}" />
+                <ComboBox ItemsSource="{Binding SoundNames}" SelectedIndex="{Binding Slots[6].SelectedIndex}" />
+                <TextBlock Text="{Binding Texts[SMLabel8]}" />
+                <ComboBox ItemsSource="{Binding SoundNames}" SelectedIndex="{Binding Slots[7].SelectedIndex}" />
+                <TextBlock Text="{Binding Texts[SMLabel9]}" />
+                <ComboBox ItemsSource="{Binding SoundNames}" SelectedIndex="{Binding Slots[8].SelectedIndex}" />
+                <TextBlock Text="{Binding Texts[SMLabel10]}" />
+                <ComboBox ItemsSource="{Binding SoundNames}" SelectedIndex="{Binding Slots[9].SelectedIndex}" />
             </StackPanel>
         </Grid>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,16,0,0">
-            <Button x:Name="button1" Content="OK" Width="75" Height="23" IsDefault="True" Click="Button1_Click" />
-            <Button x:Name="button2" Content="Cancel" Width="75" Height="23" Margin="23,0,0,0" IsCancel="True" />
+            <Button Content="OK" Width="75" Height="23" IsDefault="True" Command="{Binding OkCommand}" />
+            <Button Content="Cancel" Width="75" Height="23" Margin="23,0,0,0" IsCancel="True" />
         </StackPanel>
     </StackPanel>
 </Window>

@@ -1125,9 +1125,8 @@ namespace PPDEditor.Forms
 
         private void 切り取りToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var fm2 = new MovieCutWindow(MovieTrimmingData);
-            fm2.SetLang();
-            if (WpfDialog.ShowDialog(fm2))
+            var fm2 = new MovieCutViewModel(MovieTrimmingData);
+            if (WpfDialog.ShowDialog(new MovieCutWindow(fm2)))
             {
                 MovieTrimmingData = fm2.TrimmingData;
                 if (fm2.ApplyToIni)
@@ -3049,10 +3048,8 @@ namespace PPDEditor.Forms
         }
         private void 詳細設定ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var gsf = new GridSettingWindow();
-            gsf.SetLang();
-            gsf.Grid = Grid;
-            if (WpfDialog.ShowDialog(gsf))
+            var gsf = new GridSettingViewModel(Grid);
+            if (WpfDialog.ShowDialog(new GridSettingWindow(gsf)))
             {
                 Grid.CopyFrom(gsf.Grid);
                 TurnOffExcept(sender as MenuItem);
@@ -3718,12 +3715,10 @@ namespace PPDEditor.Forms
 
         private void 詳細設定ToolStripMenuItem2_Click(object sender, EventArgs e)
         {
-            var form = new EditTimeLineRowWindow();
-            form.SetRowManager(tlf.RowManager);
-            form.SetLang();
-            if (WpfDialog.ShowDialog(form))
+            var form = new EditTimeLineRowViewModel(tlf.RowManager);
+            if (WpfDialog.ShowDialog(new EditTimeLineRowWindow(form)))
             {
-                form.UpdateRowManager(tlf.RowManager);
+                form.Apply(tlf.RowManager);
             }
             tlf.InvalidateAll();
         }

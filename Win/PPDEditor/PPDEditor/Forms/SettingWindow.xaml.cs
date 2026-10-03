@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PPDEditor.ViewModels.Dialogs;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Collections.ObjectModel;
@@ -439,12 +440,8 @@ namespace PPDEditor.Forms
 
         private void Button4_Click(object sender, RoutedEventArgs e)
         {
-            var form = new CommandSelectWindow
-            {
-                Owner = this
-            };
-            form.SetLang();
-            if (form.ShowDialog() == true)
+            var form = new CommandSelectViewModel();
+            if (new CommandSelectWindow(form) { Owner = this }.ShowDialog() == true)
             {
                 var row = new ShortcutRow(GetCustomShortcutText(form.SelectedScriptPath), "");
                 rows.Add(row);

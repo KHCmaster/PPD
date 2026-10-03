@@ -1,21 +1,40 @@
 <Window x:Class="PPDEditor.Forms.CommandSelectWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="コマンドを選択" SizeToContent="WidthAndHeight" ResizeMode="NoResize" ShowInTaskbar="False">
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:PPDEditor.ViewModels.Dialogs"
+        xmlns:conv="clr-namespace:PPDEditor.Converters"
+        mc:Ignorable="d" d:DataContext="{d:DesignInstance Type=vm:CommandSelectViewModel}"
+        Title="{Binding Texts[SelectCommand]}" SizeToContent="WidthAndHeight" ResizeMode="NoResize" ShowInTaskbar="False">
     <StackPanel Margin="12">
-        <TreeView x:Name="treeView1" Width="260" Height="209" SelectedItemChanged="TreeView1_SelectedItemChanged" MouseDoubleClick="TreeView1_MouseDoubleClick">
+        <TreeView ItemsSource="{Binding Nodes}" Width="260" Height="209" SelectedItemChanged="TreeView_SelectedItemChanged">
+            <TreeView.InputBindings>
+                <MouseBinding MouseAction="LeftDoubleClick" Command="{Binding OkCommand}" />
+            </TreeView.InputBindings>
             <TreeView.ItemTemplate>
                 <HierarchicalDataTemplate ItemsSource="{Binding Children}">
                     <StackPanel Orientation="Horizontal">
-                        <Image Source="{Binding Icon}" Width="16" Height="16" Margin="0,0,3,0" />
+                        <Image Width="16" Height="16" Margin="0,0,3,0">
+                            <Image.Style>
+                                <Style TargetType="Image">
+                                    <Setter Property="Source" Value="/PPDEditor;component/img/folder.png" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsScript}" Value="True">
+                                            <Setter Property="Source" Value="/PPDEditor;component/img/document.png" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Image.Style>
+                        </Image>
                         <TextBlock Text="{Binding Name}" VerticalAlignment="Center" />
                     </StackPanel>
                 </HierarchicalDataTemplate>
             </TreeView.ItemTemplate>
         </TreeView>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,6,0,0">
-            <Button x:Name="okButton" Content="OK" Width="75" Height="23" IsDefault="True" IsEnabled="False" Click="OkButton_Click" />
-            <Button x:Name="cancelButton" Content="Cancel" Width="75" Height="23" Margin="19,0,0,0" IsCancel="True" />
+            <Button Content="OK" Width="75" Height="23" IsDefault="True" Command="{Binding OkCommand}" />
+            <Button Content="Cancel" Width="75" Height="23" Margin="19,0,0,0" IsCancel="True" />
         </StackPanel>
     </StackPanel>
 </Window>
