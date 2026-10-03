@@ -117,11 +117,11 @@ namespace PPDEditor
             }
 
             var commanParameters = Utility.GetCommonParameters(marks, out string[] existKeys);
-            var form = new EditParameterForm();
+            var form = new EditParameterWindow();
             form.SetLang();
             form.Parameters = commanParameters;
             form.ExistKeys = existKeys;
-            if (form.ShowDialog() == DialogResult.OK)
+            if (WpfDialog.ShowDialog(form))
             {
                 var newParameters = form.Parameters;
                 var removeParameters = new HashSet<string>();

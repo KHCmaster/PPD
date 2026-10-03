@@ -2860,10 +2860,10 @@ namespace PPDEditor.Forms
         }
         private void 詳細設定ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var gsf = new GridSettingForm();
+            var gsf = new GridSettingWindow();
             gsf.SetLang();
             gsf.Grid = Grid;
-            if (gsf.ShowDialog() == DialogResult.OK)
+            if (WpfDialog.ShowDialog(gsf))
             {
                 Grid.CopyFrom(gsf.Grid);
                 TurnOffExcept(sender as ToolStripMenuItem);
@@ -3542,10 +3542,10 @@ namespace PPDEditor.Forms
 
         private void 詳細設定ToolStripMenuItem2_Click(object sender, EventArgs e)
         {
-            var form = new EditTimeLineRowForm();
+            var form = new EditTimeLineRowWindow();
             form.SetRowManager(tlf.RowManager);
             form.SetLang();
-            if (form.ShowDialog() == DialogResult.OK)
+            if (WpfDialog.ShowDialog(form))
             {
                 form.UpdateRowManager(tlf.RowManager);
             }

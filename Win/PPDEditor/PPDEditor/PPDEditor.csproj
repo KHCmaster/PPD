@@ -132,14 +132,8 @@
     <EmbeddedResource Update="DockForm\SoundManager.resx">
       <DependentUpon>SoundManager.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Update="Forms\CommandSelectForm.resx">
-      <DependentUpon>CommandSelectForm.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Update="Forms\CreateProjectForm.resx">
       <DependentUpon>CreateProjectForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Forms\EditTimeLineRowForm.resx">
-      <DependentUpon>EditTimeLineRowForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Update="Forms\EventEditForm.resx">
       <DependentUpon>EventEditForm.cs</DependentUpon>
@@ -162,14 +156,8 @@
     <EmbeddedResource Update="Forms\MovieCutForm.resx">
       <DependentUpon>MovieCutForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Update="Forms\EditParameterForm.resx">
-      <DependentUpon>EditParameterForm.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Update="Forms\PublishForm.resx">
       <DependentUpon>PublishForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Forms\SavePosAndAngleForm.resx">
-      <DependentUpon>SavePosAndAngleForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Update="Forms\SoundChangeEditForm.resx">
       <DependentUpon>SoundChangeEditForm.cs</DependentUpon>
@@ -179,9 +167,6 @@
     </EmbeddedResource>
     <EmbeddedResource Update="DockForm\InfoForm.resx">
       <DependentUpon>InfoForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Forms\GridSettingForm.resx">
-      <DependentUpon>GridSettingForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Update="Controls\LayerDisplay.resx">
       <DependentUpon>LayerDisplay.cs</DependentUpon>
@@ -323,5 +308,10 @@
     <None Update="Functions\Samples\JP\Mark\ProcessEvaluate.fsml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <!-- WPF の画面で使う画像 -->
+    <Resource Include="img\folder.png" />
+    <Resource Include="img\document.png" />
   </ItemGroup>
 </Project>

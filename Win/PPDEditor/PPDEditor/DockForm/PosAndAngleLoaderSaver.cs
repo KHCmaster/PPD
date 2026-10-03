@@ -346,9 +346,9 @@ namespace PPDEditor
         }
         private void Button5_Click(object sender, EventArgs e)
         {
-            var fm3 = new SavePosAndAngleForm(button5.Text);
+            var fm3 = new SavePosAndAngleWindow(button5.Text);
             fm3.SetLang();
-            if (fm3.ShowDialog() == DialogResult.OK)
+            if (WpfDialog.ShowDialog(fm3))
             {
                 if (WindowUtility.Seekmain.GetSortedData(false, false, out Mark[] mks))
                 {
@@ -364,9 +364,9 @@ namespace PPDEditor
 
         private void Button6_Click(object sender, EventArgs e)
         {
-            var fm3 = new SavePosAndAngleForm(button6.Text);
+            var fm3 = new SavePosAndAngleWindow(button6.Text);
             fm3.SetLang();
-            if (fm3.ShowDialog() == DialogResult.OK)
+            if (WpfDialog.ShowDialog(fm3))
             {
                 if (WindowUtility.Seekmain.GetSortedData(true, false, out Mark[] mks))
                 {
@@ -382,9 +382,9 @@ namespace PPDEditor
 
         private void Button7_Click(object sender, EventArgs e)
         {
-            var fm3 = new SavePosAndAngleForm(button7.Text);
+            var fm3 = new SavePosAndAngleWindow(button7.Text);
             fm3.SetLang();
-            if (fm3.ShowDialog() == DialogResult.OK)
+            if (WpfDialog.ShowDialog(fm3))
             {
                 if (WindowUtility.Seekmain.GetSortedData(false, true, out Mark[] mks))
                 {
@@ -400,9 +400,9 @@ namespace PPDEditor
 
         private void Button8_Click(object sender, EventArgs e)
         {
-            var fm3 = new SavePosAndAngleForm(button8.Text);
+            var fm3 = new SavePosAndAngleWindow(button8.Text);
             fm3.SetLang();
-            if (fm3.ShowDialog() == DialogResult.OK)
+            if (WpfDialog.ShowDialog(fm3))
             {
                 if (WindowUtility.Seekmain.GetSortedData(true, true, out Mark[] mks))
                 {

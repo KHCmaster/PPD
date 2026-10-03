@@ -457,9 +457,9 @@ namespace PPDEditor.Forms
 
         private void Button4_Click(object sender, EventArgs e)
         {
-            var form = new CommandSelectForm();
+            var form = new CommandSelectWindow();
             form.SetLang();
-            if (form.ShowDialog() == DialogResult.OK)
+            if (WpfDialog.ShowDialog(form))
             {
                 dataGridView1.Rows.Add(GetCustomShortcutText(form.SelectedScriptPath), "");
                 dataGridView1.FirstDisplayedScrollingRowIndex = dataGridView1.RowCount - 1;

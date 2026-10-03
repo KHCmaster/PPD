@@ -662,7 +662,7 @@ Enter  変形終了";
 
         private void Button4_Click(object sender, EventArgs e)
         {
-            var gsf = new GridSettingForm();
+            var gsf = new GridSettingWindow();
             gsf.SetLang();
             gsf.Grid = new PPDEditor.SquareGrid
             {
@@ -672,7 +672,7 @@ Enter  変形終了";
                 OffsetX = SquareGrid.OffsetX * 2,
                 OffsetY = SquareGrid.OffsetY * 2
             };
-            if (gsf.ShowDialog() == DialogResult.OK)
+            if (WpfDialog.ShowDialog(gsf))
             {
                 SquareGrid = new SquareGrid
                 {
