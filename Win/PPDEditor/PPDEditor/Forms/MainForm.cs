@@ -3472,11 +3472,11 @@ namespace PPDEditor.Forms
                 using FileStream stream = File.Open(filePath, FileMode.Open);
                 data = ReadEvdAsEventData(stream);
             }
-            var form = new ImportEventForm();
+            var form = new ImportEventWindow();
             form.SetCurrentEvent(em.ChangeData);
             form.SetReadOnlyEvent(data);
             form.SetLang();
-            if (form.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            if (WpfDialog.ShowDialog(form))
             {
                 em.ChangeData = form.ChangeData;
             }

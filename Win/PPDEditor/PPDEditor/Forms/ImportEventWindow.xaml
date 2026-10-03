@@ -1,0 +1,45 @@
+<Window x:Class="PPDEditor.Forms.ImportEventWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="ImportEventForm" Width="596" Height="433" ShowInTaskbar="False">
+    <Window.Resources>
+        <Style TargetType="DataGrid">
+            <Setter Property="AutoGenerateColumns" Value="False" />
+            <Setter Property="IsReadOnly" Value="True" />
+            <Setter Property="SelectionMode" Value="Single" />
+            <Setter Property="SelectionUnit" Value="FullRow" />
+            <Setter Property="HeadersVisibility" Value="Column" />
+            <Setter Property="CanUserSortColumns" Value="False" />
+        </Style>
+    </Window.Resources>
+    <DockPanel>
+        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10">
+            <Button x:Name="okButton" Content="OK" Width="75" Height="23" Click="OkButton_Click" />
+            <Button x:Name="cancelButton" Content="Cancel" Width="75" Height="23" Margin="40,0,0,0" IsCancel="True" />
+        </StackPanel>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="140" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <!-- 左が今のイベント、右が読み込んだイベント（読み込みだけ） -->
+            <DataGrid x:Name="currentEventDataGrid" MouseDoubleClick="CurrentEventDataGrid_MouseDoubleClick">
+                <DataGrid.Columns>
+                    <DataGridTextColumn x:Name="Column1" Header="Time" Binding="{Binding Key}" Width="Auto" />
+                    <DataGridTextColumn x:Name="Column2" Header="Detail" Binding="{Binding Value}" Width="*" />
+                </DataGrid.Columns>
+            </DataGrid>
+            <StackPanel Grid.Column="1" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,120,0,0">
+                <Button x:Name="importButton" Content="&lt;=インポート" MinWidth="75" Height="23" Click="ImportButton_Click" />
+                <Button x:Name="deleteButton" Content="削除" MinWidth="75" Height="23" Margin="0,6,0,0" Click="DeleteButton_Click" />
+            </StackPanel>
+            <DataGrid x:Name="readOnlyEventDataGrid" Grid.Column="2" MouseDoubleClick="ReadOnlyEventDataGrid_MouseDoubleClick">
+                <DataGrid.Columns>
+                    <DataGridTextColumn x:Name="dataGridViewTextBoxColumn1" Header="Time" Binding="{Binding Key}" Width="Auto" />
+                    <DataGridTextColumn x:Name="dataGridViewTextBoxColumn2" Header="Detail" Binding="{Binding Value}" Width="*" />
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+    </DockPanel>
+</Window>

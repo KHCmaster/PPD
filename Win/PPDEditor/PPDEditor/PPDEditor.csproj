@@ -132,14 +132,8 @@
     <EmbeddedResource Update="Forms\CreateProjectForm.resx">
       <DependentUpon>CreateProjectForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Update="Forms\EventEditForm.resx">
-      <DependentUpon>EventEditForm.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Update="DockForm\EventManager.resx">
       <DependentUpon>EventManager.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Forms\ImportEventForm.resx">
-      <DependentUpon>ImportEventForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Update="Forms\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
@@ -168,9 +162,6 @@
     </EmbeddedResource>
     <EmbeddedResource Update="Forms\SettingForm.resx">
       <DependentUpon>SettingForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Controls\SoundVolumeControl.resx">
-      <DependentUpon>SoundVolumeControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Update="DockForm\TimeLineForm.resx">
       <DependentUpon>TimeLineForm.cs</DependentUpon>
@@ -293,6 +284,7 @@
   </ItemGroup>
   <ItemGroup>
     <!-- WPF の画面で使う画像 -->
+    <Resource Include="img\alert.png" />
     <Resource Include="img\folder.png" />
     <Resource Include="img\document.png" />
   </ItemGroup>

@@ -1,0 +1,9 @@
+<UserControl x:Class="PPDEditor.Controls.SoundVolumeControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <StackPanel Orientation="Horizontal">
+        <TextBlock x:Name="label1" Width="24" Text="{Binding Value, ElementName=trackBar1, StringFormat={}{0:0}}" VerticalAlignment="Center" TextAlignment="Right" />
+        <Slider x:Name="trackBar1" Width="104" Minimum="0" Maximum="100" Value="100" IsSnapToTickEnabled="True" TickFrequency="1"
+                SmallChange="1" LargeChange="5" Margin="4,0,0,0" VerticalAlignment="Center" />
+    </StackPanel>
+</UserControl>

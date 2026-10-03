@@ -442,7 +442,7 @@ namespace PPDEditor
             var time = (float)WindowUtility.Seekmain.Currenttime;
             if (!changeData.ContainsKey(time))
             {
-                var eef = new EventEditForm();
+                var eef = new EventEditWindow();
                 eef.SetLang();
                 if (changeData.Count == 0 || currentnum < 0)
                 {
@@ -459,7 +459,7 @@ namespace PPDEditor
                         eef.EventData = changeData.Values[currentnum].Clone();
                     }
                 }
-                if (eef.ShowDialog() == DialogResult.OK)
+                if (WpfDialog.ShowDialog(eef))
                 {
                     changeData.Add(time, eef.EventData);
                     this.dataGridView1.Rows.Add(1);
@@ -520,10 +520,10 @@ namespace PPDEditor
             //edit
             if (dataGridView1.CurrentRow != null)
             {
-                var eef = new EventEditForm();
+                var eef = new EventEditWindow();
                 eef.SetLang();
                 eef.EventData = changeData.Values[dataGridView1.CurrentRow.Index].Clone();
-                if (eef.ShowDialog() == DialogResult.OK)
+                if (WpfDialog.ShowDialog(eef))
                 {
                     float time = changeData.Keys[dataGridView1.CurrentRow.Index];
                     changeData.RemoveAt(dataGridView1.CurrentRow.Index);
