@@ -28,6 +28,7 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" />
     <PackageReference Include="Vortice.DirectInput" />
   </ItemGroup>
   <ItemGroup>

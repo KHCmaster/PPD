@@ -1,14 +1,26 @@
 ﻿<Window x:Class="KeyConfiger.NewConfigWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="新しい設定を作成" Width="300" SizeToContent="Height" ResizeMode="NoResize"
-        WindowStartupLocation="CenterOwner" ShowInTaskbar="False">
+        x:Name="window"
+        Title="{Binding Texts[CreateNewSetting]}" Width="300" SizeToContent="Height" ResizeMode="NoResize"
+        WindowStartupLocation="CenterOwner" ShowInTaskbar="False" FocusManager.FocusedElement="{Binding ElementName=nameTextBox}">
+    <!-- DataContext はウィンドウ自身（入力は名前だけなので、ViewModel を分けない） -->
     <StackPanel Margin="12,8,12,12">
-        <TextBlock x:Name="nameLabel" Text="新しい設定の名前を決めてください" TextWrapping="Wrap" />
-        <TextBox x:Name="nameTextBox" Margin="0,4,0,0" TextChanged="NameTextBox_TextChanged" />
-        <TextBlock x:Name="noteLabel" Text="(※現在の設定をコピーした新規の設定を作成します)" TextWrapping="Wrap" Margin="0,6,0,0" />
+        <TextBlock Text="{Binding Texts[NCWLabel1]}" TextWrapping="Wrap" />
+        <TextBox x:Name="nameTextBox" Margin="0,4,0,0" Text="{Binding SettingName, UpdateSourceTrigger=PropertyChanged}" />
+        <TextBlock Text="{Binding Texts[NCWLabel2]}" TextWrapping="Wrap" Margin="0,6,0,0" />
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,0">
-            <Button x:Name="okButton" Content="OK" Width="75" IsDefault="True" IsEnabled="False" Margin="0,0,36,0" Click="OkButton_Click" />
+            <Button Content="OK" Width="75" IsDefault="True" Margin="0,0,36,0" Click="OkButton_Click">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Text.Length, ElementName=nameTextBox}" Value="0">
+                                <Setter Property="IsEnabled" Value="False" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
             <Button Content="Cancel" Width="75" IsCancel="True" />
         </StackPanel>
     </StackPanel>

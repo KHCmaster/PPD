@@ -1,4 +1,5 @@
-﻿using PPDFramework;
+﻿using KeyConfiger.ViewModels;
+using PPDFramework;
 using System;
 using System.Windows;
 
@@ -17,7 +18,9 @@ namespace KeyConfiger
             var application = new Application();
             try
             {
-                application.Run(new MainWindow());
+                var mainWindow = new MainWindow();
+                mainWindow.DataContext = new MainWindowViewModel(mainWindow, "keyconfig.ini", "KeyConfiger.ini");
+                application.Run(mainWindow);
             }
             catch (Exception e)
             {
