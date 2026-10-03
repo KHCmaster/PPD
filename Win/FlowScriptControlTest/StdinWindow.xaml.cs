@@ -10,13 +10,14 @@ namespace FlowScriptControlTest
         public StdinWindow()
         {
             InitializeComponent();
+            DataContext = this;
         }
 
         public string InputText
         {
-            get { return inputTextBox.Text; }
-            set { inputTextBox.Text = value; }
-        }
+            get;
+            set;
+        } = "";
 
         private void OkButton_Click(object sender, RoutedEventArgs e)
         {

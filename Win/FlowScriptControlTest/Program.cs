@@ -1,4 +1,4 @@
-﻿using FlowScriptControl.Controls;
+﻿using FlowScriptControlTest.Models;
 using FlowScriptEngine;
 using System;
 using System.IO;
@@ -16,6 +16,7 @@ namespace FlowScriptControlTest
         {
             if (args.Length == 0)
             {
+                FlowEnvironment.InitializeForEditing();
                 var application = new Application();
                 application.Run(new MainWindow());
             }
@@ -26,7 +27,7 @@ namespace FlowScriptControlTest
                     return;
                 }
 
-                FlowDrawPanel.EnumerateClasses("dlls", []);
+                FlowEnvironment.LoadClasses();
                 var engine = new Engine();
                 try
                 {

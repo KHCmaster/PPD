@@ -5,7 +5,7 @@ using System.IO;
 using System.Text;
 using System.Threading;
 
-namespace FlowScriptControlTest
+namespace FlowScriptControlTest.Models
 {
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1001:Types that own disposable fields should be disposable", Justification = "止まらなかったスクリプトのスレッドが DebugController を使い続ける可能性があるので破棄しない（イベントのハンドルは GC で解放される）")]
     class Executor(ExecuteInfo[] executeInfos, string stdinText)

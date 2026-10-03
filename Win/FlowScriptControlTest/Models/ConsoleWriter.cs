@@ -3,7 +3,7 @@ using System.IO;
 using System.Text;
 using System.Threading;
 
-namespace FlowScriptControlTest
+namespace FlowScriptControlTest.Models
 {
     class ConsoleWriter : StringWriter
     {

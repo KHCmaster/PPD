@@ -27,6 +27,9 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\FlowScriptControl\FlowScriptControl.csproj" />
     <ProjectReference Include="..\FlowScriptDrawControl\FlowScriptDrawControl.csproj" />
     <ProjectReference Include="..\FlowScriptEngineBasicExtension\FlowScriptEngineBasicExtension.csproj" />

@@ -1,49 +1,64 @@
 ﻿<Window x:Class="FlowScriptControlTest.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:controls="clr-namespace:FlowScriptControl.Controls;assembly=FlowScriptControl"
-        Title="FlowScriptControlTest" Width="1184" Height="640"
-        Loaded="Window_Loaded" Closing="Window_Closing" KeyDown="Window_KeyDown">
+        xmlns:vm="clr-namespace:FlowScriptControlTest.ViewModels"
+        mc:Ignorable="d" d:DataContext="{d:DesignInstance Type=vm:MainWindowViewModel}"
+        Title="FlowScriptControlTest" Width="1184" Height="640" Closing="Window_Closing">
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVisibility" />
+    </Window.Resources>
+    <!-- 編集のショートカットは、編集の領域にフォーカスがあるときだけ効く（ViewModel で確かめる） -->
+    <Window.InputBindings>
+        <KeyBinding Modifiers="Ctrl" Key="Z" Command="{Binding UndoCommand}" CommandParameter="Shortcut" />
+        <KeyBinding Modifiers="Ctrl" Key="Y" Command="{Binding RedoCommand}" CommandParameter="Shortcut" />
+        <KeyBinding Modifiers="Ctrl" Key="C" Command="{Binding CopyCommand}" CommandParameter="Shortcut" />
+        <KeyBinding Modifiers="Ctrl" Key="V" Command="{Binding PasteCommand}" CommandParameter="Shortcut" />
+        <KeyBinding Modifiers="Ctrl+Shift" Key="V" Command="{Binding PasteWithLinksCommand}" CommandParameter="Shortcut" />
+        <KeyBinding Key="Delete" Command="{Binding DeleteCommand}" CommandParameter="Shortcut" />
+    </Window.InputBindings>
     <DockPanel>
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="ファイル">
-                <MenuItem Header="新規作成" Click="NewMenuItem_Click" />
-                <MenuItem Header="開く" Click="OpenMenuItem_Click" />
-                <MenuItem Header="保存" Click="SaveMenuItem_Click" />
+                <MenuItem Header="新規作成" Command="{Binding NewDocumentCommand}" />
+                <MenuItem Header="開く" Command="{Binding OpenCommand}" />
+                <MenuItem Header="保存" Command="{Binding SaveCommand}" />
             </MenuItem>
             <MenuItem Header="編集">
-                <MenuItem Header="元に戻す" InputGestureText="Ctrl+Z" Click="UndoMenuItem_Click" />
-                <MenuItem Header="やり直す" InputGestureText="Ctrl+Y" Click="RedoMenuItem_Click" />
-                <MenuItem Header="コピー" InputGestureText="Ctrl+C" Click="CopyMenuItem_Click" />
-                <MenuItem Header="貼り付け" InputGestureText="Ctrl+V" Click="PasteMenuItem_Click" />
-                <MenuItem Header="リンクも貼り付け" InputGestureText="Ctrl+Shift+V" Click="PasteWithLinksMenuItem_Click" />
-                <MenuItem Header="削除" InputGestureText="Del" Click="DeleteMenuItem_Click" />
-                <MenuItem Header="位置を自動調整" Click="AdjustPositionMenuItem_Click" />
-                <MenuItem Header="全て展開" Click="ExpandAllMenuItem_Click" />
-                <MenuItem Header="全て縮小" Click="CollapseAllMenuItem_Click" />
+                <MenuItem Header="元に戻す" InputGestureText="Ctrl+Z" Command="{Binding UndoCommand}" />
+                <MenuItem Header="やり直す" InputGestureText="Ctrl+Y" Command="{Binding RedoCommand}" />
+                <MenuItem Header="コピー" InputGestureText="Ctrl+C" Command="{Binding CopyCommand}" />
+                <MenuItem Header="貼り付け" InputGestureText="Ctrl+V" Command="{Binding PasteCommand}" />
+                <MenuItem Header="リンクも貼り付け" InputGestureText="Ctrl+Shift+V" Command="{Binding PasteWithLinksCommand}" />
+                <MenuItem Header="削除" InputGestureText="Del" Command="{Binding DeleteCommand}" />
+                <MenuItem Header="位置を自動調整" Command="{Binding AdjustPositionCommand}" />
+                <MenuItem Header="全て展開" Command="{Binding ExpandAllCommand}" />
+                <MenuItem Header="全て縮小" Command="{Binding CollapseAllCommand}" />
             </MenuItem>
             <MenuItem Header="コンソール">
-                <MenuItem Header="クリア" Click="ClearConsoleMenuItem_Click" />
-                <MenuItem Header="標準入力" Click="StdinMenuItem_Click" />
+                <MenuItem Header="クリア" Command="{Binding ClearConsoleCommand}" />
+                <MenuItem Header="標準入力" Command="{Binding EditStdinCommand}" />
             </MenuItem>
         </Menu>
         <ToolBarTray DockPanel.Dock="Top">
             <ToolBar>
-                <Button x:Name="executeButton" Click="ExecuteButton_Click" ToolTip="実行">
+                <Button Command="{Binding ExecuteCommand}" ToolTip="実行">
                     <StackPanel Orientation="Horizontal">
                         <Image Source="img/playonce.png" Width="16" Height="16" Margin="0,0,3,0" />
                         <TextBlock Text="実行" VerticalAlignment="Center" />
                     </StackPanel>
                 </Button>
             </ToolBar>
-            <ToolBar x:Name="debugToolBar" Visibility="Collapsed">
-                <Button x:Name="continueButton" Click="ContinueButton_Click" ToolTip="続行">
+            <ToolBar Visibility="{Binding IsExecuting, Converter={StaticResource BoolToVisibility}}">
+                <Button Command="{Binding ContinueCommand}" ToolTip="続行">
                     <Image Source="img/playonce.png" Width="16" Height="16" />
                 </Button>
-                <Button x:Name="stopButton" Click="StopButton_Click" ToolTip="停止">
+                <Button Command="{Binding StopCommand}" ToolTip="停止">
                     <Image Source="img/stop.png" Width="16" Height="16" />
                 </Button>
-                <Button x:Name="stepInButton" Click="StepInButton_Click" ToolTip="ステップイン">
+                <Button Command="{Binding StepInCommand}" ToolTip="ステップイン">
                     <Image Source="img/stepin.png" Width="16" Height="16" />
                 </Button>
             </ToolBar>
@@ -60,9 +75,37 @@
                     <RowDefinition Height="4" />
                     <RowDefinition Height="96*" />
                 </Grid.RowDefinitions>
-                <TabControl x:Name="drawTabControl" SelectionChanged="DrawTabControl_SelectionChanged" />
+                <TabControl ItemsSource="{Binding Documents}" SelectedItem="{Binding SelectedDocument}">
+                    <TabControl.ItemContainerStyle>
+                        <Style TargetType="TabItem">
+                            <Setter Property="AutomationProperties.Name" Value="{Binding Header}" />
+                        </Style>
+                    </TabControl.ItemContainerStyle>
+                    <TabControl.ItemTemplate>
+                        <DataTemplate>
+                            <!-- 見出しの右クリックで閉じる -->
+                            <TextBlock Text="{Binding Header}">
+                                <TextBlock.ContextMenu>
+                                    <ContextMenu>
+                                        <MenuItem Header="タブを閉じる"
+                                                  Command="{Binding PlacementTarget.Tag.CloseDocumentCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                                  CommandParameter="{Binding}" />
+                                    </ContextMenu>
+                                </TextBlock.ContextMenu>
+                                <TextBlock.Tag>
+                                    <Binding Path="DataContext" RelativeSource="{RelativeSource AncestorType=TabControl}" />
+                                </TextBlock.Tag>
+                            </TextBlock>
+                        </DataTemplate>
+                    </TabControl.ItemTemplate>
+                    <TabControl.ContentTemplate>
+                        <DataTemplate>
+                            <ContentControl Content="{Binding Editor}" Focusable="False" />
+                        </DataTemplate>
+                    </TabControl.ContentTemplate>
+                </TabControl>
                 <GridSplitter Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
-                <TextBox x:Name="consoleTextBox" Grid.Row="2" IsReadOnly="True" AcceptsReturn="True" TextWrapping="NoWrap"
+                <TextBox Grid.Row="2" Text="{Binding ConsoleText, Mode=OneWay}" TextChanged="ConsoleTextBox_TextChanged" IsReadOnly="True" AcceptsReturn="True" TextWrapping="NoWrap"
                          HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" FontFamily="MS Gothic" />
             </Grid>
             <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />

@@ -1,9 +1,13 @@
-﻿using FlowScriptDrawControl.Model;
+﻿using FlowScriptControlTest.ViewModels;
+using FlowScriptDrawControl.Model;
 using System;
 using System.IO;
 
-namespace FlowScriptControlTest
+namespace FlowScriptControlTest.Models
 {
+    /// <summary>
+    /// 実行する 1 つのスクリプトです（保存した内容、ブレークポイント、元の文書）。
+    /// </summary>
     class ExecuteInfo
     {
         public Stream Stream
@@ -18,7 +22,7 @@ namespace FlowScriptControlTest
             private set;
         }
 
-        public FlowDrawTab FlowDrawTab
+        public FlowDocumentViewModel Document
         {
             get;
             private set;
@@ -33,11 +37,11 @@ namespace FlowScriptControlTest
         public event Action<ExecuteInfo, int> BreakPointAdded;
         public event Action<ExecuteInfo, int> BreakPointRemoved;
 
-        public ExecuteInfo(Stream stream, int[] breakPoints, FlowDrawTab flowDrawTab, Source[] sources)
+        public ExecuteInfo(Stream stream, int[] breakPoints, FlowDocumentViewModel document, Source[] sources)
         {
             Stream = stream;
             BreakPoints = breakPoints;
-            FlowDrawTab = flowDrawTab;
+            Document = document;
             Sources = sources;
 
             foreach (var source in sources)
