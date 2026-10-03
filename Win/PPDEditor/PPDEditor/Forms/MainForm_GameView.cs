@@ -180,9 +180,11 @@ namespace PPDEditor.Forms
         /// </summary>
         private void ChangeGameViewSize(int width, int height)
         {
-            // AvalonDock は中身を論理ツリーではメインのウィンドウの下に置くので、Window.GetWindow では浮かせたウィンドウを取れない。
-            // 表示しているウィンドウ（見た目のツリーの根）を使う
-            var window = PresentationSource.FromVisual(GameView)?.RootVisual as Window;
+            // AvalonDock は中身を論理ツリーではメインのウィンドウの下に置き、浮かせたウィンドウでは中身を別の HwndSource に入れるので、
+            // Window.GetWindow でも PresentationSource でも浮かせたウィンドウを取れない。ゲームの画面の一番上の親のウィンドウから探す
+            const uint GA_ROOT = 2;
+            var root = NativeMethods.GetAncestor(GameView.RenderHandle, GA_ROOT);
+            var window = System.Windows.Interop.HwndSource.FromHwnd(root)?.RootVisual as Window;
             if (window == null || window == this)
             {
                 return;

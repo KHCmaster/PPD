@@ -105,6 +105,9 @@ namespace PPDEditor
         [DllImport("user32.dll")]
         internal static extern short GetKeyState(int nVirtKey);
 
+        [DllImport("user32.dll")]
+        internal static extern IntPtr GetAncestor(IntPtr hwnd, uint gaFlags);
+
         [StructLayout(LayoutKind.Sequential)]
         internal struct POINT
         {
