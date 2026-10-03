@@ -1,32 +1,36 @@
 ﻿using PPDEditor.Controls;
 using PPDEditor.Forms;
+using PPDEditor.ViewModels.Docks;
 using PPDEditorCommon;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using Keys = System.Windows.Forms.Keys;
 
 namespace PPDEditor
 {
-    public partial class TimeLineForm : DockView
+    /// <summary>
+    /// タイムライン（マークの一覧と、マークを置く画面）のドックです。右クリックメニューの処理は <see cref="TimeLineViewModel"/> にあります。
+    /// </summary>
+    public sealed partial class TimeLineForm : DockView, ITimeLineOperations
     {
         static readonly Brush translucentWhite = WpfSkin.ToBrush(System.Drawing.Color.FromArgb(220, 255, 255, 255));
 
-        readonly TimeLineRowManager rowManager = new();
-        DateTime presetsLoadTime;
-
-        public TimeLineRowManager RowManager
+        public TimeLineForm()
         {
-            get
-            {
-                return rowManager;
-            }
+            InitializeComponent();
+            seekex1.Setseekmain(seekmain1);
+            AttachViewModel(new TimeLineViewModel(this));
         }
+
+        public TimeLineViewModel ViewModel
+        {
+            get { return (TimeLineViewModel)DataContext; }
+        }
+
+        public TimeLineRowManager RowManager { get; } = new();
 
         /// <summary>
         /// タイムラインの背景です。メインのウィンドウに背景の画像があるときは、半透明にしてそれを透かす（以前と同じ）。
@@ -39,21 +43,9 @@ namespace PPDEditor
             }
         }
 
-        public TimeLineForm()
+        public Seekmain Seekmain
         {
-            InitializeComponent();
-            seekex1.Setseekmain(seekmain1);
-        }
-
-        public void SetLang()
-        {
-            this.選択中のマークにIDを割り当てMenuItem.Header = Utility.Language["AssignID"];
-            this.選択中のマークのID割り当てを解除MenuItem.Header = Utility.Language["DeassignID"];
-            this.角度を線形補完MenuItem.Header = Utility.Language["InterpolateAngle"];
-            this.時計回りMenuItem.Header = Utility.Language["Clockwise"];
-            this.反時計回りMenuItem.Header = Utility.Language["Unclockwise"];
-            this.位置を線形補完MenuItem.Header = Utility.Language["InterpolatePosition"];
-            this.パラメーターMenuItem.Header = Utility.Language["Parameter"];
+            get { return seekmain1; }
         }
 
         private void TimeLineForm_KeyDown(object sender, KeyEventArgs e)
@@ -69,137 +61,73 @@ namespace PPDEditor
         {
             seekmain1.CheckPreviewKey(key, Control, Shift, Alt);
         }
+
         public void InvalidateAll()
         {
             seekex1.DrawAndRefresh();
             seekmain1.DrawAndRefresh();
         }
 
-        public Seekmain Seekmain
-        {
-            get
-            {
-                return this.seekmain1;
-            }
-        }
         public void SetSkin()
         {
             seekex1.SetSkin();
             Seekmain.SetSkin();
         }
 
-        private void 選択中のマークにIDを割り当てMenuItem_Click(object sender, RoutedEventArgs e)
+        private void ContextMenu_Opened(object sender, RoutedEventArgs e)
+        {
+            ViewModel.RefreshPresets();
+        }
+
+        void ITimeLineOperations.AssignID()
         {
             Seekmain.AssignID();
         }
 
-        private void 選択中のマークのID割り当てを解除MenuItem_Click(object sender, RoutedEventArgs e)
+        void ITimeLineOperations.UnassignID(Func<bool> confirm)
         {
-            Seekmain.UnassignID(() =>
-            {
-                return MessageBox.Show(Window.GetWindow(this), Utility.Language["UnassignIDConfirm"], Utility.Language["Confirm"], MessageBoxButton.OKCancel) == MessageBoxResult.OK;
-            });
+            Seekmain.UnassignID(confirm);
         }
 
-        private void 時計回りMenuItem_Click(object sender, RoutedEventArgs e)
-        {
-            Seekmain.AngleInterpolation(true);
-        }
-
-        private void 反時計回りMenuItem_Click(object sender, RoutedEventArgs e)
-        {
-            Seekmain.AngleInterpolation(false);
-        }
-
-        private void 位置を線形補完MenuItem_Click(object sender, RoutedEventArgs e)
+        void ITimeLineOperations.InterpolatePosition()
         {
             Seekmain.PositionInterpolation();
         }
 
-        private void ContextMenuStrip1_Opened(object sender, RoutedEventArgs e)
+        void ITimeLineOperations.InterpolateAngle(bool clockwise)
         {
-            if (presetsLoadTime != WindowUtility.InfoForm.PresetsLoadTime)
-            {
-                パラメーターMenuItem.Items.Clear();
-                AddPresetMenuItems(パラメーターMenuItem, WindowUtility.InfoForm.PresetRoot);
-                presetsLoadTime = WindowUtility.InfoForm.PresetsLoadTime;
-            }
-            UpdatePresetCheckState();
+            Seekmain.AngleInterpolation(clockwise);
         }
 
-        private void AddPresetMenuItems(MenuItem parent, ParameterPresetFolder folder)
+        bool ITimeLineOperations.Confirm(string text, string caption)
         {
-            foreach (var childFolder in folder.Folders)
-            {
-                var child = new MenuItem
-                {
-                    Header = childFolder.Name.Replace("_", "__"),
-                    ToolTip = childFolder.Name
-                };
-                parent.Items.Add(child);
-                AddPresetMenuItems(child, childFolder);
-            }
-            foreach (var preset in folder.Presets)
-            {
-                var name = Path.GetFileNameWithoutExtension(preset.FilePath);
-                var child = new MenuItem
-                {
-                    Header = name.Replace("_", "__"),
-                    ToolTip = name,
-                    Tag = preset
-                };
-                child.Click += Child_Click;
-                parent.Items.Add(child);
-            }
+            return MessageBox.Show(Window.GetWindow(this), text, caption, MessageBoxButton.OKCancel) == MessageBoxResult.OK;
         }
 
-        private static IEnumerable<MenuItem> GetPresetMenuItems(MenuItem parent)
+        DateTime ITimeLineOperations.PresetsLoadTime
         {
-            foreach (var child in parent.Items.OfType<MenuItem>())
-            {
-                if (child.Tag is ParameterPreset)
-                {
-                    yield return child;
-                }
-                foreach (var descendant in GetPresetMenuItems(child))
-                {
-                    yield return descendant;
-                }
-            }
+            get { return WindowUtility.InfoForm.PresetsLoadTime; }
         }
 
-        /// <summary>
-        /// 選んでいるマークに、プリセットのパラメーターがすべて当てはまるものにチェックを、一部だけのものに印を付ける。
-        /// </summary>
-        private void UpdatePresetCheckState()
+        ParameterPresetFolder ITimeLineOperations.PresetRoot
+        {
+            get { return WindowUtility.InfoForm.PresetRoot; }
+        }
+
+        Dictionary<string, string> ITimeLineOperations.GetSelectedCommonParameters()
         {
             var marks = Utility.GetSelectedMarks();
-            if (marks.Length == 0)
-            {
-                return;
-            }
-
-            var common = Utility.GetCommonParameters(marks);
-            foreach (var menuItem in GetPresetMenuItems(パラメーターMenuItem))
-            {
-                var state = Utility.GetPresetCheckState((ParameterPreset)menuItem.Tag, common);
-                menuItem.IsChecked = state == true;
-                menuItem.Icon = state == null ? new TextBlock { Text = "－", HorizontalAlignment = HorizontalAlignment.Center } : null;
-            }
+            return marks.Length == 0 ? null : Utility.GetCommonParameters(marks);
         }
 
-        void Child_Click(object sender, RoutedEventArgs e)
+        void ITimeLineOperations.ApplyParameters(KeyValuePair<string, string>[] parameters)
         {
-            var menuItem = (MenuItem)sender;
-            var preset = (ParameterPreset)menuItem.Tag;
-            if (menuItem.IsChecked)
-            {
-                WindowUtility.InfoForm.UnapplyParameters(preset.Parameters);
-            }
-            else
-            {
-                WindowUtility.InfoForm.ApplyParameters(preset.Parameters);
-            }
+            WindowUtility.InfoForm.ApplyParameters(parameters);
+        }
+
+        void ITimeLineOperations.UnapplyParameters(KeyValuePair<string, string>[] parameters)
+        {
+            WindowUtility.InfoForm.UnapplyParameters(parameters);
         }
     }
 }
