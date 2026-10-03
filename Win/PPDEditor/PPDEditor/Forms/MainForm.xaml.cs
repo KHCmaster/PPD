@@ -576,7 +576,6 @@ namespace PPDEditor.Forms
             toolStripComboBox3.SelectedIndex = prevSelectedIndex;
             this.toolStripTextBox3.ToolTip = Utility.Language["DisplayWidth"];
             //setlang
-            ifw.SetLang();
             ke.SetLang();
             paals.SetLang();
             sm.SetLang();
