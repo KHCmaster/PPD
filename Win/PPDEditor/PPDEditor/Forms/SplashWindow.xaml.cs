@@ -47,12 +47,17 @@ namespace PPDEditor.Forms
             _mainForm?.Activated += MainForm_Activated;
 
             //スレッドの作成（WPF のウィンドウなので STA にする）
-            _thread = new Thread(StartThread)
+            _thread = new Thread(new ParameterizedThreadStart(StartThread))
             {
                 Name = "SplashForm"
             };
             _thread.SetApartmentState(ApartmentState.STA);
-            _thread.Start();
+            // 表示のスレッドが後から Set するので、ここでは破棄しない
+            var shown = new ManualResetEventSlim();
+            _thread.Start(shown);
+            // WPF の型の初期化を 2 つのスレッドで同時に行うと止まる（静的コンストラクターと XAML の読み込みのロックが絡む）ので、
+            // Splash のウィンドウを最初に描き終わるまで待ってから、メインのスレッドの初期化を続ける（念のため、待つのは 5 秒まで）
+            shown.Wait(TimeSpan.FromSeconds(5));
         }
 
         /// <summary>
@@ -113,24 +118,36 @@ namespace PPDEditor.Forms
         }
 
         //スレッドで開始するメソッド
-        private static void StartThread()
+        private static void StartThread(object state)
         {
-            var form = new SplashWindow();
-            lock (syncObject)
+            var shown = (ManualResetEventSlim)state;
+            SplashWindow form;
+            try
             {
-                if (closeRequested)
+                form = new SplashWindow();
+                lock (syncObject)
                 {
-                    // 表示する前に閉じるように言われた
-                    queue.Clear();
-                    return;
+                    if (closeRequested)
+                    {
+                        // 表示する前に閉じるように言われた
+                        queue.Clear();
+                        shown.Set();
+                        return;
+                    }
+                    while (queue.Count > 0)
+                    {
+                        form.statusLabel.Text = queue.Dequeue();
+                    }
+                    _form = form;
                 }
-                while (queue.Count > 0)
-                {
-                    form.statusLabel.Text = queue.Dequeue();
-                }
-                _form = form;
+                form.ContentRendered += (sender, e) => shown.Set();
+                form.Show();
             }
-            form.Show();
+            catch
+            {
+                shown.Set();
+                throw;
+            }
             Dispatcher.Run();
         }
 
