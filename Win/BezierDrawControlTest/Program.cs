@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Windows.Forms;
+using System.Windows;
 
 namespace BezierDrawControlTest
 {
@@ -11,9 +11,7 @@ namespace BezierDrawControlTest
         [STAThread]
         static void Main()
         {
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+            new Application().Run(new MainWindow());
         }
     }
 }

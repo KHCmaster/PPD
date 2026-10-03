@@ -3,13 +3,25 @@ using PPDFramework;
 using PPDFramework.Resource;
 using PPDShareComponent;
 using System;
-using System.Drawing;
 using System.Linq;
-using System.Windows.Forms;
+using System.Windows;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using Color = System.Drawing.Color;
+using PointF = System.Drawing.PointF;
+using RectangleF = System.Drawing.RectangleF;
 
 namespace BezierDrawControl
 {
-    public partial class DXBezierControl : UserControl
+    /// <summary>
+    /// DirectX で描画するベジエ曲線の編集領域です（WPF）。
+    /// </summary>
+    /// <remarks>
+    /// 表示しないウィンドウで描画し、バックバッファーを読み出して表示します。
+    /// 大きさはピクセル数で指定し、WPF の単位（1/96 インチ）でも同じ数値で表示します（以前の DPI 非対応のときと同じ見た目の大きさ）。
+    /// </remarks>
+    public class DXBezierControl : FrameworkElement, IDisposable
     {
         public class BezierDrawer : GameCoreBase
         {
@@ -39,9 +51,9 @@ namespace BezierDrawControl
                 private set;
             }
 
-            public BezierDrawer(Control control) : base(PPDExecuteArg.Empty, control)
+            internal BezierDrawer(IntPtr windowHandle, int width, int height) : base(PPDExecuteArg.Empty, windowHandle)
             {
-                InitializeDirectX(control.Width, control.Height, control.Width, control.Height, 1);
+                InitializeDirectX(width, height, width, height, 1);
                 Initialize();
                 ResourceManager = new ResourceManager();
                 spriteObject = new SpriteObject(device);
@@ -49,15 +61,9 @@ namespace BezierDrawControl
                 spriteObject.AddChild(Background = new SpriteObject(device));
                 spriteObject.AddChild(back = new RectangleComponent(device, ResourceManager, PPDColors.White)
                 {
-                    RectangleHeight = control.Height,
-                    RectangleWidth = control.Width
+                    RectangleHeight = height,
+                    RectangleWidth = width
                 });
-            }
-
-            public void Resize(int width, int height)
-            {
-                back.RectangleWidth = width;
-                back.RectangleHeight = height;
             }
 
             protected override void Update()
@@ -167,6 +173,9 @@ namespace BezierDrawControl
             }
         }
 
+        HiddenRenderWindow renderWindow;
+        WriteableBitmap bitmap;
+
         public BezierDrawer Drawer
         {
             get;
@@ -179,33 +188,56 @@ namespace BezierDrawControl
             private set;
         }
 
+        /// <summary>
+        /// 描画領域の幅（ピクセル）を取得します。
+        /// </summary>
+        public int PixelWidth
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// 描画領域の高さ（ピクセル）を取得します。
+        /// </summary>
+        public int PixelHeight
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// 描画領域の大きさが変わったときに発生します。
+        /// </summary>
+        public event EventHandler PixelSizeChanged;
+
         public DXBezierControl()
         {
             Controller = new BezierController();
             Controller.DrawRequired += Controller_DrawRequired;
-            InitializeComponent();
-            Disposed += DXBezierControl_Disposed;
+            Focusable = true;
         }
 
-        public void Initialize()
+        /// <summary>
+        /// 指定した大きさで描画の準備をします。前の描画の資源は破棄します。
+        /// </summary>
+        public void Initialize(int width, int height)
         {
-            Drawer = new BezierDrawer(this);
-        }
-
-        private void DXBezierControl_Disposed(object sender, EventArgs e)
-        {
-            Drawer?.Dispose();
-            Drawer = null;
+            DisposeDrawer();
+            PixelWidth = width;
+            PixelHeight = height;
+            renderWindow = new HiddenRenderWindow(width, height);
+            Drawer = new BezierDrawer(renderWindow.Handle, width, height);
+            bitmap = new WriteableBitmap(width, height, 96, 96, PixelFormats.Bgr32, null);
+            Width = width;
+            Height = height;
+            PixelSizeChanged?.Invoke(this, EventArgs.Empty);
+            InvalidateVisual();
         }
 
         private void Controller_DrawRequired()
         {
             DrawAndRefresh();
-        }
-
-        private void DrawToBuffer()
-        {
-            Controller.Draw(new Context(Drawer));
         }
 
         public void DrawAndRefresh()
@@ -216,37 +248,92 @@ namespace BezierDrawControl
             }
 
             Drawer.DrawTarget.ClearDisposeChildren();
-            DrawToBuffer();
-            Drawer.Routine();
+            Controller.Draw(new Context(Drawer));
+            Drawer.RenderWithoutPresent();
+            bitmap.Lock();
+            try
+            {
+                Drawer.Device.CopyBackBuffer(bitmap.BackBuffer, bitmap.BackBufferStride);
+                bitmap.AddDirtyRect(new Int32Rect(0, 0, PixelWidth, PixelHeight));
+            }
+            finally
+            {
+                bitmap.Unlock();
+            }
         }
 
-        private void DXBezierControl_MouseDown(object sender, MouseEventArgs e)
+        protected override void OnRender(DrawingContext drawingContext)
         {
-            Controller.MouseDown(e.X, e.Y, e.Button, ModifierKeys);
+            if (bitmap != null)
+            {
+                drawingContext.DrawImage(bitmap, new Rect(0, 0, ActualWidth, ActualHeight));
+            }
+        }
+
+        private System.Windows.Point ToPixel(MouseEventArgs e)
+        {
+            var pos = e.GetPosition(this);
+            if (ActualWidth <= 0 || ActualHeight <= 0)
+            {
+                return pos;
+            }
+            return new System.Windows.Point(pos.X * PixelWidth / ActualWidth, pos.Y * PixelHeight / ActualHeight);
+        }
+
+        protected override void OnMouseDown(MouseButtonEventArgs e)
+        {
+            base.OnMouseDown(e);
+            Focus();
+            if (e.ChangedButton == MouseButton.Left)
+            {
+                CaptureMouse();
+            }
+            var pos = ToPixel(e);
+            Controller.MouseDown((float)pos.X, (float)pos.Y, e.ChangedButton == MouseButton.Left, WpfCursors.ToBezierModifierKeys(Keyboard.Modifiers));
             DrawAndRefresh();
         }
 
-        private void DXBezierControl_MouseUp(object sender, MouseEventArgs e)
+        protected override void OnMouseUp(MouseButtonEventArgs e)
         {
+            base.OnMouseUp(e);
+            if (IsMouseCaptured)
+            {
+                ReleaseMouseCapture();
+            }
             Controller.MouseUp();
             DrawAndRefresh();
         }
 
-        private void DXBezierControl_MouseMove(object sender, MouseEventArgs e)
+        protected override void OnMouseMove(MouseEventArgs e)
         {
-            var cursor = Controller.MouseMove(e.X, e.Y, ModifierKeys);
-            if (cursor != null)
+            base.OnMouseMove(e);
+            var pos = ToPixel(e);
+            var cursor = Controller.MouseMove((float)pos.X, (float)pos.Y, WpfCursors.ToBezierModifierKeys(Keyboard.Modifiers));
+            if (cursor.HasValue)
             {
-                Cursor = cursor;
+                Cursor = WpfCursors.Get(cursor.Value);
             }
         }
 
-        private void DXBezierControl_SizeChanged(object sender, EventArgs e)
+        private void DisposeDrawer()
         {
-            if (this.Width > 0 && this.Height > 0 && Drawer != null)
+            Drawer?.Dispose();
+            Drawer = null;
+            renderWindow?.Dispose();
+            renderWindow = null;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
             {
-                Drawer.Resize(Width, Height);
-                DrawAndRefresh();
+                DisposeDrawer();
             }
         }
     }

@@ -25,6 +25,7 @@ namespace PPDFramework.DX11
         ID3D11Device device;
         IDXGISwapChain swapChain;
         ID3D11Texture2D backBuffer;
+        ID3D11Texture2D readBackTexture;
         VertexDeclarationBase vertexDeclaration;
         VertexBufferBase currentBuffer;
         IndexBufferBase currentIndex;
@@ -413,6 +414,47 @@ namespace PPDFramework.DX11
         }
 
         /// <summary>
+        /// バックバッファーの内容（BGRA）を CPU 側のメモリーにコピーします。
+        /// </summary>
+        /// <param name="destination">コピー先の先頭。</param>
+        /// <param name="destinationStride">コピー先の 1 行のバイト数。</param>
+        public override void CopyBackBuffer(IntPtr destination, int destinationStride)
+        {
+            var desc = backBuffer.Description;
+            // 毎回作らないように、読み出し用のテクスチャーは使い回す
+            readBackTexture ??= device.CreateTexture2D(new Texture2DDescription
+            {
+                Width = desc.Width,
+                Height = desc.Height,
+                MipLevels = 1,
+                ArraySize = 1,
+                Format = desc.Format,
+                SampleDescription = new SampleDescription(1, 0),
+                Usage = ResourceUsage.Staging,
+                BindFlags = BindFlags.None,
+                CPUAccessFlags = CpuAccessFlags.Read,
+                MiscFlags = ResourceOptionFlags.None
+            });
+            Context.CopyResource(readBackTexture, backBuffer);
+            var dataBox = Context.Map(readBackTexture, 0, MapMode.Read, Vortice.Direct3D11.MapFlags.None);
+            try
+            {
+                var rowBytes = (int)desc.Width * 4;
+                for (var y = 0; y < (int)desc.Height; y++)
+                {
+                    unsafe
+                    {
+                        Buffer.MemoryCopy((void*)(dataBox.DataPointer + y * (int)dataBox.RowPitch), (void*)(destination + y * destinationStride), destinationStride, rowBytes);
+                    }
+                }
+            }
+            finally
+            {
+                Context.Unmap(readBackTexture, 0);
+            }
+        }
+
+        /// <summary>
         /// シザーレクトを設定します。
         /// </summary>
         /// <param name="rectangle"></param>
@@ -471,6 +513,8 @@ namespace PPDFramework.DX11
             scissorEnabledState = null;
             scissorDisabledState?.Dispose();
             scissorDisabledState = null;
+            readBackTexture?.Dispose();
+            readBackTexture = null;
             backBuffer?.Dispose();
             backBuffer = null;
             swapChain?.Dispose();

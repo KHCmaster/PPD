@@ -1,6 +1,6 @@
 ﻿using ErrorHandle;
 using System;
-using System.Windows.Forms;
+using System.Windows;
 
 namespace Effect2DEditor
 {
@@ -14,11 +14,9 @@ namespace Effect2DEditor
         {
             var errorHandler = new ErrorHandler();
             errorHandler.Initialize();
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
             try
             {
-                Application.Run(new MainForm());
+                new Application().Run(new MainWindow());
             }
             catch (Exception e)
             {

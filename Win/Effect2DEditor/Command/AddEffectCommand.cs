@@ -1,16 +1,12 @@
 ﻿using Effect2D;
 using System;
-using System.Collections.Generic;
-using System.Drawing;
-
 
 namespace Effect2DEditor.Command
 {
-    class AddEffectCommand(EffectManager manager, string exp, int insertindex, string filename, SortedList<string, Image> imagepool) : CommandBase(manager, exp)
+    class AddEffectCommand(EffectManager manager, string exp, int insertindex, string filename) : CommandBase(manager, exp)
     {
         readonly int insertindex = insertindex;
         readonly string filename = filename;
-        readonly SortedList<string, Image> imagepool = imagepool;
 
         public override void Undo()
         {
@@ -20,8 +16,7 @@ namespace Effect2DEditor.Command
         {
             try
             {
-                var image = Image.FromFile(filename);
-                if (!imagepool.ContainsKey(filename)) imagepool.Add(filename, image);
+                Utility.ValidateImage(filename);
                 var be = new BaseEffect
                 {
                     Filename = filename

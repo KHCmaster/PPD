@@ -1,22 +1,27 @@
-﻿using Effect2D;
+using Effect2D;
 using System;
-using System.Drawing;
 using System.IO;
-using System.Windows.Forms;
+using System.Windows;
+using System.Windows.Input;
+using System.Windows.Media;
 
 namespace Effect2DEditor
 {
-    public partial class TimeLineItem : CustomUserControl
+    /// <summary>
+    /// タイムラインの左側の、エフェクトの名前の一覧です。ドラッグで順番を入れ替えます。
+    /// </summary>
+    public class TimeLineItem : DrawingSurface
     {
         const int TimeLineAreaHeight = 20;
         const int ItemHeight = 18;
         const int StringOffsetLeft = 2;
-        const int StringOffsetTop = 4;
+        const int StringOffsetTop = 2;
         bool mousedown;
         Point mousedownpos;
+        Point mousepos;
+        int pressedrow;
         int swapborderindex = -1;
         int movecount;
-        TransParentForm tpf;
         public EffectManager EffectManager
         {
             get;
@@ -27,7 +32,7 @@ namespace Effect2DEditor
             get;
             set;
         }
-        public MainForm MainForm
+        public MainWindow MainForm
         {
             get;
             set;
@@ -49,18 +54,12 @@ namespace Effect2DEditor
         }
         public TimeLineItem()
         {
-            InitializeComponent();
-            InitializeBuffer();
+            Render = Draw;
         }
-        protected override void DrawToBuffer(Graphics g)
+        private void Draw(DrawingContext g)
         {
-            g.Clear(SystemColors.Control);
             if (EffectManager == null || TimeLine == null) return;
             int iter = -TimeLine.VScrollValue;
-            var sf = new StringFormat
-            {
-                Trimming = StringTrimming.EllipsisCharacter
-            };
             for (int i = EffectManager.Effects.Count - 1; i >= 0; i--)
             {
                 IEffect effect = EffectManager.Effects[i];
@@ -68,39 +67,50 @@ namespace Effect2DEditor
                 {
                     if (iter >= 0)
                     {
-                        var rec = new Rectangle(0, iter * ItemHeight + TimeLineAreaHeight, this.Width - 1, ItemHeight);
-                        if (be == SelectedManager.Effect) g.FillRectangle(Brushes.LightBlue, rec);
-                        else g.FillRectangle(Brushes.White, rec);
-                        g.DrawRectangle(Pens.Black, rec);
-                        g.DrawString(Path.GetFileNameWithoutExtension(be.Filename), this.Font, Brushes.Black, new RectangleF(StringOffsetLeft, StringOffsetTop + iter * ItemHeight + TimeLineAreaHeight, this.Width, Font.Height), sf);
+                        DrawRow(g, be, iter * ItemHeight + TimeLineAreaHeight);
                     }
                     iter++;
                 }
             }
             if (swapborderindex != -1)
             {
-                g.FillRectangle(Brushes.Black, new Rectangle(0, TimeLineAreaHeight + (swapborderindex - TimeLine.VScrollValue) * ItemHeight - 2, this.Width, 4));
+                g.DrawRectangle(Brushes.Black, null, new Rect(0, TimeLineAreaHeight + (swapborderindex - TimeLine.VScrollValue) * ItemHeight - 2, ActualWidth, 4));
+            }
+            if (mousedown && SelectedManager.Effect is BaseEffect selected)
+            {
+                // ドラッグしている項目を、マウスに付いてくるように半透明で描く
+                g.PushOpacity(0.6);
+                DrawRow(g, selected, pressedrow * ItemHeight + TimeLineAreaHeight + mousepos.Y - mousedownpos.Y);
+                g.Pop();
             }
         }
 
-        private int ItemIndex(int y)
+        private void DrawRow(DrawingContext g, BaseEffect be, double y)
         {
-            return EffectManager.Effects.Count - 1 - (y - TimeLineAreaHeight) / ItemHeight - TimeLine.VScrollValue;
+            g.DrawRectangle(be == SelectedManager.Effect ? Brushes.LightBlue : Brushes.White, null, new Rect(0, y, ActualWidth - 1, ItemHeight));
+            DrawFrame(g, BlackPen, 0, y, ActualWidth - 1, ItemHeight);
+            DrawText(g, Path.GetFileNameWithoutExtension(be.Filename), Brushes.Black, StringOffsetLeft, StringOffsetTop + y, ActualWidth - StringOffsetLeft);
         }
-        private void TimeLineItem_MouseDown(object sender, MouseEventArgs e)
+
+        private int ItemIndex(double y)
         {
+            return EffectManager.Effects.Count - 1 - (int)((y - TimeLineAreaHeight) / ItemHeight) - TimeLine.VScrollValue;
+        }
+        protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
+        {
+            base.OnMouseLeftButtonDown(e);
+            if (EffectManager == null) return;
+            var pos = e.GetPosition(this);
             movecount = 0;
-            var itemindex = ItemIndex(e.Y);
-            if (e.Y >= TimeLineAreaHeight && itemindex >= 0 && itemindex < EffectManager.Effects.Count)
+            var itemindex = ItemIndex(pos.Y);
+            if (pos.Y >= TimeLineAreaHeight && itemindex >= 0 && itemindex < EffectManager.Effects.Count)
             {
                 mousedown = true;
+                CaptureMouse();
                 SelectedManager.Effect = EffectManager.Effects[itemindex];
-                tpf = new TransParentForm();
-                tpf.Show();
-                int hindex = (e.Y - TimeLineAreaHeight) / ItemHeight;
-                tpf.SetInfo(this.PointToScreen(new Point(0, TimeLineAreaHeight + hindex * ItemHeight)), new Size(this.Width, ItemHeight + 1));
-                tpf.Location = this.PointToScreen(new Point(0, TimeLineAreaHeight + hindex * ItemHeight));
-                mousedownpos = new Point(e.X, e.Y);
+                pressedrow = (int)((pos.Y - TimeLineAreaHeight) / ItemHeight);
+                mousedownpos = pos;
+                mousepos = pos;
             }
             else
             {
@@ -108,41 +118,35 @@ namespace Effect2DEditor
             }
         }
 
-        private void TimeLineItem_MouseMove(object sender, MouseEventArgs e)
+        protected override void OnMouseMove(MouseEventArgs e)
         {
+            base.OnMouseMove(e);
             if (mousedown && SelectedManager.Effect != null)
             {
-                tpf.Location = new Point(tpf.Location.X + e.X - mousedownpos.X, tpf.Location.Y + e.Y - mousedownpos.Y);
-                mousedownpos = new Point(e.X, e.Y);
-                if (e.Y < TimeLineAreaHeight)
+                var pos = e.GetPosition(this);
+                mousepos = pos;
+                if (pos.Y < TimeLineAreaHeight)
                 {
                     movecount++;
                     if (movecount % 10 == 0) TimeLine.VScrollChangeValue(-1);
                 }
-                else if (e.Y > this.Height)
+                else if (pos.Y > ActualHeight)
                 {
                     movecount++;
                     if (movecount % 10 == 0) TimeLine.VScrollChangeValue(1);
                 }
-                int itemindex = (e.Y - TimeLineAreaHeight) / ItemHeight + TimeLine.VScrollValue;
+                int itemindex = (int)((pos.Y - TimeLineAreaHeight) / ItemHeight) + TimeLine.VScrollValue;
                 if (itemindex < 0) itemindex = 0;
                 if (itemindex > EffectManager.Effects.Count) itemindex = EffectManager.Effects.Count;
-                if (itemindex != swapborderindex)
-                {
-                    swapborderindex = itemindex;
-                    DrawAndRefresh();
-                }
+                swapborderindex = itemindex;
+                DrawAndRefresh();
             }
         }
 
-        private void TimeLineItem_MouseUp(object sender, MouseEventArgs e)
+        protected override void OnMouseLeftButtonUp(MouseButtonEventArgs e)
         {
-            if (tpf != null)
-            {
-                tpf.Close();
-                tpf.Dispose();
-                tpf = null;
-            }
+            base.OnMouseLeftButtonUp(e);
+            ReleaseMouseCapture();
             if (swapborderindex != -1)
             {
                 var selectedindex = EffectManager.Effects.IndexOf(SelectedManager.Effect);
@@ -157,11 +161,10 @@ namespace Effect2DEditor
                         MainForm.ChangeIndex(swapborderindex, selectedindex);
                     }
                     swapborderindex = -1;
-                    DrawAndRefresh();
                 }
             }
             mousedown = false;
+            DrawAndRefresh();
         }
-
     }
 }

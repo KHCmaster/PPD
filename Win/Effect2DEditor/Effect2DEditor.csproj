@@ -6,7 +6,7 @@
     <AssemblyName>Effect2DEditor</AssemblyName>
     <ApplicationIcon>e2dmid.ico</ApplicationIcon>
     <Platforms>x64</Platforms>
-    <UseWindowsForms>true</UseWindowsForms>
+    <UseWPF>true</UseWPF>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
     <DebugSymbols>true</DebugSymbols>
@@ -28,6 +28,9 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="Dirkster.AvalonDock" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\PPDMath\PPDMath.csproj" />
     <ProjectReference Include="..\BezierCaliculator\BezierCaliculator.csproj" />
     <ProjectReference Include="..\BezierDrawControl\BezierDrawControl\BezierDrawControl.csproj" />
@@ -35,55 +38,9 @@
     <ProjectReference Include="..\ErrorHandler\ErrorHandle.csproj" />
     <ProjectReference Include="..\PPDConfiguration\PPDConfiguration.csproj" />
     <ProjectReference Include="..\PPDFramework\PPDFramework.csproj" />
-    <ProjectReference Include="..\WinFormsUI\WinFormsUI.csproj" />
+    <ProjectReference Include="..\ColorCanvas\ColorCanvas.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Update="AskFrameCount.resx">
-      <DependentUpon>AskFrameCount.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="BezierRatioDrawer.resx">
-      <DependentUpon>BezierRatioDrawer.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="CanvasSizeForm.resx">
-      <DependentUpon>CanvasSizeForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="ChangeBackGroundForm.resx">
-      <DependentUpon>ChangeBackGroundForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="DockForm\CanvasDock.resx">
-      <DependentUpon>CanvasDock.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="DockForm\HistoryDock.resx">
-      <DependentUpon>HistoryDock.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="DockForm\PropertyDock.resx">
-      <DependentUpon>PropertyDock.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="DockForm\TimeLineDock.resx">
-      <DependentUpon>TimeLineDock.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="HistoryPanel.resx">
-      <DependentUpon>HistoryPanel.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="MainForm.resx">
-      <DependentUpon>MainForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="RatioChangeForm.resx">
-      <DependentUpon>RatioChangeForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="TimeLine.resx">
-      <DependentUpon>TimeLine.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="TimeLineItem.resx">
-      <DependentUpon>TimeLineItem.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="TransParentForm.resx">
-      <DependentUpon>TransParentForm.cs</DependentUpon>
-    </EmbeddedResource>
     <None Update="Lang\lang_Effect2DEditor_en.ini">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -102,9 +59,20 @@
     <None Update="Lang\lang_Effect2DEditor_zh2.ini">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="e2dmid.ico" />
+    <Resource Include="img\add.png" />
+    <Resource Include="img\check.png" />
+    <Resource Include="img\copy.png" />
+    <Resource Include="img\delete.png" />
+    <Resource Include="img\pause.png" />
+    <Resource Include="img\playloop.png" />
+    <Resource Include="img\playonce.png" />
+    <Resource Include="img\playreverse.png" />
+    <Resource Include="img\playreverseloop.png" />
+    <Resource Include="img\remove.png" />
+    <Resource Include="img\stop.png" />
+    <Resource Include="img\swapreverse.png" />
   </ItemGroup>
 </Project>

@@ -112,7 +112,7 @@ namespace BezierDrawControl
 
         private void BezierControl_MouseDown(object sender, MouseEventArgs e)
         {
-            Controller.MouseDown(e.X, e.Y, e.Button, ModifierKeys);
+            Controller.MouseDown(e.X, e.Y, e.Button == MouseButtons.Left, MyCursors.ToBezierModifierKeys(ModifierKeys));
             DrawAndRefresh();
         }
 
@@ -124,10 +124,10 @@ namespace BezierDrawControl
 
         private void BezierControl_MouseMove(object sender, MouseEventArgs e)
         {
-            var cursor = Controller.MouseMove(e.X, e.Y, ModifierKeys);
-            if (cursor != null)
+            var cursor = Controller.MouseMove(e.X, e.Y, MyCursors.ToBezierModifierKeys(ModifierKeys));
+            if (cursor.HasValue)
             {
-                Cursor = cursor;
+                Cursor = MyCursors.Get(cursor.Value);
             }
         }
 

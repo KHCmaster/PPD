@@ -140,6 +140,19 @@ namespace PPDFramework
         }
 
         /// <summary>
+        /// WinForms のコントロールを使わずに、ウィンドウハンドルに描画するときのコンストラクタです（WPF のアプリで使う）。
+        /// </summary>
+        /// <param name="args"></param>
+        /// <param name="windowHandle">スワップチェーンを作るウィンドウ。大きさは呼び出し側で合わせる。</param>
+        protected GameCoreBase(PPDExecuteArg args, IntPtr windowHandle)
+            : this(args, (Control)null)
+        {
+            this.windowHandle = windowHandle;
+        }
+
+        readonly IntPtr windowHandle;
+
+        /// <summary>
         /// DirectXの初期化に失敗したときの例外を取得します。
         /// </summary>
         protected Exception InitializeDirectXException
@@ -243,6 +256,25 @@ namespace PPDFramework
         }
 
         /// <summary>
+        /// 更新と描画だけを行います。表示（Present）とフレームの待ち合わせは行いません。
+        /// 描画した結果は <see cref="PPDDevice.CopyBackBuffer"/> で読み出します（エディターの WPF の画面に表示するときに使う）。
+        /// </summary>
+        public void RenderWithoutPresent()
+        {
+            CharCacheManager.RenderThreadId = Environment.CurrentManagedThreadId;
+            Update();
+            device.DrawStart();
+            Draw();
+            foreach (var rect in blackRectangles)
+            {
+                rect.Draw();
+            }
+            device.GetModule<AlphaBlendContextCache>().Reset();
+            DrawEnd();
+            device.DrawEnd();
+        }
+
+        /// <summary>
         /// DirectXを初期化します。
         /// </summary>
         /// <returns></returns>
@@ -258,10 +290,13 @@ namespace PPDFramework
                 {
                     height = 450;
                 }
-                Control.Size = new System.Drawing.Size(width.Value, height.Value);
+                if (Control != null)
+                {
+                    Control.Size = new System.Drawing.Size(width.Value, height.Value);
+                }
                 InitializeUI();
 
-                device = PPDDevice.Initialize(Control.Handle, width.Value, height.Value, expectedWidth.Value, expectedHeight.Value, expectedAspectRatio.Value);
+                device = PPDDevice.Initialize(Control != null ? Control.Handle : windowHandle, width.Value, height.Value, expectedWidth.Value, expectedHeight.Value, expectedAspectRatio.Value);
                 device.RegisterModule(new AlphaBlendContextCache(1024));
                 device.RegisterModule(new ShaderCommon(device));
                 device.RegisterModule(new ColorTextureAllcator(device));

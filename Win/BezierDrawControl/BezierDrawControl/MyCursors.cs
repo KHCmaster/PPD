@@ -11,6 +11,35 @@ namespace BezierDrawControl
         public static readonly Cursor AnchorPlus = new(BezierDrawControl.Properties.Resources.anchorplus.GetHicon());
         public static readonly Cursor Handle = new(BezierDrawControl.Properties.Resources.handle.GetHicon());
 
+        /// <summary>
+        /// <see cref="BezierCursor"/> を WinForms のカーソルにします。
+        /// </summary>
+        public static Cursor Get(BezierCursor cursor)
+        {
+            return cursor.Kind switch
+            {
+                BezierCursorKind.SizeAll => Cursors.SizeAll,
+                BezierCursorKind.Rotate => Rotate,
+                BezierCursorKind.Anchor => Anchor,
+                BezierCursorKind.AnchorPlus => AnchorPlus,
+                BezierCursorKind.Handle => Handle,
+                BezierCursorKind.Arrow => CreateArrowCursor(cursor.Angle),
+                _ => Cursors.Default,
+            };
+        }
+
+        /// <summary>
+        /// WinForms の修飾キーを <see cref="BezierModifierKeys"/> にします。
+        /// </summary>
+        public static BezierModifierKeys ToBezierModifierKeys(Keys keys)
+        {
+            var result = BezierModifierKeys.None;
+            if ((keys & Keys.Shift) == Keys.Shift) result |= BezierModifierKeys.Shift;
+            if ((keys & Keys.Control) == Keys.Control) result |= BezierModifierKeys.Control;
+            if ((keys & Keys.Alt) == Keys.Alt) result |= BezierModifierKeys.Alt;
+            return result;
+        }
+
         public static Cursor CreateArrowCursor(int angle)
         {
             angle = NormalizeAngle(angle);

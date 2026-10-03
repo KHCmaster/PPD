@@ -1,0 +1,80 @@
+<UserControl x:Class="Effect2DEditor.DockForm.TimeLineDock"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:Effect2DEditor"
+             AllowDrop="True" DragEnter="TimeLineDock_DragEnter" DragOver="TimeLineDock_DragEnter" Drop="TimeLineDock_DragDrop">
+    <UserControl.Resources>
+        <Style x:Key="ToolImage" TargetType="Image">
+            <Setter Property="Width" Value="16" />
+            <Setter Property="Height" Value="16" />
+        </Style>
+    </UserControl.Resources>
+    <DockPanel>
+        <ToolBarTray DockPanel.Dock="Top" IsLocked="True">
+            <ToolBar>
+                <Button x:Name="toolStripButton1" Click="ToolStripButton1_Click">
+                    <Image Source="/img/add.png" Style="{StaticResource ToolImage}" />
+                </Button>
+                <Button x:Name="toolStripButton2" Click="ToolStripButton2_Click">
+                    <Image Source="/img/remove.png" Style="{StaticResource ToolImage}" />
+                </Button>
+                <Separator />
+                <!-- 再生と一時停止を切り替えるボタンと、再生のしかたを選ぶボタン（以前の分割ボタン） -->
+                <ToggleButton x:Name="exToolStripSplitButton1" Click="ExToolStripSplitButton1_ButtonClick">
+                    <Image x:Name="playImage" Source="/img/playonce.png" Style="{StaticResource ToolImage}" />
+                </ToggleButton>
+                <Button x:Name="playTypeButton" Padding="1,0" Click="PlayTypeButton_Click">
+                    <Path Data="M 0 0 L 6 0 L 3 3 Z" Fill="Black" VerticalAlignment="Center" />
+                    <Button.ContextMenu>
+                        <ContextMenu x:Name="playTypeMenu">
+                            <MenuItem x:Name="回再生ToolStripMenuItem" Header="1回再生" IsChecked="True" Click="回再生ToolStripMenuItem_Click">
+                                <MenuItem.Icon>
+                                    <Image Source="/img/playonce.png" Style="{StaticResource ToolImage}" />
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <MenuItem x:Name="リバース1回再生ToolStripMenuItem" Header="リバース1回再生" Click="リバース1回再生ToolStripMenuItem_Click">
+                                <MenuItem.Icon>
+                                    <Image Source="/img/playreverse.png" Style="{StaticResource ToolImage}" />
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <MenuItem x:Name="ループ再生ToolStripMenuItem" Header="ループ再生" Click="ループ再生ToolStripMenuItem_Click">
+                                <MenuItem.Icon>
+                                    <Image Source="/img/playloop.png" Style="{StaticResource ToolImage}" />
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <MenuItem x:Name="リバースループ再生ToolStripMenuItem" Header="リバースループ再生" Click="リバースループ再生ToolStripMenuItem_Click">
+                                <MenuItem.Icon>
+                                    <Image Source="/img/playreverseloop.png" Style="{StaticResource ToolImage}" />
+                                </MenuItem.Icon>
+                            </MenuItem>
+                        </ContextMenu>
+                    </Button.ContextMenu>
+                </Button>
+                <Button x:Name="toolStripButton5" Click="ToolStripButton5_Click">
+                    <Image Source="/img/stop.png" Style="{StaticResource ToolImage}" />
+                </Button>
+                <TextBox x:Name="toolStripTextBox1" Width="100" Text="60" TextChanged="ToolStripTextBox1_TextChanged" />
+                <Separator />
+                <Button x:Name="toolStripButton3" ToolTip="順番を逆転" Click="ToolStripButton3_Click">
+                    <Image Source="/img/swapreverse.png" Style="{StaticResource ToolImage}" />
+                </Button>
+                <Button x:Name="toolStripButton4" ToolTip="コピー" Click="ToolStripButton4_Click">
+                    <Image Source="/img/copy.png" Style="{StaticResource ToolImage}" />
+                </Button>
+                <Button x:Name="toolStripButton6" ToolTip="全てクリア" Click="ToolStripButton6_Click">
+                    <Image Source="/img/delete.png" Style="{StaticResource ToolImage}" />
+                </Button>
+            </ToolBar>
+        </ToolBarTray>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="200" MinWidth="20" />
+                <ColumnDefinition Width="4" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <local:TimeLineItem x:Name="timeLineItem1" />
+            <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" />
+            <local:TimeLine x:Name="timeLine1" Grid.Column="2" />
+        </Grid>
+    </DockPanel>
+</UserControl>

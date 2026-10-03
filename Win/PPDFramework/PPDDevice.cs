@@ -330,6 +330,13 @@ namespace PPDFramework
         public abstract void BackBufferToFile(string filepath);
 
         /// <summary>
+        /// バックバッファーの内容（BGRA）を CPU 側のメモリーにコピーします。
+        /// </summary>
+        /// <param name="destination">コピー先の先頭。</param>
+        /// <param name="destinationStride">コピー先の 1 行のバイト数。</param>
+        public abstract void CopyBackBuffer(IntPtr destination, int destinationStride);
+
+        /// <summary>
         /// 切り取りの有効状態を切り替えます。
         /// </summary>
         /// <param name="rectangle"></param>

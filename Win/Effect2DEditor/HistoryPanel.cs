@@ -1,14 +1,25 @@
-﻿using Effect2DEditor.Command;
+using Effect2DEditor.Command;
 using System;
-using System.Drawing;
-using System.Windows.Forms;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
+using System.Windows.Input;
+using System.Windows.Media;
+using CommandManager = Effect2DEditor.Command.CommandManager;
 
 namespace Effect2DEditor
 {
-    public partial class HistoryPanel : CustomUserControl
+    /// <summary>
+    /// 編集の履歴です。チェックボックスを押すと、そこまで元に戻す・やり直します。
+    /// </summary>
+    public class HistoryPanel : UserControl
     {
         const int ItemHeight = 20;
         const int CheckBoxOffset = 3;
+        static readonly ImageSource checkImage = Utility.LoadImage("check.png");
+
+        readonly DrawingSurface surface;
+        readonly ScrollBar vScrollBar1;
         bool ignorescroll;
 
         public CommandManager CommandManager
@@ -20,42 +31,52 @@ namespace Effect2DEditor
         public HistoryPanel()
         {
             CommandManager = new CommandManager();
-            InitializeComponent();
-            InitializeBuffer();
-            vScrollBar1.Maximum = 0;
-            vScrollBar1.Minimum = 0;
-            vScrollBar1.SmallChange = 1;
-            vScrollBar1.LargeChange = 1;
+            surface = new DrawingSurface { Render = Draw };
+            vScrollBar1 = new ScrollBar { Orientation = Orientation.Vertical, Minimum = 0, Maximum = 0, SmallChange = 1, LargeChange = 1 };
+            var grid = new Grid();
+            grid.ColumnDefinitions.Add(new ColumnDefinition());
+            grid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+            grid.Children.Add(surface);
+            Grid.SetColumn(vScrollBar1, 1);
+            grid.Children.Add(vScrollBar1);
+            Content = grid;
+
             vScrollBar1.Scroll += VScrollBar1_Scroll;
-            this.MouseWheel += HistoryPanel_MouseWheel;
-            this.SizeChanged += HistoryPanel_SizeChanged;
-            DrawAndRefresh();
+            surface.MouseWheel += HistoryPanel_MouseWheel;
+            surface.SizeChanged += HistoryPanel_SizeChanged;
+            surface.MouseLeftButtonDown += HistoryPanel_MouseDown;
         }
 
-        void HistoryPanel_SizeChanged(object sender, EventArgs e)
+        private int VValue
+        {
+            get { return (int)vScrollBar1.Value; }
+        }
+
+        void HistoryPanel_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             if (CommandManager == null) return;
             ignorescroll = true;
             AdjustVScrollBar();
             ignorescroll = false;
-            DrawAndRefresh();
+            surface.DrawAndRefresh();
         }
 
-        void HistoryPanel_MouseWheel(object sender, MouseEventArgs e)
+        void HistoryPanel_MouseWheel(object sender, MouseWheelEventArgs e)
         {
-            int num = vScrollBar1.Value;
+            int num = VValue;
             if (e.Delta >= 0) num--;
             else num++;
             if (num >= vScrollBar1.Minimum && num <= vScrollBar1.Maximum)
             {
                 vScrollBar1.Value = num;
-                DrawAndRefresh();
+                surface.DrawAndRefresh();
             }
         }
 
         void VScrollBar1_Scroll(object sender, ScrollEventArgs e)
         {
-            DrawAndRefresh();
+            vScrollBar1.Value = Math.Round(vScrollBar1.Value);
+            surface.DrawAndRefresh();
         }
 
         public void SetEvent()
@@ -66,7 +87,7 @@ namespace Effect2DEditor
         void CommandManager_CommandChanged(object sender, EventArgs e)
         {
             AdjustVScrollBar();
-            DrawAndRefresh();
+            surface.DrawAndRefresh();
         }
         private void AdjustVScrollBar()
         {
@@ -86,21 +107,20 @@ namespace Effect2DEditor
         {
             get
             {
-                return this.Height / ItemHeight;
+                return (int)surface.ActualHeight / ItemHeight;
             }
         }
-        private int ContentWidth
+        private double ContentWidth
         {
             get
             {
-                return this.Width - vScrollBar1.Width;
+                return surface.ActualWidth;
             }
         }
-        protected override void DrawToBuffer(Graphics g)
+        private void Draw(DrawingContext g)
         {
-            g.Clear(SystemColors.Control);
             if (CommandManager == null) return;
-            int StartIndex = vScrollBar1.Value, EndIndex = vScrollBar1.Value + ShownItemNumber + 1;
+            int StartIndex = VValue, EndIndex = VValue + ShownItemNumber + 1;
             int iter = MaxItemNumber - 1;
             foreach (CommandBase com in CommandManager.UndoneCommand)
             {
@@ -120,33 +140,29 @@ namespace Effect2DEditor
                 iter--;
             }
         }
-        private void DrawItem(int y, CommandBase command, Graphics g, bool IsChecked)
+        private void DrawItem(int y, CommandBase command, DrawingContext g, bool IsChecked)
         {
-            var rec = new Rectangle(0, y, ContentWidth - 1, ItemHeight);
-            if (IsChecked) g.FillRectangle(Brushes.White, rec);
-            g.DrawRectangle(Pens.Black, rec);
-            g.DrawRectangle(Pens.Black, new Rectangle(CheckBoxOffset, y + CheckBoxOffset, ItemHeight - CheckBoxOffset * 2, ItemHeight - CheckBoxOffset * 2));
-            var sf = new StringFormat
-            {
-                Trimming = StringTrimming.EllipsisCharacter
-            };
-            g.DrawString(command.Explaination, Font, IsChecked ? Brushes.Black : Brushes.Gray, new RectangleF(ItemHeight, y + (ItemHeight - Font.Height) / 2 + 1, ContentWidth - ItemHeight - 1, Font.Height), sf);
+            if (IsChecked) g.DrawRectangle(Brushes.White, null, new Rect(0, y, ContentWidth - 1, ItemHeight));
+            DrawingSurface.DrawFrame(g, DrawingSurface.BlackPen, 0, y, ContentWidth - 1, ItemHeight);
+            DrawingSurface.DrawFrame(g, DrawingSurface.BlackPen, CheckBoxOffset, y + CheckBoxOffset, ItemHeight - CheckBoxOffset * 2, ItemHeight - CheckBoxOffset * 2);
+            surface.DrawText(g, command.Explaination, IsChecked ? Brushes.Black : Brushes.Gray, ItemHeight, y + (ItemHeight - DrawingSurface.TextHeight) / 2 + 1, ContentWidth - ItemHeight - 1);
             if (IsChecked)
             {
-                g.DrawImage(Effect2DEditor.Properties.Resources.check, 5, y);
+                g.DrawImage(checkImage, new Rect(5, y, 16, 16));
             }
         }
-        private int ItemIndex(int y)
+        private int ItemIndex(double y)
         {
-            return vScrollBar1.Value + y / ItemHeight;
+            return VValue + (int)(y / ItemHeight);
         }
-        private void HistoryPanel_MouseDown(object sender, MouseEventArgs e)
+        private void HistoryPanel_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (e.X >= CheckBoxOffset && e.X <= ItemHeight - CheckBoxOffset)
+            var pos = e.GetPosition(surface);
+            if (pos.X >= CheckBoxOffset && pos.X <= ItemHeight - CheckBoxOffset)
             {
-                var itemindex = ItemIndex(e.Y);
-                int shownyindex = itemindex - vScrollBar1.Value;
-                if (itemindex < MaxItemNumber && e.Y >= shownyindex * ItemHeight + CheckBoxOffset && e.Y <= (shownyindex + 1) * ItemHeight - CheckBoxOffset)
+                var itemindex = ItemIndex(pos.Y);
+                int shownyindex = itemindex - VValue;
+                if (itemindex < MaxItemNumber && pos.Y >= shownyindex * ItemHeight + CheckBoxOffset && pos.Y <= (shownyindex + 1) * ItemHeight - CheckBoxOffset)
                 {
                     if (itemindex < CommandManager.DoneCommandNumber)
                     {

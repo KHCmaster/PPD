@@ -550,9 +550,22 @@ WinForms と WPF の混在をなくすため、PPD.exe 以外を段階的に WPF
   - PPDInstaller: 各ページは `PanelBase`（XAML を持たない UserControl）を元にした XAML にして、配置は以前の位置のまま Canvas に置いた。
     言語の選択と展開のウィンドウはメインウィンドウより先に出すので、その間は `ShutdownMode.OnExplicitShutdown` にしている。
     確認したこと（管理者でなく実行し、ダミーの Data.pak を使用）: 言語の選択 → 各ページ → キャンセル → 中断のページ → 終了。インストールそのものは行っていない
-  - BezierDrawControlTest は BezierDrawControl を使うので、Effect2DEditor と一緒に判断する
   - ErrorHandle（PPD.exe と共有）は WinForms のままなので、PPDConfig と PPDInstaller は WinForms のアセンブリも参照している（画面には使っていない）
-- [ ] Effect2DEditor、PPDEditor（作業量に見合うかを、上が終わってから判断する）
+- [x] 下準備（2026-10-03）
+  - DirectX の描画を WPF に表示する方法: 表示しないウィンドウにスワップチェーンを作って描画し、バックバッファーを読み出して `WriteableBitmap` に写す
+    （`GameCoreBase` のウィンドウハンドルを受け取るコンストラクタ、`RenderWithoutPresent`、`PPDDevice.CopyBackBuffer`）。
+    HwndHost で HWND を埋め込む方法は、ドッキングで別のウィンドウに移すと HWND が作り直されてスワップチェーンが壊れ、スクロールでも切り取られないので使わない
+  - ドッキングのライブラリは AvalonDock（Dirkster.AvalonDock 4.74.1、MS-PL）にした。配置のファイルは形式が変わるので、以前の WinForms 版のファイルは読み込めず、一度だけ既定の配置に戻る
+  - BezierDrawControl: 編集の処理（`BezierController`）から WinForms をなくし、修飾キーとカーソルは `BezierModifierKeys` / `BezierCursor` にした。
+    `DXBezierControl` は WPF にした（Effect2DEditor と BezierDrawControlTest が使う）。GDI+ で描く `BezierControl`（WinForms）は PPDEditor が使うので、PPDEditor を移すまで残す
+  - BezierDrawControlTest を WPF にした
+- [x] Effect2DEditor（2026-10-03）
+  - 自分で描く部品（タイムライン、エフェクトの一覧、履歴、変化の割合）は `OnRender` で描く。項目をドラッグするときの表示は、画面を写した別ウィンドウではなく、一覧の中に半透明で描く
+  - 色の選択は ColorCanvas を使う。画像を読めるかの確認は、ファイルを開いたままにしない方法にした（以前は System.Drawing の Image を持ったままだった）
+  - カンバスは以前と同じ見た目の大きさ（ピクセル数を WPF の単位で表示）。ini（Effect2DEditor.ini、recentused.ini）の形式は変えていない
+  - 直したもの: 背景を画像にしたときの読み込みのキーの間違い（`CanvasBackGroundImage`）、タイムラインの右クリックのメニューが翻訳されていなかった
+  - 確認したこと: 起動、etd を開く、ループ再生。マウスでの編集はこの環境では入力を送れないので、使う人が確認する
+- [ ] PPDEditor（Effect2DEditor の結果を見て判断する）
 
 ### Phase 7: 配布・更新の仕組みとリリース
 
