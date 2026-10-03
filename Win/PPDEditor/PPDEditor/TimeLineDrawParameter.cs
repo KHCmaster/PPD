@@ -1,16 +1,16 @@
 ﻿using PPDEditor.Command.PPDSheet;
-using System.Drawing;
+using System.Windows.Media;
 
 namespace PPDEditor
 {
-    class TimeLineDrawParameter(Graphics graphics, int width, int height, Image backGroundImage, PPDSheet sheet, float bpm,
+    class TimeLineDrawParameter(DrawingContext drawingContext, int width, int height, Brush background, PPDSheet sheet, float bpm,
         float bpmStart, int interval, DisplayLineMode displayMode, int leftOffset, float currentTime, DisplayBeatType beatType)
     {
-        public Graphics Graphics
+        public DrawingContext DrawingContext
         {
             get;
             private set;
-        } = graphics;
+        } = drawingContext;
 
         public int Width
         {
@@ -24,11 +24,14 @@ namespace PPDEditor
             private set;
         } = height;
 
-        public Image BackGroundImage
+        /// <summary>
+        /// 全体を塗る背景です。
+        /// </summary>
+        public Brush Background
         {
             get;
             private set;
-        } = backGroundImage;
+        } = background;
 
         public PPDSheet Sheet
         {

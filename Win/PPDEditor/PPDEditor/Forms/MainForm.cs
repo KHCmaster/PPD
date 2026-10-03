@@ -50,6 +50,7 @@ namespace PPDEditor.Forms
         static BPMMeasure bm;
         static WpfDockShell bmDock;
         static TimeLineForm tlf;
+        static WpfDockShell tlfDock;
         static DXForm dxf;
         static InfoForm infof;
         static WpfDockShell infofDock;
@@ -151,6 +152,7 @@ namespace PPDEditor.Forms
             bmDock = new WpfDockShell(bm, "PPDEditor.BPMMeasure");
             SplashWindow.ChangeStatus(String.Format(Utility.Language["InitializingStart"], Utility.Language["TimeLine"]));
             tlf = new TimeLineForm();
+            tlfDock = new WpfDockShell(tlf, "PPDEditor.TimeLineForm");
             SplashWindow.ChangeStatus(String.Format(Utility.Language["InitializingStart"], Utility.Language["GameWindow"]));
             dxf = new DXForm();
             SplashWindow.ChangeStatus(String.Format(Utility.Language["InitializingStart"], Utility.Language["Property"]));
@@ -210,7 +212,7 @@ namespace PPDEditor.Forms
             smDock.VisibleChanged += Windowvisiblechanged;
             ifwDock.VisibleChanged += Windowvisiblechanged;
             bmDock.VisibleChanged += Windowvisiblechanged;
-            tlf.VisibleChanged += Windowvisiblechanged;
+            tlfDock.VisibleChanged += Windowvisiblechanged;
             dxf.VisibleChanged += Windowvisiblechanged;
             infofDock.VisibleChanged += Windowvisiblechanged;
             lmDock.VisibleChanged += Windowvisiblechanged;
@@ -599,7 +601,7 @@ namespace PPDEditor.Forms
             smDock.DockPanel = null;
             ifwDock.DockPanel = null;
             bmDock.DockPanel = null;
-            tlf.DockPanel = null;
+            tlfDock.DockPanel = null;
             dxf.DockPanel = null;
             infofDock.DockPanel = null;
             lmDock.DockPanel = null;
@@ -658,7 +660,7 @@ namespace PPDEditor.Forms
             {
                 dxf.Show(dockPanel1, DockState.Document);
                 infofDock.Show(dockPanel1, DockState.DockRight);
-                tlf.Show(dockPanel1, DockState.DockBottom);
+                tlfDock.Show(dockPanel1, DockState.DockBottom);
             }
             scm.RestoreDock(Path.Combine(Utility.AppDir, scriptdockxmlname));
             dockPanel1.Skin = PPDEditorSkin.Skin.DockPanelSkin;
@@ -685,7 +687,7 @@ namespace PPDEditor.Forms
             this.bPMToolStripMenuItem.Checked = Utility.CheckVisible(bmDock);
             this.ゲームウィンドウToolStripMenuItem.Checked = Utility.CheckVisible(dxf);
             this.サウンドマネージャーToolStripMenuItem.Checked = Utility.CheckVisible(smDock);
-            this.タイムラインウィンドウToolStripMenuItem.Checked = Utility.CheckVisible(tlf);
+            this.タイムラインウィンドウToolStripMenuItem.Checked = Utility.CheckVisible(tlfDock);
             this.プロパティウィンドウToolStripMenuItem.Checked = Utility.CheckVisible(infofDock);
             this.位置角度ローダーセーバーToolStripMenuItem.Checked = Utility.CheckVisible(paalsDock);
             this.歌詞エディターToolStripMenuItem.Checked = Utility.CheckVisible(keDock);
@@ -710,7 +712,7 @@ namespace PPDEditor.Forms
                 "PPDEditor.KasiEditor" => keDock,
                 "PPDEditor.PosAndAngleLoaderSaver" => paalsDock,
                 "PPDEditor.SoundManager" => smDock,
-                "PPDEditor.TimeLineForm" => tlf,
+                "PPDEditor.TimeLineForm" => tlfDock,
                 "PPDEditor.IniFileWriter" => ifwDock,
                 "PPDEditor.LayerManager" => lmDock,
                 "PPDEditor.EventManager" => emDock,
@@ -956,7 +958,7 @@ namespace PPDEditor.Forms
                 this.MyGame.StopRecord();
                 this.MyGame.StopPlay();
                 tlf.Seekmain.Currenttime = 0;
-                tlf.Seekmain.HorizontalScroll.Value = 0;
+                tlf.Seekmain.ResetScroll();
             }
         }
 
@@ -2400,7 +2402,7 @@ namespace PPDEditor.Forms
 
         private void タイムラインウィンドウToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Utility.ShowOrHideWindow(dockPanel1, tlf, ModifierKeys);
+            Utility.ShowOrHideWindow(dockPanel1, tlfDock, ModifierKeys);
         }
 
         private void プロパティウィンドウToolStripMenuItem_Click(object sender, EventArgs e)

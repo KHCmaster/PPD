@@ -360,36 +360,6 @@ namespace PPDEditor
             return marks;
         }
 
-        public static void ChangeToolStripCheckState(ToolStripMenuItem root)
-        {
-            var marks = Utility.GetSelectedMarks();
-            if (marks.Length == 0)
-            {
-                return;
-            }
-
-            var parameters = Utility.GetCommonParameters(marks);
-            var queue = new Queue<ToolStripMenuItem>();
-            queue.Enqueue(root);
-            while (queue.Count > 0)
-            {
-                var menuItem = queue.Dequeue();
-                if (menuItem is TimeLineForm.CommandToolStripMenuItem commandMenuItem)
-                {
-                    var state = GetPresetCheckState(commandMenuItem.Preset, parameters);
-                    commandMenuItem.CheckState = state == true ? CheckState.Checked :
-                        (state == null ? CheckState.Indeterminate : CheckState.Unchecked);
-                }
-                else
-                {
-                    foreach (var child in menuItem.DropDownItems)
-                    {
-                        queue.Enqueue((ToolStripMenuItem)child);
-                    }
-                }
-            }
-        }
-
         /// <summary>
         /// プリセットのパラメーターがすべて当てはまるときは true、一部だけなら null、一つもなければ false を返す。
         /// </summary>
@@ -405,18 +375,6 @@ namespace PPDEditor
                 }
             }
             return count == preset.Parameters.Length ? true : (count > 0 ? null : false);
-        }
-
-        public static IEnumerable<ToolStripMenuItem> GetDescendants(this ToolStripMenuItem menu)
-        {
-            yield return menu;
-            foreach (var childMenu in menu.DropDownItems.OfType<ToolStripMenuItem>())
-            {
-                foreach (var d in childMenu.GetDescendants())
-                {
-                    yield return d;
-                }
-            }
         }
     }
 }

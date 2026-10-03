@@ -73,18 +73,6 @@
     <EmbeddedResource Update="Forms\ScrollableForm.resx">
       <DependentUpon>ScrollableForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Update="Controls\Seekex.resx">
-      <DependentUpon>Seekex.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Controls\Seekmain.resx">
-      <DependentUpon>Seekmain.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="DockForm\TimeLineForm.resx">
-      <DependentUpon>TimeLineForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Forms\TransParentForm.resx">
-      <DependentUpon>TransParentForm.cs</DependentUpon>
-    </EmbeddedResource>
     <None Update="Commands\PosAndAngleLoader\Command.fsml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -200,6 +188,9 @@
   </ItemGroup>
   <ItemGroup>
     <!-- WPF の画面で使う画像 -->
+    <Resource Include="img\lylicsmark.png" />
+    <Resource Include="img\soundmark.png" />
+    <Resource Include="img\eventmark.png" />
     <Resource Include="img\stepin.png" />
     <Resource Include="img\update.png" />
     <Resource Include="img\stop.png" />
