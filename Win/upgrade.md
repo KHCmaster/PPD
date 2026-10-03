@@ -559,7 +559,7 @@ WinForms と WPF の混在をなくすため、PPD.exe 以外を段階的に WPF
     マウスが動くたびに描いていたときは、ドラッグした制御点が遅れてついてきた
   - ドッキングのライブラリは AvalonDock（Dirkster.AvalonDock 4.74.1、MS-PL）にした。配置のファイルは形式が変わるので、以前の WinForms 版のファイルは読み込めず、一度だけ既定の配置に戻る
   - BezierDrawControl: 編集の処理（`BezierController`）から WinForms をなくし、修飾キーとカーソルは `BezierModifierKeys` / `BezierCursor` にした。
-    `DXBezierControl` は WPF にした（Effect2DEditor と BezierDrawControlTest が使う）。GDI+ で描く `BezierControl`（WinForms）は PPDEditor が使うので、PPDEditor を移すまで残す
+    `DXBezierControl` は WPF にした（Effect2DEditor と BezierDrawControlTest が使う）。GDI+ で描く `BezierControl`（WinForms）は、PPDEditor の幾何クリエーターを移したときに消した
   - BezierDrawControlTest を WPF にした
 - [x] Effect2DEditor（2026-10-03）
   - 自分で描く部品（タイムライン、エフェクトの一覧、履歴、変化の割合）は `OnRender` で描く。項目をドラッグするときの表示は、画面を写した別ウィンドウではなく、一覧の中に半透明で描く
@@ -573,8 +573,18 @@ WinForms と WPF の混在をなくすため、PPD.exe 以外を段階的に WPF
     - 起動中の画面（SplashWindow）は、以前と同じく別のスレッドで表示する（STA のスレッドで Dispatcher を動かす）
     - ショートカットの設定は、WPF のキーを仮想キーコードを経由して WinForms の Keys にして保存する（保存の形式は変えていない）
     - WinForms の NumericUpDown の代わりに `Controls/NumericUpDown` を作った。グリッドの設定は表の中ではなくテキストボックスで編集し、色は FlowScript の色の選択を使う
-    - 残っている WinForms のウィンドウ: TransParentForm（ドックの中のドラッグの表示）は、使っているドックと一緒に移す
+    - 残っている WinForms のウィンドウ: TransParentForm（タイムラインのドラッグの表示）は、タイムラインと一緒に移す
   - [ ] 2. ドックのウィンドウ
+    - ドックの中身は `DockView`（UserControl）にして、メインのウィンドウが WinForms の間は `WpfDockShell`（ElementHost を入れた DockContent）で表示する。
+      配置のファイルとの互換のため、`WpfDockShell` は以前のクラスの名前を保存する名前にする
+    - 移したもの（2026-10-03）: メモ、ヘルプ、BPM 測定、歌詞、設定ファイル、位置と角度、サウンド、イベント、プロパティ、レイヤー、幾何クリエーター、統計、リソース、スクリプト
+      - プロパティ: パラメーターのプリセットはフォルダーの木（`ParameterPresetFolder`）で持ち、タイムラインのメニューもそこから作る（以前はサブフォルダーのプリセットがタイムラインのメニューに出なかった）
+      - レイヤー: 並べ替えのドラッグの表示は、画面を写した別ウィンドウ（TransParentForm）ではなく、一覧の中に半透明で描く
+      - 幾何クリエーター: BezierDrawControl に WPF の描画（`DrawingContext`）で描く `WpfBezierControl` を加えた。WinForms の `BezierControl` は消し、BezierDrawControl は WinForms を参照しなくなった
+      - 統計: 円グラフと難易度のグラフは自分で描く（`Controls/StatsCharts.cs`）。`WinForms.DataVisualization` は使わなくなった。割合は凡例に出す
+      - リソース: 木の項目の無効の印は、TreeView のオーバーレイ画像ではなく項目の情報（`ResourceNode`）で持つ。エフェクトのプレビューは `DrawingContext` で描く
+      - スクリプト: ドックの中に AvalonDock の DockingManager を置いた。ウィンドウの ContentId は以前のクラスの名前。以前の配置のファイルは読み込めないので、一度だけ既定の配置に戻る
+    - 残り: タイムライン（Seekmain / Seekex）、ゲームのウィンドウ（DXForm）
   - [ ] 3. メインのウィンドウ
 
 ### Phase 7: 配布・更新の仕組みとリリース
