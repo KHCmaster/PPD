@@ -1,0 +1,49 @@
+<forms:DockView x:Class="PPDEditor.ResourceManager"
+                xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                xmlns:forms="clr-namespace:PPDEditor.Forms">
+    <DockPanel>
+        <Menu DockPanel.Dock="Top">
+            <MenuItem x:Name="リソースを追加MenuItem" Header="リソースを追加" SubmenuOpened="リソースを追加MenuItem_SubmenuOpened">
+                <MenuItem x:Name="imageを追加MenuItem" Header="Imageを追加" Click="Imageを追加MenuItem_Click" />
+                <MenuItem x:Name="effectを追加MenuItem" Header="Effectを追加" Click="Effectを追加MenuItem_Click" />
+                <MenuItem x:Name="soundを追加MenuItem" Header="Soundを追加" Click="Soundを追加MenuItem_Click" />
+                <MenuItem x:Name="その他を追加MenuItem" Header="その他を追加" Click="その他を追加MenuItem_Click" />
+            </MenuItem>
+        </Menu>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="264*" MinWidth="40" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="232*" MinWidth="40" />
+            </Grid.ColumnDefinitions>
+            <TreeView x:Name="treeView1" SelectedItemChanged="TreeView1_SelectedItemChanged" KeyDown="TreeView1_KeyDown"
+                      PreviewMouseRightButtonDown="TreeView1_PreviewMouseRightButtonDown" ContextMenuOpening="TreeView1_ContextMenuOpening">
+                <TreeView.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem x:Name="削除MenuItem" Header="削除" Click="削除MenuItem_Click" />
+                        <MenuItem x:Name="無効化MenuItem" Header="無効化" Click="無効化MenuItem_Click" />
+                    </ContextMenu>
+                </TreeView.ContextMenu>
+            </TreeView>
+            <GridSplitter Grid.Column="1" Width="4" HorizontalAlignment="Stretch" />
+            <Grid Grid.Column="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="168*" MinHeight="20" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="161*" MinHeight="20" />
+                </Grid.RowDefinitions>
+                <!-- 画像やエフェクトを選んだときに、その中身を出す -->
+                <ContentControl x:Name="previewHost" />
+                <GridSplitter Grid.Row="1" Height="4" HorizontalAlignment="Stretch" />
+                <DataGrid x:Name="dataGridView1" Grid.Row="2" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="None"
+                          CanUserSortColumns="False" CanUserAddRows="False">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Binding="{Binding Key}" Width="*" />
+                        <DataGridTextColumn Binding="{Binding Value}" Width="*" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+        </Grid>
+    </DockPanel>
+</forms:DockView>

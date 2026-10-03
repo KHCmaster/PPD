@@ -4,16 +4,21 @@ using PPDEditor.Forms;
 using PPDFramework.PPDStructure;
 using PPDFramework.PPDStructure.PPDData;
 using PPDSound;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
+using System.Collections.ObjectModel;
 using System.Drawing.Imaging;
 using System.IO;
-using System.Windows.Forms;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace PPDEditor
 {
-    public partial class ResourceManager : ChangableDockContent
+    public partial class ResourceManager : DockView
     {
         [Flags]
         enum Filter
@@ -42,6 +47,52 @@ namespace PPDEditor
 
         private Sound sound;
 
+        /// <summary>
+        /// 木の 1 項目の情報です。<see cref="TreeViewItem.Tag"/> に入れる。
+        /// </summary>
+        sealed class ResourceNode(string key, string name)
+        {
+            /// <summary>
+            /// 種類です（folder, image, effect, sound, others）。
+            /// </summary>
+            public string Key
+            {
+                get;
+            } = key;
+
+            public string Name
+            {
+                get;
+            } = name;
+
+            public bool Disabled
+            {
+                get;
+                set;
+            }
+
+            /// <summary>
+            /// 無効のときにアイコンに重ねる印です。
+            /// </summary>
+            public UIElement DisabledMark
+            {
+                get;
+                set;
+            }
+        }
+
+        static readonly Dictionary<string, ImageSource> icons = new()
+        {
+            { "folder", LoadIcon("folder") },
+            { "image", LoadIcon("image") },
+            { "effect", LoadIcon("effect") },
+            { "sound", LoadIcon("sound") },
+            { "others", LoadIcon("document") },
+        };
+        static readonly ImageSource disabledIcon = LoadIcon("disabled");
+
+        readonly ObservableCollection<KeyValuePair<object, object>> infoRows = [];
+
         public ResourceManager()
         {
             InitializeComponent();
@@ -50,13 +101,13 @@ namespace PPDEditor
 
         public void SetLang()
         {
-            this.リソースを追加ToolStripMenuItem.Text = Utility.Language["AddResource"];
-            this.imageを追加ToolStripMenuItem.Text = Utility.Language["AddImage"];
-            this.effectを追加ToolStripMenuItem.Text = Utility.Language["AddEffect"];
-            this.soundを追加ToolStripMenuItem.Text = Utility.Language["AddSound"];
-            this.その他を追加ToolStripMenuItem.Text = Utility.Language["AddOthers"];
-            this.削除ToolStripMenuItem.Text = Utility.Language["Delete"];
-            this.無効化ToolStripMenuItem.Text = Utility.Language["MakeInvalid"];
+            this.リソースを追加MenuItem.Header = Utility.Language["AddResource"];
+            this.imageを追加MenuItem.Header = Utility.Language["AddImage"];
+            this.effectを追加MenuItem.Header = Utility.Language["AddEffect"];
+            this.soundを追加MenuItem.Header = Utility.Language["AddSound"];
+            this.その他を追加MenuItem.Header = Utility.Language["AddOthers"];
+            this.削除MenuItem.Header = Utility.Language["Delete"];
+            this.無効化MenuItem.Header = Utility.Language["MakeInvalid"];
         }
 
         public void SetSound(Sound sound)
@@ -75,65 +126,115 @@ namespace PPDEditor
 
         private void Initialize()
         {
-            treeView1.ImageList = new System.Windows.Forms.ImageList
-            {
-                ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit
-            };
-
-            treeView1.ImageList.Images.Add("folder", PPDEditor.Properties.Resources.folder);
-            treeView1.ImageList.Images.Add("disabled", PPDEditor.Properties.Resources.disabled);
-            treeView1.ImageList.Images.Add("image", PPDEditor.Properties.Resources.image);
-            treeView1.ImageList.Images.Add("effect", PPDEditor.Properties.Resources.effect);
-            treeView1.ImageList.Images.Add("sound", PPDEditor.Properties.Resources.sound);
-            treeView1.ImageList.Images.Add("others", PPDEditor.Properties.Resources.document);
-
-            _ = NativeMethods.ImageList_SetOverlayImage(treeView1.ImageList.Handle, 1, 1);
-
-            CreateFolderNode(treeView1.Nodes, "Image");
-            CreateFolderNode(treeView1.Nodes, "Effect");
-            CreateFolderNode(treeView1.Nodes, "Sound");
-            CreateFolderNode(treeView1.Nodes, "Others");
+            dataGridView1.ItemsSource = infoRows;
+            CreateFolderNode(treeView1.Items, "Image");
+            CreateFolderNode(treeView1.Items, "Effect");
+            CreateFolderNode(treeView1.Items, "Sound");
+            CreateFolderNode(treeView1.Items, "Others");
         }
 
-        public TreeNode ImageNode
+        private static ImageSource LoadIcon(string name)
+        {
+            var image = new BitmapImage(new Uri(String.Format("pack://application:,,,/PPDEditor;component/img/{0}.png", name)));
+            image.Freeze();
+            return image;
+        }
+
+        private TreeViewItem ImageNode
         {
             get
             {
-                return treeView1.Nodes[0];
+                return (TreeViewItem)treeView1.Items[0];
             }
         }
 
-        public TreeNode EffectNode
+        private TreeViewItem EffectNode
         {
             get
             {
-                return treeView1.Nodes[1];
+                return (TreeViewItem)treeView1.Items[1];
             }
         }
 
-        public TreeNode SoundNode
+        private TreeViewItem SoundNode
         {
             get
             {
-                return treeView1.Nodes[2];
+                return (TreeViewItem)treeView1.Items[2];
             }
         }
 
-        public TreeNode OthersNode
+        private TreeViewItem OthersNode
         {
             get
             {
-                return treeView1.Nodes[3];
+                return (TreeViewItem)treeView1.Items[3];
             }
+        }
+
+        private TreeViewItem SelectedNode
+        {
+            get
+            {
+                return treeView1.SelectedItem as TreeViewItem;
+            }
+        }
+
+        private static ResourceNode GetNode(TreeViewItem item)
+        {
+            return (ResourceNode)item.Tag;
+        }
+
+        /// <summary>
+        /// 一番上からの名前を「\」でつないだもの（以前の TreeNode.FullPath と同じ）を返す。
+        /// </summary>
+        private static string GetFullPath(TreeViewItem item)
+        {
+            var names = new List<string>();
+            for (ItemsControl current = item; current is TreeViewItem treeViewItem; current = ItemsControl.ItemsControlFromItemContainer(current))
+            {
+                names.Insert(0, GetNode(treeViewItem).Name);
+            }
+            return String.Join("\\", names);
+        }
+
+        private TreeViewItem FindNode(string path)
+        {
+            ItemsControl current = treeView1;
+            foreach (var name in path.Split('\\'))
+            {
+                TreeViewItem found = null;
+                foreach (TreeViewItem child in current.Items)
+                {
+                    if (GetNode(child).Name == name)
+                    {
+                        found = child;
+                        break;
+                    }
+                }
+                if (found == null)
+                {
+                    return null;
+                }
+                current = found;
+            }
+            return current as TreeViewItem;
+        }
+
+        private static void SetDisabled(TreeViewItem item, bool disabled)
+        {
+            var node = GetNode(item);
+            node.Disabled = disabled;
+            node.DisabledMark.Visibility = disabled ? Visibility.Visible : Visibility.Collapsed;
         }
 
         public void Clear()
         {
-            ImageNode.Nodes.Clear();
-            EffectNode.Nodes.Clear();
-            SoundNode.Nodes.Clear();
-            OthersNode.Nodes.Clear();
-            dataGridView1.RowCount = 0;
+            ImageNode.Items.Clear();
+            EffectNode.Items.Clear();
+            SoundNode.Items.Clear();
+            OthersNode.Items.Clear();
+            infoRows.Clear();
         }
 
         public void ReadResource(string projectDirPath, string disableList)
@@ -145,7 +246,7 @@ namespace PPDEditor
                 var extension = Path.GetExtension(filePath);
                 if (Array.IndexOf(allowImageExtensions, extension.ToLower()) >= 0)
                 {
-                    CreateNode(ImageNode.Nodes, Path.GetFileName(filePath), NodeType.Image);
+                    CreateNode(ImageNode.Items, Path.GetFileName(filePath), NodeType.Image);
                 }
             }
 
@@ -156,7 +257,7 @@ namespace PPDEditor
                 var extension = Path.GetExtension(filePath);
                 if (extension.Equals(".etd", StringComparison.CurrentCultureIgnoreCase))
                 {
-                    CreateNode(EffectNode.Nodes, Path.GetFileName(filePath), NodeType.Effect);
+                    CreateNode(EffectNode.Items, Path.GetFileName(filePath), NodeType.Effect);
                 }
             }
 
@@ -167,7 +268,7 @@ namespace PPDEditor
                 var extension = Path.GetExtension(filePath);
                 if (Array.IndexOf(allowSoundExtensions, extension.ToLower()) >= 0)
                 {
-                    CreateNode(SoundNode.Nodes, Path.GetFileName(filePath), NodeType.Sound);
+                    CreateNode(SoundNode.Items, Path.GetFileName(filePath), NodeType.Sound);
                 }
             }
 
@@ -175,16 +276,16 @@ namespace PPDEditor
             Utility.RecursiveCreateFolder(dir);
             foreach (string filePath in Directory.GetFiles(dir))
             {
-                CreateNode(OthersNode.Nodes, Path.GetFileName(filePath), NodeType.Others);
+                CreateNode(OthersNode.Items, Path.GetFileName(filePath), NodeType.Others);
             }
 
             var disables = disableList.Split('|');
             foreach (string disable in disables)
             {
-                var node = Utility.GetTreeNodeFromPath(treeView1.Nodes, disable);
-                if (node != null)
+                var node = FindNode(disable);
+                if (node != null && GetNode(node).Key != "folder")
                 {
-                    NativeMethods.SetTreeViewOverlay(node, 1);
+                    SetDisabled(node, true);
                 }
             }
         }
@@ -220,12 +321,12 @@ namespace PPDEditor
             return GetChildrenList(OthersNode);
         }
 
-        private static string[] GetChildrenList(TreeNode node)
+        private static string[] GetChildrenList(TreeViewItem node)
         {
             var ret = new List<string>();
-            foreach (TreeNode childNode in node.Nodes)
+            foreach (TreeViewItem childNode in node.Items)
             {
-                ret.Add(childNode.Text);
+                ret.Add(GetNode(childNode).Name);
             }
             return [.. ret];
         }
@@ -233,7 +334,7 @@ namespace PPDEditor
         private string[] GetList(Filter filter)
         {
             var ret = new List<string>();
-            var nodes = new Queue<TreeNode>();
+            var nodes = new Queue<TreeViewItem>();
             nodes.Enqueue(ImageNode);
             nodes.Enqueue(EffectNode);
             nodes.Enqueue(SoundNode);
@@ -241,9 +342,9 @@ namespace PPDEditor
             while (nodes.Count > 0)
             {
                 var node = nodes.Dequeue();
-                foreach (TreeNode childNode in node.Nodes)
+                foreach (TreeViewItem childNode in node.Items)
                 {
-                    if (childNode.Name == "folder")
+                    if (GetNode(childNode).Key == "folder")
                     {
                         nodes.Enqueue(childNode);
                     }
@@ -254,7 +355,7 @@ namespace PPDEditor
                         {
                             if ((filter & Filter.Enabled) == Filter.Enabled)
                             {
-                                ret.Add(childNode.FullPath);
+                                ret.Add(GetFullPath(childNode));
                                 ret.AddRange(GetListEffect(childNode));
                             }
                         }
@@ -262,7 +363,7 @@ namespace PPDEditor
                         {
                             if ((filter & Filter.Disabled) == Filter.Disabled)
                             {
-                                ret.Add(childNode.FullPath);
+                                ret.Add(GetFullPath(childNode));
                                 ret.AddRange(GetListEffect(childNode));
                             }
                         }
@@ -273,17 +374,18 @@ namespace PPDEditor
             return [.. ret];
         }
 
-        private string[] GetListEffect(TreeNode node)
+        private string[] GetListEffect(TreeViewItem node)
         {
             var ret = new List<string>();
-            var dir = Path.Combine(Path.Combine(WindowUtility.MainForm.CurrentProjectDir, EffectDirPath), Path.GetFileNameWithoutExtension(node.Text));
-            if (node.Parent == EffectNode)
+            var name = GetNode(node).Name;
+            var dir = Path.Combine(Path.Combine(WindowUtility.MainForm.CurrentProjectDir, EffectDirPath), Path.GetFileNameWithoutExtension(name));
+            if (ItemsControl.ItemsControlFromItemContainer(node) == EffectNode)
             {
                 foreach (string filePath in Directory.GetFiles(dir))
                 {
                     if (Array.IndexOf(allowImageExtensions, Path.GetExtension(filePath)) >= 0)
                     {
-                        ret.Add(String.Format("Effect\\{0}\\{1}", Path.GetFileNameWithoutExtension(node.Text), Path.GetFileName(filePath)));
+                        ret.Add(String.Format("Effect\\{0}\\{1}", Path.GetFileNameWithoutExtension(name), Path.GetFileName(filePath)));
                     }
                 }
             }
@@ -301,11 +403,14 @@ namespace PPDEditor
             stream.Write(data, 0, data.Length);
         }
 
-        private void Imageを追加ToolStripMenuItem_Click(object sender, EventArgs e)
+        private void Imageを追加MenuItem_Click(object sender, RoutedEventArgs e)
         {
-            openFileDialog1.FileName = null;
+            var openFileDialog1 = new OpenFileDialog
+            {
+                Multiselect = true
+            };
             openFileDialog1.Filter = "Image(*.jpg;*.jpeg;*.gif;*.png)|*.jpg;*.jpeg;*.gif;*.png";
-            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            if (openFileDialog1.ShowDialog(Window.GetWindow(this)) == true)
             {
                 foreach (string filePath in openFileDialog1.FileNames)
                 {
@@ -320,21 +425,24 @@ namespace PPDEditor
             var copyPath = Path.Combine(Path.Combine(WindowUtility.MainForm.CurrentProjectDir, ImageDirPath), Path.GetFileName(filePath));
             if (File.Exists(copyPath))
             {
-                MessageBox.Show(String.Format("{0}\n{1}", Utility.Language["AlreadyExistResource"], filePath));
+                MessageBox.Show(Window.GetWindow(this), String.Format("{0}\n{1}", Utility.Language["AlreadyExistResource"], filePath));
                 return;
             }
 
             CheckResourceDir();
             File.Copy(filePath, copyPath, true);
 
-            CreateNode(ImageNode.Nodes, Path.GetFileName(filePath), NodeType.Image);
+            CreateNode(ImageNode.Items, Path.GetFileName(filePath), NodeType.Image);
         }
 
-        private void Effectを追加ToolStripMenuItem_Click(object sender, EventArgs e)
+        private void Effectを追加MenuItem_Click(object sender, RoutedEventArgs e)
         {
-            openFileDialog1.FileName = null;
+            var openFileDialog1 = new OpenFileDialog
+            {
+                Multiselect = true
+            };
             openFileDialog1.Filter = "Effect(*.etd)|*.etd";
-            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            if (openFileDialog1.ShowDialog(Window.GetWindow(this)) == true)
             {
                 foreach (string filePath in openFileDialog1.FileNames)
                 {
@@ -349,7 +457,7 @@ namespace PPDEditor
             var copyPath = Path.Combine(Path.Combine(WindowUtility.MainForm.CurrentProjectDir, EffectDirPath), Path.GetFileName(filePath));
             if (File.Exists(copyPath))
             {
-                MessageBox.Show(String.Format("{0}\n{1}", Utility.Language["AlreadyExistResource"], filePath));
+                MessageBox.Show(Window.GetWindow(this), String.Format("{0}\n{1}", Utility.Language["AlreadyExistResource"], filePath));
                 return;
             }
 
@@ -362,7 +470,7 @@ namespace PPDEditor
                 File.Copy(imagePath, newPath, true);
             }
 
-            CreateNode(EffectNode.Nodes, Path.GetFileName(filePath), NodeType.Effect);
+            CreateNode(EffectNode.Items, Path.GetFileName(filePath), NodeType.Effect);
 
             var dir = Path.GetDirectoryName(filePath);
             foreach (string fileName in EffectLoader.GetEffectReference(filePath))
@@ -375,11 +483,14 @@ namespace PPDEditor
             }
         }
 
-        private void Soundを追加ToolStripMenuItem_Click(object sender, EventArgs e)
+        private void Soundを追加MenuItem_Click(object sender, RoutedEventArgs e)
         {
-            openFileDialog1.FileName = null;
+            var openFileDialog1 = new OpenFileDialog
+            {
+                Multiselect = true
+            };
             openFileDialog1.Filter = Utility.Language["SMWaveFilter"];
-            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            if (openFileDialog1.ShowDialog(Window.GetWindow(this)) == true)
             {
                 foreach (string filePath in openFileDialog1.FileNames)
                 {
@@ -394,21 +505,24 @@ namespace PPDEditor
             var copyPath = Path.Combine(Path.Combine(WindowUtility.MainForm.CurrentProjectDir, SoundDirPath), Path.GetFileName(filePath));
             if (File.Exists(copyPath))
             {
-                MessageBox.Show(String.Format("{0}\n{1}", Utility.Language["AlreadyExistResource"], filePath));
+                MessageBox.Show(Window.GetWindow(this), String.Format("{0}\n{1}", Utility.Language["AlreadyExistResource"], filePath));
                 return;
             }
 
             CheckResourceDir();
             File.Copy(filePath, copyPath, true);
 
-            CreateNode(SoundNode.Nodes, Path.GetFileName(filePath), NodeType.Sound);
+            CreateNode(SoundNode.Items, Path.GetFileName(filePath), NodeType.Sound);
         }
 
-        private void その他を追加ToolStripMenuItem_Click(object sender, EventArgs e)
+        private void その他を追加MenuItem_Click(object sender, RoutedEventArgs e)
         {
-            openFileDialog1.FileName = null;
+            var openFileDialog1 = new OpenFileDialog
+            {
+                Multiselect = true
+            };
             openFileDialog1.Filter = Utility.Language["MovieFilter"];
-            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            if (openFileDialog1.ShowDialog(Window.GetWindow(this)) == true)
             {
                 foreach (string filePath in openFileDialog1.FileNames)
                 {
@@ -423,14 +537,14 @@ namespace PPDEditor
             var copyPath = Path.Combine(Path.Combine(WindowUtility.MainForm.CurrentProjectDir, OthersDirPath), Path.GetFileName(filePath));
             if (File.Exists(copyPath))
             {
-                MessageBox.Show(String.Format("{0}\n{1}", Utility.Language["AlreadyExistResource"], filePath));
+                MessageBox.Show(Window.GetWindow(this), String.Format("{0}\n{1}", Utility.Language["AlreadyExistResource"], filePath));
                 return;
             }
 
             CheckResourceDir();
             File.Copy(filePath, copyPath, true);
 
-            CreateNode(OthersNode.Nodes, Path.GetFileName(filePath), NodeType.Others);
+            CreateNode(OthersNode.Items, Path.GetFileName(filePath), NodeType.Others);
         }
 
         private static void CheckResourceDir()
@@ -452,34 +566,54 @@ namespace PPDEditor
             }
         }
 
-        private void リソースを追加ToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
+        private void リソースを追加MenuItem_SubmenuOpened(object sender, RoutedEventArgs e)
         {
-            imageを追加ToolStripMenuItem.Enabled = effectを追加ToolStripMenuItem.Enabled = soundを追加ToolStripMenuItem.Enabled = その他を追加ToolStripMenuItem.Enabled = WindowUtility.MainForm.IsProjectLoaded;
+            imageを追加MenuItem.IsEnabled = effectを追加MenuItem.IsEnabled = soundを追加MenuItem.IsEnabled = その他を追加MenuItem.IsEnabled = WindowUtility.MainForm.IsProjectLoaded;
         }
 
-        private void TreeView1_NodeMouseClick(object sender, System.Windows.Forms.TreeNodeMouseClickEventArgs e)
+        private void TreeView1_PreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
-            treeView1.SelectedNode = e.Node;
+            // 右クリックした項目を選ぶ
+            for (var element = e.OriginalSource as DependencyObject; element != null && element != treeView1; element = VisualTreeHelper.GetParent(element))
+            {
+                if (element is TreeViewItem item)
+                {
+                    item.IsSelected = true;
+                    item.Focus();
+                    break;
+                }
+            }
         }
 
-        private void ContextMenuStrip1_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        private void TreeView1_ContextMenuOpening(object sender, ContextMenuEventArgs e)
         {
-            無効化ToolStripMenuItem.Text = NativeMethods.GetTreeViewOverlay(treeView1.SelectedNode) == 0 ? Utility.Language["MakeInvalid"] : Utility.Language["MakeValid"];
+            // メニューはファイルの項目にだけ出す
+            if (SelectedNode == null || GetNode(SelectedNode).Key == "folder")
+            {
+                e.Handled = true;
+                return;
+            }
+            無効化MenuItem.Header = EnabledNode(SelectedNode) ? Utility.Language["MakeInvalid"] : Utility.Language["MakeValid"];
         }
 
-        private static bool EnabledNode(TreeNode node)
+        private static bool EnabledNode(TreeViewItem node)
         {
-            return NativeMethods.GetTreeViewOverlay(node) == 0;
+            return !GetNode(node).Disabled;
         }
 
-        private void 削除ToolStripMenuItem_Click(object sender, EventArgs e)
+        private void 削除MenuItem_Click(object sender, RoutedEventArgs e)
         {
-            if (MessageBox.Show(String.Format(Utility.Language["DeleteConfirmText"], treeView1.SelectedNode.FullPath), Utility.Language["DeleteConfirm"], MessageBoxButtons.OKCancel) != DialogResult.OK)
+            var selectedNode = SelectedNode;
+            if (selectedNode == null)
+            {
+                return;
+            }
+            if (MessageBox.Show(Window.GetWindow(this), String.Format(Utility.Language["DeleteConfirmText"], GetFullPath(selectedNode)), Utility.Language["DeleteConfirm"], MessageBoxButton.OKCancel) != MessageBoxResult.OK)
             {
                 return;
             }
 
-            var path = Path.Combine(WindowUtility.MainForm.CurrentProjectDir, Path.Combine("Resource", treeView1.SelectedNode.FullPath));
+            var path = Path.Combine(WindowUtility.MainForm.CurrentProjectDir, Path.Combine("Resource", GetFullPath(selectedNode)));
             if (File.Exists(path))
             {
                 File.Delete(path);
@@ -494,29 +628,53 @@ namespace PPDEditor
                 }
             }
 
-            treeView1.SelectedNode.Remove();
+            ((ItemsControl)ItemsControl.ItemsControlFromItemContainer(selectedNode)).Items.Remove(selectedNode);
 
             ContentChanged();
         }
 
-        private void 無効化ToolStripMenuItem_Click(object sender, EventArgs e)
+        private void 無効化MenuItem_Click(object sender, RoutedEventArgs e)
         {
-            if (treeView1.SelectedNode != null)
+            if (SelectedNode != null)
             {
-                NativeMethods.SetTreeViewOverlay(treeView1.SelectedNode, EnabledNode(treeView1.SelectedNode) ? (uint)1 : 0);
+                SetDisabled(SelectedNode, EnabledNode(SelectedNode));
                 ContentChanged();
             }
         }
 
-        private static TreeNode CreateFolderNode(TreeNodeCollection nodes, string name)
+        private static TreeViewItem CreateFolderNode(ItemCollection nodes, string name)
         {
-            var node = nodes.Add("folder", name);
-            node.ImageKey = "folder";
-            node.SelectedImageKey = "folder";
-            return node;
+            return AddNode(nodes, "folder", name);
         }
 
-        private TreeNode CreateNode(TreeNodeCollection nodes, string name, NodeType nodeType)
+        /// <summary>
+        /// アイコンと名前を出す項目を加える。
+        /// </summary>
+        private static TreeViewItem AddNode(ItemCollection nodes, string key, string name)
+        {
+            var node = new ResourceNode(key, name);
+            var icon = new Grid
+            {
+                Width = 16,
+                Height = 16,
+                Margin = new Thickness(0, 0, 3, 0)
+            };
+            icon.Children.Add(new Image { Source = icons[key] });
+            node.DisabledMark = new Image { Source = disabledIcon, Visibility = Visibility.Collapsed };
+            icon.Children.Add(node.DisabledMark);
+            var header = new StackPanel { Orientation = Orientation.Horizontal };
+            header.Children.Add(icon);
+            header.Children.Add(new TextBlock { Text = name, VerticalAlignment = VerticalAlignment.Center });
+            var item = new TreeViewItem
+            {
+                Header = header,
+                Tag = node
+            };
+            nodes.Add(item);
+            return item;
+        }
+
+        private static TreeViewItem CreateNode(ItemCollection nodes, string name, NodeType nodeType)
         {
             string key = "";
             switch (nodeType)
@@ -535,28 +693,24 @@ namespace PPDEditor
                     break;
             }
 
-            var node = nodes.Add(key, name);
-            node.ImageKey = key;
-            node.SelectedImageKey = key;
-            node.ContextMenuStrip = contextMenuStrip1;
-            return node;
+            return AddNode(nodes, key, name);
         }
 
-        private void TreeView1_AfterSelect(object sender, TreeViewEventArgs e)
+        private void TreeView1_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
             ChangeDataGrid();
         }
 
         private void ChangeDataGrid()
         {
-            dataGridView1.RowCount = 0;
+            infoRows.Clear();
 
-            if (treeView1.SelectedNode == null || !WindowUtility.MainForm.IsProjectLoaded)
+            if (SelectedNode == null || !WindowUtility.MainForm.IsProjectLoaded)
             {
                 return;
             }
 
-            switch (treeView1.SelectedNode.ImageKey)
+            switch (GetNode(SelectedNode).Key)
             {
                 case "folder":
                     AddFolderInfo();
@@ -582,7 +736,7 @@ namespace PPDEditor
 
         private void AddImageInfo()
         {
-            var path = Path.Combine(WindowUtility.MainForm.CurrentProjectDir, Path.Combine("Resource", treeView1.SelectedNode.FullPath));
+            var path = Path.Combine(WindowUtility.MainForm.CurrentProjectDir, Path.Combine("Resource", GetFullPath(SelectedNode)));
             if (!File.Exists(path))
             {
                 return;
@@ -590,7 +744,7 @@ namespace PPDEditor
 
             try
             {
-                using (Image image = Image.FromFile(path))
+                using (var image = System.Drawing.Image.FromFile(path))
                 {
                     AddInfo(Utility.Language["ImageKind"], GetImageFormatString(image.RawFormat));
                     AddInfo(Utility.Language["ImageWidth"], image.Width);
@@ -626,13 +780,13 @@ namespace PPDEditor
             }
             catch (Exception e)
             {
-                MessageBox.Show(e.Message);
+                MessageBox.Show(Window.GetWindow(this), e.Message);
             }
         }
 
-        private void AddInfo(params object[] args)
+        private void AddInfo(object key, object value)
         {
-            this.dataGridView1.Rows.Add(args);
+            infoRows.Add(new(key, value));
         }
 
         private static string GetImageFormatString(ImageFormat format)
@@ -683,7 +837,7 @@ namespace PPDEditor
 
         private void AddEffectInfo()
         {
-            var path = Path.Combine(WindowUtility.MainForm.CurrentProjectDir, Path.Combine("Resource", treeView1.SelectedNode.FullPath));
+            var path = Path.Combine(WindowUtility.MainForm.CurrentProjectDir, Path.Combine("Resource", GetFullPath(SelectedNode)));
             if (!File.Exists(path))
             {
                 return;
@@ -726,13 +880,13 @@ namespace PPDEditor
             }
             catch (Exception e)
             {
-                MessageBox.Show(e.Message);
+                MessageBox.Show(Window.GetWindow(this), e.Message);
             }
         }
 
         private void AddSoundInfo()
         {
-            var path = Path.Combine(WindowUtility.MainForm.CurrentProjectDir, Path.Combine("Resource", treeView1.SelectedNode.FullPath));
+            var path = Path.Combine(WindowUtility.MainForm.CurrentProjectDir, Path.Combine("Resource", GetFullPath(SelectedNode)));
             if (!File.Exists(path))
             {
                 return;
@@ -749,13 +903,13 @@ namespace PPDEditor
             }
             catch (Exception e)
             {
-                MessageBox.Show(e.Message);
+                MessageBox.Show(Window.GetWindow(this), e.Message);
             }
         }
 
         private void AddOthersInfo()
         {
-            var path = Path.Combine(WindowUtility.MainForm.CurrentProjectDir, Path.Combine("Resource", treeView1.SelectedNode.FullPath));
+            var path = Path.Combine(WindowUtility.MainForm.CurrentProjectDir, Path.Combine("Resource", GetFullPath(SelectedNode)));
             if (!File.Exists(path))
             {
                 return;
@@ -813,23 +967,22 @@ namespace PPDEditor
             }
             catch (Exception e)
             {
-                MessageBox.Show(e.Message);
+                MessageBox.Show(Window.GetWindow(this), e.Message);
             }
         }
 
-        private void ChangePanel(Control control)
+        private void ChangePanel(UIElement control)
         {
-            this.splitContainer2.Panel1.Controls.Clear();
-            this.splitContainer2.Panel1.Controls.Add(control);
+            previewHost.Content = control;
         }
 
         private void TreeView1_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Control && e.KeyCode == Keys.C)
+            if (Keyboard.Modifiers == ModifierKeys.Control && e.Key == Key.C)
             {
-                if (treeView1.SelectedNode != null)
+                if (SelectedNode != null)
                 {
-                    Clipboard.SetText(treeView1.SelectedNode.Text);
+                    Clipboard.SetText(GetNode(SelectedNode).Name);
                 }
                 e.Handled = true;
             }

@@ -59,15 +59,6 @@
     <ProjectReference Include="..\..\WinFormsUI\WinFormsUI.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Update="Controls\Resource\EffectPanel.resx">
-      <DependentUpon>EffectPanel.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Controls\Resource\ImagePanel.resx">
-      <DependentUpon>ImagePanel.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="DockForm\ResourceManager.resx">
-      <DependentUpon>ResourceManager.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Update="DockForm\ScriptManager.resx">
       <DependentUpon>ScriptManager.cs</DependentUpon>
     </EmbeddedResource>
@@ -232,6 +223,16 @@
   </ItemGroup>
   <ItemGroup>
     <!-- WPF の画面で使う画像 -->
+    <Resource Include="img\stop.png" />
+    <Resource Include="img\playreverseloop.png" />
+    <Resource Include="img\playreverse.png" />
+    <Resource Include="img\playonce.png" />
+    <Resource Include="img\playloop.png" />
+    <Resource Include="img\pause.png" />
+    <Resource Include="img\sound.png" />
+    <Resource Include="img\effect.png" />
+    <Resource Include="img\image.png" />
+    <Resource Include="img\disabled.png" />
     <Resource Include="img\angle.png" />
     <Resource Include="img\eye.png" />
     <Resource Include="img\next.png" />
