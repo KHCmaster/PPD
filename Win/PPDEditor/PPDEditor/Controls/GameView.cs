@@ -25,7 +25,6 @@ namespace PPDEditor.Controls
         const uint WM_MOUSEMOVE = 0x0200;
         const uint WM_LBUTTONDOWN = 0x0201;
         const uint WM_LBUTTONUP = 0x0202;
-        const uint WM_RBUTTONUP = 0x0205;
         const uint WM_MOUSELEAVE = 0x02A3;
         const uint WM_KEYDOWN = 0x0100;
         const uint WM_SYSKEYDOWN = 0x0104;
@@ -65,11 +64,6 @@ namespace PPDEditor.Controls
         /// マウスが出ていったときに発生します。
         /// </summary>
         public event EventHandler GameMouseLeave;
-
-        /// <summary>
-        /// 右のボタンを離したときに発生します（メニューを出す）。
-        /// </summary>
-        public event EventHandler GameRightClick;
 
         /// <summary>
         /// キーを押したときに発生します。処理したら <see cref="GameKeyEventArgs.Handled"/> を true にする。
@@ -205,11 +199,6 @@ namespace PPDEditor.Controls
                 case WM_LBUTTONUP:
                     NativeMethods.ReleaseCapture();
                     GameMouseUp?.Invoke(this, GetPoint(lParam));
-                    handled = true;
-                    break;
-                case WM_RBUTTONUP:
-                    NativeMethods.SetFocus(hwnd);
-                    GameRightClick?.Invoke(this, EventArgs.Empty);
                     handled = true;
                     break;
                 case WM_MOUSEMOVE:

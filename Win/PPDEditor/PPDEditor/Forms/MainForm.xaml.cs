@@ -133,9 +133,9 @@ namespace PPDEditor.Forms
         readonly Microsoft.Win32.SaveFileDialog saveFileDialog1 = new();
         // ゲームの画面でマウスを押している間、マークを動かす（以前と同じく 100 ミリ秒ごと）
         readonly DispatcherTimer moveMarkTimer = new() { Interval = TimeSpan.FromMilliseconds(100) };
-        readonly ContextMenu gameViewMenu = new();
-        MenuItem 画面比を169にMenuItem;
-        MenuItem 標準解像度にするMenuItem;
+        // ゲームウィンドウのタブ（浮かせたときはタイトルバー）の右クリックのメニューに加える項目
+        readonly MenuItem 画面比を169にMenuItem = new() { Header = "画面比を16:9に" };
+        readonly MenuItem 標準解像度にするMenuItem = new() { Header = "標準解像度にする" };
 
         /// <summary>
         /// ゲームの画面です。
@@ -156,14 +156,9 @@ namespace PPDEditor.Forms
             GameView.GameMouseMove += GameView_GameMouseMove;
             GameView.GameMouseLeave += GameView_GameMouseLeave;
             GameView.GameKeyDown += GameView_GameKeyDown;
-            GameView.GameRightClick += GameView_GameRightClick;
             moveMarkTimer.Tick += Movemark;
-            画面比を169にMenuItem = new MenuItem { Header = "画面比を16:9に" };
             画面比を169にMenuItem.Click += 画面比を169にMenuItem_Click;
-            標準解像度にするMenuItem = new MenuItem { Header = "標準解像度にする" };
             標準解像度にするMenuItem.Click += 標準解像度にするMenuItem_Click;
-            gameViewMenu.Items.Add(画面比を169にMenuItem);
-            gameViewMenu.Items.Add(標準解像度にするMenuItem);
             SizeChanged += (sender, e) => ChangeBackGround();
         }
 
@@ -405,6 +400,7 @@ namespace PPDEditor.Forms
 
         private void MainForm_Load(object sender, EventArgs e)
         {
+            AddGameWindowMenu();
             //check author name
             if (string.IsNullOrEmpty(PPDStaticSetting.AuthorName))
             {
@@ -586,6 +582,11 @@ namespace PPDEditor.Forms
             bm.SetLang();
             画面比を169にMenuItem.Header = Utility.Language["ChangeAspect"];
             標準解像度にするMenuItem.Header = Utility.Language["GWDefaultResolution"];
+            if (extraGameWindowMenuItems.Count == 2)
+            {
+                extraGameWindowMenuItems[0].Header = 画面比を169にMenuItem.Header;
+                extraGameWindowMenuItems[1].Header = 標準解像度にするMenuItem.Header;
+            }
             em.SetLang();
             lm.SetLang();
             gc.SetLang();

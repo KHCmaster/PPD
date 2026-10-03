@@ -95,13 +95,55 @@ namespace PPDEditor.Forms
             e.Handled = true;
         }
 
-        private void GameView_GameRightClick(object sender, EventArgs e)
+        /// <summary>
+        /// ゲームウィンドウのタブ（浮かせたときはタイトルバー）の右クリックのメニューに、画面の大きさを変える項目を加える（以前と同じ）。
+        /// </summary>
+        /// <remarks>
+        /// AvalonDock のメニューはすべてのウィンドウで共通なので、開いたときに、ゲームウィンドウのときだけ項目を出す。
+        /// ゲームウィンドウはドキュメントの領域にも置けるので、ドキュメントのメニューにも加える。
+        /// </remarks>
+        private void AddGameWindowMenu()
         {
-            // 画面の大きさを変えるのは、浮かせているときだけ
-            画面比を169にMenuItem.IsEnabled = 標準解像度にするMenuItem.IsEnabled = dxfDock.IsFloating;
-            gameViewMenu.Placement = System.Windows.Controls.Primitives.PlacementMode.MousePoint;
-            gameViewMenu.IsOpen = true;
+            AddGameWindowMenu(dockPanel1.AnchorableContextMenu);
+            AddGameWindowMenu(dockPanel1.DocumentContextMenu);
         }
+
+        private void AddGameWindowMenu(System.Windows.Controls.ContextMenu menu)
+        {
+            if (menu == null)
+            {
+                return;
+            }
+            var separator = new System.Windows.Controls.Separator();
+            var items = new System.Windows.Controls.Control[] { 画面比を169にMenuItem, 標準解像度にするMenuItem, separator };
+            // 同じ項目を 2 つのメニューに入れることはできないので、メニューごとに作る
+            if (画面比を169にMenuItem.Parent != null)
+            {
+                var aspect = new System.Windows.Controls.MenuItem { Header = 画面比を169にMenuItem.Header };
+                aspect.Click += 画面比を169にMenuItem_Click;
+                var standard = new System.Windows.Controls.MenuItem { Header = 標準解像度にするMenuItem.Header };
+                standard.Click += 標準解像度にするMenuItem_Click;
+                items = [aspect, standard, separator];
+                extraGameWindowMenuItems.Add(aspect);
+                extraGameWindowMenuItems.Add(standard);
+            }
+            for (int i = 0; i < items.Length; i++)
+            {
+                menu.Items.Insert(i, items[i]);
+            }
+            menu.Opened += (sender, e) =>
+            {
+                var isGameWindow = (menu.DataContext as AvalonDock.Controls.LayoutItem)?.Model == dxfDock;
+                foreach (var item in items)
+                {
+                    item.Visibility = isGameWindow ? Visibility.Visible : Visibility.Collapsed;
+                }
+                // 画面の大きさを変えるのは、浮かせているときだけ
+                items[0].IsEnabled = items[1].IsEnabled = dxfDock.IsFloating;
+            };
+        }
+
+        readonly System.Collections.Generic.List<System.Windows.Controls.MenuItem> extraGameWindowMenuItems = [];
 
         private void 画面比を169にMenuItem_Click(object sender, RoutedEventArgs e)
         {
