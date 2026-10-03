@@ -1,6 +1,10 @@
 ﻿<Window x:Class="PPDConfig.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:PPDConfig.ViewModels"
+        mc:Ignorable="d" d:DataContext="{d:DesignInstance Type=vm:MainWindowViewModel}"
         Title="PPDConfig" Width="560" Height="640" ResizeMode="CanMinimize" Icon="ppdconfigicon.ico">
     <Window.Resources>
         <Style TargetType="CheckBox">
@@ -13,49 +17,64 @@
     </Window.Resources>
     <DockPanel>
         <Menu DockPanel.Dock="Top">
-            <MenuItem x:Name="languageMenuItem" Header="言語" />
+            <MenuItem Header="{Binding Texts[Language]}" ItemsSource="{Binding Languages}">
+                <MenuItem.ItemContainerStyle>
+                    <Style TargetType="MenuItem">
+                        <Setter Property="IsChecked" Value="{Binding IsChecked}" />
+                        <Setter Property="Command" Value="{Binding DataContext.SelectLanguageCommand, RelativeSource={RelativeSource AncestorType=MenuItem}}" />
+                        <Setter Property="CommandParameter" Value="{Binding}" />
+                        <Setter Property="AutomationProperties.Name" Value="{Binding DisplayName}" />
+                    </Style>
+                </MenuItem.ItemContainerStyle>
+                <MenuItem.ItemTemplate>
+                    <DataTemplate>
+                        <!-- 名前の「_」がアクセスキーとして扱われないように、TextBlock で表示する -->
+                        <TextBlock Text="{Binding DisplayName}" />
+                    </DataTemplate>
+                </MenuItem.ItemTemplate>
+            </MenuItem>
         </Menu>
         <UniformGrid DockPanel.Dock="Bottom" Columns="3" Margin="12,8,12,12">
-            <Button x:Name="okButton" Content="OK" Height="30" Margin="0,0,6,0" Click="OkButton_Click" />
-            <Button x:Name="cancelButton" Content="Cancel" Height="30" Margin="3,0" Click="CancelButton_Click" />
-            <Button x:Name="defaultButton" Content="デフォルト" Height="30" Margin="6,0,0,0" Click="DefaultButton_Click" />
+            <Button Content="{Binding Texts[Button5]}" Height="30" Margin="0,0,6,0" Command="{Binding OkCommand}" />
+            <Button Content="{Binding Texts[Button6]}" Height="30" Margin="3,0" Command="{Binding CancelCommand}" />
+            <Button Content="{Binding Texts[Button7]}" Height="30" Margin="6,0,0,0" Command="{Binding SetDefaultCommand}" />
         </UniformGrid>
         <TabControl Margin="8,8,8,0">
-            <TabItem x:Name="generalTab" Header="一般設定">
+            <TabItem Header="{Binding Texts[TabPage1]}">
                 <StackPanel Margin="40,12,40,12">
                     <DockPanel Margin="0,4">
-                        <TextBox x:Name="windowSizeTextBox" DockPanel.Dock="Right" Width="156" />
-                        <TextBlock x:Name="windowSizeLabel" Text="ウィンドウサイズ" VerticalAlignment="Center" />
+                        <TextBox DockPanel.Dock="Right" Width="156" Text="{Binding WindowSize, UpdateSourceTrigger=PropertyChanged}" />
+                        <TextBlock Text="{Binding Texts[Label13]}" VerticalAlignment="Center" />
                     </DockPanel>
-                    <CheckBox x:Name="fullScreenCheckBox" Content="フルスクリーン" />
-                    <CheckBox x:Name="drawConnectUnderAllMarkCheckBox" Content="コネクトのラインを最背面に表示" />
+                    <CheckBox Content="{Binding Texts[CheckBox3]}" IsChecked="{Binding FullScreen}" />
+                    <CheckBox Content="{Binding Texts[CheckBox6]}" IsChecked="{Binding DrawConnectUnderAllMark}" />
                     <DockPanel Margin="0,4">
-                        <TextBox x:Name="monitorLatencyTextBox" DockPanel.Dock="Right" Width="97" />
-                        <TextBlock x:Name="monitorLatencyLabel" Text="モニタ遅延時間調整(sec)" VerticalAlignment="Center" />
+                        <TextBox DockPanel.Dock="Right" Width="97" Text="{Binding MonitorLatency, UpdateSourceTrigger=PropertyChanged}" />
+                        <TextBlock Text="{Binding Texts[Label2]}" VerticalAlignment="Center" />
                     </DockPanel>
                     <DockPanel Margin="0,4">
-                        <TextBox x:Name="movieLatencyTextBox" DockPanel.Dock="Right" Width="97" />
-                        <TextBlock x:Name="movieLatencyLabel" Text="動画遅延時間調整(sec)" VerticalAlignment="Center" />
+                        <TextBox DockPanel.Dock="Right" Width="97" Text="{Binding MovieLatency, UpdateSourceTrigger=PropertyChanged}" />
+                        <TextBlock Text="{Binding Texts[Label14]}" VerticalAlignment="Center" />
                     </DockPanel>
-                    <TextBlock x:Name="movieExtensionsLabel" Text="動画拡張子" TextWrapping="Wrap" Margin="0,10,0,2" />
-                    <TextBox x:Name="movieExtensionsTextBox" TextWrapping="Wrap" />
-                    <TextBlock x:Name="musicExtensionsLabel" Text="音声拡張子" TextWrapping="Wrap" Margin="0,10,0,2" />
-                    <TextBox x:Name="musicExtensionsTextBox" TextWrapping="Wrap" />
-                    <GroupBox x:Name="fontGroupBox" Header="変更非推奨" Margin="0,14,0,0" Padding="8,4">
+                    <TextBlock Text="{Binding Texts[Label19]}" TextWrapping="Wrap" Margin="0,10,0,2" />
+                    <TextBox TextWrapping="Wrap" Text="{Binding MovieExtensions, UpdateSourceTrigger=PropertyChanged}" />
+                    <TextBlock Text="{Binding Texts[MusicExtensions]}" TextWrapping="Wrap" Margin="0,10,0,2" />
+                    <TextBox TextWrapping="Wrap" Text="{Binding MusicExtensions, UpdateSourceTrigger=PropertyChanged}" />
+                    <GroupBox Header="{Binding Texts[GroupBox1]}" Margin="0,14,0,0" Padding="8,4">
                         <StackPanel>
                             <DockPanel Margin="0,3">
-                                <TextBox x:Name="fontNameTextBox" DockPanel.Dock="Right" Width="144" />
-                                <TextBlock x:Name="fontNameLabel" Text="フォント名" VerticalAlignment="Center" />
+                                <TextBox DockPanel.Dock="Right" Width="144" Text="{Binding FontName, UpdateSourceTrigger=PropertyChanged}" />
+                                <TextBlock Text="{Binding Texts[Label7]}" VerticalAlignment="Center" />
                             </DockPanel>
                             <DockPanel Margin="0,3">
-                                <TextBox x:Name="fontSizeTextBox" DockPanel.Dock="Right" Width="144" />
-                                <TextBlock x:Name="fontSizeLabel" Text="フォントサイズ" VerticalAlignment="Center" />
+                                <TextBox DockPanel.Dock="Right" Width="144" Text="{Binding FontSize, UpdateSourceTrigger=PropertyChanged}" />
+                                <TextBlock Text="{Binding Texts[Label9]}" VerticalAlignment="Center" />
                             </DockPanel>
                         </StackPanel>
                     </GroupBox>
                 </StackPanel>
             </TabItem>
-            <TabItem x:Name="blueSkyTab" Header="BlueSky設定">
+            <TabItem Header="{Binding Texts[TabPage2]}">
                 <Grid Margin="30,14">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="170" />
@@ -67,34 +86,36 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
-                    <TextBlock x:Name="blueSkyIdLabel" Text="ID" VerticalAlignment="Center" />
-                    <TextBox x:Name="blueSkyIdTextBox" Grid.Column="1" Margin="0,4" />
+                    <TextBlock Text="{Binding Texts[Label16]}" VerticalAlignment="Center" />
+                    <TextBox Grid.Column="1" Margin="0,4" Text="{Binding BlueSkyId, UpdateSourceTrigger=PropertyChanged}" />
                     <TextBlock Grid.Column="2" Text=".bsky.social" VerticalAlignment="Center" Margin="4,0,0,0" />
-                    <TextBlock x:Name="blueSkyPasswordLabel" Grid.Row="1" Text="アプリパスワード" VerticalAlignment="Center" />
-                    <PasswordBox x:Name="blueSkyPasswordBox" Grid.Row="1" Grid.Column="1" Margin="0,4" VerticalContentAlignment="Center" Padding="2" />
+                    <TextBlock Grid.Row="1" Text="{Binding Texts[Label18]}" VerticalAlignment="Center" />
+                    <!-- PasswordBox は値をバインドできないので、コードビハインドで ViewModel とやり取りする -->
+                    <PasswordBox x:Name="blueSkyPasswordBox" Grid.Row="1" Grid.Column="1" Margin="0,4" VerticalContentAlignment="Center" Padding="2"
+                                 PasswordChanged="BlueSkyPasswordBox_PasswordChanged" />
                 </Grid>
             </TabItem>
-            <TabItem x:Name="disableTab" Header="無効化設定">
+            <TabItem Header="{Binding Texts[TabPage3]}">
                 <StackPanel Margin="10,8">
-                    <CheckBox x:Name="textBoxDisabledCheckBox" Content="テキストボックス無効化" />
-                    <CheckBox x:Name="drawSameColorDisabledCheckBox" Content="同時押しのマークの同じ色塗り処理の無効化" />
-                    <CheckBox x:Name="allowedToUseMuchMemoryCheckBox" Content="メモリ使用量低減を無効化" />
-                    <CheckBox x:Name="everyFramePollingDisabledCheckBox" Content="入力の毎フレームポーリングを無効化" />
-                    <TextBlock x:Name="accurateInputSleepTimeLabel" Text="高精度入力時のポーリングレート" TextWrapping="Wrap" Margin="0,6,0,2" />
-                    <ComboBox x:Name="accurateInputSleepTimeComboBox" Width="200" HorizontalAlignment="Right" />
-                    <CheckBox x:Name="menuMoviePreviewDisabledCheckBox" Content="メニューでの動画再生を無効化" />
-                    <CheckBox x:Name="autoAdjustLatencyDisabledCheckBox" Content="レンテンシの自動調整を無効化" />
-                    <CheckBox x:Name="fontScaleDisabledCheckBox" Content="フォントスケールを無効化" />
-                    <CheckBox x:Name="highResolutionImageDisabledCheckBox" Content="高解像度画像を無効化" />
-                    <CheckBox x:Name="fixedFPSDisabledCheckBox" Content="60FPS固定を無効化" />
+                    <CheckBox Content="{Binding Texts[CheckBox1]}" IsChecked="{Binding TextBoxDisabled}" />
+                    <CheckBox Content="{Binding Texts[CheckBox2]}" IsChecked="{Binding DrawSameColorDisabled}" />
+                    <CheckBox Content="{Binding Texts[CheckBox5]}" IsChecked="{Binding AllowedToUseMuchMemory}" />
+                    <CheckBox Content="{Binding Texts[CheckBox7]}" IsChecked="{Binding EveryFramePollingDisabled}" />
+                    <TextBlock Text="{Binding Texts[AccurateInputSleepTimeDesc]}" TextWrapping="Wrap" Margin="0,6,0,2" />
+                    <ComboBox Width="200" HorizontalAlignment="Right" ItemsSource="{Binding AccurateInputSleepTimes}" SelectedItem="{Binding AccurateInputSleepTime}" />
+                    <CheckBox Content="{Binding Texts[CheckBox8]}" IsChecked="{Binding MenuMoviePreviewDisabled}" />
+                    <CheckBox Content="{Binding Texts[DisableAutoAdjustLatency]}" IsChecked="{Binding AutoAdjustLatencyDisabled}" />
+                    <CheckBox Content="{Binding Texts[DisableFontScale]}" IsChecked="{Binding FontScaleDisabled}" />
+                    <CheckBox Content="{Binding Texts[DisableHighResolutionImage]}" IsChecked="{Binding HighResolutionImageDisabled}" />
+                    <CheckBox Content="{Binding Texts[DisableFixedFPS]}" IsChecked="{Binding FixedFPSDisabled}" />
                 </StackPanel>
             </TabItem>
-            <TabItem x:Name="expansionTab" Header="拡張設定">
+            <TabItem Header="{Binding Texts[ExpansionSetting]}">
                 <StackPanel Margin="10,8">
-                    <CheckBox x:Name="runExpansionCheckBox" Content="PPDExpansionを使用する" />
+                    <CheckBox Content="{Binding Texts[Use PPDExpansion]}" IsChecked="{Binding RunExpansion}" />
                     <DockPanel Margin="32,6,0,0">
-                        <TextBox x:Name="expansionPortTextBox" DockPanel.Dock="Right" Width="164" />
-                        <TextBlock x:Name="expansionPortLabel" Text="使用するポート" VerticalAlignment="Center" />
+                        <TextBox DockPanel.Dock="Right" Width="164" Text="{Binding ExpansionPort, UpdateSourceTrigger=PropertyChanged}" />
+                        <TextBlock Text="{Binding Texts[Using Port]}" VerticalAlignment="Center" />
                     </DockPanel>
                 </StackPanel>
             </TabItem>

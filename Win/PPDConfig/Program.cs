@@ -1,4 +1,5 @@
-﻿using PPDFramework;
+﻿using PPDConfig.ViewModels;
+using PPDFramework;
 using System;
 using System.Windows;
 
@@ -24,7 +25,9 @@ namespace PPDConfig
             var application = new Application();
             try
             {
-                application.Run(new MainWindow());
+                var mainWindow = new MainWindow();
+                mainWindow.DataContext = new MainWindowViewModel(mainWindow, "PPD.ini", "PPDConfig.ini");
+                application.Run(mainWindow);
             }
             catch (Exception e)
             {
