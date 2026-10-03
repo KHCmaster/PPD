@@ -154,9 +154,6 @@
     <EmbeddedResource Update="Controls\Seekmain.resx">
       <DependentUpon>Seekmain.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Update="Forms\SettingForm.resx">
-      <DependentUpon>SettingForm.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Update="DockForm\TimeLineForm.resx">
       <DependentUpon>TimeLineForm.cs</DependentUpon>
     </EmbeddedResource>

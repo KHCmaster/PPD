@@ -1,36 +1,45 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Collections.ObjectModel;
 using System.Linq;
-using System.Windows.Forms;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
+using Keys = System.Windows.Forms.Keys;
 
 namespace PPDEditor.Forms
 {
-    public partial class SettingForm : Form
+    public partial class SettingWindow : Window
     {
+        readonly ObservableCollection<ShortcutRow> rows = [];
         bool ignore;
         ShortcutManager shortcutManager;
         int regularShortcutCount;
-        public SettingForm()
+        public SettingWindow()
         {
+            ignore = true;
             InitializeComponent();
+            ignore = false;
+            dataGridView1.ItemsSource = rows;
+            listBox1.SelectedIndex = 0;
         }
 
         public void SetLangAngShortcut(ShortcutManager shortcutManager)
         {
+            Title = Utility.Language["Setting"];
             label1.Text = Utility.Language["SFAutherName"];
             label2.Text = Utility.Language["SFMovieLatency"];
-            groupBox1.Text = Utility.Language["SFGroupBox1"];
-            groupBox2.Text = Utility.Language["SFGroupBox2"];
-            checkBox1.Text = Utility.Language["SFCheckBox1"];
-            checkBox2.Text = Utility.Language["SFCheckBox2"];
-            listBox1.Items.Clear();
-            listBox1.Items.Add(Utility.Language["General"]);
-            listBox1.Items.Add(Utility.Language["ShortcutKey"]);
-            listBox1.Items.Add(Utility.Language["EnvironmentVariable"]);
-            dataGridView1.Columns[0].HeaderText = Utility.Language["Command"];
-            dataGridView1.Columns[1].HeaderText = Utility.Language["Key"];
-            groupBox3.Text = Utility.Language["ToggleOption"];
+            groupBox1.Header = Utility.Language["SFGroupBox1"];
+            groupBox2.Header = Utility.Language["SFGroupBox2"];
+            checkBox1.Content = Utility.Language["SFCheckBox1"];
+            checkBox2.Content = Utility.Language["SFCheckBox2"];
+            ((ListBoxItem)listBox1.Items[0]).Content = Utility.Language["General"];
+            ((ListBoxItem)listBox1.Items[1]).Content = Utility.Language["ShortcutKey"];
+            ((ListBoxItem)listBox1.Items[2]).Content = Utility.Language["EnvironmentVariable"];
+            Column1.Header = Utility.Language["Command"];
+            Column2.Header = Utility.Language["Key"];
+            groupBox3.Header = Utility.Language["ToggleOption"];
             moveLabel1.Text = Utility.Language["Move1"];
             moveLabel2.Text = Utility.Language["Move2"];
             moveLabel3.Text = Utility.Language["Move3"];
@@ -40,16 +49,16 @@ namespace PPDEditor.Forms
             moveLabel7.Text = Utility.Language["Move7"];
             moveLabel8.Text = Utility.Language["Move8"];
             label13.Text = Utility.Language["None"];
-            button3.Text = Utility.Language["DeleteShortcut"];
+            button3.Content = Utility.Language["DeleteShortcut"];
             label6.Text = Utility.Language["DragAngleRestriction"];
-            checkBox3.Text = Utility.Language["SFCheckBox3"];
-            button4.Text = Utility.Language["AddCommand"];
-            button5.Text = Utility.Language["RemoveCommand"];
+            checkBox3.Content = new TextBlock { Text = Utility.Language["SFCheckBox3"], TextWrapping = TextWrapping.Wrap };
+            button4.Content = Utility.Language["AddCommand"];
+            button5.Content = Utility.Language["RemoveCommand"];
 
 
             this.shortcutManager = shortcutManager;
             ShortcutInfo[] shortcuts = shortcutManager.Shortcuts;
-            dataGridView1.Rows.Clear();
+            rows.Clear();
 
             regularShortcutCount = 0;
             foreach (ShortcutType type in Enum.GetValues<ShortcutType>())
@@ -62,18 +71,17 @@ namespace PPDEditor.Forms
                 {
                     foreach (var shortcut in shortcuts.Where(s => s.ShortcutType == ShortcutType.Custom))
                     {
-                        dataGridView1.Rows.Add(GetCustomShortcutText(shortcut), GetReadableShortcut(shortcut));
+                        rows.Add(new ShortcutRow(GetCustomShortcutText(shortcut), GetReadableShortcut(shortcut)));
                     }
                 }
                 else
                 {
                     var info = shortcuts.FirstOrDefault(i => i.ShortcutType == type);
-                    dataGridView1.Rows.Add(Utility.Language[type.ToString()], info == null ? "" : GetReadableShortcut(info));
+                    rows.Add(new ShortcutRow(Utility.Language[type.ToString()], info == null ? "" : GetReadableShortcut(info)));
                     regularShortcutCount++;
                 }
             }
 
-            dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
         }
 
         private static string GetCustomShortcutText(ShortcutInfo shortcut)
@@ -163,11 +171,11 @@ namespace PPDEditor.Forms
         {
             get
             {
-                return !checkBox1.Checked;
+                return checkBox1.IsChecked != true;
             }
             set
             {
-                checkBox1.Checked = !value;
+                checkBox1.IsChecked = !value;
             }
         }
 
@@ -175,11 +183,11 @@ namespace PPDEditor.Forms
         {
             get
             {
-                return !checkBox2.Checked;
+                return checkBox2.IsChecked != true;
             }
             set
             {
-                checkBox2.Checked = !value;
+                checkBox2.IsChecked = !value;
             }
         }
 
@@ -187,11 +195,11 @@ namespace PPDEditor.Forms
         {
             get
             {
-                return checkBox3.Checked;
+                return checkBox3.IsChecked == true;
             }
             set
             {
-                checkBox3.Checked = value;
+                checkBox3.IsChecked = value;
             }
         }
 
@@ -203,14 +211,14 @@ namespace PPDEditor.Forms
 
         private bool CheckSameShortcut()
         {
-            for (int i = 0; i < dataGridView1.RowCount; i++)
+            for (int i = 0; i < rows.Count; i++)
             {
-                for (int j = i + 1; j < dataGridView1.RowCount; j++)
+                for (int j = i + 1; j < rows.Count; j++)
                 {
-                    string val1 = dataGridView1[1, i].Value.ToString(), val2 = dataGridView1[1, j].Value.ToString();
+                    string val1 = rows[i].Key, val2 = rows[j].Key;
                     if (!String.IsNullOrEmpty(val1) && !String.IsNullOrEmpty(val2) && val1 == val2)
                     {
-                        MessageBox.Show(String.Format("{0}\n{1}\n{2}", Utility.Language["SameShortcutKeyAssigned"],
+                        MessageBox.Show(this, String.Format("{0}\n{1}\n{2}", Utility.Language["SameShortcutKeyAssigned"],
                             GetRowContent(i), GetRowContent(j)));
                         return true;
                     }
@@ -222,10 +230,10 @@ namespace PPDEditor.Forms
 
         private string GetRowContent(int index)
         {
-            return String.Format("{0} {1}", dataGridView1[0, index].Value, dataGridView1[1, index].Value);
+            return String.Format("{0} {1}", rows[index].Command, rows[index].Key);
         }
 
-        private void Button1_Click(object sender, EventArgs e)
+        private void Button1_Click(object sender, RoutedEventArgs e)
         {
             if (CheckSameShortcut())
             {
@@ -242,10 +250,10 @@ namespace PPDEditor.Forms
                 }
                 else if (type == ShortcutType.Custom)
                 {
-                    for (int i = iter; i < dataGridView1.Rows.Count; i++)
+                    for (int i = iter; i < rows.Count; i++)
                     {
-                        var shortcut = GetCustomShortcutInfo(dataGridView1[1, iter].Value.ToString(),
-                            GetCustomShortcutScriptPath(dataGridView1[0, iter].Value.ToString()));
+                        var shortcut = GetCustomShortcutInfo(rows[iter].Key,
+                            GetCustomShortcutScriptPath(rows[iter].Command));
                         if (shortcut != null)
                         {
                             shortcutManager.RegisterShortcut(shortcut);
@@ -255,7 +263,7 @@ namespace PPDEditor.Forms
                 }
                 else
                 {
-                    var shortcut = GetShortcutInfo(dataGridView1[1, iter].Value.ToString(), type);
+                    var shortcut = GetShortcutInfo(rows[iter].Key, type);
                     if (shortcut != null)
                     {
                         shortcutManager.RegisterShortcut(shortcut);
@@ -264,8 +272,7 @@ namespace PPDEditor.Forms
                 }
             }
 
-            this.DialogResult = DialogResult.OK;
-            this.Close();
+            this.DialogResult = true;
         }
 
         private static void GetModifiers(string str, out Keys key, out bool ctrl, out bool shift, out bool alt)
@@ -341,136 +348,140 @@ namespace PPDEditor.Forms
             return String.Join("+", list.ToArray());
         }
 
-        private void Button2_Click(object sender, EventArgs e)
+        private void ListBox1_SelectedIndexChanged(object sender, SelectionChangedEventArgs e)
         {
-            this.DialogResult = DialogResult.Cancel;
-            this.Close();
+            generalPanel.Visibility = listBox1.SelectedIndex == 0 ? Visibility.Visible : Visibility.Collapsed;
+            shortcutPanel.Visibility = listBox1.SelectedIndex == 1 ? Visibility.Visible : Visibility.Collapsed;
+            variablePanel.Visibility = listBox1.SelectedIndex == 2 ? Visibility.Visible : Visibility.Collapsed;
         }
 
-        private void ListBox1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            switch (listBox1.SelectedIndex)
-            {
-                case 0:
-                    HideExclude(generalPanel);
-                    break;
-                case 1:
-                    HideExclude(shortcutPanel);
-                    break;
-                case 2:
-                    HideExclude(variablePanel);
-                    break;
-            }
-        }
-
-        private void HideExclude(Control exclude)
-        {
-            foreach (Control c in splitContainer2.Panel1.Controls)
-            {
-                c.Visible = c == exclude;
-            }
-        }
-
-        private void TextBox1_TextChanged(object sender, EventArgs e)
+        private void TextBox1_TextChanged(object sender, TextChangedEventArgs e)
         {
             if (ignore) return;
             ShouldRestart = true;
         }
 
-        private void TextBox2_TextChanged(object sender, EventArgs e)
+        private void TextBox2_TextChanged(object sender, TextChangedEventArgs e)
         {
             if (ignore) return;
             ShouldRestart = true;
         }
 
-        private void ComboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        private void Button3_Click(object sender, RoutedEventArgs e)
         {
-            if (ignore) return;
-            ShouldRestart = true;
-        }
-
-        private void Button3_Click(object sender, EventArgs e)
-        {
-            if (dataGridView1.CurrentRow == null)
+            if (dataGridView1.SelectedItem is not ShortcutRow row)
             {
                 return;
             }
 
-            dataGridView1.CurrentRow.Cells[1].Value = "";
+            row.Key = "";
+            textBox3.Text = "";
         }
 
-        private void DataGridView1_SelectionChanged(object sender, EventArgs e)
+        private void DataGridView1_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (dataGridView1.CurrentRow == null)
+            if (dataGridView1.SelectedItem == null)
             {
                 return;
             }
 
-            button5.Enabled = dataGridView1.CurrentRow.Index >= regularShortcutCount;
+            button5.IsEnabled = dataGridView1.SelectedIndex >= regularShortcutCount;
             EnableEditMode();
         }
 
         private void EnableEditMode()
         {
-            dataGridView1.CurrentCell = dataGridView1.CurrentRow.Cells[1];
-            textBox3.Text = dataGridView1.CurrentCell.Value.ToString();
-            textBox3.Enabled = true;
+            if (dataGridView1.SelectedItem is not ShortcutRow row)
+            {
+                return;
+            }
+            textBox3.Text = row.Key;
+            textBox3.IsEnabled = true;
             textBox3.Focus();
             textBox3.SelectAll();
         }
 
-        private void TextBox3_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+        /// <summary>
+        /// 押したキーを、選んでいるコマンドのショートカットにします。Enter と Space は入力をやめます。
+        /// </summary>
+        private void TextBox3_PreviewKeyDown(object sender, KeyEventArgs e)
         {
-            e.IsInputKey = true;
-        }
-
-        private void TextBox3_KeyDown(object sender, KeyEventArgs e)
-        {
-            e.SuppressKeyPress = true;
             e.Handled = true;
 
-            if (e.KeyCode == Keys.ControlKey || e.KeyCode == Keys.ShiftKey || e.KeyCode == Keys.Menu)
+            // Alt を押しているときは SystemKey に本当のキーが入る
+            var key = e.Key == Key.System ? e.SystemKey : e.Key;
+            if (key == Key.LeftCtrl || key == Key.RightCtrl || key == Key.LeftShift || key == Key.RightShift || key == Key.LeftAlt || key == Key.RightAlt)
             {
                 return;
             }
 
-            if (e.KeyCode == Keys.Return || e.KeyCode == Keys.Space)
+            if (key == Key.Return || key == Key.Space)
             {
                 dataGridView1.Focus();
                 textBox3.Text = "";
                 return;
             }
 
-            textBox3.Text = GetReadableShortcut(new ShortcutInfo(e.KeyCode, e.Shift, e.Control, e.Alt, ShortcutType.None));
-            dataGridView1.CurrentRow?.Cells[1].Value = textBox3.Text;
-        }
-
-        private void TextBox3_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            e.Handled = true;
-        }
-
-        private void TextBox3_Leave(object sender, EventArgs e)
-        {
-            textBox3.Enabled = false;
-        }
-
-        private void Button4_Click(object sender, EventArgs e)
-        {
-            var form = new CommandSelectWindow();
-            form.SetLang();
-            if (WpfDialog.ShowDialog(form))
+            // ショートカットは WinForms のキーの値で保存しているので、仮想キーコードを経由して変換する（値は同じ）
+            var modifiers = Keyboard.Modifiers;
+            var winFormsKey = (Keys)KeyInterop.VirtualKeyFromKey(key);
+            textBox3.Text = GetReadableShortcut(new ShortcutInfo(winFormsKey, modifiers.HasFlag(ModifierKeys.Shift), modifiers.HasFlag(ModifierKeys.Control), modifiers.HasFlag(ModifierKeys.Alt), ShortcutType.None));
+            if (dataGridView1.SelectedItem is ShortcutRow row)
             {
-                dataGridView1.Rows.Add(GetCustomShortcutText(form.SelectedScriptPath), "");
-                dataGridView1.FirstDisplayedScrollingRowIndex = dataGridView1.RowCount - 1;
-                dataGridView1.CurrentCell = dataGridView1.Rows[dataGridView1.RowCount - 1].Cells[1];
+                row.Key = textBox3.Text;
+            }
+        }
+
+        private void TextBox3_LostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+        {
+            textBox3.IsEnabled = false;
+        }
+
+        private void Button4_Click(object sender, RoutedEventArgs e)
+        {
+            var form = new CommandSelectWindow
+            {
+                Owner = this
+            };
+            form.SetLang();
+            if (form.ShowDialog() == true)
+            {
+                var row = new ShortcutRow(GetCustomShortcutText(form.SelectedScriptPath), "");
+                rows.Add(row);
+                dataGridView1.SelectedItem = row;
+                dataGridView1.ScrollIntoView(row);
                 EnableEditMode();
             }
         }
 
-        private void Button5_Click(object sender, EventArgs e)
+        private void Button5_Click(object sender, RoutedEventArgs e)
         {
-            dataGridView1.Rows.RemoveAt(dataGridView1.CurrentRow.Index);
+            if (dataGridView1.SelectedItem is ShortcutRow row)
+            {
+                rows.Remove(row);
+            }
+        }
+
+        /// <summary>
+        /// ショートカットの一覧の 1 行です。
+        /// </summary>
+        class ShortcutRow(string command, string key) : System.ComponentModel.INotifyPropertyChanged
+        {
+            private string key = key;
+
+            public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+
+            public string Command { get; } = command;
+
+            public string Key
+            {
+                get { return key; }
+                set
+                {
+                    key = value;
+                    PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(nameof(Key)));
+                }
+            }
         }
     }
 }
