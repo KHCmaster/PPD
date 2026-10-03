@@ -3,13 +3,14 @@ using PPDEditor.Forms;
 using PPDFramework;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
-using System.Windows.Forms.DataVisualization.Charting;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace PPDEditor
 {
-    public partial class StatsManager : ChangableDockContent
+    public partial class StatsManager : DockView
     {
         public enum ChartMode
         {
@@ -22,7 +23,7 @@ namespace PPDEditor
         private LayerStats[] currentStats;
         private readonly Dictionary<ButtonType, Color> colorDict = new()
         {
-            {ButtonType.Square, Color.FromArgb(231,75,245)},            {ButtonType.Cross, Color.FromArgb(100,185,239)},            {ButtonType.Circle, Color.FromArgb(238,54,80)},            {ButtonType.Triangle, Color.FromArgb(24,208,37)},            {ButtonType.Left, Color.FromArgb(255,65,221)},            {ButtonType.Down, Color.FromArgb(65,208,255)},            {ButtonType.Right, Color.FromArgb(255,65,98)},            {ButtonType.Up, Color.FromArgb(66,254,77)},            {ButtonType.R, Color.FromArgb(181,245,251)},            {ButtonType.L, Color.FromArgb(75,231,245)}        };
+            {ButtonType.Square, Color.FromRgb(231,75,245)},            {ButtonType.Cross, Color.FromRgb(100,185,239)},            {ButtonType.Circle, Color.FromRgb(238,54,80)},            {ButtonType.Triangle, Color.FromRgb(24,208,37)},            {ButtonType.Left, Color.FromRgb(255,65,221)},            {ButtonType.Down, Color.FromRgb(65,208,255)},            {ButtonType.Right, Color.FromRgb(255,65,98)},            {ButtonType.Up, Color.FromRgb(66,254,77)},            {ButtonType.R, Color.FromRgb(181,245,251)},            {ButtonType.L, Color.FromRgb(75,231,245)}        };
 
         public ChartMode CurrentChartMode
         {
@@ -41,8 +42,6 @@ namespace PPDEditor
         public StatsManager()
         {
             InitializeComponent();
-            comboBox1.SelectedIndex = 0;
-            comboBox1.SelectedIndexChanged += ComboBox1_SelectedIndexChanged;
         }
 
         public void SetEvent()
@@ -52,42 +51,38 @@ namespace PPDEditor
 
         public void SetLang()
         {
-            this.データ更新ToolStripMenuItem.Text = Utility.Language["UpdateData"];
-            this.tabPage1.Text = Utility.Language["Data"];
-            this.tabPage2.Text = Utility.Language["Visualization"];
-            this.tabPage3.Text = Utility.Language["Difficulty"];
+            this.データ更新MenuItem.Header = Utility.Language["UpdateData"];
+            this.tabPage1.Header = Utility.Language["Data"];
+            this.tabPage2.Header = Utility.Language["Visualization"];
+            this.tabPage3.Header = Utility.Language["Difficulty"];
             this.comboBox1.Items.Clear();
-            this.comboBox1.Items.AddRange([
-                String.Format("{0}+{1}",Utility.Language["NormalMark"],Utility.Language["LongMark"]),
-                Utility.Language["NormalMark"],
-                Utility.Language["LongMark"]
-            ]);
+            this.comboBox1.Items.Add(String.Format("{0}+{1}", Utility.Language["NormalMark"], Utility.Language["LongMark"]));
+            this.comboBox1.Items.Add(Utility.Language["NormalMark"]);
+            this.comboBox1.Items.Add(Utility.Language["LongMark"]);
             comboBox1.SelectedIndex = 0;
         }
 
         private void RefreshData()
         {
-            dataGridView1.Rows.Clear();
-
             LayerStats stats = currentStats[listBox1.SelectedIndex];
+            var rows = new List<KeyValuePair<string, object>>();
             foreach (var i in WindowUtility.TimeLineForm.RowManager.OrderedVisibleRows)
             {
-                dataGridView1.Rows.Add(String.Format("{0}({1}+{2})", GetButtonString(i), Utility.Language["NormalMark"], Utility.Language["LongMark"]),
-                    String.Format("{0}({1}+{2})", stats.NormalCounts[i] + stats.LongCounts[i], stats.NormalCounts[i], stats.LongCounts[i]));
+                rows.Add(new(String.Format("{0}({1}+{2})", GetButtonString(i), Utility.Language["NormalMark"], Utility.Language["LongMark"]),
+                    String.Format("{0}({1}+{2})", stats.NormalCounts[i] + stats.LongCounts[i], stats.NormalCounts[i], stats.LongCounts[i])));
             }
-            dataGridView1.Rows.Add(Utility.Language["NormalMark"], stats.AllNormalCounts);
-            dataGridView1.Rows.Add(Utility.Language["LongMark"], stats.AllLongCounts);
-            dataGridView1.Rows.Add(Utility.Language["Sum"], stats.AllCounts);
-            dataGridView1.Rows.Add(Utility.Language["Difficulty(Average)"], stats.Result.Average);
-            dataGridView1.Rows.Add(Utility.Language["Difficulty(Peak)"], stats.Result.Peak);
+            rows.Add(new(Utility.Language["NormalMark"], stats.AllNormalCounts));
+            rows.Add(new(Utility.Language["LongMark"], stats.AllLongCounts));
+            rows.Add(new(Utility.Language["Sum"], stats.AllCounts));
+            rows.Add(new(Utility.Language["Difficulty(Average)"], stats.Result.Average));
+            rows.Add(new(Utility.Language["Difficulty(Peak)"], stats.Result.Peak));
+            dataGridView1.ItemsSource = rows;
         }
 
         private void RefreshChart()
         {
             LayerStats stats = currentStats[listBox1.SelectedIndex];
-            var strList = new List<string>();
-            var dataList = new List<int>();
-            var iters = new List<int>();
+            var items = new List<PieChartItem>();
             for (int i = 0; i < 10; i++)
             {
                 switch (CurrentChartMode)
@@ -95,52 +90,42 @@ namespace PPDEditor
                     case ChartMode.Normal:
                         if (stats.NormalCounts[i] > 0)
                         {
-                            strList.Add(GetButtonString(i));
-                            dataList.Add(stats.NormalCounts[i]);
-                            iters.Add(i);
+                            items.Add(CreatePieItem(i, stats.NormalCounts[i]));
                         }
                         break;
                     case ChartMode.Long:
                         if (stats.LongCounts[i] > 0)
                         {
-                            strList.Add(GetButtonString(i));
-                            dataList.Add(stats.LongCounts[i]);
-                            iters.Add(i);
+                            items.Add(CreatePieItem(i, stats.LongCounts[i]));
                         }
                         break;
                     case ChartMode.Both:
                         if (stats.NormalCounts[i] + stats.LongCounts[i] > 0)
                         {
-                            strList.Add(GetButtonString(i));
-                            dataList.Add(stats.NormalCounts[i] + stats.LongCounts[i]);
-                            iters.Add(i);
+                            items.Add(CreatePieItem(i, stats.NormalCounts[i] + stats.LongCounts[i]));
                         }
                         break;
                 }
             }
 
-            chart1.Series["Default"].Points.DataBindXY(strList, dataList);
-            chart1.Series["Default"].Label = "#VALX (#PERCENT)";
-            int iter = 0;
-            foreach (DataPoint p in chart1.Series["Default"].Points)
-            {
-                p.Color = Color.FromArgb(200, colorDict[(ButtonType)iters[iter]]);
-                iter++;
-            }
+            chart1.Items = items;
+        }
+
+        private PieChartItem CreatePieItem(int i, int value)
+        {
+            var color = colorDict[(ButtonType)i];
+            return new PieChartItem(GetButtonString(i), value, Color.FromArgb(200, color.R, color.G, color.B));
         }
 
         private void RefreshDifficultyChart()
         {
             LayerStats stats = currentStats[listBox1.SelectedIndex];
-            var times = new List<int>();
-            var points = new List<float>();
-            chart2.ChartAreas[0].AxisX.LabelStyle.Format = "MyAxisXCustomFormat";
+            var points = new List<KeyValuePair<int, float>>();
             for (int i = (int)Math.Floor(WindowUtility.IniFileWriter.StartTime); i <= (int)Math.Ceiling(WindowUtility.IniFileWriter.EndTime); i++)
             {
-                times.Add(i);
-                points.Add(stats.Result.Data.TryGetValue(i, out float value) ? value : 0);
+                points.Add(new(i, stats.Result.Data.TryGetValue(i, out float value) ? value : 0));
             }
-            chart2.Series["Default"].Points.DataBindXY(times, points);
+            chart2.Points = points;
         }
 
         private static string GetButtonString(int i)
@@ -148,7 +133,7 @@ namespace PPDEditor
             return Utility.Language[((ButtonType)i).ToString()];
         }
 
-        void ComboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        void ComboBox1_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (currentStats == null)
             {
@@ -161,7 +146,7 @@ namespace PPDEditor
             }
         }
 
-        private void データ更新ToolStripMenuItem_Click(object sender, EventArgs e)
+        private void データ更新MenuItem_Click(object sender, RoutedEventArgs e)
         {
             var statsList = new List<LayerStats>();
             foreach (LayerDisplay ld in WindowUtility.LayerManager.AllLayerDisplay)
@@ -206,7 +191,7 @@ namespace PPDEditor
             listBox1.SelectedIndex = 0;
         }
 
-        private void ListBox1_SelectedIndexChanged(object sender, EventArgs e)
+        private void ListBox1_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (currentStats == null)
             {
@@ -221,30 +206,9 @@ namespace PPDEditor
             }
         }
 
-        private void Chart2_FormatNumber(object sender, FormatNumberEventArgs e)
-        {
-            if (e.ElementType == ChartElementType.AxisLabels && e.Format == "MyAxisXCustomFormat")
-            {
-                e.LocalizedValue = new TimeSpan(0, 0, (int)e.Value).ToString(@"mm\:ss");
-            }
-        }
-
         void Seekmain_onmoveseek(object sender, EventArgs e)
         {
-            if (Visible && chart2.Visible)
-            {
-                var time = (int)WindowUtility.Seekmain.Currenttime;
-                var normalColor = Color.Empty;
-                foreach (DataPoint p in chart2.Series["Default"].Points)
-                {
-                    Color newColor = normalColor;
-                    if ((int)p.XValue == time)
-                    {
-                        newColor = Color.Red;
-                    }
-                    p.Color = newColor;
-                }
-            }
+            chart2.HighlightTime = (int)WindowUtility.Seekmain.Currenttime;
         }
 
         class LayerStats(string name, ScoreDifficultyMeasureResult result)

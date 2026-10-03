@@ -30,7 +30,6 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="WinForms.DataVisualization" />
     <PackageReference Include="Newtonsoft.Json" />
     <PackageReference Include="Vortice.DirectInput" />
     <PackageReference Include="System.Data.SQLite.Core" />
@@ -92,9 +91,6 @@
     </EmbeddedResource>
     <EmbeddedResource Update="DockForm\Script\ScriptListDockForm.resx">
       <DependentUpon>ScriptListDockForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="DockForm\StatsManager.resx">
-      <DependentUpon>StatsManager.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Update="DockForm\DXForm.resx">
       <DependentUpon>DXForm.cs</DependentUpon>

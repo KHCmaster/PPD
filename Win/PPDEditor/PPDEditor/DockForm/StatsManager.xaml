@@ -1,0 +1,41 @@
+<forms:DockView x:Class="PPDEditor.StatsManager"
+                xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                xmlns:forms="clr-namespace:PPDEditor.Forms"
+                xmlns:controls="clr-namespace:PPDEditor.Controls">
+    <DockPanel>
+        <Menu DockPanel.Dock="Top">
+            <MenuItem x:Name="データ更新MenuItem" Header="データ更新" Click="データ更新MenuItem_Click" />
+        </Menu>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="128" MinWidth="40" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <ListBox x:Name="listBox1" SelectionChanged="ListBox1_SelectionChanged" />
+            <GridSplitter Grid.Column="1" Width="4" HorizontalAlignment="Stretch" />
+            <TabControl x:Name="tabControl1" Grid.Column="2">
+                <TabItem x:Name="tabPage1" Header="データ">
+                    <DataGrid x:Name="dataGridView1" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="None"
+                              CanUserSortColumns="False" CanUserAddRows="False">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Binding="{Binding Key}" Width="*" />
+                            <DataGridTextColumn Binding="{Binding Value}" Width="*" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </TabItem>
+                <TabItem x:Name="tabPage2" Header="可視化">
+                    <Grid>
+                        <controls:PieChart x:Name="chart1" Margin="0,32,0,0" />
+                        <ComboBox x:Name="comboBox1" Width="121" Margin="6" HorizontalAlignment="Left" VerticalAlignment="Top"
+                                  SelectionChanged="ComboBox1_SelectionChanged" />
+                    </Grid>
+                </TabItem>
+                <TabItem x:Name="tabPage3" Header="難易度">
+                    <controls:TimeColumnChart x:Name="chart2" />
+                </TabItem>
+            </TabControl>
+        </Grid>
+    </DockPanel>
+</forms:DockView>

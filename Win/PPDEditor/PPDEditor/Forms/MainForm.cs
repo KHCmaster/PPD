@@ -67,6 +67,7 @@ namespace PPDEditor.Forms
         static ResourceManager rm;
         static ScriptManager scm;
         static StatsManager stm;
+        static WpfDockShell stmDock;
 
         long starttime;
         long movielastime;
@@ -176,6 +177,7 @@ namespace PPDEditor.Forms
             scm = new ScriptManager();
             SplashWindow.ChangeStatus(String.Format(Utility.Language["InitializingStart"], Utility.Language["StatsManager"]));
             stm = new StatsManager();
+            stmDock = new WpfDockShell(stm, "PPDEditor.StatsManager");
 
             Grid = new SquareGrid();
             NativeMethods.timeBeginPeriod(1);
@@ -214,7 +216,7 @@ namespace PPDEditor.Forms
             hfDock.VisibleChanged += Windowvisiblechanged;
             rm.VisibleChanged += Windowvisiblechanged;
             scm.VisibleChanged += Windowvisiblechanged;
-            stm.VisibleChanged += Windowvisiblechanged;
+            stmDock.VisibleChanged += Windowvisiblechanged;
 
             em.SetEvent();
             sm.SetEvent();
@@ -603,7 +605,7 @@ namespace PPDEditor.Forms
             hfDock.DockPanel = null;
             rm.DockPanel = null;
             scm.DockPanel = null;
-            stm.DockPanel = null;
+            stmDock.DockPanel = null;
             CloseAllDocuments();
 
             dockPanel1.LoadFromXml(path, this.DeserializeForm);
@@ -691,7 +693,7 @@ namespace PPDEditor.Forms
             this.ヘルプToolStripMenuItem.Checked = Utility.CheckVisible(hfDock);
             this.リソースマネージャーToolStripMenuItem.Checked = Utility.CheckVisible(rm);
             this.スクリプトマネージャーToolStripMenuItem.Checked = Utility.CheckVisible(scm);
-            this.統計ToolStripMenuItem.Checked = Utility.CheckVisible(stm);
+            this.統計ToolStripMenuItem.Checked = Utility.CheckVisible(stmDock);
         }
 
         private IDockContent DeserializeForm(string persistentString)
@@ -713,7 +715,7 @@ namespace PPDEditor.Forms
                 "PPDEditor.HelpForm" => hfDock,
                 "PPDEditor.ResourceManager" => rm,
                 "PPDEditor.ScriptManager" => scm,
-                "PPDEditor.StatsManager" => stm,
+                "PPDEditor.StatsManager" => stmDock,
                 _ => null,
             };
         }
@@ -2437,7 +2439,7 @@ namespace PPDEditor.Forms
 
         private void 統計ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Utility.ShowOrHideWindow(dockPanel1, stm, ModifierKeys);
+            Utility.ShowOrHideWindow(dockPanel1, stmDock, ModifierKeys);
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
