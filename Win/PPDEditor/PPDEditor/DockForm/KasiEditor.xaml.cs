@@ -2,11 +2,12 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Windows.Forms;
+using System.Linq;
+using System.Windows;
 
 namespace PPDEditor
 {
-    public partial class KasiEditor : ScrollableForm
+    public partial class KasiEditor : DockView
     {
         readonly SortedList<float, string> changedata = new(100);
         string alreadyadd = "すでにこの時間にはテキストが指定されています";
@@ -14,28 +15,26 @@ namespace PPDEditor
         public KasiEditor()
         {
             InitializeComponent();
-            foreach (DataGridViewColumn c in dataGridView1.Columns)
-                c.SortMode = DataGridViewColumnSortMode.NotSortable;
         }
         public void SetLang()
         {
-            this.Text = Utility.Language["KE"];
-            this.dataGridView1.Columns[0].HeaderText = Utility.Language["KEGridColumn1"];
-            this.dataGridView1.Columns[1].HeaderText = Utility.Language["KEGridColumn2"];
+            this.TabText = Utility.Language["KE"];
+            this.Column1.Header = Utility.Language["KEGridColumn1"];
+            this.Column2.Header = Utility.Language["KEGridColumn2"];
             this.label1.Text = Utility.Language["KELabel1"];
             this.label2.Text = Utility.Language["KELabel2"];
-            this.button1.Text = Utility.Language["KEButton1"];
-            this.button2.Text = Utility.Language["KEButton2"];
-            this.button3.Text = Utility.Language["KEButton3"];
-            this.button4.Text = Utility.Language["KEButton4"];
-            this.button5.Text = Utility.Language["KEButton5"];
+            this.button1.Content = Utility.Language["KEButton1"];
+            this.button2.Content = Utility.Language["KEButton2"];
+            this.button3.Content = Utility.Language["KEButton3"];
+            this.button4.Content = Utility.Language["KEButton4"];
+            this.button5.Content = Utility.Language["KEButton5"];
             this.alreadyadd = Utility.Language["KEAlreadyAdded"];
             this.noselectedline = Utility.Language["KENoSelectedLine"];
         }
         public void SetSkin()
         {
-            this.label1.ForeColor = PPDEditorSkin.Skin.TransparentTextColor;
-            this.label2.ForeColor = PPDEditorSkin.Skin.TransparentTextColor;
+            this.label1.Foreground = WpfSkin.TransparentTextBrush;
+            this.label2.Foreground = WpfSkin.TransparentTextBrush;
         }
         public float[] GetKasiChangeWithinTime(float starttime, float endtime)
         {
@@ -77,9 +76,9 @@ namespace PPDEditor
                 var index = changedata.IndexOfKey(time);
                 if (index >= 0)
                 {
-                    dataGridView1.Rows[index].Selected = true;
-                    dataGridView1.FirstDisplayedScrollingRowIndex = index;
-                    ShowOrHideWindow(this);
+                    dataGridView1.SelectedIndex = index;
+                    dataGridView1.ScrollIntoView(dataGridView1.SelectedItem);
+                    ShowDock();
                 }
             }
         }
@@ -107,7 +106,6 @@ namespace PPDEditor
                     if (temp.Length >= 2)
                     {
                         changedata.Add(float.Parse(temp[0], CultureInfo.InvariantCulture), temp[1]);
-                        dataGridView1.RowCount++;
                     }
                     else changedata.Add(float.Parse(temp[0], CultureInfo.InvariantCulture), "");
                 }
@@ -150,7 +148,7 @@ namespace PPDEditor
         public void Clear()
         {
             changedata.Clear();
-            this.dataGridView1.RowCount = 0;
+            Updatedatagrid();
         }
         private static string Removeextra(string st)
         {
@@ -168,57 +166,66 @@ namespace PPDEditor
             }
             return st;
         }
-        private void Button1_Click(object sender, EventArgs e)
+        private void Button1_Click(object sender, RoutedEventArgs e)
         {
             if (!changedata.ContainsKey((float)WindowUtility.Seekmain.Currenttime))
             {
                 var text = textBox1.Text.Replace("\n", "");
                 changedata.Add((float)WindowUtility.Seekmain.Currenttime, text);
-                this.dataGridView1.Rows.Add(1);
                 Updatedatagrid();
                 ContentChanged();
             }
             else
             {
-                MessageBox.Show(alreadyadd);
+                MessageBox.Show(Window.GetWindow(this), alreadyadd);
             }
         }
         private void Updatedatagrid()
         {
-            for (int i = 0; i < changedata.Count; i++)
+            // 選んでいる行は、行の番号で保つ（以前の DataGridView と同じ）
+            var selectedIndex = dataGridView1.SelectedIndex;
+            dataGridView1.ItemsSource = changedata.ToList();
+            if (selectedIndex >= 0 && selectedIndex < changedata.Count)
             {
-                this.dataGridView1[0, i].Value = changedata.Keys[i];
-                this.dataGridView1[1, i].Value = changedata.Values[i];
+                dataGridView1.SelectedIndex = selectedIndex;
             }
         }
 
-        private void Button2_Click(object sender, EventArgs e)
+        /// <summary>
+        /// 選んでいる行の番号です。選んでいないときは -1 です。
+        /// </summary>
+        private int CurrentIndex
         {
-            if (this.dataGridView1.CurrentRow == null)
+            get { return dataGridView1.SelectedIndex; }
+        }
+
+        private void Button2_Click(object sender, RoutedEventArgs e)
+        {
+            if (CurrentIndex < 0)
             {
-                MessageBox.Show(noselectedline);
+                MessageBox.Show(Window.GetWindow(this), noselectedline);
             }
             else
             {
-                changedata.RemoveAt(this.dataGridView1.CurrentRow.Index);
-                this.dataGridView1.Rows.RemoveAt(this.dataGridView1.CurrentRow.Index);
+                changedata.RemoveAt(CurrentIndex);
+                Updatedatagrid();
                 ContentChanged();
             }
         }
 
-        private void Button3_Click(object sender, EventArgs e)
+        private void Button3_Click(object sender, RoutedEventArgs e)
         {
-            if (this.dataGridView1.CurrentRow == null)
+            if (CurrentIndex < 0)
             {
-                MessageBox.Show(noselectedline);
+                MessageBox.Show(Window.GetWindow(this), noselectedline);
             }
             else
             {
-                float time = changedata.Keys[this.dataGridView1.CurrentRow.Index];
+                float time = changedata.Keys[CurrentIndex];
                 if (!changedata.ContainsKey(time + (float)this.numericUpDown1.Value))
                 {
-                    string text = changedata.Values[this.dataGridView1.CurrentRow.Index];
-                    changedata.RemoveAt(this.dataGridView1.CurrentRow.Index);
+                    string text = changedata.Values[CurrentIndex];
+                    changedata.RemoveAt(CurrentIndex);
                     changedata.Add(time + (float)this.numericUpDown1.Value, text);
                     Updatedatagrid();
                     ContentChanged();
@@ -226,22 +233,22 @@ namespace PPDEditor
             }
         }
 
-        private void Button4_Click(object sender, EventArgs e)
+        private void Button4_Click(object sender, RoutedEventArgs e)
         {
-            if (this.dataGridView1.CurrentRow == null)
+            if (CurrentIndex < 0)
             {
-                MessageBox.Show(noselectedline);
+                MessageBox.Show(Window.GetWindow(this), noselectedline);
             }
             else
             {
                 var fm4 = new ChangeKasiWindow();
                 fm4.SetLang();
-                fm4.Beforetext = changedata.Values[this.dataGridView1.CurrentRow.Index];
+                fm4.Beforetext = changedata.Values[CurrentIndex];
                 if (WpfDialog.ShowDialog(fm4))
                 {
-                    float time = changedata.Keys[this.dataGridView1.CurrentRow.Index];
+                    float time = changedata.Keys[CurrentIndex];
                     var newtext = fm4.Newtext.Replace("\n", "");
-                    changedata.RemoveAt(this.dataGridView1.CurrentRow.Index);
+                    changedata.RemoveAt(CurrentIndex);
                     changedata.Add(time, newtext);
                     Updatedatagrid();
                     ContentChanged();
@@ -249,31 +256,21 @@ namespace PPDEditor
             }
         }
 
-        private void Button5_Click(object sender, EventArgs e)
+        private void Button5_Click(object sender, RoutedEventArgs e)
         {
-            if (this.dataGridView1.CurrentRow == null)
+            if (CurrentIndex < 0)
             {
-                MessageBox.Show(noselectedline);
+                MessageBox.Show(Window.GetWindow(this), noselectedline);
             }
             else
             {
-                string text = changedata.Values[dataGridView1.CurrentRow.Index];
+                string text = changedata.Values[CurrentIndex];
                 this.textBox1.Text = text;
                 this.Button1_Click(this, e);
                 ContentChanged();
             }
         }
-        private void DataGridView1_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
-        {
-            ContentChanged();
-        }
-
-        private void DataGridView1_RowsRemoved(object sender, DataGridViewRowsRemovedEventArgs e)
-        {
-            ContentChanged();
-        }
-
-        private void Button6_Click(object sender, EventArgs e)
+        private void Button6_Click(object sender, RoutedEventArgs e)
         {
             this.textBox1.Text = "";
             this.textBox1.Focus();

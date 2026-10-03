@@ -36,6 +36,7 @@ namespace PPDEditor.Forms
             Controls.Add(host);
             TabText = Text = view.TabText;
             view.TabTextChanged += (sender, e) => TabText = Text = view.TabText;
+            view.ShowRequested += (sender, e) => ShowOrHideWindow(this);
         }
 
         protected override string GetPersistString()

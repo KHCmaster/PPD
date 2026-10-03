@@ -27,6 +27,19 @@ namespace PPDEditor.Forms
         public event EventHandler TabTextChanged;
 
         /// <summary>
+        /// このドックを表示して前に出すように頼まれたときに発生します（ドックを入れている側が処理する）。
+        /// </summary>
+        public event EventHandler ShowRequested;
+
+        /// <summary>
+        /// このドックを表示して前に出します（以前の ScrollableForm.ShowOrHideWindow(this) と同じ）。
+        /// </summary>
+        protected void ShowDock()
+        {
+            ShowRequested?.Invoke(this, EventArgs.Empty);
+        }
+
+        /// <summary>
         /// タブの表示名です。
         /// </summary>
         public string TabText
