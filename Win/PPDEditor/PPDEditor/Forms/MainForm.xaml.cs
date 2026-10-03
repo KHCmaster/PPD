@@ -590,7 +590,6 @@ namespace PPDEditor.Forms
             gc.SetLang();
             rm.SetLang();
             scm.SetLang();
-            stm.SetLang();
             tlf.SetLang();
         }
 

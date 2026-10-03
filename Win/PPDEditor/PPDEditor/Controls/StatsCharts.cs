@@ -23,14 +23,22 @@ namespace PPDEditor.Controls
 
         IReadOnlyList<PieChartItem> items = [];
 
+        /// <summary>
+        /// 円グラフの項目です（結び付けられるように依存関係プロパティにしてある）。
+        /// </summary>
+        public static readonly DependencyProperty ItemsProperty = DependencyProperty.Register(
+            nameof(Items), typeof(IReadOnlyList<PieChartItem>), typeof(PieChart),
+            new PropertyMetadata(null, (d, e) =>
+            {
+                var chart = (PieChart)d;
+                chart.items = (IReadOnlyList<PieChartItem>)e.NewValue ?? [];
+                chart.InvalidateVisual();
+            }));
+
         public IReadOnlyList<PieChartItem> Items
         {
-            get { return items; }
-            set
-            {
-                items = value ?? [];
-                InvalidateVisual();
-            }
+            get { return (IReadOnlyList<PieChartItem>)GetValue(ItemsProperty) ?? []; }
+            set { SetValue(ItemsProperty, value); }
         }
 
         protected override void OnRender(DrawingContext drawingContext)
@@ -129,29 +137,36 @@ namespace PPDEditor.Controls
         /// </summary>
         public IReadOnlyList<KeyValuePair<int, float>> Points
         {
-            get { return points; }
-            set
-            {
-                points = value ?? [];
-                InvalidateVisual();
-            }
+            get { return (IReadOnlyList<KeyValuePair<int, float>>)GetValue(PointsProperty) ?? []; }
+            set { SetValue(PointsProperty, value); }
         }
+
+        public static readonly DependencyProperty PointsProperty = DependencyProperty.Register(
+            nameof(Points), typeof(IReadOnlyList<KeyValuePair<int, float>>), typeof(TimeColumnChart),
+            new PropertyMetadata(null, (d, e) =>
+            {
+                var chart = (TimeColumnChart)d;
+                chart.points = (IReadOnlyList<KeyValuePair<int, float>>)e.NewValue ?? [];
+                chart.InvalidateVisual();
+            }));
 
         /// <summary>
         /// 赤くする秒です。
         /// </summary>
         public int? HighlightTime
         {
-            get { return highlightTime; }
-            set
-            {
-                if (highlightTime != value)
-                {
-                    highlightTime = value;
-                    InvalidateVisual();
-                }
-            }
+            get { return (int?)GetValue(HighlightTimeProperty); }
+            set { SetValue(HighlightTimeProperty, value); }
         }
+
+        public static readonly DependencyProperty HighlightTimeProperty = DependencyProperty.Register(
+            nameof(HighlightTime), typeof(int?), typeof(TimeColumnChart),
+            new PropertyMetadata(null, (d, e) =>
+            {
+                var chart = (TimeColumnChart)d;
+                chart.highlightTime = (int?)e.NewValue;
+                chart.InvalidateVisual();
+            }));
 
         protected override void OnRender(DrawingContext drawingContext)
         {
