@@ -3,11 +3,14 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Windows.Threading;
+using System.Threading;
 
 namespace FolderDiffChecker
 {
-    class DiffFinder(string oldFolderPath, string newFolderPath, Regex[] exceptFilePatterns, Regex[] forceIncludeFilePatterns, Dispatcher dispatcher)
+    /// <summary>
+    /// 2 つのフォルダーを比べて、追加・変更されたファイルを探します。イベントは作ったスレッドの <see cref="SynchronizationContext"/> で起こします。
+    /// </summary>
+    class DiffFinder(string oldFolderPath, string newFolderPath, Regex[] exceptFilePatterns, Regex[] forceIncludeFilePatterns, SynchronizationContext context)
     {
         public delegate void DiffEventHandler(DiffModel diffModel);
         public event DiffEventHandler DiffFound;
@@ -16,33 +19,17 @@ namespace FolderDiffChecker
 
         protected void OnDiffFind(DiffModel diffModel)
         {
-            if (!dispatcher.CheckAccess())
-            {
-                dispatcher.Invoke(() => OnDiffFind(diffModel));
-                return;
-            }
-            DiffFound?.Invoke(diffModel);
+            context.Send(_ => DiffFound?.Invoke(diffModel), null);
         }
 
         protected void OnFinished()
         {
-            if (!dispatcher.CheckAccess())
-            {
-                dispatcher.Invoke(OnFinished);
-                return;
-            }
-            Finished?.Invoke(this, EventArgs.Empty);
+            context.Send(_ => Finished?.Invoke(this, EventArgs.Empty), null);
         }
 
         protected void OnBeforeCompare(string text)
         {
-            if (!dispatcher.CheckAccess())
-            {
-                dispatcher.Invoke(() => OnBeforeCompare(text));
-                return;
-            }
-
-            BeforeCompare?.Invoke(text);
+            context.Send(_ => BeforeCompare?.Invoke(text), null);
         }
 
         public string OldFolderPath
@@ -68,8 +55,6 @@ namespace FolderDiffChecker
             get;
             private set;
         } = forceIncludeFilePatterns;
-
-        readonly Dispatcher dispatcher = dispatcher;
 
         public void Execute()
         {
