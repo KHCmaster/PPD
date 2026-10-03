@@ -52,7 +52,7 @@ namespace PPDEditor.Forms
         static GeometryCreator gc;
         static MemoWindow mw;
         static HelpForm hf;
-        static WriteDoneForm wdf;
+        static WriteDoneWindow wdf;
         static ResourceManager rm;
         static ScriptManager scm;
         static StatsManager stm;
@@ -147,7 +147,7 @@ namespace PPDEditor.Forms
             SplashForm.ChangeStatus(String.Format(Utility.Language["InitializingStart"], Utility.Language["Help"]));
             hf = new HelpForm();
             SplashForm.ChangeStatus(String.Format(Utility.Language["InitializingStart"], Utility.Language["WriteDoneWindow"]));
-            wdf = new WriteDoneForm();
+            wdf = new WriteDoneWindow();
             SplashForm.ChangeStatus(String.Format(Utility.Language["InitializingStart"], Utility.Language["ResourceManager"]));
             rm = new ResourceManager();
             SplashForm.ChangeStatus(String.Format(Utility.Language["InitializingStart"], Utility.Language["ScriptManager"]));
@@ -609,10 +609,10 @@ namespace PPDEditor.Forms
 
         private static void ChangeAuthorName()
         {
-            var anf = new AuthorNameForm();
+            var anf = new AuthorNameWindow();
             anf.SetLang();
             if (PPDStaticSetting.AuthorName != null) anf.AuthorName = PPDStaticSetting.AuthorName;
-            if (anf.ShowDialog() == DialogResult.OK)
+            if (WpfDialog.ShowDialog(anf))
             {
                 PPDStaticSetting.AuthorName = anf.AuthorName;
             }
@@ -2331,9 +2331,9 @@ namespace PPDEditor.Forms
 
         private void ライン入れ替えToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var fm5 = new SwapLineForm();
+            var fm5 = new SwapLineWindow();
             fm5.SetLang();
-            if (fm5.ShowDialog() == DialogResult.OK)
+            if (WpfDialog.ShowDialog(fm5))
             {
                 int first = fm5.First;
                 int second = fm5.Second;
@@ -2873,11 +2873,11 @@ namespace PPDEditor.Forms
 
         private void 詳細設定ToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            var fsf = new FarnessSettingForm
+            var fsf = new FarnessSettingWindow
             {
                 Farness = Farness
             };
-            if (fsf.ShowDialog() == DialogResult.OK)
+            if (WpfDialog.ShowDialog(fsf))
             {
                 Farness = fsf.Farness;
             }
@@ -2993,10 +2993,10 @@ namespace PPDEditor.Forms
             {
                 return;
             }
-            var cdf = new CopyDifficultyForm();
+            var cdf = new CopyDifficultyWindow();
             cdf.SetLang();
             cdf.CurrentDifficulty = CurrentDifficulty;
-            if (cdf.ShowDialog() == DialogResult.OK)
+            if (WpfDialog.ShowDialog(cdf))
             {
                 bool alreadyexist = false;
                 switch (cdf.DestDifficulty)

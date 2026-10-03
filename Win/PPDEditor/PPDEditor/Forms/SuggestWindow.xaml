@@ -1,0 +1,19 @@
+<Window x:Class="PPDEditor.Forms.SuggestWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="候補" SizeToContent="WidthAndHeight" ResizeMode="NoResize" ShowInTaskbar="False">
+    <StackPanel Margin="12">
+        <DataGrid x:Name="dataGridView1" Width="260" Height="210" AutoGenerateColumns="False" IsReadOnly="True" SelectionMode="Single"
+                  SelectionUnit="FullRow" HeadersVisibility="Column" CanUserAddRows="False" CanUserDeleteRows="False"
+                  SelectionChanged="DataGridView1_SelectionChanged" MouseDoubleClick="DataGridView1_MouseDoubleClick">
+            <DataGrid.Columns>
+                <DataGridTextColumn x:Name="Column1" Header="Name" Binding="{Binding Key}" Width="*" />
+                <DataGridTextColumn x:Name="Column2" Header="Value" Binding="{Binding Value}" Width="*" />
+            </DataGrid.Columns>
+        </DataGrid>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,6,0,0">
+            <Button x:Name="okButton" Content="OK" Width="75" Height="23" IsDefault="True" IsEnabled="False" Click="OkButton_Click" />
+            <Button x:Name="cancelButton" Content="Cancel" Width="75" Height="23" Margin="20,0,0,0" IsCancel="True" />
+        </StackPanel>
+    </StackPanel>
+</Window>

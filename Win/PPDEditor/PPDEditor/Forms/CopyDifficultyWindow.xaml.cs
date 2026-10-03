@@ -1,18 +1,17 @@
-﻿using System;
-using System.Windows.Forms;
+﻿using System.Windows;
 
 namespace PPDEditor.Forms
 {
-    public partial class CopyDifficultyForm : Form
+    public partial class CopyDifficultyWindow : Window
     {
-        public CopyDifficultyForm()
+        public CopyDifficultyWindow()
         {
             InitializeComponent();
         }
 
         public void SetLang()
         {
-            this.Text = Utility.Language["CopyDifficulty"];
+            this.Title = Utility.Language["CopyDifficulty"];
             this.label1.Text = Utility.Language["CDFLabel1"];
             this.label2.Text = Utility.Language["CDFLabel2"];
         }
@@ -42,16 +41,9 @@ namespace PPDEditor.Forms
             }
         }
 
-        private void Button1_Click(object sender, EventArgs e)
+        private void Button1_Click(object sender, RoutedEventArgs e)
         {
-            DialogResult = DialogResult.OK;
-            this.Close();
-        }
-
-        private void Button2_Click(object sender, EventArgs e)
-        {
-            DialogResult = DialogResult.Cancel;
-            this.Close();
+            DialogResult = true;
         }
     }
 }

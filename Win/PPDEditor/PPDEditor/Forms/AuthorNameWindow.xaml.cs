@@ -1,11 +1,10 @@
-﻿using System;
-using System.Windows.Forms;
+﻿using System.Windows;
 
 namespace PPDEditor.Forms
 {
-    public partial class AuthorNameForm : Form
+    public partial class AuthorNameWindow : Window
     {
-        public AuthorNameForm()
+        public AuthorNameWindow()
         {
             InitializeComponent();
         }
@@ -13,10 +12,9 @@ namespace PPDEditor.Forms
         {
             this.label1.Text = Utility.Language["AuthorNameLabel"];
         }
-        private void Button1_Click(object sender, EventArgs e)
+        private void Button1_Click(object sender, RoutedEventArgs e)
         {
-            this.DialogResult = DialogResult.OK;
-            this.Close();
+            this.DialogResult = true;
         }
         public string AuthorName
         {

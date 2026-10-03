@@ -59,10 +59,10 @@ namespace PPDEditor
         }
         private void 新規レイヤーToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var fm6 = new NewLayerForm();
+            var fm6 = new NewLayerWindow();
             fm6.SetLang();
             fm6.LayerName = layer + layers.Count;
-            if (fm6.ShowDialog() == DialogResult.OK)
+            if (WpfDialog.ShowDialog(fm6))
             {
                 var ld = CreateLayerDisplay(fm6.LayerName);
                 AddLayerToPanel(ld);

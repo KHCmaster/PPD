@@ -105,9 +105,6 @@
     <EmbeddedResource Update="DockForm\StatsManager.resx">
       <DependentUpon>StatsManager.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Update="Forms\AuthorNameForm.resx">
-      <DependentUpon>AuthorNameForm.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Update="Controls\BlackBar.resx">
       <DependentUpon>BlackBar.cs</DependentUpon>
     </EmbeddedResource>
@@ -138,9 +135,6 @@
     <EmbeddedResource Update="Forms\CommandSelectForm.resx">
       <DependentUpon>CommandSelectForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Update="Forms\CopyDifficultyForm.resx">
-      <DependentUpon>CopyDifficultyForm.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Update="Forms\CreateProjectForm.resx">
       <DependentUpon>CreateProjectForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -152,9 +146,6 @@
     </EmbeddedResource>
     <EmbeddedResource Update="DockForm\EventManager.resx">
       <DependentUpon>EventManager.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Forms\FarnessSettingForm.resx">
-      <DependentUpon>FarnessSettingForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Update="Forms\ImportEventForm.resx">
       <DependentUpon>ImportEventForm.cs</DependentUpon>
@@ -180,23 +171,11 @@
     <EmbeddedResource Update="Forms\SavePosAndAngleForm.resx">
       <DependentUpon>SavePosAndAngleForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Update="Forms\ChangeKasiForm.resx">
-      <DependentUpon>ChangeKasiForm.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Update="Forms\SoundChangeEditForm.resx">
       <DependentUpon>SoundChangeEditForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Update="Forms\SplashForm.resx">
       <DependentUpon>SplashForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Forms\SuggestForm.resx">
-      <DependentUpon>SuggestForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Forms\SwapLineForm.resx">
-      <DependentUpon>SwapLineForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Forms\NewLayerForm.resx">
-      <DependentUpon>NewLayerForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Update="DockForm\InfoForm.resx">
       <DependentUpon>InfoForm.cs</DependentUpon>
@@ -206,9 +185,6 @@
     </EmbeddedResource>
     <EmbeddedResource Update="Controls\LayerDisplay.resx">
       <DependentUpon>LayerDisplay.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Forms\WriteDoneForm.resx">
-      <DependentUpon>WriteDoneForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Update="Properties\Resources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>

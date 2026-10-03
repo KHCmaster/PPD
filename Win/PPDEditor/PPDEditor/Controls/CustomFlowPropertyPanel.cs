@@ -113,13 +113,13 @@ namespace PPDEditor.Controls
 
         private static string ShowSuggest(KeyValuePair<string, string>[] suggests)
         {
-            var suggestForm = new SuggestForm();
+            var suggestForm = new SuggestWindow();
             foreach (KeyValuePair<string, string> suggest in suggests)
             {
                 suggestForm.AddSuggest(suggest.Key, suggest.Value);
             }
             suggestForm.SetLang();
-            if (suggestForm.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            if (WpfDialog.ShowDialog(suggestForm))
             {
                 return suggestForm.SelectedValue;
             }

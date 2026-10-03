@@ -1,0 +1,9 @@
+<Window x:Class="PPDEditor.Forms.WriteDoneWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="" Width="280" Height="37" WindowStyle="None" AllowsTransparency="True" ResizeMode="NoResize"
+        ShowInTaskbar="False" ShowActivated="False" Topmost="True" WindowStartupLocation="CenterScreen"
+        Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}">
+    <!-- 上書き保存したときに少しの間だけ出して、だんだん消す -->
+    <TextBlock x:Name="label1" Text="上書き保存が完了しました" HorizontalAlignment="Center" VerticalAlignment="Center" />
+</Window>

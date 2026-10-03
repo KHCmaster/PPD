@@ -234,10 +234,10 @@ namespace PPDEditor
             }
             else
             {
-                var fm4 = new ChangeKasiForm();
+                var fm4 = new ChangeKasiWindow();
                 fm4.SetLang();
                 fm4.Beforetext = changedata.Values[this.dataGridView1.CurrentRow.Index];
-                if (fm4.ShowDialog() == DialogResult.OK)
+                if (WpfDialog.ShowDialog(fm4))
                 {
                     float time = changedata.Keys[this.dataGridView1.CurrentRow.Index];
                     var newtext = fm4.Newtext.Replace("\n", "");

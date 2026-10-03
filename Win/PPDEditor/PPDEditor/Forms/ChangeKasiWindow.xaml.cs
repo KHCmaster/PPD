@@ -1,17 +1,16 @@
-﻿using System;
-using System.Windows.Forms;
+﻿using System.Windows;
 
 namespace PPDEditor.Forms
 {
-    public partial class ChangeKasiForm : Form
+    public partial class ChangeKasiWindow : Window
     {
-        public ChangeKasiForm()
+        public ChangeKasiWindow()
         {
             InitializeComponent();
         }
         public void SetLang()
         {
-            this.Text = Utility.Language["KEButton4"];
+            this.Title = Utility.Language["KEButton4"];
             this.label1.Text = Utility.Language["KEDialogLabel1"];
             this.label2.Text = Utility.Language["KEDialogLabel2"];
             this.label3.Text = Utility.Language["KEDialogLabel3"];
@@ -30,17 +29,9 @@ namespace PPDEditor.Forms
                 return this.textBox2.Text;
             }
         }
-        private void Button1_Click(object sender, EventArgs e)
+        private void Button1_Click(object sender, RoutedEventArgs e)
         {
-            this.DialogResult = DialogResult.OK;
-            this.Close();
+            this.DialogResult = true;
         }
-
-        private void Button2_Click(object sender, EventArgs e)
-        {
-            this.DialogResult = DialogResult.Cancel;
-            this.Close();
-        }
-
     }
 }

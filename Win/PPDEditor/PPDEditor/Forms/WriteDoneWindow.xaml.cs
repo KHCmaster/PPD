@@ -1,23 +1,24 @@
 ﻿using System;
-using System.Windows.Forms;
+using System.Windows;
+using System.Windows.Threading;
 
 namespace PPDEditor.Forms
 {
-    public partial class WriteDoneForm : Form
+    public partial class WriteDoneWindow : Window
     {
-        private readonly Timer timer;
+        private readonly DispatcherTimer timer;
         private int tickCount;
-        public WriteDoneForm()
+        public WriteDoneWindow()
         {
             InitializeComponent();
 
-            timer = new Timer
+            timer = new DispatcherTimer
             {
-                Interval = 10
+                Interval = TimeSpan.FromMilliseconds(10)
             };
             timer.Tick += Timer_Tick;
 
-            VisibleChanged += WriteDoneForm_VisibleChanged;
+            IsVisibleChanged += WriteDoneWindow_IsVisibleChanged;
         }
 
         public void SetLang()
@@ -47,11 +48,12 @@ namespace PPDEditor.Forms
             }
         }
 
-        void WriteDoneForm_VisibleChanged(object sender, EventArgs e)
+        void WriteDoneWindow_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            if (Visible)
+            if (IsVisible)
             {
                 tickCount = 0;
+                Opacity = 1;
                 timer.Stop();
                 timer.Start();
             }
