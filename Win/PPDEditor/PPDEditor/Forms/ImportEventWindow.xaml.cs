@@ -19,14 +19,7 @@ namespace PPDEditor.Forms
         // イベントの中身を、編集できない状態で表示する
         private void ShowEvent(EventData eventData)
         {
-            var eef = new EventEditWindow
-            {
-                Owner = this
-            };
-            eef.SetLang();
-            eef.EventData = eventData;
-            eef.IsReadOnly = true;
-            eef.ShowDialog();
+            new EventEditWindow(new EventEditViewModel(eventData, isReadOnly: true)) { Owner = this }.ShowDialog();
         }
     }
 }

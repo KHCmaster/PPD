@@ -1,9 +1,15 @@
 <Window x:Class="PPDEditor.Forms.EventEditWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:controls="clr-namespace:PPDEditor.Controls"
-        Title="イベント編集" SizeToContent="WidthAndHeight" ResizeMode="NoResize" ShowInTaskbar="False">
+        xmlns:vm="clr-namespace:PPDEditor.ViewModels.Dialogs"
+        xmlns:conv="clr-namespace:PPDEditor.Converters"
+        mc:Ignorable="d" d:DataContext="{d:DesignInstance Type=vm:EventEditViewModel}"
+        Title="{Binding Texts[EEF]}" SizeToContent="WidthAndHeight" ResizeMode="NoResize" ShowInTaskbar="False">
     <Window.Resources>
+        <conv:EnumToBooleanConverter x:Key="EnumToBoolean" />
         <Style x:Key="VolumeLabel" TargetType="TextBlock">
             <Setter Property="Width" Value="124" />
             <Setter Property="VerticalAlignment" Value="Center" />
@@ -11,121 +17,43 @@
         <Style x:Key="SoundOption" TargetType="CheckBox">
             <Setter Property="Margin" Value="135,0,0,0" />
         </Style>
-        <Style x:Key="Block" TargetType="StackPanel">
-            <Setter Property="Margin" Value="0,0,0,8" />
-        </Style>
     </Window.Resources>
     <StackPanel>
-        <TabControl x:Name="tabControl1" Width="610">
-            <TabItem x:Name="tabPage1" Header="サウンド関連">
-                <Grid x:Name="soundPanel" Margin="8,4,8,0">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-                    <StackPanel Grid.ColumnSpan="2" Orientation="Horizontal" Style="{StaticResource Block}">
-                        <TextBlock x:Name="label1" Text="動画の音声のボリューム" Style="{StaticResource VolumeLabel}" />
-                        <controls:SoundVolumeControl x:Name="soundVolumeControl1" />
+        <TabControl Width="610">
+            <TabItem Header="{Binding Texts[EEFTab1]}">
+                <StackPanel Margin="8,4,8,0" IsEnabled="{Binding IsEditable}">
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                        <TextBlock Text="{Binding Texts[EEFLabel1]}" Style="{StaticResource VolumeLabel}" />
+                        <controls:SoundVolumeControl VolumePercent="{Binding MovieVolumePercent}" />
                     </StackPanel>
-
-                    <StackPanel Grid.Row="1" Style="{StaticResource Block}">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock x:Name="label2" Text="スクエアのボリューム" Style="{StaticResource VolumeLabel}" />
-                            <controls:SoundVolumeControl x:Name="soundVolumeControl2" />
-                        </StackPanel>
-                        <CheckBox x:Name="checkBox2" Content="押している間のみ再生" Style="{StaticResource SoundOption}" />
-                        <CheckBox x:Name="checkBox12" Content="長押しリリース時再生" Style="{StaticResource SoundOption}" />
-                    </StackPanel>
-                    <StackPanel Grid.Row="1" Grid.Column="1" Style="{StaticResource Block}">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock x:Name="label3" Text="クロスのボリューム" Style="{StaticResource VolumeLabel}" />
-                            <controls:SoundVolumeControl x:Name="soundVolumeControl3" />
-                        </StackPanel>
-                        <CheckBox x:Name="checkBox3" Content="押している間のみ再生" Style="{StaticResource SoundOption}" />
-                        <CheckBox x:Name="checkBox13" Content="長押しリリース時再生" Style="{StaticResource SoundOption}" />
-                    </StackPanel>
-
-                    <StackPanel Grid.Row="2" Style="{StaticResource Block}">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock x:Name="label4" Text="サークルのボリューム" Style="{StaticResource VolumeLabel}" />
-                            <controls:SoundVolumeControl x:Name="soundVolumeControl4" />
-                        </StackPanel>
-                        <CheckBox x:Name="checkBox4" Content="押している間のみ再生" Style="{StaticResource SoundOption}" />
-                        <CheckBox x:Name="checkBox14" Content="長押しリリース時再生" Style="{StaticResource SoundOption}" />
-                    </StackPanel>
-                    <StackPanel Grid.Row="2" Grid.Column="1" Style="{StaticResource Block}">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock x:Name="label5" Text="トライアングルのボリューム" Style="{StaticResource VolumeLabel}" />
-                            <controls:SoundVolumeControl x:Name="soundVolumeControl5" />
-                        </StackPanel>
-                        <CheckBox x:Name="checkBox5" Content="押している間のみ再生" Style="{StaticResource SoundOption}" />
-                        <CheckBox x:Name="checkBox15" Content="長押しリリース時再生" Style="{StaticResource SoundOption}" />
-                    </StackPanel>
-
-                    <StackPanel Grid.Row="3" Style="{StaticResource Block}">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock x:Name="label6" Text="レフトのボリューム" Style="{StaticResource VolumeLabel}" />
-                            <controls:SoundVolumeControl x:Name="soundVolumeControl6" />
-                        </StackPanel>
-                        <CheckBox x:Name="checkBox6" Content="押している間のみ再生" Style="{StaticResource SoundOption}" />
-                        <CheckBox x:Name="checkBox16" Content="長押しリリース時再生" Style="{StaticResource SoundOption}" />
-                    </StackPanel>
-                    <StackPanel Grid.Row="3" Grid.Column="1" Style="{StaticResource Block}">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock x:Name="label7" Text="ダウンのボリューム" Style="{StaticResource VolumeLabel}" />
-                            <controls:SoundVolumeControl x:Name="soundVolumeControl7" />
-                        </StackPanel>
-                        <CheckBox x:Name="checkBox7" Content="押している間のみ再生" Style="{StaticResource SoundOption}" />
-                        <CheckBox x:Name="checkBox17" Content="長押しリリース時再生" Style="{StaticResource SoundOption}" />
-                    </StackPanel>
-
-                    <StackPanel Grid.Row="4" Style="{StaticResource Block}">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock x:Name="label8" Text="ライトのボリューム" Style="{StaticResource VolumeLabel}" />
-                            <controls:SoundVolumeControl x:Name="soundVolumeControl8" />
-                        </StackPanel>
-                        <CheckBox x:Name="checkBox8" Content="押している間のみ再生" Style="{StaticResource SoundOption}" />
-                        <CheckBox x:Name="checkBox18" Content="長押しリリース時再生" Style="{StaticResource SoundOption}" />
-                    </StackPanel>
-                    <StackPanel Grid.Row="4" Grid.Column="1" Style="{StaticResource Block}">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock x:Name="label9" Text="アップのボリューム" Style="{StaticResource VolumeLabel}" />
-                            <controls:SoundVolumeControl x:Name="soundVolumeControl9" />
-                        </StackPanel>
-                        <CheckBox x:Name="checkBox9" Content="押している間のみ再生" Style="{StaticResource SoundOption}" />
-                        <CheckBox x:Name="checkBox19" Content="長押しリリース時再生" Style="{StaticResource SoundOption}" />
-                    </StackPanel>
-
-                    <StackPanel Grid.Row="5" Style="{StaticResource Block}">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock x:Name="label10" Text="アールのボリューム" Style="{StaticResource VolumeLabel}" />
-                            <controls:SoundVolumeControl x:Name="soundVolumeControl10" />
-                        </StackPanel>
-                        <CheckBox x:Name="checkBox10" Content="押している間のみ再生" Style="{StaticResource SoundOption}" />
-                        <CheckBox x:Name="checkBox20" Content="長押しリリース時再生" Style="{StaticResource SoundOption}" />
-                    </StackPanel>
-                    <StackPanel Grid.Row="5" Grid.Column="1" Style="{StaticResource Block}">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock x:Name="label11" Text="エルのボリューム" Style="{StaticResource VolumeLabel}" />
-                            <controls:SoundVolumeControl x:Name="soundVolumeControl11" />
-                        </StackPanel>
-                        <CheckBox x:Name="checkBox11" Content="押している間のみ再生" Style="{StaticResource SoundOption}" />
-                        <CheckBox x:Name="checkBox21" Content="長押しリリース時再生" Style="{StaticResource SoundOption}" />
-                    </StackPanel>
-                </Grid>
+                    <!-- ボタンごとの音（2 列で、スクエアからエルの順） -->
+                    <ItemsControl ItemsSource="{Binding Sounds}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <UniformGrid Columns="2" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Margin="0,0,0,8">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="{Binding Label}" Style="{StaticResource VolumeLabel}" />
+                                        <controls:SoundVolumeControl VolumePercent="{Binding VolumePercent}" />
+                                    </StackPanel>
+                                    <CheckBox Content="{Binding DataContext.Texts[EEFKeepPlaying], RelativeSource={RelativeSource AncestorType=Window}}"
+                                              IsChecked="{Binding KeepPlaying}" Style="{StaticResource SoundOption}" />
+                                    <CheckBox Content="{Binding DataContext.Texts[EEFReleaseSound], RelativeSource={RelativeSource AncestorType=Window}}"
+                                              IsChecked="{Binding ReleaseSound}" Style="{StaticResource SoundOption}" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
             </TabItem>
-            <TabItem x:Name="tabPage2" Header="その他">
-                <StackPanel x:Name="otherPanel" Margin="6,4,6,0">
+            <TabItem Header="{Binding Texts[EEFTabOthers]}">
+                <StackPanel Margin="6,4,6,0" IsEnabled="{Binding IsEditable}">
                     <StackPanel Orientation="Horizontal">
-                        <GroupBox x:Name="groupBox1" Header="BPM変更" Width="147" Height="88">
+                        <GroupBox Header="{Binding Texts[EEFGroup1]}" Width="147" Height="88">
                             <Grid Margin="2,2,2,0">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*" />
@@ -137,66 +65,88 @@
                                     <RowDefinition Height="24" />
                                     <RowDefinition Height="Auto" />
                                 </Grid.RowDefinitions>
-                                <TextBlock x:Name="label12" Text="変更前" VerticalAlignment="Center" />
-                                <TextBox x:Name="textBox1" Grid.Column="2" Height="20" IsEnabled="False" VerticalContentAlignment="Center" />
-                                <TextBlock x:Name="label13" Grid.Row="1" Text="変更後" VerticalAlignment="Center" />
+                                <TextBlock Text="{Binding Texts[EEFLabel12]}" VerticalAlignment="Center" />
+                                <TextBox Grid.Column="2" Text="{Binding BeforeBpm, Mode=OneWay}" Height="20" IsEnabled="False" VerticalContentAlignment="Center" />
+                                <TextBlock Grid.Row="1" Text="{Binding Texts[EEFLabel13]}" VerticalAlignment="Center" />
                                 <!-- 数値でないときに出す -->
-                                <Image x:Name="pictureBox1" Grid.Row="1" Grid.Column="1" Source="/PPDEditor;component/img/alert.png" Width="16" Height="16" Visibility="Hidden" />
-                                <TextBox x:Name="textBox2" Grid.Row="1" Grid.Column="2" Height="20" VerticalContentAlignment="Center" TextChanged="TextBox2_TextChanged" />
-                                <CheckBox x:Name="checkBox1" Grid.Row="2" Grid.ColumnSpan="3" Content="瞬時に変化" Margin="0,4,0,0" />
+                                <Image Grid.Row="1" Grid.Column="1" Source="/PPDEditor;component/img/alert.png" Width="16" Height="16" ToolTip="{Binding Texts[EEFError1]}">
+                                    <Image.Style>
+                                        <Style TargetType="Image">
+                                            <Setter Property="Visibility" Value="Hidden" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsBpmInvalid}" Value="True">
+                                                    <Setter Property="Visibility" Value="Visible" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Image.Style>
+                                </Image>
+                                <TextBox Grid.Row="1" Grid.Column="2" Text="{Binding Bpm, UpdateSourceTrigger=PropertyChanged}" Height="20" VerticalContentAlignment="Center" />
+                                <CheckBox Grid.Row="2" Grid.ColumnSpan="3" Content="{Binding Texts[EEFCheckBox1]}" IsChecked="{Binding BpmRapidChange}" Margin="0,4,0,0" />
                             </Grid>
                         </GroupBox>
-                        <GroupBox x:Name="groupBox2" Header="マークエフェクト" Width="94" Height="88" Margin="6,0,0,0">
+                        <GroupBox Header="{Binding Texts[EEFGroup2]}" Width="94" Height="88" Margin="6,0,0,0">
                             <StackPanel Margin="2,4,0,0">
-                                <RadioButton x:Name="radioButton1" GroupName="DisplayState" Content="なし" />
-                                <RadioButton x:Name="radioButton2" GroupName="DisplayState" Content="サドゥン" Margin="0,5,0,0" />
-                                <RadioButton x:Name="radioButton3" GroupName="DisplayState" Content="ヒドゥン" Margin="0,5,0,0" />
+                                <RadioButton GroupName="DisplayState" Content="{Binding Texts[EEFRadioButton1]}"
+                                             IsChecked="{Binding DisplayState, Converter={StaticResource EnumToBoolean}, ConverterParameter=Normal}" />
+                                <RadioButton GroupName="DisplayState" Content="{Binding Texts[EEFRadioButton2]}" Margin="0,5,0,0"
+                                             IsChecked="{Binding DisplayState, Converter={StaticResource EnumToBoolean}, ConverterParameter=Sudden}" />
+                                <RadioButton GroupName="DisplayState" Content="{Binding Texts[EEFRadioButton3]}" Margin="0,5,0,0"
+                                             IsChecked="{Binding DisplayState, Converter={StaticResource EnumToBoolean}, ConverterParameter=Hidden}" />
                             </StackPanel>
                         </GroupBox>
-                        <GroupBox x:Name="groupBox3" Header="マークの動き" Width="80" Height="88" Margin="6,0,0,0">
+                        <GroupBox Header="{Binding Texts[EEFGroup3]}" Width="80" Height="88" Margin="6,0,0,0">
                             <StackPanel Margin="2,14,0,0">
-                                <RadioButton x:Name="radioButton4" GroupName="MoveState" Content="普通" />
-                                <RadioButton x:Name="radioButton5" GroupName="MoveState" Content="停止" Margin="0,5,0,0" />
+                                <RadioButton GroupName="MoveState" Content="{Binding Texts[EEFRadioButton4]}"
+                                             IsChecked="{Binding MoveState, Converter={StaticResource EnumToBoolean}, ConverterParameter=Normal}" />
+                                <RadioButton GroupName="MoveState" Content="{Binding Texts[EEFRadioButton5]}" Margin="0,5,0,0"
+                                             IsChecked="{Binding MoveState, Converter={StaticResource EnumToBoolean}, ConverterParameter=Stop}" />
                             </StackPanel>
                         </GroupBox>
-                        <GroupBox x:Name="groupBox4" Header="AC" Width="72" Height="88" Margin="6,0,0,0">
+                        <GroupBox Header="AC" Width="72" Height="88" Margin="6,0,0,0">
                             <StackPanel Margin="8,4,0,0">
-                                <RadioButton x:Name="radioButton6" GroupName="NoteType" Content="普通" />
-                                <RadioButton x:Name="radioButton7" GroupName="NoteType" Content="AC" Margin="0,5,0,0" />
-                                <RadioButton x:Name="radioButton11" GroupName="NoteType" Content="ACFT" Margin="0,5,0,0" />
+                                <RadioButton GroupName="NoteType" Content="{Binding Texts[EEFRadioButton4]}"
+                                             IsChecked="{Binding NoteType, Converter={StaticResource EnumToBoolean}, ConverterParameter=Normal}" />
+                                <RadioButton GroupName="NoteType" Content="AC" Margin="0,5,0,0"
+                                             IsChecked="{Binding NoteType, Converter={StaticResource EnumToBoolean}, ConverterParameter=AC}" />
+                                <RadioButton GroupName="NoteType" Content="ACFT" Margin="0,5,0,0"
+                                             IsChecked="{Binding NoteType, Converter={StaticResource EnumToBoolean}, ConverterParameter=ACFT}" />
                             </StackPanel>
                         </GroupBox>
-                        <GroupBox x:Name="groupBox6" Header="スライド" Width="169" Height="88" Margin="6,0,0,0">
+                        <GroupBox Header="{Binding Texts[Slide]}" Width="169" Height="88" Margin="6,0,0,0">
                             <DockPanel Margin="2,4,2,0" VerticalAlignment="Top">
-                                <TextBox x:Name="textBox3" DockPanel.Dock="Right" Width="47" Height="20" VerticalContentAlignment="Center" />
-                                <TextBlock x:Name="label14" Text="スケール" VerticalAlignment="Center" />
+                                <TextBox DockPanel.Dock="Right" Text="{Binding SlideScale, UpdateSourceTrigger=PropertyChanged}" Width="47" Height="20" VerticalContentAlignment="Center" />
+                                <TextBlock Text="{Binding Texts[Scale]}" VerticalAlignment="Center" />
                             </DockPanel>
                         </GroupBox>
                     </StackPanel>
-                    <GroupBox x:Name="groupBox5" Header="同時押し描画順序" Width="245" Height="194" HorizontalAlignment="Left" Margin="2,6,0,0">
+                    <GroupBox Header="{Binding Texts[EEFGroup5]}" Width="245" Height="194" HorizontalAlignment="Left" Margin="2,6,0,0">
                         <Grid Margin="4,4,4,4">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="131" />
                             </Grid.ColumnDefinitions>
                             <StackPanel>
-                                <RadioButton x:Name="radioButton8" GroupName="InitializeOrder" Content="普通" Checked="InitializeOrderChanged" />
-                                <RadioButton x:Name="radioButton9" GroupName="InitializeOrder" Content="AC" Margin="0,5,0,0" Checked="InitializeOrderChanged" />
-                                <RadioButton x:Name="radioButton10" GroupName="InitializeOrder" Content="カスタム" Margin="0,5,0,0" Checked="InitializeOrderChanged" />
+                                <RadioButton GroupName="InitializeOrder" Content="{Binding Texts[EEFRadioButton4]}"
+                                             IsChecked="{Binding OrderMode, Converter={StaticResource EnumToBoolean}, ConverterParameter=Normal}" />
+                                <RadioButton GroupName="InitializeOrder" Content="AC" Margin="0,5,0,0"
+                                             IsChecked="{Binding OrderMode, Converter={StaticResource EnumToBoolean}, ConverterParameter=AC}" />
+                                <RadioButton GroupName="InitializeOrder" Content="{Binding Texts[EEFRadioButton10]}" Margin="0,5,0,0"
+                                             IsChecked="{Binding OrderMode, Converter={StaticResource EnumToBoolean}, ConverterParameter=Custom}" />
                             </StackPanel>
                             <StackPanel VerticalAlignment="Bottom">
-                                <Button x:Name="button3" Content="上へ" Width="75" Height="23" HorizontalAlignment="Left" IsEnabled="False" Click="Button3_Click" />
-                                <Button x:Name="button4" Content="下へ" Width="75" Height="23" HorizontalAlignment="Left" Margin="0,6,0,0" IsEnabled="False" Click="Button4_Click" />
+                                <Button Content="{Binding Texts[EEFButton3]}" Width="75" Height="23" HorizontalAlignment="Left" Command="{Binding MoveUpCommand}" />
+                                <Button Content="{Binding Texts[EEFButton4]}" Width="75" Height="23" HorizontalAlignment="Left" Margin="0,6,0,0" Command="{Binding MoveDownCommand}" />
                             </StackPanel>
-                            <ListBox x:Name="listBox1" Grid.Column="1" />
+                            <ListBox Grid.Column="1" ItemsSource="{Binding InitializeOrder}" DisplayMemberPath="Name" SelectedIndex="{Binding SelectedOrderIndex}" />
                         </Grid>
                     </GroupBox>
                 </StackPanel>
             </TabItem>
         </TabControl>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,14,0,14">
-            <Button x:Name="button1" Content="OK" Width="75" Height="23" IsDefault="True" Click="Button1_Click" />
-            <Button x:Name="button2" Content="Cancel" Width="75" Height="23" Margin="141,0,0,0" IsCancel="True" />
+            <Button Content="OK" Width="75" Height="23" IsDefault="True" Command="{Binding OkCommand}" />
+            <Button Content="Cancel" Width="75" Height="23" Margin="141,0,0,0" IsCancel="True" />
         </StackPanel>
     </StackPanel>
 </Window>

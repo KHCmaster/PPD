@@ -1,4 +1,5 @@
-﻿using PPDEditor.Forms;
+﻿using PPDEditor.ViewModels.Dialogs;
+using PPDEditor.Forms;
 using PPDEditorCommon;
 using PPDFramework.PPDStructure.EVDData;
 using System;
@@ -441,24 +442,12 @@ namespace PPDEditor
             var time = (float)WindowUtility.Seekmain.Currenttime;
             if (!changeData.ContainsKey(time))
             {
-                var eef = new EventEditWindow();
-                eef.SetLang();
-                if (changeData.Count == 0 || currentnum < 0)
-                {
-                    var temp = new EventData
-                    {
-                        BPM = WindowUtility.IniFileWriter.BPM
-                    };
-                    eef.EventData = temp;
-                }
-                else
-                {
-                    if (currentnum >= 0 && currentnum < changeData.Count)
-                    {
-                        eef.EventData = changeData.Values[currentnum].Clone();
-                    }
-                }
-                if (WpfDialog.ShowDialog(eef))
+                // 前のイベントがあれば、それを元にする
+                var source = changeData.Count > 0 && currentnum >= 0 && currentnum < changeData.Count
+                    ? changeData.Values[currentnum].Clone()
+                    : new EventData { BPM = WindowUtility.IniFileWriter.BPM };
+                var eef = new EventEditViewModel(source);
+                if (WpfDialog.ShowDialog(new EventEditWindow(eef)))
                 {
                     changeData.Add(time, eef.EventData);
                     UpdateDataGrid();
@@ -531,10 +520,8 @@ namespace PPDEditor
             //edit
             if (CurrentIndex >= 0)
             {
-                var eef = new EventEditWindow();
-                eef.SetLang();
-                eef.EventData = changeData.Values[CurrentIndex].Clone();
-                if (WpfDialog.ShowDialog(eef))
+                var eef = new EventEditViewModel(changeData.Values[CurrentIndex].Clone());
+                if (WpfDialog.ShowDialog(new EventEditWindow(eef)))
                 {
                     float time = changeData.Keys[CurrentIndex];
                     changeData.RemoveAt(CurrentIndex);

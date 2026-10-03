@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
@@ -18,6 +18,23 @@ namespace PPDEditor.Converters
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             return value is bool b ? !b : value;
+        }
+    }
+
+    /// <summary>
+    /// 列挙の値が ConverterParameter（値の名前）と同じかを bool にします（ラジオボタンを列挙に結び付けるときなど）。
+    /// </summary>
+    public class EnumToBooleanConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return value != null && value.ToString() == parameter as string;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            // チェックが外れたときは値を変えない（ほかのラジオボタンがチェックされたときに変わる）
+            return value is true ? Enum.Parse(targetType, (string)parameter) : Binding.DoNothing;
         }
     }
 
