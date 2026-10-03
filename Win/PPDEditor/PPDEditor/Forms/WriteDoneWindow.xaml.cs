@@ -11,6 +11,7 @@ namespace PPDEditor.Forms
         public WriteDoneWindow()
         {
             InitializeComponent();
+            DataContext = ViewModels.LanguageTexts.Instance;
 
             timer = new DispatcherTimer
             {
@@ -19,11 +20,6 @@ namespace PPDEditor.Forms
             timer.Tick += Timer_Tick;
 
             IsVisibleChanged += WriteDoneWindow_IsVisibleChanged;
-        }
-
-        public void SetLang()
-        {
-            this.label1.Text = Utility.Language["WDFLabel1"];
         }
 
         void Timer_Tick(object sender, EventArgs e)

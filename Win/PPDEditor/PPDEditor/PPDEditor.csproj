@@ -30,6 +30,7 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" />
     <PackageReference Include="Dirkster.AvalonDock" />
     <PackageReference Include="Newtonsoft.Json" />
     <PackageReference Include="Vortice.DirectInput" />

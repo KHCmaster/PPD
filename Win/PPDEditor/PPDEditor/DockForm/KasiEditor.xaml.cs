@@ -1,4 +1,5 @@
-﻿using PPDEditor.Forms;
+﻿using PPDEditor.ViewModels.Dialogs;
+using PPDEditor.Forms;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -241,13 +242,11 @@ namespace PPDEditor
             }
             else
             {
-                var fm4 = new ChangeKasiWindow();
-                fm4.SetLang();
-                fm4.Beforetext = changedata.Values[CurrentIndex];
-                if (WpfDialog.ShowDialog(fm4))
+                var viewModel = new ChangeKasiViewModel(changedata.Values[CurrentIndex]);
+                if (WpfDialog.ShowDialog(new ChangeKasiWindow(viewModel)))
                 {
                     float time = changedata.Keys[CurrentIndex];
-                    var newtext = fm4.Newtext.Replace("\n", "");
+                    var newtext = viewModel.NewText.Replace("\n", "");
                     changedata.RemoveAt(CurrentIndex);
                     changedata.Add(time, newtext);
                     Updatedatagrid();

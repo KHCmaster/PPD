@@ -1,33 +1,19 @@
+﻿using PPDEditor.ViewModels.Dialogs;
 using System.Windows;
 
 namespace PPDEditor.Forms
 {
+    /// <summary>
+    /// 新しいレイヤーの名前を入力するウィンドウです。処理は <see cref="NewLayerViewModel"/> にあります。
+    /// </summary>
     public partial class NewLayerWindow : Window
     {
-        public NewLayerWindow()
+        public NewLayerWindow(NewLayerViewModel viewModel)
         {
             InitializeComponent();
-        }
-        public void SetLang()
-        {
-            this.Title = Utility.Language["LMNewLayer"];
-            this.label1.Text = Utility.Language["LMNewLayerName"];
-        }
-        private void Button1_Click(object sender, RoutedEventArgs e)
-        {
-            DialogResult = true;
-        }
-        public string LayerName
-        {
-            get
-            {
-                return this.textBox1.Text;
-            }
-            set
-            {
-                this.textBox1.Text = value;
-                this.textBox1.SelectAll();
-            }
+            this.AttachDialog(viewModel);
+            // 既定の名前をすぐ書き換えられるように、全部選んでおく
+            nameTextBox.SelectAll();
         }
     }
 }

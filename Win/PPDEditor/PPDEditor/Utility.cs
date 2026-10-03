@@ -133,6 +133,7 @@ namespace PPDEditor
         public static void ChangeLanguage(string langIso)
         {
             langReader = new LanguageReader("PPDEditor", langIso);
+            ViewModels.LanguageTexts.Instance.Refresh();
         }
 
         public static void RecursiveCreateFolder(string filePath)

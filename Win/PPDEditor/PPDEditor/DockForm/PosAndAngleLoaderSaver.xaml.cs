@@ -1,4 +1,5 @@
-﻿using PPDEditor.Controls;
+﻿using PPDEditor.ViewModels.Dialogs;
+using PPDEditor.Controls;
 using PPDEditor.Forms;
 using System.Numerics;
 using PPDMath;
@@ -342,9 +343,8 @@ namespace PPDEditor
         }
         private void Button5_Click(object sender, RoutedEventArgs e)
         {
-            var fm3 = new SavePosAndAngleWindow((string)button5.Content);
-            fm3.SetLang();
-            if (WpfDialog.ShowDialog(fm3))
+            var fm3 = new SavePosAndAngleViewModel((string)button5.Content);
+            if (WpfDialog.ShowDialog(new SavePosAndAngleWindow(fm3)))
             {
                 if (WindowUtility.Seekmain.GetSortedData(false, false, out Mark[] mks))
                 {
@@ -360,9 +360,8 @@ namespace PPDEditor
 
         private void Button6_Click(object sender, RoutedEventArgs e)
         {
-            var fm3 = new SavePosAndAngleWindow((string)button6.Content);
-            fm3.SetLang();
-            if (WpfDialog.ShowDialog(fm3))
+            var fm3 = new SavePosAndAngleViewModel((string)button6.Content);
+            if (WpfDialog.ShowDialog(new SavePosAndAngleWindow(fm3)))
             {
                 if (WindowUtility.Seekmain.GetSortedData(true, false, out Mark[] mks))
                 {
@@ -378,9 +377,8 @@ namespace PPDEditor
 
         private void Button7_Click(object sender, RoutedEventArgs e)
         {
-            var fm3 = new SavePosAndAngleWindow((string)button7.Content);
-            fm3.SetLang();
-            if (WpfDialog.ShowDialog(fm3))
+            var fm3 = new SavePosAndAngleViewModel((string)button7.Content);
+            if (WpfDialog.ShowDialog(new SavePosAndAngleWindow(fm3)))
             {
                 if (WindowUtility.Seekmain.GetSortedData(false, true, out Mark[] mks))
                 {
@@ -396,9 +394,8 @@ namespace PPDEditor
 
         private void Button8_Click(object sender, RoutedEventArgs e)
         {
-            var fm3 = new SavePosAndAngleWindow((string)button8.Content);
-            fm3.SetLang();
-            if (WpfDialog.ShowDialog(fm3))
+            var fm3 = new SavePosAndAngleViewModel((string)button8.Content);
+            if (WpfDialog.ShowDialog(new SavePosAndAngleWindow(fm3)))
             {
                 if (WindowUtility.Seekmain.GetSortedData(true, true, out Mark[] mks))
                 {

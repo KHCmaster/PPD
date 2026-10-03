@@ -1,4 +1,5 @@
-﻿using FlowScriptControl.Controls;
+﻿using PPDEditor.ViewModels.Dialogs;
+using FlowScriptControl.Controls;
 using PPDEditor.Forms;
 using System;
 using System.Collections.Generic;
@@ -113,15 +114,10 @@ namespace PPDEditor.Controls
 
         private static string ShowSuggest(KeyValuePair<string, string>[] suggests)
         {
-            var suggestForm = new SuggestWindow();
-            foreach (KeyValuePair<string, string> suggest in suggests)
+            var viewModel = new SuggestViewModel(suggests);
+            if (WpfDialog.ShowDialog(new SuggestWindow(viewModel)))
             {
-                suggestForm.AddSuggest(suggest.Key, suggest.Value);
-            }
-            suggestForm.SetLang();
-            if (WpfDialog.ShowDialog(suggestForm))
-            {
-                return suggestForm.SelectedValue;
+                return viewModel.SelectedSuggest?.Value;
             }
 
             return null;

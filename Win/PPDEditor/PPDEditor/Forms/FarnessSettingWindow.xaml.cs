@@ -1,29 +1,17 @@
-﻿using System;
+﻿using PPDEditor.ViewModels.Dialogs;
 using System.Windows;
 
 namespace PPDEditor.Forms
 {
+    /// <summary>
+    /// 遠さを設定するウィンドウです。処理は <see cref="FarnessSettingViewModel"/> にあります。
+    /// </summary>
     public partial class FarnessSettingWindow : Window
     {
-        public FarnessSettingWindow()
+        public FarnessSettingWindow(FarnessSettingViewModel viewModel)
         {
             InitializeComponent();
-        }
-        public float Farness
-        {
-            get
-            {
-                return (float)(Math.Round(trackBar1.Value) / trackBar1.Maximum);
-            }
-            set
-            {
-                trackBar1.Value = (int)Math.Min(value * 100, trackBar1.Maximum);
-            }
-        }
-
-        private void Button1_Click(object sender, RoutedEventArgs e)
-        {
-            DialogResult = true;
+            this.AttachDialog(viewModel);
         }
     }
 }

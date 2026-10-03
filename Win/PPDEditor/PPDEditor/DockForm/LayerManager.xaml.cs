@@ -1,4 +1,5 @@
-﻿using PPDEditor.Command.PPDSheet;
+﻿using PPDEditor.ViewModels.Dialogs;
+using PPDEditor.Command.PPDSheet;
 using PPDEditor.Controls;
 using PPDEditor.Forms;
 using PPDFramework.PPDStructure.PPDData;
@@ -60,12 +61,10 @@ namespace PPDEditor
         }
         private void 新規レイヤーMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            var fm6 = new NewLayerWindow();
-            fm6.SetLang();
-            fm6.LayerName = layer + layers.Count;
-            if (WpfDialog.ShowDialog(fm6))
+            var viewModel = new NewLayerViewModel(layer + layers.Count);
+            if (WpfDialog.ShowDialog(new NewLayerWindow(viewModel)))
             {
-                var ld = CreateLayerDisplay(fm6.LayerName);
+                var ld = CreateLayerDisplay(viewModel.LayerName);
                 AddLayerToPanel(ld);
                 ContentChanged();
             }

@@ -1,4 +1,5 @@
-﻿using PPDConfiguration;
+﻿using PPDEditor.ViewModels.Dialogs;
+using PPDConfiguration;
 using PPDEditor.Controls;
 using PPDEditor.FlowScript;
 using PPDEditorCommon;
@@ -591,7 +592,6 @@ namespace PPDEditor.Forms
             lm.SetLang();
             gc.SetLang();
             mw.SetLang();
-            wdf.SetLang();
             rm.SetLang();
             scm.SetLang();
             stm.SetLang();
@@ -772,12 +772,10 @@ namespace PPDEditor.Forms
 
         private static void ChangeAuthorName()
         {
-            var anf = new AuthorNameWindow();
-            anf.SetLang();
-            if (PPDStaticSetting.AuthorName != null) anf.AuthorName = PPDStaticSetting.AuthorName;
-            if (WpfDialog.ShowDialog(anf))
+            var viewModel = new AuthorNameViewModel { AuthorName = PPDStaticSetting.AuthorName ?? "" };
+            if (WpfDialog.ShowDialog(new AuthorNameWindow(viewModel)))
             {
-                PPDStaticSetting.AuthorName = anf.AuthorName;
+                PPDStaticSetting.AuthorName = viewModel.AuthorName;
             }
         }
 
@@ -2442,12 +2440,11 @@ namespace PPDEditor.Forms
 
         private void ライン入れ替えToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var fm5 = new SwapLineWindow();
-            fm5.SetLang();
-            if (WpfDialog.ShowDialog(fm5))
+            var viewModel = new SwapLineViewModel();
+            if (WpfDialog.ShowDialog(new SwapLineWindow(viewModel)))
             {
-                int first = fm5.First;
-                int second = fm5.Second;
+                int first = viewModel.First;
+                int second = viewModel.Second;
                 tlf.Seekmain.Swap(first, second);
             }
         }
@@ -3065,13 +3062,10 @@ namespace PPDEditor.Forms
 
         private void 詳細設定ToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            var fsf = new FarnessSettingWindow
+            var viewModel = new FarnessSettingViewModel(Farness);
+            if (WpfDialog.ShowDialog(new FarnessSettingWindow(viewModel)))
             {
-                Farness = Farness
-            };
-            if (WpfDialog.ShowDialog(fsf))
-            {
-                Farness = fsf.Farness;
+                Farness = viewModel.Farness;
             }
         }
 
@@ -3185,10 +3179,8 @@ namespace PPDEditor.Forms
             {
                 return;
             }
-            var cdf = new CopyDifficultyWindow();
-            cdf.SetLang();
-            cdf.CurrentDifficulty = CurrentDifficulty;
-            if (WpfDialog.ShowDialog(cdf))
+            var cdf = new CopyDifficultyViewModel(CurrentDifficulty);
+            if (WpfDialog.ShowDialog(new CopyDifficultyWindow(cdf)))
             {
                 bool alreadyexist = false;
                 switch (cdf.DestDifficulty)
