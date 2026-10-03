@@ -27,6 +27,9 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\BezierCaliculator\BezierCaliculator.csproj" />
     <ProjectReference Include="..\BezierDrawControl\BezierDrawControl\BezierDrawControl.csproj" />
   </ItemGroup>

@@ -1,7 +1,11 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 
-namespace BezierDrawControlTest
+namespace BezierDrawControlTest.Models
 {
+    /// <summary>
+    /// 正方形の格子です。点を近くの格子点に吸い付けます。
+    /// </summary>
     public class SquareGrid
     {
         public SquareGrid()
@@ -56,6 +60,18 @@ namespace BezierDrawControlTest
             int val = num % basenum;
             if (val < 0) val += basenum;
             return val;
+        }
+
+        /// <summary>
+        /// 格子点から snapDistance より近い点は、格子点に移します。
+        /// </summary>
+        public PointF Snap(PointF point, float snapDistance)
+        {
+            var nearest = new PointF((int)(point.X + Width / 2) / Width * Width + NormalizedOffsetX,
+                (int)(point.Y + Height / 2) / Height * Height + NormalizedOffsetY);
+            var diffX = nearest.X - point.X;
+            var diffY = nearest.Y - point.Y;
+            return Math.Sqrt(diffX * diffX + diffY * diffY) >= snapDistance ? point : nearest;
         }
     }
 }

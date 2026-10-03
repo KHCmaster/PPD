@@ -1,8 +1,19 @@
 <Window x:Class="BezierDrawControlTest.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:bezier="clr-namespace:BezierDrawControl;assembly=BezierDrawControl"
+        xmlns:vm="clr-namespace:BezierDrawControlTest.ViewModels"
+        mc:Ignorable="d" d:DataContext="{d:DesignInstance Type=vm:MainWindowViewModel}"
         Title="BezierDrawControlTest" SizeToContent="WidthAndHeight" ResizeMode="CanMinimize"
-        KeyDown="Window_KeyDown" Closed="Window_Closed">
+        Closed="Window_Closed">
+    <Window.InputBindings>
+        <KeyBinding Modifiers="Ctrl" Key="Z" Command="{Binding UndoCommand}" />
+        <KeyBinding Modifiers="Ctrl" Key="Y" Command="{Binding RedoCommand}" />
+        <KeyBinding Modifiers="Ctrl" Key="T" Command="{Binding StartTransformCommand}" />
+        <KeyBinding Key="Return" Command="{Binding EndTransformCommand}" />
+        <KeyBinding Key="Delete" Command="{Binding DeleteCommand}" />
+    </Window.InputBindings>
     <bezier:DXBezierControl x:Name="bezierControl1" Margin="12" />
 </Window>
