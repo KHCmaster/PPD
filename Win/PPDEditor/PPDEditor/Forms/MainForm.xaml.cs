@@ -3086,24 +3086,10 @@ namespace PPDEditor.Forms
 
         private void 設定ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var sf = new SettingWindow();
-            sf.SetLangAngShortcut(WindowUtility.Seekmain.ShortcutManager);
-            sf.AuthorName = PPDStaticSetting.AuthorName;
-            sf.MovieLatency = PPDStaticSetting.MovieLatency;
-            sf.HideToggleArrow = PPDStaticSetting.HideToggleArrow;
-            sf.HideToggleRectangle = PPDStaticSetting.HideToggleRectangle;
-            sf.EnableToChangeMarkTypeAndTime = PPDStaticSetting.EnableToChangeMarkTypeAndTime;
-            sf.Moves = PPDStaticSetting.Moves;
-            sf.Angles = PPDStaticSetting.Angles;
-            if (WpfDialog.ShowDialog(sf))
+            var sf = new SettingViewModel(WindowUtility.Seekmain.ShortcutManager);
+            if (WpfDialog.ShowDialog(new SettingWindow(sf)))
             {
-                PPDStaticSetting.AuthorName = sf.AuthorName;
-                PPDStaticSetting.MovieLatency = sf.MovieLatency;
-                PPDStaticSetting.HideToggleArrow = sf.HideToggleArrow;
-                PPDStaticSetting.HideToggleRectangle = sf.HideToggleRectangle;
-                PPDStaticSetting.EnableToChangeMarkTypeAndTime = sf.EnableToChangeMarkTypeAndTime;
-                PPDStaticSetting.Moves = sf.Moves;
-                PPDStaticSetting.Angles = sf.Angles;
+                sf.Apply();
                 SaveShortcut();
                 ReadCommands();
                 if (sf.ShouldRestart)

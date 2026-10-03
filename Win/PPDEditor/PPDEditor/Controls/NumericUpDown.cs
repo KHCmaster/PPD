@@ -13,8 +13,14 @@ namespace PPDEditor.Controls
     /// </summary>
     public class NumericUpDown : UserControl
     {
+        /// <summary>
+        /// 値です（結び付けられるように依存関係プロパティにしてある）。最小値と最大値の間に収め、小数点以下の桁数で丸めます。
+        /// </summary>
+        public static readonly DependencyProperty ValueProperty = DependencyProperty.Register(
+            nameof(Value), typeof(decimal), typeof(NumericUpDown),
+            new FrameworkPropertyMetadata(0m, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnValuePropertyChanged, CoerceValueProperty));
+
         readonly TextBox textBox;
-        decimal value;
         decimal minimum;
         decimal maximum = 100;
 
@@ -81,17 +87,26 @@ namespace PPDEditor.Controls
         /// </summary>
         public decimal Value
         {
-            get { return value; }
+            get { return (decimal)GetValue(ValueProperty); }
             set
             {
-                var newValue = Math.Clamp(Math.Round(value, DecimalPlaces), minimum, maximum);
-                if (this.value != newValue)
-                {
-                    this.value = newValue;
-                    ValueChanged?.Invoke(this, EventArgs.Empty);
-                }
+                SetValue(ValueProperty, value);
+                // 値が変わらなくても、入力途中の文字を今の値に戻す
                 UpdateText();
             }
+        }
+
+        private static object CoerceValueProperty(DependencyObject d, object baseValue)
+        {
+            var control = (NumericUpDown)d;
+            return Math.Clamp(Math.Round((decimal)baseValue, control.DecimalPlaces), control.minimum, control.maximum);
+        }
+
+        private static void OnValuePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var control = (NumericUpDown)d;
+            control.UpdateText();
+            control.ValueChanged?.Invoke(control, EventArgs.Empty);
         }
 
         public decimal Minimum
@@ -101,7 +116,7 @@ namespace PPDEditor.Controls
             {
                 minimum = value;
                 if (maximum < minimum) maximum = minimum;
-                Value = this.value;
+                CoerceValue(ValueProperty);
             }
         }
 
@@ -112,7 +127,7 @@ namespace PPDEditor.Controls
             {
                 maximum = value;
                 if (minimum > maximum) minimum = maximum;
-                Value = this.value;
+                CoerceValue(ValueProperty);
             }
         }
 
@@ -142,7 +157,7 @@ namespace PPDEditor.Controls
 
         private void UpdateText()
         {
-            textBox.Text = value.ToString("F" + DecimalPlaces, CultureInfo.CurrentCulture);
+            textBox.Text = Value.ToString("F" + DecimalPlaces, CultureInfo.CurrentCulture);
         }
 
         private void CommitText()
