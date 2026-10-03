@@ -1,0 +1,74 @@
+<forms:DockView x:Class="PPDEditor.PosAndAngleLoaderSaver"
+                xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                xmlns:forms="clr-namespace:PPDEditor.Forms"
+                xmlns:controls="clr-namespace:PPDEditor.Controls">
+    <forms:DockView.Resources>
+        <Style x:Key="Coordinate" TargetType="TextBox">
+            <Setter Property="Width" Value="50" />
+            <Setter Property="Height" Value="20" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="IsEnabled" Value="False" />
+        </Style>
+        <Style x:Key="CoordinateLabel" TargetType="controls:DragValueLabel">
+            <Setter Property="Width" Value="18" />
+            <Setter Property="Margin" Value="0,0,2,0" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="TextAlignment" Value="Right" />
+        </Style>
+        <Style x:Key="WideButton" TargetType="Button">
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="MinWidth" Value="190" />
+            <Setter Property="Height" Value="23" />
+            <Setter Property="Margin" Value="0,6,0,0" />
+            <Setter Property="Padding" Value="6,0" />
+        </Style>
+    </forms:DockView.Resources>
+    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+        <StackPanel Width="230" HorizontalAlignment="Left">
+            <ListBox x:Name="listBox1" Height="220" SelectionChanged="ListBox1_SelectedIndexChanged" />
+            <CheckBox x:Name="checkBox1" Content="角度を表示する" Margin="13,8,0,0" />
+            <StackPanel Orientation="Horizontal" Margin="12,6,0,0">
+                <Button x:Name="button10" Content="選択した行を削除" MinWidth="111" Height="23" Padding="6,0" Click="Button10_Click" />
+                <Button x:Name="button9" Content="リストを更新" MinWidth="91" Height="23" Margin="6,0,0,0" Padding="6,0" Click="Button9_Click" />
+            </StackPanel>
+            <GroupBox x:Name="groupBox1" Header="適用設定" Margin="0,6,0,0">
+                <StackPanel Margin="8,4,4,6">
+                    <RadioButton x:Name="radioButton1" Content="何もなし" Checked="ChangeRadioCheck" />
+                    <RadioButton x:Name="radioButton2" Content="点対称" Margin="0,6,0,0" Checked="ChangeRadioCheck" />
+                    <StackPanel Orientation="Horizontal" Margin="18,4,0,0">
+                        <controls:DragValueLabel x:Name="label1" Text="X" Style="{StaticResource CoordinateLabel}" ValueChange="Label1_ValueChange" />
+                        <TextBox x:Name="textBox1" Text="400" Style="{StaticResource Coordinate}" TextChanged="TextBoxTextChanged" />
+                        <controls:DragValueLabel x:Name="label2" Text="Y" Style="{StaticResource CoordinateLabel}" Margin="6,0,2,0" ValueChange="Label2_ValueChange" />
+                        <TextBox x:Name="textBox2" Text="225" Style="{StaticResource Coordinate}" TextChanged="TextBoxTextChanged" />
+                    </StackPanel>
+                    <RadioButton x:Name="radioButton3" Content="線対称" Margin="0,6,0,0" Checked="ChangeRadioCheck" />
+                    <StackPanel Orientation="Horizontal" Margin="18,4,0,0">
+                        <controls:DragValueLabel x:Name="label3" Text="X1" Style="{StaticResource CoordinateLabel}" ValueChange="Label3_ValueChange" />
+                        <TextBox x:Name="textBox3" Text="0" Style="{StaticResource Coordinate}" TextChanged="TextBoxTextChanged" />
+                        <controls:DragValueLabel x:Name="label4" Text="Y1" Style="{StaticResource CoordinateLabel}" Margin="6,0,2,0" ValueChange="Label4_ValueChange" />
+                        <TextBox x:Name="textBox4" Text="225" Style="{StaticResource Coordinate}" TextChanged="TextBoxTextChanged" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="18,4,0,0">
+                        <controls:DragValueLabel x:Name="label5" Text="X2" Style="{StaticResource CoordinateLabel}" ValueChange="Label5_ValueChange" />
+                        <TextBox x:Name="textBox5" Text="800" Style="{StaticResource Coordinate}" TextChanged="TextBoxTextChanged" />
+                        <controls:DragValueLabel x:Name="label6" Text="Y2" Style="{StaticResource CoordinateLabel}" Margin="6,0,2,0" ValueChange="Label6_ValueChange" />
+                        <TextBox x:Name="textBox6" Text="225" Style="{StaticResource Coordinate}" TextChanged="TextBoxTextChanged" />
+                    </StackPanel>
+                    <ComboBox x:Name="comboBox1" Width="121" HorizontalAlignment="Left" Margin="20,6,0,0" IsEnabled="False" SelectionChanged="ComboBox1_SelectedIndexChanged" />
+                    <CheckBox x:Name="checkBox2" Content="角度も対称に" Margin="0,8,0,0" IsEnabled="False" Click="CheckBox2_CheckedChanged" />
+                    <Button x:Name="button1" Content="現在の選択点以降に適用" Style="{StaticResource WideButton}" MinWidth="155" Click="Button1_Click" />
+                    <Button x:Name="button2" Content="現在の選択点以前に適用" Style="{StaticResource WideButton}" MinWidth="155" Click="Button2_Click" />
+                    <Button x:Name="button3" Content="現在の選択範囲内で前から適用" Style="{StaticResource WideButton}" Click="Button3_Click" />
+                    <Button x:Name="button4" Content="現在の選択範囲内で後ろから適用" Style="{StaticResource WideButton}" Click="Button4_Click" />
+                </StackPanel>
+            </GroupBox>
+            <StackPanel Margin="12,0,0,12">
+                <Button x:Name="button5" Content="現在の選択点以降を保存" Style="{StaticResource WideButton}" Click="Button5_Click" />
+                <Button x:Name="button6" Content="現在の選択点以前を保存" Style="{StaticResource WideButton}" Click="Button6_Click" />
+                <Button x:Name="button7" Content="現在の選択範囲を前から保存" Style="{StaticResource WideButton}" Click="Button7_Click" />
+                <Button x:Name="button8" Content="現在の選択範囲を後ろから保存" Style="{StaticResource WideButton}" Click="Button8_Click" />
+            </StackPanel>
+        </StackPanel>
+    </ScrollViewer>
+</forms:DockView>

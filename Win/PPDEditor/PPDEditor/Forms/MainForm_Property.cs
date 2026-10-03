@@ -214,7 +214,7 @@ namespace PPDEditor.Forms
         {
             get
             {
-                return (dockPanel1.ActiveContent == paals);// (paals.DockState > DockState.Unknown && paals.DockState < DockState.Hidden ? true : false);
+                return (dockPanel1.ActiveContent == paalsDock);// (paals.DockState > DockState.Unknown && paals.DockState < DockState.Hidden ? true : false);
             }
         }
 
