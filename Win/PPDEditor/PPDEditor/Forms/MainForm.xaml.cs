@@ -583,7 +583,6 @@ namespace PPDEditor.Forms
                 extraGameWindowMenuItems[0].Header = 画面比を169にMenuItem.Header;
                 extraGameWindowMenuItems[1].Header = 標準解像度にするMenuItem.Header;
             }
-            rm.SetLang();
             scm.SetLang();
         }
 
