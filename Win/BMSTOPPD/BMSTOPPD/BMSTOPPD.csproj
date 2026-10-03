@@ -28,6 +28,9 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" />
+  </ItemGroup>
+  <ItemGroup>
     <Resource Include="bmstoppd.ico" />
   </ItemGroup>
 </Project>
