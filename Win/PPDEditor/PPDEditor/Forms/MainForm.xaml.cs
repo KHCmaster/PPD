@@ -523,7 +523,6 @@ namespace PPDEditor.Forms
             this.disableExpansionToolStripMenuItem.Header = Utility.Language["DisableExpansion"];
             this.コマンドToolStripMenuItem.Header = Utility.Language["Command"];
             this.一覧を再読み込みToolStripMenuItem.Header = Utility.Language["ReloadList"];
-            infof.SetLang();
             openinifilter = Utility.Language["INIFilter"];
             openmoviefilter = Utility.Language["MovieFilter"];
             openppdfilter = Utility.Language["PPDFilter"];
