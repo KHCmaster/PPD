@@ -1,4 +1,5 @@
-﻿using PPDEditor.Controls;
+﻿using PPDEditor.ViewModels.Docks;
+using PPDEditor.Controls;
 using PPDEditor.Forms;
 using PPDFramework;
 using System;
@@ -159,7 +160,7 @@ namespace PPDEditor
             }
             float drawstarttime = (float)(parameter.LeftOffset - 10) / parameter.Interval / parameter.BPM * 60;
             float drawendtime = (float)(parameter.LeftOffset + parameter.Width + 10) / parameter.Interval / parameter.BPM * 60;
-            LayerDisplay[] layers = WindowUtility.LayerManager.AllLayerDisplay;
+            LayerViewModel[] layers = WindowUtility.LayerManager.AllLayerDisplay;
             if (layers != null)
             {
                 foreach (var layer in layers)

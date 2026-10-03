@@ -34,7 +34,7 @@ namespace PPDEditor
 
         IEnumerable<(string Name, PPDSheet Sheet)> IStatsSource.GetLayers()
         {
-            return WindowUtility.LayerManager.AllLayerDisplay.Cast<LayerDisplay>().Select(ld => (ld.DisplayName, ld.PPDData));
+            return WindowUtility.LayerManager.AllLayerDisplay.Select(layer => (layer.DisplayName, layer.PPDData));
         }
 
         MarkData[] IStatsSource.GetAllData()

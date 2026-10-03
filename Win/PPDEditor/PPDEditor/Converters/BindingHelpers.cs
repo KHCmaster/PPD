@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PPDEditor.Forms;
+using System;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
@@ -35,6 +36,22 @@ namespace PPDEditor.Converters
         {
             // チェックが外れたときは値を変えない（ほかのラジオボタンがチェックされたときに変わる）
             return value is true ? Enum.Parse(targetType, (string)parameter) : Binding.DoNothing;
+        }
+    }
+
+    /// <summary>
+    /// System.Drawing.Color をブラシにします（設定ファイルやスキンが System.Drawing.Color で色を持っているため）。
+    /// </summary>
+    public class DrawingColorToBrushConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return value is System.Drawing.Color color ? WpfSkin.ToBrush(color) : null;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotSupportedException();
         }
     }
 

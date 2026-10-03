@@ -1,142 +1,159 @@
-﻿using PPDEditor.ViewModels.Dialogs;
-using PPDEditor.Command.PPDSheet;
+﻿using PPDEditor.Command.PPDSheet;
 using PPDEditor.Controls;
 using PPDEditor.Forms;
+using PPDEditor.ViewModels.Dialogs;
+using PPDEditor.ViewModels.Docks;
 using PPDFramework.PPDStructure.PPDData;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 
 namespace PPDEditor
 {
-    public partial class LayerManager : DockView
+    /// <summary>
+    /// レイヤーの一覧です。処理は <see cref="LayerManagerViewModel"/> にあります。
+    /// </summary>
+    /// <remarks>
+    /// ドラッグでの並べ替え（マウスの扱いと、つかんでいるレイヤーの絵）はここで行う。
+    /// </remarks>
+    public sealed partial class LayerManager : DockView, ILayerHost
     {
-        string BPMtext = "BPM";
-        string BPMOffsettext = "BPM offset";
-        string Displaywidthtext = "タイムラインの幅";
-        string layer = "レイヤー";
-        string copy = " のコピー";
-        LayerDisplay lastld;
-        float lastBPM;
-        float lastBPMOffset;
-        int lastDisplayWidth;
-        DisplayLineMode lastDisplayMode;
-        DisplayBeatType lastBeatType;
-
         // ドラッグで並べ替えるときの状態
-        bool mousedown;
+        LayerDisplay dragTarget;
         bool dragging;
         Point mousedownpos;
         int movecount;
 
-        readonly List<LayerDisplay> layers;
-
-        IDProvider idProvider;
-
         public LayerManager()
         {
             InitializeComponent();
-
-            idProvider = new IDProvider(0);
-            layers = [];
+            AttachViewModel(new LayerManagerViewModel(this));
         }
+
+        public LayerManagerViewModel ViewModel
+        {
+            get { return (LayerManagerViewModel)DataContext; }
+        }
+
         public void Initialize()
         {
-            var ld = CreateLayerDisplay(layer + 0);
-            layers.Add(ld);
-            ld.Selected = true;
-            Relocate();
+            ViewModel.Initialize();
         }
-        public void SetLang()
+
+        public void Clear()
         {
-            BPMtext = Utility.Language["LMBPM"];
-            BPMOffsettext = Utility.Language["LMBPMOffset"];
-            Displaywidthtext = Utility.Language["LMDisplayWidth"];
-            layer = Utility.Language["LMLayer"];
-            copy = Utility.Language["LMCopy"];
-            this.新規レイヤーMenuItem.Header = Utility.Language["LMMenu1"];
+            ViewModel.Clear();
         }
-        private void 新規レイヤーMenuItem_Click(object sender, RoutedEventArgs e)
+
+        public MarkData[] GetAllData(bool any)
         {
-            var viewModel = new NewLayerViewModel(layer + layers.Count);
-            if (WpfDialog.ShowDialog(new NewLayerWindow(viewModel)))
+            return ViewModel.GetAllData(any);
+        }
+
+        public void AddLayer(string name, float bpm, float bpmoffset, int displaywidth, bool visible, DisplayLineMode displayMode, DisplayBeatType beatType)
+        {
+            ViewModel.AddLayer(name, bpm, bpmoffset, displaywidth, visible, displayMode, beatType);
+        }
+
+        public void SelectLastLayer()
+        {
+            ViewModel.SelectLastLayer();
+        }
+
+        public void SelectLayerByIndex(int index)
+        {
+            ViewModel.SelectLayerByIndex(index);
+        }
+
+        public void CalculateMaxID()
+        {
+            ViewModel.CalculateMaxID();
+        }
+
+        public IDProvider IDProvider
+        {
+            get { return ViewModel.IDProvider; }
+        }
+
+        public PPDSheet SelectedPpdSheet
+        {
+            get { return ViewModel.SelectedPpdSheet; }
+        }
+
+        public int SelectedLayerIndex
+        {
+            get { return ViewModel.SelectedLayerIndex; }
+        }
+
+        public PPDSheet[] Sheets
+        {
+            get { return ViewModel.Sheets; }
+        }
+
+        /// <summary>
+        /// すべてのレイヤー（保存する順）です。
+        /// </summary>
+        public LayerViewModel[] AllLayerDisplay
+        {
+            get { return ViewModel.Layers; }
+        }
+
+        public float BPM
+        {
+            set { ViewModel.SetSelectedBpm(value); }
+        }
+
+        public float BPMOffset
+        {
+            set { ViewModel.SetSelectedBpmOffset(value); }
+        }
+
+        public int DisplayWidth
+        {
+            set { ViewModel.SetSelectedDisplayWidth(value); }
+        }
+
+        public DisplayLineMode DisplayMode
+        {
+            set { ViewModel.SetSelectedDisplayMode(value); }
+        }
+
+        public DisplayBeatType BeatType
+        {
+            set { ViewModel.SetSelectedBeatType(value); }
+        }
+
+        private static LayerDisplay FindLayerDisplay(object source)
+        {
+            for (var element = source as DependencyObject; element != null; element = VisualTreeHelper.GetParent(element))
             {
-                var ld = CreateLayerDisplay(viewModel.LayerName);
-                AddLayerToPanel(ld);
-                ContentChanged();
+                if (element is LayerDisplay layerDisplay)
+                {
+                    return layerDisplay;
+                }
             }
+            return null;
         }
 
-        private void Relocate()
+        private void Layers_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            // 後ろのレイヤーほど上に並べる
-            layersPanel.Children.Clear();
-            for (int i = layers.Count - 1; i >= 0; i--)
+            var layerDisplay = FindLayerDisplay(e.OriginalSource);
+            if (layerDisplay == null)
             {
-                layersPanel.Children.Add(layers[i]);
+                return;
             }
-        }
-
-        private void AddLayerToPanel(LayerDisplay ld)
-        {
-            layers.Add(ld);
-            Relocate();
-        }
-
-        private LayerDisplay CreateLayerDisplay(string layername)
-        {
-            return CreateLayerDisplay(layername,
-                WindowUtility.MainForm.BPM,
-                WindowUtility.MainForm.BPMOffset,
-                WindowUtility.MainForm.DisplayWidth, DisplayLineMode.Fourth, DisplayBeatType.Fourth);
-        }
-
-        private LayerDisplay CreateLayerDisplay(string layername, float bpm, float bpmoffset, int displaywidth, DisplayLineMode displayMode, DisplayBeatType beatType)
-        {
-            var ld = new LayerDisplay();
-            ld.SetLang();
-            ld.DisplayName = layername;
-            ld.BPM = BPMtext + " " + bpm;
-            ld.PPDData.BPM = bpm;
-            ld.PPDData.BPMStart = bpmoffset;
-            ld.PPDData.DisplayWidth = displaywidth;
-            ld.PPDData.DisplayName = layername;
-            ld.PPDData.DisplayMode = displayMode;
-            ld.PPDData.BeatType = beatType;
-            ld.MouseLeftButtonDown += Ld_MouseLeftButtonDown;
-            ld.MouseMove += Ld_MouseMove;
-            ld.MouseLeftButtonUp += Ld_MouseLeftButtonUp;
-            ld.LostMouseCapture += Ld_LostMouseCapture;
-            ld.SelectStateChanged += Ld_SelectStateChanged;
-            ld.Deleted += Ld_Deleted;
-            ld.Duplicated += Ld_Duplicated;
-            ld.VisibleStateChanged += Ld_VisibleStateChanged;
-            ld.PPDData.DisplayDataChanged += PPDData_DisplayDataChanged;
-            ld.PPDData.CommandChanged += PPDData_CommandChanged;
-            return ld;
-        }
-
-        void PPDData_CommandChanged(object sender, EventArgs e)
-        {
-            WindowUtility.TimeLineForm?.ContentChanged();
-        }
-
-        void Ld_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            var ld = (LayerDisplay)sender;
-            mousedown = true;
+            dragTarget = layerDisplay;
             dragging = false;
             mousedownpos = e.GetPosition(layersPanel);
-            ld.CaptureMouse();
+            layerDisplay.CaptureMouse();
         }
 
-        void Ld_MouseMove(object sender, MouseEventArgs e)
+        private void Layers_MouseMove(object sender, MouseEventArgs e)
         {
-            var ld = (LayerDisplay)sender;
-            if (!mousedown || !ld.IsMouseCaptured)
+            var ld = dragTarget;
+            if (ld == null || !ld.IsMouseCaptured)
             {
                 return;
             }
@@ -157,8 +174,8 @@ namespace PPDEditor
                 dropBar.Visibility = Visibility.Visible;
             }
             var top = ld.TranslatePoint(new Point(), layersPanel).Y;
-            System.Windows.Controls.Canvas.SetTop(dragImage, top + p.Y - mousedownpos.Y);
-            System.Windows.Controls.Canvas.SetTop(dropBar, ld.ActualHeight * GetDropRow(p) - dropBar.Height / 2);
+            Canvas.SetTop(dragImage, top + p.Y - mousedownpos.Y);
+            Canvas.SetTop(dropBar, ld.ActualHeight * GetDropRow(p, ld.ActualHeight) - dropBar.Height / 2);
             if (movecount % 10 == 0)
             {
                 // 見えているところの外までドラッグしたら、そちらへスクロールする
@@ -175,30 +192,23 @@ namespace PPDEditor
             movecount++;
         }
 
-        void Ld_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        private void Layers_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            var ld = (LayerDisplay)sender;
-            if (mousedown && dragging)
+            var ld = dragTarget;
+            if (ld == null)
             {
-                var index = layers.Count - GetDropRow(e.GetPosition(layersPanel));
-                var selectedIndex = layers.IndexOf(ld);
-                if (selectedIndex < index)
-                {
-                    index--;
-                }
-                if (selectedIndex != index)
-                {
-                    layers.RemoveAt(selectedIndex);
-                    layers.Insert(index, ld);
-                    Relocate();
-                }
+                return;
+            }
+            if (dragging)
+            {
+                ViewModel.MoveLayer((LayerViewModel)ld.DataContext, GetDropRow(e.GetPosition(layersPanel), ld.ActualHeight));
             }
             ld.ReleaseMouseCapture();
         }
 
-        void Ld_LostMouseCapture(object sender, MouseEventArgs e)
+        private void Layers_LostMouseCapture(object sender, MouseEventArgs e)
         {
-            mousedown = false;
+            dragTarget = null;
             dragging = false;
             dragImage.Visibility = Visibility.Collapsed;
             dragImage.Fill = null;
@@ -208,283 +218,63 @@ namespace PPDEditor
         /// <summary>
         /// 並べている行の間のうち、落とす場所の番号を返す（一番上が 0）。
         /// </summary>
-        private int GetDropRow(Point positionInPanel)
+        private int GetDropRow(Point positionInPanel, double rowHeight)
         {
-            if (layers.Count == 0)
+            var count = ViewModel.DisplayLayers.Count;
+            if (count == 0 || rowHeight <= 0)
             {
                 return 0;
             }
-            var height = layers[0].ActualHeight;
-            var row = (int)Math.Round(positionInPanel.Y / height);
-            return Math.Clamp(row, 0, layers.Count);
+            return Math.Clamp((int)Math.Round(positionInPanel.Y / rowHeight), 0, count);
         }
 
-        void PPDData_DisplayDataChanged(object sender, EventArgs e)
+        bool ILayerHost.Confirm(string text, string caption)
         {
-            ChangeDisplayData();
-        }
-        private void ChangeDisplayData()
-        {
-            LayerDisplay sld = SelectedLayer;
-            if (sld != null && (sld != lastld || sld.PPDData.BPM != lastBPM || sld.PPDData.BPMStart != lastBPMOffset
-                || sld.PPDData.DisplayWidth != lastDisplayWidth || sld.PPDData.BeatType != lastBeatType))
-            {
-                WindowUtility.Seekmain.SetSelectedSheetInfo(sld.PPDData.BPM, sld.PPDData.BPMStart, sld.PPDData.DisplayWidth,
-                    sld.PPDData.DisplayMode, sld.PPDData.BeatType);
-                lastld = sld;
-                lastBPM = sld.PPDData.BPM;
-                lastBPMOffset = sld.PPDData.BPMStart;
-                lastDisplayWidth = sld.PPDData.DisplayWidth;
-                lastDisplayMode = sld.PPDData.DisplayMode;
-                lastBeatType = sld.PPDData.BeatType;
-                WindowUtility.MainForm.BPM = lastBPM;
-                WindowUtility.MainForm.BPMOffset = lastBPMOffset;
-                WindowUtility.MainForm.DisplayWidth = lastDisplayWidth;
-                WindowUtility.MainForm.DisplayMode = lastDisplayMode;
-                WindowUtility.MainForm.BeatType = lastBeatType;
-            }
-        }
-        void Ld_VisibleStateChanged(object sender, EventArgs e)
-        {
-            WindowUtility.Seekmain.DrawAndRefresh();
+            return MessageBox.Show(Window.GetWindow(this), text, caption, MessageBoxButton.OKCancel) == MessageBoxResult.OK;
         }
 
-        void Ld_Duplicated(object sender, EventArgs e)
+        string ILayerHost.AskNewLayerName(string defaultName)
         {
-            if (sender is LayerDisplay senderld)
-            {
-                var index = layers.IndexOf(senderld);
-                var ld = CreateLayerDisplay(senderld.DisplayName + copy);
-                layers.Insert(index + 1, ld);
-                Relocate();
-                WindowUtility.Seekmain.DrawAndRefresh();
-                SortedList<float, Mark>[] source = senderld.PPDData.Data;
-                for (int i = 0; i < source.Length; i++)
-                {
-                    foreach (Mark mk in source[i].Values)
-                    {
-                        if (mk is ExMark exmk)
-                        {
-                            ld.PPDData.AddExMark(exmk.Time, exmk.EndTime, exmk.Position.X, exmk.Position.Y, exmk.Rotation, (int)exmk.Type, exmk.ID, [.. exmk.Parameters]);
-                        }
-                        else
-                        {
-                            ld.PPDData.AddMark(mk.Time, mk.Position.X, mk.Position.Y, mk.Rotation, (int)mk.Type, mk.ID, [.. mk.Parameters]);
-                        }
-                    }
-                }
-                ld.PPDData.BPM = senderld.PPDData.BPM;
-                ld.PPDData.BPMStart = senderld.PPDData.BPMStart;
-                ld.PPDData.DisplayWidth = senderld.PPDData.DisplayWidth;
-                ld.PPDData.DisplayMode = senderld.PPDData.DisplayMode;
-                ld.PPDData.BeatType = senderld.PPDData.BeatType;
-                ld.BPM = senderld.BPM;
-                ld.MarkColor = senderld.MarkColor;
-                ContentChanged();
-            }
+            var viewModel = new NewLayerViewModel(defaultName);
+            return WpfDialog.ShowDialog(new NewLayerWindow(viewModel)) ? viewModel.LayerName : null;
         }
 
-        void Ld_Deleted(object sender, EventArgs e)
+        System.Drawing.Color? ILayerHost.PickColor(System.Drawing.Color current)
         {
-            var senderld = sender as LayerDisplay;
-            var index = layers.IndexOf(senderld);
-            layers.Remove(senderld);
-            Relocate();
-            index--;
-            if (index >= layers.Count) index = layers.Count - 1;
-            if (index < 0) index = 0;
-            if (layers.Count != 0)
+            var dialog = new FlowScriptDrawControl.Dialog.ColorDialog
             {
-                LayerDisplay ld = layers[index];
-                ld?.SelectedWithEvent = true;
-            }
-            WindowUtility.Seekmain.DrawAndRefresh();
-            ContentChanged();
-        }
-
-        void Ld_SelectStateChanged(object sender, EventArgs e)
-        {
-            var senderld = sender as LayerDisplay;
-            foreach (LayerDisplay layer in layers)
+                CurrentColor = Color.FromRgb(current.R, current.G, current.B)
+            };
+            if (!WpfDialog.ShowDialog(dialog))
             {
-                if (senderld != layer)
-                {
-                    layer.Selected = false;
-                }
-            }
-            ChangeDisplayData();
-        }
-        private LayerDisplay SelectedLayer
-        {
-            get
-            {
-                return layers.FirstOrDefault(l => l.Selected);
-            }
-        }
-        public void Clear()
-        {
-            idProvider = new IDProvider(0);
-            layers.Clear();
-        }
-        public MarkData[] GetAllData(bool any)
-        {
-            SortedList<float, MarkData>[] dest = new SortedList<float, MarkData>[10];
-            for (int i = 0; i < dest.Length; i++)
-            {
-                dest[i] = [];
-            }
-
-            foreach (var layer in layers)
-            {
-                if (layer.DisplayVisible || any)
-                {
-                    SortedList<float, Mark>[] source = layer.PPDData.Data;
-                    for (int j = 0; j < source.Length; j++)
-                    {
-                        foreach (Mark mk in source[j].Values)
-                        {
-                            if (!dest[j].ContainsKey(mk.Time))
-                            {
-                                if (mk is ExMark exmk)
-                                {
-                                    dest[j].Add(exmk.Time, exmk.Convert());
-                                }
-                                else
-                                {
-                                    dest[j].Add(mk.Time, mk.Convert());
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            return Utility.GetSortedData<MarkData>(dest);
-        }
-
-        public void AddLayer(string name, float bpm, float bpmoffset, int displaywidth, bool visible, DisplayLineMode displayMode, DisplayBeatType beatType)
-        {
-            var ld = CreateLayerDisplay(name, bpm, bpmoffset, displaywidth, displayMode, beatType);
-            ld.DisplayVisible = visible;
-            AddLayerToPanel(ld);
-        }
-
-        public void SelectLastLayer()
-        {
-            if (layers.Count > 0)
-            {
-                layers[^1].SelectedWithEvent = true;
-            }
-        }
-
-        public void SelectLayerByIndex(int index)
-        {
-            if (index < 0 || index >= layers.Count)
-            {
-                return;
-            }
-            layers[index].SelectedWithEvent = true;
-        }
-
-        public void CalculateMaxID()
-        {
-            uint max = 0;
-            foreach (MarkData markData in GetAllData(true))
-            {
-                if (max < markData.ID)
-                {
-                    max = markData.ID;
-                }
-            }
-            idProvider = new IDProvider(max);
-        }
-        public IDProvider IDProvider
-        {
-            get
-            {
-                return idProvider;
-            }
-        }
-        public PPDSheet SelectedPpdSheet
-        {
-            get
-            {
-                LayerDisplay sld = SelectedLayer;
-                if (sld != null)
-                {
-                    return sld.PPDData;
-                }
                 return null;
             }
+            return System.Drawing.Color.FromArgb(dialog.CurrentColor.R, dialog.CurrentColor.G, dialog.CurrentColor.B);
         }
-        public int SelectedLayerIndex
+
+        (float Bpm, float BpmOffset, int DisplayWidth) ILayerHost.CurrentSettings
         {
-            get
-            {
-                LayerDisplay sld = SelectedLayer;
-                if (sld == null)
-                {
-                    return -1;
-                }
-                return layers.IndexOf(sld);
-            }
+            get { return (WindowUtility.MainForm.BPM, WindowUtility.MainForm.BPMOffset, WindowUtility.MainForm.DisplayWidth); }
         }
-        public PPDSheet[] Sheets
+
+        void ILayerHost.ApplySheetSettings(PPDSheet sheet)
         {
-            get
-            {
-                return [.. layers.Where(l => l.DisplayVisible).Select(l => l.PPDData)];
-            }
+            WindowUtility.Seekmain.SetSelectedSheetInfo(sheet.BPM, sheet.BPMStart, sheet.DisplayWidth, sheet.DisplayMode, sheet.BeatType);
+            WindowUtility.MainForm.BPM = sheet.BPM;
+            WindowUtility.MainForm.BPMOffset = sheet.BPMStart;
+            WindowUtility.MainForm.DisplayWidth = sheet.DisplayWidth;
+            WindowUtility.MainForm.DisplayMode = sheet.DisplayMode;
+            WindowUtility.MainForm.BeatType = sheet.BeatType;
         }
-        public LayerDisplay[] AllLayerDisplay
+
+        void ILayerHost.RefreshTimeline()
         {
-            get
-            {
-                return [.. layers];
-            }
+            WindowUtility.Seekmain?.DrawAndRefresh();
         }
-        public float BPM
+
+        void ILayerHost.OnSheetChanged()
         {
-            set
-            {
-                LayerDisplay sld = SelectedLayer;
-                if (sld != null)
-                {
-                    sld.BPM = BPMtext + " " + value;
-                    sld.PPDData.BPM = value;
-                }
-            }
-        }
-        public float BPMOffset
-        {
-            set
-            {
-                LayerDisplay sld = SelectedLayer;
-                sld?.PPDData.BPMStart = value;
-            }
-        }
-        public int DisplayWidth
-        {
-            set
-            {
-                LayerDisplay sld = SelectedLayer;
-                sld?.PPDData.DisplayWidth = value;
-            }
-        }
-        public DisplayLineMode DisplayMode
-        {
-            set
-            {
-                LayerDisplay sld = SelectedLayer;
-                sld?.PPDData.DisplayMode = value;
-            }
-        }
-        public DisplayBeatType BeatType
-        {
-            set
-            {
-                LayerDisplay sld = SelectedLayer;
-                sld?.PPDData.BeatType = value;
-            }
+            WindowUtility.TimeLineForm?.ContentChanged();
         }
     }
 }

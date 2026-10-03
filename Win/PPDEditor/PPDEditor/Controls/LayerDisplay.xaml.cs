@@ -1,226 +1,88 @@
-﻿using PPDEditor.Command.PPDSheet;
-using PPDEditor.Forms;
-using System;
+﻿using PPDEditor.ViewModels.Docks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media;
 
 namespace PPDEditor.Controls
 {
+    /// <summary>
+    /// レイヤーの一覧の 1 行です。DataContext は <see cref="LayerViewModel"/> です。
+    /// </summary>
+    /// <remarks>
+    /// クリックで選び（ドラッグでの並べ替えはレイヤーの一覧が扱う）、表示の切り替えと色の部分ではクリックを止める。
+    /// </remarks>
     public partial class LayerDisplay : UserControl
     {
-        public event EventHandler VisibleStateChanged;
-        public event EventHandler SelectStateChanged;
-        public event EventHandler Deleted;
-        public event EventHandler Duplicated;
-        bool selected;
-        bool visible = true;
-        readonly PPDSheet data;
-        System.Drawing.Color markColor;
-        string deleteconfirm = "削除してもよろしいですか?";
-        string confirm = "確認";
         public LayerDisplay()
         {
-            data = new PPDSheet();
             InitializeComponent();
-            MarkColor = PPDEditorSkin.Skin.TimeLineMarkColor;
-        }
-        public void SetLang()
-        {
-            this.このレイヤーを複製MenuItem.Header = Utility.Language["LMMenu2"];
-            this.このレイヤーを削除MenuItem.Header = Utility.Language["LMMenu3"];
-            deleteconfirm = Utility.Language["LMDeleteConfirm"];
-            confirm = Utility.Language["LMConfirm"];
         }
 
-        private void Panel1_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private LayerViewModel ViewModel
         {
-            // 選択やドラッグにならないように、ここで止める
-            e.Handled = true;
-            DisplayVisible = !visible;
-        }
-
-        private void VisibleChange()
-        {
-            VisibleStateChanged?.Invoke(this, EventArgs.Empty);
+            get { return (LayerViewModel)DataContext; }
         }
 
         private void LayerDisplay_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            Select();
+            Focus();
+            ViewModel.SelectCommand.Execute(null);
         }
 
+        // 右クリックのメニューを出すときも選ぶ
         private void LayerDisplay_ContextMenuOpening(object sender, ContextMenuEventArgs e)
         {
-            Select();
+            Focus();
+            ViewModel.SelectCommand.Execute(null);
         }
 
-        private void Select()
+        private void VisibleToggle_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            selected = true;
-            this.Focus();
-            SelectStateChanged?.Invoke(this, EventArgs.Empty);
-            ChangeDisplayMode();
+            // 選択やドラッグにならないように、ここで止める
+            e.Handled = true;
+            ViewModel.ToggleVisibleCommand.Execute(null);
         }
 
-        private void ChangeDisplayMode()
-        {
-            this.Background = selected ? Brushes.LightBlue : Brushes.LightGray;
-        }
-
-        private void Label1_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void Name_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             if (e.ClickCount == 2)
             {
                 e.Handled = true;
-                this.textBox1.Text = DisplayName;
-                this.textBox1.Visibility = Visibility.Visible;
-                this.textBox1.Focus();
-                this.textBox1.SelectAll();
+                ViewModel.BeginRenameCommand.Execute(null);
             }
         }
 
-        private void TextBox1_KeyDown(object sender, KeyEventArgs e)
+        // 名前の編集を始めたら、すぐ入力できるようにする
+        private void NameBox_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            if (nameBox.IsVisible)
+            {
+                nameBox.Focus();
+                nameBox.SelectAll();
+            }
+        }
+
+        private void NameBox_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Return)
             {
                 e.Handled = true;
-                Hidetextbox();
+                ViewModel.EndRenameCommand.Execute(null);
             }
         }
 
-        private void TextBox1_LostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+        private void NameBox_LostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
         {
-            Hidetextbox();
+            ViewModel.EndRenameCommand.Execute(null);
         }
 
-        private void Hidetextbox()
-        {
-            if (this.textBox1.Visibility == Visibility.Visible)
-            {
-                DisplayName = this.textBox1.Text == "" ? "no text" : this.textBox1.Text;
-                data.DisplayName = this.DisplayName;
-                this.textBox1.Visibility = Visibility.Collapsed;
-            }
-        }
-
-        private void このレイヤーを削除MenuItem_Click(object sender, RoutedEventArgs e)
-        {
-            if (this.Deleted != null)
-            {
-                if (MessageBox.Show(Window.GetWindow(this), deleteconfirm, confirm, MessageBoxButton.OKCancel) == MessageBoxResult.OK)
-                {
-                    this.Deleted.Invoke(this, EventArgs.Empty);
-                }
-            }
-        }
-
-        private void このレイヤーを複製MenuItem_Click(object sender, RoutedEventArgs e)
-        {
-            this.Duplicated?.Invoke(this, EventArgs.Empty);
-        }
-        public PPDSheet PPDData
-        {
-            get
-            {
-                return data;
-            }
-        }
-        public bool Selected
-        {
-            get
-            {
-                return selected;
-            }
-            set
-            {
-                selected = value;
-                ChangeDisplayMode();
-            }
-        }
-        public bool SelectedWithEvent
-        {
-            get
-            {
-                return selected;
-            }
-            set
-            {
-                selected = value;
-                if (selected)
-                {
-                    this.Focus();
-                    SelectStateChanged?.Invoke(this, EventArgs.Empty);
-                }
-                ChangeDisplayMode();
-            }
-        }
-        public bool DisplayVisible
-        {
-            get
-            {
-                return visible;
-            }
-            set
-            {
-                this.pictureBox1.Visibility = value ? Visibility.Visible : Visibility.Hidden;
-                visible = value;
-                VisibleChange();
-            }
-        }
-        public string DisplayName
-        {
-            get
-            {
-                return this.label1.Text;
-            }
-            set
-            {
-                this.label1.Text = value;
-            }
-        }
-        public string BPM
-        {
-            get
-            {
-                return this.label2.Text;
-            }
-            set
-            {
-                this.label2.Text = value;
-            }
-        }
-
-        public System.Drawing.Color MarkColor
-        {
-            get
-            {
-                return markColor;
-            }
-            set
-            {
-                markColor = value;
-                panel2.Background = WpfSkin.ToBrush(value);
-            }
-        }
-
-        private void Panel2_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void MarkColor_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             // 選択やドラッグにならないように、ここで止める
             e.Handled = true;
-            if (e.ClickCount != 2)
+            if (e.ClickCount == 2)
             {
-                return;
-            }
-            var dialog = new FlowScriptDrawControl.Dialog.ColorDialog
-            {
-                CurrentColor = Color.FromRgb(markColor.R, markColor.G, markColor.B)
-            };
-            if (WpfDialog.ShowDialog(dialog))
-            {
-                MarkColor = System.Drawing.Color.FromArgb(dialog.CurrentColor.R, dialog.CurrentColor.G, dialog.CurrentColor.B);
-                WindowUtility.TimeLineForm.Seekmain.DrawAndRefresh();
+                ViewModel.ChangeColorCommand.Execute(null);
             }
         }
     }

@@ -1,4 +1,5 @@
-﻿using PPDEditor.ViewModels.Dialogs;
+﻿using PPDEditor.ViewModels.Docks;
+using PPDEditor.ViewModels.Dialogs;
 using PPDConfiguration;
 using PPDEditor.Controls;
 using PPDEditor.FlowScript;
@@ -585,7 +586,6 @@ namespace PPDEditor.Forms
                 extraGameWindowMenuItems[1].Header = 標準解像度にするMenuItem.Header;
             }
             em.SetLang();
-            lm.SetLang();
             gc.SetLang();
             rm.SetLang();
             scm.SetLang();
@@ -1393,7 +1393,7 @@ namespace PPDEditor.Forms
 
         private static void SaveLayers(string insideDirectory)
         {
-            LayerDisplay[] lds = lm.AllLayerDisplay;
+            LayerViewModel[] lds = lm.AllLayerDisplay;
             if (!Directory.Exists(insideDirectory + "\\layers"))
             {
                 Directory.CreateDirectory(insideDirectory + "\\layers");
@@ -1470,7 +1470,7 @@ namespace PPDEditor.Forms
             var setting = new SettingReader(projectData);
             var head = Difficulty.ToString();
             string headdot = head + ".";
-            LayerDisplay[] lds = lm.AllLayerDisplay;
+            LayerViewModel[] lds = lm.AllLayerDisplay;
             if (Directory.Exists(Path.Combine(projectdir, head + "_" + "layers")))
             {
                 Directory.Delete(Path.Combine(projectdir, head + "_" + "layers"), true);
