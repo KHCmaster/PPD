@@ -52,6 +52,7 @@ namespace PPDEditor.Forms
         static TimeLineForm tlf;
         static DXForm dxf;
         static InfoForm infof;
+        static WpfDockShell infofDock;
         static LayerManager lm;
         static EventManager em;
         static WpfDockShell emDock;
@@ -149,6 +150,7 @@ namespace PPDEditor.Forms
             dxf = new DXForm();
             SplashWindow.ChangeStatus(String.Format(Utility.Language["InitializingStart"], Utility.Language["Property"]));
             infof = new InfoForm();
+            infofDock = new WpfDockShell(infof, "PPDEditor.InfoForm");
             SplashWindow.ChangeStatus(String.Format(Utility.Language["InitializingStart"], Utility.Language["LayerManager"]));
             lm = new LayerManager();
             SplashWindow.ChangeStatus(String.Format(Utility.Language["InitializingStart"], Utility.Language["EventManager"]));
@@ -200,7 +202,7 @@ namespace PPDEditor.Forms
             bmDock.VisibleChanged += Windowvisiblechanged;
             tlf.VisibleChanged += Windowvisiblechanged;
             dxf.VisibleChanged += Windowvisiblechanged;
-            infof.VisibleChanged += Windowvisiblechanged;
+            infofDock.VisibleChanged += Windowvisiblechanged;
             lm.VisibleChanged += Windowvisiblechanged;
             emDock.VisibleChanged += Windowvisiblechanged;
             gc.VisibleChanged += Windowvisiblechanged;
@@ -589,7 +591,7 @@ namespace PPDEditor.Forms
             bmDock.DockPanel = null;
             tlf.DockPanel = null;
             dxf.DockPanel = null;
-            infof.DockPanel = null;
+            infofDock.DockPanel = null;
             lm.DockPanel = null;
             emDock.DockPanel = null;
             gc.DockPanel = null;
@@ -645,7 +647,7 @@ namespace PPDEditor.Forms
             else
             {
                 dxf.Show(dockPanel1, DockState.Document);
-                infof.Show(dockPanel1, DockState.DockRight);
+                infofDock.Show(dockPanel1, DockState.DockRight);
                 tlf.Show(dockPanel1, DockState.DockBottom);
             }
             scm.RestoreDock(Path.Combine(Utility.AppDir, scriptdockxmlname));
@@ -674,7 +676,7 @@ namespace PPDEditor.Forms
             this.ゲームウィンドウToolStripMenuItem.Checked = Utility.CheckVisible(dxf);
             this.サウンドマネージャーToolStripMenuItem.Checked = Utility.CheckVisible(smDock);
             this.タイムラインウィンドウToolStripMenuItem.Checked = Utility.CheckVisible(tlf);
-            this.プロパティウィンドウToolStripMenuItem.Checked = Utility.CheckVisible(infof);
+            this.プロパティウィンドウToolStripMenuItem.Checked = Utility.CheckVisible(infofDock);
             this.位置角度ローダーセーバーToolStripMenuItem.Checked = Utility.CheckVisible(paalsDock);
             this.歌詞エディターToolStripMenuItem.Checked = Utility.CheckVisible(keDock);
             this.設定ファイルライターToolStripMenuItem.Checked = Utility.CheckVisible(ifwDock);
@@ -694,7 +696,7 @@ namespace PPDEditor.Forms
             {
                 "PPDEditor.BPMMeasure" => bmDock,
                 "PPDEditor.DXForm" => dxf,
-                "PPDEditor.InfoForm" => infof,
+                "PPDEditor.InfoForm" => infofDock,
                 "PPDEditor.KasiEditor" => keDock,
                 "PPDEditor.PosAndAngleLoaderSaver" => paalsDock,
                 "PPDEditor.SoundManager" => smDock,
@@ -2393,7 +2395,7 @@ namespace PPDEditor.Forms
 
         private void プロパティウィンドウToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Utility.ShowOrHideWindow(dockPanel1, infof, ModifierKeys);
+            Utility.ShowOrHideWindow(dockPanel1, infofDock, ModifierKeys);
         }
         private void レイヤーマネージャーToolStripMenuItem_Click(object sender, EventArgs e)
         {

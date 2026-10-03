@@ -1,7 +1,9 @@
 ﻿using PPDEditor.Controls;
 using PPDEditor.Forms;
+using PPDEditorCommon;
 using System;
 using System.Drawing;
+using System.IO;
 using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;
 
@@ -228,35 +230,33 @@ namespace PPDEditor
             if (presetsLoadTime != WindowUtility.InfoForm.PresetsLoadTime)
             {
                 パラメーターToolStripMenuItem.DropDownItems.Clear();
-                Copy(パラメーターToolStripMenuItem, WindowUtility.InfoForm.PresetsMenuList);
+                AddPresetMenuItems(パラメーターToolStripMenuItem, WindowUtility.InfoForm.PresetRoot);
                 presetsLoadTime = WindowUtility.InfoForm.PresetsLoadTime;
             }
             Utility.ChangeToolStripCheckState(パラメーターToolStripMenuItem);
         }
 
-        private void Copy(ToolStripMenuItem parent, ToolStripItemCollection collection)
+        private void AddPresetMenuItems(ToolStripMenuItem parent, ParameterPresetFolder folder)
         {
-            foreach (ToolStripMenuItem menuItem in collection)
+            foreach (var childFolder in folder.Folders)
             {
-                var commandMenuItem = menuItem as InfoForm.CommandToolStripMenuItem;
-                ToolStripMenuItem child;
-                if (menuItem != null)
-                {
-                    child = commandMenuItem.Clone();
-                    child.Click += Child_Click;
-                }
-                else
-                {
-                    child = new ToolStripMenuItem();
-                    child.Text = child.ToolTipText = menuItem.Text;
-                }
+                var child = new ToolStripMenuItem();
+                child.Text = child.ToolTipText = childFolder.Name;
+                parent.DropDownItems.Add(child);
+                AddPresetMenuItems(child, childFolder);
+            }
+            foreach (var preset in folder.Presets)
+            {
+                var child = new CommandToolStripMenuItem(preset);
+                child.Text = child.ToolTipText = Path.GetFileNameWithoutExtension(preset.FilePath);
+                child.Click += Child_Click;
                 parent.DropDownItems.Add(child);
             }
         }
 
         void Child_Click(object sender, EventArgs e)
         {
-            if (sender is InfoForm.CommandToolStripMenuItem menuItem)
+            if (sender is CommandToolStripMenuItem menuItem)
             {
                 if (menuItem.CheckState == CheckState.Checked)
                 {
@@ -267,6 +267,15 @@ namespace PPDEditor
                     WindowUtility.InfoForm.ApplyParameters(menuItem.Preset.Parameters);
                 }
             }
+        }
+
+        public class CommandToolStripMenuItem(ParameterPreset preset) : ToolStripMenuItem
+        {
+            public ParameterPreset Preset
+            {
+                get;
+                private set;
+            } = preset;
         }
     }
 }

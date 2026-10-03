@@ -1,4 +1,5 @@
 ﻿using PPDConfiguration;
+using PPDEditorCommon;
 using PPDFramework;
 using System.Numerics;
 using PPDMath;
@@ -408,19 +409,11 @@ namespace PPDEditor
             while (queue.Count > 0)
             {
                 var menuItem = queue.Dequeue();
-                if (menuItem is InfoForm.CommandToolStripMenuItem commandMenuItem)
+                if (menuItem is TimeLineForm.CommandToolStripMenuItem commandMenuItem)
                 {
-                    int count = 0;
-                    foreach (var parameter in parameters)
-                    {
-                        var param = commandMenuItem.Preset.Parameters.FirstOrDefault(p => p.Key == parameter.Key && p.Value == parameter.Value);
-                        if (param.Key != null)
-                        {
-                            count++;
-                        }
-                    }
-                    commandMenuItem.CheckState = count == commandMenuItem.Preset.Parameters.Length ? CheckState.Checked :
-                        (count > 0 ? CheckState.Indeterminate : CheckState.Unchecked);
+                    var state = GetPresetCheckState(commandMenuItem.Preset, parameters);
+                    commandMenuItem.CheckState = state == true ? CheckState.Checked :
+                        (state == null ? CheckState.Indeterminate : CheckState.Unchecked);
                 }
                 else
                 {
@@ -430,6 +423,23 @@ namespace PPDEditor
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// プリセットのパラメーターがすべて当てはまるときは true、一部だけなら null、一つもなければ false を返す。
+        /// </summary>
+        public static bool? GetPresetCheckState(ParameterPreset preset, Dictionary<string, string> parameters)
+        {
+            int count = 0;
+            foreach (var parameter in parameters)
+            {
+                var param = preset.Parameters.FirstOrDefault(p => p.Key == parameter.Key && p.Value == parameter.Value);
+                if (param.Key != null)
+                {
+                    count++;
+                }
+            }
+            return count == preset.Parameters.Length ? true : (count > 0 ? null : false);
         }
 
         public static IEnumerable<ToolStripMenuItem> GetDescendants(this ToolStripMenuItem menu)

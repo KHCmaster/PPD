@@ -111,9 +111,6 @@
     <EmbeddedResource Update="Forms\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Update="DockForm\InfoForm.resx">
-      <DependentUpon>InfoForm.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Update="Controls\LayerDisplay.resx">
       <DependentUpon>LayerDisplay.cs</DependentUpon>
     </EmbeddedResource>
