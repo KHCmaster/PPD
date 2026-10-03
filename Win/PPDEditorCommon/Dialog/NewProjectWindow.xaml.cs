@@ -67,18 +67,16 @@ namespace PPDEditorCommon.Dialog
                 return;
             }
 
-            var dialog = new System.Windows.Forms.OpenFileDialog
+            var dialog = new Microsoft.Win32.OpenFileDialog
             {
                 Filter = message.Filter,
-                FileName = message.FileName,
-                RestoreDirectory = true
+                FileName = message.FileName
             };
-            message.Result = dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK;
+            message.Result = dialog.ShowDialog(this) == true;
             if (message.Result)
             {
                 message.FileName = dialog.FileName;
             }
-            dialog.Dispose();
         }
 
         private void FolderBrowserDialogMessage_Received(FolderBrowserDialogMessage message)
@@ -88,16 +86,15 @@ namespace PPDEditorCommon.Dialog
                 return;
             }
 
-            var dialog = new System.Windows.Forms.FolderBrowserDialog
+            var dialog = new Microsoft.Win32.OpenFolderDialog
             {
-                SelectedPath = message.SelectedPath
+                InitialDirectory = message.SelectedPath
             };
-            message.Result = dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK;
+            message.Result = dialog.ShowDialog(this) == true;
             if (message.Result)
             {
-                message.SelectedPath = dialog.SelectedPath;
+                message.SelectedPath = dialog.FolderName;
             }
-            dialog.Dispose();
         }
 
         private void SelectMessage_Received(SelectMessage message)

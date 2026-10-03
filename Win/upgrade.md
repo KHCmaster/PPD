@@ -598,6 +598,9 @@ WinForms と WPF の混在をなくすため、PPD.exe 以外を段階的に WPF
     - スキン: 背景の画像と重ねる色は WPF で表示する。以前の DockPanel Suite のタブの色（skin.ini の *Gradient）は、今は使っていない
     - 消したもの: WpfDockShell、ScrollableForm、ChangableDockContent、DXForm、CustomFloatWindow、CustomToolStripRenderer、ExToolStripSplitButton、WinForms の ChangeValueLabel。PPDEditor は WinFormsUI を参照しなくなった
     - 残っている WinForms: ショートカットのキー（`System.Windows.Forms.Keys`。保存の形式がこの名前なので、そのまま使う）と、PPD.exe と共有している PPDFramework、ErrorHandler
+    - FlowScriptEnginePPDEditor の MessageBox のノードは、WinForms の型（MessageBoxButtons など）を値に使っている。.fsml に型が残り、Mod の互換に関わるので変えない（表示は Win32 のメッセージボックスで、WPF と同じ）
+    - PPDEditorCommon の新規プロジェクトの画面のファイルとフォルダーの選択は、WPF（`OpenFileDialog`、`OpenFolderDialog`）にした
+    - WinFormsUI（DockPanel Suite）のプロジェクトはソリューションから消した。配布の DLL の一覧（PPDReleaser、Checker）は `WeifenLuo.WinFormsUI.Docking.dll` を `AvalonDock.dll` に替えた
 
 ### Phase 7: 配布・更新の仕組みとリリース
 

@@ -146,7 +146,7 @@ namespace PPDReleaser
                 "System.Threading.Tasks.Extensions.dll",
                 "System.ValueTuple.dll",
                 "DotNetProjects.DataVisualization.Toolkit.dll",
-                "WeifenLuo.WinFormsUI.Docking.dll",
+                "AvalonDock.dll",
                 "YamlDotNet.dll",
                 "BlueSky.dll",
                 "x64\\SQLite.Interop.dll",

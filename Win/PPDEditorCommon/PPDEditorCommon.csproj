@@ -6,7 +6,6 @@
     <AssemblyName>PPDEditorCommon</AssemblyName>
     <WarningLevel>4</WarningLevel>
     <Platforms>x64</Platforms>
-    <UseWindowsForms>true</UseWindowsForms>
     <UseWPF>true</UseWPF>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">

@@ -187,7 +187,7 @@ namespace PPD.Update
                 "System.Threading.Tasks.Extensions.dll",
                 "System.ValueTuple.dll",
                 "DotNetProjects.DataVisualization.Toolkit.dll",
-                "WeifenLuo.WinFormsUI.Docking.dll",
+                "AvalonDock.dll",
                 "YamlDotNet.dll",
                 "x64\\SQLite.Interop.dll",
                 "skins\\PPDModSettingUI.dll",
