@@ -1,9 +1,14 @@
 <Window x:Class="PPDEditor.Forms.ModPublishWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="MODを発行" SizeToContent="WidthAndHeight" ResizeMode="NoResize" ShowInTaskbar="False">
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:PPDEditor.ViewModels.Dialogs"
+        xmlns:conv="clr-namespace:PPDEditor.Converters"
+        mc:Ignorable="d" d:DataContext="{d:DesignInstance Type=vm:ModPublishViewModel}"
+        Title="{Binding Texts[PublishMod]}" SizeToContent="WidthAndHeight" ResizeMode="NoResize" ShowInTaskbar="False">
     <StackPanel Margin="12,9,12,12" Width="268">
-        <TextBlock x:Name="label1" Text="MODを発行します。以下の項目を埋めてください。" TextWrapping="Wrap" />
+        <TextBlock Text="{Binding Texts[PublishModLabel1]}" TextWrapping="Wrap" />
         <Grid Margin="0,8,0,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
@@ -15,23 +20,23 @@
                 <RowDefinition Height="25" />
                 <RowDefinition Height="25" />
             </Grid.RowDefinitions>
-            <TextBlock x:Name="label2" Text="ファイル名:" VerticalAlignment="Center" />
-            <TextBox x:Name="textBox1" Grid.Column="1" Height="20" VerticalContentAlignment="Center" />
-            <TextBlock x:Name="label3" Grid.Row="1" Text="表示名:" VerticalAlignment="Center" />
-            <TextBox x:Name="textBox2" Grid.Row="1" Grid.Column="1" Height="20" VerticalContentAlignment="Center" />
-            <TextBlock x:Name="label4" Grid.Row="2" Text="作者名:" VerticalAlignment="Center" />
-            <TextBox x:Name="textBox3" Grid.Row="2" Grid.Column="1" Height="20" VerticalContentAlignment="Center" />
-            <TextBlock x:Name="label5" Grid.Row="3" Text="バージョン:" VerticalAlignment="Center" />
-            <TextBox x:Name="textBox4" Grid.Row="3" Grid.Column="1" Height="20" VerticalContentAlignment="Center" />
+            <TextBlock Grid.Row="0" Text="{Binding Texts[PublishModLabel2]}" VerticalAlignment="Center" />
+            <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding ModFileName, UpdateSourceTrigger=PropertyChanged}" Height="20" VerticalContentAlignment="Center" />
+            <TextBlock Grid.Row="1" Text="{Binding Texts[PublishModLabel3]}" VerticalAlignment="Center" />
+            <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding ModDisplayName, UpdateSourceTrigger=PropertyChanged}" Height="20" VerticalContentAlignment="Center" />
+            <TextBlock Grid.Row="2" Text="{Binding Texts[PublishModLabel4]}" VerticalAlignment="Center" />
+            <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding ModAuthorName, UpdateSourceTrigger=PropertyChanged}" Height="20" VerticalContentAlignment="Center" />
+            <TextBlock Grid.Row="3" Text="{Binding Texts[PublishModLabel5]}" VerticalAlignment="Center" />
+            <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding ModVersion, UpdateSourceTrigger=PropertyChanged}" Height="20" VerticalContentAlignment="Center" />
         </Grid>
-        <TextBlock x:Name="label6" Text="発行先のフォルダ:" Margin="0,8,0,0" />
+        <TextBlock Text="{Binding Texts[PublishModLabel6]}" Margin="0,8,0,0" />
         <DockPanel Margin="0,3,0,0">
-            <Button x:Name="button1" DockPanel.Dock="Right" Content="..." Width="24" Height="22" Margin="6,0,0,0" Click="Button1_Click" />
-            <TextBox x:Name="textBox5" Height="20" VerticalContentAlignment="Center" />
+            <Button DockPanel.Dock="Right" Content="..." Width="24" Height="22" Margin="6,0,0,0" Command="{Binding BrowseFolderCommand}" />
+            <TextBox Text="{Binding PublishFolder, UpdateSourceTrigger=PropertyChanged}" Height="20" VerticalContentAlignment="Center" />
         </DockPanel>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,20,0,0">
-            <Button x:Name="button2" Content="OK" Width="75" Height="23" IsDefault="True" Click="Button2_Click" />
-            <Button x:Name="button3" Content="Cancel" Width="75" Height="23" Margin="29,0,0,0" IsCancel="True" />
+            <Button Content="OK" Width="75" Height="23" IsDefault="True" Command="{Binding OkCommand}" />
+            <Button Content="Cancel" Width="75" Height="23" Margin="29,0,0,0" IsCancel="True" />
         </StackPanel>
     </StackPanel>
 </Window>

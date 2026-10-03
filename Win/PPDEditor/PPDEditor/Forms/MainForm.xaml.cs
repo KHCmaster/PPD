@@ -3246,11 +3246,8 @@ namespace PPDEditor.Forms
             {
                 return;
             }
-            var pf = new PublishWindow();
-            pf.SetLang();
-            pf.AvailableDifficulty = AvailableDifficulty;
-            pf.PublishFolderName = Path.GetFileNameWithoutExtension(projectfilename);
-            if (WpfDialog.ShowDialog(pf))
+            var pf = new PublishViewModel(AvailableDifficulty, Path.GetFileNameWithoutExtension(projectfilename), CurrentProjectDir);
+            if (WpfDialog.ShowDialog(new PublishWindow(pf)))
             {
                 if (pf.PublishDifficulty == AvailableDifficulty.None)
                 {
@@ -3303,9 +3300,8 @@ namespace PPDEditor.Forms
 
         private void プロジェクトをマージToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var mf = new MergeWindow();
-            mf.SetLang();
-            if (WpfDialog.ShowDialog(mf))
+            var mf = new MergeViewModel();
+            if (WpfDialog.ShowDialog(new MergeWindow(mf)))
             {
                 AvailableDifficulty mergeDifficulty = mf.MergeDifficulty;
                 if (mergeDifficulty == AvailableDifficulty.None)
@@ -3572,9 +3568,8 @@ namespace PPDEditor.Forms
                 return;
             }
 
-            var mpf = new ModPublishWindow();
-            mpf.SetLang();
-            if (WpfDialog.ShowDialog(mpf))
+            var mpf = new ModPublishViewModel();
+            if (WpfDialog.ShowDialog(new ModPublishWindow(mpf)))
             {
                 var path = Path.Combine(mpf.PublishFolder, mpf.ModFileName);
                 path = Path.ChangeExtension(path, "mod");
@@ -3645,11 +3640,8 @@ namespace PPDEditor.Forms
                 using FileStream stream = File.Open(filePath, FileMode.Open);
                 data = ReadEvdAsEventData(stream);
             }
-            var form = new ImportEventWindow();
-            form.SetCurrentEvent(em.ChangeData);
-            form.SetReadOnlyEvent(data);
-            form.SetLang();
-            if (WpfDialog.ShowDialog(form))
+            var form = new ImportEventViewModel(em.ChangeData, data);
+            if (WpfDialog.ShowDialog(new ImportEventWindow(form)))
             {
                 em.ChangeData = form.ChangeData;
             }

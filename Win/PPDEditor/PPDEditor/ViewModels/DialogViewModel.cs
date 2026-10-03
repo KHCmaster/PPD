@@ -1,4 +1,4 @@
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System;
 
@@ -10,6 +10,24 @@ namespace PPDEditor.ViewModels
     public interface IDialogView
     {
         void ShowMessage(string text);
+
+        /// <summary>
+        /// フォルダーを選ばせます。
+        /// </summary>
+        /// <returns>キャンセルしたときは null。</returns>
+        string SelectFolder(string initialDirectory);
+
+        /// <summary>
+        /// 開くファイルを選ばせます。
+        /// </summary>
+        /// <returns>キャンセルしたときは null。</returns>
+        string OpenFile(string filter);
+
+        /// <summary>
+        /// 保存するファイルを選ばせます。
+        /// </summary>
+        /// <returns>キャンセルしたときは null。</returns>
+        string SaveFile(string filter);
     }
 
     /// <summary>
