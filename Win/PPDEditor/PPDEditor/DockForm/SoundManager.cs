@@ -519,11 +519,11 @@ namespace PPDEditor
             {
                 var time = (float)dataGridView1[0, dataGridView1.CurrentRow.Index].Value;
                 var change = changedata[time];
-                var form = new SoundChangeEditForm();
+                var form = new SoundChangeEditWindow();
                 form.SetLang();
                 form.SetInfo(change, [.. data]);
                 form.PlaySound += Form_PlaySound;
-                if (form.ShowDialog() != DialogResult.OK)
+                if (!WpfDialog.ShowDialog(form))
                 {
                     return;
                 }

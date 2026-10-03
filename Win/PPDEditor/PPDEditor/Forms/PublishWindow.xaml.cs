@@ -5,14 +5,16 @@ using PPDPack;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Microsoft.Win32;
 using System.Security.Cryptography;
-using System.Windows.Forms;
+using System.Windows;
+using System.Windows.Controls;
 
 namespace PPDEditor.Forms
 {
-    public partial class PublishForm : Form
+    public partial class PublishWindow : Window
     {
-        public PublishForm()
+        public PublishWindow()
         {
             InitializeComponent();
             if (Directory.Exists("publish"))
@@ -20,32 +22,38 @@ namespace PPDEditor.Forms
                 Directory.CreateDirectory("publish");
             }
             this.textBox1.Text = Path.GetFullPath("publish");
-            checkBox1.CheckedChanged += CheckedChanged;
-            checkBox2.CheckedChanged += CheckedChanged;
-            checkBox3.CheckedChanged += CheckedChanged;
-            checkBox4.CheckedChanged += CheckedChanged;
         }
 
         public void SetLang()
         {
-            this.Text = Utility.Language["Publish"];
+            this.Title = Utility.Language["Publish"];
             this.label1.Text = Utility.Language["PFLabel1"];
             this.label2.Text = Utility.Language["PFLabel2"];
             this.label3.Text = Utility.Language["PFLabel3"];
-            this.groupBox1.Text = Utility.Language["PFGroupBox1"];
+            this.groupBox1.Header = Utility.Language["PFGroupBox1"];
         }
 
-        void CheckedChanged(object sender, EventArgs e)
+        void CheckBox_Click(object sender, RoutedEventArgs e)
         {
             CheckOKButtonEnable();
         }
 
         private void CheckOKButtonEnable()
         {
-            button1.Enabled = (checkBox1.Checked || checkBox2.Checked || checkBox3.Checked || checkBox4.Checked) && textBox2.Text != "";
+            // XAML の初期化中に TextChanged が来るときは、まだボタンがない
+            if (button1 == null)
+            {
+                return;
+            }
+            button1.IsEnabled = (IsChecked(checkBox1) || IsChecked(checkBox2) || IsChecked(checkBox3) || IsChecked(checkBox4)) && textBox2.Text != "";
         }
 
-        private void TextBox2_TextChanged(object sender, EventArgs e)
+        private static bool IsChecked(CheckBox checkBox)
+        {
+            return checkBox.IsChecked == true;
+        }
+
+        private void TextBox2_TextChanged(object sender, TextChangedEventArgs e)
         {
             CheckOKButtonEnable();
         }
@@ -54,10 +62,10 @@ namespace PPDEditor.Forms
         {
             set
             {
-                checkBox1.Enabled = checkBox1.Checked = (value & AvailableDifficulty.Easy) == AvailableDifficulty.Easy;
-                checkBox2.Enabled = checkBox2.Checked = (value & AvailableDifficulty.Normal) == AvailableDifficulty.Normal;
-                checkBox3.Enabled = checkBox3.Checked = (value & AvailableDifficulty.Hard) == AvailableDifficulty.Hard;
-                checkBox4.Enabled = checkBox4.Checked = (value & AvailableDifficulty.Extreme) == AvailableDifficulty.Extreme;
+                checkBox1.IsChecked = checkBox1.IsEnabled = (value & AvailableDifficulty.Easy) == AvailableDifficulty.Easy;
+                checkBox2.IsChecked = checkBox2.IsEnabled = (value & AvailableDifficulty.Normal) == AvailableDifficulty.Normal;
+                checkBox3.IsChecked = checkBox3.IsEnabled = (value & AvailableDifficulty.Hard) == AvailableDifficulty.Hard;
+                checkBox4.IsChecked = checkBox4.IsEnabled = (value & AvailableDifficulty.Extreme) == AvailableDifficulty.Extreme;
                 CheckOKButtonEnable();
             }
         }
@@ -67,10 +75,10 @@ namespace PPDEditor.Forms
             get
             {
                 AvailableDifficulty ret = AvailableDifficulty.None;
-                ret |= checkBox1.Checked ? AvailableDifficulty.Easy : AvailableDifficulty.None;
-                ret |= checkBox2.Checked ? AvailableDifficulty.Normal : AvailableDifficulty.None;
-                ret |= checkBox3.Checked ? AvailableDifficulty.Hard : AvailableDifficulty.None;
-                ret |= checkBox4.Checked ? AvailableDifficulty.Extreme : AvailableDifficulty.None;
+                ret |= IsChecked(checkBox1) ? AvailableDifficulty.Easy : AvailableDifficulty.None;
+                ret |= IsChecked(checkBox2) ? AvailableDifficulty.Normal : AvailableDifficulty.None;
+                ret |= IsChecked(checkBox3) ? AvailableDifficulty.Hard : AvailableDifficulty.None;
+                ret |= IsChecked(checkBox4) ? AvailableDifficulty.Extreme : AvailableDifficulty.None;
                 return ret;
             }
         }
@@ -99,7 +107,7 @@ namespace PPDEditor.Forms
         {
             if (!Utility.CheckValidFileName(PublishFolderName))
             {
-                MessageBox.Show(String.Format(Utility.Language["ContainsInvalidChars"], Utility.Language["PFLabel3"]));
+                MessageBox.Show(this, String.Format(Utility.Language["ContainsInvalidChars"], Utility.Language["PFLabel3"]));
                 return false;
             }
             return true;
@@ -118,7 +126,7 @@ namespace PPDEditor.Forms
                     var hash = CryptographyUtility.Getx2Encoding(SHA256.HashData(File.ReadAllBytes(filePath)));
                     if (hashs.TryGetValue(hash, out AvailableDifficulty value))
                     {
-                        MessageBox.Show(String.Format(Utility.Language["ScoreHashCollision"], value, difficulty));
+                        MessageBox.Show(this, String.Format(Utility.Language["ScoreHashCollision"], value, difficulty));
                         found = true;
                     }
                     else
@@ -158,7 +166,7 @@ namespace PPDEditor.Forms
                             {
                                 if (Math.Abs(setVal - d.Time) <= checkTimeInterval)
                                 {
-                                    MessageBox.Show(Utility.Language["NearTimeWarning"] + "\n" +
+                                    MessageBox.Show(this, Utility.Language["NearTimeWarning"] + "\n" +
                                         Utility.Language["Difficulty"] + ":" + difficulty + "\n" +
                                         Utility.Language["Time"] + ":" + d.Time + "\n" +
                                         Utility.Language["ButtonType"] + ":" + Utility.Language[d.ButtonType.ToString()] + "\n");
@@ -174,28 +182,24 @@ namespace PPDEditor.Forms
             return !found;
         }
 
-        private void Button1_Click(object sender, EventArgs e)
+        private void Button1_Click(object sender, RoutedEventArgs e)
         {
             if (!CheckSameScore() || !CheckNearTime())
             {
                 return;
             }
-            DialogResult = DialogResult.OK;
-            this.Close();
+            DialogResult = true;
         }
 
-        private void Button2_Click(object sender, EventArgs e)
+        private void Button3_Click(object sender, RoutedEventArgs e)
         {
-            DialogResult = DialogResult.Cancel;
-            this.Close();
-        }
-
-        private void Button3_Click(object sender, EventArgs e)
-        {
-            folderBrowserDialog1.SelectedPath = this.textBox1.Text;
-            if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
+            var dialog = new OpenFolderDialog
             {
-                this.textBox1.Text = folderBrowserDialog1.SelectedPath;
+                InitialDirectory = this.textBox1.Text
+            };
+            if (dialog.ShowDialog(this) == true)
+            {
+                this.textBox1.Text = dialog.FolderName;
             }
         }
     }

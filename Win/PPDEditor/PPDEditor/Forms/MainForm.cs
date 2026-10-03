@@ -1020,9 +1020,9 @@ namespace PPDEditor.Forms
 
         private void 切り取りToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var fm2 = new MovieCutForm(MovieTrimmingData);
+            var fm2 = new MovieCutWindow(MovieTrimmingData);
             fm2.SetLang();
-            if (fm2.ShowDialog() == DialogResult.OK)
+            if (WpfDialog.ShowDialog(fm2))
             {
                 MovieTrimmingData = fm2.TrimmingData;
                 if (fm2.ApplyToIni)
@@ -3065,11 +3065,11 @@ namespace PPDEditor.Forms
             {
                 return;
             }
-            var pf = new PublishForm();
+            var pf = new PublishWindow();
             pf.SetLang();
             pf.AvailableDifficulty = AvailableDifficulty;
             pf.PublishFolderName = Path.GetFileNameWithoutExtension(projectfilename);
-            if (pf.ShowDialog() == DialogResult.OK)
+            if (WpfDialog.ShowDialog(pf))
             {
                 if (pf.PublishDifficulty == AvailableDifficulty.None)
                 {
@@ -3122,9 +3122,9 @@ namespace PPDEditor.Forms
 
         private void プロジェクトをマージToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var mf = new MergeForm();
+            var mf = new MergeWindow();
             mf.SetLang();
-            if (mf.ShowDialog() == DialogResult.OK)
+            if (WpfDialog.ShowDialog(mf))
             {
                 AvailableDifficulty mergeDifficulty = mf.MergeDifficulty;
                 if (mergeDifficulty == AvailableDifficulty.None)
@@ -3399,9 +3399,9 @@ namespace PPDEditor.Forms
                 return;
             }
 
-            var mpf = new ModPublishForm();
+            var mpf = new ModPublishWindow();
             mpf.SetLang();
-            if (mpf.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            if (WpfDialog.ShowDialog(mpf))
             {
                 var path = Path.Combine(mpf.PublishFolder, mpf.ModFileName);
                 path = Path.ChangeExtension(path, "mod");

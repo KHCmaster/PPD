@@ -60,9 +60,6 @@
     <ProjectReference Include="..\..\WinFormsUI\WinFormsUI.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Update="Controls\MergeGroupBox.resx">
-      <DependentUpon>MergeGroupBox.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Update="Controls\Resource\EffectPanel.resx">
       <DependentUpon>EffectPanel.cs</DependentUpon>
     </EmbeddedResource>
@@ -146,21 +143,6 @@
     </EmbeddedResource>
     <EmbeddedResource Update="Forms\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Forms\MergeForm.resx">
-      <DependentUpon>MergeForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Forms\ModPublishForm.resx">
-      <DependentUpon>ModPublishForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Forms\MovieCutForm.resx">
-      <DependentUpon>MovieCutForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Forms\PublishForm.resx">
-      <DependentUpon>PublishForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Forms\SoundChangeEditForm.resx">
-      <DependentUpon>SoundChangeEditForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Update="Forms\SplashForm.resx">
       <DependentUpon>SplashForm.cs</DependentUpon>

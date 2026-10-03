@@ -1,26 +1,22 @@
 ﻿using PPDEditor.Controls;
+using Microsoft.Win32;
 using System;
 using System.IO;
-using System.Windows.Forms;
+using System.Windows;
 
 namespace PPDEditor.Forms
 {
-    public partial class MergeForm : Form
+    public partial class MergeWindow : Window
     {
         string openprojectfilter = "PPDProjectファイル(*.ppdproj)|*.ppdproj|すべてのファイル(*.*)|*.*";
-        public MergeForm()
+        public MergeWindow()
         {
             InitializeComponent();
-            mergeGroupBox1.ButtonPressed += MergeBox_ButtonPressed;
-            mergeGroupBox2.ButtonPressed += MergeBox_ButtonPressed;
-            mergeGroupBox3.ButtonPressed += MergeBox_ButtonPressed;
-            mergeGroupBox4.ButtonPressed += MergeBox_ButtonPressed;
-            mergeGroupBox5.ButtonPressed += MergeBox_ButtonPressed;
         }
 
         public void SetLang()
         {
-            this.Text = Utility.Language["MergeProject"];
+            this.Title = Utility.Language["MergeProject"];
             this.label1.Text = Utility.Language["MFLabel1"];
             this.label2.Text = Utility.Language["MFLabel2"];
             this.label3.Text = Utility.Language["MFLabel3"];
@@ -30,8 +26,11 @@ namespace PPDEditor.Forms
 
         void MergeBox_ButtonPressed(object sender, EventArgs e)
         {
-            openFileDialog1.Filter = openprojectfilter;
-            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            var openFileDialog1 = new OpenFileDialog
+            {
+                Filter = openprojectfilter
+            };
+            if (openFileDialog1.ShowDialog(this) == true)
             {
                 string projectPath = openFileDialog1.FileName;
                 var version = EditorForm.GetProjectVersion(projectPath);
@@ -61,7 +60,7 @@ namespace PPDEditor.Forms
                 }
                 else
                 {
-                    MessageBox.Show(Utility.Language["NoAvailableDifficulty"]);
+                    MessageBox.Show(this, Utility.Language["NoAvailableDifficulty"]);
                 }
             }
             else
@@ -76,7 +75,7 @@ namespace PPDEditor.Forms
         private void CheckEnable()
         {
             AvailableDifficulty mergeDifficulty = MergeDifficulty;
-            button1.Enabled = mergeDifficulty != AvailableDifficulty.None && this.textBox1.Text != string.Empty;
+            button1.IsEnabled = mergeDifficulty != AvailableDifficulty.None && this.textBox1.Text != string.Empty;
             comboBox1.Items.Clear();
             foreach (AvailableDifficulty difficulty in EditorForm.DifficultyArray)
             {
@@ -99,22 +98,18 @@ namespace PPDEditor.Forms
             }
         }
 
-        private void Button1_Click(object sender, EventArgs e)
+        private void Button1_Click(object sender, RoutedEventArgs e)
         {
-            this.DialogResult = DialogResult.OK;
-            this.Close();
+            this.DialogResult = true;
         }
 
-        private void Button2_Click(object sender, EventArgs e)
+        private void Button3_Click(object sender, RoutedEventArgs e)
         {
-            this.DialogResult = DialogResult.Cancel;
-            this.Close();
-        }
-
-        private void Button3_Click(object sender, EventArgs e)
-        {
-            saveFileDialog1.Filter = openprojectfilter;
-            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+            var saveFileDialog1 = new SaveFileDialog
+            {
+                Filter = openprojectfilter
+            };
+            if (saveFileDialog1.ShowDialog(this) == true)
             {
                 this.textBox1.Text = saveFileDialog1.FileName;
             }

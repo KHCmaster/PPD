@@ -1,12 +1,13 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.IO;
-using System.Windows.Forms;
+using System.Windows;
 
 namespace PPDEditor.Forms
 {
-    public partial class ModPublishForm : Form
+    public partial class ModPublishWindow : Window
     {
-        public ModPublishForm()
+        public ModPublishWindow()
         {
             InitializeComponent();
             var path = Path.GetFullPath("publish_mod");
@@ -20,7 +21,7 @@ namespace PPDEditor.Forms
 
         public void SetLang()
         {
-            this.Text = Utility.Language["PublishMod"];
+            this.Title = Utility.Language["PublishMod"];
             this.label1.Text = Utility.Language["PublishModLabel1"];
             this.label2.Text = Utility.Language["PublishModLabel2"];
             this.label3.Text = Utility.Language["PublishModLabel3"];
@@ -79,44 +80,40 @@ namespace PPDEditor.Forms
                 }
                 if (String.IsNullOrEmpty(ModFileName))
                 {
-                    MessageBox.Show(Utility.Language["NoFilename"]);
+                    MessageBox.Show(this, Utility.Language["NoFilename"]);
                     return false;
                 }
                 if (!Utility.CheckValidFileName(ModFileName))
                 {
-                    MessageBox.Show(String.Format(Utility.Language["ContainsInvalidChars"], Utility.Language["FileName"]));
+                    MessageBox.Show(this, String.Format(Utility.Language["ContainsInvalidChars"], Utility.Language["FileName"]));
                     return false;
                 }
                 return true;
             }
             catch (Exception e)
             {
-                MessageBox.Show(e.Message);
+                MessageBox.Show(this, e.Message);
                 return false;
             }
         }
 
-        private void Button2_Click(object sender, EventArgs e)
+        private void Button2_Click(object sender, RoutedEventArgs e)
         {
             if (CheckInput())
             {
-                this.DialogResult = System.Windows.Forms.DialogResult.OK;
-                this.Close();
+                this.DialogResult = true;
             }
         }
 
-        private void Button3_Click(object sender, EventArgs e)
+        private void Button1_Click(object sender, RoutedEventArgs e)
         {
-            this.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.Close();
-        }
-
-        private void Button1_Click(object sender, EventArgs e)
-        {
-            folderBrowserDialog1.SelectedPath = textBox5.Text;
-            if (folderBrowserDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            var dialog = new OpenFolderDialog
             {
-                this.textBox5.Text = folderBrowserDialog1.SelectedPath;
+                InitialDirectory = textBox5.Text
+            };
+            if (dialog.ShowDialog(this) == true)
+            {
+                this.textBox5.Text = dialog.FolderName;
             }
         }
     }

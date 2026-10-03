@@ -1,8 +1,12 @@
 ﻿using System;
-using System.Windows.Forms;
+using System.Windows;
+using System.Windows.Controls;
 
 namespace PPDEditor.Controls
 {
+    /// <summary>
+    /// マージするプロジェクトと難易度を選ぶ部分です。
+    /// </summary>
     public partial class MergeGroupBox : UserControl
     {
         public event EventHandler ButtonPressed;
@@ -11,7 +15,7 @@ namespace PPDEditor.Controls
             InitializeComponent();
         }
 
-        private void Button1_Click(object sender, EventArgs e)
+        private void Button1_Click(object sender, RoutedEventArgs e)
         {
             ButtonPressed?.Invoke(this, EventArgs.Empty);
         }
@@ -50,11 +54,11 @@ namespace PPDEditor.Controls
         {
             get
             {
-                return groupBox1.Text;
+                return groupBox1.Header as string;
             }
             set
             {
-                groupBox1.Text = value;
+                groupBox1.Header = value;
             }
         }
 
