@@ -101,11 +101,21 @@ namespace PPDEditor.Forms
         /// <remarks>
         /// AvalonDock のメニューはすべてのウィンドウで共通なので、開いたときに、ゲームウィンドウのときだけ項目を出す。
         /// ゲームウィンドウはドキュメントの領域にも置けるので、ドキュメントのメニューにも加える。
+        /// テーマのメニューは、このアプリでは DockingManager に設定されない（タブを右クリックしても何も出ない）ので、
+        /// AvalonDock のテーマのファイルから読み込んで、自分で設定する。
         /// </remarks>
         private void AddGameWindowMenu()
         {
-            AddGameWindowMenu(dockPanel1.AnchorableContextMenu);
-            AddGameWindowMenu(dockPanel1.DocumentContextMenu);
+            var theme = new ResourceDictionary
+            {
+                Source = new Uri("/AvalonDock;component/themes/generic.xaml", UriKind.Relative)
+            };
+            var anchorableMenu = (System.Windows.Controls.ContextMenu)theme["AnchorableContextMenu"];
+            var documentMenu = (System.Windows.Controls.ContextMenu)theme["DocumentContextMenu"];
+            AddGameWindowMenu(anchorableMenu);
+            AddGameWindowMenu(documentMenu);
+            dockPanel1.AnchorableContextMenu = anchorableMenu;
+            dockPanel1.DocumentContextMenu = documentMenu;
         }
 
         private void AddGameWindowMenu(System.Windows.Controls.ContextMenu menu)
@@ -133,7 +143,8 @@ namespace PPDEditor.Forms
             }
             menu.Opened += (sender, e) =>
             {
-                var isGameWindow = (menu.DataContext as AvalonDock.Controls.LayoutItem)?.Model == dxfDock;
+                // LayoutItem.Model は、ウィンドウの中身（ゲームの画面）
+                var isGameWindow = (menu.DataContext as AvalonDock.Controls.LayoutItem)?.Model == GameView;
                 foreach (var item in items)
                 {
                     item.Visibility = isGameWindow ? Visibility.Visible : Visibility.Collapsed;
