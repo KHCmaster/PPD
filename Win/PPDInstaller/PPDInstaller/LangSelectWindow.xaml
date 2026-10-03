@@ -3,8 +3,9 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Language" SizeToContent="WidthAndHeight" ResizeMode="NoResize" ShowInTaskbar="False"
         WindowStartupLocation="CenterScreen" SourceInitialized="Window_SourceInitialized">
+    <!-- DataContext はウィンドウ自身（言語を 1 つ選ぶだけなので、ViewModel を分けない） -->
     <StackPanel Margin="12">
-        <ComboBox x:Name="comboBox1" Width="121" />
-        <Button x:Name="button1" Content="OK" Width="75" Height="23" Margin="0,6,0,0" IsDefault="True" Click="Button1_Click" />
+        <ComboBox Width="121" ItemsSource="{Binding Languages}" SelectedIndex="{Binding SelectedIndex}" />
+        <Button Content="OK" Width="75" Height="23" Margin="0,6,0,0" IsDefault="True" Click="OkButton_Click" />
     </StackPanel>
 </Window>

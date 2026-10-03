@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Windows.Threading;
+using System.Threading;
 
 namespace PPDInstaller.Executor
 {
-    class LAVFiltersInstallExecutor(string filePath, Dispatcher dispatcher) : CExecutor(dispatcher)
+    class LAVFiltersInstallExecutor(string filePath, SynchronizationContext context) : CExecutor(context)
     {
         public static Uri lavFiltersUri = new("http://lavfilters.googlecode.com/files/LAVFilters-0.58.2.exe");
         readonly FileDownloader downloadClient = new();

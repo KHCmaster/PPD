@@ -1,11 +1,11 @@
 ﻿using System;
 using System.IO;
 using System.Text.RegularExpressions;
-using System.Windows.Threading;
+using System.Threading;
 
 namespace PPDInstaller.Executor
 {
-    partial class BMSTOPPDInstallExecutor(string dataDirectory, string installDirectory, Dispatcher dispatcher) : CExecutor(dispatcher)
+    partial class BMSTOPPDInstallExecutor(string dataDirectory, string installDirectory, SynchronizationContext context) : CExecutor(context)
     {
         readonly Regex[] BMSTOPPDIgnoreList = [
           SettingIniRegex()

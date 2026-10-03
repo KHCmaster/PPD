@@ -1,16 +1,15 @@
 ﻿using System;
-using System.Windows.Threading;
+using System.Threading;
 
 namespace PPDInstaller.Executor
 {
     /// <summary>
-    /// インストールの処理の基底クラスです。終了と進み具合は UI のスレッドに通知します。
+    /// インストールの処理の基底クラスです。終了と進み具合は作ったスレッドの <see cref="SynchronizationContext"/> に通知します。
     /// </summary>
-    abstract class CExecutor(Dispatcher dispatcher)
+    abstract class CExecutor(SynchronizationContext context)
     {
         public event EventHandler Finished;
         public event EventHandler Progressed;
-        readonly Dispatcher dispatcher = dispatcher;
 
         public bool Success
         {
@@ -49,22 +48,12 @@ namespace PPDInstaller.Executor
 
         protected void OnFinish()
         {
-            if (!dispatcher.CheckAccess())
-            {
-                dispatcher.Invoke(OnFinish);
-                return;
-            }
-            Finished?.Invoke(this, EventArgs.Empty);
+            context.Send(_ => Finished?.Invoke(this, EventArgs.Empty), null);
         }
 
         protected void OnProgress()
         {
-            if (!dispatcher.CheckAccess())
-            {
-                dispatcher.Invoke(OnProgress);
-                return;
-            }
-            Progressed?.Invoke(this, EventArgs.Empty);
+            context.Send(_ => Progressed?.Invoke(this, EventArgs.Empty), null);
         }
     }
 }

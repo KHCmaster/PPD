@@ -1,11 +1,11 @@
 ﻿using PPDConfiguration;
 using System;
 using System.IO;
-using System.Windows.Threading;
+using System.Threading;
 
 namespace PPDInstaller.Executor
 {
-    class InstallListExecutor(Dispatcher dispatcher) : CExecutor(dispatcher)
+    class InstallListExecutor(SynchronizationContext context) : CExecutor(context)
     {
         public static Uri directshowliburi = new("http://projectdxxx.me/installer/InstallURL.txt");
         readonly FileDownloader downloadClient = new();

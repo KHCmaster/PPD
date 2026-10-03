@@ -1,20 +1,23 @@
-<local:PanelBase x:Class="PPDInstaller.Controls.InstallComponentPanel"
-                 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                 xmlns:local="clr-namespace:PPDInstaller.Controls">
+<UserControl x:Class="PPDInstaller.Controls.InstallComponentPanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:PPDInstaller.ViewModels"
+             mc:Ignorable="d" d:DataContext="{d:DesignInstance Type=vm:InstallComponentPageViewModel}">
     <Canvas>
-        <TextBlock x:Name="label5" Canvas.Left="14" Canvas.Top="12" Text="インストールリスト(必須)" />
-        <CheckBox x:Name="ppdCheckBox" Canvas.Left="17" Canvas.Top="29" Content="PPD" IsChecked="True" />
-        <CheckBox x:Name="lavFiltersCheckBox" Canvas.Left="69" Canvas.Top="29" Content="LAVFilters" IsChecked="True" />
-        <GroupBox x:Name="groupBox1" Canvas.Left="17" Canvas.Top="51" Width="330" Height="48" Header="インストール済みならチェックされません">
+        <TextBlock Canvas.Left="14" Canvas.Top="12" Text="{Binding Texts[Label5]}" />
+        <CheckBox Canvas.Left="17" Canvas.Top="29" Content="{Binding Texts[CheckBox1]}" IsChecked="{Binding InstallPPD}" />
+        <CheckBox Canvas.Left="69" Canvas.Top="29" Content="LAVFilters" IsChecked="{Binding InstallLAVFilters}" />
+        <GroupBox Canvas.Left="17" Canvas.Top="51" Width="330" Height="48" Header="{Binding Texts[GroupBox1]}">
             <StackPanel Orientation="Horizontal" Margin="2,4,0,0">
-                <CheckBox x:Name="ipaFontCheckBox" Content="IPA フォント" Width="96" />
+                <CheckBox Content="{Binding Texts[CheckBox4]}" Width="96" IsChecked="{Binding InstallIPAFont}" />
                 <TextBlock VerticalAlignment="Center">
-                    <Hyperlink Click="LinkLabel1_Click"><Run x:Name="linkLabel1" Text="使用ライセンス(必ず確認してください)" /></Hyperlink>
+                    <Hyperlink Command="{Binding OpenIpaFontLicenseCommand}"><Run Text="{Binding Texts[LinkLabel], Mode=OneWay}" /></Hyperlink>
                 </TextBlock>
             </StackPanel>
         </GroupBox>
-        <TextBlock x:Name="label6" Canvas.Left="14" Canvas.Top="121" Text="インストールリスト(任意)" />
-        <CheckBox x:Name="bmsTOPPDCheckBox" Canvas.Left="16" Canvas.Top="138" Content="BMSTOPPD" IsChecked="True" />
+        <TextBlock Canvas.Left="14" Canvas.Top="121" Text="{Binding Texts[Label6]}" />
+        <CheckBox Canvas.Left="16" Canvas.Top="138" Content="{Binding Texts[CheckBox6]}" IsChecked="{Binding InstallBMSTOPPD}" />
     </Canvas>
-</local:PanelBase>
+</UserControl>
