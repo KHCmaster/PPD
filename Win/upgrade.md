@@ -567,7 +567,15 @@ WinForms と WPF の混在をなくすため、PPD.exe 以外を段階的に WPF
   - カンバスは以前と同じ見た目の大きさ（ピクセル数を WPF の単位で表示）。ini（Effect2DEditor.ini、recentused.ini）の形式は変えていない
   - 直したもの: 背景を画像にしたときの読み込みのキーの間違い（`CanvasBackGroundImage`）、タイムラインの右クリックのメニューが翻訳されていなかった
   - 確認したこと: 起動、etd を開く、ループ再生。マウスでの編集はこの環境では入力を送れないので、使う人が確認する
-- [ ] PPDEditor（Effect2DEditor の結果を見て判断する）
+- [ ] PPDEditor（段階に分けて移す: 1. ダイアログ、2. ドックのウィンドウ、3. メインのウィンドウと AvalonDock）
+  - [x] 1. ダイアログ（2026-10-03）: 22 個を WPF にした。メインのウィンドウが WinForms の間は `WpfDialog.ShowDialog` で、開いている WinForms のウィンドウを所有者にして表示する
+    - 使っていなかった CreateProjectForm は消した（プロジェクトの作成は PPDEditorCommon の NewProjectWindow）
+    - 起動中の画面（SplashWindow）は、以前と同じく別のスレッドで表示する（STA のスレッドで Dispatcher を動かす）
+    - ショートカットの設定は、WPF のキーを仮想キーコードを経由して WinForms の Keys にして保存する（保存の形式は変えていない）
+    - WinForms の NumericUpDown の代わりに `Controls/NumericUpDown` を作った。グリッドの設定は表の中ではなくテキストボックスで編集し、色は FlowScript の色の選択を使う
+    - 残っている WinForms のウィンドウ: TransParentForm（ドックの中のドラッグの表示）は、使っているドックと一緒に移す
+  - [ ] 2. ドックのウィンドウ
+  - [ ] 3. メインのウィンドウ
 
 ### Phase 7: 配布・更新の仕組みとリリース
 
