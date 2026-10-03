@@ -1,8 +1,14 @@
 <forms:DockView x:Class="PPDEditor.SoundManager"
                 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                xmlns:forms="clr-namespace:PPDEditor.Forms">
+                xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                xmlns:forms="clr-namespace:PPDEditor.Forms"
+                xmlns:vm="clr-namespace:PPDEditor.ViewModels.Docks"
+                xmlns:conv="clr-namespace:PPDEditor.Converters"
+                mc:Ignorable="d" d:DataContext="{d:DesignInstance Type=vm:SoundManagerViewModel}">
     <forms:DockView.Resources>
+        <conv:BindingProxy x:Key="Proxy" Data="{Binding}" />
         <Style TargetType="ComboBox">
             <Setter Property="Width" Value="121" />
             <Setter Property="HorizontalAlignment" Value="Left" />
@@ -18,70 +24,72 @@
     </forms:DockView.Resources>
     <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
         <StackPanel Width="284" HorizontalAlignment="Left">
-            <DataGrid x:Name="dataGridView1" Height="132" AutoGenerateColumns="False" IsReadOnly="True" SelectionMode="Single"
-                      SelectionUnit="FullRow" HeadersVisibility="Column" CanUserSortColumns="False" CanUserAddRows="False"
-                      SelectionChanged="DataGridView1_SelectionChanged">
+            <DataGrid x:Name="changeGrid" ItemsSource="{Binding Rows}" SelectedIndex="{Binding SelectedIndex}" Height="132" AutoGenerateColumns="False" IsReadOnly="True" SelectionMode="Single"
+                      SelectionUnit="FullRow" HeadersVisibility="Column" CanUserSortColumns="False" CanUserAddRows="False">
                 <DataGrid.Columns>
-                    <DataGridTextColumn x:Name="Column1" Header="時間" Binding="{Binding Time}" Width="Auto" />
-                    <DataGridTextColumn x:Name="Column2" Header="サウンド" Binding="{Binding Sounds}" Width="*" />
+                    <DataGridTextColumn Header="{Binding Data.Texts[SMDataGridColumn1], Source={StaticResource Proxy}}" Binding="{Binding Time}" Width="Auto" />
+                    <DataGridTextColumn Header="{Binding Data.Texts[SMDataGridColumn2], Source={StaticResource Proxy}}" Binding="{Binding Sounds}" Width="*" />
                 </DataGrid.Columns>
             </DataGrid>
-            <GroupBox x:Name="groupBox1" Margin="5,6,7,0">
-                <Grid Margin="4,2,4,6">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="132" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
-                    <StackPanel>
-                        <TextBlock x:Name="label1" Text="スクエア" />
-                        <ComboBox x:Name="comboBox1" />
-                        <TextBlock x:Name="label2" Text="クロス" />
-                        <ComboBox x:Name="comboBox2" />
-                        <TextBlock x:Name="label3" Text="サークル" />
-                        <ComboBox x:Name="comboBox3" />
-                        <TextBlock x:Name="label4" Text="トライアングル" />
-                        <ComboBox x:Name="comboBox4" />
-                        <Button x:Name="button1" Content="サウンド追加" Style="{StaticResource ActionButton}" Click="Button1_Click" />
-                        <Button x:Name="button3" Content="変更追加" Style="{StaticResource ActionButton}" Click="Button3_Click" />
-                        <Button x:Name="button4" Content="選択した行の変更削除" Style="{StaticResource ActionButton}" Click="Button4_Click" />
-                        <Button x:Name="button7" Content="選択した行を編集" Style="{StaticResource ActionButton}" Click="Button7_Click" />
-                    </StackPanel>
-                    <StackPanel Grid.Column="1">
-                        <TextBlock x:Name="label5" Text="レフト" />
-                        <ComboBox x:Name="comboBox5" />
-                        <TextBlock x:Name="label6" Text="ダウン" />
-                        <ComboBox x:Name="comboBox6" />
-                        <TextBlock x:Name="label7" Text="ライト" />
-                        <ComboBox x:Name="comboBox7" />
-                        <TextBlock x:Name="label8" Text="アップ" />
-                        <ComboBox x:Name="comboBox8" />
-                        <TextBlock x:Name="label9" Text="アール" />
-                        <ComboBox x:Name="comboBox9" />
-                        <TextBlock x:Name="label10" Text="エル" />
-                        <ComboBox x:Name="comboBox10" />
-                    </StackPanel>
-                </Grid>
-            </GroupBox>
-            <GroupBox x:Name="groupBox2" Margin="5,6,7,0">
-                <Grid Margin="4,4,4,6">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="132" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-                    <Button x:Name="button5" Grid.Column="1" Content="視聴" Style="{StaticResource ActionButton}" Margin="0" Click="Button5_Click" />
-                    <ComboBox x:Name="comboBox11" Grid.Row="1" Margin="0,6,0,0" />
-                    <Button x:Name="button2" Grid.Row="1" Grid.Column="1" Content="サウンド削除" Style="{StaticResource ActionButton}" Click="Button2_Click" />
-                    <Button x:Name="button6" Grid.Row="2" Grid.Column="1" Content="サウンド再読込み" Style="{StaticResource ActionButton}" Click="Button6_Click" />
-                </Grid>
-            </GroupBox>
-            <CheckBox x:Name="checkBox1" Margin="5,8,7,12">
-                <TextBlock x:Name="checkBox1Text" Text="コンボボックスの内容を選択行に同期" TextWrapping="Wrap" />
-            </CheckBox>
+            <!-- 文字の色はスキンに合わせる（SetSkin で TextBlock の色を変える） -->
+            <StackPanel x:Name="skinPanel">
+                <GroupBox Margin="5,6,7,0">
+                    <Grid Margin="4,2,4,6">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="132" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel>
+                        <TextBlock Text="{Binding Texts[SMLabel1]}" />
+                        <ComboBox ItemsSource="{Binding SoundNames}" SelectedIndex="{Binding Slots[0].SelectedIndex}" />
+                        <TextBlock Text="{Binding Texts[SMLabel2]}" />
+                        <ComboBox ItemsSource="{Binding SoundNames}" SelectedIndex="{Binding Slots[1].SelectedIndex}" />
+                        <TextBlock Text="{Binding Texts[SMLabel3]}" />
+                        <ComboBox ItemsSource="{Binding SoundNames}" SelectedIndex="{Binding Slots[2].SelectedIndex}" />
+                        <TextBlock Text="{Binding Texts[SMLabel4]}" />
+                        <ComboBox ItemsSource="{Binding SoundNames}" SelectedIndex="{Binding Slots[3].SelectedIndex}" />
+                            <Button Content="{Binding Texts[SMButton1]}" Style="{StaticResource ActionButton}" Command="{Binding AddSoundsCommand}" />
+                            <Button Content="{Binding Texts[SMButton3]}" Style="{StaticResource ActionButton}" Command="{Binding AddChangeCommand}" />
+                            <Button Content="{Binding Texts[SMButton4]}" Style="{StaticResource ActionButton}" Command="{Binding DeleteChangeCommand}" />
+                            <Button Content="{Binding Texts[EditSelectedRow]}" Style="{StaticResource ActionButton}" Command="{Binding EditChangeCommand}" />
+                        </StackPanel>
+                        <StackPanel Grid.Column="1">
+                        <TextBlock Text="{Binding Texts[SMLabel5]}" />
+                        <ComboBox ItemsSource="{Binding SoundNames}" SelectedIndex="{Binding Slots[4].SelectedIndex}" />
+                        <TextBlock Text="{Binding Texts[SMLabel6]}" />
+                        <ComboBox ItemsSource="{Binding SoundNames}" SelectedIndex="{Binding Slots[5].SelectedIndex}" />
+                        <TextBlock Text="{Binding Texts[SMLabel7]}" />
+                        <ComboBox ItemsSource="{Binding SoundNames}" SelectedIndex="{Binding Slots[6].SelectedIndex}" />
+                        <TextBlock Text="{Binding Texts[SMLabel8]}" />
+                        <ComboBox ItemsSource="{Binding SoundNames}" SelectedIndex="{Binding Slots[7].SelectedIndex}" />
+                        <TextBlock Text="{Binding Texts[SMLabel9]}" />
+                        <ComboBox ItemsSource="{Binding SoundNames}" SelectedIndex="{Binding Slots[8].SelectedIndex}" />
+                        <TextBlock Text="{Binding Texts[SMLabel10]}" />
+                        <ComboBox ItemsSource="{Binding SoundNames}" SelectedIndex="{Binding Slots[9].SelectedIndex}" />
+                        </StackPanel>
+                    </Grid>
+                </GroupBox>
+                <GroupBox Margin="5,6,7,0">
+                    <Grid Margin="4,4,4,6">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="132" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Button Grid.Column="1" Content="{Binding Texts[SMButton5]}" Style="{StaticResource ActionButton}" Margin="0" Command="{Binding PlayCommand}" />
+                        <ComboBox Grid.Row="1" ItemsSource="{Binding SoundNames}" SelectedIndex="{Binding PreviewIndex}" Margin="0,6,0,0" />
+                        <Button Grid.Row="1" Grid.Column="1" Content="{Binding Texts[SMButton2]}" Style="{StaticResource ActionButton}" Command="{Binding DeleteSoundCommand}" />
+                        <Button Grid.Row="2" Grid.Column="1" Content="{Binding Texts[SMButton6]}" Style="{StaticResource ActionButton}" Command="{Binding ReloadSoundCommand}" />
+                    </Grid>
+                </GroupBox>
+                <CheckBox IsChecked="{Binding SyncSelection}" Margin="5,8,7,12">
+                    <TextBlock Text="{Binding Texts[SMCheckBox]}" TextWrapping="Wrap" />
+                </CheckBox>
+            </StackPanel>
         </StackPanel>
     </ScrollViewer>
 </forms:DockView>
