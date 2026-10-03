@@ -1,37 +1,51 @@
-﻿using System;
-using System.Windows.Forms;
-using WeifenLuo.WinFormsUI.Docking;
+﻿using PPDEditor.Forms;
+using System;
+using System.Windows;
+using System.Windows.Input;
+using System.Windows.Navigation;
 
 namespace PPDEditor
 {
-    public partial class HelpForm : DockContent
+    /// <summary>
+    /// ヘルプ（同じフォルダーの HTML）を表示します。
+    /// </summary>
+    public partial class HelpForm : DockView
     {
         public HelpForm()
         {
             InitializeComponent();
-            webBrowser1.Navigated += WebBrowser1_Navigated;
-            webBrowser1.ProgressChanged += WebBrowser1_ProgressChanged;
         }
 
-        void WebBrowser1_ProgressChanged(object sender, WebBrowserProgressChangedEventArgs e)
+        void WebBrowser1_LoadCompleted(object sender, NavigationEventArgs e)
         {
-            toolStripButton3.Visible &= e.CurrentProgress != e.MaximumProgress;
+            toolStripButton3.Visibility = Visibility.Collapsed;
         }
 
-        void WebBrowser1_Navigated(object sender, WebBrowserNavigatedEventArgs e)
+        void WebBrowser1_Navigated(object sender, NavigationEventArgs e)
         {
-            toolStripTextBox1.Text = webBrowser1.Url.ToString();
-            toolStripButton1.Enabled = webBrowser1.CanGoBack;
-            toolStripButton2.Enabled = webBrowser1.CanGoForward;
-            toolStripButton3.Visible = true;
+            toolStripTextBox1.Text = e.Uri?.ToString() ?? "";
+            toolStripButton1.IsEnabled = webBrowser1.CanGoBack;
+            toolStripButton2.IsEnabled = webBrowser1.CanGoForward;
+            toolStripButton3.Visibility = Visibility.Visible;
         }
 
         public void ChangeUrl(string url)
         {
-            webBrowser1.Navigate(url);
+            Navigate(url);
         }
 
-        private void ToolStripButton1_Click(object sender, EventArgs e)
+        private void Navigate(string url)
+        {
+            try
+            {
+                webBrowser1.Navigate(url);
+            }
+            catch (UriFormatException)
+            {
+            }
+        }
+
+        private void ToolStripButton1_Click(object sender, RoutedEventArgs e)
         {
             if (webBrowser1.CanGoBack)
             {
@@ -39,7 +53,7 @@ namespace PPDEditor
             }
         }
 
-        private void ToolStripButton2_Click(object sender, EventArgs e)
+        private void ToolStripButton2_Click(object sender, RoutedEventArgs e)
         {
             if (webBrowser1.CanGoForward)
             {
@@ -49,16 +63,9 @@ namespace PPDEditor
 
         private void ToolStripTextBox1_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Return)
+            if (e.Key == Key.Return)
             {
-                webBrowser1.Navigate(toolStripTextBox1.Text);
-            }
-        }
-
-        private void ToolStripTextBox1_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            if (e.KeyChar == '\r' || e.KeyChar == '\n')
-            {
+                Navigate(toolStripTextBox1.Text);
                 e.Handled = true;
             }
         }

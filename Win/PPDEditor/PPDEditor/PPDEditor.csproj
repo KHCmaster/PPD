@@ -66,12 +66,6 @@
     <EmbeddedResource Update="Controls\Resource\ImagePanel.resx">
       <DependentUpon>ImagePanel.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Update="DockForm\HelpForm.resx">
-      <DependentUpon>HelpForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="DockForm\MemoWindow.resx">
-      <DependentUpon>MemoWindow.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Update="DockForm\ResourceManager.resx">
       <DependentUpon>ResourceManager.cs</DependentUpon>
     </EmbeddedResource>
@@ -104,9 +98,6 @@
     </EmbeddedResource>
     <EmbeddedResource Update="Controls\BlackBar.resx">
       <DependentUpon>BlackBar.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="DockForm\BPMMeasure.resx">
-      <DependentUpon>BPMMeasure.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Update="DockForm\DXForm.resx">
       <DependentUpon>DXForm.cs</DependentUpon>
@@ -275,6 +266,8 @@
   </ItemGroup>
   <ItemGroup>
     <!-- WPF の画面で使う画像 -->
+    <Resource Include="img\next.png" />
+    <Resource Include="img\back.png" />
     <Resource Include="img\splash.png" />
     <Resource Include="img\alert.png" />
     <Resource Include="img\folder.png" />

@@ -44,6 +44,7 @@ namespace PPDEditor.Forms
         static SoundManager sm;
         static IniFileWriter ifw;
         static BPMMeasure bm;
+        static WpfDockShell bmDock;
         static TimeLineForm tlf;
         static DXForm dxf;
         static InfoForm infof;
@@ -51,7 +52,9 @@ namespace PPDEditor.Forms
         static EventManager em;
         static GeometryCreator gc;
         static MemoWindow mw;
+        static WpfDockShell mwDock;
         static HelpForm hf;
+        static WpfDockShell hfDock;
         static WriteDoneWindow wdf;
         static ResourceManager rm;
         static ScriptManager scm;
@@ -130,6 +133,7 @@ namespace PPDEditor.Forms
             ifw = new IniFileWriter();
             SplashWindow.ChangeStatus(String.Format(Utility.Language["InitializingStart"], Utility.Language["BPMMeasure"]));
             bm = new BPMMeasure();
+            bmDock = new WpfDockShell(bm, "PPDEditor.BPMMeasure");
             SplashWindow.ChangeStatus(String.Format(Utility.Language["InitializingStart"], Utility.Language["TimeLine"]));
             tlf = new TimeLineForm();
             SplashWindow.ChangeStatus(String.Format(Utility.Language["InitializingStart"], Utility.Language["GameWindow"]));
@@ -144,8 +148,10 @@ namespace PPDEditor.Forms
             gc = new GeometryCreator();
             SplashWindow.ChangeStatus(String.Format(Utility.Language["InitializingStart"], Utility.Language["Memo"]));
             mw = new MemoWindow();
+            mwDock = new WpfDockShell(mw, "PPDEditor.MemoWindow");
             SplashWindow.ChangeStatus(String.Format(Utility.Language["InitializingStart"], Utility.Language["Help"]));
             hf = new HelpForm();
+            hfDock = new WpfDockShell(hf, "PPDEditor.HelpForm");
             SplashWindow.ChangeStatus(String.Format(Utility.Language["InitializingStart"], Utility.Language["WriteDoneWindow"]));
             wdf = new WriteDoneWindow();
             SplashWindow.ChangeStatus(String.Format(Utility.Language["InitializingStart"], Utility.Language["ResourceManager"]));
@@ -181,15 +187,15 @@ namespace PPDEditor.Forms
             ke.VisibleChanged += Windowvisiblechanged;
             sm.VisibleChanged += Windowvisiblechanged;
             ifw.VisibleChanged += Windowvisiblechanged;
-            bm.VisibleChanged += Windowvisiblechanged;
+            bmDock.VisibleChanged += Windowvisiblechanged;
             tlf.VisibleChanged += Windowvisiblechanged;
             dxf.VisibleChanged += Windowvisiblechanged;
             infof.VisibleChanged += Windowvisiblechanged;
             lm.VisibleChanged += Windowvisiblechanged;
             em.VisibleChanged += Windowvisiblechanged;
             gc.VisibleChanged += Windowvisiblechanged;
-            mw.VisibleChanged += Windowvisiblechanged;
-            hf.VisibleChanged += Windowvisiblechanged;
+            mwDock.VisibleChanged += Windowvisiblechanged;
+            hfDock.VisibleChanged += Windowvisiblechanged;
             rm.VisibleChanged += Windowvisiblechanged;
             scm.VisibleChanged += Windowvisiblechanged;
             stm.VisibleChanged += Windowvisiblechanged;
@@ -570,15 +576,15 @@ namespace PPDEditor.Forms
             ke.DockPanel = null;
             sm.DockPanel = null;
             ifw.DockPanel = null;
-            bm.DockPanel = null;
+            bmDock.DockPanel = null;
             tlf.DockPanel = null;
             dxf.DockPanel = null;
             infof.DockPanel = null;
             lm.DockPanel = null;
             em.DockPanel = null;
             gc.DockPanel = null;
-            mw.DockPanel = null;
-            hf.DockPanel = null;
+            mwDock.DockPanel = null;
+            hfDock.DockPanel = null;
             rm.DockPanel = null;
             scm.DockPanel = null;
             stm.DockPanel = null;
@@ -654,7 +660,7 @@ namespace PPDEditor.Forms
 
         private void Windowvisiblechanged(object sender, EventArgs e)
         {
-            this.bPMToolStripMenuItem.Checked = Utility.CheckVisible(bm);
+            this.bPMToolStripMenuItem.Checked = Utility.CheckVisible(bmDock);
             this.ゲームウィンドウToolStripMenuItem.Checked = Utility.CheckVisible(dxf);
             this.サウンドマネージャーToolStripMenuItem.Checked = Utility.CheckVisible(sm);
             this.タイムラインウィンドウToolStripMenuItem.Checked = Utility.CheckVisible(tlf);
@@ -665,8 +671,8 @@ namespace PPDEditor.Forms
             this.レイヤーマネージャーToolStripMenuItem.Checked = Utility.CheckVisible(lm);
             this.イベントマネージャーToolStripMenuItem.Checked = Utility.CheckVisible(em);
             this.幾何クリエーターToolStripMenuItem.Checked = Utility.CheckVisible(gc);
-            this.メモToolStripMenuItem.Checked = Utility.CheckVisible(mw);
-            this.ヘルプToolStripMenuItem.Checked = Utility.CheckVisible(hf);
+            this.メモToolStripMenuItem.Checked = Utility.CheckVisible(mwDock);
+            this.ヘルプToolStripMenuItem.Checked = Utility.CheckVisible(hfDock);
             this.リソースマネージャーToolStripMenuItem.Checked = Utility.CheckVisible(rm);
             this.スクリプトマネージャーToolStripMenuItem.Checked = Utility.CheckVisible(scm);
             this.統計ToolStripMenuItem.Checked = Utility.CheckVisible(stm);
@@ -676,7 +682,7 @@ namespace PPDEditor.Forms
         {
             return persistentString switch
             {
-                "PPDEditor.BPMMeasure" => bm,
+                "PPDEditor.BPMMeasure" => bmDock,
                 "PPDEditor.DXForm" => dxf,
                 "PPDEditor.InfoForm" => infof,
                 "PPDEditor.KasiEditor" => ke,
@@ -687,8 +693,8 @@ namespace PPDEditor.Forms
                 "PPDEditor.LayerManager" => lm,
                 "PPDEditor.EventManager" => em,
                 "PPDEditor.GeometryCreator" => gc,
-                "PPDEditor.MemoWindow" => mw,
-                "PPDEditor.HelpForm" => hf,
+                "PPDEditor.MemoWindow" => mwDock,
+                "PPDEditor.HelpForm" => hfDock,
                 "PPDEditor.ResourceManager" => rm,
                 "PPDEditor.ScriptManager" => scm,
                 "PPDEditor.StatsManager" => stm,
@@ -2362,7 +2368,7 @@ namespace PPDEditor.Forms
 
         private void BPMToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Utility.ShowOrHideWindow(dockPanel1, bm, ModifierKeys);
+            Utility.ShowOrHideWindow(dockPanel1, bmDock, ModifierKeys);
         }
 
         private void ゲームウィンドウToolStripMenuItem_Click(object sender, EventArgs e)
@@ -2395,7 +2401,7 @@ namespace PPDEditor.Forms
 
         private void メモToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Utility.ShowOrHideWindow(dockPanel1, mw, ModifierKeys);
+            Utility.ShowOrHideWindow(dockPanel1, mwDock, ModifierKeys);
         }
 
         private void リソースマネージャーToolStripMenuItem_Click(object sender, EventArgs e)
@@ -2410,7 +2416,7 @@ namespace PPDEditor.Forms
 
         private void ヘルプToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Utility.ShowOrHideWindow(dockPanel1, hf, ModifierKeys);
+            Utility.ShowOrHideWindow(dockPanel1, hfDock, ModifierKeys);
         }
 
         private void 統計ToolStripMenuItem_Click(object sender, EventArgs e)

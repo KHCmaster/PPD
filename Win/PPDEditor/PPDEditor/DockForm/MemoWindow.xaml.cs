@@ -1,21 +1,19 @@
 ﻿using PPDEditor.Forms;
-using System;
-using System.Drawing;
-using System.Windows.Forms;
+using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace PPDEditor
 {
-    public partial class MemoWindow : ChangableDockContent
+    public partial class MemoWindow : DockView
     {
         public MemoWindow()
         {
             InitializeComponent();
-            textBox1.KeyDown += TextBox1_KeyDown;
-            textBox1.MouseWheel += TextBox1_MouseWheel;
         }
 
-        void TextBox1_MouseWheel(object sender, MouseEventArgs e)
+        void TextBox1_MouseWheel(object sender, MouseWheelEventArgs e)
         {
+            // 以前と同じく、ホイールで文字の大きさを変える
             if (e.Delta > 0)
             {
                 MemoFontSize++;
@@ -24,20 +22,22 @@ namespace PPDEditor
             {
                 MemoFontSize--;
             }
-
+            e.Handled = true;
         }
 
         void TextBox1_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Control)
+            if (Keyboard.Modifiers.HasFlag(ModifierKeys.Control))
             {
-                switch (e.KeyCode)
+                switch (e.Key)
                 {
-                    case Keys.Oemplus:
+                    case Key.OemPlus:
                         MemoFontSize++;
+                        e.Handled = true;
                         break;
-                    case Keys.OemMinus:
+                    case Key.OemMinus:
                         MemoFontSize--;
+                        e.Handled = true;
                         break;
                 }
             }
@@ -45,7 +45,7 @@ namespace PPDEditor
 
         public void SetLang()
         {
-            this.TabText = this.Text = Utility.Language["Memo"];
+            this.TabText = Utility.Language["Memo"];
         }
 
         public void Clear()
@@ -65,23 +65,26 @@ namespace PPDEditor
             }
         }
 
+        /// <summary>
+        /// 文字の大きさ（ポイント）です。設定ファイルには以前と同じくポイントで保存します。
+        /// </summary>
         public float MemoFontSize
         {
             get
             {
-                return textBox1.Font.Size;
+                return (float)(textBox1.FontSize * 72 / 96);
             }
             set
             {
                 if (value >= 5 && value <= 100)
                 {
-                    textBox1.Font = new Font(textBox1.Font.FontFamily, value);
+                    textBox1.FontSize = value * 96 / 72;
                     PPDStaticSetting.MemoFontSize = value;
                 }
             }
         }
 
-        private void TextBox1_TextChanged(object sender, EventArgs e)
+        private void TextBox1_TextChanged(object sender, TextChangedEventArgs e)
         {
             ContentChanged();
         }
