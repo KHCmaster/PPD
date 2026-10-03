@@ -580,7 +580,6 @@ namespace PPDEditor.Forms
             ke.SetLang();
             paals.SetLang();
             sm.SetLang();
-            bm.SetLang();
             画面比を169にMenuItem.Header = Utility.Language["ChangeAspect"];
             標準解像度にするMenuItem.Header = Utility.Language["GWDefaultResolution"];
             if (extraGameWindowMenuItems.Count == 2)
@@ -591,7 +590,6 @@ namespace PPDEditor.Forms
             em.SetLang();
             lm.SetLang();
             gc.SetLang();
-            mw.SetLang();
             rm.SetLang();
             scm.SetLang();
             stm.SetLang();

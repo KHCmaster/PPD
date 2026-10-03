@@ -26,6 +26,15 @@ namespace PPDEditor.Forms
         public event EventHandler ShowRequested;
 
         /// <summary>
+        /// ViewModel を DataContext にして、ViewModel で内容が変わったら変更の印を付けるようにします。
+        /// </summary>
+        protected void AttachViewModel(ViewModels.DockViewModel viewModel)
+        {
+            DataContext = viewModel;
+            viewModel.Changed += (sender, e) => ContentChanged();
+        }
+
+        /// <summary>
         /// このドックを表示して前に出します。
         /// </summary>
         protected void ShowDock()

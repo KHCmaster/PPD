@@ -1,74 +1,54 @@
 ﻿using PPDEditor.Forms;
-using System.Collections.Generic;
-using System.Windows;
+using PPDEditor.ViewModels.Docks;
+using System.Windows.Documents;
 using System.Windows.Input;
 
 namespace PPDEditor
 {
     /// <summary>
-    /// ボタンやキーを拍に合わせて押して、BPM を測ります。
+    /// ボタンやキーを拍に合わせて押して、BPM を測ります。処理は <see cref="BPMMeasureViewModel"/> にあります。
     /// </summary>
+    /// <remarks>
+    /// 押した瞬間に数えるため、ボタンはマウスを押したとき、キーは押したとき（押しっぱなしの繰り返しは除く）に数える。
+    /// </remarks>
     public partial class BPMMeasure : DockView
     {
-        readonly List<long> data;
+        bool down;
+
         public BPMMeasure()
         {
             InitializeComponent();
-            data = new List<long>(10);
+            AttachViewModel(new BPMMeasureViewModel(() => NativeMethods.timeGetTime()));
         }
-        public void SetLang()
+
+        private BPMMeasureViewModel ViewModel
         {
-            this.label1.Text = Utility.Language["BMLabel1"];
-            this.label2.Text = Utility.Language["BMLabel2"];
-            this.button1.Content = Utility.Language["BMButton1"];
-            this.button2.Content = Utility.Language["BMButton2"];
+            get { return (BPMMeasureViewModel)DataContext; }
         }
+
         public void SetSkin()
         {
-            var brush = WpfSkin.TransparentTextBrush;
-            this.label1.Foreground = brush;
-            this.label2.Foreground = brush;
-            this.label3.Foreground = brush;
-            this.label4.Foreground = brush;
-        }
-        private void UpdateText()
-        {
-            if (data.Count <= 1) return;
-            long tempdata = data[^1] - data[0];
-            this.label3.Text = (data[^1] - data[^2]).ToString();
-            this.label4.Text = (60f / (tempdata / 1000f) * data.Count).ToString();
+            TextElement.SetForeground(contentGrid, WpfSkin.TransparentTextBrush);
         }
 
-        private void Button2_Click(object sender, RoutedEventArgs e)
+        private void TapButton_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            data.Clear();
-            this.label3.Text = "0";
-            this.label4.Text = "0";
+            ViewModel.TapCommand.Execute(null);
         }
 
-        private void Button1_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            data.Add(NativeMethods.timeGetTime());
-            UpdateText();
-        }
-
-        bool down;
         private void BPMMeasure_KeyDown(object sender, KeyEventArgs e)
         {
+            if (e.Key != Key.Return && e.Key != Key.Space)
+            {
+                down = true;
+                return;
+            }
+            // 押しっぱなしの繰り返しでは数えず、ボタンも押されないようにする
+            e.Handled = true;
             if (!down)
             {
                 down = true;
-                if (e.Key == Key.Return || e.Key == Key.Space)
-                {
-                    e.Handled = true;
-                    data.Add(NativeMethods.timeGetTime());
-                    UpdateText();
-                }
-            }
-            else if (e.Key == Key.Return || e.Key == Key.Space)
-            {
-                // 押しっぱなしの繰り返しでボタンが押されないようにする
-                e.Handled = true;
+                ViewModel.TapCommand.Execute(null);
             }
         }
 
