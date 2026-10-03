@@ -56,6 +56,24 @@ namespace PPDEditor.Converters
     }
 
     /// <summary>
+    /// 列挙の値と、その番号（コンボボックスの SelectedIndex など）を変換します。
+    /// </summary>
+    public class EnumIndexConverter : IValueConverter
+    {
+        public static EnumIndexConverter Instance { get; } = new();
+
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return value is Enum ? System.Convert.ToInt32(value, CultureInfo.InvariantCulture) : -1;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return value is int index && index >= 0 ? Enum.ToObject(targetType, index) : Binding.DoNothing;
+        }
+    }
+
+    /// <summary>
     /// リソースの中から DataContext を使うための入れ物です（DataGrid の列やメニューの CompositeCollection などは DataContext を受け継がない）。
     /// </summary>
     public class BindingProxy : Freezable
