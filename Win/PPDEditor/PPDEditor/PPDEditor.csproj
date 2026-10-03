@@ -105,9 +105,6 @@
     <EmbeddedResource Update="DockForm\GeometryCreator.resx">
       <DependentUpon>GeometryCreator.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Update="DockForm\IniFileWriter.resx">
-      <DependentUpon>IniFileWriter.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Update="DockForm\LayerManager.resx">
       <DependentUpon>LayerManager.cs</DependentUpon>
     </EmbeddedResource>
