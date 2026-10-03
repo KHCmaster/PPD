@@ -4,13 +4,14 @@ using PPDEditor.Forms;
 using PPDFramework.PPDStructure.PPDData;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
-using System.Windows.Forms;
+using System.Windows;
+using System.Windows.Input;
+using System.Windows.Media;
 
 namespace PPDEditor
 {
-    public partial class LayerManager : ScrollableForm
+    public partial class LayerManager : DockView
     {
         string BPMtext = "BPM";
         string BPMOffsettext = "BPM offset";
@@ -24,10 +25,10 @@ namespace PPDEditor
         DisplayLineMode lastDisplayMode;
         DisplayBeatType lastBeatType;
 
+        // ドラッグで並べ替えるときの状態
         bool mousedown;
+        bool dragging;
         Point mousedownpos;
-        TransParentForm tpf;
-        BlackBar bb;
         int movecount;
 
         readonly List<LayerDisplay> layers;
@@ -55,9 +56,9 @@ namespace PPDEditor
             Displaywidthtext = Utility.Language["LMDisplayWidth"];
             layer = Utility.Language["LMLayer"];
             copy = Utility.Language["LMCopy"];
-            this.新規レイヤーToolStripMenuItem.Text = Utility.Language["LMMenu1"];
+            this.新規レイヤーMenuItem.Header = Utility.Language["LMMenu1"];
         }
-        private void 新規レイヤーToolStripMenuItem_Click(object sender, EventArgs e)
+        private void 新規レイヤーMenuItem_Click(object sender, RoutedEventArgs e)
         {
             var fm6 = new NewLayerWindow();
             fm6.SetLang();
@@ -72,13 +73,11 @@ namespace PPDEditor
 
         private void Relocate()
         {
-            Controls.Clear();
-            int nextY = 0;
+            // 後ろのレイヤーほど上に並べる
+            layersPanel.Children.Clear();
             for (int i = layers.Count - 1; i >= 0; i--)
             {
-                layers[i].Location = new Point(0, nextY);
-                Controls.Add(layers[i]);
-                nextY += layers[i].Height;
+                layersPanel.Children.Add(layers[i]);
             }
         }
 
@@ -108,9 +107,10 @@ namespace PPDEditor
             ld.PPDData.DisplayName = layername;
             ld.PPDData.DisplayMode = displayMode;
             ld.PPDData.BeatType = beatType;
-            ld.MouseDown += Ld_MouseDown;
+            ld.MouseLeftButtonDown += Ld_MouseLeftButtonDown;
             ld.MouseMove += Ld_MouseMove;
-            ld.MouseUp += Ld_MouseUp;
+            ld.MouseLeftButtonUp += Ld_MouseLeftButtonUp;
+            ld.LostMouseCapture += Ld_LostMouseCapture;
             ld.SelectStateChanged += Ld_SelectStateChanged;
             ld.Deleted += Ld_Deleted;
             ld.Duplicated += Ld_Duplicated;
@@ -125,22 +125,64 @@ namespace PPDEditor
             WindowUtility.TimeLineForm?.ContentChanged();
         }
 
-        void Ld_MouseUp(object sender, MouseEventArgs e)
+        void Ld_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            if (mousedown && tpf != null)
+            var ld = (LayerDisplay)sender;
+            mousedown = true;
+            dragging = false;
+            mousedownpos = e.GetPosition(layersPanel);
+            ld.CaptureMouse();
+        }
+
+        void Ld_MouseMove(object sender, MouseEventArgs e)
+        {
+            var ld = (LayerDisplay)sender;
+            if (!mousedown || !ld.IsMouseCaptured)
             {
-                int index = (SelectedLayer.Location.Y + e.Y + VerticalScroll.Value) / SelectedLayer.Height;
-                if (index < 0)
+                return;
+            }
+            var p = e.GetPosition(layersPanel);
+            if (!dragging)
+            {
+                if (Math.Abs(mousedownpos.X - p.X) < 5 && Math.Abs(mousedownpos.Y - p.Y) < 5)
                 {
-                    index = 0;
+                    return;
                 }
-                if (index > layers.Count)
+                dragging = true;
+                movecount = 0;
+                dragImage.Width = ld.ActualWidth;
+                dragImage.Height = ld.ActualHeight;
+                dragImage.Fill = new VisualBrush(ld) { Stretch = Stretch.None, AlignmentX = AlignmentX.Left, AlignmentY = AlignmentY.Top };
+                dragImage.Visibility = Visibility.Visible;
+                dropBar.Width = layersPanel.ActualWidth;
+                dropBar.Visibility = Visibility.Visible;
+            }
+            var top = ld.TranslatePoint(new Point(), layersPanel).Y;
+            System.Windows.Controls.Canvas.SetTop(dragImage, top + p.Y - mousedownpos.Y);
+            System.Windows.Controls.Canvas.SetTop(dropBar, ld.ActualHeight * GetDropRow(p) - dropBar.Height / 2);
+            if (movecount % 10 == 0)
+            {
+                // 見えているところの外までドラッグしたら、そちらへスクロールする
+                var inViewer = e.GetPosition(scrollViewer);
+                if (inViewer.Y < 0)
                 {
-                    index = layers.Count;
+                    scrollViewer.ScrollToVerticalOffset(scrollViewer.VerticalOffset - ld.ActualHeight);
                 }
-                index = layers.Count - index;
-                var selectedIndex = layers.IndexOf(SelectedLayer);
-                var layer = SelectedLayer;
+                else if (inViewer.Y > scrollViewer.ViewportHeight)
+                {
+                    scrollViewer.ScrollToVerticalOffset(scrollViewer.VerticalOffset + ld.ActualHeight);
+                }
+            }
+            movecount++;
+        }
+
+        void Ld_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            var ld = (LayerDisplay)sender;
+            if (mousedown && dragging)
+            {
+                var index = layers.Count - GetDropRow(e.GetPosition(layersPanel));
+                var selectedIndex = layers.IndexOf(ld);
                 if (selectedIndex < index)
                 {
                     index--;
@@ -148,97 +190,36 @@ namespace PPDEditor
                 if (selectedIndex != index)
                 {
                     layers.RemoveAt(selectedIndex);
-                    layers.Insert(index, layer);
+                    layers.Insert(index, ld);
                     Relocate();
                 }
             }
+            ld.ReleaseMouseCapture();
+        }
+
+        void Ld_LostMouseCapture(object sender, MouseEventArgs e)
+        {
             mousedown = false;
-            if (tpf != null)
-            {
-                tpf.Close();
-                tpf.Dispose();
-                tpf = null;
-            }
-            if (bb != null)
-            {
-                this.Controls.Remove(bb);
-                bb.Dispose();
-                bb = null;
-            }
-        }
-        void Ld_MouseMove(object sender, MouseEventArgs e)
-        {
-            if (mousedown)
-            {
-                if (tpf == null)
-                {
-                    if (Math.Abs(mousedownpos.X - e.X) >= 5 || Math.Abs(mousedownpos.Y - e.Y) >= 5)
-                    {
-                        tpf = new TransParentForm();
-                        tpf.Show();
-                        tpf.SetInfo(SelectedLayer, SelectedLayer.Size);
-                        tpf.Location = this.PointToScreen(new Point(SelectedLayer.Location.X, SelectedLayer.Location.Y));
-                        bb = new BlackBar();
-                        this.Controls.Add(bb);
-                        this.Controls.SetChildIndex(bb, 0);
-                        mousedownpos = new Point(Cursor.Position.X, Cursor.Position.Y);
-                        movecount = 0;
-                    }
-                }
-                else
-                {
-                    Point p = Cursor.Position;
-                    tpf.Location = new Point(tpf.Location.X + p.X - mousedownpos.X, tpf.Location.Y + p.Y - mousedownpos.Y);
-                    mousedownpos = new Point(p.X, p.Y);
-                    int index = (SelectedLayer.Location.Y + e.Y + VerticalScroll.Value) / SelectedLayer.Height;
-                    if (index < 0)
-                    {
-                        index = 0;
-                    }
-                    if (index > layers.Count)
-                    {
-                        index = layers.Count;
-                    }
-                    bb.Location = new Point(0, SelectedLayer.Height * index - VerticalScroll.Value);
-                    if (movecount % 10 == 0)
-                    {
-                        if (bb.Location.Y < 0)
-                        {
-                            GainVScroll(-SelectedLayer.Width);
-                        }
-                        else if (bb.Location.Y > this.ClientSize.Height)
-                        {
-                            GainVScroll(SelectedLayer.Width);
-                        }
-                    }
-                    bb.Location = new Point(0, SelectedLayer.Height * index - VerticalScroll.Value);
-                    movecount++;
-                }
-            }
+            dragging = false;
+            dragImage.Visibility = Visibility.Collapsed;
+            dragImage.Fill = null;
+            dropBar.Visibility = Visibility.Collapsed;
         }
 
-        private void GainVScroll(int gain)
+        /// <summary>
+        /// 並べている行の間のうち、落とす場所の番号を返す（一番上が 0）。
+        /// </summary>
+        private int GetDropRow(Point positionInPanel)
         {
-            var value = VerticalScroll.Value + gain;
-            if (value < VerticalScroll.Minimum)
+            if (layers.Count == 0)
             {
-                value = VerticalScroll.Minimum;
+                return 0;
             }
-            if (value > VerticalScroll.Maximum)
-            {
-                value = VerticalScroll.Maximum;
-            }
-            VerticalScroll.Value = value;
+            var height = layers[0].ActualHeight;
+            var row = (int)Math.Round(positionInPanel.Y / height);
+            return Math.Clamp(row, 0, layers.Count);
         }
 
-        void Ld_MouseDown(object sender, MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Left)
-            {
-                mousedown = true;
-                mousedownpos = new Point(e.X, e.Y);
-            }
-        }
         void PPDData_DisplayDataChanged(object sender, EventArgs e)
         {
             ChangeDisplayData();

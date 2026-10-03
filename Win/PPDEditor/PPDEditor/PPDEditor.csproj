@@ -96,23 +96,14 @@
     <EmbeddedResource Update="DockForm\StatsManager.resx">
       <DependentUpon>StatsManager.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Update="Controls\BlackBar.resx">
-      <DependentUpon>BlackBar.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Update="DockForm\DXForm.resx">
       <DependentUpon>DXForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Update="DockForm\GeometryCreator.resx">
       <DependentUpon>GeometryCreator.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Update="DockForm\LayerManager.resx">
-      <DependentUpon>LayerManager.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Update="Forms\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Controls\LayerDisplay.resx">
-      <DependentUpon>LayerDisplay.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Update="Properties\Resources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
@@ -248,6 +239,7 @@
   </ItemGroup>
   <ItemGroup>
     <!-- WPF の画面で使う画像 -->
+    <Resource Include="img\eye.png" />
     <Resource Include="img\next.png" />
     <Resource Include="img\back.png" />
     <Resource Include="img\splash.png" />
