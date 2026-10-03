@@ -1,0 +1,16 @@
+<UserControl x:Class="PPDEditor.DockForm.Script.FlowLogPanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <DockPanel>
+        <Menu DockPanel.Dock="Top">
+            <MenuItem x:Name="clearMenuItem" Header="Clear" Click="ClearMenuItem_Click" />
+        </Menu>
+        <DataGrid x:Name="dataGridView1" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column"
+                  CanUserSortColumns="False" CanUserAddRows="False">
+            <DataGrid.Columns>
+                <DataGridTextColumn x:Name="Column1" Header="LogLevel" Binding="{Binding Key}" Width="*" />
+                <DataGridTextColumn x:Name="Column2" Header="Message" Binding="{Binding Value}" Width="3*" />
+            </DataGrid.Columns>
+        </DataGrid>
+    </DockPanel>
+</UserControl>

@@ -1,4 +1,8 @@
-﻿using FlowScriptControl.Classes;
+﻿using AvalonDock;
+using AvalonDock.Controls;
+using AvalonDock.Layout;
+using AvalonDock.Layout.Serialization;
+using FlowScriptControl.Classes;
 using FlowScriptControl.Controls;
 using FlowScriptDrawControl.Model;
 using PPDCore;
@@ -9,36 +13,38 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Windows.Forms;
-using WeifenLuo.WinFormsUI.Docking;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace PPDEditor
 {
-    public partial class ScriptManager : ChangableDockContent
+    public partial class ScriptManager : DockView, IDisposable
     {
-        static FlowPropertyDockForm propertyForm;
-        static FlowTreeViewDockForm treeViewForm;
-        static ScriptListDockForm scriptListForm;
-        static FlowSearchDockForm searchForm;
-        static FlowExecutingPropertyDockForm executingPropertyForm;
-        static FlowLogDockForm logForm;
+        readonly List<FlowDrawDocument> documents = [];
         private TcpDebugControllerHost controllerHost;
         private Source[] currentSources;
         private string currentFileName;
+        private bool mainFormEventsAttached;
 
-        public FlowDrawDockForm[] FlowDrawForms
+        public FlowDrawDocument[] FlowDrawForms
         {
             get
             {
-                return [.. dockPanel1.Documents.OfType<FlowDrawDockForm>()];
+                return [.. documents];
             }
         }
 
-        public FlowDrawDockForm CurrentFlowDrawForm
+        /// <summary>
+        /// 最後に選んだスクリプトのタブです（以前の DockPanel.ActiveDocument）。
+        /// </summary>
+        public FlowDrawDocument CurrentFlowDrawForm
         {
             get
             {
-                return dockPanel1.ActiveDocument as FlowDrawDockForm;
+                var lastFocused = dockingManager.Layout.LastFocusedDocument;
+                return documents.FirstOrDefault(d => d.Document == lastFocused)
+                    ?? documents.FirstOrDefault(d => d.Document.IsSelected);
             }
         }
 
@@ -46,29 +52,17 @@ namespace PPDEditor
         {
             InitializeComponent();
 
-            propertyForm = new FlowPropertyDockForm();
-            treeViewForm = new FlowTreeViewDockForm();
-            scriptListForm = new ScriptListDockForm();
-            searchForm = new FlowSearchDockForm();
-            executingPropertyForm = new FlowExecutingPropertyDockForm();
-            logForm = new FlowLogDockForm();
-
-            propertyForm.VisibleChanged += WindowVisibleChanged;
-            treeViewForm.VisibleChanged += WindowVisibleChanged;
-            scriptListForm.VisibleChanged += WindowVisibleChanged;
-            searchForm.VisibleChanged += WindowVisibleChanged;
-            executingPropertyForm.VisibleChanged += WindowVisibleChanged;
-            logForm.VisibleChanged += WindowVisibleChanged;
-
             scriptListForm.Renamed += ScriptListForm_Renamed;
             scriptListForm.Deleted += ScriptListForm_Deleted;
             scriptListForm.ScriptSelected += ScriptListForm_ScriptSelected;
             scriptListForm.Reloaded += ScriptListForm_Reloaded;
 
-            searchForm.FlowSearchPanel.Searched += FlowSearchPanel_Searched;
-            searchForm.FlowSearchPanel.SelectionChanged += FlowSearchPanel_SelectionChanged;
+            searchPanel.Searched += FlowSearchPanel_Searched;
+            searchPanel.SelectionChanged += FlowSearchPanel_SelectionChanged;
 
-            dockPanel1.ActiveDocumentChanged += DockPanel1_ActiveDocumentChanged;
+            dockingManager.ActiveContentChanged += DockingManager_ActiveContentChanged;
+            // デバッグのウィンドウは、はじめは出さない
+            executingPropertyAnchorable.Hide();
 
             FlowDrawPanel.EnumerateClasses("dlls", ["FlowScriptEngineConsole"]);
             FlowDrawPanel.AddFilter(new NodeFilterInfo("PPD", [
@@ -100,11 +94,17 @@ namespace PPDEditor
                 NamespaceFilter("FlowScriptEngineData")],
                 null));
 
-            Load += ScriptManager_Load;
+            Loaded += ScriptManager_Loaded;
         }
 
-        void ScriptManager_Load(object sender, EventArgs e)
+        void ScriptManager_Loaded(object sender, RoutedEventArgs e)
         {
+            // Loaded はドックを出し直すたびに来るので、1 回だけ登録する
+            if (mainFormEventsAttached)
+            {
+                return;
+            }
+            mainFormEventsAttached = true;
             WindowUtility.MainForm.ProcessStarted += MainForm_ProcessStarted;
             WindowUtility.MainForm.CommandExecuting += MainForm_CommandExecuting;
             WindowUtility.MainForm.ProcessExited += MainForm_ProcessExited;
@@ -140,8 +140,8 @@ namespace PPDEditor
 
         private void EnableControllerHost(Dictionary<string, int[]> infos)
         {
-            toolStrip1.Visible = true;
-            toolStripButton1.Enabled = toolStripButton2.Enabled = false;
+            toolStrip1.Visibility = Visibility.Visible;
+            toolStripButton1.IsEnabled = toolStripButton2.IsEnabled = false;
             controllerHost = new TcpDebugControllerHost(infos);
             controllerHost.SourceChanged += ControllerHost_SourceChanged;
             controllerHost.OperationWaited += ControllerHost_OperationWaited;
@@ -153,7 +153,7 @@ namespace PPDEditor
 
         private void DisableControllerHost()
         {
-            toolStrip1.Visible = false;
+            toolStrip1.Visibility = Visibility.Collapsed;
             controllerHost?.Dispose();
             foreach (var flowDrawDockForm in FlowDrawForms)
             {
@@ -185,34 +185,34 @@ namespace PPDEditor
             DisableControllerHost();
         }
 
-        private FlowDrawDockForm GetFlowDrawDockForm(string fileName)
+        private FlowDrawDocument GetFlowDrawDockForm(string fileName)
         {
             return FlowDrawForms.FirstOrDefault(f => f.FilePath.ToLower().Contains(fileName.ToLower(), StringComparison.CurrentCulture));
         }
 
-        private void ToolStripButton1_Click(object sender, EventArgs e)
+        private void ToolStripButton1_Click(object sender, RoutedEventArgs e)
         {
             controllerHost.Continue();
-            toolStripButton1.Enabled = toolStripButton2.Enabled = false;
+            toolStripButton1.IsEnabled = toolStripButton2.IsEnabled = false;
         }
 
-        private void ToolStripButton2_Click(object sender, EventArgs e)
+        private void ToolStripButton2_Click(object sender, RoutedEventArgs e)
         {
             controllerHost.StepIn();
-            toolStripButton1.Enabled = toolStripButton2.Enabled = false;
+            toolStripButton1.IsEnabled = toolStripButton2.IsEnabled = false;
         }
 
         private void ControllerHost_LogReceived(string arg1, string arg2)
         {
-            this.Invoke((Action)(() =>
+            Dispatcher.Invoke(() =>
             {
                 logForm.AddLog(arg1, arg2);
-            }));
+            });
         }
 
         void ControllerHost_ErrorOccurred(string arg1, int arg2, string arg3)
         {
-            this.Invoke((Action)(() =>
+            Dispatcher.Invoke(() =>
             {
                 var flowDrawDockForm = GetFlowDrawDockForm(arg1);
                 if (flowDrawDockForm == null)
@@ -227,14 +227,14 @@ namespace PPDEditor
                 }
                 else
                 {
-                    MessageBox.Show(arg3);
+                    MessageBox.Show(Window.GetWindow(this), arg3);
                 }
-            }));
+            });
         }
 
         void ControllerHost_OperationAccepted(string obj)
         {
-            this.Invoke((Action)(() =>
+            Dispatcher.Invoke(() =>
             {
                 var flowDrawDockForm = GetFlowDrawDockForm(obj);
                 flowDrawDockForm?.FlowDrawPanel.SelectionChanged -= FlowDrawPanel_SelectionChanged;
@@ -246,13 +246,13 @@ namespace PPDEditor
                     }
                     currentSources = null;
                 }
-                toolStripButton1.Enabled = toolStripButton2.Enabled = false;
-            }));
+                toolStripButton1.IsEnabled = toolStripButton2.IsEnabled = false;
+            });
         }
 
         void ControllerHost_OperationWaited(string obj)
         {
-            this.Invoke((Action)(() =>
+            Dispatcher.Invoke(() =>
             {
                 currentFileName = obj;
                 var flowDrawDockForm = GetFlowDrawDockForm(obj);
@@ -271,8 +271,8 @@ namespace PPDEditor
                         source.PropertyChanged += Source_PropertyChanged;
                     }
                 }
-                toolStripButton1.Enabled = toolStripButton2.Enabled = true;
-            }));
+                toolStripButton1.IsEnabled = toolStripButton2.IsEnabled = true;
+            });
         }
 
         void Source_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -303,7 +303,7 @@ namespace PPDEditor
 
         void ControllerHost_SourceChanged(string arg1, string arg2)
         {
-            this.Invoke((Action)(() =>
+            Dispatcher.Invoke(() =>
             {
                 var flowDrawDockForm = GetFlowDrawDockForm(arg2);
                 if (flowDrawDockForm == null)
@@ -315,19 +315,19 @@ namespace PPDEditor
                 if (flowDrawDockForm != null)
                 {
                     flowDrawDockForm.Activate();
-                    var lastSourceId = executingPropertyForm.FlowExecutingPropertyPanel.SourceId;
-                    executingPropertyForm.FlowExecutingPropertyPanel.ChangeSource(arg2, arg1);
-                    if (lastSourceId != executingPropertyForm.FlowExecutingPropertyPanel.SourceId)
+                    var lastSourceId = executingPropertyPanel.SourceId;
+                    executingPropertyPanel.ChangeSource(arg2, arg1);
+                    if (lastSourceId != executingPropertyPanel.SourceId)
                     {
-                        flowDrawDockForm.FlowDrawPanel.SelectAndFocus(executingPropertyForm.FlowExecutingPropertyPanel.SourceId);
+                        flowDrawDockForm.FlowDrawPanel.SelectAndFocus(executingPropertyPanel.SourceId);
                     }
                 }
-                this.Activate();
+                ShowDock();
                 WindowUtility.MainForm.Activate();
-            }));
+            });
         }
 
-        void FlowSearchPanel_SelectionChanged(FlowScriptControl.Classes.SearchResultItem obj)
+        void FlowSearchPanel_SelectionChanged(SearchResultItem obj)
         {
             var foundForm = FlowDrawForms.FirstOrDefault(f => f.FlowDrawPanel.Guid == obj.SearchResult.Guid);
             if (foundForm == null)
@@ -359,14 +359,22 @@ namespace PPDEditor
             return CurrentFlowDrawForm.FlowDrawPanel.Search(arg);
         }
 
-        void DockPanel1_ActiveDocumentChanged(object sender, EventArgs e)
+        FlowDrawDocument lastActiveDocument;
+
+        void DockingManager_ActiveContentChanged(object sender, EventArgs e)
         {
-            propertyForm.FlowPropertyPanel.MakeEmpty();
+            // スクリプトのタブを切り替えたら、前のタブのノードのプロパティは消す
+            var current = CurrentFlowDrawForm;
+            if (current != lastActiveDocument)
+            {
+                lastActiveDocument = current;
+                propertyPanel.MakeEmpty();
+            }
         }
 
-        private FlowDrawDockForm AddFlowDrawForm(string filePath)
+        private FlowDrawDocument AddFlowDrawForm(string filePath)
         {
-            FlowDrawDockForm drawForm = null;
+            FlowDrawDocument drawForm = null;
             if (!File.Exists(filePath))
             {
                 return null;
@@ -377,58 +385,99 @@ namespace PPDEditor
                 return drawForm;
             }
 
-            drawForm = new FlowDrawDockForm();
-            drawForm.VisibleChanged += WindowVisibleChanged;
+            drawForm = new FlowDrawDocument();
             drawForm.Modified += DrawForm_Modified;
+            drawForm.Closed += DrawForm_Closed;
             drawForm.FlowDrawPanel.SearchRequired += FlowDrawPanel_SearchRequired;
-            drawForm.FlowDrawPanel.FlowPropertyPanel = propertyForm.FlowPropertyPanel;
-            drawForm.FlowDrawPanel.FlowTreeView = treeViewForm.FlowTreeView;
+            drawForm.FlowDrawPanel.FlowPropertyPanel = propertyPanel;
+            drawForm.FlowDrawPanel.FlowTreeView = treeView;
             drawForm.SetLang();
             drawForm.FilePath = filePath;
-            drawForm.Show(dockPanel1, WeifenLuo.WinFormsUI.Docking.DockState.Document);
+            documents.Add(drawForm);
+            GetDocumentPane().Children.Add(drawForm.Document);
+            drawForm.Load();
+            drawForm.Activate();
             return drawForm;
+        }
+
+        /// <summary>
+        /// スクリプトのタブを入れるところを返す。配置を読み込んでなくなっていたら作る。
+        /// </summary>
+        private LayoutDocumentPane GetDocumentPane()
+        {
+            var pane = dockingManager.Layout.Descendents().OfType<LayoutDocumentPane>().FirstOrDefault();
+            if (pane == null)
+            {
+                pane = new LayoutDocumentPane();
+                dockingManager.Layout.RootPanel.Children.Add(pane);
+            }
+            return pane;
+        }
+
+        void DrawForm_Closed(object sender, EventArgs e)
+        {
+            var drawForm = (FlowDrawDocument)sender;
+            documents.Remove(drawForm);
+            if (lastActiveDocument == drawForm)
+            {
+                lastActiveDocument = null;
+            }
         }
 
         void FlowDrawPanel_SearchRequired(string obj)
         {
-            searchForm.FlowSearchPanel.SearchQuery = obj;
-            searchForm.Activate();
+            searchPanel.SearchQuery = obj;
+            searchAnchorable.Show();
+            searchAnchorable.IsActive = true;
         }
 
         public void SetLang()
         {
-            this.編集ToolStripMenuItem.Text = Utility.Language["Edit"];
-            this.元に戻すToolStripMenuItem.Text = Utility.Language["Undo"];
-            this.やり直すToolStripMenuItem.Text = Utility.Language["Redo"];
-            this.表示ToolStripMenuItem.Text = Utility.Language["Show"];
-            this.切り取りToolStripMenuItem.Text = Utility.Language["Cut"];
-            this.コピーToolStripMenuItem.Text = Utility.Language["Copy"];
-            this.貼り付けToolStripMenuItem.Text = Utility.Language["Paste"];
-            this.リンクも貼り付けToolStripMenuItem.Text = Utility.Language["PasteWithLinks"];
-            this.削除ToolStripMenuItem.Text = Utility.Language["Delete"];
-            this.表示領域を合わせるToolStripMenuItem.Text = Utility.Language["FitView"];
-            this.全て展開ToolStripMenuItem.Text = Utility.Language["ExpandAll"];
-            this.全て縮小ToolStripMenuItem.Text = Utility.Language["CollapseAll"];
-            this.toolStripButton1.Text = Utility.Language["Continue"];
-            this.toolStripButton2.Text = Utility.Language["StepIn"];
-            propertyForm.TabText = this.プロパティToolStripMenuItem.Text = Utility.Language["NodePropertyWindow"];
-            treeViewForm.TabText = this.ソースリストToolStripMenuItem.Text = Utility.Language["NodeListWindow"];
-            scriptListForm.TabText = this.スクリプトリストToolStripMenuItem.Text = Utility.Language["ScriptListWindow"];
-            searchForm.TabText = this.検索ToolStripMenuItem.Text = Utility.Language["NodeSearchWindow"];
-            executingPropertyForm.TabText = this.デバッグToolStripMenuItem.Text = Utility.Language["Debug"];
-            logForm.TabText = this.ログToolStripMenuItem.Text = Utility.Language["Log"];
+            this.編集MenuItem.Header = Utility.Language["Edit"];
+            this.元に戻すMenuItem.Header = Utility.Language["Undo"];
+            this.やり直すMenuItem.Header = Utility.Language["Redo"];
+            this.表示MenuItem.Header = Utility.Language["Show"];
+            this.切り取りMenuItem.Header = Utility.Language["Cut"];
+            this.コピーMenuItem.Header = Utility.Language["Copy"];
+            this.貼り付けMenuItem.Header = Utility.Language["Paste"];
+            this.リンクも貼り付けMenuItem.Header = Utility.Language["PasteWithLinks"];
+            this.削除MenuItem.Header = Utility.Language["Delete"];
+            this.表示領域を合わせるMenuItem.Header = Utility.Language["FitView"];
+            this.全て展開MenuItem.Header = Utility.Language["ExpandAll"];
+            this.全て縮小MenuItem.Header = Utility.Language["CollapseAll"];
+            this.toolStripButton1.ToolTip = Utility.Language["Continue"];
+            this.toolStripButton2.ToolTip = Utility.Language["StepIn"];
+            this.保存MenuItem.Header = Utility.Language["Save"];
+            SetAnchorableTitles();
             scriptListForm.SetLang();
             logForm.SetLang();
 
-            foreach (FlowDrawDockForm dockForm in FlowDrawForms)
+            foreach (FlowDrawDocument dockForm in FlowDrawForms)
             {
                 dockForm.SetLang();
             }
         }
 
+        /// <summary>
+        /// ウィンドウのタイトルを言語に合わせる。配置を読み込むとタイトルも読み込まれるので、その後にも呼ぶ。
+        /// </summary>
+        private void SetAnchorableTitles()
+        {
+            if (Utility.Language == null)
+            {
+                return;
+            }
+            propertyAnchorable.Title = (string)(this.プロパティMenuItem.Header = Utility.Language["NodePropertyWindow"]);
+            treeViewAnchorable.Title = (string)(this.ソースリストMenuItem.Header = Utility.Language["NodeListWindow"]);
+            scriptListAnchorable.Title = (string)(this.スクリプトリストMenuItem.Header = Utility.Language["ScriptListWindow"]);
+            searchAnchorable.Title = (string)(this.検索MenuItem.Header = Utility.Language["NodeSearchWindow"]);
+            executingPropertyAnchorable.Title = (string)(this.デバッグMenuItem.Header = Utility.Language["Debug"]);
+            logAnchorable.Title = (string)(this.ログMenuItem.Header = Utility.Language["Log"]);
+        }
+
         void DrawForm_Modified(object sender, EventArgs e)
         {
-            var drawForm = sender as FlowDrawDockForm;
+            var drawForm = (FlowDrawDocument)sender;
             if (!IsUnderFunctions(drawForm.FilePath) && !IsUnderCommands(drawForm.FilePath))
             {
                 ContentChanged();
@@ -457,7 +506,7 @@ namespace PPDEditor
 
         void ScriptListForm_Reloaded()
         {
-            foreach (FlowDrawDockForm drawForm in FlowDrawForms.Where(d => !File.Exists(d.FilePath)))
+            foreach (FlowDrawDocument drawForm in FlowDrawForms.Where(d => !File.Exists(d.FilePath)))
             {
                 drawForm.Close();
             }
@@ -468,7 +517,7 @@ namespace PPDEditor
             if (Path.GetExtension(arg1) != "")
             {
                 // File Change
-                foreach (FlowDrawDockForm drawForm in FlowDrawForms)
+                foreach (FlowDrawDocument drawForm in FlowDrawForms)
                 {
                     if (drawForm.FilePath.Equals(arg1, StringComparison.CurrentCultureIgnoreCase))
                     {
@@ -479,7 +528,7 @@ namespace PPDEditor
             else
             {
                 // Folder Change
-                foreach (FlowDrawDockForm drawForm in FlowDrawForms)
+                foreach (FlowDrawDocument drawForm in FlowDrawForms)
                 {
                     if (IsChildFolderOrFile(arg1, drawForm.FilePath))
                     {
@@ -491,45 +540,102 @@ namespace PPDEditor
 
         void ScriptListForm_Deleted(string obj)
         {
-            var removeTargets = new List<FlowDrawDockForm>();
-            foreach (FlowDrawDockForm drawForm in FlowDrawForms)
+            var removeTargets = new List<FlowDrawDocument>();
+            foreach (FlowDrawDocument drawForm in FlowDrawForms)
             {
                 if (drawForm.FilePath.Equals(obj, StringComparison.CurrentCultureIgnoreCase) || IsChildFolderOrFile(obj, drawForm.FilePath))
                 {
                     removeTargets.Add(drawForm);
                 }
             }
-            foreach (FlowDrawDockForm removeTarget in removeTargets)
+            foreach (FlowDrawDocument removeTarget in removeTargets)
             {
                 removeTarget.Close();
             }
         }
 
+        /// <summary>
+        /// ウィンドウの配置を読み込みます。以前の WinForms 版の形式など、読み込めないときは既定の配置のままにします。
+        /// </summary>
         public void RestoreDock(string filePath)
         {
             if (File.Exists(filePath))
             {
-                dockPanel1.LoadFromXml(filePath, DeserializeForm);
+                try
+                {
+                    var serializer = new XmlLayoutSerializer(dockingManager);
+                    serializer.LayoutSerializationCallback += (sender, e) =>
+                    {
+                        // スクリプトのタブは配置に入れない
+                        e.Content = e.Model.ContentId switch
+                        {
+                            "PPDEditor.DockForm.Script.FlowPropertyDockForm" => propertyPanel,
+                            "PPDEditor.DockForm.Script.FlowTreeViewDockForm" => treeView,
+                            "PPDEditor.DockForm.Script.ScriptListDockForm" => scriptListForm,
+                            "PPDEditor.DockForm.Script.FlowSearchDockForm" => searchPanel,
+                            "PPDEditor.DockForm.Script.FlowExecutingPropertyDockForm" => executingPropertyPanel,
+                            "PPDEditor.DockForm.Script.FlowLogDockForm" => logForm,
+                            _ => null,
+                        };
+                        e.Cancel = e.Content == null;
+                    };
+                    serializer.Deserialize(filePath);
+                }
+                catch (Exception)
+                {
+                }
             }
-            else
+            RebindAnchorables();
+            SetAnchorableTitles();
+        }
+
+        /// <summary>
+        /// 配置を読み込むと、ウィンドウ（LayoutAnchorable）は新しく作られるので、「表示」メニューで扱うものを付け替えます。
+        /// 読み込んだ配置になかったウィンドウは、配置に加え直します。
+        /// </summary>
+        private void RebindAnchorables()
+        {
+            var anchorables = dockingManager.Layout.Descendents().OfType<LayoutAnchorable>()
+                .Concat(dockingManager.Layout.Hidden)
+                .Distinct()
+                .ToList();
+            propertyAnchorable = Rebind(anchorables, propertyAnchorable);
+            treeViewAnchorable = Rebind(anchorables, treeViewAnchorable);
+            scriptListAnchorable = Rebind(anchorables, scriptListAnchorable);
+            searchAnchorable = Rebind(anchorables, searchAnchorable);
+            executingPropertyAnchorable = Rebind(anchorables, executingPropertyAnchorable);
+            logAnchorable = Rebind(anchorables, logAnchorable);
+        }
+
+        private LayoutAnchorable Rebind(List<LayoutAnchorable> anchorables, LayoutAnchorable original)
+        {
+            var found = anchorables.FirstOrDefault(a => a.ContentId == original.ContentId);
+            if (found != null)
             {
-                propertyForm.Show(dockPanel1, WeifenLuo.WinFormsUI.Docking.DockState.DockRight);
-                searchForm.Show(propertyForm.Pane, WeifenLuo.WinFormsUI.Docking.DockAlignment.Top, 0.5);
-                treeViewForm.Show(searchForm.Pane, searchForm);
-                scriptListForm.Show(dockPanel1, WeifenLuo.WinFormsUI.Docking.DockState.DockLeft);
-                logForm.Show(scriptListForm.Pane, DockAlignment.Bottom, 0.5);
+                return found;
             }
+            if (original.Root == null)
+            {
+                original.AddToLayout(dockingManager, AnchorableShowStrategy.Most);
+            }
+            return original;
         }
 
         public void SaveDock(string filePath)
         {
-            dockPanel1.SaveAsXml(filePath);
+            try
+            {
+                new XmlLayoutSerializer(dockingManager).Serialize(filePath);
+            }
+            catch (IOException)
+            {
+            }
         }
 
         public void Clear()
         {
             scriptListForm.Clear();
-            foreach (FlowDrawDockForm drawForm in FlowDrawForms)
+            foreach (FlowDrawDocument drawForm in FlowDrawForms)
             {
                 if (!IsUnderFunctions(drawForm.FilePath))
                 {
@@ -540,7 +646,7 @@ namespace PPDEditor
 
         public void SaveAll()
         {
-            foreach (FlowDrawDockForm drawForm in FlowDrawForms)
+            foreach (FlowDrawDocument drawForm in FlowDrawForms)
             {
                 if (drawForm.IsContentChanged && !IsUnderFunctions(drawForm.FilePath) && !IsUnderCommands(drawForm.FilePath))
                 {
@@ -569,61 +675,128 @@ namespace PPDEditor
             scriptListForm.WriteScript(stream, scriptName);
         }
 
-        private IDockContent DeserializeForm(string persistentString)
+        private void 表示MenuItem_SubmenuOpened(object sender, RoutedEventArgs e)
         {
-            return persistentString switch
+            this.スクリプトリストMenuItem.IsChecked = IsShown(scriptListAnchorable);
+            this.ソースリストMenuItem.IsChecked = IsShown(treeViewAnchorable);
+            this.プロパティMenuItem.IsChecked = IsShown(propertyAnchorable);
+            this.検索MenuItem.IsChecked = IsShown(searchAnchorable);
+            this.デバッグMenuItem.IsChecked = IsShown(executingPropertyAnchorable);
+            this.ログMenuItem.IsChecked = IsShown(logAnchorable);
+        }
+
+        private static bool IsShown(LayoutAnchorable anchorable)
+        {
+            return anchorable.IsVisible && !anchorable.IsAutoHidden;
+        }
+
+        /// <summary>
+        /// ウィンドウを出すか隠す。出ていて前にあるときは隠し、ほかのウィンドウの後ろにあるときは前に出す。Shift を押していると浮かせて出す。
+        /// </summary>
+        private static void ShowOrHideWindow(LayoutAnchorable anchorable)
+        {
+            if (Keyboard.Modifiers.HasFlag(ModifierKeys.Shift))
             {
-                "PPDEditor.DockForm.Script.FlowPropertyDockForm" => propertyForm,
-                "PPDEditor.DockForm.Script.FlowTreeViewDockForm" => treeViewForm,
-                "PPDEditor.DockForm.Script.ScriptListDockForm" => scriptListForm,
-                "PPDEditor.DockForm.Script.FlowSearchDockForm" => searchForm,
-                "PPDEditor.DockForm.Script.FlowExecutingPropertyDockForm" => executingPropertyForm,
-                "PPDEditor.DockForm.Script.FlowLogDockForm" => logForm,
+                anchorable.Show();
+                anchorable.Float();
+                anchorable.IsActive = true;
+                return;
+            }
+            if (!anchorable.IsVisible || anchorable.IsAutoHidden)
+            {
+                anchorable.Show();
+                anchorable.IsActive = true;
+            }
+            else if (anchorable.IsActive || anchorable.IsFloating)
+            {
+                anchorable.Hide();
+            }
+            else
+            {
+                anchorable.IsActive = true;
+            }
+        }
+
+        private void プロパティMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            ShowOrHideWindow(propertyAnchorable);
+        }
+
+        private void スクリプトリストMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            ShowOrHideWindow(scriptListAnchorable);
+        }
+
+        private void ソースリストMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            ShowOrHideWindow(treeViewAnchorable);
+        }
+
+        private void 検索MenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            ShowOrHideWindow(searchAnchorable);
+        }
+
+        private void デバッグMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            ShowOrHideWindow(executingPropertyAnchorable);
+        }
+
+        private void ログMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            ShowOrHideWindow(logAnchorable);
+        }
+
+        /// <summary>
+        /// タブの右クリックのメニューで選んだスクリプトのタブを返す。
+        /// </summary>
+        private FlowDrawDocument GetContextMenuDocument(object sender)
+        {
+            var menuItem = (MenuItem)sender;
+            var model = (menuItem.DataContext as LayoutDocumentItem)?.Model;
+            return documents.FirstOrDefault(d => d.Document == model);
+        }
+
+        private void 保存MenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            GetContextMenuDocument(sender)?.Save();
+        }
+
+        private void 閉じるMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            GetContextMenuDocument(sender)?.Close();
+        }
+
+        /// <summary>
+        /// 編集のメニューのショートカットキーです。ノードの図にフォーカスがあるときだけ処理し、入力欄などのキーはそのままにする。
+        /// </summary>
+        private void ScriptManager_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (CurrentFlowDrawForm == null || !CurrentFlowDrawForm.FlowDrawPanel.IsControlFocused)
+            {
+                return;
+            }
+            var panel = CurrentFlowDrawForm.FlowDrawPanel;
+            var modifiers = Keyboard.Modifiers;
+            Action action = (modifiers, e.Key) switch
+            {
+                (ModifierKeys.Control, Key.Z) => panel.Undo,
+                (ModifierKeys.Control, Key.Y) => panel.Redo,
+                (ModifierKeys.Control, Key.X) => panel.Cut,
+                (ModifierKeys.Control, Key.C) => panel.Copy,
+                (ModifierKeys.Control, Key.V) => panel.PasteAtCursor,
+                (ModifierKeys.Control | ModifierKeys.Shift, Key.V) => panel.PasteWithLinksAtCursor,
+                (ModifierKeys.None, Key.Delete) => panel.Delete,
                 _ => null,
             };
+            if (action != null)
+            {
+                action();
+                e.Handled = true;
+            }
         }
 
-        private void WindowVisibleChanged(object sender, EventArgs e)
-        {
-            this.スクリプトリストToolStripMenuItem.Checked = Utility.CheckVisible(scriptListForm);
-            this.ソースリストToolStripMenuItem.Checked = Utility.CheckVisible(treeViewForm);
-            this.プロパティToolStripMenuItem.Checked = Utility.CheckVisible(propertyForm);
-            this.検索ToolStripMenuItem.Checked = Utility.CheckVisible(searchForm);
-            this.デバッグToolStripMenuItem.Checked = Utility.CheckVisible(executingPropertyForm);
-            this.ログToolStripMenuItem.Checked = Utility.CheckVisible(logForm);
-        }
-
-        private void プロパティToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Utility.ShowOrHideWindow(dockPanel1, propertyForm, ModifierKeys);
-        }
-
-        private void スクリプトリストToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Utility.ShowOrHideWindow(dockPanel1, scriptListForm, ModifierKeys);
-        }
-
-        private void ソースリストToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Utility.ShowOrHideWindow(dockPanel1, treeViewForm, ModifierKeys);
-        }
-
-        private void 検索ToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Utility.ShowOrHideWindow(dockPanel1, searchForm, ModifierKeys);
-        }
-
-        private void デバッグToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Utility.ShowOrHideWindow(dockPanel1, executingPropertyForm, ModifierKeys);
-        }
-
-        private void ログToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Utility.ShowOrHideWindow(dockPanel1, logForm, ModifierKeys);
-        }
-
-        private void 元に戻すToolStripMenuItem_Click(object sender, EventArgs e)
+        private void 元に戻すMenuItem_Click(object sender, RoutedEventArgs e)
         {
             if (CurrentFlowDrawForm == null || !CurrentFlowDrawForm.FlowDrawPanel.IsControlFocused)
             {
@@ -633,7 +806,7 @@ namespace PPDEditor
             CurrentFlowDrawForm.FlowDrawPanel.Undo();
         }
 
-        private void やり直すToolStripMenuItem_Click(object sender, EventArgs e)
+        private void やり直すMenuItem_Click(object sender, RoutedEventArgs e)
         {
             if (CurrentFlowDrawForm == null || !CurrentFlowDrawForm.FlowDrawPanel.IsControlFocused)
             {
@@ -643,7 +816,7 @@ namespace PPDEditor
             CurrentFlowDrawForm.FlowDrawPanel.Redo();
         }
 
-        private void 切り取りToolStripMenuItem_Click(object sender, EventArgs e)
+        private void 切り取りMenuItem_Click(object sender, RoutedEventArgs e)
         {
             if (CurrentFlowDrawForm == null || !CurrentFlowDrawForm.FlowDrawPanel.IsControlFocused)
             {
@@ -653,7 +826,7 @@ namespace PPDEditor
             CurrentFlowDrawForm.FlowDrawPanel.Cut();
         }
 
-        private void コピーToolStripMenuItem_Click(object sender, EventArgs e)
+        private void コピーMenuItem_Click(object sender, RoutedEventArgs e)
         {
             if (CurrentFlowDrawForm == null || !CurrentFlowDrawForm.FlowDrawPanel.IsControlFocused)
             {
@@ -663,7 +836,7 @@ namespace PPDEditor
             CurrentFlowDrawForm.FlowDrawPanel.Copy();
         }
 
-        private void 貼り付けToolStripMenuItem_Click(object sender, EventArgs e)
+        private void 貼り付けMenuItem_Click(object sender, RoutedEventArgs e)
         {
             if (CurrentFlowDrawForm == null || !CurrentFlowDrawForm.FlowDrawPanel.IsControlFocused)
             {
@@ -673,7 +846,7 @@ namespace PPDEditor
             CurrentFlowDrawForm.FlowDrawPanel.PasteAtCursor();
         }
 
-        private void リンクも貼り付けToolStripMenuItem_Click(object sender, EventArgs e)
+        private void リンクも貼り付けMenuItem_Click(object sender, RoutedEventArgs e)
         {
             if (CurrentFlowDrawForm == null || !CurrentFlowDrawForm.FlowDrawPanel.IsControlFocused)
             {
@@ -683,7 +856,7 @@ namespace PPDEditor
             CurrentFlowDrawForm.FlowDrawPanel.PasteWithLinksAtCursor();
         }
 
-        private void 削除ToolStripMenuItem_Click(object sender, EventArgs e)
+        private void 削除MenuItem_Click(object sender, RoutedEventArgs e)
         {
             if (CurrentFlowDrawForm == null || !CurrentFlowDrawForm.FlowDrawPanel.IsControlFocused)
             {
@@ -693,34 +866,34 @@ namespace PPDEditor
             CurrentFlowDrawForm.FlowDrawPanel.Delete();
         }
 
-        private void 表示領域を合わせるToolStripMenuItem_Click(object sender, EventArgs e)
+        private void 表示領域を合わせるMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            if (CurrentFlowDrawForm == null)
-            {
-                return;
-            }
-
-            CurrentFlowDrawForm.FlowDrawPanel.FitToView();
+            CurrentFlowDrawForm?.FlowDrawPanel.FitToView();
         }
 
-        private void 全て展開ToolStripMenuItem_Click(object sender, EventArgs e)
+        private void 全て展開MenuItem_Click(object sender, RoutedEventArgs e)
         {
-            if (CurrentFlowDrawForm == null)
-            {
-                return;
-            }
-
-            CurrentFlowDrawForm.FlowDrawPanel.ExpandAll();
+            CurrentFlowDrawForm?.FlowDrawPanel.ExpandAll();
         }
 
-        private void 全て縮小ToolStripMenuItem_Click(object sender, EventArgs e)
+        private void 全て縮小MenuItem_Click(object sender, RoutedEventArgs e)
         {
-            if (CurrentFlowDrawForm == null)
-            {
-                return;
-            }
+            CurrentFlowDrawForm?.FlowDrawPanel.CollapseAll();
+        }
 
-            CurrentFlowDrawForm.FlowDrawPanel.CollapseAll();
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                controllerHost?.Dispose();
+                controllerHost = null;
+            }
         }
 
         private static Regex NamespaceFilter(string ns)

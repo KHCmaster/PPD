@@ -67,6 +67,7 @@ namespace PPDEditor.Forms
         static ResourceManager rm;
         static WpfDockShell rmDock;
         static ScriptManager scm;
+        static WpfDockShell scmDock;
         static StatsManager stm;
         static WpfDockShell stmDock;
 
@@ -177,6 +178,7 @@ namespace PPDEditor.Forms
             rmDock = new WpfDockShell(rm, "PPDEditor.ResourceManager");
             SplashWindow.ChangeStatus(String.Format(Utility.Language["InitializingStart"], Utility.Language["ScriptManager"]));
             scm = new ScriptManager();
+            scmDock = new WpfDockShell(scm, "PPDEditor.ScriptManager");
             SplashWindow.ChangeStatus(String.Format(Utility.Language["InitializingStart"], Utility.Language["StatsManager"]));
             stm = new StatsManager();
             stmDock = new WpfDockShell(stm, "PPDEditor.StatsManager");
@@ -217,7 +219,7 @@ namespace PPDEditor.Forms
             mwDock.VisibleChanged += Windowvisiblechanged;
             hfDock.VisibleChanged += Windowvisiblechanged;
             rmDock.VisibleChanged += Windowvisiblechanged;
-            scm.VisibleChanged += Windowvisiblechanged;
+            scmDock.VisibleChanged += Windowvisiblechanged;
             stmDock.VisibleChanged += Windowvisiblechanged;
 
             em.SetEvent();
@@ -606,7 +608,7 @@ namespace PPDEditor.Forms
             mwDock.DockPanel = null;
             hfDock.DockPanel = null;
             rmDock.DockPanel = null;
-            scm.DockPanel = null;
+            scmDock.DockPanel = null;
             stmDock.DockPanel = null;
             CloseAllDocuments();
 
@@ -694,7 +696,7 @@ namespace PPDEditor.Forms
             this.メモToolStripMenuItem.Checked = Utility.CheckVisible(mwDock);
             this.ヘルプToolStripMenuItem.Checked = Utility.CheckVisible(hfDock);
             this.リソースマネージャーToolStripMenuItem.Checked = Utility.CheckVisible(rmDock);
-            this.スクリプトマネージャーToolStripMenuItem.Checked = Utility.CheckVisible(scm);
+            this.スクリプトマネージャーToolStripMenuItem.Checked = Utility.CheckVisible(scmDock);
             this.統計ToolStripMenuItem.Checked = Utility.CheckVisible(stmDock);
         }
 
@@ -716,7 +718,7 @@ namespace PPDEditor.Forms
                 "PPDEditor.MemoWindow" => mwDock,
                 "PPDEditor.HelpForm" => hfDock,
                 "PPDEditor.ResourceManager" => rmDock,
-                "PPDEditor.ScriptManager" => scm,
+                "PPDEditor.ScriptManager" => scmDock,
                 "PPDEditor.StatsManager" => stmDock,
                 _ => null,
             };
@@ -2431,7 +2433,7 @@ namespace PPDEditor.Forms
 
         private void スクリプトマネージャーToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Utility.ShowOrHideWindow(dockPanel1, scm, ModifierKeys);
+            Utility.ShowOrHideWindow(dockPanel1, scmDock, ModifierKeys);
         }
 
         private void ヘルプToolStripMenuItem_Click(object sender, EventArgs e)

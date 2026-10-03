@@ -43,5 +43,14 @@ namespace PPDEditor.Forms
         {
             return persistString;
         }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                (View as System.IDisposable)?.Dispose();
+            }
+            base.Dispose(disposing);
+        }
     }
 }

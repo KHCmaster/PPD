@@ -1,0 +1,18 @@
+<UserControl x:Class="PPDEditor.DockForm.Script.ScriptListPanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <DockPanel>
+        <ToolBar DockPanel.Dock="Top" ToolBarTray.IsLocked="True">
+            <Button x:Name="toolStripButton1" ToolTip="関数更新" Click="ToolStripButton1_Click">
+                <Image Source="/img/update.png" Stretch="None" />
+            </Button>
+            <Button x:Name="toolStripButton2" ToolTip="フォルダ作成" Click="ToolStripButton2_Click">
+                <Image Source="/img/folder.png" Stretch="None" />
+            </Button>
+        </ToolBar>
+        <TreeView x:Name="treeView1" AllowDrop="True" KeyDown="TreeView1_KeyDown"
+                  PreviewMouseRightButtonDown="TreeView1_PreviewMouseRightButtonDown"
+                  PreviewMouseLeftButtonDown="TreeView1_PreviewMouseLeftButtonDown" PreviewMouseMove="TreeView1_PreviewMouseMove"
+                  MouseDoubleClick="TreeView1_MouseDoubleClick" DragOver="TreeView1_DragOver" Drop="TreeView1_Drop" />
+    </DockPanel>
+</UserControl>

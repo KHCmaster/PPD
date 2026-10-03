@@ -222,41 +222,6 @@ namespace PPDEditor
             File.Copy(src, dest, true);
         }
 
-        public static TreeNode GetTreeNodeFromPath(TreeNodeCollection coll, string nodePath)
-        {
-            var split = nodePath.Split('\\');
-            int iter = 0;
-            while (iter < split.Length)
-            {
-                TreeNode found = null;
-                foreach (TreeNode node in coll)
-                {
-                    if (node.Text == split[iter])
-                    {
-                        if (iter == split.Length - 1)
-                        {
-                            return node;
-                        }
-
-                        found = node;
-                        break;
-                    }
-                }
-
-                if (found != null)
-                {
-                    iter++;
-                    coll = found.Nodes;
-                }
-                else
-                {
-                    break;
-                }
-            }
-
-            return null;
-        }
-
         public static void CopyDirectory(string sourceDirName, string destDirName, Regex[] exceptFiles)
         {
             CopyDirectory(sourceDirName, destDirName, exceptFiles, null);

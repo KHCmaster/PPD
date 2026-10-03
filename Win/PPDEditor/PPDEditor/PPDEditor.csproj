@@ -30,6 +30,7 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="Dirkster.AvalonDock" />
     <PackageReference Include="Newtonsoft.Json" />
     <PackageReference Include="Vortice.DirectInput" />
     <PackageReference Include="System.Data.SQLite.Core" />
@@ -59,30 +60,6 @@
     <ProjectReference Include="..\..\WinFormsUI\WinFormsUI.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Update="DockForm\ScriptManager.resx">
-      <DependentUpon>ScriptManager.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="DockForm\Script\FlowDrawDockForm.resx">
-      <DependentUpon>FlowDrawDockForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="DockForm\Script\FlowExecutingPropertyDockForm.resx">
-      <DependentUpon>FlowExecutingPropertyDockForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="DockForm\Script\FlowLogDockForm.resx">
-      <DependentUpon>FlowLogDockForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="DockForm\Script\FlowPropertyDockForm.resx">
-      <DependentUpon>FlowPropertyDockForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="DockForm\Script\FlowSearchDockForm.resx">
-      <DependentUpon>FlowSearchDockForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="DockForm\Script\FlowTreeViewDockForm.resx">
-      <DependentUpon>FlowTreeViewDockForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="DockForm\Script\ScriptListDockForm.resx">
-      <DependentUpon>ScriptListDockForm.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Update="DockForm\DXForm.resx">
       <DependentUpon>DXForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -223,6 +200,8 @@
   </ItemGroup>
   <ItemGroup>
     <!-- WPF の画面で使う画像 -->
+    <Resource Include="img\stepin.png" />
+    <Resource Include="img\update.png" />
     <Resource Include="img\stop.png" />
     <Resource Include="img\playreverseloop.png" />
     <Resource Include="img\playreverse.png" />
