@@ -120,39 +120,39 @@ namespace PPDEditor.Forms
         #region Initialize
         public void Initialize()
         {
-            SplashForm.ChangeStatus(String.Format(Utility.Language["InitializingStart"], Utility.Language["PAALS"]));
+            SplashWindow.ChangeStatus(String.Format(Utility.Language["InitializingStart"], Utility.Language["PAALS"]));
             paals = new PosAndAngleLoaderSaver();
-            SplashForm.ChangeStatus(String.Format(Utility.Language["InitializingStart"], Utility.Language["KE"]));
+            SplashWindow.ChangeStatus(String.Format(Utility.Language["InitializingStart"], Utility.Language["KE"]));
             ke = new KasiEditor();
-            SplashForm.ChangeStatus(String.Format(Utility.Language["InitializingStart"], Utility.Language["SM"]));
+            SplashWindow.ChangeStatus(String.Format(Utility.Language["InitializingStart"], Utility.Language["SM"]));
             sm = new SoundManager();
-            SplashForm.ChangeStatus(String.Format(Utility.Language["InitializingStart"], Utility.Language["SFW"]));
+            SplashWindow.ChangeStatus(String.Format(Utility.Language["InitializingStart"], Utility.Language["SFW"]));
             ifw = new IniFileWriter();
-            SplashForm.ChangeStatus(String.Format(Utility.Language["InitializingStart"], Utility.Language["BPMMeasure"]));
+            SplashWindow.ChangeStatus(String.Format(Utility.Language["InitializingStart"], Utility.Language["BPMMeasure"]));
             bm = new BPMMeasure();
-            SplashForm.ChangeStatus(String.Format(Utility.Language["InitializingStart"], Utility.Language["TimeLine"]));
+            SplashWindow.ChangeStatus(String.Format(Utility.Language["InitializingStart"], Utility.Language["TimeLine"]));
             tlf = new TimeLineForm();
-            SplashForm.ChangeStatus(String.Format(Utility.Language["InitializingStart"], Utility.Language["GameWindow"]));
+            SplashWindow.ChangeStatus(String.Format(Utility.Language["InitializingStart"], Utility.Language["GameWindow"]));
             dxf = new DXForm();
-            SplashForm.ChangeStatus(String.Format(Utility.Language["InitializingStart"], Utility.Language["Property"]));
+            SplashWindow.ChangeStatus(String.Format(Utility.Language["InitializingStart"], Utility.Language["Property"]));
             infof = new InfoForm();
-            SplashForm.ChangeStatus(String.Format(Utility.Language["InitializingStart"], Utility.Language["LayerManager"]));
+            SplashWindow.ChangeStatus(String.Format(Utility.Language["InitializingStart"], Utility.Language["LayerManager"]));
             lm = new LayerManager();
-            SplashForm.ChangeStatus(String.Format(Utility.Language["InitializingStart"], Utility.Language["EventManager"]));
+            SplashWindow.ChangeStatus(String.Format(Utility.Language["InitializingStart"], Utility.Language["EventManager"]));
             em = new EventManager();
-            SplashForm.ChangeStatus(String.Format(Utility.Language["InitializingStart"], Utility.Language["GeometryCreator"]));
+            SplashWindow.ChangeStatus(String.Format(Utility.Language["InitializingStart"], Utility.Language["GeometryCreator"]));
             gc = new GeometryCreator();
-            SplashForm.ChangeStatus(String.Format(Utility.Language["InitializingStart"], Utility.Language["Memo"]));
+            SplashWindow.ChangeStatus(String.Format(Utility.Language["InitializingStart"], Utility.Language["Memo"]));
             mw = new MemoWindow();
-            SplashForm.ChangeStatus(String.Format(Utility.Language["InitializingStart"], Utility.Language["Help"]));
+            SplashWindow.ChangeStatus(String.Format(Utility.Language["InitializingStart"], Utility.Language["Help"]));
             hf = new HelpForm();
-            SplashForm.ChangeStatus(String.Format(Utility.Language["InitializingStart"], Utility.Language["WriteDoneWindow"]));
+            SplashWindow.ChangeStatus(String.Format(Utility.Language["InitializingStart"], Utility.Language["WriteDoneWindow"]));
             wdf = new WriteDoneWindow();
-            SplashForm.ChangeStatus(String.Format(Utility.Language["InitializingStart"], Utility.Language["ResourceManager"]));
+            SplashWindow.ChangeStatus(String.Format(Utility.Language["InitializingStart"], Utility.Language["ResourceManager"]));
             rm = new ResourceManager();
-            SplashForm.ChangeStatus(String.Format(Utility.Language["InitializingStart"], Utility.Language["ScriptManager"]));
+            SplashWindow.ChangeStatus(String.Format(Utility.Language["InitializingStart"], Utility.Language["ScriptManager"]));
             scm = new ScriptManager();
-            SplashForm.ChangeStatus(String.Format(Utility.Language["InitializingStart"], Utility.Language["StatsManager"]));
+            SplashWindow.ChangeStatus(String.Format(Utility.Language["InitializingStart"], Utility.Language["StatsManager"]));
             stm = new StatsManager();
 
             Grid = new SquareGrid();
@@ -198,12 +198,12 @@ namespace PPDEditor.Forms
             sm.SetEvent();
             stm.SetEvent();
 
-            SplashForm.ChangeStatus(String.Format(Utility.Language["InitializingStart"], Utility.Language["Setting"]));
+            SplashWindow.ChangeStatus(String.Format(Utility.Language["InitializingStart"], Utility.Language["Setting"]));
             LoadConfig();
-            SplashForm.ChangeStatus(String.Format(Utility.Language["InitializingStart"], Utility.Language["LanguageFile"]));
+            SplashWindow.ChangeStatus(String.Format(Utility.Language["InitializingStart"], Utility.Language["LanguageFile"]));
             CheckLangFiles();
             SetLanguage(PPDStaticSetting.langFileISO);
-            SplashForm.ChangeStatus(String.Format(Utility.Language["InitializingStart"], Utility.Language["View"]));
+            SplashWindow.ChangeStatus(String.Format(Utility.Language["InitializingStart"], Utility.Language["View"]));
             ReadViews();
 
             if (File.Exists("skin.ini"))
@@ -218,7 +218,7 @@ namespace PPDEditor.Forms
             this.toolStripComboBox2.SelectedIndex = 2;
             Farness = 0.5f;
 
-            SplashForm.ChangeStatus(String.Format(Utility.Language["InitializingStart"], Utility.Language["Skin"]));
+            SplashWindow.ChangeStatus(String.Format(Utility.Language["InitializingStart"], Utility.Language["Skin"]));
             toolStrip1.Renderer = new CustomToolStripRenderer();
             if (File.Exists("skin.ini"))
             {
@@ -226,7 +226,7 @@ namespace PPDEditor.Forms
                 ChangeBackGround();
             }
 
-            SplashForm.ChangeStatus(String.Format(Utility.Language["InitializingStart"], Utility.Language["DockWindow"]));
+            SplashWindow.ChangeStatus(String.Format(Utility.Language["InitializingStart"], Utility.Language["DockWindow"]));
             InitializeDockWindow();
 
             AvailableDifficulty = AvailableDifficulty.Base;

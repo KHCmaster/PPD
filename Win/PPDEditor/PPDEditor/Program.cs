@@ -53,7 +53,7 @@ namespace PPDEditor
             }
             catch (Exception e)
             {
-                SplashForm.CloseSplash();
+                SplashWindow.CloseSplash();
                 errorHandler.ProcessError(e);
                 if (game != null)
                 {

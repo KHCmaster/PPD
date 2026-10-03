@@ -13,8 +13,8 @@ namespace PPDEditor
 
         public Game(PPDExecuteArg args) : base(args, new EditorForm())
         {
-            SplashForm.ShowSplash(Window);
-            SplashForm.ChangeStatus(String.Format(Utility.Language["InitializingStart"], Utility.Language["MainWindow"]));
+            SplashWindow.ShowSplash(Window);
+            SplashWindow.ChangeStatus(String.Format(Utility.Language["InitializingStart"], Utility.Language["MainWindow"]));
             Window.Initialize();
         }
     }

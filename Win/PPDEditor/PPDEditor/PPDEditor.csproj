@@ -129,17 +129,11 @@
     <EmbeddedResource Update="DockForm\SoundManager.resx">
       <DependentUpon>SoundManager.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Update="Forms\CreateProjectForm.resx">
-      <DependentUpon>CreateProjectForm.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Update="DockForm\EventManager.resx">
       <DependentUpon>EventManager.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Update="Forms\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Forms\SplashForm.resx">
-      <DependentUpon>SplashForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Update="DockForm\InfoForm.resx">
       <DependentUpon>InfoForm.cs</DependentUpon>
@@ -284,6 +278,7 @@
   </ItemGroup>
   <ItemGroup>
     <!-- WPF の画面で使う画像 -->
+    <Resource Include="img\splash.png" />
     <Resource Include="img\alert.png" />
     <Resource Include="img\folder.png" />
     <Resource Include="img\document.png" />
