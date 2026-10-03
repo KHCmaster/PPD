@@ -23,17 +23,11 @@ namespace PPDUpdater
             {
                 var app = new Application();
                 errorHandler.Attach(app);
-                var window = new MainWindow();
-
                 WorkState ws = WorkState.None;
                 if (Array.IndexOf(args, "-d") != -1) ws |= WorkState.DownLoad;
                 if (Array.IndexOf(args, "-i") != -1) ws |= WorkState.Install;
 
-                if (ws != WorkState.None)
-                {
-                    window.WorkState = ws;
-                }
-                app.Run(window);
+                app.Run(new MainWindow(ws == WorkState.None ? WorkState.DownloadAndInstall : ws));
             }
             catch (Exception e)
             {

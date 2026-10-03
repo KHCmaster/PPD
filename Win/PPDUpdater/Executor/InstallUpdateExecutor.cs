@@ -3,11 +3,11 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Windows.Threading;
+using System.Threading;
 
 namespace PPDUpdater.Executor
 {
-    class InstallUpdateExecutor(string filePath, VersionInfo installversion, InstallInfo installInfo, int index, Dispatcher dispatcher) : CExecutor(dispatcher)
+    class InstallUpdateExecutor(string filePath, VersionInfo installversion, InstallInfo installInfo, int index, SynchronizationContext context) : CExecutor(context)
     {
         const int bufferSize = 1024;
 

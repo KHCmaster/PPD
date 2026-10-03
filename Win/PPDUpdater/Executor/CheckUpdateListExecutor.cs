@@ -2,12 +2,12 @@
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
-using System.Windows.Threading;
+using System.Threading;
 using System.Xml;
 
 namespace PPDUpdater.Executor
 {
-    class CheckUpdateListExecutor(string url, Dispatcher dispatcher) : CExecutor(dispatcher)
+    class CheckUpdateListExecutor(string url, SynchronizationContext context) : CExecutor(context)
     {
         // HttpWebRequest と同じく Cookie は保持しない
         private static readonly HttpClient client = new(new HttpClientHandler { UseCookies = false });
