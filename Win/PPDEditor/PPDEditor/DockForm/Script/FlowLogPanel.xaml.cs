@@ -1,44 +1,40 @@
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+using PPDEditor.ViewModels.Docks;
+using System.Collections.Specialized;
 using System.Windows;
 using System.Windows.Controls;
 
 namespace PPDEditor.DockForm.Script
 {
     /// <summary>
-    /// スクリプトを実行したときのログを出します。
+    /// スクリプトを実行したときのログを出します。DataContext は <see cref="FlowLogViewModel"/> です。
     /// </summary>
     public partial class FlowLogPanel : UserControl
     {
-        readonly ObservableCollection<KeyValuePair<string, string>> logs = [];
-
         public FlowLogPanel()
         {
             InitializeComponent();
-            dataGridView1.ItemsSource = logs;
+            DataContextChanged += FlowLogPanel_DataContextChanged;
         }
 
-        public void SetLang()
+        // ログが増えたら、最後のログを見えるようにする
+        private void FlowLogPanel_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            clearMenuItem.Header = Utility.Language["Clear"];
-            Column1.Header = Utility.Language["LogType"];
-            Column2.Header = Utility.Language["Message"];
+            if (e.OldValue is FlowLogViewModel oldViewModel)
+            {
+                oldViewModel.Logs.CollectionChanged -= Logs_CollectionChanged;
+            }
+            if (e.NewValue is FlowLogViewModel newViewModel)
+            {
+                newViewModel.Logs.CollectionChanged += Logs_CollectionChanged;
+            }
         }
 
-        public void AddLog(string logType, string logText)
+        private void Logs_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            logs.Add(new(logType, logText));
-            dataGridView1.ScrollIntoView(logs[^1]);
-        }
-
-        public void ClearLogs()
-        {
-            logs.Clear();
-        }
-
-        private void ClearMenuItem_Click(object sender, RoutedEventArgs e)
-        {
-            ClearLogs();
+            if (e.Action == NotifyCollectionChangedAction.Add)
+            {
+                logGrid.ScrollIntoView(e.NewItems[0]);
+            }
         }
     }
 }

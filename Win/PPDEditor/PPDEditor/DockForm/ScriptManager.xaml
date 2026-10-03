@@ -6,24 +6,31 @@
                 xmlns:controls="clr-namespace:PPDEditor.Controls"
                 xmlns:script="clr-namespace:PPDEditor.DockForm.Script"
                 xmlns:flow="clr-namespace:FlowScriptControl.Controls;assembly=FlowScriptControl"
+                xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                xmlns:vm="clr-namespace:PPDEditor.ViewModels.Docks"
+                mc:Ignorable="d" d:DataContext="{d:DesignInstance Type=vm:ScriptManagerViewModel}"
                 KeyDown="ScriptManager_KeyDown">
+    <forms:DockView.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVisibility" />
+    </forms:DockView.Resources>
     <DockPanel>
         <Menu DockPanel.Dock="Top">
-            <MenuItem x:Name="編集MenuItem" Header="編集">
-                <MenuItem x:Name="元に戻すMenuItem" Header="元に戻す" InputGestureText="Ctrl+Z" Click="元に戻すMenuItem_Click" />
-                <MenuItem x:Name="やり直すMenuItem" Header="やり直す" InputGestureText="Ctrl+Y" Click="やり直すMenuItem_Click" />
+            <MenuItem Header="{Binding Texts[Edit]}">
+                <MenuItem Header="{Binding Texts[Undo]}" InputGestureText="Ctrl+Z" Command="{Binding UndoCommand}" />
+                <MenuItem Header="{Binding Texts[Redo]}" InputGestureText="Ctrl+Y" Command="{Binding RedoCommand}" />
                 <Separator />
-                <MenuItem x:Name="切り取りMenuItem" Header="切り取り" InputGestureText="Ctrl+X" Click="切り取りMenuItem_Click" />
-                <MenuItem x:Name="コピーMenuItem" Header="コピー" InputGestureText="Ctrl+C" Click="コピーMenuItem_Click" />
-                <MenuItem x:Name="貼り付けMenuItem" Header="貼り付け" InputGestureText="Ctrl+V" Click="貼り付けMenuItem_Click" />
-                <MenuItem x:Name="リンクも貼り付けMenuItem" Header="リンクも貼り付け" InputGestureText="Ctrl+Shift+V" Click="リンクも貼り付けMenuItem_Click" />
-                <MenuItem x:Name="削除MenuItem" Header="削除" InputGestureText="Del" Click="削除MenuItem_Click" />
+                <MenuItem Header="{Binding Texts[Cut]}" InputGestureText="Ctrl+X" Command="{Binding CutCommand}" />
+                <MenuItem Header="{Binding Texts[Copy]}" InputGestureText="Ctrl+C" Command="{Binding CopyCommand}" />
+                <MenuItem Header="{Binding Texts[Paste]}" InputGestureText="Ctrl+V" Command="{Binding PasteCommand}" />
+                <MenuItem Header="{Binding Texts[PasteWithLinks]}" InputGestureText="Ctrl+Shift+V" Command="{Binding PasteWithLinksCommand}" />
+                <MenuItem Header="{Binding Texts[Delete]}" InputGestureText="Del" Command="{Binding DeleteCommand}" />
                 <Separator />
-                <MenuItem x:Name="表示領域を合わせるMenuItem" Header="表示領域を合わせる" Click="表示領域を合わせるMenuItem_Click" />
-                <MenuItem x:Name="全て展開MenuItem" Header="全て展開" Click="全て展開MenuItem_Click" />
-                <MenuItem x:Name="全て縮小MenuItem" Header="全て縮小" Click="全て縮小MenuItem_Click" />
+                <MenuItem Header="{Binding Texts[FitView]}" Command="{Binding FitViewCommand}" />
+                <MenuItem Header="{Binding Texts[ExpandAll]}" Command="{Binding ExpandAllCommand}" />
+                <MenuItem Header="{Binding Texts[CollapseAll]}" Command="{Binding CollapseAllCommand}" />
             </MenuItem>
-            <MenuItem x:Name="表示MenuItem" Header="表示" SubmenuOpened="表示MenuItem_SubmenuOpened">
+            <MenuItem Header="{Binding Texts[Show]}" SubmenuOpened="表示MenuItem_SubmenuOpened">
                 <MenuItem x:Name="プロパティMenuItem" Header="プロパティ" Click="プロパティMenuItem_Click" />
                 <MenuItem x:Name="スクリプトリストMenuItem" Header="スクリプトリスト" Click="スクリプトリストMenuItem_Click" />
                 <MenuItem x:Name="ソースリストMenuItem" Header="ソースリスト" Click="ソースリストMenuItem_Click" />
@@ -33,11 +40,11 @@
             </MenuItem>
         </Menu>
         <!-- デバッグ中だけ出す -->
-        <ToolBar x:Name="toolStrip1" DockPanel.Dock="Top" ToolBarTray.IsLocked="True" Visibility="Collapsed">
-            <Button x:Name="toolStripButton1" ToolTip="続行" Click="ToolStripButton1_Click">
+        <ToolBar DockPanel.Dock="Top" ToolBarTray.IsLocked="True" Visibility="{Binding IsDebugging, Converter={StaticResource BoolToVisibility}}">
+            <Button ToolTip="{Binding Texts[Continue]}" Command="{Binding ContinueCommand}">
                 <Image Source="/img/playonce.png" Stretch="None" />
             </Button>
-            <Button x:Name="toolStripButton2" ToolTip="ステップイン" Click="ToolStripButton2_Click">
+            <Button ToolTip="{Binding Texts[StepIn]}" Command="{Binding StepInCommand}">
                 <Image Source="/img/stepin.png" Stretch="None" />
             </Button>
         </ToolBar>
