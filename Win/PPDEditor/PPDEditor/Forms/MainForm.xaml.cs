@@ -576,7 +576,6 @@ namespace PPDEditor.Forms
             toolStripComboBox3.SelectedIndex = prevSelectedIndex;
             this.toolStripTextBox3.ToolTip = Utility.Language["DisplayWidth"];
             //setlang
-            ke.SetLang();
             paals.SetLang();
             sm.SetLang();
             画面比を169にMenuItem.Header = Utility.Language["ChangeAspect"];
