@@ -218,13 +218,12 @@ namespace PPDEditor
         }
 
         /// <summary>
-        /// レイアウトの中のウィンドウの名前、タブの右クリックのメニュー、スクリプトの一覧とタブの文字を、言語に合わせます。
+        /// レイアウトの中のウィンドウの名前、タブの右クリックのメニュー、タブの文字を、言語に合わせます。
         /// </summary>
         public void SetLang()
         {
             this.保存MenuItem.Header = Utility.Language["Save"];
             SetAnchorableTitles();
-            scriptListForm.SetLang();
             foreach (FlowDrawDocument dockForm in FlowDrawForms)
             {
                 dockForm.SetLang();
