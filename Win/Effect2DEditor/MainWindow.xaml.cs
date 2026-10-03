@@ -1,4 +1,5 @@
-﻿using AvalonDock.Layout.Serialization;
+﻿using AvalonDock.Layout;
+using AvalonDock.Layout.Serialization;
 using BezierCaliculator;
 using Effect2D;
 using Effect2DEditor.Command;
@@ -106,9 +107,10 @@ namespace Effect2DEditor
             }
             CheckSetting();
             CheckLangFiles();
+            // 配置を読み込むとウィンドウのタイトルも読み込まれるので、言語はその後に設定する
+            RestoreDock();
             SetLanguage(langFileName);
 
-            RestoreDock();
             ResetEffect(new EffectManager());
         }
 
@@ -141,6 +143,37 @@ namespace Effect2DEditor
             catch (Exception)
             {
             }
+            RebindAnchorables();
+        }
+
+        /// <summary>
+        /// 配置を読み込むと、ウィンドウ（LayoutAnchorable）は新しく作られるので、「表示」メニューで扱うものを付け替えます。
+        /// 読み込んだ配置になかったウィンドウは、配置に加え直します。
+        /// </summary>
+        private void RebindAnchorables()
+        {
+            var anchorables = dockingManager.Layout.Descendents().OfType<LayoutAnchorable>()
+                .Concat(dockingManager.Layout.Hidden)
+                .Distinct()
+                .ToList();
+            canvasAnchorable = Rebind(anchorables, canvasAnchorable);
+            timeLineAnchorable = Rebind(anchorables, timeLineAnchorable);
+            historyAnchorable = Rebind(anchorables, historyAnchorable);
+            propertyAnchorable = Rebind(anchorables, propertyAnchorable);
+        }
+
+        private LayoutAnchorable Rebind(List<LayoutAnchorable> anchorables, LayoutAnchorable original)
+        {
+            var found = anchorables.FirstOrDefault(a => a.ContentId == original.ContentId);
+            if (found != null)
+            {
+                return found;
+            }
+            if (original.Root == null)
+            {
+                original.AddToLayout(dockingManager, AnchorableShowStrategy.Most);
+            }
+            return original;
         }
 
         private void SaveDock()
@@ -258,8 +291,13 @@ namespace Effect2DEditor
             {
                 var setting = new SettingReader(File.ReadAllText(iniFileName));
                 langFileISO = setting["Language"];
-                langFileName = Path.Combine("Lang", String.Format("lang_{0}_{1}.ini", this.GetType().Assembly.GetName().Name, langFileISO));
             }
+            if (string.IsNullOrEmpty(langFileISO))
+            {
+                // 言語を選んでいないときは、最初から表示している日本語にする
+                langFileISO = "jp";
+            }
+            langFileName = Path.Combine("Lang", String.Format("lang_{0}_{1}.ini", this.GetType().Assembly.GetName().Name, langFileISO));
         }
 
         private void CheckLangFiles()
