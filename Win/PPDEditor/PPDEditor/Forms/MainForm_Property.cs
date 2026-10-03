@@ -3,7 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Windows.Forms;
+using System.Windows;
+using System.Windows.Controls;
 
 namespace PPDEditor.Forms
 {
@@ -11,62 +12,11 @@ namespace PPDEditor.Forms
     {
         #region プロパティ
 
-        /// <summary>
-        /// 閉じられようとしているかどうかを取得、設定します。
-        /// </summary>
-        public bool IsCloseRequired
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// 最初に閉じされようとしているかどうかを取得、設定します。
-        /// </summary>
-        public bool IsFirstCloseRequierd
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// 閉じることが許可されたかどうかを取得、設定します。
-        /// </summary>
-        public bool CloseAdmitted
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// フォームを取得します。
-        /// </summary>
-        public Form MainForm
-        {
-            get { return this; }
-        }
-
-        /// <summary>
-        /// フォームを取得します。
-        /// </summary>
-        public Form RenderForm
-        {
-            get { return dxf; }
-        }
-
         public string CurrentKasi
         {
             get
             {
                 return ke.Askcurrentkasi();
-            }
-        }
-
-        public IntPtr WindowSpace
-        {
-            get
-            {
-                return dxf.Handle;
             }
         }
 
@@ -214,7 +164,7 @@ namespace PPDEditor.Forms
         {
             get
             {
-                return (dockPanel1.ActiveContent == paalsDock);// (paals.DockState > DockState.Unknown && paals.DockState < DockState.Hidden ? true : false);
+                return paalsDock != null && paalsDock.IsActive;
             }
         }
 
@@ -240,12 +190,12 @@ namespace PPDEditor.Forms
             {
                 if (!Directory.Exists(projectfiledir + "\\" + Path.GetFileNameWithoutExtension(projectfilename)))
                 {
-                    MessageBox.Show(noproject);
+                    MessageBox.Show(this, noproject);
                     return false;
                 }
                 if (!File.Exists(Program.PPDExePath))
                 {
-                    MessageBox.Show(noppdexe);
+                    MessageBox.Show(this, noppdexe);
                     return false;
                 }
                 return true;
@@ -307,11 +257,11 @@ namespace PPDEditor.Forms
         {
             get
             {
-                return this.toolStripButton1.Checked;
+                return this.toolStripButton1.IsChecked == true;
             }
             set
             {
-                toolStripButton1.Checked = value;
+                toolStripButton1.IsChecked = value;
             }
         }
 
@@ -319,11 +269,11 @@ namespace PPDEditor.Forms
         {
             get
             {
-                return this.toolStripButton2.Checked;
+                return this.toolStripButton2.IsChecked == true;
             }
             set
             {
-                this.toolStripButton2.Checked = value;
+                this.toolStripButton2.IsChecked = value;
             }
         }
 
@@ -331,11 +281,11 @@ namespace PPDEditor.Forms
         {
             get
             {
-                return this.toolStripButton4.Checked;
+                return this.toolStripButton4.IsChecked == true;
             }
             set
             {
-                this.toolStripButton4.Checked = value;
+                this.toolStripButton4.IsChecked = value;
             }
         }
 
@@ -343,11 +293,11 @@ namespace PPDEditor.Forms
         {
             get
             {
-                return this.toolStripButton3.Checked;
+                return this.toolStripButton3.IsChecked == true;
             }
             set
             {
-                this.toolStripButton3.Checked = value;
+                this.toolStripButton3.IsChecked = value;
             }
         }
 
@@ -430,11 +380,11 @@ namespace PPDEditor.Forms
         {
             get
             {
-                return this.exToolStripSplitButton1.Checked;
+                return this.exToolStripSplitButton1.IsChecked == true;
             }
             set
             {
-                this.exToolStripSplitButton1.Checked = value;
+                this.exToolStripSplitButton1.IsChecked = value;
             }
         }
 
@@ -459,23 +409,23 @@ namespace PPDEditor.Forms
                 switch (value)
                 {
                     case AvailableDifficulty.Easy:
-                        easyToolStripMenuItem.Checked = true;
+                        easyToolStripMenuItem.IsChecked = true;
                         TurnOffExceptDifficulty(easyToolStripMenuItem);
                         break;
                     case AvailableDifficulty.Normal:
-                        normalToolStripMenuItem.Checked = true;
+                        normalToolStripMenuItem.IsChecked = true;
                         TurnOffExceptDifficulty(normalToolStripMenuItem);
                         break;
                     case AvailableDifficulty.Hard:
-                        hardToolStripMenuItem.Checked = true;
+                        hardToolStripMenuItem.IsChecked = true;
                         TurnOffExceptDifficulty(hardToolStripMenuItem);
                         break;
                     case AvailableDifficulty.Extreme:
-                        extremeToolStripMenuItem.Checked = true;
+                        extremeToolStripMenuItem.IsChecked = true;
                         TurnOffExceptDifficulty(extremeToolStripMenuItem);
                         break;
                     case AvailableDifficulty.Base:
-                        baseToolStripMenuItem.Checked = true;
+                        baseToolStripMenuItem.IsChecked = true;
                         TurnOffExceptDifficulty(baseToolStripMenuItem);
                         break;
                 }
@@ -515,11 +465,11 @@ namespace PPDEditor.Forms
             private set
             {
                 availabledifficulty = value;
-                baseToolStripMenuItem.Enabled = (availabledifficulty & AvailableDifficulty.Base) == AvailableDifficulty.Base;
-                easyToolStripMenuItem.Enabled = (availabledifficulty & AvailableDifficulty.Easy) == AvailableDifficulty.Easy;
-                normalToolStripMenuItem.Enabled = (availabledifficulty & AvailableDifficulty.Normal) == AvailableDifficulty.Normal;
-                hardToolStripMenuItem.Enabled = (availabledifficulty & AvailableDifficulty.Hard) == AvailableDifficulty.Hard;
-                extremeToolStripMenuItem.Enabled = (availabledifficulty & AvailableDifficulty.Extreme) == AvailableDifficulty.Extreme;
+                baseToolStripMenuItem.IsEnabled = (availabledifficulty & AvailableDifficulty.Base) == AvailableDifficulty.Base;
+                easyToolStripMenuItem.IsEnabled = (availabledifficulty & AvailableDifficulty.Easy) == AvailableDifficulty.Easy;
+                normalToolStripMenuItem.IsEnabled = (availabledifficulty & AvailableDifficulty.Normal) == AvailableDifficulty.Normal;
+                hardToolStripMenuItem.IsEnabled = (availabledifficulty & AvailableDifficulty.Hard) == AvailableDifficulty.Hard;
+                extremeToolStripMenuItem.IsEnabled = (availabledifficulty & AvailableDifficulty.Extreme) == AvailableDifficulty.Extreme;
             }
         }
 
@@ -551,9 +501,12 @@ namespace PPDEditor.Forms
             set
             {
                 PPDStaticSetting.FixDockPanel = value;
-                dockPanel1?.AllowChangeDock = dockPanel1.AllowEndUserDocking =
-                        dockPanel1.AllowEndUserNestedDocking = !value;
-                ドックを固定ToolStripMenuItem.Checked = value;
+                // 固定するときは、ウィンドウを動かしたり浮かせたりできなくする
+                foreach (var anchorable in AllAnchorables.Where(a => a != null))
+                {
+                    anchorable.CanMove = anchorable.CanFloat = anchorable.CanDockAsTabbedDocument = !value;
+                }
+                ドックを固定ToolStripMenuItem.IsChecked = value;
             }
         }
 
@@ -561,22 +514,22 @@ namespace PPDEditor.Forms
         {
             get
             {
-                return connectToolStripMenuItem.Checked;
+                return connectToolStripMenuItem.IsChecked;
             }
             set
             {
-                connectToolStripMenuItem.Checked = value;
+                connectToolStripMenuItem.IsChecked = value;
             }
         }
 
 
-        private string GetModName(ToolStripMenuItem menu)
+        private string GetModName(MenuItem menu)
         {
             var names = new List<string>();
             while (menu != mODToolStripMenuItem)
             {
-                names.Add(menu.Text);
-                menu = (ToolStripMenuItem)menu.OwnerItem;
+                names.Add(menu.Tag is ModMenuInfo info ? info.Name : (string)menu.Tag);
+                menu = (MenuItem)menu.Parent;
             }
             names.Reverse();
             return String.Join(Path.DirectorySeparatorChar.ToString(), names.ToArray());
@@ -587,16 +540,16 @@ namespace PPDEditor.Forms
             get
             {
                 var list = new List<string>();
-                var menus = new Queue<ToolStripMenuItem>();
+                var menus = new Queue<MenuItem>();
                 menus.Enqueue(mODToolStripMenuItem);
                 while (menus.Count > 0)
                 {
                     var menu = menus.Dequeue();
-                    foreach (ToolStripMenuItem childMenu in menu.DropDownItems)
+                    foreach (MenuItem childMenu in menu.Items)
                     {
                         menus.Enqueue(childMenu);
                     }
-                    if (menu.Tag is bool v && v && menu.Checked)
+                    if (menu.Tag is ModMenuInfo && menu.IsChecked)
                     {
                         list.Add(GetModName(menu));
                     }
@@ -605,16 +558,16 @@ namespace PPDEditor.Forms
             }
             set
             {
-                var menus = new Queue<ToolStripMenuItem>();
+                var menus = new Queue<MenuItem>();
                 menus.Enqueue(mODToolStripMenuItem);
                 while (menus.Count > 0)
                 {
                     var menu = menus.Dequeue();
-                    foreach (ToolStripMenuItem childMenu in menu.DropDownItems)
+                    foreach (MenuItem childMenu in menu.Items)
                     {
                         menus.Enqueue(childMenu);
                     }
-                    menu.Checked = false;
+                    menu.IsChecked = false;
                 }
 
                 if (String.IsNullOrEmpty(value))
@@ -626,13 +579,13 @@ namespace PPDEditor.Forms
                 while (menus.Count > 0)
                 {
                     var menu = menus.Dequeue();
-                    foreach (ToolStripMenuItem childMenu in menu.DropDownItems)
+                    foreach (MenuItem childMenu in menu.Items)
                     {
                         menus.Enqueue(childMenu);
                     }
-                    if (Array.IndexOf(mods, GetModName(menu)) >= 0)
+                    if (menu.Tag is ModMenuInfo && Array.IndexOf(mods, GetModName(menu)) >= 0)
                     {
-                        menu.Checked = true;
+                        menu.IsChecked = true;
                     }
                 }
             }
@@ -642,11 +595,11 @@ namespace PPDEditor.Forms
         {
             get
             {
-                return disableExpansionToolStripMenuItem.Checked;
+                return disableExpansionToolStripMenuItem.IsChecked;
             }
             set
             {
-                disableExpansionToolStripMenuItem.Checked = value;
+                disableExpansionToolStripMenuItem.IsChecked = value;
             }
         }
 
@@ -661,7 +614,7 @@ namespace PPDEditor.Forms
                     tlf.RowManager.IsLimited = value;
                     tlf.InvalidateAll();
                 }
-                toolStripSplitButton1.Checked = tlf.RowManager.IsLimited;
+                toolStripSplitButton1.IsChecked = tlf.RowManager.IsLimited;
             }
         }
 

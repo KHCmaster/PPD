@@ -7,7 +7,9 @@ using PPDMath;
 using Point = Vortice.Mathematics.Int2;
 using System;
 using System.Collections.Generic;
-using System.Windows.Forms;
+using System.ComponentModel;
+using System.Windows;
+using System.Windows.Interop;
 
 namespace PPDEditor
 {
@@ -42,10 +44,10 @@ namespace PPDEditor
 
         public MyGame(PPDExecuteArg args) : base(args)
         {
-            this.Window.FormClosing += Window_FormClosing;
+            this.Window.Closing += Window_Closing;
         }
 
-        private void Window_FormClosing(object sender, FormClosingEventArgs e)
+        private void Window_Closing(object sender, CancelEventArgs e)
         {
             ShouldBeExit = true;
         }
@@ -54,11 +56,13 @@ namespace PPDEditor
         {
             base.Initialize();
             this.Window.MyGame = this;
+            // 入力と音は、メインのウィンドウに結びつける
+            var windowHandle = new WindowInteropHelper(this.Window).EnsureHandle();
             //Inputクラスの生成
-            input = new Input(this.Window);
+            input = new Input(windowHandle);
             input.Load();
             //Soundクラスの生成
-            sound = new Sound(this.Window);
+            sound = new Sound(windowHandle);
             sound.Initialize();
             keyConfigManager = new KeyConfigManager();
             keyConfigManager.Load("keyconfig.ini");

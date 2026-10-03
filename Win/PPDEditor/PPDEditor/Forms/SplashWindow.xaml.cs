@@ -16,7 +16,7 @@ namespace PPDEditor.Forms
         //Splashウィンドウ
         private static SplashWindow _form;
         //メインフォーム
-        private static System.Windows.Forms.Form _mainForm;
+        private static Window _mainForm;
         //Splashを表示するスレッド
         private static Thread _thread;
         //lock用のオブジェクト
@@ -36,7 +36,7 @@ namespace PPDEditor.Forms
         /// Splashウィンドウを表示する
         /// </summary>
         /// <param name="mainForm">メインフォーム</param>
-        public static void ShowSplash(System.Windows.Forms.Form mainForm)
+        public static void ShowSplash(Window mainForm)
         {
             if (_form != null || _thread != null)
                 return;

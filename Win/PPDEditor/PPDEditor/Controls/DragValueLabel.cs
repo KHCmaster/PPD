@@ -1,10 +1,11 @@
+using System;
 using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace PPDEditor.Controls
 {
     /// <summary>
-    /// 左右にドラッグすると、動かした量を通知するラベルです（WinForms の <see cref="ChangeValueLabel"/> の WPF 版）。
+    /// 左右にドラッグすると、動かした量を通知するラベルです。
     /// </summary>
     public class DragValueLabel : TextBlock
     {
@@ -55,4 +56,15 @@ namespace PPDEditor.Controls
             ReleaseMouseCapture();
         }
     }
+
+    public class ValueChangeEventArgs : EventArgs
+    {
+        public int ChangedValue
+        {
+            get;
+            set;
+        }
+    }
+
+    public delegate void ValueChangeEventHandler(object sender, ValueChangeEventArgs e);
 }

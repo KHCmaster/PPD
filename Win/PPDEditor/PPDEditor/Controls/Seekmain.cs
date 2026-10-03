@@ -457,9 +457,11 @@ namespace PPDEditor.Controls
             var truepos = new Point(pos.X * 800 / width, pos.Y * 450 / height);
             Mark mk = ppdsheet.SelectedMark;
             var marks = ppdsheet.GetAreaData();
-            bool shiftKey = Keyboard.Modifiers.HasFlag(ModifierKeys.Shift),
-                ctrlKey = Keyboard.Modifiers.HasFlag(ModifierKeys.Control),
-                altKey = Keyboard.Modifiers.HasFlag(ModifierKeys.Alt);
+            // ゲームの画面（WPF の外のウィンドウ）から呼ばれるので、修飾キーはシステムから読む
+            var modifiers = GameView.GetModifiers();
+            bool shiftKey = modifiers.HasFlag(ModifierKeys.Shift),
+                ctrlKey = modifiers.HasFlag(ModifierKeys.Control),
+                altKey = modifiers.HasFlag(ModifierKeys.Alt);
             if (mk != null)
             {
                 switch (markSelectMode)

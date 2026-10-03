@@ -1,5 +1,4 @@
 using System.Windows;
-using System.Windows.Interop;
 
 namespace PPDEditor.Forms
 {
@@ -9,7 +8,7 @@ namespace PPDEditor.Forms
     static class WpfDialog
     {
         /// <summary>
-        /// 開いている WinForms のウィンドウを所有者にして、モーダルで表示します。
+        /// 開いているウィンドウを所有者にして、モーダルで表示します。
         /// </summary>
         /// <returns>OK で閉じたときは true。</returns>
         public static bool ShowDialog(Window window)
@@ -19,14 +18,26 @@ namespace PPDEditor.Forms
         }
 
         /// <summary>
-        /// 開いている WinForms のウィンドウを所有者にします。所有者があるときは、その中央に表示します。
+        /// 開いているウィンドウ（なければメインのウィンドウ）を所有者にします。所有者があるときは、その中央に表示します。
         /// </summary>
         public static void SetOwner(Window window)
         {
-            var owner = System.Windows.Forms.Form.ActiveForm ?? WindowUtility.MainForm;
-            if (owner != null && !owner.IsDisposed)
+            Window owner = null;
+            if (Application.Current != null)
             {
-                new WindowInteropHelper(window).Owner = owner.Handle;
+                foreach (Window candidate in Application.Current.Windows)
+                {
+                    if (candidate != window && candidate.IsActive && candidate.IsVisible)
+                    {
+                        owner = candidate;
+                        break;
+                    }
+                }
+            }
+            owner ??= WindowUtility.MainForm;
+            if (owner != null && owner != window && owner.IsVisible)
+            {
+                window.Owner = owner;
                 window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
             }
         }

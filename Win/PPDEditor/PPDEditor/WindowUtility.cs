@@ -1,6 +1,6 @@
 ﻿using PPDEditor.Controls;
 using PPDEditor.Forms;
-using WeifenLuo.WinFormsUI.Docking;
+using AvalonDock;
 
 namespace PPDEditor
 {
@@ -12,11 +12,6 @@ namespace PPDEditor
             set;
         }
         public static BPMMeasure BPMMeasure
-        {
-            get;
-            set;
-        }
-        public static DXForm DXForm
         {
             get;
             set;
@@ -71,7 +66,7 @@ namespace PPDEditor
             get;
             set;
         }
-        public static DockPanel DockPanel
+        public static DockingManager DockPanel
         {
             get;
             set;

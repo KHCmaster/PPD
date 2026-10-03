@@ -677,74 +677,42 @@ namespace PPDEditor
 
         private void 表示MenuItem_SubmenuOpened(object sender, RoutedEventArgs e)
         {
-            this.スクリプトリストMenuItem.IsChecked = IsShown(scriptListAnchorable);
-            this.ソースリストMenuItem.IsChecked = IsShown(treeViewAnchorable);
-            this.プロパティMenuItem.IsChecked = IsShown(propertyAnchorable);
-            this.検索MenuItem.IsChecked = IsShown(searchAnchorable);
-            this.デバッグMenuItem.IsChecked = IsShown(executingPropertyAnchorable);
-            this.ログMenuItem.IsChecked = IsShown(logAnchorable);
-        }
-
-        private static bool IsShown(LayoutAnchorable anchorable)
-        {
-            return anchorable.IsVisible && !anchorable.IsAutoHidden;
-        }
-
-        /// <summary>
-        /// ウィンドウを出すか隠す。出ていて前にあるときは隠し、ほかのウィンドウの後ろにあるときは前に出す。Shift を押していると浮かせて出す。
-        /// </summary>
-        private static void ShowOrHideWindow(LayoutAnchorable anchorable)
-        {
-            if (Keyboard.Modifiers.HasFlag(ModifierKeys.Shift))
-            {
-                anchorable.Show();
-                anchorable.Float();
-                anchorable.IsActive = true;
-                return;
-            }
-            if (!anchorable.IsVisible || anchorable.IsAutoHidden)
-            {
-                anchorable.Show();
-                anchorable.IsActive = true;
-            }
-            else if (anchorable.IsActive || anchorable.IsFloating)
-            {
-                anchorable.Hide();
-            }
-            else
-            {
-                anchorable.IsActive = true;
-            }
+            this.スクリプトリストMenuItem.IsChecked = DockUtility.IsShown(scriptListAnchorable);
+            this.ソースリストMenuItem.IsChecked = DockUtility.IsShown(treeViewAnchorable);
+            this.プロパティMenuItem.IsChecked = DockUtility.IsShown(propertyAnchorable);
+            this.検索MenuItem.IsChecked = DockUtility.IsShown(searchAnchorable);
+            this.デバッグMenuItem.IsChecked = DockUtility.IsShown(executingPropertyAnchorable);
+            this.ログMenuItem.IsChecked = DockUtility.IsShown(logAnchorable);
         }
 
         private void プロパティMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            ShowOrHideWindow(propertyAnchorable);
+            DockUtility.ShowOrHideWindow(propertyAnchorable);
         }
 
         private void スクリプトリストMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            ShowOrHideWindow(scriptListAnchorable);
+            DockUtility.ShowOrHideWindow(scriptListAnchorable);
         }
 
         private void ソースリストMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            ShowOrHideWindow(treeViewAnchorable);
+            DockUtility.ShowOrHideWindow(treeViewAnchorable);
         }
 
         private void 検索MenuItem_Click(object sender, RoutedEventArgs e)
         {
-            ShowOrHideWindow(searchAnchorable);
+            DockUtility.ShowOrHideWindow(searchAnchorable);
         }
 
         private void デバッグMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            ShowOrHideWindow(executingPropertyAnchorable);
+            DockUtility.ShowOrHideWindow(executingPropertyAnchorable);
         }
 
         private void ログMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            ShowOrHideWindow(logAnchorable);
+            DockUtility.ShowOrHideWindow(logAnchorable);
         }
 
         /// <summary>

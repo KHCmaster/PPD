@@ -7,19 +7,13 @@ namespace PPDEditor.Forms
     /// ドックに表示する画面（WPF）の基底クラスです。
     /// </summary>
     /// <remarks>
-    /// メインのウィンドウが WinForms の間は <see cref="WpfDockShell"/> に入れて表示します。
+    /// メインのウィンドウでは AvalonDock の LayoutAnchorable に入れて表示します。
     /// タブの表示名と、保存していない変更があるか（タブの名前の先頭の「*」）を持ちます（以前の ChangableDockContent と同じ）。
     /// </remarks>
     public class DockView : UserControl
     {
         string tabText = "";
         bool changed;
-
-        public DockView()
-        {
-            // 背景を透明にして WinForms の上に表示すると、ClearType の文字に色がにじむので、グレースケールで描く
-            System.Windows.Media.TextOptions.SetTextRenderingMode(this, System.Windows.Media.TextRenderingMode.Grayscale);
-        }
 
         /// <summary>
         /// タブの表示名が変わったときに発生します。
@@ -32,7 +26,7 @@ namespace PPDEditor.Forms
         public event EventHandler ShowRequested;
 
         /// <summary>
-        /// このドックを表示して前に出します（以前の ScrollableForm.ShowOrHideWindow(this) と同じ）。
+        /// このドックを表示して前に出します。
         /// </summary>
         protected void ShowDock()
         {

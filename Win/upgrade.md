@@ -585,8 +585,19 @@ WinForms と WPF の混在をなくすため、PPD.exe 以外を段階的に WPF
       - スクリプト: ドックの中に AvalonDock の DockingManager を置いた。ウィンドウの ContentId は以前のクラスの名前。以前の配置のファイルは読み込めないので、一度だけ既定の配置に戻る
       - タイムライン: `DrawingContext` で描く。ドラッグ中は以前と同じく 100 ミリ秒ごとにマウスの位置を見る（動画のシークの回数を抑えるため）。
         イベントなどの印のドラッグは、画面を写した別ウィンドウではなくタイムラインの中に描く。スキンの背景は半透明の白で透かす。TransParentForm は消した
-    - 残り: ゲームのウィンドウ（DXForm）。ゲームのループ（`RenderLoop.Run`）とメインのウィンドウに結びついているので、3. と一緒に移す
-  - [ ] 3. メインのウィンドウ
+    - ゲームのウィンドウ（DXForm）は、ゲームのループとメインのウィンドウに結びついているので、3. で移した
+  - [ ] 3. メインのウィンドウ（2026-10-03 に WPF にした。使う人の確認待ち）
+    - メインのウィンドウは WPF の Window（クラスの名前は `EditorForm` のまま）。メニュー、ツールバー、状態の表示は以前の名前のまま XAML にした。ドッキングは AvalonDock
+    - ゲームの画面（`Controls/GameView`）は、DirectX が描く Win32 のウィンドウを HwndHost で埋め込む（画面を読み出して WPF に写す方法より速く、動画との同期も変わらない）。
+      ドッキングで別のウィンドウに移すと WPF は埋め込んだウィンドウを作り直そうとするので、ウィンドウは壊さずに親を付け替えて使い回す（スワップチェーンを作り直さない）
+    - ゲームの画面のマウスとキーは、そのウィンドウのメッセージで受ける。メニューのショートカット（Ctrl+S、Ctrl+G など）は、ゲームの画面にフォーカスがあるときも効くようにした
+    - ゲームのループ: エディターの `Game` は `GameCoreBase` から直接作り、WinForms の RenderLoop の代わりに Dispatcher の Background の優先度で 1 フレームずつ進める。
+      フレームの中で例外が起きたときは、以前と同じくデータを退避して終わる。画面の操作の中の例外は、知らせてから続ける
+    - ドックの配置: AvalonDock の形式で保存する。以前の WinForms 版の配置（dockforminfo.xml）と同梱の view フォルダーの配置は、`Forms/DockLayoutImporter` で AvalonDock の配置にして読む
+    - 入力（DirectInput）と音（DirectSound）は、メインのウィンドウのハンドルに結びつける（`Sound` にハンドルを受け取るコンストラクタを加えた）
+    - スキン: 背景の画像と重ねる色は WPF で表示する。以前の DockPanel Suite のタブの色（skin.ini の *Gradient）は、今は使っていない
+    - 消したもの: WpfDockShell、ScrollableForm、ChangableDockContent、DXForm、CustomFloatWindow、CustomToolStripRenderer、ExToolStripSplitButton、WinForms の ChangeValueLabel。PPDEditor は WinFormsUI を参照しなくなった
+    - 残っている WinForms: ショートカットのキー（`System.Windows.Forms.Keys`。保存の形式がこの名前なので、そのまま使う）と、PPD.exe と共有している PPDFramework、ErrorHandler
 
 ### Phase 7: 配布・更新の仕組みとリリース
 

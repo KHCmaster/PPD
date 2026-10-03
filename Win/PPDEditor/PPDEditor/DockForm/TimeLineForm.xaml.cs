@@ -35,7 +35,7 @@ namespace PPDEditor
         {
             get
             {
-                return WindowUtility.DockPanel?.BackgroundImage != null ? translucentWhite : Brushes.White;
+                return PPDEditorSkin.Skin.BackGround != null ? translucentWhite : Brushes.White;
             }
         }
 

@@ -23,12 +23,21 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Windows.Forms;
-using WeifenLuo.WinFormsUI.Docking;
+using System.ComponentModel;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
+using System.Windows.Interop;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Threading;
+using AvalonDock.Layout;
+using AvalonDock.Layout.Serialization;
+using Keys = System.Windows.Forms.Keys;
 
 namespace PPDEditor.Forms
 {
-    public partial class EditorForm : Form, IGameForm, IMovieManager, ISongInfo
+    public partial class EditorForm : Window, IMovieManager, ISongInfo, IDisposable
     {
 
         const string rescuedirectory = "rescueddata";
@@ -40,37 +49,37 @@ namespace PPDEditor.Forms
         const int latestprojectversion = 2;
 
         static PosAndAngleLoaderSaver paals;
-        static WpfDockShell paalsDock;
+        static LayoutAnchorable paalsDock;
         static KasiEditor ke;
-        static WpfDockShell keDock;
+        static LayoutAnchorable keDock;
         static SoundManager sm;
-        static WpfDockShell smDock;
+        static LayoutAnchorable smDock;
         static IniFileWriter ifw;
-        static WpfDockShell ifwDock;
+        static LayoutAnchorable ifwDock;
         static BPMMeasure bm;
-        static WpfDockShell bmDock;
+        static LayoutAnchorable bmDock;
         static TimeLineForm tlf;
-        static WpfDockShell tlfDock;
-        static DXForm dxf;
+        static LayoutAnchorable tlfDock;
+        static LayoutAnchorable dxfDock;
         static InfoForm infof;
-        static WpfDockShell infofDock;
+        static LayoutAnchorable infofDock;
         static LayerManager lm;
-        static WpfDockShell lmDock;
+        static LayoutAnchorable lmDock;
         static EventManager em;
-        static WpfDockShell emDock;
+        static LayoutAnchorable emDock;
         static GeometryCreator gc;
-        static WpfDockShell gcDock;
+        static LayoutAnchorable gcDock;
         static MemoWindow mw;
-        static WpfDockShell mwDock;
+        static LayoutAnchorable mwDock;
         static HelpForm hf;
-        static WpfDockShell hfDock;
+        static LayoutAnchorable hfDock;
         static WriteDoneWindow wdf;
         static ResourceManager rm;
-        static WpfDockShell rmDock;
+        static LayoutAnchorable rmDock;
         static ScriptManager scm;
-        static WpfDockShell scmDock;
+        static LayoutAnchorable scmDock;
         static StatsManager stm;
-        static WpfDockShell stmDock;
+        static LayoutAnchorable stmDock;
 
         long starttime;
         long movielastime;
@@ -120,16 +129,42 @@ namespace PPDEditor.Forms
 
         private Storage storage;
 
+        readonly Microsoft.Win32.OpenFileDialog openFileDialog1 = new();
+        readonly Microsoft.Win32.SaveFileDialog saveFileDialog1 = new();
+        // ゲームの画面でマウスを押している間、マークを動かす（以前と同じく 100 ミリ秒ごと）
+        readonly DispatcherTimer moveMarkTimer = new() { Interval = TimeSpan.FromMilliseconds(100) };
+        readonly ContextMenu gameViewMenu = new();
+        MenuItem 画面比を169にMenuItem;
+        MenuItem 標準解像度にするMenuItem;
+
+        /// <summary>
+        /// ゲームの画面です。
+        /// </summary>
+        public GameView GameView
+        {
+            get;
+            private set;
+        }
+
         public EditorForm()
         {
             InitializeComponent();
-            dockPanel1.Extender.FloatWindowFactory = new CustomFloatWindowFactory();
-            this.SizeChanged += MainForm_SizeChanged;
-        }
-
-        void MainForm_SizeChanged(object sender, EventArgs e)
-        {
-            ChangeBackGround();
+            // ゲームの画面は、DirectX の初期化（Game のコンストラクタ）より先に作る
+            GameView = new GameView();
+            GameView.GameMouseDown += GameView_GameMouseDown;
+            GameView.GameMouseUp += GameView_GameMouseUp;
+            GameView.GameMouseMove += GameView_GameMouseMove;
+            GameView.GameMouseLeave += GameView_GameMouseLeave;
+            GameView.GameKeyDown += GameView_GameKeyDown;
+            GameView.GameRightClick += GameView_GameRightClick;
+            moveMarkTimer.Tick += Movemark;
+            画面比を169にMenuItem = new MenuItem { Header = "画面比を16:9に" };
+            画面比を169にMenuItem.Click += 画面比を169にMenuItem_Click;
+            標準解像度にするMenuItem = new MenuItem { Header = "標準解像度にする" };
+            標準解像度にするMenuItem.Click += 標準解像度にするMenuItem_Click;
+            gameViewMenu.Items.Add(画面比を169にMenuItem);
+            gameViewMenu.Items.Add(標準解像度にするMenuItem);
+            SizeChanged += (sender, e) => ChangeBackGround();
         }
 
         #region Initialize
@@ -137,59 +172,64 @@ namespace PPDEditor.Forms
         {
             SplashWindow.ChangeStatus(String.Format(Utility.Language["InitializingStart"], Utility.Language["PAALS"]));
             paals = new PosAndAngleLoaderSaver();
-            paalsDock = new WpfDockShell(paals, "PPDEditor.PosAndAngleLoaderSaver");
+            paalsDock = CreateAnchorable(paals, "PPDEditor.PosAndAngleLoaderSaver");
             SplashWindow.ChangeStatus(String.Format(Utility.Language["InitializingStart"], Utility.Language["KE"]));
             ke = new KasiEditor();
-            keDock = new WpfDockShell(ke, "PPDEditor.KasiEditor");
+            keDock = CreateAnchorable(ke, "PPDEditor.KasiEditor");
             SplashWindow.ChangeStatus(String.Format(Utility.Language["InitializingStart"], Utility.Language["SM"]));
             sm = new SoundManager();
-            smDock = new WpfDockShell(sm, "PPDEditor.SoundManager");
+            smDock = CreateAnchorable(sm, "PPDEditor.SoundManager");
             SplashWindow.ChangeStatus(String.Format(Utility.Language["InitializingStart"], Utility.Language["SFW"]));
             ifw = new IniFileWriter();
-            ifwDock = new WpfDockShell(ifw, "PPDEditor.IniFileWriter");
+            ifwDock = CreateAnchorable(ifw, "PPDEditor.IniFileWriter");
             SplashWindow.ChangeStatus(String.Format(Utility.Language["InitializingStart"], Utility.Language["BPMMeasure"]));
             bm = new BPMMeasure();
-            bmDock = new WpfDockShell(bm, "PPDEditor.BPMMeasure");
+            bmDock = CreateAnchorable(bm, "PPDEditor.BPMMeasure");
             SplashWindow.ChangeStatus(String.Format(Utility.Language["InitializingStart"], Utility.Language["TimeLine"]));
             tlf = new TimeLineForm();
-            tlfDock = new WpfDockShell(tlf, "PPDEditor.TimeLineForm");
+            tlfDock = CreateAnchorable(tlf, "PPDEditor.TimeLineForm");
             SplashWindow.ChangeStatus(String.Format(Utility.Language["InitializingStart"], Utility.Language["GameWindow"]));
-            dxf = new DXForm();
+            dxfDock = new LayoutAnchorable
+            {
+                ContentId = "PPDEditor.DXForm",
+                Content = GameView,
+                Title = "ゲームウィンドウ",
+                CanClose = false
+            };
             SplashWindow.ChangeStatus(String.Format(Utility.Language["InitializingStart"], Utility.Language["Property"]));
             infof = new InfoForm();
-            infofDock = new WpfDockShell(infof, "PPDEditor.InfoForm");
+            infofDock = CreateAnchorable(infof, "PPDEditor.InfoForm");
             SplashWindow.ChangeStatus(String.Format(Utility.Language["InitializingStart"], Utility.Language["LayerManager"]));
             lm = new LayerManager();
-            lmDock = new WpfDockShell(lm, "PPDEditor.LayerManager");
+            lmDock = CreateAnchorable(lm, "PPDEditor.LayerManager");
             SplashWindow.ChangeStatus(String.Format(Utility.Language["InitializingStart"], Utility.Language["EventManager"]));
             em = new EventManager();
-            emDock = new WpfDockShell(em, "PPDEditor.EventManager");
+            emDock = CreateAnchorable(em, "PPDEditor.EventManager");
             SplashWindow.ChangeStatus(String.Format(Utility.Language["InitializingStart"], Utility.Language["GeometryCreator"]));
             gc = new GeometryCreator();
-            gcDock = new WpfDockShell(gc, "PPDEditor.GeometryCreator");
+            gcDock = CreateAnchorable(gc, "PPDEditor.GeometryCreator");
             SplashWindow.ChangeStatus(String.Format(Utility.Language["InitializingStart"], Utility.Language["Memo"]));
             mw = new MemoWindow();
-            mwDock = new WpfDockShell(mw, "PPDEditor.MemoWindow");
+            mwDock = CreateAnchorable(mw, "PPDEditor.MemoWindow");
             SplashWindow.ChangeStatus(String.Format(Utility.Language["InitializingStart"], Utility.Language["Help"]));
             hf = new HelpForm();
-            hfDock = new WpfDockShell(hf, "PPDEditor.HelpForm");
+            hfDock = CreateAnchorable(hf, "PPDEditor.HelpForm");
             SplashWindow.ChangeStatus(String.Format(Utility.Language["InitializingStart"], Utility.Language["WriteDoneWindow"]));
             wdf = new WriteDoneWindow();
             SplashWindow.ChangeStatus(String.Format(Utility.Language["InitializingStart"], Utility.Language["ResourceManager"]));
             rm = new ResourceManager();
-            rmDock = new WpfDockShell(rm, "PPDEditor.ResourceManager");
+            rmDock = CreateAnchorable(rm, "PPDEditor.ResourceManager");
             SplashWindow.ChangeStatus(String.Format(Utility.Language["InitializingStart"], Utility.Language["ScriptManager"]));
             scm = new ScriptManager();
-            scmDock = new WpfDockShell(scm, "PPDEditor.ScriptManager");
+            scmDock = CreateAnchorable(scm, "PPDEditor.ScriptManager");
             SplashWindow.ChangeStatus(String.Format(Utility.Language["InitializingStart"], Utility.Language["StatsManager"]));
             stm = new StatsManager();
-            stmDock = new WpfDockShell(stm, "PPDEditor.StatsManager");
+            stmDock = CreateAnchorable(stm, "PPDEditor.StatsManager");
 
             Grid = new SquareGrid();
             NativeMethods.timeBeginPeriod(1);
             WindowUtility.MainForm = this;
             WindowUtility.BPMMeasure = bm;
-            WindowUtility.DXForm = dxf;
             WindowUtility.EventManager = em;
             WindowUtility.InfoForm = infof;
             WindowUtility.IniFileWriter = ifw;
@@ -207,22 +247,6 @@ namespace PPDEditor.Forms
             WindowUtility.ScriptManager = scm;
             WindowUtility.StatsManager = stm;
 
-            paalsDock.VisibleChanged += Windowvisiblechanged;
-            keDock.VisibleChanged += Windowvisiblechanged;
-            smDock.VisibleChanged += Windowvisiblechanged;
-            ifwDock.VisibleChanged += Windowvisiblechanged;
-            bmDock.VisibleChanged += Windowvisiblechanged;
-            tlfDock.VisibleChanged += Windowvisiblechanged;
-            dxf.VisibleChanged += Windowvisiblechanged;
-            infofDock.VisibleChanged += Windowvisiblechanged;
-            lmDock.VisibleChanged += Windowvisiblechanged;
-            emDock.VisibleChanged += Windowvisiblechanged;
-            gcDock.VisibleChanged += Windowvisiblechanged;
-            mwDock.VisibleChanged += Windowvisiblechanged;
-            hfDock.VisibleChanged += Windowvisiblechanged;
-            rmDock.VisibleChanged += Windowvisiblechanged;
-            scmDock.VisibleChanged += Windowvisiblechanged;
-            stmDock.VisibleChanged += Windowvisiblechanged;
 
             em.SetEvent();
             sm.SetEvent();
@@ -249,10 +273,8 @@ namespace PPDEditor.Forms
             Farness = 0.5f;
 
             SplashWindow.ChangeStatus(String.Format(Utility.Language["InitializingStart"], Utility.Language["Skin"]));
-            toolStrip1.Renderer = new CustomToolStripRenderer();
             if (File.Exists("skin.ini"))
             {
-                dockPanel1.BackColor = PPDEditorSkin.Skin.BorderColor;
                 ChangeBackGround();
             }
 
@@ -279,26 +301,40 @@ namespace PPDEditor.Forms
             LoadMod(mODToolStripMenuItem, "mods");
         }
 
-        private static void LoadMod(ToolStripMenuItem menu, string dir)
+        private static void LoadMod(MenuItem menu, string dir)
         {
             foreach (string dirName in Directory.GetDirectories(dir))
             {
-                var newItem = new ToolStripMenuItem
+                var newItem = new MenuItem
                 {
-                    Text = Path.GetFileNameWithoutExtension(dirName)
+                    Header = ToMenuText(Path.GetFileNameWithoutExtension(dirName)),
+                    Tag = Path.GetFileNameWithoutExtension(dirName)
                 };
-                menu.DropDownItems.Add(newItem);
+                menu.Items.Add(newItem);
                 LoadMod(newItem, dirName);
             }
             foreach (string fileName in Directory.GetFiles(dir, "*.mod"))
             {
-                menu.DropDownItems.Add(new ToolStripMenuItem
+                menu.Items.Add(new MenuItem
                 {
-                    Text = Path.GetFileNameWithoutExtension(fileName),
-                    CheckOnClick = true,
-                    Tag = true
+                    Header = ToMenuText(Path.GetFileNameWithoutExtension(fileName)),
+                    IsCheckable = true,
+                    Tag = new ModMenuInfo(Path.GetFileNameWithoutExtension(fileName))
                 });
             }
+        }
+
+        /// <summary>
+        /// Mod のファイルのメニューに入れる情報です（名前）。
+        /// </summary>
+        sealed record ModMenuInfo(string Name);
+
+        /// <summary>
+        /// メニューでは「_」がアクセスキーの印になるので、そのまま出るようにする。
+        /// </summary>
+        private static string ToMenuText(string text)
+        {
+            return text.Replace("_", "__");
         }
 
         private static void LoadShortcut()
@@ -391,34 +427,34 @@ namespace PPDEditor.Forms
                     var lang = new SettingReader(sr.ReadToEnd());
                     sr.ReadToEnd();
                     var name = lang.ReadString("DisplayName");
-                    var langtsmi = new ToolStripMenuItem
+                    var langtsmi = new MenuItem
                     {
-                        Text = name,
-                        Name = fileName.ToLower(),
-                        Checked = Path.GetFileName(fileName).Equals(String.Format("lang_{0}_{1}.ini", this.GetType().Assembly.GetName().Name, PPDStaticSetting.langFileISO), StringComparison.CurrentCultureIgnoreCase)
+                        Header = name,
+                        Tag = fileName.ToLower(),
+                        IsChecked = Path.GetFileName(fileName).Equals(String.Format("lang_{0}_{1}.ini", this.GetType().Assembly.GetName().Name, PPDStaticSetting.langFileISO), StringComparison.CurrentCultureIgnoreCase)
                     };
                     langtsmi.Click += Langtsmi_Click;
-                    言語ToolStripMenuItem.DropDownItems.Add(langtsmi);
+                    言語ToolStripMenuItem.Items.Add(langtsmi);
                 }
             }
         }
 
         void Langtsmi_Click(object sender, EventArgs e)
         {
-            if (sender is ToolStripMenuItem tsmi)
+            if (sender is MenuItem tsmi)
             {
-                langFileName = tsmi.Name;
+                langFileName = (string)tsmi.Tag;
                 var m = LangFileRegex().Match(Path.GetFileName(langFileName));
                 if (m.Success)
                 {
                     PPDStaticSetting.langFileISO = m.Groups["ISO"].Value;
                 }
                 SetLanguage(PPDStaticSetting.langFileISO);
-                foreach (ToolStripMenuItem child in (tsmi.OwnerItem as ToolStripMenuItem).DropDownItems)
+                foreach (MenuItem child in 言語ToolStripMenuItem.Items)
                 {
-                    child.Checked = false;
+                    child.IsChecked = false;
                 }
-                tsmi.Checked = true;
+                tsmi.IsChecked = true;
                 ChangeHelpUrl();
             }
         }
@@ -426,71 +462,70 @@ namespace PPDEditor.Forms
         private void SetLanguage(string langIso)
         {
             Utility.ChangeLanguage(langIso);
-            this.SuspendLayout();
-            言語ToolStripMenuItem.Text = Utility.Language["Language"];
-            this.ファイルToolStripMenuItem.Text = Utility.Language["File"];
-            this.プロジェクトを開くToolStripMenuItem.Text = Utility.Language["OpenProject"];
-            this.プロジェクトを上書き保存ToolStripMenuItem.Text = Utility.Language["OverWriteProject"];
-            this.開くToolStripMenuItem.Text = Utility.Language["Open"];
-            this.保存ToolStripMenuItem.Text = Utility.Language["Save"];
-            this.最近使用したプロジェクトToolStripMenuItem.Text = Utility.Language["RecentUsedFile"];
-            this.終了ToolStripMenuItem.Text = Utility.Language["Exit"];
-            this.編集ToolStripMenuItem.Text = Utility.Language["Edit"];
-            this.元に戻すToolStripMenuItem.Text = Utility.Language["Undo"];
-            this.やり直すToolStripMenuItem.Text = Utility.Language["Redo"];
-            this.ライン入れ替えToolStripMenuItem.Text = Utility.Language["SwapLine"];
-            this.動画ToolStripMenuItem.Text = Utility.Language["Movie"];
-            this.再生ToolStripMenuItem.Text = Utility.Language["Play"];
-            this.一時停止ToolStripMenuItem.Text = Utility.Language["Pause"];
-            this.停止ToolStripMenuItem.Text = Utility.Language["Stop"];
-            this.打鍵記録ToolStripMenuItem.Text = Utility.Language["RecordKey"];
-            this.切り取りToolStripMenuItem.Text = Utility.Language["Cut"];
-            this.表示ToolStripMenuItem.Text = Utility.Language["Show"];
-            this.強制的にラインに乗せるToolStripMenuItem.Text = Utility.Language["ForceFit"];
-            this.レイヤー全体ToolStripMenuItem.Text = Utility.Language["EntireSelectedLayer"];
-            this.選択範囲のみToolStripMenuItem.Text = Utility.Language["OnlyInSelection"];
-            dxf.TabText = this.ゲームウィンドウToolStripMenuItem.Text = Utility.Language["GameWindow"];
-            tlf.TabText = this.タイムラインウィンドウToolStripMenuItem.Text = Utility.Language["TimeLine"];
-            infof.TabText = this.プロパティウィンドウToolStripMenuItem.Text = Utility.Language["Property"];
-            paals.TabText = this.位置角度ローダーセーバーToolStripMenuItem.Text = Utility.Language["PAALS"];
-            ke.TabText = this.歌詞エディターToolStripMenuItem.Text = Utility.Language["KE"];
-            sm.TabText = this.サウンドマネージャーToolStripMenuItem.Text = Utility.Language["SM"];
-            ifw.TabText = this.設定ファイルライターToolStripMenuItem.Text = Utility.Language["SFW"];
-            bm.TabText = this.bPMToolStripMenuItem.Text = Utility.Language["BPMMeasure"];
-            lm.TabText = this.レイヤーマネージャーToolStripMenuItem.Text = Utility.Language["LayerManager"];
-            em.TabText = this.イベントマネージャーToolStripMenuItem.Text = Utility.Language["EventManager"];
-            gc.TabText = this.幾何クリエーターToolStripMenuItem.Text = Utility.Language["GeometryCreator"];
-            mw.TabText = this.メモToolStripMenuItem.Text = Utility.Language["Memo"];
-            hf.TabText = this.ヘルプToolStripMenuItem.Text = Utility.Language["Help"];
-            rm.TabText = this.リソースマネージャーToolStripMenuItem.Text = Utility.Language["ResourceManager"];
-            scm.TabText = this.スクリプトマネージャーToolStripMenuItem.Text = Utility.Language["ScriptManager"];
-            stm.TabText = this.統計ToolStripMenuItem.Text = Utility.Language["StatsManager"];
-            this.新規プロジェクトを作成ToolStripMenuItem.Text = Utility.Language["CPF"];
+            言語ToolStripMenuItem.Header = Utility.Language["Language"];
+            this.ファイルToolStripMenuItem.Header = Utility.Language["File"];
+            this.プロジェクトを開くToolStripMenuItem.Header = Utility.Language["OpenProject"];
+            this.プロジェクトを上書き保存ToolStripMenuItem.Header = Utility.Language["OverWriteProject"];
+            this.開くToolStripMenuItem.Header = Utility.Language["Open"];
+            this.保存ToolStripMenuItem.Header = Utility.Language["Save"];
+            this.最近使用したプロジェクトToolStripMenuItem.Header = Utility.Language["RecentUsedFile"];
+            this.終了ToolStripMenuItem.Header = Utility.Language["Exit"];
+            this.編集ToolStripMenuItem.Header = Utility.Language["Edit"];
+            this.元に戻すToolStripMenuItem.Header = Utility.Language["Undo"];
+            this.やり直すToolStripMenuItem.Header = Utility.Language["Redo"];
+            this.ライン入れ替えToolStripMenuItem.Header = Utility.Language["SwapLine"];
+            this.動画ToolStripMenuItem.Header = Utility.Language["Movie"];
+            this.再生ToolStripMenuItem.Header = Utility.Language["Play"];
+            this.一時停止ToolStripMenuItem.Header = Utility.Language["Pause"];
+            this.停止ToolStripMenuItem.Header = Utility.Language["Stop"];
+            this.打鍵記録ToolStripMenuItem.Header = Utility.Language["RecordKey"];
+            this.切り取りToolStripMenuItem.Header = Utility.Language["Cut"];
+            this.表示ToolStripMenuItem.Header = Utility.Language["Show"];
+            this.強制的にラインに乗せるToolStripMenuItem.Header = Utility.Language["ForceFit"];
+            this.レイヤー全体ToolStripMenuItem.Header = Utility.Language["EntireSelectedLayer"];
+            this.選択範囲のみToolStripMenuItem.Header = Utility.Language["OnlyInSelection"];
+            dxfDock.Title = (string)(this.ゲームウィンドウToolStripMenuItem.Header = Utility.Language["GameWindow"]);
+            tlf.TabText = (string)(this.タイムラインウィンドウToolStripMenuItem.Header = Utility.Language["TimeLine"]);
+            infof.TabText = (string)(this.プロパティウィンドウToolStripMenuItem.Header = Utility.Language["Property"]);
+            paals.TabText = (string)(this.位置角度ローダーセーバーToolStripMenuItem.Header = Utility.Language["PAALS"]);
+            ke.TabText = (string)(this.歌詞エディターToolStripMenuItem.Header = Utility.Language["KE"]);
+            sm.TabText = (string)(this.サウンドマネージャーToolStripMenuItem.Header = Utility.Language["SM"]);
+            ifw.TabText = (string)(this.設定ファイルライターToolStripMenuItem.Header = Utility.Language["SFW"]);
+            bm.TabText = (string)(this.bPMToolStripMenuItem.Header = Utility.Language["BPMMeasure"]);
+            lm.TabText = (string)(this.レイヤーマネージャーToolStripMenuItem.Header = Utility.Language["LayerManager"]);
+            em.TabText = (string)(this.イベントマネージャーToolStripMenuItem.Header = Utility.Language["EventManager"]);
+            gc.TabText = (string)(this.幾何クリエーターToolStripMenuItem.Header = Utility.Language["GeometryCreator"]);
+            mw.TabText = (string)(this.メモToolStripMenuItem.Header = Utility.Language["Memo"]);
+            hf.TabText = (string)(this.ヘルプToolStripMenuItem.Header = Utility.Language["Help"]);
+            rm.TabText = (string)(this.リソースマネージャーToolStripMenuItem.Header = Utility.Language["ResourceManager"]);
+            scm.TabText = (string)(this.スクリプトマネージャーToolStripMenuItem.Header = Utility.Language["ScriptManager"]);
+            stm.TabText = (string)(this.統計ToolStripMenuItem.Header = Utility.Language["StatsManager"]);
+            this.新規プロジェクトを作成ToolStripMenuItem.Header = Utility.Language["CPF"];
 
 
-            this.ゲームToolStripMenuItem.Text = Utility.Language["Game"];
-            this.現在の時間から開始ToolStripMenuItem.Text = Utility.Language["GameStart1"];
-            this.最初から開始ToolStripMenuItem.Text = Utility.Language["GameStart2"];
-            this.現在の時間から開始オートToolStripMenuItem.Text = Utility.Language["GameStart3"];
-            this.最初から開始オートToolStripMenuItem.Text = Utility.Language["GameStart4"];
-            this.メニューから開始ToolStripMenuItem.Text = Utility.Language["StartFromMenu"];
-            this.pPDプロセスを強制終了ToolStripMenuItem.Text = Utility.Language["ExitPPDProcess"];
-            this.その他ToolStripMenuItem.Text = Utility.Language["Others"];
-            this.設定ToolStripMenuItem.Text = Utility.Language["Setting"];
-            this.プロジェクトをマージToolStripMenuItem.Text = Utility.Language["MergeProject"];
-            this.発行ToolStripMenuItem.Text = Utility.Language["Publish"];
-            this.ビューを読み込むToolStripMenuItem.Text = Utility.Language["ReadView"];
-            this.現在の難易度をコピーToolStripMenuItem.Text = Utility.Language["CopyCurrentDifficulty"];
-            this.難易度ToolStripMenuItem.Text = Utility.Language["Difficulty"];
-            this.ツールバーを隠すToolStripMenuItem.Text = Utility.Language["HideToolBar"];
-            this.ドックを固定ToolStripMenuItem.Text = Utility.Language["FixDockPanel"];
-            this.mODを発行ToolStripMenuItem.Text = Utility.Language["PublishMod"];
-            this.イベントToolStripMenuItem.Text = Utility.Language["Event"];
-            this.インポートToolStripMenuItem.Text = Utility.Language["Import"];
-            this.別のファイルToolStripMenuItem.Text = Utility.Language["Other Files"];
-            this.disableExpansionToolStripMenuItem.Text = Utility.Language["DisableExpansion"];
-            this.コマンドToolStripMenuItem.Text = Utility.Language["Command"];
-            this.一覧を再読み込みToolStripMenuItem.Text = Utility.Language["ReloadList"];
+            this.ゲームToolStripMenuItem.Header = Utility.Language["Game"];
+            this.現在の時間から開始ToolStripMenuItem.Header = Utility.Language["GameStart1"];
+            this.最初から開始ToolStripMenuItem.Header = Utility.Language["GameStart2"];
+            this.現在の時間から開始オートToolStripMenuItem.Header = Utility.Language["GameStart3"];
+            this.最初から開始オートToolStripMenuItem.Header = Utility.Language["GameStart4"];
+            this.メニューから開始ToolStripMenuItem.Header = Utility.Language["StartFromMenu"];
+            this.pPDプロセスを強制終了ToolStripMenuItem.Header = Utility.Language["ExitPPDProcess"];
+            this.その他ToolStripMenuItem.Header = Utility.Language["Others"];
+            this.設定ToolStripMenuItem.Header = Utility.Language["Setting"];
+            this.プロジェクトをマージToolStripMenuItem.Header = Utility.Language["MergeProject"];
+            this.発行ToolStripMenuItem.Header = Utility.Language["Publish"];
+            this.ビューを読み込むToolStripMenuItem.Header = Utility.Language["ReadView"];
+            this.現在の難易度をコピーToolStripMenuItem.Header = Utility.Language["CopyCurrentDifficulty"];
+            this.難易度ToolStripMenuItem.Header = Utility.Language["Difficulty"];
+            this.ツールバーを隠すToolStripMenuItem.Header = Utility.Language["HideToolBar"];
+            this.ドックを固定ToolStripMenuItem.Header = Utility.Language["FixDockPanel"];
+            this.mODを発行ToolStripMenuItem.Header = Utility.Language["PublishMod"];
+            this.イベントToolStripMenuItem.Header = Utility.Language["Event"];
+            this.インポートToolStripMenuItem.Header = Utility.Language["Import"];
+            this.別のファイルToolStripMenuItem.Header = Utility.Language["Other Files"];
+            this.disableExpansionToolStripMenuItem.Header = Utility.Language["DisableExpansion"];
+            this.コマンドToolStripMenuItem.Header = Utility.Language["Command"];
+            this.一覧を再読み込みToolStripMenuItem.Header = Utility.Language["ReloadList"];
             infof.SetLang();
             openinifilter = Utility.Language["INIFilter"];
             openmoviefilter = Utility.Language["MovieFilter"];
@@ -515,15 +550,15 @@ namespace PPDEditor.Forms
             noselecteddifficulty = Utility.Language["NoSelectedDifficulty"];
             nomergedifficulty = Utility.Language["NoMergeDifficulty"];
             //toolbar
-            this.toolStripButton1.ToolTipText = Utility.Language["FixOp"];
-            this.toolStripButton2.ToolTipText = Utility.Language["Drawtoggle"];
-            this.toolStripButton3.ToolTipText = Utility.Language["ShowHoldExtent"];
-            this.toolStripButton4.ToolTipText = Utility.Language["MarkFocus"];
-            this.toolStripSplitButton1.Text = Utility.Language["LimitTimeLineRow"];
-            this.exToolStripSplitButton1.ToolTipText = Utility.Language["DisplayGrid"];
-            this.詳細設定ToolStripMenuItem.Text = Utility.Language["GridDetailSetting"];
-            this.詳細設定ToolStripMenuItem1.Text = Utility.Language["GridDetailSetting"];
-            this.詳細設定ToolStripMenuItem2.Text = Utility.Language["GridDetailSetting"];
+            this.toolStripButton1.ToolTip = Utility.Language["FixOp"];
+            this.toolStripButton2.ToolTip = Utility.Language["Drawtoggle"];
+            this.toolStripButton3.ToolTip = Utility.Language["ShowHoldExtent"];
+            this.toolStripButton4.ToolTip = Utility.Language["MarkFocus"];
+            this.toolStripSplitButton1.ToolTip = Utility.Language["LimitTimeLineRow"];
+            this.exToolStripSplitButton1.ToolTip = Utility.Language["DisplayGrid"];
+            this.詳細設定ToolStripMenuItem.Header = Utility.Language["GridDetailSetting"];
+            this.詳細設定ToolStripMenuItem1.Header = Utility.Language["GridDetailSetting"];
+            this.詳細設定ToolStripMenuItem2.Header = Utility.Language["GridDetailSetting"];
             int prevSelectedIndex = toolStripComboBox1.SelectedIndex;
             this.toolStripComboBox1.Items.Clear();
             this.toolStripComboBox1.Items.Add(Utility.Language["Displaylevel1"]);
@@ -542,14 +577,15 @@ namespace PPDEditor.Forms
             this.toolStripComboBox3.Items.Add(Utility.Language["BeatFourth"]);
             this.toolStripComboBox3.Items.Add(Utility.Language["BeatFifth"]);
             toolStripComboBox3.SelectedIndex = prevSelectedIndex;
-            this.toolStripTextBox3.ToolTipText = Utility.Language["DisplayWidth"];
+            this.toolStripTextBox3.ToolTip = Utility.Language["DisplayWidth"];
             //setlang
             ifw.SetLang();
             ke.SetLang();
             paals.SetLang();
             sm.SetLang();
             bm.SetLang();
-            dxf.SetLang();
+            画面比を169にMenuItem.Header = Utility.Language["ChangeAspect"];
+            標準解像度にするMenuItem.Header = Utility.Language["GWDefaultResolution"];
             em.SetLang();
             lm.SetLang();
             gc.SetLang();
@@ -559,7 +595,6 @@ namespace PPDEditor.Forms
             scm.SetLang();
             stm.SetLang();
             tlf.SetLang();
-            this.ResumeLayout();
         }
 
         private void ReadViews()
@@ -572,13 +607,13 @@ namespace PPDEditor.Forms
                     var m = regex.Match(Path.GetFileName(file));
                     if (m.Success)
                     {
-                        var tsmi = new ToolStripMenuItem
+                        var tsmi = new MenuItem
                         {
-                            Text = String.Format("{0}x{1}{2}", m.Groups["w"].Value, m.Groups["h"].Value, m.Groups["extra"].Value)
+                            Header = ToMenuText(String.Format("{0}x{1}{2}", m.Groups["w"].Value, m.Groups["h"].Value, m.Groups["extra"].Value))
                         };
                         tsmi.Click += Viewtsmi_Click;
                         tsmi.Tag = file;
-                        ビューを読み込むToolStripMenuItem.DropDownItems.Add(tsmi);
+                        ビューを読み込むToolStripMenuItem.Items.Add(tsmi);
                     }
                 }
             }
@@ -586,55 +621,152 @@ namespace PPDEditor.Forms
 
         void Viewtsmi_Click(object sender, EventArgs e)
         {
-            var tsmi = sender as ToolStripMenuItem;
-            this.SuspendLayout();
-            //this.Size = size;
+            var tsmi = sender as MenuItem;
             ReadDockXML(tsmi.Tag as string);
-            this.ResumeLayout();
         }
 
-        private void ReadDockXML(string path)
+        /// <summary>
+        /// ドックの配置を読み込みます。AvalonDock の形式と、以前の WinForms 版（DockPanel Suite）の形式を読めます。
+        /// </summary>
+        /// <returns>読み込めたかどうか。</returns>
+        private bool ReadDockXML(string path)
         {
-            dockPanel1.SuspendLayout();
-            paalsDock.DockPanel = null;
-            keDock.DockPanel = null;
-            smDock.DockPanel = null;
-            ifwDock.DockPanel = null;
-            bmDock.DockPanel = null;
-            tlfDock.DockPanel = null;
-            dxf.DockPanel = null;
-            infofDock.DockPanel = null;
-            lmDock.DockPanel = null;
-            emDock.DockPanel = null;
-            gcDock.DockPanel = null;
-            mwDock.DockPanel = null;
-            hfDock.DockPanel = null;
-            rmDock.DockPanel = null;
-            scmDock.DockPanel = null;
-            stmDock.DockPanel = null;
-            CloseAllDocuments();
-
-            dockPanel1.LoadFromXml(path, this.DeserializeForm);
-            dockPanel1.ResumeLayout();
-        }
-
-        private void CloseAllDocuments()
-        {
-            if (dockPanel1.DocumentStyle == DocumentStyle.SystemMdi)
+            if (DockLayoutImporter.IsDockPanelSuiteLayout(path))
             {
-                foreach (Form form in MdiChildren)
-                    form.Close();
+                var imported = DockLayoutImporter.Import(path, dockPanel1, GetAnchorable, CreateDefaultLayout);
+                RebindAnchorables();
+                return imported;
             }
-            else
+            try
             {
-                for (int index = dockPanel1.Contents.Count - 1; index >= 0; index--)
+                var serializer = new XmlLayoutSerializer(dockPanel1);
+                serializer.LayoutSerializationCallback += (sender, e) =>
                 {
-                    if (dockPanel1.Contents[index] is IDockContent content)
-                    {
-                        content.DockHandler.Close();
-                    }
-                }
+                    e.Content = GetAnchorable(e.Model.ContentId)?.Content;
+                    e.Cancel = e.Content == null;
+                };
+                serializer.Deserialize(path);
+                RebindAnchorables();
+                return true;
             }
+            catch (Exception)
+            {
+                CreateDefaultLayout();
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// 既定の配置にします（ゲームの画面を真ん中、プロパティを右、タイムラインを下）。
+        /// </summary>
+        private void CreateDefaultLayout()
+        {
+            foreach (var anchorable in AllAnchorables)
+            {
+                anchorable.Parent?.RemoveChild(anchorable);
+            }
+            var documentPane = new LayoutDocumentPane(dxfDock);
+            var timeLinePane = new LayoutAnchorablePane(tlfDock) { DockHeight = new GridLength(300) };
+            var propertyPane = new LayoutAnchorablePane(infofDock) { DockWidth = new GridLength(330) };
+            var center = new LayoutPanel { Orientation = Orientation.Vertical };
+            center.Children.Add(new LayoutDocumentPaneGroup(documentPane));
+            center.Children.Add(timeLinePane);
+            var root = new LayoutPanel { Orientation = Orientation.Horizontal };
+            root.Children.Add(center);
+            root.Children.Add(propertyPane);
+            dockPanel1.Layout = new LayoutRoot { RootPanel = root };
+            // ほかのウィンドウは右に置いて隠しておく（表示のメニューで出す）
+            foreach (var anchorable in AllAnchorables.Where(a => a.Root == null))
+            {
+                anchorable.AddToLayout(dockPanel1, AnchorableShowStrategy.Right);
+                anchorable.Hide();
+            }
+        }
+
+        /// <summary>
+        /// 配置を読み込むと、ウィンドウ（LayoutAnchorable）は新しく作られるので、持っているものを付け替えます。
+        /// 読み込んだ配置になかったウィンドウは、配置に加えて隠しておきます。
+        /// </summary>
+        private void RebindAnchorables()
+        {
+            var anchorables = dockPanel1.Layout.Descendents().OfType<LayoutAnchorable>()
+                .Concat(dockPanel1.Layout.Hidden)
+                .Distinct()
+                .ToList();
+            LayoutAnchorable Rebind(LayoutAnchorable original)
+            {
+                var found = anchorables.FirstOrDefault(a => a.ContentId == original.ContentId);
+                if (found != null)
+                {
+                    found.Title = original.Title;
+                    found.CanClose = false;
+                    return found;
+                }
+                if (original.Root == null)
+                {
+                    original.AddToLayout(dockPanel1, AnchorableShowStrategy.Right);
+                    original.Hide();
+                }
+                return original;
+            }
+            paalsDock = Rebind(paalsDock);
+            keDock = Rebind(keDock);
+            smDock = Rebind(smDock);
+            ifwDock = Rebind(ifwDock);
+            bmDock = Rebind(bmDock);
+            tlfDock = Rebind(tlfDock);
+            dxfDock = Rebind(dxfDock);
+            infofDock = Rebind(infofDock);
+            lmDock = Rebind(lmDock);
+            emDock = Rebind(emDock);
+            gcDock = Rebind(gcDock);
+            mwDock = Rebind(mwDock);
+            hfDock = Rebind(hfDock);
+            rmDock = Rebind(rmDock);
+            scmDock = Rebind(scmDock);
+            stmDock = Rebind(stmDock);
+            FixDockPanel = FixDockPanel;
+        }
+
+        private static IEnumerable<LayoutAnchorable> AllAnchorables
+        {
+            get
+            {
+                return [paalsDock, keDock, smDock, ifwDock, bmDock, tlfDock, dxfDock, infofDock, lmDock, emDock, gcDock, mwDock, hfDock, rmDock, scmDock, stmDock];
+            }
+        }
+
+        /// <summary>
+        /// ドックのウィンドウを作ります。ContentId は以前のクラスの名前（配置のファイルとの互換のため）。
+        /// </summary>
+        private static LayoutAnchorable CreateAnchorable(DockView view, string contentId)
+        {
+            var anchorable = new LayoutAnchorable
+            {
+                ContentId = contentId,
+                Content = view,
+                Title = view.TabText,
+                CanClose = false
+            };
+            view.TabTextChanged += (sender, e) => GetAnchorableOf(view)?.Title = view.TabText;
+            view.ShowRequested += (sender, e) =>
+            {
+                var target = GetAnchorableOf(view);
+                if (target != null)
+                {
+                    target.Show();
+                    target.IsActive = true;
+                }
+            };
+            return anchorable;
+        }
+
+        /// <summary>
+        /// 中身のドックのウィンドウを返す（配置を読み込むと作り直されるので、そのたびに探す）。
+        /// </summary>
+        private static LayoutAnchorable GetAnchorableOf(object content)
+        {
+            return AllAnchorables.FirstOrDefault(a => a?.Content == content);
         }
 
         private static void ChangeAuthorName()
@@ -650,27 +782,20 @@ namespace PPDEditor.Forms
 
         private void InitializeDockWindow()
         {
-            dockPanel1.SuspendLayout(true);
             var path = Path.Combine(Utility.AppDir, dockxmlname);
-            if (File.Exists(path))
+            if (!File.Exists(path) || !ReadDockXML(path))
             {
-                ReadDockXML(path);
-            }
-            else
-            {
-                dxf.Show(dockPanel1, DockState.Document);
-                infofDock.Show(dockPanel1, DockState.DockRight);
-                tlfDock.Show(dockPanel1, DockState.DockBottom);
+                CreateDefaultLayout();
             }
             scm.RestoreDock(Path.Combine(Utility.AppDir, scriptdockxmlname));
-            dockPanel1.Skin = PPDEditorSkin.Skin.DockPanelSkin;
-            this.toolStripStatusLabel1.ForeColor = PPDEditorSkin.Skin.TransparentTextColor;
-            this.toolStripStatusLabel2.ForeColor = PPDEditorSkin.Skin.TransparentTextColor;
-            this.toolStripStatusLabel3.ForeColor = PPDEditorSkin.Skin.TransparentTextColor;
-            this.ファイルToolStripMenuItem.ForeColor = PPDEditorSkin.Skin.TransparentTextColor;
-            this.編集ToolStripMenuItem.ForeColor = PPDEditorSkin.Skin.TransparentTextColor;
-            this.動画ToolStripMenuItem.ForeColor = PPDEditorSkin.Skin.TransparentTextColor;
-            this.表示ToolStripMenuItem.ForeColor = PPDEditorSkin.Skin.TransparentTextColor;
+            var textBrush = WpfSkin.TransparentTextBrush;
+            this.toolStripStatusLabel1.Foreground = textBrush;
+            this.toolStripStatusLabel2.Foreground = textBrush;
+            this.toolStripStatusLabel3.Foreground = textBrush;
+            this.ファイルToolStripMenuItem.Foreground = textBrush;
+            this.編集ToolStripMenuItem.Foreground = textBrush;
+            this.動画ToolStripMenuItem.Foreground = textBrush;
+            this.表示ToolStripMenuItem.Foreground = textBrush;
             infof.SetSkin();
             ifw.SetSkin();
             ke.SetSkin();
@@ -679,35 +804,37 @@ namespace PPDEditor.Forms
             bm.SetSkin();
             tlf.SetSkin();
             gc.SetSkin();
-            dockPanel1.ResumeLayout(true, true);
         }
 
-        private void Windowvisiblechanged(object sender, EventArgs e)
+        private void 表示ToolStripMenuItem_SubmenuOpened(object sender, RoutedEventArgs e)
         {
-            this.bPMToolStripMenuItem.Checked = Utility.CheckVisible(bmDock);
-            this.ゲームウィンドウToolStripMenuItem.Checked = Utility.CheckVisible(dxf);
-            this.サウンドマネージャーToolStripMenuItem.Checked = Utility.CheckVisible(smDock);
-            this.タイムラインウィンドウToolStripMenuItem.Checked = Utility.CheckVisible(tlfDock);
-            this.プロパティウィンドウToolStripMenuItem.Checked = Utility.CheckVisible(infofDock);
-            this.位置角度ローダーセーバーToolStripMenuItem.Checked = Utility.CheckVisible(paalsDock);
-            this.歌詞エディターToolStripMenuItem.Checked = Utility.CheckVisible(keDock);
-            this.設定ファイルライターToolStripMenuItem.Checked = Utility.CheckVisible(ifwDock);
-            this.レイヤーマネージャーToolStripMenuItem.Checked = Utility.CheckVisible(lmDock);
-            this.イベントマネージャーToolStripMenuItem.Checked = Utility.CheckVisible(emDock);
-            this.幾何クリエーターToolStripMenuItem.Checked = Utility.CheckVisible(gcDock);
-            this.メモToolStripMenuItem.Checked = Utility.CheckVisible(mwDock);
-            this.ヘルプToolStripMenuItem.Checked = Utility.CheckVisible(hfDock);
-            this.リソースマネージャーToolStripMenuItem.Checked = Utility.CheckVisible(rmDock);
-            this.スクリプトマネージャーToolStripMenuItem.Checked = Utility.CheckVisible(scmDock);
-            this.統計ToolStripMenuItem.Checked = Utility.CheckVisible(stmDock);
+            this.bPMToolStripMenuItem.IsChecked = DockUtility.IsShown(bmDock);
+            this.ゲームウィンドウToolStripMenuItem.IsChecked = DockUtility.IsShown(dxfDock);
+            this.サウンドマネージャーToolStripMenuItem.IsChecked = DockUtility.IsShown(smDock);
+            this.タイムラインウィンドウToolStripMenuItem.IsChecked = DockUtility.IsShown(tlfDock);
+            this.プロパティウィンドウToolStripMenuItem.IsChecked = DockUtility.IsShown(infofDock);
+            this.位置角度ローダーセーバーToolStripMenuItem.IsChecked = DockUtility.IsShown(paalsDock);
+            this.歌詞エディターToolStripMenuItem.IsChecked = DockUtility.IsShown(keDock);
+            this.設定ファイルライターToolStripMenuItem.IsChecked = DockUtility.IsShown(ifwDock);
+            this.レイヤーマネージャーToolStripMenuItem.IsChecked = DockUtility.IsShown(lmDock);
+            this.イベントマネージャーToolStripMenuItem.IsChecked = DockUtility.IsShown(emDock);
+            this.幾何クリエーターToolStripMenuItem.IsChecked = DockUtility.IsShown(gcDock);
+            this.メモToolStripMenuItem.IsChecked = DockUtility.IsShown(mwDock);
+            this.ヘルプToolStripMenuItem.IsChecked = DockUtility.IsShown(hfDock);
+            this.リソースマネージャーToolStripMenuItem.IsChecked = DockUtility.IsShown(rmDock);
+            this.スクリプトマネージャーToolStripMenuItem.IsChecked = DockUtility.IsShown(scmDock);
+            this.統計ToolStripMenuItem.IsChecked = DockUtility.IsShown(stmDock);
         }
 
-        private IDockContent DeserializeForm(string persistentString)
+        /// <summary>
+        /// 配置のファイルの名前（以前のクラスの名前）から、ドックのウィンドウを返す。
+        /// </summary>
+        private static LayoutAnchorable GetAnchorable(string persistentString)
         {
             return persistentString switch
             {
                 "PPDEditor.BPMMeasure" => bmDock,
-                "PPDEditor.DXForm" => dxf,
+                "PPDEditor.DXForm" => dxfDock,
                 "PPDEditor.InfoForm" => infofDock,
                 "PPDEditor.KasiEditor" => keDock,
                 "PPDEditor.PosAndAngleLoaderSaver" => paalsDock,
@@ -728,107 +855,56 @@ namespace PPDEditor.Forms
         #endregion
 
         #region BackGround
+        /// <summary>
+        /// スキンの背景を表示します。メニューと状態の表示のところには、スキンの重ねる色を塗る。
+        /// </summary>
         private void ChangeBackGround()
         {
-            if (PPDEditorSkin.Skin.BackGround == null || this.ClientSize.Width == 0 || this.ClientSize.Height == 0) return;
-            try
+            var original = PPDEditorSkin.Skin.BackGround;
+            if (original == null)
             {
-                this.statusStrip1.SuspendLayout();
-                this.menuStrip1.SuspendLayout();
-                this.toolStripContainer1.BottomToolStripPanel.SuspendLayout();
-                this.toolStripContainer1.ContentPanel.SuspendLayout();
-                this.toolStripContainer1.TopToolStripPanel.SuspendLayout();
-                this.toolStripContainer1.SuspendLayout();
-                this.toolStrip1.SuspendLayout();
-                this.toolStripContainer2.ContentPanel.SuspendLayout();
-                this.toolStripContainer2.TopToolStripPanel.SuspendLayout();
-                this.toolStripContainer2.SuspendLayout();
-                this.SuspendLayout();
-                ToolStripPanel top = this.toolStripContainer1.TopToolStripPanel;
-                ToolStripContentPanel center = this.toolStripContainer1.ContentPanel;
-                ToolStripPanel bottom = this.toolStripContainer1.BottomToolStripPanel;
-                System.Drawing.Bitmap original = PPDEditorSkin.Skin.BackGround;
-                var target = new System.Drawing.Bitmap(this.ClientSize.Width, this.ClientSize.Height);
-                float ratio = (float)target.Height / original.Height;
-                var g = System.Drawing.Graphics.FromImage(target);
-                var sb = new System.Drawing.SolidBrush(PPDEditorSkin.Skin.FillColor);
-                g.FillRectangle(sb, new System.Drawing.Rectangle(0, 0, target.Size.Width, target.Size.Height));
-                sb.Dispose();
-                sb = new System.Drawing.SolidBrush(PPDEditorSkin.Skin.OverLayColor);
-                switch (PPDEditorSkin.Skin.DisplayMode)
-                {
-                    case PPDEditorSkin.BackGroundDisplayMode.right:
-                        g.DrawImage(original, new System.Drawing.Rectangle(target.Width - (int)(original.Width * ratio), 0, (int)(original.Width * ratio), target.Height), new System.Drawing.Rectangle(0, 0, original.Width, original.Height), System.Drawing.GraphicsUnit.Pixel);
-                        break;
-                    case PPDEditorSkin.BackGroundDisplayMode.left:
-                        g.DrawImage(original, new System.Drawing.Rectangle(0, 0, (int)(original.Width * ratio), target.Height), new System.Drawing.Rectangle(0, 0, original.Width, original.Height), System.Drawing.GraphicsUnit.Pixel);
-                        break;
-                    case PPDEditorSkin.BackGroundDisplayMode.center:
-                        if (target.Width > (int)(original.Width * ratio))
-                        {
-                            g.DrawImage(original, new System.Drawing.Rectangle((target.Width - (int)(original.Width * ratio)) / 2, 0, (int)(original.Width * ratio), target.Height), new System.Drawing.Rectangle(0, 0, original.Width, original.Height), System.Drawing.GraphicsUnit.Pixel);
-                        }
-                        else
-                        {
-                            g.DrawImage(original, new System.Drawing.Rectangle(0, 0, target.Width, target.Height), new System.Drawing.Rectangle((original.Width - (int)(target.Width / ratio)) / 2, 0, (int)(target.Width / ratio), original.Height), System.Drawing.GraphicsUnit.Pixel);
-                        }
-                        break;
-                    case PPDEditorSkin.BackGroundDisplayMode.fill:
-                        g.DrawImage(original, new System.Drawing.Rectangle(0, 0, target.Width, target.Height), new System.Drawing.Rectangle(0, 0, original.Width, original.Height), System.Drawing.GraphicsUnit.Pixel);
-                        break;
-                }
-                var topbit = new System.Drawing.Bitmap(top.Width, top.Height);
-                g = System.Drawing.Graphics.FromImage(topbit);
-                g.DrawImage(target, new System.Drawing.Rectangle(topbit.Width - target.Width, 0, target.Width, topbit.Height), new System.Drawing.Rectangle(0, 0, target.Width, topbit.Height), System.Drawing.GraphicsUnit.Pixel);
-                g.FillRectangle(sb, new System.Drawing.Rectangle(0, 0, topbit.Width, topbit.Height));
-                top.BackgroundImage = topbit;
-                menuStrip1.BackgroundImage = topbit;
-
-                var centbit = new System.Drawing.Bitmap(center.Width, center.Height);
-                g = System.Drawing.Graphics.FromImage(centbit);
-                g.DrawImage(target, new System.Drawing.Rectangle(centbit.Width - target.Width, 0, target.Width, centbit.Height), new System.Drawing.Rectangle(0, topbit.Height, target.Width, centbit.Height), System.Drawing.GraphicsUnit.Pixel);
-                center.BackgroundImage = centbit;
-                var bottombit = new System.Drawing.Bitmap(bottom.Width, bottom.Height);
-                g = System.Drawing.Graphics.FromImage(bottombit);
-                g.DrawImage(target, new System.Drawing.Rectangle(bottombit.Width - target.Width, 0, target.Width, bottombit.Height), new System.Drawing.Rectangle(0, topbit.Height + centbit.Height, target.Width, bottombit.Height), System.Drawing.GraphicsUnit.Pixel);
-                g.FillRectangle(sb, new System.Drawing.Rectangle(0, 0, bottombit.Width, bottombit.Height));
-                bottom.BackgroundImage = bottombit;
-                statusStrip1.BackgroundImage = bottombit;
-
-                top = this.toolStripContainer2.TopToolStripPanel;
-                topbit = new System.Drawing.Bitmap(top.Width, top.Height);
-                g = System.Drawing.Graphics.FromImage(topbit);
-                g.DrawImage(center.BackgroundImage, new System.Drawing.Rectangle(0, 0, center.BackgroundImage.Width, topbit.Height), new System.Drawing.Rectangle(0, 0, center.BackgroundImage.Width, topbit.Height), System.Drawing.GraphicsUnit.Pixel);
-                g.FillRectangle(sb, new System.Drawing.Rectangle(0, 0, topbit.Width, topbit.Height));
-                top.BackgroundImage = topbit;
-
-                var dockBit = new System.Drawing.Bitmap(dockPanel1.Width, dockPanel1.Height);
-                g = System.Drawing.Graphics.FromImage(dockBit);
-                g.DrawImage(center.BackgroundImage, new System.Drawing.Rectangle(0, 0, center.BackgroundImage.Width, center.BackgroundImage.Height), new System.Drawing.Rectangle(0, topbit.Height, dockBit.Width, dockBit.Height), System.Drawing.GraphicsUnit.Pixel);
-                dockPanel1.BackgroundImage = dockBit;
-                sb.Dispose();
-
-                this.statusStrip1.ResumeLayout(false);
-                this.statusStrip1.PerformLayout();
-                this.menuStrip1.ResumeLayout(false);
-                this.menuStrip1.PerformLayout();
-                this.toolStripContainer1.BottomToolStripPanel.ResumeLayout(false);
-                this.toolStripContainer1.BottomToolStripPanel.PerformLayout();
-                this.toolStripContainer1.ContentPanel.ResumeLayout(false);
-                this.toolStripContainer1.TopToolStripPanel.ResumeLayout(false);
-                this.toolStripContainer1.TopToolStripPanel.PerformLayout();
-                this.toolStripContainer1.ResumeLayout(false);
-                this.toolStripContainer1.PerformLayout();
-                this.toolStrip1.ResumeLayout(false);
-                this.toolStrip1.PerformLayout();
-                this.toolStripContainer2.ContentPanel.ResumeLayout(false);
-                this.toolStripContainer2.TopToolStripPanel.ResumeLayout(false);
-                this.toolStripContainer2.TopToolStripPanel.PerformLayout();
-                this.toolStripContainer2.ResumeLayout(false);
-                this.toolStripContainer2.PerformLayout();
-                this.ResumeLayout(false);
+                return;
             }
-            catch { }
+            if (backgroundImage.Source == null)
+            {
+                backgroundImage.Source = ToBitmapSource(original);
+                backgroundFill.Fill = WpfSkin.ToBrush(PPDEditorSkin.Skin.FillColor);
+                topOverlay.Fill = bottomOverlay.Fill = WpfSkin.ToBrush(PPDEditorSkin.Skin.OverLayColor);
+            }
+            // 画像は高さに合わせて、スキンの指定の位置に置く
+            switch (PPDEditorSkin.Skin.DisplayMode)
+            {
+                case PPDEditorSkin.BackGroundDisplayMode.right:
+                    backgroundImage.Stretch = Stretch.Uniform;
+                    backgroundImage.HorizontalAlignment = HorizontalAlignment.Right;
+                    break;
+                case PPDEditorSkin.BackGroundDisplayMode.left:
+                    backgroundImage.Stretch = Stretch.Uniform;
+                    backgroundImage.HorizontalAlignment = HorizontalAlignment.Left;
+                    break;
+                case PPDEditorSkin.BackGroundDisplayMode.center:
+                    backgroundImage.Stretch = Stretch.UniformToFill;
+                    backgroundImage.HorizontalAlignment = HorizontalAlignment.Center;
+                    break;
+                case PPDEditorSkin.BackGroundDisplayMode.fill:
+                    backgroundImage.Stretch = Stretch.Fill;
+                    backgroundImage.HorizontalAlignment = HorizontalAlignment.Stretch;
+                    break;
+            }
+        }
+
+        private static BitmapSource ToBitmapSource(System.Drawing.Bitmap bitmap)
+        {
+            using var stream = new MemoryStream();
+            bitmap.Save(stream, System.Drawing.Imaging.ImageFormat.Png);
+            stream.Position = 0;
+            var image = new BitmapImage();
+            image.BeginInit();
+            image.CacheOption = BitmapCacheOption.OnLoad;
+            image.StreamSource = stream;
+            image.EndInit();
+            image.Freeze();
+            return image;
         }
         #endregion
 
@@ -837,7 +913,7 @@ namespace PPDEditor.Forms
             this.openFileDialog1.Filter = openmoviefilter;
             this.openFileDialog1.RestoreDirectory = true;
             this.openFileDialog1.FileName = "";
-            if (this.openFileDialog1.ShowDialog() == DialogResult.OK)
+            if (this.openFileDialog1.ShowDialog(this) == true)
             {
                 ReadMovie(this.openFileDialog1.FileName);
             }
@@ -852,8 +928,8 @@ namespace PPDEditor.Forms
             tlf.Seekmain.Length = MovieLength;
             infof.SetMovieInfo(MovieWidth.ToString(), MovieHeight.ToString(), GetTimeDisplay(MovieLength));
 
-            this.プロジェクトを上書き保存ToolStripMenuItem.Enabled = this.難易度ToolStripMenuItem.Enabled =
-                this.発行ToolStripMenuItem.Enabled = this.mODを発行ToolStripMenuItem.Enabled = IsProjectLoaded;
+            this.プロジェクトを上書き保存ToolStripMenuItem.IsEnabled = this.難易度ToolStripMenuItem.IsEnabled =
+                this.発行ToolStripMenuItem.IsEnabled = this.mODを発行ToolStripMenuItem.IsEnabled = IsProjectLoaded;
 
             moviefirstplayafterinitialized = true;
         }
@@ -907,9 +983,9 @@ namespace PPDEditor.Forms
 
         public void Play()
         {
-            if (InvokeRequired)
+            if (!Dispatcher.CheckAccess())
             {
-                Invoke((Action)Play);
+                Dispatcher.Invoke(Play);
                 return;
             }
 
@@ -927,9 +1003,9 @@ namespace PPDEditor.Forms
 
         public void Pause()
         {
-            if (InvokeRequired)
+            if (!Dispatcher.CheckAccess())
             {
-                Invoke((Action)Pause);
+                Dispatcher.Invoke(Pause);
                 return;
             }
 
@@ -943,9 +1019,9 @@ namespace PPDEditor.Forms
 
         public void Stop()
         {
-            if (InvokeRequired)
+            if (!Dispatcher.CheckAccess())
             {
-                Invoke((Action)Stop);
+                Dispatcher.Invoke(Stop);
                 return;
             }
 
@@ -964,9 +1040,9 @@ namespace PPDEditor.Forms
 
         public void Seek(double time)
         {
-            if (InvokeRequired)
+            if (!Dispatcher.CheckAccess())
             {
-                Invoke((Action<double>)Seek, time);
+                Dispatcher.Invoke(() => Seek(time));
                 return;
             }
 
@@ -1116,7 +1192,7 @@ namespace PPDEditor.Forms
             this.saveFileDialog1.Filter = opensoundsetfilter;
             this.saveFileDialog1.RestoreDirectory = true;
             this.saveFileDialog1.FileName = "soundset.txt";
-            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+            if (saveFileDialog1.ShowDialog(this) == true)
             {
                 if (saveFileDialog1.FileName[^4..] != ".txt")
                 {
@@ -1150,7 +1226,7 @@ namespace PPDEditor.Forms
             this.saveFileDialog1.Filter = openscdfilter;
             this.saveFileDialog1.RestoreDirectory = true;
             this.saveFileDialog1.FileName = "new.scd";
-            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+            if (saveFileDialog1.ShowDialog(this) == true)
             {
                 if (saveFileDialog1.FileName[^4..] != ".txt")
                 {
@@ -1185,7 +1261,7 @@ namespace PPDEditor.Forms
             this.saveFileDialog1.Filter = openppdfilter;
             this.saveFileDialog1.RestoreDirectory = true;
             this.saveFileDialog1.FileName = "NewFile.ppd";
-            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+            if (saveFileDialog1.ShowDialog(this) == true)
             {
                 if (saveFileDialog1.FileName[^4..] != ".ppd")
                 {
@@ -1223,7 +1299,7 @@ namespace PPDEditor.Forms
             this.saveFileDialog1.Filter = opensoundsetfilter;
             this.saveFileDialog1.RestoreDirectory = true;
             this.saveFileDialog1.FileName = "kasi.txt";
-            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+            if (saveFileDialog1.ShowDialog(this) == true)
             {
                 if (saveFileDialog1.FileName[^4..] != ".txt")
                 {
@@ -1257,7 +1333,7 @@ namespace PPDEditor.Forms
             this.saveFileDialog1.Filter = openinifilter;
             this.saveFileDialog1.RestoreDirectory = true;
             this.saveFileDialog1.FileName = "data.ini";
-            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+            if (saveFileDialog1.ShowDialog(this) == true)
             {
                 if (saveFileDialog1.FileName[^4..] != ".ini")
                 {
@@ -1290,7 +1366,7 @@ namespace PPDEditor.Forms
         {
             this.saveFileDialog1.Filter = openevdfilter;
             this.saveFileDialog1.RestoreDirectory = true;
-            this.saveFileDialog1.FileName = "NewFile.evd"; if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+            this.saveFileDialog1.FileName = "NewFile.evd"; if (saveFileDialog1.ShowDialog(this) == true)
             {
                 if (saveFileDialog1.FileName[^4..] != ".evd")
                 {
@@ -1341,7 +1417,11 @@ namespace PPDEditor.Forms
             }
         }
 
-        private DialogResult CheckCanSaveAndSaveProject()
+        /// <summary>
+        /// 保存する場所を選んで保存します。
+        /// </summary>
+        /// <returns>保存したかどうか（やめたときは false）。</returns>
+        private bool CheckCanSaveAndSaveProject()
         {
             this.saveFileDialog1.Filter = openprojectfilter;
             this.saveFileDialog1.RestoreDirectory = true;
@@ -1357,8 +1437,8 @@ namespace PPDEditor.Forms
             {
                 this.saveFileDialog1.FileName = "New.ppdproj";
             }
-            DialogResult ret = saveFileDialog1.ShowDialog();
-            if (ret == DialogResult.OK)
+            var ret = saveFileDialog1.ShowDialog(this) == true;
+            if (ret)
             {
                 if (saveFileDialog1.FileName[^8..] != ".ppdproj")
                 {
@@ -1374,8 +1454,8 @@ namespace PPDEditor.Forms
                 this.projectfilename = Path.GetFileName(this.saveFileDialog1.FileName);
                 this.projectfiledir = Path.GetDirectoryName(this.saveFileDialog1.FileName);
                 SaveProject();
-                this.プロジェクトを上書き保存ToolStripMenuItem.Enabled = this.難易度ToolStripMenuItem.Enabled
-                    = this.発行ToolStripMenuItem.Enabled = this.mODを発行ToolStripMenuItem.Enabled = IsProjectLoaded;
+                this.プロジェクトを上書き保存ToolStripMenuItem.IsEnabled = this.難易度ToolStripMenuItem.IsEnabled
+                    = this.発行ToolStripMenuItem.IsEnabled = this.mODを発行ToolStripMenuItem.IsEnabled = IsProjectLoaded;
                 ChangeWindowText();
             }
             return ret;
@@ -1539,7 +1619,7 @@ namespace PPDEditor.Forms
                     }
                     else
                     {
-                        MessageBox.Show((datas[i]) + nosoundfile);
+                        MessageBox.Show(this, (datas[i]) + nosoundfile);
                     }
                 }
             }
@@ -1596,7 +1676,7 @@ namespace PPDEditor.Forms
             this.openFileDialog1.Filter = opensoundsetfilter;
             this.openFileDialog1.RestoreDirectory = true;
             this.openFileDialog1.FileName = "kasi.txt";
-            if (this.openFileDialog1.ShowDialog() == DialogResult.OK)
+            if (this.openFileDialog1.ShowDialog(this) == true)
             {
                 ReadKasi(this.openFileDialog1.FileName);
             }
@@ -1614,7 +1694,7 @@ namespace PPDEditor.Forms
             this.openFileDialog1.Filter = openppdfilter;
             this.openFileDialog1.RestoreDirectory = true;
             this.openFileDialog1.FileName = "";
-            if (this.openFileDialog1.ShowDialog() == DialogResult.OK)
+            if (this.openFileDialog1.ShowDialog(this) == true)
             {
                 ReadPpdAsPack(this.openFileDialog1.FileName);
             }
@@ -1645,7 +1725,7 @@ namespace PPDEditor.Forms
             var markData = PPDReader.Read(stream, ref signError);
             if (signError)
             {
-                MessageBox.Show(invaliddata);
+                MessageBox.Show(this, invaliddata);
                 return;
             }
 
@@ -1670,7 +1750,7 @@ namespace PPDEditor.Forms
             this.openFileDialog1.Filter = openinifilter;
             this.openFileDialog1.RestoreDirectory = true;
             this.openFileDialog1.FileName = "data.ini";
-            if (this.openFileDialog1.ShowDialog() == DialogResult.OK)
+            if (this.openFileDialog1.ShowDialog(this) == true)
             {
                 ReadIni(this.openFileDialog1.FileName);
             }
@@ -1773,7 +1853,7 @@ namespace PPDEditor.Forms
             this.openFileDialog1.Filter = openevdfilter;
             this.openFileDialog1.RestoreDirectory = true;
             this.openFileDialog1.FileName = "";
-            if (this.openFileDialog1.ShowDialog() == DialogResult.OK)
+            if (this.openFileDialog1.ShowDialog(this) == true)
             {
                 ReadEvdAsPack(this.openFileDialog1.FileName);
             }
@@ -1880,7 +1960,7 @@ namespace PPDEditor.Forms
             this.openFileDialog1.Filter = openprojectfilter;
             this.openFileDialog1.RestoreDirectory = true;
             this.openFileDialog1.FileName = "";
-            if (this.openFileDialog1.ShowDialog() == DialogResult.OK)
+            if (this.openFileDialog1.ShowDialog(this) == true)
             {
                 CheckReadProject(this.openFileDialog1.FileName);
             }
@@ -1909,7 +1989,7 @@ namespace PPDEditor.Forms
             }
             else
             {
-                if (MessageBox.Show(oldprojectdetected, confirm, MessageBoxButtons.OKCancel) == DialogResult.OK)
+                if (MessageBox.Show(this, oldprojectdetected, confirm, MessageBoxButton.OKCancel) == MessageBoxResult.OK)
                 {
                     BackUpProject(path);
                     ConvertProject(path, version);
@@ -2346,7 +2426,7 @@ namespace PPDEditor.Forms
             SaveIni(rescuedirectory + "\\data.ini");
             SaveEvd(rescuedirectory + "\\base.evd");
             SaveLayers(rescuedirectory);
-            MessageBox.Show("Data was rescued at\n" + Path.GetFullPath(rescuedirectory));
+            MessageBox.Show(this, "Data was rescued at\n" + Path.GetFullPath(rescuedirectory));
         }
 
         private void 元に戻すToolStripMenuItem_Click(object sender, EventArgs e)
@@ -2372,87 +2452,123 @@ namespace PPDEditor.Forms
         }
         private void サウンドマネージャーToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Utility.ShowOrHideWindow(dockPanel1, smDock, ModifierKeys);
+            DockUtility.ShowOrHideWindow(smDock);
         }
 
         private void 設定ファイルライターToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Utility.ShowOrHideWindow(dockPanel1, ifwDock, ModifierKeys);
+            DockUtility.ShowOrHideWindow(ifwDock);
         }
 
         private void 位置角度ローダーセーバーToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Utility.ShowOrHideWindow(dockPanel1, paalsDock, ModifierKeys);
+            DockUtility.ShowOrHideWindow(paalsDock);
         }
 
         private void 歌詞エディターToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Utility.ShowOrHideWindow(dockPanel1, keDock, ModifierKeys);
+            DockUtility.ShowOrHideWindow(keDock);
         }
 
         private void BPMToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Utility.ShowOrHideWindow(dockPanel1, bmDock, ModifierKeys);
+            DockUtility.ShowOrHideWindow(bmDock);
         }
 
         private void ゲームウィンドウToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Utility.ShowOrHideWindow(dockPanel1, dxf, ModifierKeys);
+            DockUtility.ShowOrHideWindow(dxfDock);
         }
 
         private void タイムラインウィンドウToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Utility.ShowOrHideWindow(dockPanel1, tlfDock, ModifierKeys);
+            DockUtility.ShowOrHideWindow(tlfDock);
         }
 
         private void プロパティウィンドウToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Utility.ShowOrHideWindow(dockPanel1, infofDock, ModifierKeys);
+            DockUtility.ShowOrHideWindow(infofDock);
         }
         private void レイヤーマネージャーToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Utility.ShowOrHideWindow(dockPanel1, lmDock, ModifierKeys);
+            DockUtility.ShowOrHideWindow(lmDock);
         }
 
         private void イベントマネージャーToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Utility.ShowOrHideWindow(dockPanel1, emDock, ModifierKeys);
+            DockUtility.ShowOrHideWindow(emDock);
         }
         private void 幾何クリエーターToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Utility.ShowOrHideWindow(dockPanel1, gcDock, ModifierKeys);
+            DockUtility.ShowOrHideWindow(gcDock);
         }
 
         private void メモToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Utility.ShowOrHideWindow(dockPanel1, mwDock, ModifierKeys);
+            DockUtility.ShowOrHideWindow(mwDock);
         }
 
         private void リソースマネージャーToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Utility.ShowOrHideWindow(dockPanel1, rmDock, ModifierKeys);
+            DockUtility.ShowOrHideWindow(rmDock);
         }
 
         private void スクリプトマネージャーToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Utility.ShowOrHideWindow(dockPanel1, scmDock, ModifierKeys);
+            DockUtility.ShowOrHideWindow(scmDock);
         }
 
         private void ヘルプToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Utility.ShowOrHideWindow(dockPanel1, hfDock, ModifierKeys);
+            DockUtility.ShowOrHideWindow(hfDock);
         }
 
         private void 統計ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Utility.ShowOrHideWindow(dockPanel1, stmDock, ModifierKeys);
+            DockUtility.ShowOrHideWindow(stmDock);
         }
 
-        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        private void Form1_FormClosing(object sender, CancelEventArgs e)
         {
-            scm.SaveDock(Path.Combine(Utility.AppDir, scriptdockxmlname));
-            dockPanel1.SaveAsXml(Path.Combine(Utility.AppDir, dockxmlname));
-            SaveShortcut();
+            moveMarkTimer.Stop();
+            try
+            {
+                scm.SaveDock(Path.Combine(Utility.AppDir, scriptdockxmlname));
+                new XmlLayoutSerializer(dockPanel1).Serialize(Path.Combine(Utility.AppDir, dockxmlname));
+                SaveShortcut();
+            }
+            catch (IOException)
+            {
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                currentProcess?.Dispose();
+                currentProcess = null;
+            }
+        }
+
+        /// <summary>
+        /// 確認しないで閉じます（エラーで止まったとき）。
+        /// </summary>
+        public void ForceClose()
+        {
+            try
+            {
+                Close();
+            }
+            catch (InvalidOperationException)
+            {
+            }
         }
 
         public void ChangeMousePos(Point p)
@@ -2465,22 +2581,23 @@ namespace PPDEditor.Forms
             MyGame.ChangeData(positions, angles);
         }
 
-        protected override void OnLoad(EventArgs e)
+        private void Window_SourceInitialized(object sender, EventArgs e)
         {
-            base.OnLoad(e);
+            var handle = new WindowInteropHelper(this).Handle;
+            HwndSource.FromHwnd(handle).AddHook(WndProc);
             const Int32 MF_BYPOSITION = 0x400;
             const Int32 MF_REMOVE = 0x1000;
 
             const UInt32 SC_CLOSE = 0x0000F060;
             const UInt32 MF_BYCOMMAND = 0x00000000;
-            var menu = NativeMethods.GetSystemMenu(this.Handle, false);
+            var menu = NativeMethods.GetSystemMenu(handle, false);
             NativeMethods.RemoveMenu(menu, SC_CLOSE, MF_BYCOMMAND);
             var menuCount = NativeMethods.GetMenuItemCount(menu);
             if (menuCount > 1)
             {
                 //メニューの「閉じる」を削除
                 NativeMethods.RemoveMenu(menu, (uint)(menuCount - 1), MF_BYPOSITION | MF_REMOVE);
-                NativeMethods.DrawMenuBar(this.Handle);
+                NativeMethods.DrawMenuBar(handle);
             }
         }
 
@@ -2488,13 +2605,13 @@ namespace PPDEditor.Forms
         {
             if (currentProcess != null && !currentProcess.HasExited)
             {
-                var dr = MessageBox.Show(askkillprocess, confirm, MessageBoxButtons.OKCancel, MessageBoxIcon.Exclamation);
+                var dr = MessageBox.Show(this, askkillprocess, confirm, MessageBoxButton.OKCancel, MessageBoxImage.Exclamation);
                 switch (dr)
                 {
-                    case DialogResult.OK:
+                    case MessageBoxResult.OK:
                         currentProcess.Kill();
                         break;
-                    case DialogResult.Cancel:
+                    case MessageBoxResult.Cancel:
                         return false;
                 }
             }
@@ -2505,15 +2622,15 @@ namespace PPDEditor.Forms
         {
             if (currentExecutor != null && currentExecutor.IsWorking)
             {
-                var dr = MessageBox.Show(askkillcommand, confirm, MessageBoxButtons.OKCancel, MessageBoxIcon.Exclamation);
+                var dr = MessageBox.Show(this, askkillcommand, confirm, MessageBoxButton.OKCancel, MessageBoxImage.Exclamation);
                 switch (dr)
                 {
-                    case DialogResult.OK:
+                    case MessageBoxResult.OK:
                         currentExecutor.Kill();
                         currentExecutor = null;
                         CommandExecuted?.Invoke(null);
                         break;
-                    case DialogResult.Cancel:
+                    case MessageBoxResult.Cancel:
                         return false;
                 }
             }
@@ -2535,16 +2652,16 @@ namespace PPDEditor.Forms
             bool cancel = false;
             if (IsNotSaved)
             {
-                var dr = MessageBox.Show(asksave, confirm, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2);
+                var dr = MessageBox.Show(this, asksave, confirm, MessageBoxButton.YesNoCancel, MessageBoxImage.Exclamation, MessageBoxResult.No);
                 switch (dr)
                 {
-                    case DialogResult.Yes:
-                        cancel |= CheckCanSaveAndSaveProject() == DialogResult.Cancel;
+                    case MessageBoxResult.Yes:
+                        cancel |= !CheckCanSaveAndSaveProject();
 
                         break;
-                    case DialogResult.No:
+                    case MessageBoxResult.No:
                         break;
-                    case DialogResult.Cancel:
+                    case MessageBoxResult.Cancel:
                         cancel = true;
                         break;
                 }
@@ -2559,9 +2676,12 @@ namespace PPDEditor.Forms
 
         private void LoadConfig()
         {
+            WindowStartupLocation = WindowStartupLocation.Manual;
+            Width = PPDStaticSetting.LastWindowSize.Width;
+            Height = PPDStaticSetting.LastWindowSize.Height;
+            Left = PPDStaticSetting.LastWindowLocation.X;
+            Top = PPDStaticSetting.LastWindowLocation.Y;
             WindowState = PPDStaticSetting.LastWindowState;
-            ClientSize = PPDStaticSetting.LastWindowSize;
-            Location = PPDStaticSetting.LastWindowLocation;
             FixDockPanel = PPDStaticSetting.FixDockPanel;
             mw.MemoFontSize = PPDStaticSetting.MemoFontSize;
             LoadRecentUserProject();
@@ -2589,39 +2709,39 @@ namespace PPDEditor.Forms
 
         private void AddRecentUsedProject(string path)
         {
-            if (this.最近使用したプロジェクトToolStripMenuItem.DropDownItems.ContainsKey(path))
+            var existing = this.最近使用したプロジェクトToolStripMenuItem.Items.OfType<MenuItem>().FirstOrDefault(m => (string)m.Tag == path);
+            if (existing != null)
             {
-                var tsmis = this.最近使用したプロジェクトToolStripMenuItem.DropDownItems.Find(path, false);
-                if (tsmis.Length == 1)
-                {
-                    this.最近使用したプロジェクトToolStripMenuItem.DropDownItems.Remove(tsmis[0]);
-                    this.最近使用したプロジェクトToolStripMenuItem.DropDownItems.Insert(0, tsmis[0]);
-                }
+                this.最近使用したプロジェクトToolStripMenuItem.Items.Remove(existing);
+                this.最近使用したプロジェクトToolStripMenuItem.Items.Insert(0, existing);
             }
             else
             {
-                var tsmi = new ToolStripMenuItem(path);
-                tsmi.Name = tsmi.Text = path;
-                tsmi.Click += Tsmi_Click;
-                this.最近使用したプロジェクトToolStripMenuItem.DropDownItems.Insert(0, tsmi);
-                if (this.最近使用したプロジェクトToolStripMenuItem.DropDownItems.Count > 5)
+                var tsmi = new MenuItem
                 {
-                    this.最近使用したプロジェクトToolStripMenuItem.DropDownItems.RemoveAt(this.最近使用したプロジェクトToolStripMenuItem.DropDownItems.Count - 1);
+                    Header = ToMenuText(path),
+                    Tag = path
+                };
+                tsmi.Click += Tsmi_Click;
+                this.最近使用したプロジェクトToolStripMenuItem.Items.Insert(0, tsmi);
+                if (this.最近使用したプロジェクトToolStripMenuItem.Items.Count > 5)
+                {
+                    this.最近使用したプロジェクトToolStripMenuItem.Items.RemoveAt(this.最近使用したプロジェクトToolStripMenuItem.Items.Count - 1);
                 }
             }
         }
 
         void Tsmi_Click(object sender, EventArgs e)
         {
-            CheckReadProject((sender as ToolStripMenuItem).Text);
+            CheckReadProject((string)((MenuItem)sender).Tag);
         }
 
         private void SaveRecentUsedProject()
         {
             using StreamWriter sw = new(Path.Combine(Utility.AppDir, projectcache));
-            foreach (ToolStripMenuItem tsmi in this.最近使用したプロジェクトToolStripMenuItem.DropDownItems)
+            foreach (MenuItem tsmi in this.最近使用したプロジェクトToolStripMenuItem.Items)
             {
-                sw.WriteLine(tsmi.Text);
+                sw.WriteLine((string)tsmi.Tag);
             }
         }
 
@@ -2630,9 +2750,11 @@ namespace PPDEditor.Forms
             var path = Path.Combine(Utility.AppDir, iniFileName);
             var setting = new SettingReader(File.ReadAllText(path));
             setting.ReplaceOrAdd("Language", PPDStaticSetting.langFileISO);
-            setting.ReplaceOrAdd("Maximised", WindowState == FormWindowState.Maximized);
-            setting.ReplaceOrAdd("Size", String.Format("{0},{1}", this.ClientSize.Width, this.ClientSize.Height));
-            setting.ReplaceOrAdd("Location", String.Format("{0},{1}", Location.X, Location.Y));
+            // 最大化しているときは、元の大きさと位置を保存する
+            var bounds = WindowState == WindowState.Normal ? new Rect(Left, Top, Width, Height) : RestoreBounds;
+            setting.ReplaceOrAdd("Maximised", WindowState == WindowState.Maximized);
+            setting.ReplaceOrAdd("Size", String.Format("{0},{1}", (int)bounds.Width, (int)bounds.Height));
+            setting.ReplaceOrAdd("Location", String.Format("{0},{1}", (int)bounds.X, (int)bounds.Y));
             setting.ReplaceOrAdd("AuthorName", PPDStaticSetting.AuthorName);
             setting.ReplaceOrAdd("MovieLatency", PPDStaticSetting.MovieLatency);
             setting.ReplaceOrAdd("HideToggleRectangle", PPDStaticSetting.HideToggleRectangle);
@@ -2750,20 +2872,20 @@ namespace PPDEditor.Forms
             ProcessStarted?.Invoke();
             currentProcess.Exited += CurrentProcess_Exited;
             currentProcess.Start();
-            現在の時間から開始ToolStripMenuItem.Enabled = 現在の時間から開始オートToolStripMenuItem.Enabled =
-                最初から開始ToolStripMenuItem.Enabled = 最初から開始オートToolStripMenuItem.Enabled = メニューから開始ToolStripMenuItem.Enabled = false;
-            pPDプロセスを強制終了ToolStripMenuItem.Enabled = true;
+            現在の時間から開始ToolStripMenuItem.IsEnabled = 現在の時間から開始オートToolStripMenuItem.IsEnabled =
+                最初から開始ToolStripMenuItem.IsEnabled = 最初から開始オートToolStripMenuItem.IsEnabled = メニューから開始ToolStripMenuItem.IsEnabled = false;
+            pPDプロセスを強制終了ToolStripMenuItem.IsEnabled = true;
         }
 
         void CurrentProcess_Exited(object sender, EventArgs e)
         {
-            this.Invoke((Action)(() =>
+            Dispatcher.Invoke(() =>
             {
-                現在の時間から開始ToolStripMenuItem.Enabled = 現在の時間から開始オートToolStripMenuItem.Enabled =
-                    最初から開始ToolStripMenuItem.Enabled = 最初から開始オートToolStripMenuItem.Enabled = メニューから開始ToolStripMenuItem.Enabled = true;
-                pPDプロセスを強制終了ToolStripMenuItem.Enabled = false;
+                現在の時間から開始ToolStripMenuItem.IsEnabled = 現在の時間から開始オートToolStripMenuItem.IsEnabled =
+                    最初から開始ToolStripMenuItem.IsEnabled = 最初から開始オートToolStripMenuItem.IsEnabled = メニューから開始ToolStripMenuItem.IsEnabled = true;
+                pPDプロセスを強制終了ToolStripMenuItem.IsEnabled = false;
                 ProcessExited?.Invoke();
-            }));
+            });
         }
 
         private void プロジェクトを上書き保存ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -2771,6 +2893,10 @@ namespace PPDEditor.Forms
             wdf.Hide();
             if (OverWriteProject())
             {
+                if (wdf.Owner == null)
+                {
+                    wdf.Owner = this;
+                }
                 wdf.Show();
                 this.Activate();
             }
@@ -2778,6 +2904,11 @@ namespace PPDEditor.Forms
 
         private void ToolStripComboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
+            // WPF では XAML を読み込む間にも呼ばれるので、ドックを作るまでは何もしない
+            if (WindowUtility.LayerManager == null)
+            {
+                return;
+            }
             WindowUtility.LayerManager.DisplayMode = (DisplayLineMode)this.toolStripComboBox1.SelectedIndex;
             WindowUtility.Seekmain.DisplayMode = (DisplayLineMode)this.toolStripComboBox1.SelectedIndex;
             WindowUtility.Seekmain.DrawAndRefresh();
@@ -2785,6 +2916,11 @@ namespace PPDEditor.Forms
 
         private void ToolStripComboBox2_SelectedIndexChanged(object sender, EventArgs e)
         {
+            // WPF では XAML を読み込む間にも呼ばれるので、ドックを作るまでは何もしない
+            if (WindowUtility.LayerManager == null)
+            {
+                return;
+            }
             float result = 0;
             switch (this.toolStripComboBox2.SelectedIndex)
             {
@@ -2816,6 +2952,11 @@ namespace PPDEditor.Forms
 
         private void ToolStripComboBox3_SelectedIndexChanged(object sender, EventArgs e)
         {
+            // WPF では XAML を読み込む間にも呼ばれるので、ドックを作るまでは何もしない
+            if (WindowUtility.LayerManager == null)
+            {
+                return;
+            }
             WindowUtility.LayerManager.BeatType = (DisplayBeatType)this.toolStripComboBox3.SelectedIndex;
             WindowUtility.Seekmain.BeatType = (DisplayBeatType)this.toolStripComboBox3.SelectedIndex;
             WindowUtility.Seekmain.DrawAndRefresh();
@@ -2823,6 +2964,11 @@ namespace PPDEditor.Forms
 
         private void ToolStripTextBox1_TextChanged(object sender, EventArgs e)
         {
+            // WPF では XAML を読み込む間にも呼ばれるので、ドックを作るまでは何もしない
+            if (WindowUtility.LayerManager == null)
+            {
+                return;
+            }
             if (float.TryParse(this.toolStripTextBox1.Text, out float result))
             {
                 if (result <= 500)
@@ -2834,6 +2980,11 @@ namespace PPDEditor.Forms
 
         private void ToolStripTextBox2_TextChanged(object sender, EventArgs e)
         {
+            // WPF では XAML を読み込む間にも呼ばれるので、ドックを作るまでは何もしない
+            if (WindowUtility.LayerManager == null)
+            {
+                return;
+            }
             if (float.TryParse(this.toolStripTextBox2.Text, out float result))
             {
                 WindowUtility.LayerManager.BPMOffset = result;
@@ -2842,6 +2993,11 @@ namespace PPDEditor.Forms
 
         private void ToolStripTextBox3_TextChanged(object sender, EventArgs e)
         {
+            // WPF では XAML を読み込む間にも呼ばれるので、ドックを作るまでは何もしない
+            if (WindowUtility.LayerManager == null)
+            {
+                return;
+            }
             if (int.TryParse(this.toolStripTextBox3.Text, out int result))
             {
                 WindowUtility.LayerManager.DisplayWidth = result;
@@ -2850,43 +3006,48 @@ namespace PPDEditor.Forms
         public string GetDisplayModeString(DisplayLineMode index)
         {
             if (index < 0 || (int)index >= toolStripComboBox1.Items.Count) return "";
-            return toolStripComboBox1.Items[(int)index].ToString();
-        }
-
-        private void PxToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            this.exToolStripSplitButton1.Checked = true;
-            TurnOffExcept(sender as ToolStripMenuItem);
-            GridPixel = 5;
+            var item = toolStripComboBox1.Items[(int)index];
+            return (item as ComboBoxItem)?.Content?.ToString() ?? item.ToString();
         }
 
         private void PxToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            this.exToolStripSplitButton1.Checked = true;
-            TurnOffExcept(sender as ToolStripMenuItem);
+            this.exToolStripSplitButton1.IsChecked = true;
+            TurnOffExcept(sender as MenuItem);
             GridPixel = 10;
         }
 
         private void PxToolStripMenuItem2_Click(object sender, EventArgs e)
         {
-            this.exToolStripSplitButton1.Checked = true;
-            TurnOffExcept(sender as ToolStripMenuItem);
+            this.exToolStripSplitButton1.IsChecked = true;
+            TurnOffExcept(sender as MenuItem);
             GridPixel = 20;
         }
 
         private void PxToolStripMenuItem3_Click(object sender, EventArgs e)
         {
-            this.exToolStripSplitButton1.Checked = true;
-            TurnOffExcept(sender as ToolStripMenuItem);
+            this.exToolStripSplitButton1.IsChecked = true;
+            TurnOffExcept(sender as MenuItem);
             GridPixel = 50;
         }
 
-        private void TurnOffExcept(ToolStripMenuItem tsmi)
+        private void TurnOffExcept(MenuItem tsmi)
         {
-            foreach (ToolStripMenuItem ttsmi in this.exToolStripSplitButton1.DropDownItems)
+            foreach (MenuItem ttsmi in this.gridMenu.Items)
             {
-                if (tsmi != ttsmi) ttsmi.Checked = false;
+                if (tsmi != ttsmi) ttsmi.IsChecked = false;
             }
+        }
+
+        /// <summary>
+        /// ツールバーのボタンの横の ▼ で、メニューを出す。
+        /// </summary>
+        private void DropDownButton_Click(object sender, RoutedEventArgs e)
+        {
+            var button = (Button)sender;
+            button.ContextMenu.PlacementTarget = button;
+            button.ContextMenu.Placement = System.Windows.Controls.Primitives.PlacementMode.Bottom;
+            button.ContextMenu.IsOpen = true;
         }
         private void 詳細設定ToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -2896,8 +3057,8 @@ namespace PPDEditor.Forms
             if (WpfDialog.ShowDialog(gsf))
             {
                 Grid.CopyFrom(gsf.Grid);
-                TurnOffExcept(sender as ToolStripMenuItem);
-                this.exToolStripSplitButton1.Checked = true;
+                TurnOffExcept(sender as MenuItem);
+                this.exToolStripSplitButton1.IsChecked = true;
             }
         }
 
@@ -2920,9 +3081,9 @@ namespace PPDEditor.Forms
 
         private void Form1_DragEnter(object sender, DragEventArgs e)
         {
-            if (e.Data.GetDataPresent(DataFormats.FileDrop)) e.Effect = DragDropEffects.Copy;
-            else e.Effect = DragDropEffects.None;
-
+            if (e.Data.GetDataPresent(DataFormats.FileDrop)) e.Effects = DragDropEffects.Copy;
+            else e.Effects = DragDropEffects.None;
+            e.Handled = true;
         }
 
         private void Form1_DragDrop(object sender, DragEventArgs e)
@@ -2955,7 +3116,7 @@ namespace PPDEditor.Forms
                 ReadCommands();
                 if (sf.ShouldRestart)
                 {
-                    MessageBox.Show(rebootnecessary);
+                    MessageBox.Show(this, rebootnecessary);
                 }
             }
         }
@@ -2963,35 +3124,35 @@ namespace PPDEditor.Forms
         private void EasyToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ChangeDifficulty(AvailableDifficulty.Easy);
-            TurnOffExceptDifficulty(sender as ToolStripMenuItem);
+            TurnOffExceptDifficulty(sender as MenuItem);
             ChangeWindowText();
         }
 
         private void NormalToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ChangeDifficulty(AvailableDifficulty.Normal);
-            TurnOffExceptDifficulty(sender as ToolStripMenuItem);
+            TurnOffExceptDifficulty(sender as MenuItem);
             ChangeWindowText();
         }
 
         private void HardToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ChangeDifficulty(AvailableDifficulty.Hard);
-            TurnOffExceptDifficulty(sender as ToolStripMenuItem);
+            TurnOffExceptDifficulty(sender as MenuItem);
             ChangeWindowText();
         }
 
         private void ExtremeToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ChangeDifficulty(AvailableDifficulty.Extreme);
-            TurnOffExceptDifficulty(sender as ToolStripMenuItem);
+            TurnOffExceptDifficulty(sender as MenuItem);
             ChangeWindowText();
         }
 
         private void BaseToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ChangeDifficulty(AvailableDifficulty.Base);
-            TurnOffExceptDifficulty(sender as ToolStripMenuItem);
+            TurnOffExceptDifficulty(sender as MenuItem);
             ChangeWindowText();
         }
 
@@ -3009,11 +3170,11 @@ namespace PPDEditor.Forms
             }
         }
 
-        private void TurnOffExceptDifficulty(ToolStripMenuItem tsmi)
+        private void TurnOffExceptDifficulty(MenuItem tsmi)
         {
-            foreach (ToolStripMenuItem ttsmi in this.難易度ToolStripMenuItem.DropDownItems)
+            foreach (MenuItem ttsmi in this.難易度ToolStripMenuItem.Items.OfType<MenuItem>())
             {
-                if (tsmi != ttsmi) ttsmi.Checked = false;
+                if (tsmi != ttsmi) ttsmi.IsChecked = false;
             }
         }
 
@@ -3049,7 +3210,7 @@ namespace PPDEditor.Forms
                 }
                 if (alreadyexist)
                 {
-                    alreadyexist = !(MessageBox.Show(alreadyexitdifficulty, confirm, MessageBoxButtons.OKCancel) == DialogResult.OK);
+                    alreadyexist = !(MessageBox.Show(this, alreadyexitdifficulty, confirm, MessageBoxButton.OKCancel) == MessageBoxResult.OK);
                 }
                 if (!alreadyexist)
                 {
@@ -3103,7 +3264,7 @@ namespace PPDEditor.Forms
             {
                 if (pf.PublishDifficulty == AvailableDifficulty.None)
                 {
-                    MessageBox.Show(noselecteddifficulty);
+                    MessageBox.Show(this, noselecteddifficulty);
                     return;
                 }
                 NonExistCreateDirectory(pf.PublishFolderPath);
@@ -3159,7 +3320,7 @@ namespace PPDEditor.Forms
                 AvailableDifficulty mergeDifficulty = mf.MergeDifficulty;
                 if (mergeDifficulty == AvailableDifficulty.None)
                 {
-                    MessageBox.Show(nomergedifficulty);
+                    MessageBox.Show(this, nomergedifficulty);
                     return;
                 }
                 foreach (AvailableDifficulty difficulty in DifficultyArray)
@@ -3255,32 +3416,24 @@ namespace PPDEditor.Forms
 
         private void ツールバーを隠すToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ツールバーを隠すToolStripMenuItem.Checked = !ツールバーを隠すToolStripMenuItem.Checked;
-            toolStripContainer1.TopToolStripPanelVisible = !ツールバーを隠すToolStripMenuItem.Checked;
+            ツールバーを隠すToolStripMenuItem.IsChecked = !ツールバーを隠すToolStripMenuItem.IsChecked;
+            menuStrip1.Visibility = ツールバーを隠すToolStripMenuItem.IsChecked ? Visibility.Collapsed : Visibility.Visible;
         }
 
-        protected override void WndProc(ref Message m)
+        private IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
         {
-            switch (m.Msg)
+            // WM_NCMOUSEMOVE: タイトルバーにマウスが来たら、隠したメニューを出す
+            if (msg == 0xA0 && menuStrip1.Visibility != Visibility.Visible)
             {
-                // WM_NCMOUSEMOVE
-                case 0xA0:
-                    base.WndProc(ref m);
-                    if (!toolStripContainer1.TopToolStripPanelVisible)
-                    {
-                        toolStripContainer1.TopToolStripPanelVisible = true;
-                        ツールバーを隠すToolStripMenuItem.Checked = false;
-                    }
-                    break;
-                default:
-                    base.WndProc(ref m);
-                    break;
+                menuStrip1.Visibility = Visibility.Visible;
+                ツールバーを隠すToolStripMenuItem.IsChecked = false;
             }
+            return IntPtr.Zero;
         }
 
         private void ChangeWindowText()
         {
-            this.Text = string.Format("{0}({1}) - PPDEditor", Path.GetFileNameWithoutExtension(projectfilename), CurrentDifficulty);
+            this.Title = string.Format("{0}({1}) - PPDEditor", Path.GetFileNameWithoutExtension(projectfilename), CurrentDifficulty);
         }
 
         private void ドックを固定ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -3342,7 +3495,7 @@ namespace PPDEditor.Forms
             {
                 if (!File.Exists(sound))
                 {
-                    MessageBox.Show(String.Format("{0}\n{1}", Utility.Language["SoundNotExist"], sound));
+                    MessageBox.Show(this, String.Format("{0}\n{1}", Utility.Language["SoundNotExist"], sound));
                     continue;
                 }
                 sounds.Add(sound);
@@ -3373,7 +3526,7 @@ namespace PPDEditor.Forms
                 var src = Path.Combine(Utility.AppDir, script.Src);
                 if (!File.Exists(src))
                 {
-                    MessageBox.Show(String.Format("{0}\n{1}", Utility.Language["ScriptNotExist"], src));
+                    MessageBox.Show(this, String.Format("{0}\n{1}", Utility.Language["ScriptNotExist"], src));
                     continue;
                 }
                 var dest = Path.Combine(CurrentProjectDir, "Base_Scripts", script.Dest);
@@ -3397,24 +3550,24 @@ namespace PPDEditor.Forms
             {
                 if (String.IsNullOrEmpty(projectfiledir))
                 {
-                    var dr = MessageBox.Show(asksave, confirm, okCancel ? MessageBoxButtons.OKCancel : MessageBoxButtons.YesNoCancel, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2);
-                    if (dr == DialogResult.Yes || dr == DialogResult.OK)
+                    var dr = MessageBox.Show(this, asksave, confirm, okCancel ? MessageBoxButton.OKCancel : MessageBoxButton.YesNoCancel, MessageBoxImage.Exclamation, okCancel ? MessageBoxResult.Cancel : MessageBoxResult.No);
+                    if (dr == MessageBoxResult.Yes || dr == MessageBoxResult.OK)
                     {
-                        cancel |= CheckCanSaveAndSaveProject() == DialogResult.Cancel;
+                        cancel |= !CheckCanSaveAndSaveProject();
                     }
-                    else if (dr == DialogResult.No)
+                    else if (dr == MessageBoxResult.No)
                     {
                     }
-                    else cancel |= dr == DialogResult.Cancel;
+                    else cancel |= dr == MessageBoxResult.Cancel;
                 }
                 else
                 {
-                    var dr = MessageBox.Show(asksave, confirm, okCancel ? MessageBoxButtons.OKCancel : MessageBoxButtons.YesNoCancel, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2);
-                    if (dr == DialogResult.Yes || dr == DialogResult.OK)
+                    var dr = MessageBox.Show(this, asksave, confirm, okCancel ? MessageBoxButton.OKCancel : MessageBoxButton.YesNoCancel, MessageBoxImage.Exclamation, okCancel ? MessageBoxResult.Cancel : MessageBoxResult.No);
+                    if (dr == MessageBoxResult.Yes || dr == MessageBoxResult.OK)
                     {
                         SaveProject();
                     }
-                    cancel = dr == DialogResult.Cancel;
+                    cancel = dr == MessageBoxResult.Cancel;
                 }
             }
 
@@ -3425,7 +3578,7 @@ namespace PPDEditor.Forms
         {
             if (scm.GetEnabledScriptList().Length < 1)
             {
-                MessageBox.Show("MODの発行には少なくともひとつのスクリプトが必要です。");
+                MessageBox.Show(this, "MODの発行には少なくともひとつのスクリプトが必要です。");
                 return;
             }
 
@@ -3482,11 +3635,11 @@ namespace PPDEditor.Forms
             WindowUtility.Seekmain.AngleInterpolation(true);
         }
 
-        private static void ImportEvent(string filePath)
+        private void ImportEvent(string filePath)
         {
             if (!File.Exists(filePath))
             {
-                MessageBox.Show(String.Format("Not Exist File:{0}", filePath));
+                MessageBox.Show(this, String.Format("Not Exist File:{0}", filePath));
                 return;
             }
 
@@ -3542,7 +3695,7 @@ namespace PPDEditor.Forms
             this.openFileDialog1.Filter = openevdfilter;
             this.openFileDialog1.RestoreDirectory = true;
             this.openFileDialog1.FileName = "";
-            if (this.openFileDialog1.ShowDialog() == DialogResult.OK)
+            if (this.openFileDialog1.ShowDialog(this) == true)
             {
                 ImportEvent(this.openFileDialog1.FileName);
             }
@@ -3552,21 +3705,21 @@ namespace PPDEditor.Forms
         {
             if (!IsProjectLoaded)
             {
-                easyToolStripMenuItem1.Enabled = normalToolStripMenuItem1.Enabled = hardToolStripMenuItem1.Enabled =
-                    extremeToolStripMenuItem1.Enabled = baseToolStripMenuItem1.Enabled = false;
+                easyToolStripMenuItem1.IsEnabled = normalToolStripMenuItem1.IsEnabled = hardToolStripMenuItem1.IsEnabled =
+                    extremeToolStripMenuItem1.IsEnabled = baseToolStripMenuItem1.IsEnabled = false;
                 return;
             }
 
-            baseToolStripMenuItem1.Enabled = AvailableDifficulty.HasFlag(AvailableDifficulty.Base) && CurrentDifficulty != PPDEditor.AvailableDifficulty.Base;
-            easyToolStripMenuItem1.Enabled = AvailableDifficulty.HasFlag(AvailableDifficulty.Easy) && CurrentDifficulty != PPDEditor.AvailableDifficulty.Easy;
-            normalToolStripMenuItem1.Enabled = AvailableDifficulty.HasFlag(AvailableDifficulty.Normal) && CurrentDifficulty != PPDEditor.AvailableDifficulty.Normal;
-            hardToolStripMenuItem1.Enabled = AvailableDifficulty.HasFlag(AvailableDifficulty.Hard) && CurrentDifficulty != PPDEditor.AvailableDifficulty.Hard;
-            extremeToolStripMenuItem1.Enabled = AvailableDifficulty.HasFlag(AvailableDifficulty.Extreme) && CurrentDifficulty != PPDEditor.AvailableDifficulty.Extreme;
+            baseToolStripMenuItem1.IsEnabled = AvailableDifficulty.HasFlag(AvailableDifficulty.Base) && CurrentDifficulty != PPDEditor.AvailableDifficulty.Base;
+            easyToolStripMenuItem1.IsEnabled = AvailableDifficulty.HasFlag(AvailableDifficulty.Easy) && CurrentDifficulty != PPDEditor.AvailableDifficulty.Easy;
+            normalToolStripMenuItem1.IsEnabled = AvailableDifficulty.HasFlag(AvailableDifficulty.Normal) && CurrentDifficulty != PPDEditor.AvailableDifficulty.Normal;
+            hardToolStripMenuItem1.IsEnabled = AvailableDifficulty.HasFlag(AvailableDifficulty.Hard) && CurrentDifficulty != PPDEditor.AvailableDifficulty.Hard;
+            extremeToolStripMenuItem1.IsEnabled = AvailableDifficulty.HasFlag(AvailableDifficulty.Extreme) && CurrentDifficulty != PPDEditor.AvailableDifficulty.Extreme;
         }
 
         private void ToolStripSplitButton1_CheckStateChanged(object sender, EventArgs e)
         {
-            tlf.RowManager.IsLimited = toolStripSplitButton1.Checked;
+            tlf.RowManager.IsLimited = toolStripSplitButton1.IsChecked == true;
             tlf.InvalidateAll();
         }
 
@@ -3608,9 +3761,9 @@ namespace PPDEditor.Forms
 
         private void ReadCommands()
         {
-            while (コマンドToolStripMenuItem.DropDownItems.Count > 2)
+            while (コマンドToolStripMenuItem.Items.Count > 2)
             {
-                コマンドToolStripMenuItem.DropDownItems.RemoveAt(0);
+                コマンドToolStripMenuItem.Items.RemoveAt(0);
             }
 
             if (!Directory.Exists("Commands"))
@@ -3621,18 +3774,18 @@ namespace PPDEditor.Forms
             ReadCommands(コマンドToolStripMenuItem, "Commands");
         }
 
-        private void ReadCommands(ToolStripMenuItem menuItem, string dir)
+        private void ReadCommands(MenuItem menuItem, string dir)
         {
             int insertIndex = 0;
             foreach (string childDir in Directory.GetDirectories(dir))
             {
                 var name = Path.GetFileNameWithoutExtension(childDir);
-                var childMenu = new ToolStripMenuItem
+                var childMenu = new MenuItem
                 {
-                    Text = name
+                    Header = ToMenuText(name)
                 };
                 ReadCommands(childMenu, childDir);
-                menuItem.DropDownItems.Insert(insertIndex++, childMenu);
+                menuItem.Items.Insert(insertIndex++, childMenu);
             }
 
             foreach (string childFile in Directory.GetFiles(dir))
@@ -3645,18 +3798,17 @@ namespace PPDEditor.Forms
                 var shortcut = WindowUtility.Seekmain.ShortcutManager.Shortcuts.FirstOrDefault(s =>
                     s.ShortcutType == ShortcutType.Custom && s.ScriptPath.Equals(targetPath, StringComparison.CurrentCultureIgnoreCase));
                 var name = Path.GetFileNameWithoutExtension(childFile);
-                var childMenu = new ToolStripMenuItem
+                var childMenu = new MenuItem
                 {
-                    Text = name,
+                    Header = ToMenuText(name),
                     Tag = childFile
                 };
                 if (shortcut != null)
                 {
-                    childMenu.ShortcutKeyDisplayString = shortcut.GetCommandText();
-                    childMenu.ShowShortcutKeys = true;
+                    childMenu.InputGestureText = shortcut.GetCommandText();
                 }
                 childMenu.Click += ChildMenu_Click;
-                menuItem.DropDownItems.Insert(insertIndex++, childMenu);
+                menuItem.Items.Insert(insertIndex++, childMenu);
             }
         }
 
@@ -3676,8 +3828,8 @@ namespace PPDEditor.Forms
             }
             var fullPath = Path.GetFullPath(scriptPath).ToLower();
             CommandExecuting?.Invoke(fullPath);
-            コマンドToolStripMenuItem.Enabled = false;
-            ゲームToolStripMenuItem.Enabled = false;
+            コマンドToolStripMenuItem.IsEnabled = false;
+            ゲームToolStripMenuItem.IsEnabled = false;
             currentExecutor = new Executor(fullPath, [.. layers]);
             currentExecutor.AddItem("Storage", storage);
             currentExecutor.AddItem("PosAndAngleLoader", PosAndAngleLoader.Instance);
@@ -3700,7 +3852,7 @@ namespace PPDEditor.Forms
                 CommandExecuted?.Invoke(executor.ScriptFilePath);
                 if (executor.HasError)
                 {
-                    MessageBox.Show(executor.ErrorText);
+                    MessageBox.Show(this, executor.ErrorText);
                 }
                 foreach (var layer in executor.Layers)
                 {
@@ -3710,17 +3862,17 @@ namespace PPDEditor.Forms
                 {
                     storage.Save();
                 }
-                コマンドToolStripMenuItem.Enabled = true;
-                ゲームToolStripMenuItem.Enabled = true;
+                コマンドToolStripMenuItem.IsEnabled = true;
+                ゲームToolStripMenuItem.IsEnabled = true;
                 tlf.Seekmain.DrawAndRefresh();
             });
         }
 
         private void SafeInvoke(Action action)
         {
-            if (this.InvokeRequired)
+            if (!Dispatcher.CheckAccess())
             {
-                this.Invoke(action);
+                Dispatcher.Invoke(action);
                 return;
             }
             action();
@@ -3728,7 +3880,7 @@ namespace PPDEditor.Forms
 
         void ChildMenu_Click(object sender, EventArgs e)
         {
-            var menuItem = (ToolStripMenuItem)sender;
+            var menuItem = (MenuItem)sender;
             var filePath = (string)menuItem.Tag;
             ExecuteScript(filePath);
         }
@@ -3740,9 +3892,9 @@ namespace PPDEditor.Forms
 
         public void SetTrimming(MovieTrimmingData trimmingData, bool applyToIniFileWriter)
         {
-            if (InvokeRequired)
+            if (!Dispatcher.CheckAccess())
             {
-                Invoke((Action<MovieTrimmingData, bool>)SetTrimming, trimmingData, applyToIniFileWriter);
+                Dispatcher.Invoke(() => SetTrimming(trimmingData, applyToIniFileWriter));
                 return;
             }
 

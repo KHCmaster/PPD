@@ -6,8 +6,6 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.IO;
 using System.Text.RegularExpressions;
-using System.Windows.Forms;
-using WeifenLuo.WinFormsUI.Docking;
 
 namespace PPDEditor
 {
@@ -70,19 +68,6 @@ namespace PPDEditor
                 TimeLineBackGroundColors.Add(i, sb);
             }
             DisplayMode = BackGroundDisplayMode.right;
-            var dockPanelSkin = new DockPanelSkin();
-            dockPanelSkin.AutoHideStripSkin.DockStripGradient = CreateDockPanelGradient(81, 85, 94, 37, 42, 45, System.Drawing.Drawing2D.LinearGradientMode.Horizontal);
-            dockPanelSkin.AutoHideStripSkin.TabGradient = CreateTabGradient(147, 207, 208, 7, 117, 118, System.Drawing.Drawing2D.LinearGradientMode.Horizontal);
-            dockPanelSkin.DockPaneStripSkin.DocumentGradient.ActiveTabGradient = CreateTabGradient(231, 245, 248, 0, 157, 188, System.Drawing.Drawing2D.LinearGradientMode.Horizontal);
-            dockPanelSkin.DockPaneStripSkin.DocumentGradient.DockStripGradient = CreateTabGradient(37, 42, 45, 81, 85, 94, System.Drawing.Drawing2D.LinearGradientMode.Horizontal);
-            dockPanelSkin.DockPaneStripSkin.DocumentGradient.InactiveTabGradient = CreateTabGradient(147, 207, 208, 7, 117, 118, System.Drawing.Drawing2D.LinearGradientMode.Horizontal);
-            dockPanelSkin.DockPaneStripSkin.ToolWindowGradient.ActiveCaptionGradient = CreateTabGradient(231, 245, 248, 0, 157, 188, System.Drawing.Drawing2D.LinearGradientMode.Horizontal);
-            dockPanelSkin.DockPaneStripSkin.ToolWindowGradient.ActiveTabGradient = CreateTabGradient(231, 245, 248, 0, 157, 188, System.Drawing.Drawing2D.LinearGradientMode.Horizontal);
-            dockPanelSkin.DockPaneStripSkin.ToolWindowGradient.DockStripGradient = CreateTabGradient(81, 85, 94, 37, 42, 45, System.Drawing.Drawing2D.LinearGradientMode.Horizontal);
-            dockPanelSkin.DockPaneStripSkin.ToolWindowGradient.InactiveCaptionGradient = CreateTabGradient(147, 207, 208, 7, 117, 118, System.Drawing.Drawing2D.LinearGradientMode.Horizontal);
-            dockPanelSkin.DockPaneStripSkin.ToolWindowGradient.InactiveTabGradient = CreateTabGradient(147, 207, 208, 7, 117, 118, System.Drawing.Drawing2D.LinearGradientMode.Horizontal);
-            DockPanelSkin = dockPanelSkin;
-
             if (File.Exists("defaultskin.ini"))
             {
                 var sr = new StreamReader("defaultskin.ini");
@@ -180,62 +165,6 @@ namespace PPDEditor
                     TimeLineMarkColor = GetColorFromString(rgb, argb, timelinemarkcolor);
                     var timelineHoldExtentColor = setting.ReadString("TimeLineHoldExtentColor");
                     TimeLineHoldExtentColor = GetColorFromString(rgb, argb, timelineHoldExtentColor, TimeLineHoldExtentColor);
-                    var dockPanelSkin = new DockPanelSkin();
-                    var Name = new string[]{
-                        "AutoHideDockStripGradient",
-                        "AutoHideTabGradient",
-                        "DocumentActiveTabGradient",
-                        "DocumentDockStripGradient",
-                        "DocumentInactiveTabGradient",
-                        "ToolWindowActiveCaptionGradient",
-                        "ToolWindowActiveTabGradient",
-                        "ToolWindowDockStripGradient",
-                        "ToolWindowInactiveCaptionGradient",
-                        "ToolWindowInactiveTabGradient"
-                    };
-                    DockPanelGradient[] dpg =
-                    [
-                        dockPanelSkin.AutoHideStripSkin.DockStripGradient,
-                        dockPanelSkin.AutoHideStripSkin.TabGradient,
-                        dockPanelSkin.DockPaneStripSkin.DocumentGradient.ActiveTabGradient,
-                        dockPanelSkin.DockPaneStripSkin.DocumentGradient.DockStripGradient,
-                        dockPanelSkin.DockPaneStripSkin.DocumentGradient.InactiveTabGradient,
-                        dockPanelSkin.DockPaneStripSkin.ToolWindowGradient.ActiveCaptionGradient,
-                        dockPanelSkin.DockPaneStripSkin.ToolWindowGradient.ActiveTabGradient,
-                        dockPanelSkin.DockPaneStripSkin.ToolWindowGradient.DockStripGradient,
-                        dockPanelSkin.DockPaneStripSkin.ToolWindowGradient.InactiveCaptionGradient,
-                        dockPanelSkin.DockPaneStripSkin.ToolWindowGradient.InactiveTabGradient,
-                    ];
-                    for (int i = 0; i < dpg.Length; i++)
-                    {
-                        var mode = int.Parse(setting.ReadString(Name[i] + "Mode"));
-                        LinearGradientMode Mode = LinearGradientMode.Horizontal;
-                        if (mode >= 0 && mode < 4)
-                        {
-                            Mode = (LinearGradientMode)mode;
-                        }
-                        var start = setting.ReadString(Name[i] + "StartColor");
-                        var StartColor = GetColorFromString(rgb, argb, start);
-                        var end = setting.ReadString(Name[i] + "EndColor");
-                        var EndColor = GetColorFromString(rgb, argb, end);
-                        if (dpg[i] is TabGradient)
-                        {
-                            var tg = dpg[i] as TabGradient;
-                            var text = setting.ReadString(Name[i] + "TextColor");
-                            var TextColor = GetColorFromString(rgb, argb, text);
-                            tg.TextColor = TextColor;
-                            tg.StartColor = StartColor;
-                            tg.EndColor = EndColor;
-                            tg.LinearGradientMode = Mode;
-                        }
-                        else
-                        {
-                            dpg[i].StartColor = StartColor;
-                            dpg[i].EndColor = EndColor;
-                            dpg[i].LinearGradientMode = Mode;
-                        }
-                    }
-                    DockPanelSkin = dockPanelSkin;
                     for (int i = 0; i < 10; i++)
                     {
                         TimeLineBackGroundColors[i].Dispose();
@@ -275,7 +204,7 @@ namespace PPDEditor
             }
             catch (Exception e)
             {
-                MessageBox.Show(e.Message);
+                System.Windows.MessageBox.Show(e.Message);
             }
         }
         private static SolidBrush GetBrush(Regex rgb, Regex argb, SettingReader setting, string exp, Color ErrorColor)
@@ -317,26 +246,6 @@ namespace PPDEditor
             }
             return ret;
         }
-        private static DockPanelGradient CreateDockPanelGradient(int sred, int sgreen, int sblue, int ered, int egreen, int eblue, LinearGradientMode gramode)
-        {
-            var gra = new DockPanelGradient
-            {
-                StartColor = Color.FromArgb(sred, sgreen, sblue),
-                EndColor = Color.FromArgb(ered, egreen, eblue),
-                LinearGradientMode = gramode
-            };
-            return gra;
-        }
-        private static TabGradient CreateTabGradient(int sred, int sgreen, int sblue, int ered, int egreen, int eblue, LinearGradientMode gramode)
-        {
-            var tabgra = new TabGradient
-            {
-                StartColor = Color.FromArgb(sred, sgreen, sblue),
-                EndColor = Color.FromArgb(ered, egreen, eblue),
-                LinearGradientMode = gramode
-            };
-            return tabgra;
-        }
         public Bitmap BackGround
         {
             get;
@@ -358,11 +267,6 @@ namespace PPDEditor
             set;
         }
         public BackGroundDisplayMode DisplayMode
-        {
-            get;
-            set;
-        }
-        public DockPanelSkin DockPanelSkin
         {
             get;
             set;

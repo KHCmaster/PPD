@@ -57,21 +57,11 @@
     <ProjectReference Include="..\..\PPDMovie\PPDMovie.csproj" />
     <ProjectReference Include="..\..\PPDPack\PPDPack.csproj" />
     <ProjectReference Include="..\..\PPDShareComponent\PPDShareComponent.csproj" />
-    <ProjectReference Include="..\..\WinFormsUI\WinFormsUI.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Update="DockForm\DXForm.resx">
-      <DependentUpon>DXForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Forms\MainForm.resx">
-      <DependentUpon>MainForm.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Update="Properties\Resources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Forms\ScrollableForm.resx">
-      <DependentUpon>ScrollableForm.cs</DependentUpon>
     </EmbeddedResource>
     <None Update="Commands\PosAndAngleLoader\Command.fsml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -188,6 +178,13 @@
   </ItemGroup>
   <ItemGroup>
     <!-- WPF の画面で使う画像 -->
+    <Resource Include="ed.ico" />
+    <Resource Include="img\showholdextent.png" />
+    <Resource Include="img\timeline.png" />
+    <Resource Include="img\grid.png" />
+    <Resource Include="img\markfocus.png" />
+    <Resource Include="img\toggle.png" />
+    <Resource Include="img\fix.png" />
     <Resource Include="img\lylicsmark.png" />
     <Resource Include="img\soundmark.png" />
     <Resource Include="img\eventmark.png" />

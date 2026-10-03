@@ -5,7 +5,7 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Text.RegularExpressions;
-using System.Windows.Forms;
+using WindowState = System.Windows.WindowState;
 
 namespace PPDEditor
 {
@@ -14,7 +14,7 @@ namespace PPDEditor
         static readonly Regex rgb = RgbRegex();
         static readonly Regex argb = ArgbRegex();
 
-        public static FormWindowState LastWindowState = FormWindowState.Normal;
+        public static WindowState LastWindowState = WindowState.Normal;
         public static Size LastWindowSize = new(800, 600);
         public static Point LastWindowLocation = new(0, 0);
         public static string AuthorName = "";
@@ -43,7 +43,7 @@ namespace PPDEditor
             var setting = new SettingReader(File.ReadAllText(path));
             if (setting.ReadString("Maximised") == "1")
             {
-                LastWindowState = FormWindowState.Maximized;
+                LastWindowState = WindowState.Maximized;
             }
             var size = (setting.ReadString("Size")).Split(',');
             if (size.Length == 2)

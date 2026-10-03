@@ -14,7 +14,8 @@ namespace PPDSound
     {
         private const int CHUNKSIZE = 4096;
         private IDirectSound soundDevice;
-        private readonly Form window;
+        // ハンドルは初期化するときに取り出す（WinForms のフォームは、表示するまでハンドルがないことがある）
+        private readonly Func<IntPtr> getWindowHandle;
 
         private readonly Dictionary<string, BufferInfo> sounds;
         private readonly Dictionary<string, SoundPlayingInfo> playingSounds;
@@ -24,8 +25,21 @@ namespace PPDSound
         bool disposed;
 
         public Sound(Form window)
+            : this(() => window.Handle)
         {
-            this.window = window;
+        }
+
+        /// <summary>
+        /// ウィンドウハンドルを指定して作ります（WPF のアプリで使う）。
+        /// </summary>
+        public Sound(IntPtr windowHandle)
+            : this(() => windowHandle)
+        {
+        }
+
+        private Sound(Func<IntPtr> getWindowHandle)
+        {
+            this.getWindowHandle = getWindowHandle;
             sounds = [];
             playingSounds = [];
             SoundMasterControl.Instance.SeVolumeChanged += Instance_SeVolumeChanged;
@@ -34,7 +48,7 @@ namespace PPDSound
         public void Initialize()
         {
             soundDevice = DSound.DirectSoundCreate();
-            soundDevice.SetCooperativeLevel(window.Handle, CooperativeLevel.Priority).CheckError();
+            soundDevice.SetCooperativeLevel(getWindowHandle(), CooperativeLevel.Priority).CheckError();
 
             FMODEX.RESULT result;
             result = FMODEX.Factory.System_Create(ref system);
