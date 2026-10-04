@@ -51,7 +51,8 @@ namespace PPDEditor.ViewModels.Dialogs
                 var ret = AvailableDifficulty.None;
                 foreach (var slot in Slots)
                 {
-                    ret |= File.Exists(slot.ProjectPath) ? slot.Difficulty : AvailableDifficulty.None;
+                    // 難易度のないプロジェクトは数えない（以前は数えていたので、マージで存在しない「None」の譜面を探して失敗した）
+                    ret |= File.Exists(slot.ProjectPath) && slot.SelectedDifficulty.HasValue ? slot.Difficulty : AvailableDifficulty.None;
                 }
                 return ret;
             }
