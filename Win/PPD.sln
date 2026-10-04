@@ -143,6 +143,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PPDMath", "PPDMath\PPDMath.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UITests", "UITests\UITests.csproj", "{640C054E-A7F4-4508-B72F-24DBA4F305AA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.csproj", "{E137B3CA-CE60-4AF5-8245-ABA2A7C1364C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -368,6 +370,9 @@ Global
 		{640C054E-A7F4-4508-B72F-24DBA4F305AA}.Debug|x64.ActiveCfg = Debug|x64
 		{640C054E-A7F4-4508-B72F-24DBA4F305AA}.Debug|x64.Build.0 = Debug|x64
 		{640C054E-A7F4-4508-B72F-24DBA4F305AA}.Release|x64.ActiveCfg = Release|x64
+		{E137B3CA-CE60-4AF5-8245-ABA2A7C1364C}.Debug|x64.ActiveCfg = Debug|x64
+		{E137B3CA-CE60-4AF5-8245-ABA2A7C1364C}.Debug|x64.Build.0 = Debug|x64
+		{E137B3CA-CE60-4AF5-8245-ABA2A7C1364C}.Release|x64.ActiveCfg = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
