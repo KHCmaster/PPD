@@ -101,11 +101,28 @@ namespace UITests
         }
 
         /// <summary>
-        /// ボタンを押します。モーダルのウィンドウを開くボタンは、閉じるまで戻らないことがあるので、別のスレッドで押す。
+        /// ボタンやメニューの項目を押します。モーダルのウィンドウを開くものは、閉じるまで戻らないことがあるので、別のスレッドで押す。
         /// </summary>
-        public static void InvokeAsync(Button button)
+        public static void InvokeAsync(AutomationElement element)
         {
-            Task.Run(() => button.Invoke());
+            Task.Run(() => element.Patterns.Invoke.Pattern.Invoke());
+        }
+
+        /// <summary>
+        /// アプリが終わったかどうかです。
+        /// </summary>
+        public bool HasExited
+        {
+            get { return application.HasExited; }
+        }
+
+        /// <summary>
+        /// アプリが終わるまで待ちます。
+        /// </summary>
+        /// <returns>終わったかどうか。</returns>
+        public bool WaitForExit()
+        {
+            return WaitUntil(() => application.HasExited);
         }
 
         public void Dispose()

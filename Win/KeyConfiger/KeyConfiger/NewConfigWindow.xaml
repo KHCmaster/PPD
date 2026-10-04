@@ -7,10 +7,10 @@
     <!-- DataContext はウィンドウ自身（入力は名前だけなので、ViewModel を分けない） -->
     <StackPanel Margin="12,8,12,12">
         <TextBlock Text="{Binding Texts[NCWLabel1]}" TextWrapping="Wrap" />
-        <TextBox x:Name="nameTextBox" Margin="0,4,0,0" Text="{Binding SettingName, UpdateSourceTrigger=PropertyChanged}" />
+        <TextBox x:Name="nameTextBox" AutomationProperties.AutomationId="NameTextBox" Margin="0,4,0,0" Text="{Binding SettingName, UpdateSourceTrigger=PropertyChanged}" />
         <TextBlock Text="{Binding Texts[NCWLabel2]}" TextWrapping="Wrap" Margin="0,6,0,0" />
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,0">
-            <Button Content="OK" Width="75" IsDefault="True" Margin="0,0,36,0" Click="OkButton_Click">
+            <Button AutomationProperties.AutomationId="OkButton" Content="OK" Width="75" IsDefault="True" Margin="0,0,36,0" Click="OkButton_Click">
                 <Button.Style>
                     <Style TargetType="Button">
                         <Style.Triggers>

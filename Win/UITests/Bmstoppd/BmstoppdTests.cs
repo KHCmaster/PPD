@@ -30,10 +30,7 @@ namespace UITests.Bmstoppd
         /// </summary>
         private string ReadAndCloseMessage()
         {
-            var message = session.WaitForModal();
-            var text = string.Join("\n", message.FindAllDescendants(cf => cf.ByControlType(ControlType.Text)).Select(t => t.Name));
-            message.Close();
-            return text;
+            return MessageBoxes.ReadAndClose(session.WaitForModal());
         }
 
         [Fact]

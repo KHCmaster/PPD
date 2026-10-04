@@ -45,20 +45,21 @@
             </vm:OptionStyleSelector.OptionStyle>
         </vm:OptionStyleSelector>
     </Window.Resources>
+    <!-- AutomationId は UI の自動テスト（UITests）で使う -->
     <DockPanel>
         <Menu DockPanel.Dock="Top">
-            <MenuItem Header="{Binding Texts[Language]}" ItemsSource="{Binding Languages}" ItemContainerStyleSelector="{StaticResource LanguageItemSelector}" />
-            <MenuItem Header="{Binding Texts[Setting]}" ItemContainerStyleSelector="{StaticResource ConfigItemSelector}">
+            <MenuItem AutomationProperties.AutomationId="LanguageMenu" Header="{Binding Texts[Language]}" ItemsSource="{Binding Languages}" ItemContainerStyleSelector="{StaticResource LanguageItemSelector}" />
+            <MenuItem AutomationProperties.AutomationId="SettingMenu" Header="{Binding Texts[Setting]}" ItemContainerStyleSelector="{StaticResource ConfigItemSelector}">
                 <MenuItem.ItemsSource>
                     <CompositeCollection>
-                        <MenuItem Header="{Binding Data.Texts[CreateNewSetting], Source={StaticResource Proxy}}" Command="{Binding Data.CreateConfigCommand, Source={StaticResource Proxy}}" />
-                        <MenuItem Header="{Binding Data.Texts[DeleteCurrentSetting], Source={StaticResource Proxy}}" Command="{Binding Data.DeleteConfigCommand, Source={StaticResource Proxy}}" />
+                        <MenuItem AutomationProperties.AutomationId="CreateSettingMenuItem" Header="{Binding Data.Texts[CreateNewSetting], Source={StaticResource Proxy}}" Command="{Binding Data.CreateConfigCommand, Source={StaticResource Proxy}}" />
+                        <MenuItem AutomationProperties.AutomationId="DeleteSettingMenuItem" Header="{Binding Data.Texts[DeleteCurrentSetting], Source={StaticResource Proxy}}" Command="{Binding Data.DeleteConfigCommand, Source={StaticResource Proxy}}" />
                         <Separator />
                         <CollectionContainer Collection="{Binding Data.Configs, Source={StaticResource Proxy}}" />
                     </CompositeCollection>
                 </MenuItem.ItemsSource>
             </MenuItem>
-            <MenuItem Header="{Binding Texts[Gamepad]}" ItemContainerStyleSelector="{StaticResource ControllerItemSelector}">
+            <MenuItem AutomationProperties.AutomationId="GamepadMenu" Header="{Binding Texts[Gamepad]}" ItemContainerStyleSelector="{StaticResource ControllerItemSelector}">
                 <MenuItem.ItemsSource>
                     <CompositeCollection>
                         <MenuItem Header="{Binding Data.Texts[ResetControllerList], Source={StaticResource Proxy}}" Command="{Binding Data.ReloadControllersCommand, Source={StaticResource Proxy}}" />
@@ -74,7 +75,7 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <DataGrid x:Name="keyGrid" ItemsSource="{Binding Rows}" SelectedIndex="{Binding SelectedIndex}"
+            <DataGrid x:Name="keyGrid" AutomationProperties.AutomationId="KeyGrid" ItemsSource="{Binding Rows}" SelectedIndex="{Binding SelectedIndex}"
                       AutoGenerateColumns="False" IsReadOnly="True" CanUserAddRows="False"
                       CanUserSortColumns="False" CanUserReorderColumns="False" SelectionMode="Single" SelectionUnit="FullRow"
                       HeadersVisibility="All" RowHeaderWidth="90"
@@ -105,7 +106,7 @@
                 </DataGrid.Columns>
             </DataGrid>
             <DockPanel Grid.Row="1" Margin="0,6,0,0">
-                <Button Content="{Binding Texts[Button1]}" Width="193" Command="{Binding WaitForInputCommand}" />
+                <Button AutomationProperties.AutomationId="WaitInputButton" Content="{Binding Texts[Button1]}" Width="193" Command="{Binding WaitForInputCommand}" />
                 <TextBlock Text="{Binding Texts[Label1]}" Margin="12,0,0,0" VerticalAlignment="Center">
                     <TextBlock.Style>
                         <Style TargetType="TextBlock">
@@ -120,8 +121,8 @@
                 </TextBlock>
             </DockPanel>
             <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,6,0,0">
-                <Button Content="OK" Width="75" Margin="0,0,24,0" Command="{Binding OkCommand}" />
-                <Button Content="Cancel" Width="75" Command="{Binding CancelCommand}" />
+                <Button AutomationProperties.AutomationId="OkButton" Content="OK" Width="75" Margin="0,0,24,0" Command="{Binding OkCommand}" />
+                <Button AutomationProperties.AutomationId="CancelButton" Content="Cancel" Width="75" Command="{Binding CancelCommand}" />
             </StackPanel>
         </Grid>
     </DockPanel>
