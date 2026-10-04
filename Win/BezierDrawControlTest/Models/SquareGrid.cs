@@ -67,8 +67,9 @@ namespace BezierDrawControlTest.Models
         /// </summary>
         public PointF Snap(PointF point, float snapDistance)
         {
-            var nearest = new PointF((int)(point.X + Width / 2) / Width * Width + NormalizedOffsetX,
-                (int)(point.Y + Height / 2) / Height * Height + NormalizedOffsetY);
+            // ずらした分を引いてから一番近い格子点を求める（以前はずらす前に丸めていたので、ずれが半分より大きいときや負の座標で、違う格子点になっていた）
+            var nearest = new PointF(MathF.Floor((point.X - NormalizedOffsetX) / Width + 0.5f) * Width + NormalizedOffsetX,
+                MathF.Floor((point.Y - NormalizedOffsetY) / Height + 0.5f) * Height + NormalizedOffsetY);
             var diffX = nearest.X - point.X;
             var diffY = nearest.Y - point.Y;
             return Math.Sqrt(diffX * diffX + diffY * diffY) >= snapDistance ? point : nearest;
