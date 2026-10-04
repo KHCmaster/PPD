@@ -79,6 +79,21 @@
                       CanUserSortColumns="False" CanUserReorderColumns="False" SelectionMode="Single" SelectionUnit="FullRow"
                       HeadersVisibility="All" RowHeaderWidth="90"
                       PreviewKeyDown="KeyGrid_PreviewKeyDown" MouseLeftButtonUp="KeyGrid_MouseLeftButtonUp">
+                <DataGrid.Resources>
+                    <!-- 標準のテーマの行見出しは左が白い横向きのグラデーションで、文字の後ろだけ白く浮いて見えるので、単色にする -->
+                    <Style TargetType="DataGridRowHeader">
+                        <Setter Property="Background" Value="#FFF7F7F7" />
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="DataGridRowHeader">
+                                    <Border Background="{TemplateBinding Background}" BorderBrush="#FFE5E5E5" BorderThickness="0,0,1,1" Padding="4,0">
+                                        <ContentPresenter VerticalAlignment="Center" />
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </DataGrid.Resources>
                 <DataGrid.RowHeaderTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding DataContext.Header, RelativeSource={RelativeSource AncestorType=DataGridRow}}" />
