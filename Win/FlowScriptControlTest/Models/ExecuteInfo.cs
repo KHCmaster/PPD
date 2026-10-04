@@ -62,14 +62,15 @@ namespace FlowScriptControlTest.Models
         {
             if (e.PropertyName == "IsBreakPointSet")
             {
+                // スクリプトを読み込む前（ハンドラーがないとき）に変えても、例外にしない
                 var source = (Source)sender;
-                if (source.IsBreakPointSet && BreakPointAdded != null)
+                if (source.IsBreakPointSet)
                 {
-                    BreakPointAdded(this, source.Id);
+                    BreakPointAdded?.Invoke(this, source.Id);
                 }
                 else
                 {
-                    BreakPointRemoved(this, source.Id);
+                    BreakPointRemoved?.Invoke(this, source.Id);
                 }
             }
         }
