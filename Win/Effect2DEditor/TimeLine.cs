@@ -1,5 +1,4 @@
 using Effect2D;
-using PPDConfiguration;
 using System;
 using System.Collections.Generic;
 using System.Windows;
@@ -69,7 +68,10 @@ namespace Effect2DEditor
             get;
             set;
         }
-        public MainWindow MainForm
+        /// <summary>
+        /// ステートの編集を履歴に残したり、カンバスを描き直したりするエディターです。
+        /// </summary>
+        public ViewModels.ITimeLineHost Host
         {
             get;
             set;
@@ -86,7 +88,7 @@ namespace Effect2DEditor
                 {
                     currentframe = value;
                     EffectManager?.Update(currentframe, null);
-                    MainForm?.RefreshCanvas();
+                    Host?.RefreshCanvas();
                     DrawAndRefresh();
                 }
             }
@@ -119,11 +121,11 @@ namespace Effect2DEditor
             grid.Children.Add(hScrollBar1);
             Content = grid;
 
-            キーステートを挿入ToolStripMenuItem = new MenuItem { Header = "キーステートを挿入" };
+            キーステートを挿入ToolStripMenuItem = CreateMenuItem("InsertKeyState");
             キーステートを挿入ToolStripMenuItem.Click += キーステートを挿入ToolStripMenuItem_Click;
-            ノーマルステートを挿入ToolStripMenuItem = new MenuItem { Header = "ノーマルステートを挿入" };
+            ノーマルステートを挿入ToolStripMenuItem = CreateMenuItem("InsertNormalState");
             ノーマルステートを挿入ToolStripMenuItem.Click += ノーマルステートを挿入ToolStripMenuItem_Click;
-            ステートを削除ToolStripMenuItem = new MenuItem { Header = "ステートを削除" };
+            ステートを削除ToolStripMenuItem = CreateMenuItem("DeleteState");
             ステートを削除ToolStripMenuItem.Click += ステートを削除ToolStripMenuItem_Click;
             surface.ContextMenu = new ContextMenu
             {
@@ -140,14 +142,14 @@ namespace Effect2DEditor
             surface.MouseUp += TimeLine_MouseUp;
         }
 
-        public void SetLang(SettingReader setting)
+        /// <summary>
+        /// 右クリックのメニューの項目を作ります。表示する文字は今の言語の文字にする。
+        /// </summary>
+        private static MenuItem CreateMenuItem(string textKey)
         {
-            if (setting != null)
-            {
-                キーステートを挿入ToolStripMenuItem.Header = setting["InsertKeyState"];
-                ノーマルステートを挿入ToolStripMenuItem.Header = setting["InsertNormalState"];
-                ステートを削除ToolStripMenuItem.Header = setting["DeleteState"];
-            }
+            var item = new MenuItem();
+            item.SetBinding(HeaderedItemsControl.HeaderProperty, new System.Windows.Data.Binding("[" + textKey + "]") { Source = ViewModels.LanguageTexts.Instance });
+            return item;
         }
 
         public void DrawAndRefresh()
@@ -179,7 +181,7 @@ namespace Effect2DEditor
             if (num >= vScrollBar1.Minimum && num <= vScrollBar1.Maximum)
             {
                 vScrollBar1.Value = num;
-                MainForm.RefreshTimeLine();
+                Host.RefreshTimeLine();
             }
         }
 
@@ -190,7 +192,7 @@ namespace Effect2DEditor
             AdjustVScrollBar();
             AdjustHScrollBar();
             ignorescroll = false;
-            MainForm.RefreshTimeLine();
+            Host.RefreshTimeLine();
         }
         public void MoveVScroll(int lineindex)
         {
@@ -273,12 +275,12 @@ namespace Effect2DEditor
         {
             int num = VValue + diff;
             if (vScrollBar1.Minimum <= num && num <= vScrollBar1.Maximum) vScrollBar1.Value = num;
-            MainForm.RefreshTimeLine();
+            Host.RefreshTimeLine();
         }
         void VScrollBar1_Scroll(object sender, ScrollEventArgs e)
         {
             vScrollBar1.Value = Math.Round(vScrollBar1.Value);
-            MainForm.RefreshTimeLine();
+            Host.RefreshTimeLine();
         }
         private void Draw(DrawingContext g)
         {
@@ -381,7 +383,7 @@ namespace Effect2DEditor
                 if (pos.Y >= TimeLineAreaHeight && itemindex >= 0 && itemindex < EffectManager.Effects.Count)
                 {
                     mousedown = true;
-                    MainForm.PropertyDock.IsRatioMakerAvailable = false;
+                    Host.IsRatioMakerAvailable = false;
                     SelectedManager.Effect = EffectManager.Effects[itemindex];
                     FindKey(itemindex, pos.X);
                 }
@@ -409,14 +411,14 @@ namespace Effect2DEditor
                     newframe = keyindex;
                     SelectedManager.Set = set;
                     SelectedManager.State = set.StartState;
-                    MainForm.PropertyDock.IsRatioMakerAvailable = false;
+                    Host.IsRatioMakerAvailable = false;
                     return;
                 }
                 else if (set.EndFrame == keyindex)
                 {
                     beforeframe = keyindex;
                     newframe = keyindex;
-                    MainForm.PropertyDock.IsRatioMakerAvailable = !IsKey(set);
+                    Host.IsRatioMakerAvailable = !IsKey(set);
                     SelectedManager.Set = set;
                     SelectedManager.State = set.EndState;
                     return;
@@ -561,7 +563,7 @@ namespace Effect2DEditor
             if (mousedown && beforeframe != newframe && keyopmode != KeyOperationMode.FixMove && keyopmode != KeyOperationMode.None)
             {
                 SelectedManager.Effect.CheckFrameLength();
-                MainForm.MoveState(beforeframe, newframe, keyopmode);
+                Host.MoveState(beforeframe, newframe, keyopmode);
             }
             mousedown = false;
             movetimeline = false;
@@ -569,12 +571,12 @@ namespace Effect2DEditor
 
         private void キーステートを挿入ToolStripMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            MainForm.AddState(presseditemindex, pressedkeyindex, true);
+            Host.AddState(presseditemindex, pressedkeyindex, true);
         }
 
         private void ノーマルステートを挿入ToolStripMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            MainForm.AddState(presseditemindex, pressedkeyindex, false);
+            Host.AddState(presseditemindex, pressedkeyindex, false);
         }
 
         private void ContextMenu_Opening(object sender, ContextMenuEventArgs e)
@@ -611,7 +613,7 @@ namespace Effect2DEditor
                 MessageBox.Show("削除するには少なくとも3つ以上のステートが必要です");
                 return;
             }
-            MainForm.DeleteState(presseditemindex, pressedkeyindex);
+            Host.DeleteState(presseditemindex, pressedkeyindex);
         }
     }
 }

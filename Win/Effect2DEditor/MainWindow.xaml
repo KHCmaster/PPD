@@ -1,35 +1,63 @@
 <Window x:Class="Effect2DEditor.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:ad="https://github.com/Dirkster99/AvalonDock"
         xmlns:dock="clr-namespace:Effect2DEditor.DockForm"
+        xmlns:vm="clr-namespace:Effect2DEditor.ViewModels"
+        xmlns:local="clr-namespace:Effect2DEditor"
+        mc:Ignorable="d" d:DataContext="{d:DesignInstance Type=vm:MainWindowViewModel}"
         Title="Effect2DEditor" Width="1021" Height="690" Icon="e2dmid.ico"
-        AllowDrop="True" DragEnter="MainForm_DragEnter" DragOver="MainForm_DragEnter" Drop="MainForm_DragDrop"
-        Closing="MainForm_FormClosing" Closed="Window_Closed" KeyDown="Window_KeyDown">
+        AllowDrop="True" DragEnter="Window_DragEnter" DragOver="Window_DragEnter" Drop="Window_Drop"
+        Closing="Window_Closing" Closed="Window_Closed">
+    <Window.InputBindings>
+        <KeyBinding Key="N" Modifiers="Control" Command="{Binding NewEffectCommand}" />
+        <KeyBinding Key="O" Modifiers="Control" Command="{Binding OpenCommand}" />
+        <KeyBinding Key="S" Modifiers="Control" Command="{Binding OverwriteCommand}" />
+        <KeyBinding Key="S" Modifiers="Control+Shift" Command="{Binding SaveAsCommand}" />
+        <KeyBinding Key="Z" Modifiers="Control" Command="{Binding UndoCommand}" />
+        <KeyBinding Key="Y" Modifiers="Control" Command="{Binding RedoCommand}" />
+    </Window.InputBindings>
+    <Window.Resources>
+        <local:BindingProxy x:Key="Proxy" Data="{Binding}" />
+        <!-- 最近使ったファイルと言語の項目 -->
+        <Style x:Key="RecentFileItem" TargetType="MenuItem">
+            <Setter Property="Header" Value="{Binding Header}" />
+            <Setter Property="Command" Value="{Binding Data.OpenRecentFileCommand, Source={StaticResource Proxy}}" />
+            <Setter Property="CommandParameter" Value="{Binding}" />
+        </Style>
+        <Style x:Key="LanguageItem" TargetType="MenuItem">
+            <Setter Property="Header" Value="{Binding Header}" />
+            <Setter Property="IsChecked" Value="{Binding IsChecked, Mode=OneWay}" />
+            <Setter Property="Command" Value="{Binding Data.SelectLanguageCommand, Source={StaticResource Proxy}}" />
+            <Setter Property="CommandParameter" Value="{Binding}" />
+        </Style>
+    </Window.Resources>
     <DockPanel>
         <Menu DockPanel.Dock="Top">
-            <MenuItem x:Name="ファイルToolStripMenuItem" Header="ファイル">
-                <MenuItem x:Name="新規作成ToolStripMenuItem" Header="新規作成" InputGestureText="Ctrl+N" Click="新規作成ToolStripMenuItem_Click" />
-                <MenuItem x:Name="開くToolStripMenuItem" Header="開く" InputGestureText="Ctrl+O" Click="開くToolStripMenuItem_Click" />
-                <MenuItem x:Name="保存するToolStripMenuItem" Header="保存する" InputGestureText="Ctrl+Shift+S" Click="保存するToolStripMenuItem_Click" />
-                <MenuItem x:Name="上書き保存するToolStripMenuItem" Header="上書き保存する" InputGestureText="Ctrl+S" Click="上書き保存するToolStripMenuItem_Click" />
-                <MenuItem x:Name="最近使用したファイルToolStripMenuItem" Header="最近使用したファイル" />
-                <MenuItem x:Name="終了するToolStripMenuItem" Header="終了する" InputGestureText="Alt+F4" Click="終了するToolStripMenuItem_Click" />
+            <MenuItem Header="{Binding Texts[File]}">
+                <MenuItem Header="{Binding Texts[CreateNew]}" InputGestureText="Ctrl+N" Command="{Binding NewEffectCommand}" />
+                <MenuItem Header="{Binding Texts[Open]}" InputGestureText="Ctrl+O" Command="{Binding OpenCommand}" />
+                <MenuItem Header="{Binding Texts[Save]}" InputGestureText="Ctrl+Shift+S" Command="{Binding SaveAsCommand}" />
+                <MenuItem Header="{Binding Texts[OverWrite]}" InputGestureText="Ctrl+S" Command="{Binding OverwriteCommand}" />
+                <MenuItem Header="{Binding Texts[RecentUsedFile]}" ItemsSource="{Binding RecentFiles}" ItemContainerStyle="{StaticResource RecentFileItem}" />
+                <MenuItem Header="{Binding Texts[Exit]}" InputGestureText="Alt+F4" Command="{Binding ExitCommand}" />
             </MenuItem>
-            <MenuItem x:Name="編集ToolStripMenuItem" Header="編集">
-                <MenuItem x:Name="元に戻すToolStripMenuItem" Header="元に戻す" InputGestureText="Ctrl+Z" Click="元に戻すToolStripMenuItem_Click" />
-                <MenuItem x:Name="やり直すToolStripMenuItem" Header="やり直す" InputGestureText="Ctrl+Y" Click="やり直すToolStripMenuItem_Click" />
-                <MenuItem x:Name="アニメーションToolStripMenuItem" Header="アニメーション" Click="アニメーションToolStripMenuItem_Click" />
-                <MenuItem x:Name="カンバスサイズToolStripMenuItem" Header="カンバスサイズ" Click="カンバスサイズToolStripMenuItem_Click" />
-                <MenuItem x:Name="カンバス背景変更ToolStripMenuItem" Header="カンバス背景変更" Click="カンバス背景変更ToolStripMenuItem_Click" />
+            <MenuItem Header="{Binding Texts[Edit]}">
+                <MenuItem Header="{Binding Texts[Undo]}" InputGestureText="Ctrl+Z" Command="{Binding UndoCommand}" />
+                <MenuItem Header="{Binding Texts[Redo]}" InputGestureText="Ctrl+Y" Command="{Binding RedoCommand}" />
+                <MenuItem Header="{Binding Texts[Animation]}" Command="{Binding CreateAnimationCommand}" />
+                <MenuItem Header="{Binding Texts[CanvasSize]}" Command="{Binding ChangeCanvasSizeCommand}" />
+                <MenuItem Header="{Binding Texts[CanvasBackGround]}" Command="{Binding ChangeBackGroundCommand}" />
             </MenuItem>
-            <MenuItem x:Name="表示ToolStripMenuItem" Header="表示">
-                <MenuItem x:Name="キャンバスウィンドウToolStripMenuItem" Header="キャンバスウィンドウ" Click="キャンバスウィンドウToolStripMenuItem_Click" />
-                <MenuItem x:Name="プロパティウィンドウToolStripMenuItem" Header="プロパティウィンドウ" Click="プロパティウィンドウToolStripMenuItem_Click" />
-                <MenuItem x:Name="ヒストリーウィンドウToolStripMenuItem" Header="ヒストリーウィンドウ" Click="ヒストリーウィンドウToolStripMenuItem_Click" />
-                <MenuItem x:Name="タイムラインウィンドウToolStripMenuItem" Header="タイムラインウィンドウ" Click="タイムラインウィンドウToolStripMenuItem_Click" />
+            <MenuItem Header="{Binding Texts[Show]}">
+                <MenuItem Header="{Binding Texts[CanvasWindow]}" Command="{Binding ToggleDockCommand}" CommandParameter="{x:Static vm:DockKind.Canvas}" />
+                <MenuItem Header="{Binding Texts[PropertyWindow]}" Command="{Binding ToggleDockCommand}" CommandParameter="{x:Static vm:DockKind.Property}" />
+                <MenuItem Header="{Binding Texts[HistoryWindow]}" Command="{Binding ToggleDockCommand}" CommandParameter="{x:Static vm:DockKind.History}" />
+                <MenuItem Header="{Binding Texts[TimeLineWindow]}" Command="{Binding ToggleDockCommand}" CommandParameter="{x:Static vm:DockKind.TimeLine}" />
             </MenuItem>
-            <MenuItem x:Name="言語ToolStripMenuItem" Header="言語" />
+            <MenuItem Header="{Binding Texts[Language]}" ItemsSource="{Binding Languages}" ItemContainerStyle="{StaticResource LanguageItem}" />
         </Menu>
         <ad:DockingManager x:Name="dockingManager">
             <ad:LayoutRoot>

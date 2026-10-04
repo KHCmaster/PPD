@@ -32,7 +32,10 @@ namespace Effect2DEditor
             get;
             set;
         }
-        public MainWindow MainForm
+        /// <summary>
+        /// 順番の入れ替えを履歴に残すエディターです。
+        /// </summary>
+        public ViewModels.ITimeLineHost Host
         {
             get;
             set;
@@ -158,7 +161,7 @@ namespace Effect2DEditor
                     }
                     else
                     {
-                        MainForm.ChangeIndex(swapborderindex, selectedindex);
+                        Host.ChangeIndex(swapborderindex, selectedindex);
                     }
                     swapborderindex = -1;
                 }

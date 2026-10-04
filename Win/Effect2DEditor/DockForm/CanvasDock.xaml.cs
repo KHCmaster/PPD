@@ -1,7 +1,8 @@
 ﻿using PPDMath;
 using BezierDrawControl;
 using Effect2D;
-using PPDConfiguration;
+using Effect2DEditor.Models;
+using Effect2DEditor.ViewModels;
 using PPDFramework;
 using PPDFramework.Resource;
 using PPDFramework.Shaders;
@@ -11,26 +12,23 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Threading;
 using Color = System.Drawing.Color;
 using Point = System.Drawing.Point;
 
 namespace Effect2DEditor.DockForm
 {
-    public enum BackGroundMode
-    {
-        Default = 0,
-        Color = 1,
-        Image = 2
-    }
-
+    /// <summary>
+    /// エフェクトを描くカンバスです。位置をベジエで動かすステートでは、ベジエの点をマウスで編集できます。
+    /// </summary>
+    /// <remarks>
+    /// DataContext は <see cref="MainWindowViewModel"/>（描くエフェクトと背景）。
+    /// </remarks>
     public partial class CanvasDock : UserControl
     {
         public event EventHandler BezierEdited;
-        public event EventHandler BezierReset;
 
-        readonly DispatcherTimer timer;
         string checkBackPath;
+        bool isTransformMode;
 
         const int checksize = 8;
         /// <summary>
@@ -38,46 +36,9 @@ namespace Effect2DEditor.DockForm
         /// </summary>
         const int FontHeight = 12;
 
-        public Color BackGroundColor
+        private MainWindowViewModel ViewModel
         {
-            get;
-            set;
-        }
-
-        public string BackImageFileName
-        {
-            get;
-            set;
-        }
-
-        public BackGroundMode BackGroundMode
-        {
-            get;
-            set;
-        }
-
-        public EffectManager EffectManager
-        {
-            get;
-            private set;
-        }
-
-        public SelectedManager SelectedManager
-        {
-            get;
-            private set;
-        }
-
-        public bool IsTransFormMode
-        {
-            get;
-            private set;
-        }
-
-        public EffectManager.PlayType PlayType
-        {
-            get;
-            set;
+            get { return DataContext as MainWindowViewModel; }
         }
 
         public DXBezierControl BezierControl
@@ -106,34 +67,12 @@ namespace Effect2DEditor.DockForm
 
         public CanvasDock()
         {
-            BackGroundColor = Color.White;
-
             InitializeComponent();
 
             bezierControl1.Controller.AllowMouseOperation = false;
             bezierControl1.Controller.BeforePaint += BezierControl1_BeforePaint;
             bezierControl1.Controller.Edited += BezierControl1_Edited;
             bezierControl1.PixelSizeChanged += BezierControl1_SizeChanged;
-            timer = new DispatcherTimer
-            {
-                Interval = TimeSpan.FromMilliseconds(1000.0 / 60)
-            };
-            timer.Tick += Timer_Tick;
-        }
-
-        public void SetEffectManager(EffectManager effectManager)
-        {
-            EffectManager = effectManager;
-            SelectedManager = new SelectedManager(EffectManager);
-            EffectManager.Finish += EffectManager_Finish;
-        }
-
-        public void SetLang(SettingReader lang)
-        {
-            選択したアンカーを削除ToolStripMenuItem.Header = lang["DeleteSelectedAnchor"];
-            変形を開始するToolStripMenuItem.Header = lang["StartTransform"];
-            変形を終了するToolStripMenuItem.Header = lang["EndTransform"];
-            リセットするToolStripMenuItem.Header = lang["Reset"];
         }
 
         public void Initialize(int width, int height)
@@ -158,34 +97,11 @@ namespace Effect2DEditor.DockForm
             bezierControl1.DrawAndRefresh();
         }
 
-        public void Stop()
-        {
-            timer.Stop();
-            EffectManager.Update(0, null);
-            EffectManager.Stop();
-            bezierControl1.DrawAndRefresh();
-        }
-
-        public void Pause()
-        {
-            timer.Stop();
-            EffectManager.Pause();
-        }
-
-        public void Play()
-        {
-            timer.Stop();
-            EffectManager.CheckFrameLength();
-            EffectManager.Play(PlayType);
-            timer.Start();
-        }
-
         /// <summary>
         /// 描画の資源と、背景の一時ファイルを破棄します。
         /// </summary>
         public void Close()
         {
-            timer.Stop();
             bezierControl1.Dispose();
             DeleteCheckBack();
         }
@@ -234,48 +150,50 @@ namespace Effect2DEditor.DockForm
         {
             var context = ((DXBezierControl.Context)e.Context);
             DrawBack(context.Drawer);
-            EffectManager?.Draw(Draw);
+            ViewModel?.EffectManager?.Draw(Draw);
             DrawCenter(context);
             DrawBezierMark(context);
-        }
-
-        void EffectManager_Finish(object sender, EventArgs e)
-        {
-            timer.Stop();
         }
 
         private void DrawBack(DXBezierControl.BezierDrawer drawer)
         {
             drawer.Background.ClearChildren();
-            switch (BackGroundMode)
+            var viewModel = ViewModel;
+            if (viewModel == null)
             {
-                case DockForm.BackGroundMode.Default:
+                return;
+            }
+            var backGroundColor = viewModel.BackGroundColor;
+            var backImageFileName = viewModel.BackGroundImage;
+            switch (viewModel.BackGroundMode)
+            {
+                case BackGroundMode.Default:
                     drawer.Background.AddChild(new PictureObject(drawer.Device, drawer.ResourceManager, PathObject.Absolute(checkBackPath)));
                     break;
-                case DockForm.BackGroundMode.Color:
+                case BackGroundMode.Color:
                     drawer.Background.AddChild(new RectangleComponent(drawer.Device, drawer.ResourceManager,
-                        new Vortice.Mathematics.Color4(BackGroundColor.R / 255f, BackGroundColor.G / 255f, BackGroundColor.B / 255f, 1.0f))
+                        new Vortice.Mathematics.Color4(backGroundColor.R / 255f, backGroundColor.G / 255f, backGroundColor.B / 255f, 1.0f))
                     {
                         RectangleWidth = CanvasWidth,
                         RectangleHeight = CanvasHeight
                     });
                     break;
-                case DockForm.BackGroundMode.Image:
-                    if (!File.Exists(BackImageFileName))
+                case BackGroundMode.Image:
+                    if (!File.Exists(backImageFileName))
                     {
                         return;
                     }
-                    var resource = drawer.ResourceManager.GetResource<ImageResourceBase>(BackImageFileName);
+                    var resource = drawer.ResourceManager.GetResource<ImageResourceBase>(backImageFileName);
                     if (resource == null)
                     {
-                        resource = ImageResourceFactoryManager.Factory.Create(drawer.Device, BackImageFileName, false);
-                        drawer.ResourceManager.Add(BackImageFileName, resource);
+                        resource = ImageResourceFactoryManager.Factory.Create(drawer.Device, backImageFileName, false);
+                        drawer.ResourceManager.Add(backImageFileName, resource);
                     }
                     for (int i = 0; i * resource.Width < CanvasWidth; i++)
                     {
                         for (int j = 0; j * resource.Height < CanvasHeight; j++)
                         {
-                            drawer.Background.AddChild(new PictureObject(drawer.Device, drawer.ResourceManager, PathObject.Absolute(BackImageFileName))
+                            drawer.Background.AddChild(new PictureObject(drawer.Device, drawer.ResourceManager, PathObject.Absolute(backImageFileName))
                             {
                                 Position = new System.Numerics.Vector2(i * resource.Width, j * resource.Height)
                             });
@@ -311,52 +229,35 @@ namespace Effect2DEditor.DockForm
             bezierControl1.Drawer.DrawTarget.InsertChild(obj, 0);
         }
 
-        void Timer_Tick(object sender, EventArgs e)
-        {
-            if (EffectManager.State == EffectManager.PlayState.Stop)
-            {
-                timer.Stop();
-            }
-            EffectManager.Update();
-            bezierControl1.DrawAndRefresh();
-        }
-
-
-        private void 選択したアンカーを削除ToolStripMenuItem_Click(object sender, RoutedEventArgs e)
+        private void DeleteAnchorMenuItem_Click(object sender, RoutedEventArgs e)
         {
             bezierControl1.Controller.Delete();
         }
 
-        private void 変形を開始するToolStripMenuItem_Click(object sender, RoutedEventArgs e)
+        private void StartTransformMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            IsTransFormMode = true;
+            isTransformMode = true;
             bezierControl1.Controller.StartTransform();
         }
 
-        private void 変形を終了するToolStripMenuItem_Click(object sender, RoutedEventArgs e)
+        private void EndTransformMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            IsTransFormMode = false;
+            isTransformMode = false;
             bezierControl1.Controller.EndTransform();
-        }
-
-        private void リセットするToolStripMenuItem_Click(object sender, RoutedEventArgs e)
-        {
-            BezierReset?.Invoke(this, EventArgs.Empty);
         }
 
         private void ContextMenu_Opening(object sender, ContextMenuEventArgs e)
         {
-            if (bezierControl1.Controller.AllowMouseOperation)
-            {
-                選択したアンカーを削除ToolStripMenuItem.IsEnabled = bezierControl1.Controller.SelectedIndex != -1 && !IsTransFormMode;
-                変形を開始するToolStripMenuItem.IsEnabled = !IsTransFormMode;
-                変形を終了するToolStripMenuItem.IsEnabled = IsTransFormMode;
-                リセットするToolStripMenuItem.IsEnabled = SelectedManager.Set.IsBezierPosition;
-            }
-            else
+            // ベジエを編集できないステートでは、メニューを出さない
+            if (!bezierControl1.Controller.AllowMouseOperation)
             {
                 e.Handled = true;
+                return;
             }
+            deleteAnchorMenuItem.IsEnabled = bezierControl1.Controller.SelectedIndex != -1 && !isTransformMode;
+            startTransformMenuItem.IsEnabled = !isTransformMode;
+            endTransformMenuItem.IsEnabled = isTransformMode;
+            resetMenuItem.IsEnabled = ViewModel.SelectedManager.Set.IsBezierPosition;
         }
 
         /// <summary>

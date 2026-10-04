@@ -22,15 +22,31 @@ namespace Effect2DEditor
         readonly ScrollBar vScrollBar1;
         bool ignorescroll;
 
+        CommandManager commandManager;
+
+        /// <summary>
+        /// 表示する編集の履歴です。
+        /// </summary>
         public CommandManager CommandManager
         {
-            get;
-            private set;
+            get { return commandManager; }
+            set
+            {
+                if (commandManager != null)
+                {
+                    commandManager.CommandChanged -= CommandManager_CommandChanged;
+                }
+                commandManager = value;
+                if (commandManager != null)
+                {
+                    commandManager.CommandChanged += CommandManager_CommandChanged;
+                }
+                CommandManager_CommandChanged(this, EventArgs.Empty);
+            }
         }
 
         public HistoryPanel()
         {
-            CommandManager = new CommandManager();
             surface = new DrawingSurface { Render = Draw };
             vScrollBar1 = new ScrollBar { Orientation = Orientation.Vertical, Minimum = 0, Maximum = 0, SmallChange = 1, LargeChange = 1 };
             var grid = new Grid();
@@ -79,13 +95,9 @@ namespace Effect2DEditor
             surface.DrawAndRefresh();
         }
 
-        public void SetEvent()
-        {
-            CommandManager.CommandChanged += CommandManager_CommandChanged;
-        }
-
         void CommandManager_CommandChanged(object sender, EventArgs e)
         {
+            if (CommandManager == null) return;
             AdjustVScrollBar();
             surface.DrawAndRefresh();
         }
