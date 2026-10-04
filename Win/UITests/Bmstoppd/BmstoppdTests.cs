@@ -66,6 +66,39 @@ namespace UITests.Bmstoppd
             Assert.True(new FileInfo(output).Length > 0);
         }
 
+        /// <summary>
+        /// テストのデータの譜面を作業のフォルダにコピーして変換し、できた譜面の中身を返します。
+        /// </summary>
+        private byte[] Convert(string sampleName, string timeOffset)
+        {
+            var source = Path.Combine(session.WorkDirectory, sampleName);
+            File.Copy(Path.Combine(AppContext.BaseDirectory, "Bmstoppd", "TestData", sampleName), source, true);
+            Find("FileNameBox").AsTextBox().Text = source;
+            Find("TimeOffsetBox").AsTextBox().Text = timeOffset;
+            AppSession.InvokeAsync(Find("ConvertButton").AsButton());
+            var output = Path.Combine(session.WorkDirectory, "trans.ppd");
+            Assert.Contains(output, ReadAndCloseMessage());
+            return File.ReadAllBytes(output);
+        }
+
+        [Fact]
+        public void Convert_TimeOffsetChangesOutput()
+        {
+            var withoutOffset = Convert("sample.bms", "0");
+            var withOffset = Convert("sample.bms", "1.5");
+
+            Assert.NotEmpty(withoutOffset);
+            Assert.NotEqual(withoutOffset, withOffset);
+        }
+
+        [Fact]
+        public void Convert_DtxFormat_WritesPpd()
+        {
+            Find("DtxCheckBox").AsCheckBox().IsChecked = true;
+
+            Assert.NotEmpty(Convert("sample.dtx", "0"));
+        }
+
         [Fact]
         public void SettingWindow_ListsAllButtons()
         {

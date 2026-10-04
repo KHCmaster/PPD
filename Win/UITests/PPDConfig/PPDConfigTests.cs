@@ -93,6 +93,23 @@ namespace UITests.PPDConfig
         }
 
         [Fact]
+        public void DetailSettings_CanBeChangedAndReset()
+        {
+            SelectTab("DetailTab");
+            var combo = session.Find("SleepTimeCombo").AsComboBox();
+            combo.Select(3);
+            Assert.True(AppSession.WaitUntil(() => combo.SelectedItem?.Text == "3"));
+            var textBoxDisabled = session.Find("TextBoxDisabledCheck").AsCheckBox();
+            textBoxDisabled.IsChecked = false;
+
+            session.Find("DefaultButton").AsButton().Invoke();
+
+            Assert.True(AppSession.WaitUntil(() => combo.SelectedItem?.Text == "0"));
+            Assert.False(textBoxDisabled.IsChecked);
+            Assert.Equal(dummyPpdIni, File.ReadAllText(PpdIniPath));
+        }
+
+        [Fact]
         public void Cancel_ClosesWithoutChangingPpdIni()
         {
             session.Find("WindowSizeBox").AsTextBox().Text = "1920,1080";

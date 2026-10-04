@@ -62,7 +62,22 @@ namespace UITests.PPDInstaller
             var combo = languageWindow.FindFirstDescendant(cf => cf.ByAutomationId("LanguageCombo")).AsComboBox();
             combo.Select(language);
             AppSession.InvokeAsync(languageWindow.FindFirstDescendant(cf => cf.ByAutomationId("OkButton")));
-            return session.WaitForWindow("PPDInstaller");
+            // データを展開する間のウィンドウも同じタイトルなので、最初のページのあるウィンドウを待つ
+            Window window = null;
+            Assert.True(AppSession.WaitUntil(() =>
+            {
+                try
+                {
+                    window = session.WaitForWindow("PPDInstaller");
+                    return window.FindFirstDescendant(cf => cf.ByAutomationId("StartPage")) != null;
+                }
+                catch (Exception)
+                {
+                    // 展開のウィンドウが、ちょうど閉じたとき
+                    return false;
+                }
+            }));
+            return window;
         }
 
         private static AutomationElement Find(Window window, string automationId)
@@ -125,6 +140,66 @@ namespace UITests.PPDInstaller
             // 確認のページで次へを押すと、インストールが始まる（押さない）
             Assert.True(Find(window, "NextButton").IsEnabled);
             Assert.NotEmpty(Find(window, "ConfirmTree").FindAllDescendants(cf => cf.ByControlType(ControlType.TreeItem)));
+        }
+
+        /// <summary>
+        /// 確認のページの、インストールするものの名前の一覧です。
+        /// </summary>
+        private static string[] ConfirmItems(Window window)
+        {
+            return [.. Find(window, "ConfirmTree").FindAllDescendants(cf => cf.ByControlType(ControlType.TreeItem)).Select(item => item.Name)];
+        }
+
+        private static void SetChecked(Window window, string automationId, bool value)
+        {
+            var checkBox = Find(window, automationId).AsCheckBox();
+            if (checkBox.IsChecked != value)
+            {
+                checkBox.Toggle();
+            }
+            Assert.Equal(value, checkBox.IsChecked);
+        }
+
+        [Fact]
+        public void Components_AreListedOnConfirmPage()
+        {
+            var window = SelectLanguage("English");
+            Find(window, "CustomInstallButton").AsButton().Invoke();
+            Assert.True(IsShown(window, "InstallFolderPage"));
+            PressNext(window);
+            Assert.True(IsShown(window, "ComponentPage"));
+            SetChecked(window, "BmstoppdCheck", true);
+            SetChecked(window, "LavFiltersCheck", false);
+            PressNext(window);
+            Assert.True(IsShown(window, "LinkCreatePage"));
+            PressNext(window);
+            Assert.True(IsShown(window, "ConfirmPage"));
+
+            var items = ConfirmItems(window);
+            Assert.Contains("PPD", items);
+            Assert.Contains("BMSTOPPD", items);
+            Assert.DoesNotContain("LAVFilters", items);
+        }
+
+        [Fact]
+        public void Components_ChangedAfterGoingBack_UpdateConfirmPage()
+        {
+            var window = SelectLanguage("English");
+            GoToConfirmPage(window);
+            Find(window, "PreviousButton").AsButton().Invoke();
+            Assert.True(IsShown(window, "LinkCreatePage"));
+            Find(window, "PreviousButton").AsButton().Invoke();
+            Assert.True(IsShown(window, "ComponentPage"));
+            SetChecked(window, "BmstoppdCheck", false);
+            SetChecked(window, "LavFiltersCheck", true);
+            PressNext(window);
+            Assert.True(IsShown(window, "LinkCreatePage"));
+            PressNext(window);
+            Assert.True(IsShown(window, "ConfirmPage"));
+
+            var items = ConfirmItems(window);
+            Assert.DoesNotContain("BMSTOPPD", items);
+            Assert.Contains("LAVFilters", items);
         }
 
         [Fact]

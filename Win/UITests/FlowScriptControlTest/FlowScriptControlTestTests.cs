@@ -2,6 +2,7 @@ using FlaUI.Core.AutomationElements;
 using FlaUI.Core.Definitions;
 using System;
 using System.IO;
+using System.Linq;
 using Xunit;
 
 namespace UITests.FlowScriptControlTest
@@ -37,7 +38,7 @@ namespace UITests.FlowScriptControlTest
         private void OpenScript(string fileName)
         {
             var path = Path.Combine(session.WorkDirectory, fileName);
-            File.Copy(Path.Combine(AppContext.BaseDirectory, "FlowScriptControlTest", "TestData", fileName), path);
+            File.Copy(Path.Combine(AppContext.BaseDirectory, "FlowScriptControlTest", "TestData", fileName), path, true);
             AppSession.InvokeAsync(session.FindMenuItem("FileMenu", "OpenMenuItem"));
             FileDialogs.Accept(session.WaitForModal(), path);
             Assert.True(session.WaitForNoModal());
@@ -97,6 +98,35 @@ namespace UITests.FlowScriptControlTest
             Assert.True(AppSession.WaitUntil(() => File.Exists(path) && new FileInfo(path).Length > 0));
             Assert.True(session.WaitForNoModal());
             Assert.Contains("Hello MVVM", File.ReadAllText(path));
+        }
+
+        [Fact]
+        public void CloseTab_FromTabMenu()
+        {
+            session.FindMenuItem("FileMenu", "NewMenuItem").Invoke();
+            Assert.True(AppSession.WaitUntil(() => TabCount >= 2));
+            var before = TabCount;
+            var tab = session.Find("DocumentTabs").FindAllChildren(cf => cf.ByControlType(ControlType.TabItem)).Last();
+
+            // タブの見出しを右クリックして、閉じる
+            session.ClickAt(tab, 10, 8, rightButton: true);
+            session.FindInPopups("CloseTabMenuItem").AsMenuItem().Invoke();
+
+            Assert.True(AppSession.WaitUntil(() => TabCount == before - 1));
+        }
+
+        [Fact]
+        public void Execute_TwoTabs_RunsBoth()
+        {
+            OpenScript("hello.fsml");
+            session.FindMenuItem("FileMenu", "NewMenuItem").Invoke();
+            Assert.True(AppSession.WaitUntil(() => TabCount >= 2));
+            OpenScript("hello.fsml");
+
+            ExecuteAndWait();
+
+            // すべてのタブのスクリプトを実行するので、2 回書かれる
+            Assert.True(AppSession.WaitUntil(() => ConsoleText.Split("Hello MVVM").Length - 1 == 2));
         }
 
         [Fact]

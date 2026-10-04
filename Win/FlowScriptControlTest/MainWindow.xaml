@@ -88,7 +88,7 @@
                             <TextBlock Text="{Binding Header}">
                                 <TextBlock.ContextMenu>
                                     <ContextMenu>
-                                        <MenuItem Header="タブを閉じる"
+                                        <MenuItem AutomationProperties.AutomationId="CloseTabMenuItem" Header="タブを閉じる"
                                                   Command="{Binding PlacementTarget.Tag.CloseDocumentCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
                                                   CommandParameter="{Binding}" />
                                     </ContextMenu>

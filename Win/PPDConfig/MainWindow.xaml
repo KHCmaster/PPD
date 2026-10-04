@@ -103,7 +103,7 @@
                     <CheckBox Content="{Binding Texts[CheckBox5]}" IsChecked="{Binding AllowedToUseMuchMemory}" />
                     <CheckBox Content="{Binding Texts[CheckBox7]}" IsChecked="{Binding EveryFramePollingDisabled}" />
                     <TextBlock Text="{Binding Texts[AccurateInputSleepTimeDesc]}" TextWrapping="Wrap" Margin="0,6,0,2" />
-                    <ComboBox Width="200" HorizontalAlignment="Right" ItemsSource="{Binding AccurateInputSleepTimes}" SelectedItem="{Binding AccurateInputSleepTime}" />
+                    <ComboBox AutomationProperties.AutomationId="SleepTimeCombo" Width="200" HorizontalAlignment="Right" ItemsSource="{Binding AccurateInputSleepTimes}" SelectedItem="{Binding AccurateInputSleepTime}" />
                     <CheckBox Content="{Binding Texts[CheckBox8]}" IsChecked="{Binding MenuMoviePreviewDisabled}" />
                     <CheckBox Content="{Binding Texts[DisableAutoAdjustLatency]}" IsChecked="{Binding AutoAdjustLatencyDisabled}" />
                     <CheckBox Content="{Binding Texts[DisableFontScale]}" IsChecked="{Binding FontScaleDisabled}" />

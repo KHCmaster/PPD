@@ -92,6 +92,34 @@ namespace UITests.FolderDiffChecker
         }
 
         [Fact]
+        public void DiffCheck_ForceIncludedFileIsListedEvenIfSame()
+        {
+            var (oldFolder, newFolder) = CreateFolders();
+            SetFolders(oldFolder, newFolder);
+            session.Find("ForceIncludeBox").AsTextBox().Text = "same.txt";
+            var button = session.Find("DiffCheckButton").AsButton();
+            button.Invoke();
+
+            Assert.True(AppSession.WaitUntil(() => button.IsEnabled && DiffNames().Contains("same.txt")));
+        }
+
+        [Fact]
+        public void DiffCheck_RunAgainReplacesList()
+        {
+            var (oldFolder, newFolder) = CreateFolders();
+            SetFolders(oldFolder, newFolder);
+            var button = session.Find("DiffCheckButton").AsButton();
+            button.Invoke();
+            Assert.True(AppSession.WaitUntil(() => button.IsEnabled && DiffNames().Contains("added.txt")));
+
+            // 同じフォルダどうしを比べると、差分はない
+            SetFolders(newFolder, newFolder);
+            button.Invoke();
+
+            Assert.True(AppSession.WaitUntil(() => button.IsEnabled && DiffNames().Length == 0));
+        }
+
+        [Fact]
         public void DiffCheck_MissingFolder_ShowsMessage()
         {
             SetFolders(Path.Combine(session.WorkDirectory, "not_exist_old"), Path.Combine(session.WorkDirectory, "not_exist_new"));

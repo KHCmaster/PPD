@@ -128,6 +128,24 @@ namespace UITests.KeyConfiger
         }
 
         [Fact]
+        public void SelectSetting_ThenDeleteRemovesSelectedOne()
+        {
+            CreateSetting("first");
+            CreateSetting("second");
+
+            // 「first」を選んでから消すと、「first」だけがなくなる
+            OpenMenuAndFind("SettingMenu", "first").Invoke();
+            InvokeDeleteSetting();
+            MessageBoxes.Press(session.WaitForModal(), MessageBoxButton.Ok);
+            Assert.True(session.WaitForNoModal());
+
+            var names = MenuItemNames("SettingMenu");
+            Assert.DoesNotContain("first", names);
+            Assert.Contains("second", names);
+            Assert.Contains("default", names);
+        }
+
+        [Fact]
         public void Ok_SavesSettingsAndCloses()
         {
             CreateSetting("uitest");
