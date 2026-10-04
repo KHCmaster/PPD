@@ -47,6 +47,8 @@ namespace PPDUpdater.Model
             WriteData(sw, "DirectShowLib", installInfo.DirectShowLib);
             WriteData(sw, "IPAFont", installInfo.IPAFont);
             WriteData(sw, "PPDeditor", installInfo.PPDeditor);
+            // 読み込むときと同じく、BMSTOPPD を入れたかも書く（書かないと、次の更新から BMSTOPPD が更新されなくなる）
+            WriteData(sw, "BMSTOPPD", installInfo.BMSTOPPD);
             WriteData(sw, "ffdshow", installInfo.Ffdshow);
             WriteData(sw, "MP4Splitter", installInfo.MP4Splitter);
             WriteData(sw, "FLVSplitter", installInfo.FLVSplitter);
