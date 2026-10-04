@@ -70,7 +70,16 @@ namespace FlowScriptEngine
         public static string ToString(float value, IFormatProvider provider)
         {
             // -0 は 0 として表示する（.NET Framework と同じ）
-            return (value == 0 ? 0f : value).ToString("G7", provider);
+            if (value == 0)
+            {
+                return 0f.ToString("G7", provider);
+            }
+            // ちょうど真ん中の値は、.NET Framework と同じく 0 から遠い方に丸める（.NET Core は偶数の方に丸める）
+            if (float.IsFinite(value) && IsTie(value.ToString("R", CultureInfo.InvariantCulture), () => value.ToString("E120", CultureInfo.InvariantCulture), 7))
+            {
+                value = value > 0 ? MathF.BitIncrement(value) : MathF.BitDecrement(value);
+            }
+            return value.ToString("G7", provider);
         }
 
         public static string ToString(double value)
@@ -80,7 +89,50 @@ namespace FlowScriptEngine
 
         public static string ToString(double value, IFormatProvider provider)
         {
-            return (value == 0 ? 0d : value).ToString("G15", provider);
+            if (value == 0)
+            {
+                return 0d.ToString("G15", provider);
+            }
+            if (double.IsFinite(value) && IsTie(value.ToString("R", CultureInfo.InvariantCulture), () => value.ToString("E800", CultureInfo.InvariantCulture), 15))
+            {
+                value = value > 0 ? Math.BitIncrement(value) : Math.BitDecrement(value);
+            }
+            return value.ToString("G15", provider);
+        }
+
+        /// <summary>
+        /// 有効数字 <paramref name="precision"/> 桁に丸めるときに、ちょうど真ん中（次の桁が 5 で、その後がすべて 0）かを調べます。
+        /// </summary>
+        /// <param name="shortest">値を表す一番短い文字列（"R"）。真ん中の値はこれが precision + 1 桁で 5 で終わるので、まずこれで調べる。</param>
+        /// <param name="exact">値のすべての桁を表す文字列（"E" で桁を多く指定したもの）。</param>
+        private static bool IsTie(string shortest, Func<string> exact, int precision)
+        {
+            var digits = SignificantDigits(shortest);
+            if (digits.Length != precision + 1 || digits[^1] != '5')
+            {
+                return false;
+            }
+            var exactDigits = SignificantDigits(exact());
+            return exactDigits.Length > precision && exactDigits[precision] == '5' && exactDigits.AsSpan(precision + 1).TrimEnd('0').IsEmpty;
+        }
+
+        // 符号、小数点、指数と、前後の余計な 0 を除いた数字
+        private static string SignificantDigits(string text)
+        {
+            var exponent = text.IndexOfAny(['E', 'e']);
+            if (exponent >= 0)
+            {
+                text = text[..exponent];
+            }
+            var digits = new System.Text.StringBuilder(text.Length);
+            foreach (var c in text)
+            {
+                if (c >= '0' && c <= '9')
+                {
+                    digits.Append(c);
+                }
+            }
+            return digits.ToString().TrimStart('0').TrimEnd('0');
         }
 
         /// <summary>
