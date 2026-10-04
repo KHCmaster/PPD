@@ -21,9 +21,13 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BMSTOPPD\BMSTOPPD\BMSTOPPD.csproj" />
+    <ProjectReference Include="..\KeyConfiger\KeyConfiger\KeyConfiger.csproj" />
+    <ProjectReference Include="..\PPDFramework\PPDFramework.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Update="xunit.runner.json" CopyToOutputDirectory="PreserveNewest" />
+    <!-- アプリが今のフォルダから読む言語ファイル。テストでは一時フォルダにコピーして使う（AppFiles） -->
+    <None Include="..\KeyConfiger\KeyConfiger\Lang\*.ini" Link="Apps\KeyConfiger\Lang\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
     <None Update="coverage.runsettings" CopyToOutputDirectory="Never" />
   </ItemGroup>
 </Project>
