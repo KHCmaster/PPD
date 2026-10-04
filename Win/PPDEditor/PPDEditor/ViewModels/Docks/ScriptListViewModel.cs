@@ -304,7 +304,8 @@ namespace PPDEditor.ViewModels.Docks
         private void Delete()
         {
             var node = SelectedNode;
-            if (node == null || !host.Confirm(String.Format(Texts["DeleteConfirmText"], node.TreePath), Texts["DeleteConfirm"]))
+            // 一番上のフォルダー（Commands など）は消さない（メニューでも消せないようにしている）
+            if (node == null || node.IsRoot || !host.Confirm(String.Format(Texts["DeleteConfirmText"], node.TreePath), Texts["DeleteConfirm"]))
             {
                 return;
             }
