@@ -9,7 +9,6 @@ using System;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Threading;
@@ -242,7 +241,8 @@ namespace Effect2DEditor.ViewModels
 
         private static string ComponentName
         {
-            get { return Assembly.GetEntryAssembly().GetName().Name; }
+            // 起動したアセンブリでなく、このアセンブリの名前にする（テストから使ったときも、エディターの言語ファイルを読むように）
+            get { return typeof(MainWindowViewModel).Assembly.GetName().Name; }
         }
 
         private static string LanguageFilePath(string iso)

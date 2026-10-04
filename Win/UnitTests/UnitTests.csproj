@@ -27,6 +27,9 @@
     <ProjectReference Include="..\PPDUpdater\PPDUpdater.csproj" />
     <ProjectReference Include="..\FolderDiffChecker\FolderDiffChecker.csproj" />
     <ProjectReference Include="..\PPDInstaller\PPDInstaller\PPDInstaller.csproj" />
+    <ProjectReference Include="..\Effect2DEditor\Effect2DEditor.csproj" />
+    <ProjectReference Include="..\Effect2D\Effect2D.csproj" />
+    <ProjectReference Include="..\BezierCaliculator\BezierCaliculator.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Update="xunit.runner.json" CopyToOutputDirectory="PreserveNewest" />
@@ -35,6 +38,7 @@
     <None Include="..\PPDConfig\Lang\*.ini" Link="Apps\PPDConfig\Lang\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
     <None Include="..\PPDUpdater\Lang\*.ini" Link="Apps\PPDUpdater\Lang\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
     <None Include="..\PPDInstaller\PPDInstaller\Lang\*.ini" Link="Apps\PPDInstaller\Lang\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\Effect2DEditor\Lang\*.ini" Link="Apps\Effect2DEditor\Lang\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
     <None Update="coverage.runsettings" CopyToOutputDirectory="Never" />
   </ItemGroup>
 </Project>

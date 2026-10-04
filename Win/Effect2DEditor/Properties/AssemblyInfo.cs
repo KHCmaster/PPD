@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 // アセンブリに関する一般情報は以下の属性セットをとおして制御されます。
@@ -17,6 +18,9 @@ using System.Runtime.InteropServices;
 // 参照不可能になります。COM からこのアセンブリ内の型にアクセスする場合は、
 // その型の ComVisible 属性を true に設定してください。
 [assembly: ComVisible(false)]
+
+// 単体テスト（UnitTests）から内部のクラスを使う
+[assembly: InternalsVisibleTo("UnitTests")]
 
 // 次の GUID は、このプロジェクトが COM に公開される場合の、typelib の ID です
 [assembly: Guid("03324448-836d-40c2-b2e3-f1bb6b2a394b")]
