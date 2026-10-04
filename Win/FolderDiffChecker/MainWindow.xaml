@@ -6,10 +6,11 @@
         xmlns:vm="clr-namespace:FolderDiffChecker.ViewModels"
         mc:Ignorable="d" d:DataContext="{d:DesignInstance Type=vm:MainWindowViewModel}"
         Title="FolderDiffChecker" Width="749" Height="579">
+    <!-- AutomationId は UI の自動テスト（UITests）で使う -->
     <DockPanel>
         <StatusBar DockPanel.Dock="Bottom">
             <StatusBarItem>
-                <TextBlock Text="{Binding StatusText}" />
+                <TextBlock AutomationProperties.AutomationId="StatusText" Text="{Binding StatusText}" />
             </StatusBarItem>
         </StatusBar>
         <Grid>
@@ -36,15 +37,15 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <TextBlock Grid.Row="0" Text="古いフォルダ" />
-                <TextBox Text="{Binding OldFolder}" Grid.Row="1" Margin="0,2,0,4" />
+                <TextBox AutomationProperties.AutomationId="OldFolderBox" Text="{Binding OldFolder, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" Margin="0,2,0,4" />
                 <Button Grid.Row="1" Grid.Column="1" Content="..." Width="37" Margin="12,2,0,4" Command="{Binding SelectOldFolderCommand}" />
                 <TextBlock Grid.Row="2" Text="新しいフォルダ" />
-                <TextBox Text="{Binding NewFolder}" Grid.Row="3" Margin="0,2,0,4" />
+                <TextBox AutomationProperties.AutomationId="NewFolderBox" Text="{Binding NewFolder, UpdateSourceTrigger=PropertyChanged}" Grid.Row="3" Margin="0,2,0,4" />
                 <Button Grid.Row="3" Grid.Column="1" Content="..." Width="37" Margin="12,2,0,4" Command="{Binding SelectNewFolderCommand}" />
                 <TextBlock Grid.Row="4" Text="強制的に変更済みにするファイルリスト(:区切り)" />
-                <TextBox Text="{Binding ForceIncludeFiles}" Grid.Row="5" Margin="0,2,0,4" />
+                <TextBox AutomationProperties.AutomationId="ForceIncludeBox" Text="{Binding ForceIncludeFiles, UpdateSourceTrigger=PropertyChanged}" Grid.Row="5" Margin="0,2,0,4" />
                 <TextBlock Grid.Row="6" Text="無視するファイル名(:区切り)" />
-                <TextBox Grid.Row="7" Margin="0,2,0,4" Text="{Binding IgnoreFiles}" />
+                <TextBox AutomationProperties.AutomationId="IgnoreFilesBox" Grid.Row="7" Margin="0,2,0,4" Text="{Binding IgnoreFiles, UpdateSourceTrigger=PropertyChanged}" />
                 <WrapPanel Grid.Row="8" Grid.ColumnSpan="2" Margin="0,14,0,0">
                     <WrapPanel.Resources>
                         <Style TargetType="Button">
@@ -53,7 +54,7 @@
                             <Setter Property="Padding" Value="6,1" />
                         </Style>
                     </WrapPanel.Resources>
-                    <Button Content="DiffCheck" Command="{Binding DiffCheckCommand}" />
+                    <Button AutomationProperties.AutomationId="DiffCheckButton" Content="DiffCheck" Command="{Binding DiffCheckCommand}" />
                     <Button Content="CopyDiff" Command="{Binding CopyDiffCommand}" />
                     <Button Content="CopyDiff(clever)" Command="{Binding CopyDiffCleverCommand}" />
                     <Button Content="ZipAll" Command="{Binding ZipAllCommand}" />
@@ -64,7 +65,7 @@
                 </WrapPanel>
             </Grid>
             <GridSplitter Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
-            <DataGrid Grid.Row="2" ItemsSource="{Binding Rows}" AutoGenerateColumns="False" IsReadOnly="True" CanUserAddRows="False">
+            <DataGrid AutomationProperties.AutomationId="DiffGrid" Grid.Row="2" ItemsSource="{Binding Rows}" AutoGenerateColumns="False" IsReadOnly="True" CanUserAddRows="False">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="名前" Binding="{Binding Name}" Width="*" />
                     <DataGridCheckBoxColumn Header="ファイルかどうか" Binding="{Binding Model.IsFile}" Width="*" />

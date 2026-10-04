@@ -25,9 +25,9 @@ namespace UITests
         static readonly TimeSpan defaultTimeout = TimeSpan.FromSeconds(15);
 
         /// <summary>
-        /// コピーしないファイルです（アカウントの情報を含むことがあるもの）。
+        /// コピーしないファイルです（アカウントの情報や鍵を含むことがあるもの）。「*.拡張子」は、その拡張子のすべてのファイル。
         /// </summary>
-        static readonly string[] excludedFileNames = ["PPD.ini", "credentials.txt", "Data.pak"];
+        static readonly string[] excludedFileNames = ["PPD.ini", "credentials.txt", "Data.pak", "*.ppk", "lastUser.txt"];
 
         readonly Application application;
 
@@ -196,12 +196,19 @@ namespace UITests
             }
         }
 
+        private static bool IsExcluded(string fileName, string[] excluded)
+        {
+            return excluded.Any(pattern => pattern.StartsWith("*.", StringComparison.Ordinal)
+                ? fileName.EndsWith(pattern[1..], StringComparison.OrdinalIgnoreCase)
+                : fileName.Equals(pattern, StringComparison.OrdinalIgnoreCase));
+        }
+
         private static void CopyDirectory(string source, string destination, string[] excluded)
         {
             Directory.CreateDirectory(destination);
             foreach (var file in Directory.GetFiles(source))
             {
-                if (excluded.Contains(Path.GetFileName(file), StringComparer.OrdinalIgnoreCase))
+                if (IsExcluded(Path.GetFileName(file), excluded))
                 {
                     continue;
                 }
