@@ -20,7 +20,8 @@ namespace PPDEditor.ViewModels.Dialogs
         {
             if (!Directory.Exists(CommandsDirectory))
             {
-                Directory.CreateDirectory("Command");
+                // 以前は「Command」という違う名前のフォルダーを作っていた
+                Directory.CreateDirectory(CommandsDirectory);
                 return;
             }
             ReadScript(Nodes, CommandsDirectory, "");
