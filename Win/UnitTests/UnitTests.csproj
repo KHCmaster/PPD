@@ -25,6 +25,7 @@
     <ProjectReference Include="..\PPDFramework\PPDFramework.csproj" />
     <ProjectReference Include="..\PPDConfig\PPDConfig.csproj" />
     <ProjectReference Include="..\PPDUpdater\PPDUpdater.csproj" />
+    <ProjectReference Include="..\FolderDiffChecker\FolderDiffChecker.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Update="xunit.runner.json" CopyToOutputDirectory="PreserveNewest" />
