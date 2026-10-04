@@ -29,6 +29,7 @@
     <ProjectReference Include="..\PPDInstaller\PPDInstaller\PPDInstaller.csproj" ReferenceOutputAssembly="false" />
     <ProjectReference Include="..\PPDConfig\PPDConfig.csproj" ReferenceOutputAssembly="false" />
     <ProjectReference Include="..\PPDEditor\PPDEditor\PPDEditor.csproj" ReferenceOutputAssembly="false" />
+    <ProjectReference Include="..\Effect2DEditor\Effect2DEditor.csproj" ReferenceOutputAssembly="false" />
   </ItemGroup>
   <ItemGroup>
     <!-- テストするアプリのビルドの場所を探すための、リポジトリの場所と構成 -->

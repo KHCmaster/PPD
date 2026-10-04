@@ -33,7 +33,7 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <local:ChangeValueLabel Text="Blend" Style="{StaticResource ValueLabel}" />
-            <ComboBox Grid.Column="1" Width="100" Height="20" VerticalAlignment="Center"
+            <ComboBox AutomationProperties.AutomationId="BlendCombo" Grid.Column="1" Width="100" Height="20" VerticalAlignment="Center"
                       ItemsSource="{Binding BlendModes}" SelectedItem="{Binding SelectedBlendMode}" />
         </Grid>
         <ItemsControl ItemsSource="{Binding Rows}">

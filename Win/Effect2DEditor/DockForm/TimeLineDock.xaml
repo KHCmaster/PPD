@@ -35,15 +35,15 @@
     <DockPanel>
         <ToolBarTray DockPanel.Dock="Top" IsLocked="True">
             <ToolBar>
-                <Button ToolTip="{Binding Texts[Add]}" Command="{Binding AddFilesCommand}">
+                <Button AutomationProperties.AutomationId="AddButton" ToolTip="{Binding Texts[Add]}" Command="{Binding AddFilesCommand}">
                     <Image Source="/img/add.png" Style="{StaticResource ToolImage}" />
                 </Button>
-                <Button ToolTip="{Binding Texts[Delete]}" Command="{Binding DeleteEffectCommand}">
+                <Button AutomationProperties.AutomationId="DeleteButton" ToolTip="{Binding Texts[Delete]}" Command="{Binding DeleteEffectCommand}">
                     <Image Source="/img/remove.png" Style="{StaticResource ToolImage}" />
                 </Button>
                 <Separator />
                 <!-- 再生と一時停止を切り替えるボタンと、再生のしかたを選ぶボタン（以前の分割ボタン） -->
-                <ToggleButton IsChecked="{Binding IsPlaying}" ToolTip="{Binding PlayToolTip}">
+                <ToggleButton AutomationProperties.AutomationId="PlayButton" IsChecked="{Binding IsPlaying}" ToolTip="{Binding PlayToolTip}">
                     <Image Style="{StaticResource PlayImage}" />
                 </ToggleButton>
                 <Button x:Name="playTypeButton" Padding="1,0" Click="PlayTypeButton_Click">
@@ -77,10 +77,10 @@
                         </ContextMenu>
                     </Button.ContextMenu>
                 </Button>
-                <Button ToolTip="{Binding Texts[Stop]}" Command="{Binding StopCommand}">
+                <Button AutomationProperties.AutomationId="StopButton" ToolTip="{Binding Texts[Stop]}" Command="{Binding StopCommand}">
                     <Image Source="/img/stop.png" Style="{StaticResource ToolImage}" />
                 </Button>
-                <TextBox Width="100" Text="{Binding FpsText, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBox AutomationProperties.AutomationId="FpsBox" Width="100" Text="{Binding FpsText, UpdateSourceTrigger=PropertyChanged}" />
                 <Separator />
                 <Button ToolTip="{Binding Texts[SwapPermutation]}" Command="{Binding ReverseEffectsCommand}">
                     <Image Source="/img/swapreverse.png" Style="{StaticResource ToolImage}" />

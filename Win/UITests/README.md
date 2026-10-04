@@ -13,7 +13,7 @@ dotnet test UITests\UITests.csproj -c Debug -p:Platform=x64 --blame-hang --blame
 `--blame-hang` は、テストが止まったときに 3 分で終わらせるための指定です。
 テストで起動したアプリは Windows のジョブに入れてあるので、テストのプロセスが終わると（止まって強制終了されたときも）一緒に終わります。
 
-テストするアプリ（BMSTOPPD、KeyConfiger、FlowScriptControlTest、BezierDrawControlTest、PPDUpdater、FolderDiffChecker、PPDInstaller、PPDConfig、PPDEditor）は、テストの前にビルドされます。Visual Studio のテスト エクスプローラーからも実行できます。
+テストするアプリ（BMSTOPPD、KeyConfiger、FlowScriptControlTest、BezierDrawControlTest、PPDUpdater、FolderDiffChecker、PPDInstaller、PPDConfig、PPDEditor、Effect2DEditor）は、テストの前にビルドされます。Visual Studio のテスト エクスプローラーからも実行できます。
 
 ## テストの書き方
 

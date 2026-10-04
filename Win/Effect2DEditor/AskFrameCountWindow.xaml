@@ -10,7 +10,7 @@
     <StackPanel Margin="12">
         <TextBlock Text="{Binding Texts[AFCLabel1]}" />
         <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
-            <TextBox Text="{Binding FrameCountText, UpdateSourceTrigger=PropertyChanged}" Width="100" Height="20" VerticalContentAlignment="Center" />
+            <TextBox AutomationProperties.AutomationId="FrameCountBox" Text="{Binding FrameCountText, UpdateSourceTrigger=PropertyChanged}" Width="100" Height="20" VerticalContentAlignment="Center" />
             <TextBlock Text="{Binding Texts[AFCLabel2]}" Margin="6,0,0,0" VerticalAlignment="Center" />
         </StackPanel>
         <CheckBox Content="{Binding Texts[AFCCheckBox1]}" IsChecked="{Binding WithReverse}" Margin="0,6,0,0" />

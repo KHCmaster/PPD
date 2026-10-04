@@ -34,22 +34,23 @@
             <Setter Property="CommandParameter" Value="{Binding}" />
         </Style>
     </Window.Resources>
+    <!-- AutomationId は UI の自動テスト（UITests）で使う -->
     <DockPanel>
         <Menu DockPanel.Dock="Top">
-            <MenuItem Header="{Binding Texts[File]}">
-                <MenuItem Header="{Binding Texts[CreateNew]}" InputGestureText="Ctrl+N" Command="{Binding NewEffectCommand}" />
-                <MenuItem Header="{Binding Texts[Open]}" InputGestureText="Ctrl+O" Command="{Binding OpenCommand}" />
-                <MenuItem Header="{Binding Texts[Save]}" InputGestureText="Ctrl+Shift+S" Command="{Binding SaveAsCommand}" />
-                <MenuItem Header="{Binding Texts[OverWrite]}" InputGestureText="Ctrl+S" Command="{Binding OverwriteCommand}" />
+            <MenuItem AutomationProperties.AutomationId="FileMenu" Header="{Binding Texts[File]}">
+                <MenuItem AutomationProperties.AutomationId="NewMenuItem" Header="{Binding Texts[CreateNew]}" InputGestureText="Ctrl+N" Command="{Binding NewEffectCommand}" />
+                <MenuItem AutomationProperties.AutomationId="OpenMenuItem" Header="{Binding Texts[Open]}" InputGestureText="Ctrl+O" Command="{Binding OpenCommand}" />
+                <MenuItem AutomationProperties.AutomationId="SaveAsMenuItem" Header="{Binding Texts[Save]}" InputGestureText="Ctrl+Shift+S" Command="{Binding SaveAsCommand}" />
+                <MenuItem AutomationProperties.AutomationId="OverwriteMenuItem" Header="{Binding Texts[OverWrite]}" InputGestureText="Ctrl+S" Command="{Binding OverwriteCommand}" />
                 <MenuItem Header="{Binding Texts[RecentUsedFile]}" ItemsSource="{Binding RecentFiles}" ItemContainerStyle="{StaticResource RecentFileItem}" />
                 <MenuItem Header="{Binding Texts[Exit]}" InputGestureText="Alt+F4" Command="{Binding ExitCommand}" />
             </MenuItem>
-            <MenuItem Header="{Binding Texts[Edit]}">
-                <MenuItem Header="{Binding Texts[Undo]}" InputGestureText="Ctrl+Z" Command="{Binding UndoCommand}" />
-                <MenuItem Header="{Binding Texts[Redo]}" InputGestureText="Ctrl+Y" Command="{Binding RedoCommand}" />
-                <MenuItem Header="{Binding Texts[Animation]}" Command="{Binding CreateAnimationCommand}" />
-                <MenuItem Header="{Binding Texts[CanvasSize]}" Command="{Binding ChangeCanvasSizeCommand}" />
-                <MenuItem Header="{Binding Texts[CanvasBackGround]}" Command="{Binding ChangeBackGroundCommand}" />
+            <MenuItem AutomationProperties.AutomationId="EditMenu" Header="{Binding Texts[Edit]}">
+                <MenuItem AutomationProperties.AutomationId="UndoMenuItem" Header="{Binding Texts[Undo]}" InputGestureText="Ctrl+Z" Command="{Binding UndoCommand}" />
+                <MenuItem AutomationProperties.AutomationId="RedoMenuItem" Header="{Binding Texts[Redo]}" InputGestureText="Ctrl+Y" Command="{Binding RedoCommand}" />
+                <MenuItem AutomationProperties.AutomationId="AnimationMenuItem" Header="{Binding Texts[Animation]}" Command="{Binding CreateAnimationCommand}" />
+                <MenuItem AutomationProperties.AutomationId="CanvasSizeMenuItem" Header="{Binding Texts[CanvasSize]}" Command="{Binding ChangeCanvasSizeCommand}" />
+                <MenuItem AutomationProperties.AutomationId="BackGroundMenuItem" Header="{Binding Texts[CanvasBackGround]}" Command="{Binding ChangeBackGroundCommand}" />
             </MenuItem>
             <MenuItem Header="{Binding Texts[Show]}">
                 <MenuItem Header="{Binding Texts[CanvasWindow]}" Command="{Binding ToggleDockCommand}" CommandParameter="{x:Static vm:DockKind.Canvas}" />
@@ -57,7 +58,7 @@
                 <MenuItem Header="{Binding Texts[HistoryWindow]}" Command="{Binding ToggleDockCommand}" CommandParameter="{x:Static vm:DockKind.History}" />
                 <MenuItem Header="{Binding Texts[TimeLineWindow]}" Command="{Binding ToggleDockCommand}" CommandParameter="{x:Static vm:DockKind.TimeLine}" />
             </MenuItem>
-            <MenuItem Header="{Binding Texts[Language]}" ItemsSource="{Binding Languages}" ItemContainerStyle="{StaticResource LanguageItem}" />
+            <MenuItem AutomationProperties.AutomationId="LanguageMenu" Header="{Binding Texts[Language]}" ItemsSource="{Binding Languages}" ItemContainerStyle="{StaticResource LanguageItem}" />
         </Menu>
         <ad:DockingManager x:Name="dockingManager">
             <ad:LayoutRoot>

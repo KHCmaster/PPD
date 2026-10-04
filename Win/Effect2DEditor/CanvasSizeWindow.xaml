@@ -18,11 +18,11 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <TextBlock Text="{Binding Texts[CSFLabel1]}" VerticalAlignment="Center" />
-        <TextBox Grid.Column="1" Text="{Binding WidthText, UpdateSourceTrigger=PropertyChanged}" Width="100" Height="20" VerticalContentAlignment="Center" />
+        <TextBox AutomationProperties.AutomationId="WidthBox" Grid.Column="1" Text="{Binding WidthText, UpdateSourceTrigger=PropertyChanged}" Width="100" Height="20" VerticalContentAlignment="Center" />
         <TextBlock Grid.Row="1" Text="{Binding Texts[CSFLabel2]}" VerticalAlignment="Center" />
-        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding HeightText, UpdateSourceTrigger=PropertyChanged}" Width="100" Height="20" VerticalContentAlignment="Center" />
+        <TextBox AutomationProperties.AutomationId="HeightBox" Grid.Row="1" Grid.Column="1" Text="{Binding HeightText, UpdateSourceTrigger=PropertyChanged}" Width="100" Height="20" VerticalContentAlignment="Center" />
         <StackPanel Grid.Row="2" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,8,0,0">
-            <Button Content="OK" Width="75" Height="23" IsDefault="True" Command="{Binding OkCommand}" />
+            <Button AutomationProperties.AutomationId="OkButton" Content="OK" Width="75" Height="23" IsDefault="True" Command="{Binding OkCommand}" />
             <Button Content="Cancel" Width="75" Height="23" Margin="6,0,0,0" IsCancel="True" />
         </StackPanel>
     </Grid>
