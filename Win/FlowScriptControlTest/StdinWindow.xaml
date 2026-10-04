@@ -4,8 +4,8 @@
         Title="標準入力" Width="520" Height="330" WindowStartupLocation="CenterOwner" ShowInTaskbar="False">
     <!-- DataContext はウィンドウ自身（文字列を 1 つ編集するだけなので、ViewModel を分けない） -->
     <DockPanel Margin="12">
-        <Button DockPanel.Dock="Bottom" HorizontalAlignment="Right" Width="75" Margin="0,8,0,0" Content="OK" IsDefault="True" Click="OkButton_Click" />
-        <TextBox Text="{Binding InputText, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="True" AcceptsTab="True" TextWrapping="NoWrap"
+        <Button DockPanel.Dock="Bottom" HorizontalAlignment="Right" Width="75" Margin="0,8,0,0" Content="OK" IsDefault="True" AutomationProperties.AutomationId="OkButton" Click="OkButton_Click" />
+        <TextBox AutomationProperties.AutomationId="StdinTextBox" Text="{Binding InputText, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="True" AcceptsTab="True" TextWrapping="NoWrap"
                  HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" />
     </DockPanel>
 </Window>

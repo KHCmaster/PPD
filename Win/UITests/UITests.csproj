@@ -22,6 +22,7 @@
     <!-- テストするアプリを先にビルドする（参照はしない。ビルドした exe をコピーして起動する） -->
     <ProjectReference Include="..\BMSTOPPD\BMSTOPPD\BMSTOPPD.csproj" ReferenceOutputAssembly="false" />
     <ProjectReference Include="..\KeyConfiger\KeyConfiger\KeyConfiger.csproj" ReferenceOutputAssembly="false" />
+    <ProjectReference Include="..\FlowScriptControlTest\FlowScriptControlTest.csproj" ReferenceOutputAssembly="false" />
   </ItemGroup>
   <ItemGroup>
     <!-- テストするアプリのビルドの場所を探すための、リポジトリの場所と構成 -->
@@ -35,7 +36,7 @@
     </AssemblyAttribute>
   </ItemGroup>
   <ItemGroup>
-    <None Update="Bmstoppd\TestData\*" CopyToOutputDirectory="PreserveNewest" />
+    <None Update="**\TestData\*" CopyToOutputDirectory="PreserveNewest" />
     <None Update="xunit.runner.json" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 </Project>

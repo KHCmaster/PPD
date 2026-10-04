@@ -10,7 +10,7 @@
 dotnet test UITests\UITests.csproj -c Debug -p:Platform=x64
 ```
 
-テストするアプリ（今は BMSTOPPD）は、テストの前にビルドされます。Visual Studio のテスト エクスプローラーからも実行できます。
+テストするアプリ（BMSTOPPD、KeyConfiger、FlowScriptControlTest）は、テストの前にビルドされます。Visual Studio のテスト エクスプローラーからも実行できます。
 
 ## テストの書き方
 
@@ -20,5 +20,8 @@ dotnet test UITests\UITests.csproj -c Debug -p:Platform=x64
 - アプリは普通には閉じません（閉じるときに設定を保存するアプリがあるため）。
 - 画面の部品は `AutomationProperties.AutomationId` で探します（表示の文字は言語で変わるため）。
 - メッセージボックスなどのモーダルのウィンドウを開くボタンは、`AppSession.InvokeAsync` で押します（閉じるまで戻らないため）。
+- メッセージボックスは `MessageBoxes`、ファイルを開く・保存するダイアログは `FileDialogs` で操作します
+  （Windows 11 ではボタンを UI Automation で押せないことがあるので、ウィンドウにコマンドを送る）。
+- テストで使うファイルは、テストのフォルダの `TestData` に置きます（出力のフォルダにコピーされる）。
 - テストは並べて実行しません（`xunit.runner.json`）。
 - インストール、アップロード、ネットワークにつなぐ操作はテストしません。

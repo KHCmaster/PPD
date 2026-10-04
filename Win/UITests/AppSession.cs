@@ -93,6 +93,32 @@ namespace UITests
         }
 
         /// <summary>
+        /// メインのウィンドウの中の、AutomationId の要素を返します。
+        /// </summary>
+        public AutomationElement Find(string automationId)
+        {
+            return MainWindow.FindFirstDescendant(cf => cf.ByAutomationId(automationId))
+                ?? throw new InvalidOperationException(automationId + " が見つかりません。");
+        }
+
+        /// <summary>
+        /// メニューを順に開いて、最後の項目を返します（押さない）。
+        /// </summary>
+        /// <param name="automationIds">メニューの項目の AutomationId（一番上のメニューから順に）。</param>
+        public MenuItem FindMenuItem(params string[] automationIds)
+        {
+            var item = Find(automationIds[0]).AsMenuItem();
+            for (int i = 1; i < automationIds.Length; i++)
+            {
+                item.Expand();
+                var id = automationIds[i];
+                item = item.Items.FirstOrDefault(child => child.AutomationId == id)
+                    ?? throw new InvalidOperationException("メニューに " + id + " がありません。");
+            }
+            return item;
+        }
+
+        /// <summary>
         /// 条件が満たされるまで待ちます。
         /// </summary>
         public static bool WaitUntil(Func<bool> condition)

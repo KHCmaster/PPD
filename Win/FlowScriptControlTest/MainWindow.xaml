@@ -19,12 +19,13 @@
         <KeyBinding Modifiers="Ctrl+Shift" Key="V" Command="{Binding PasteWithLinksCommand}" CommandParameter="Shortcut" />
         <KeyBinding Key="Delete" Command="{Binding DeleteCommand}" CommandParameter="Shortcut" />
     </Window.InputBindings>
+    <!-- AutomationId は UI の自動テスト（UITests）で使う -->
     <DockPanel>
         <Menu DockPanel.Dock="Top">
-            <MenuItem Header="ファイル">
-                <MenuItem Header="新規作成" Command="{Binding NewDocumentCommand}" />
-                <MenuItem Header="開く" Command="{Binding OpenCommand}" />
-                <MenuItem Header="保存" Command="{Binding SaveCommand}" />
+            <MenuItem AutomationProperties.AutomationId="FileMenu" Header="ファイル">
+                <MenuItem AutomationProperties.AutomationId="NewMenuItem" Header="新規作成" Command="{Binding NewDocumentCommand}" />
+                <MenuItem AutomationProperties.AutomationId="OpenMenuItem" Header="開く" Command="{Binding OpenCommand}" />
+                <MenuItem AutomationProperties.AutomationId="SaveMenuItem" Header="保存" Command="{Binding SaveCommand}" />
             </MenuItem>
             <MenuItem Header="編集">
                 <MenuItem Header="元に戻す" InputGestureText="Ctrl+Z" Command="{Binding UndoCommand}" />
@@ -37,14 +38,14 @@
                 <MenuItem Header="全て展開" Command="{Binding ExpandAllCommand}" />
                 <MenuItem Header="全て縮小" Command="{Binding CollapseAllCommand}" />
             </MenuItem>
-            <MenuItem Header="コンソール">
-                <MenuItem Header="クリア" Command="{Binding ClearConsoleCommand}" />
-                <MenuItem Header="標準入力" Command="{Binding EditStdinCommand}" />
+            <MenuItem AutomationProperties.AutomationId="ConsoleMenu" Header="コンソール">
+                <MenuItem AutomationProperties.AutomationId="ClearConsoleMenuItem" Header="クリア" Command="{Binding ClearConsoleCommand}" />
+                <MenuItem AutomationProperties.AutomationId="StdinMenuItem" Header="標準入力" Command="{Binding EditStdinCommand}" />
             </MenuItem>
         </Menu>
         <ToolBarTray DockPanel.Dock="Top">
             <ToolBar>
-                <Button Command="{Binding ExecuteCommand}" ToolTip="実行">
+                <Button AutomationProperties.AutomationId="ExecuteButton" Command="{Binding ExecuteCommand}" ToolTip="実行">
                     <StackPanel Orientation="Horizontal">
                         <Image Source="img/playonce.png" Width="16" Height="16" Margin="0,0,3,0" />
                         <TextBlock Text="実行" VerticalAlignment="Center" />
@@ -55,7 +56,7 @@
                 <Button Command="{Binding ContinueCommand}" ToolTip="続行">
                     <Image Source="img/playonce.png" Width="16" Height="16" />
                 </Button>
-                <Button Command="{Binding StopCommand}" ToolTip="停止">
+                <Button AutomationProperties.AutomationId="StopButton" Command="{Binding StopCommand}" ToolTip="停止">
                     <Image Source="img/stop.png" Width="16" Height="16" />
                 </Button>
                 <Button Command="{Binding StepInCommand}" ToolTip="ステップイン">
@@ -75,7 +76,7 @@
                     <RowDefinition Height="4" />
                     <RowDefinition Height="96*" />
                 </Grid.RowDefinitions>
-                <TabControl ItemsSource="{Binding Documents}" SelectedItem="{Binding SelectedDocument}">
+                <TabControl AutomationProperties.AutomationId="DocumentTabs" ItemsSource="{Binding Documents}" SelectedItem="{Binding SelectedDocument}">
                     <TabControl.ItemContainerStyle>
                         <Style TargetType="TabItem">
                             <Setter Property="AutomationProperties.Name" Value="{Binding Header}" />
@@ -105,7 +106,7 @@
                     </TabControl.ContentTemplate>
                 </TabControl>
                 <GridSplitter Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
-                <TextBox Grid.Row="2" Text="{Binding ConsoleText, Mode=OneWay}" TextChanged="ConsoleTextBox_TextChanged" IsReadOnly="True" AcceptsReturn="True" TextWrapping="NoWrap"
+                <TextBox AutomationProperties.AutomationId="ConsoleTextBox" Grid.Row="2" Text="{Binding ConsoleText, Mode=OneWay}" TextChanged="ConsoleTextBox_TextChanged" IsReadOnly="True" AcceptsReturn="True" TextWrapping="NoWrap"
                          HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" FontFamily="MS Gothic" />
             </Grid>
             <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
