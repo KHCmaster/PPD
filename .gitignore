@@ -12,4 +12,5 @@ Thumbs.db
 /Win/.vs
 /Win/packages
 /Mono/packages
-/Mono/.vs/Win/UnitTests/TestResults
+/Mono/.vs
+/Win/UnitTests/TestResults
