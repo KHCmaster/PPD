@@ -17,11 +17,14 @@ namespace PPDInstaller.Executor
             protected set;
         }
 
+        /// <summary>
+        /// 進み具合（%）です。始める前に表示しても数字になるように、最初は 0 にしておきます。
+        /// </summary>
         public string Progress
         {
             get;
             protected set;
-        }
+        } = "0";
 
         public string ErrorLog
         {
