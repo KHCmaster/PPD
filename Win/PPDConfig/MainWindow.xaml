@@ -15,9 +15,10 @@
             <Setter Property="Padding" Value="2" />
         </Style>
     </Window.Resources>
+    <!-- AutomationId は UI の自動テスト（UITests）で使う。BlueSky のタブはテストで開かないので付けない -->
     <DockPanel>
         <Menu DockPanel.Dock="Top">
-            <MenuItem Header="{Binding Texts[Language]}" ItemsSource="{Binding Languages}">
+            <MenuItem AutomationProperties.AutomationId="LanguageMenu" Header="{Binding Texts[Language]}" ItemsSource="{Binding Languages}">
                 <MenuItem.ItemContainerStyle>
                     <Style TargetType="MenuItem">
                         <Setter Property="IsChecked" Value="{Binding IsChecked}" />
@@ -35,39 +36,39 @@
             </MenuItem>
         </Menu>
         <UniformGrid DockPanel.Dock="Bottom" Columns="3" Margin="12,8,12,12">
-            <Button Content="{Binding Texts[Button5]}" Height="30" Margin="0,0,6,0" Command="{Binding OkCommand}" />
-            <Button Content="{Binding Texts[Button6]}" Height="30" Margin="3,0" Command="{Binding CancelCommand}" />
-            <Button Content="{Binding Texts[Button7]}" Height="30" Margin="6,0,0,0" Command="{Binding SetDefaultCommand}" />
+            <Button AutomationProperties.AutomationId="OkButton" Content="{Binding Texts[Button5]}" Height="30" Margin="0,0,6,0" Command="{Binding OkCommand}" />
+            <Button AutomationProperties.AutomationId="CancelButton" Content="{Binding Texts[Button6]}" Height="30" Margin="3,0" Command="{Binding CancelCommand}" />
+            <Button AutomationProperties.AutomationId="DefaultButton" Content="{Binding Texts[Button7]}" Height="30" Margin="6,0,0,0" Command="{Binding SetDefaultCommand}" />
         </UniformGrid>
         <TabControl Margin="8,8,8,0">
-            <TabItem Header="{Binding Texts[TabPage1]}">
+            <TabItem AutomationProperties.AutomationId="GeneralTab" Header="{Binding Texts[TabPage1]}">
                 <StackPanel Margin="40,12,40,12">
                     <DockPanel Margin="0,4">
-                        <TextBox DockPanel.Dock="Right" Width="156" Text="{Binding WindowSize, UpdateSourceTrigger=PropertyChanged}" />
+                        <TextBox AutomationProperties.AutomationId="WindowSizeBox" DockPanel.Dock="Right" Width="156" Text="{Binding WindowSize, UpdateSourceTrigger=PropertyChanged}" />
                         <TextBlock Text="{Binding Texts[Label13]}" VerticalAlignment="Center" />
                     </DockPanel>
-                    <CheckBox Content="{Binding Texts[CheckBox3]}" IsChecked="{Binding FullScreen}" />
+                    <CheckBox AutomationProperties.AutomationId="FullScreenCheck" Content="{Binding Texts[CheckBox3]}" IsChecked="{Binding FullScreen}" />
                     <CheckBox Content="{Binding Texts[CheckBox6]}" IsChecked="{Binding DrawConnectUnderAllMark}" />
                     <DockPanel Margin="0,4">
-                        <TextBox DockPanel.Dock="Right" Width="97" Text="{Binding MonitorLatency, UpdateSourceTrigger=PropertyChanged}" />
+                        <TextBox DockPanel.Dock="Right" Width="97" AutomationProperties.AutomationId="MonitorLatencyBox" Text="{Binding MonitorLatency, UpdateSourceTrigger=PropertyChanged}" />
                         <TextBlock Text="{Binding Texts[Label2]}" VerticalAlignment="Center" />
                     </DockPanel>
                     <DockPanel Margin="0,4">
-                        <TextBox DockPanel.Dock="Right" Width="97" Text="{Binding MovieLatency, UpdateSourceTrigger=PropertyChanged}" />
+                        <TextBox DockPanel.Dock="Right" Width="97" AutomationProperties.AutomationId="MovieLatencyBox" Text="{Binding MovieLatency, UpdateSourceTrigger=PropertyChanged}" />
                         <TextBlock Text="{Binding Texts[Label14]}" VerticalAlignment="Center" />
                     </DockPanel>
                     <TextBlock Text="{Binding Texts[Label19]}" TextWrapping="Wrap" Margin="0,10,0,2" />
-                    <TextBox TextWrapping="Wrap" Text="{Binding MovieExtensions, UpdateSourceTrigger=PropertyChanged}" />
+                    <TextBox TextWrapping="Wrap" AutomationProperties.AutomationId="MovieExtensionsBox" Text="{Binding MovieExtensions, UpdateSourceTrigger=PropertyChanged}" />
                     <TextBlock Text="{Binding Texts[MusicExtensions]}" TextWrapping="Wrap" Margin="0,10,0,2" />
-                    <TextBox TextWrapping="Wrap" Text="{Binding MusicExtensions, UpdateSourceTrigger=PropertyChanged}" />
+                    <TextBox TextWrapping="Wrap" AutomationProperties.AutomationId="MusicExtensionsBox" Text="{Binding MusicExtensions, UpdateSourceTrigger=PropertyChanged}" />
                     <GroupBox Header="{Binding Texts[GroupBox1]}" Margin="0,14,0,0" Padding="8,4">
                         <StackPanel>
                             <DockPanel Margin="0,3">
-                                <TextBox DockPanel.Dock="Right" Width="144" Text="{Binding FontName, UpdateSourceTrigger=PropertyChanged}" />
+                                <TextBox DockPanel.Dock="Right" Width="144" AutomationProperties.AutomationId="FontNameBox" Text="{Binding FontName, UpdateSourceTrigger=PropertyChanged}" />
                                 <TextBlock Text="{Binding Texts[Label7]}" VerticalAlignment="Center" />
                             </DockPanel>
                             <DockPanel Margin="0,3">
-                                <TextBox DockPanel.Dock="Right" Width="144" Text="{Binding FontSize, UpdateSourceTrigger=PropertyChanged}" />
+                                <TextBox DockPanel.Dock="Right" Width="144" AutomationProperties.AutomationId="FontSizeBox" Text="{Binding FontSize, UpdateSourceTrigger=PropertyChanged}" />
                                 <TextBlock Text="{Binding Texts[Label9]}" VerticalAlignment="Center" />
                             </DockPanel>
                         </StackPanel>
@@ -95,9 +96,9 @@
                                  PasswordChanged="BlueSkyPasswordBox_PasswordChanged" />
                 </Grid>
             </TabItem>
-            <TabItem Header="{Binding Texts[TabPage3]}">
+            <TabItem AutomationProperties.AutomationId="DetailTab" Header="{Binding Texts[TabPage3]}">
                 <StackPanel Margin="10,8">
-                    <CheckBox Content="{Binding Texts[CheckBox1]}" IsChecked="{Binding TextBoxDisabled}" />
+                    <CheckBox AutomationProperties.AutomationId="TextBoxDisabledCheck" Content="{Binding Texts[CheckBox1]}" IsChecked="{Binding TextBoxDisabled}" />
                     <CheckBox Content="{Binding Texts[CheckBox2]}" IsChecked="{Binding DrawSameColorDisabled}" />
                     <CheckBox Content="{Binding Texts[CheckBox5]}" IsChecked="{Binding AllowedToUseMuchMemory}" />
                     <CheckBox Content="{Binding Texts[CheckBox7]}" IsChecked="{Binding EveryFramePollingDisabled}" />
@@ -110,11 +111,11 @@
                     <CheckBox Content="{Binding Texts[DisableFixedFPS]}" IsChecked="{Binding FixedFPSDisabled}" />
                 </StackPanel>
             </TabItem>
-            <TabItem Header="{Binding Texts[ExpansionSetting]}">
+            <TabItem AutomationProperties.AutomationId="ExpansionTab" Header="{Binding Texts[ExpansionSetting]}">
                 <StackPanel Margin="10,8">
-                    <CheckBox Content="{Binding Texts[Use PPDExpansion]}" IsChecked="{Binding RunExpansion}" />
+                    <CheckBox AutomationProperties.AutomationId="RunExpansionCheck" Content="{Binding Texts[Use PPDExpansion]}" IsChecked="{Binding RunExpansion}" />
                     <DockPanel Margin="32,6,0,0">
-                        <TextBox DockPanel.Dock="Right" Width="164" Text="{Binding ExpansionPort, UpdateSourceTrigger=PropertyChanged}" />
+                        <TextBox DockPanel.Dock="Right" Width="164" AutomationProperties.AutomationId="ExpansionPortBox" Text="{Binding ExpansionPort, UpdateSourceTrigger=PropertyChanged}" />
                         <TextBlock Text="{Binding Texts[Using Port]}" VerticalAlignment="Center" />
                     </DockPanel>
                 </StackPanel>

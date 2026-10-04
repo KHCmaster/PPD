@@ -10,7 +10,7 @@
 dotnet test UITests\UITests.csproj -c Debug -p:Platform=x64
 ```
 
-テストするアプリ（BMSTOPPD、KeyConfiger、FlowScriptControlTest、BezierDrawControlTest、PPDUpdater、FolderDiffChecker、PPDInstaller）は、テストの前にビルドされます。Visual Studio のテスト エクスプローラーからも実行できます。
+テストするアプリ（BMSTOPPD、KeyConfiger、FlowScriptControlTest、BezierDrawControlTest、PPDUpdater、FolderDiffChecker、PPDInstaller、PPDConfig）は、テストの前にビルドされます。Visual Studio のテスト エクスプローラーからも実行できます。
 
 ## テストの書き方
 
@@ -22,6 +22,7 @@ dotnet test UITests\UITests.csproj -c Debug -p:Platform=x64
   （テストのクラスのコンストラクターで失敗すると、Dispose が呼ばれずアプリが残るため）。
 - PPDInstaller はインストールしません。本物の Data.pak は使わず、テストで小さなものを作ります。
   「かんたんインストール」と、確認のページの「次へ」は押しません。
+- PPDConfig は、テスト用の PPD.ini を作って使います。BlueSky のタブは開かず、OK（保存）は押しません。
 - 画面の部品は `AutomationProperties.AutomationId` で探します（表示の文字は言語で変わるため）。
 - メッセージボックスなどのモーダルのウィンドウを開くボタンは、`AppSession.InvokeAsync` で押します（閉じるまで戻らないため）。
 - メッセージボックスは `MessageBoxes`、ファイルを開く・保存するダイアログは `FileDialogs` で操作します
