@@ -178,8 +178,9 @@ namespace FolderDiffChecker
                 var fi1 = new FileInfo(filePath1);
                 var fi2 = new FileInfo(filePath2);
                 if (fi1.Length != fi2.Length) return false;
-                using FileStream fs1 = fi1.Open(FileMode.Open);
-                using FileStream fs2 = fi2.Open(FileMode.Open);
+                // 比べるだけなので読み取りで開き、ほかが読んでいても開けるようにする（同じファイルどうしを比べるときも）
+                using FileStream fs1 = fi1.Open(FileMode.Open, FileAccess.Read, FileShare.Read);
+                using FileStream fs2 = fi2.Open(FileMode.Open, FileAccess.Read, FileShare.Read);
                 byte[] buffer1 = new byte[bufferSize], buffer2 = new byte[bufferSize];
                 while (fs1.Position < fs1.Length)
                 {
