@@ -178,69 +178,82 @@ namespace PPDEditor.Models
                     }
                 }
             }
-            var tempdir = Path.Combine(Path.GetTempPath(), Path.GetFileNameWithoutExtension(Path.GetTempFileName()));
-            var projectdir = Path.Combine(tempdir, Path.GetFileNameWithoutExtension(destProjectFilePath));
-            EnsureDirectory(projectdir);
-            var setting = new SettingReader("");
-            setting.ReplaceOrAdd("version", LatestVersion.ToString());
-            string moviePath = "";
-            foreach (AvailableDifficulty difficulty in DifficultyArray)
+            // 作業用の一時フォルダーで作ってから、コピーする（終わったら一時ファイルとフォルダーを消す。以前は残ったままだった）
+            var tempFileName = Path.GetTempFileName();
+            var tempdir = Path.Combine(Path.GetTempPath(), Path.GetFileNameWithoutExtension(tempFileName));
+            try
             {
-                if (difficulty == AvailableDifficulty.None) continue;
-                if ((mergeDifficulty & difficulty) == difficulty)
+                var projectdir = Path.Combine(tempdir, Path.GetFileNameWithoutExtension(destProjectFilePath));
+                EnsureDirectory(projectdir);
+                var setting = new SettingReader("");
+                setting.ReplaceOrAdd("version", LatestVersion.ToString());
+                string moviePath = "";
+                foreach (AvailableDifficulty difficulty in DifficultyArray)
                 {
-                    var mi = getMergeInfo(difficulty);
-                    var srcDir = GetProjectDir(mi.ProjectPath);
-                    Utility.CopyDirectory(Path.Combine(srcDir, mi.Difficulty + "_" + "layers"),
-                        Path.Combine(projectdir, difficulty + "_" + "layers"), []);
-                    File.Copy(Path.Combine(srcDir, mi.Difficulty + ".ppd"), Path.Combine(projectdir, difficulty + ".ppd"), true);
-                    File.Copy(Path.Combine(srcDir, mi.Difficulty + ".scd"), Path.Combine(projectdir, difficulty + ".scd"), true);
-
-                    var scriptDir = Path.Combine(srcDir, mi.Difficulty + "_" + "Scripts");
-                    if (Directory.Exists(scriptDir))
+                    if (difficulty == AvailableDifficulty.None) continue;
+                    if ((mergeDifficulty & difficulty) == difficulty)
                     {
-                        Utility.CopyDirectory(scriptDir, Path.Combine(projectdir, difficulty + "_" + "Scripts"), []);
-                    }
+                        var mi = getMergeInfo(difficulty);
+                        var srcDir = GetProjectDir(mi.ProjectPath);
+                        Utility.CopyDirectory(Path.Combine(srcDir, mi.Difficulty + "_" + "layers"),
+                            Path.Combine(projectdir, difficulty + "_" + "layers"), []);
+                        File.Copy(Path.Combine(srcDir, mi.Difficulty + ".ppd"), Path.Combine(projectdir, difficulty + ".ppd"), true);
+                        File.Copy(Path.Combine(srcDir, mi.Difficulty + ".scd"), Path.Combine(projectdir, difficulty + ".scd"), true);
 
-                    if (difficulty == baseInfoDifficulty)
-                    {
-                        var resourceDir = Path.Combine(srcDir, "Resource");
-                        if (Directory.Exists(resourceDir))
+                        var scriptDir = Path.Combine(srcDir, mi.Difficulty + "_" + "Scripts");
+                        if (Directory.Exists(scriptDir))
                         {
-                            Utility.CopyDirectory(resourceDir, Path.Combine(projectdir, "Resource"), []);
+                            Utility.CopyDirectory(scriptDir, Path.Combine(projectdir, difficulty + "_" + "Scripts"), []);
                         }
 
-                        Utility.CopyDirectory(Path.Combine(srcDir, "sound"), Path.Combine(projectdir, "sound"), []);
-
-                        File.Copy(Path.Combine(srcDir, "data.ini"), Path.Combine(projectdir, "data.ini"), true);
-                        File.Copy(Path.Combine(srcDir, "kasi.txt"), Path.Combine(projectdir, "kasi.txt"), true);
-                        File.Copy(Path.Combine(srcDir, "soundset.txt"), Path.Combine(projectdir, "soundset.txt"), true);
-                        var fns = Directory.GetFiles(srcDir, "movie.*");
-                        if (fns.Length > 0) moviePath = fns[0];
-                    }
-                    var tempSetting = new SettingReader(File.ReadAllText(mi.ProjectPath));
-                    foreach (KeyValuePair<string, string> kvp in tempSetting.Dictionary)
-                    {
-                        if (kvp.Key.StartsWith(mi.Difficulty.ToString()))
+                        if (difficulty == baseInfoDifficulty)
                         {
-                            setting.ReplaceOrAdd(kvp.Key.Replace(mi.Difficulty.ToString(), difficulty.ToString()), kvp.Value);
+                            var resourceDir = Path.Combine(srcDir, "Resource");
+                            if (Directory.Exists(resourceDir))
+                            {
+                                Utility.CopyDirectory(resourceDir, Path.Combine(projectdir, "Resource"), []);
+                            }
+
+                            Utility.CopyDirectory(Path.Combine(srcDir, "sound"), Path.Combine(projectdir, "sound"), []);
+
+                            File.Copy(Path.Combine(srcDir, "data.ini"), Path.Combine(projectdir, "data.ini"), true);
+                            File.Copy(Path.Combine(srcDir, "kasi.txt"), Path.Combine(projectdir, "kasi.txt"), true);
+                            File.Copy(Path.Combine(srcDir, "soundset.txt"), Path.Combine(projectdir, "soundset.txt"), true);
+                            var fns = Directory.GetFiles(srcDir, "movie.*");
+                            if (fns.Length > 0) moviePath = fns[0];
                         }
+                        var tempSetting = new SettingReader(File.ReadAllText(mi.ProjectPath));
+                        foreach (KeyValuePair<string, string> kvp in tempSetting.Dictionary)
+                        {
+                            if (kvp.Key.StartsWith(mi.Difficulty.ToString()))
+                            {
+                                setting.ReplaceOrAdd(kvp.Key.Replace(mi.Difficulty.ToString(), difficulty.ToString()), kvp.Value);
+                            }
+                        }
+                        setting.ReplaceOrAdd("selecteddifficulty", difficulty.ToString());
                     }
-                    setting.ReplaceOrAdd("selecteddifficulty", difficulty.ToString());
+                }
+                var sw = new SettingWriter(Path.Combine(tempdir, Path.GetFileName(destProjectFilePath)), false);
+                foreach (KeyValuePair<string, string> kvp in setting.Dictionary)
+                {
+                    sw.Write(kvp.Key, kvp.Value);
+                }
+                sw.Close();
+
+                //Copy To Local
+                Utility.CopyDirectory(tempdir, Path.GetDirectoryName(destProjectFilePath), []);
+                if (File.Exists(moviePath))
+                {
+                    File.Copy(moviePath, Path.Combine(GetProjectDir(destProjectFilePath), Path.GetFileName(moviePath)), true);
                 }
             }
-            var sw = new SettingWriter(Path.Combine(tempdir, Path.GetFileName(destProjectFilePath)), false);
-            foreach (KeyValuePair<string, string> kvp in setting.Dictionary)
+            finally
             {
-                sw.Write(kvp.Key, kvp.Value);
-            }
-            sw.Close();
-
-            //Copy To Local
-            Utility.CopyDirectory(tempdir, Path.GetDirectoryName(destProjectFilePath), []);
-            if (File.Exists(moviePath))
-            {
-                File.Copy(moviePath, Path.Combine(GetProjectDir(destProjectFilePath), Path.GetFileName(moviePath)), true);
+                if (Directory.Exists(tempdir))
+                {
+                    Directory.Delete(tempdir, true);
+                }
+                File.Delete(tempFileName);
             }
         }
 
