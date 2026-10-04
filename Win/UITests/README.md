@@ -10,7 +10,7 @@
 dotnet test UITests\UITests.csproj -c Debug -p:Platform=x64
 ```
 
-テストするアプリ（BMSTOPPD、KeyConfiger、FlowScriptControlTest、BezierDrawControlTest）は、テストの前にビルドされます。Visual Studio のテスト エクスプローラーからも実行できます。
+テストするアプリ（BMSTOPPD、KeyConfiger、FlowScriptControlTest、BezierDrawControlTest、PPDUpdater）は、テストの前にビルドされます。Visual Studio のテスト エクスプローラーからも実行できます。
 
 ## テストの書き方
 
@@ -28,3 +28,4 @@ dotnet test UITests\UITests.csproj -c Debug -p:Platform=x64
 - テストで使うファイルは、テストのフォルダの `TestData` に置きます（出力のフォルダにコピーされる）。
 - テストは並べて実行しません（`xunit.runner.json`）。
 - インストール、アップロード、ネットワークにつなぐ操作はテストしません。
+  ネットワークにつなぐ設定のファイルは、`AppSession.Start` の最後の引数でコピーしないようにします（PPDUpdater の PPDUpdater.ini など）。

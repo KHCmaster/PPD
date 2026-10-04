@@ -52,10 +52,10 @@ namespace UITests
 
         public Window MainWindow { get; }
 
-        private AppSession(string sourceDirectory, string exeName)
+        private AppSession(string sourceDirectory, string exeName, string[] excludedFiles)
         {
             WorkDirectory = Path.Combine(Path.GetTempPath(), "PPDUITests", Guid.NewGuid().ToString("N"));
-            CopyDirectory(sourceDirectory, WorkDirectory);
+            CopyDirectory(sourceDirectory, WorkDirectory, [.. excludedFileNames, .. excludedFiles]);
             application = Application.Launch(new ProcessStartInfo(Path.Combine(WorkDirectory, exeName))
             {
                 WorkingDirectory = WorkDirectory
@@ -69,7 +69,8 @@ namespace UITests
         /// </summary>
         /// <param name="projectDirectory">ソリューションのフォルダからの、プロジェクトのフォルダ。</param>
         /// <param name="exeName">exe の名前。</param>
-        public static AppSession Start(string projectDirectory, string exeName)
+        /// <param name="excludedFiles">ほかにコピーしないファイルの名前（ネットワークにつなぐ設定のファイルなど）。</param>
+        public static AppSession Start(string projectDirectory, string exeName, params string[] excludedFiles)
         {
             var assembly = typeof(AppSession).Assembly;
             string Metadata(string key) => assembly.GetCustomAttributes<AssemblyMetadataAttribute>().First(a => a.Key == key).Value;
@@ -78,7 +79,7 @@ namespace UITests
             {
                 throw new FileNotFoundException("テストするアプリがビルドされていません。", Path.Combine(outputDirectory, exeName));
             }
-            return new AppSession(outputDirectory, exeName);
+            return new AppSession(outputDirectory, exeName, excludedFiles);
         }
 
         /// <summary>
@@ -105,11 +106,11 @@ namespace UITests
         }
 
         /// <summary>
-        /// メインのウィンドウの中の、AutomationId の要素を返します。
+        /// メインのウィンドウの中の、AutomationId の要素を返します（表示されるまで待つ）。
         /// </summary>
         public AutomationElement Find(string automationId)
         {
-            return MainWindow.FindFirstDescendant(cf => cf.ByAutomationId(automationId))
+            return Retry.WhileNull(() => MainWindow.FindFirstDescendant(cf => cf.ByAutomationId(automationId)), defaultTimeout).Result
                 ?? throw new InvalidOperationException(automationId + " が見つかりません。");
         }
 
@@ -195,12 +196,12 @@ namespace UITests
             }
         }
 
-        private static void CopyDirectory(string source, string destination)
+        private static void CopyDirectory(string source, string destination, string[] excluded)
         {
             Directory.CreateDirectory(destination);
             foreach (var file in Directory.GetFiles(source))
             {
-                if (excludedFileNames.Contains(Path.GetFileName(file), StringComparer.OrdinalIgnoreCase))
+                if (excluded.Contains(Path.GetFileName(file), StringComparer.OrdinalIgnoreCase))
                 {
                     continue;
                 }
@@ -208,7 +209,7 @@ namespace UITests
             }
             foreach (var directory in Directory.GetDirectories(source))
             {
-                CopyDirectory(directory, Path.Combine(destination, Path.GetFileName(directory)));
+                CopyDirectory(directory, Path.Combine(destination, Path.GetFileName(directory)), excluded);
             }
         }
     }
