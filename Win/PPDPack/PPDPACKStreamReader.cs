@@ -47,7 +47,8 @@ namespace PPDPack
                 {
                     throw new ArgumentException("Positionに負の値が設定されました");
                 }
-                if (_baseStream.Length < _offset + value)
+                // このファイルの長さを超えないようにする（以前はパック全体の長さで確かめていた）
+                if (value > _length)
                 {
                     throw new ArgumentException("Positionに長さを超える値が設定されました");
                 }
@@ -86,7 +87,7 @@ namespace PPDPack
                     {
                         throw new ArgumentException("offsetがlengthよりも大きいです");
                     }
-                    return _baseStream.Seek(_offset + offset, origin);
+                    return _baseStream.Seek(_offset + offset, origin) - _offset;
                 case SeekOrigin.Current:
                     if (_baseStream.Position + offset < _offset)
                     {
@@ -96,7 +97,7 @@ namespace PPDPack
                     {
                         throw new ArgumentException("offsetによりlengthを超えます");
                     }
-                    return _baseStream.Seek(offset, origin);
+                    return _baseStream.Seek(offset, origin) - _offset;
                 case SeekOrigin.End:
                     if (offset > 0)
                     {
@@ -106,7 +107,7 @@ namespace PPDPack
                     {
                         throw new ArgumentException("offsetにより負の範囲にでます");
                     }
-                    return _baseStream.Seek(_offset + offset + _length, SeekOrigin.Begin);
+                    return _baseStream.Seek(_offset + offset + _length, SeekOrigin.Begin) - _offset;
             }
             return 0;
         }

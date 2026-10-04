@@ -107,8 +107,8 @@ namespace PPDPack.V2
 
         public PPDPackStreamReader Read(string fileName)
         {
-            var info = files[fileName];
-            if (info == null)
+            // ないファイルは null を返す（以前は例外になっていた）
+            if (!files.TryGetValue(fileName, out var info))
             {
                 return null;
             }

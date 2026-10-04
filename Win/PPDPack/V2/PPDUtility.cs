@@ -21,7 +21,8 @@
                 return -1;
             }
 
-            for (int i = 0; i < array.Length - FileSignature.Length; i++)
+            // 配列の最後で終わるところまで探す（以前は最後の位置を探していなかった）
+            for (int i = 0; i <= array.Length - FileSignature.Length; i++)
             {
                 if (CheckContainsArray(array, i))
                 {
