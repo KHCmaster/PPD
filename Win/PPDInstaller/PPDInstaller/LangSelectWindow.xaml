@@ -5,7 +5,7 @@
         WindowStartupLocation="CenterScreen" SourceInitialized="Window_SourceInitialized">
     <!-- DataContext はウィンドウ自身（言語を 1 つ選ぶだけなので、ViewModel を分けない） -->
     <StackPanel Margin="12">
-        <ComboBox Width="121" ItemsSource="{Binding Languages}" SelectedIndex="{Binding SelectedIndex}" />
-        <Button Content="OK" Width="75" Height="23" Margin="0,6,0,0" IsDefault="True" Click="OkButton_Click" />
+        <ComboBox AutomationProperties.AutomationId="LanguageCombo" Width="121" ItemsSource="{Binding Languages}" SelectedIndex="{Binding SelectedIndex}" />
+        <Button AutomationProperties.AutomationId="OkButton" Content="OK" Width="75" Height="23" Margin="0,6,0,0" IsDefault="True" Click="OkButton_Click" />
     </StackPanel>
 </Window>

@@ -15,12 +15,12 @@ namespace UITests.PPDUpdater
     /// </remarks>
     public sealed class PPDUpdaterTests : IDisposable
     {
-        readonly AppSession session = AppSession.Start("PPDUpdater", "PPDUpdater.exe", "PPDUpdater.ini", "install.info");
-
-        public PPDUpdaterTests()
+        readonly AppSession session = AppSession.Start("PPDUpdater", "PPDUpdater.exe", new AppStartOptions
         {
-            Assert.False(File.Exists(Path.Combine(session.WorkDirectory, "PPDUpdater.ini")), "更新のリストの場所がある設定をコピーしてはいけない");
-        }
+            ExcludedFiles = ["PPDUpdater.ini", "install.info"],
+            // 起動する前に確かめる
+            Prepare = workDirectory => Assert.False(File.Exists(Path.Combine(workDirectory, "PPDUpdater.ini")), "更新のリストの場所がある設定をコピーしてはいけない"),
+        });
 
         public void Dispose()
         {

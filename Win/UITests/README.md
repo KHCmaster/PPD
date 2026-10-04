@@ -10,7 +10,7 @@
 dotnet test UITests\UITests.csproj -c Debug -p:Platform=x64
 ```
 
-テストするアプリ（BMSTOPPD、KeyConfiger、FlowScriptControlTest、BezierDrawControlTest、PPDUpdater、FolderDiffChecker）は、テストの前にビルドされます。Visual Studio のテスト エクスプローラーからも実行できます。
+テストするアプリ（BMSTOPPD、KeyConfiger、FlowScriptControlTest、BezierDrawControlTest、PPDUpdater、FolderDiffChecker、PPDInstaller）は、テストの前にビルドされます。Visual Studio のテスト エクスプローラーからも実行できます。
 
 ## テストの書き方
 
@@ -18,6 +18,10 @@ dotnet test UITests\UITests.csproj -c Debug -p:Platform=x64
   ビルドしたフォルダを一時フォルダにコピーしてから起動し、終わったらプロセスを終了してフォルダを消します。
   開発用のフォルダの設定ファイルは変わりません。PPD.ini、credentials.txt、Data.pak、鍵（*.ppk）、lastUser.txt はコピーしません。
 - アプリは普通には閉じません（閉じるときに設定を保存するアプリがあるため）。
+- テスト用のデータを置く、コピーしてはいけないものがないか確かめる、などは `AppStartOptions.Prepare` で、アプリを起動する前に行います
+  （テストのクラスのコンストラクターで失敗すると、Dispose が呼ばれずアプリが残るため）。
+- PPDInstaller はインストールしません。本物の Data.pak は使わず、テストで小さなものを作ります。
+  「かんたんインストール」と、確認のページの「次へ」は押しません。
 - 画面の部品は `AutomationProperties.AutomationId` で探します（表示の文字は言語で変わるため）。
 - メッセージボックスなどのモーダルのウィンドウを開くボタンは、`AppSession.InvokeAsync` で押します（閉じるまで戻らないため）。
 - メッセージボックスは `MessageBoxes`、ファイルを開く・保存するダイアログは `FileDialogs` で操作します

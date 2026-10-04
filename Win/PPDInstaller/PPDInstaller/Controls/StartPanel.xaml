@@ -1,4 +1,4 @@
-<UserControl x:Class="PPDInstaller.Controls.StartPanel"
+<UserControl x:Class="PPDInstaller.Controls.StartPanel" AutomationProperties.AutomationId="StartPage"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -7,9 +7,9 @@
              mc:Ignorable="d" d:DataContext="{d:DesignInstance Type=vm:StartPageViewModel}">
     <Canvas>
         <TextBlock Canvas.Left="3" Canvas.Top="9" FontSize="21" Text="{Binding Texts[Label1]}" />
-        <Button Canvas.Left="91" Canvas.Top="87" Width="215" Height="50" FontSize="19" FontWeight="Bold"
+        <Button AutomationProperties.AutomationId="EasyInstallButton" Canvas.Left="91" Canvas.Top="87" Width="215" Height="50" FontSize="19" FontWeight="Bold"
                 Content="{Binding Texts[EasyInstall]}" Command="{Binding EasyInstallCommand}" />
-        <Button Canvas.Left="91" Canvas.Top="158" Width="215" Height="23"
+        <Button AutomationProperties.AutomationId="CustomInstallButton" Canvas.Left="91" Canvas.Top="158" Width="215" Height="23"
                 Content="{Binding Texts[CustomInstall]}" Command="{Binding CustomInstallCommand}" />
     </Canvas>
 </UserControl>

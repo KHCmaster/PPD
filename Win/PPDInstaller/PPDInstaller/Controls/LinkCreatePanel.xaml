@@ -1,4 +1,4 @@
-<UserControl x:Class="PPDInstaller.Controls.LinkCreatePanel"
+<UserControl x:Class="PPDInstaller.Controls.LinkCreatePanel" AutomationProperties.AutomationId="LinkCreatePage"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -6,6 +6,6 @@
              xmlns:vm="clr-namespace:PPDInstaller.ViewModels"
              mc:Ignorable="d" d:DataContext="{d:DesignInstance Type=vm:LinkCreatePageViewModel}">
     <Canvas>
-        <CheckBox Canvas.Left="32" Canvas.Top="129" Content="{Binding Texts[RegisterStartMenu]}" IsChecked="{Binding RegisterStartMenu}" />
+        <CheckBox AutomationProperties.AutomationId="StartMenuCheck" Canvas.Left="32" Canvas.Top="129" Content="{Binding Texts[RegisterStartMenu]}" IsChecked="{Binding RegisterStartMenu}" />
     </Canvas>
 </UserControl>

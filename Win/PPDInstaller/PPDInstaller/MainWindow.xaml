@@ -46,7 +46,7 @@
             </Grid.RowDefinitions>
             <ContentControl Content="{Binding CurrentPage}" Focusable="False" />
             <Canvas Grid.Row="1">
-                <Button Canvas.Left="61" Canvas.Top="3" Width="85" Height="23" Content="{Binding Texts[Button3]}" Command="{Binding PreviousCommand}">
+                <Button Canvas.Left="61" Canvas.Top="3" Width="85" Height="23" AutomationProperties.AutomationId="PreviousButton" Content="{Binding Texts[Button3]}" Command="{Binding PreviousCommand}">
                     <Button.Style>
                         <Style TargetType="Button">
                             <Style.Triggers>
@@ -57,7 +57,7 @@
                         </Style>
                     </Button.Style>
                 </Button>
-                <Button Canvas.Left="152" Canvas.Top="3" Width="87" Height="23" Content="{Binding NextText}" Command="{Binding NextOrCloseCommand}">
+                <Button Canvas.Left="152" Canvas.Top="3" Width="87" Height="23" AutomationProperties.AutomationId="NextButton" Content="{Binding NextText}" Command="{Binding NextOrCloseCommand}">
                     <Button.Style>
                         <Style TargetType="Button">
                             <Style.Triggers>
@@ -68,7 +68,7 @@
                         </Style>
                     </Button.Style>
                 </Button>
-                <Button Canvas.Left="276" Canvas.Top="3" MinWidth="90" Height="23" Padding="6,1" Content="{Binding Texts[Button1]}" Command="{Binding CancelCommand}">
+                <Button Canvas.Left="276" Canvas.Top="3" MinWidth="90" Height="23" Padding="6,1" AutomationProperties.AutomationId="CancelButton" Content="{Binding Texts[Button1]}" Command="{Binding CancelCommand}">
                     <Button.Style>
                         <Style TargetType="Button">
                             <Style.Triggers>

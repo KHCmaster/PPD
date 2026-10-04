@@ -52,16 +52,39 @@ namespace UITests
 
         public Window MainWindow { get; }
 
-        private AppSession(string sourceDirectory, string exeName, string[] excludedFiles)
+        private AppSession(string sourceDirectory, string exeName, AppStartOptions options)
         {
             WorkDirectory = Path.Combine(Path.GetTempPath(), "PPDUITests", Guid.NewGuid().ToString("N"));
-            CopyDirectory(sourceDirectory, WorkDirectory, [.. excludedFileNames, .. excludedFiles]);
-            application = Application.Launch(new ProcessStartInfo(Path.Combine(WorkDirectory, exeName))
+            try
             {
-                WorkingDirectory = WorkDirectory
-            });
-            MainWindow = application.GetMainWindow(Automation, defaultTimeout)
-                ?? throw new InvalidOperationException(exeName + " のウィンドウが開きませんでした。");
+                CopyDirectory(sourceDirectory, WorkDirectory, [.. excludedFileNames, .. options.ExcludedFiles]);
+                // 準備や確かめに失敗したら、アプリを起動しない
+                options.Prepare?.Invoke(WorkDirectory);
+            }
+            catch
+            {
+                DeleteWorkDirectory();
+                throw;
+            }
+            var startInfo = new ProcessStartInfo(Path.Combine(WorkDirectory, exeName))
+            {
+                WorkingDirectory = WorkDirectory,
+                UseShellExecute = false
+            };
+            foreach (var (name, value) in options.Environment)
+            {
+                startInfo.Environment[name] = value.Replace("{WorkDirectory}", WorkDirectory);
+            }
+            application = Application.Launch(startInfo);
+            // 最初に開いたウィンドウを待つ。タスクバーに出ないウィンドウ（ShowInTaskbar="False"）は、
+            // プロセスのメインのウィンドウにならないので、プロセスのトップレベルのウィンドウから探す
+            MainWindow = Retry.WhileNull(() => application.GetAllTopLevelWindows(Automation).FirstOrDefault(), defaultTimeout).Result;
+            if (MainWindow == null)
+            {
+                // 起動に失敗したときも、アプリを残さない（例外を投げるとテストの Dispose は呼ばれない）
+                Dispose();
+                throw new InvalidOperationException(exeName + " のウィンドウが開きませんでした。");
+            }
         }
 
         /// <summary>
@@ -72,6 +95,14 @@ namespace UITests
         /// <param name="excludedFiles">ほかにコピーしないファイルの名前（ネットワークにつなぐ設定のファイルなど）。</param>
         public static AppSession Start(string projectDirectory, string exeName, params string[] excludedFiles)
         {
+            return Start(projectDirectory, exeName, new AppStartOptions { ExcludedFiles = excludedFiles });
+        }
+
+        /// <summary>
+        /// ソリューションの中のアプリ（ビルドしたもの）を、指定のしかたで起動します。
+        /// </summary>
+        public static AppSession Start(string projectDirectory, string exeName, AppStartOptions options)
+        {
             var assembly = typeof(AppSession).Assembly;
             string Metadata(string key) => assembly.GetCustomAttributes<AssemblyMetadataAttribute>().First(a => a.Key == key).Value;
             var outputDirectory = Path.GetFullPath(Path.Combine(Metadata("SourceRoot"), projectDirectory, "bin", "x64", Metadata("Configuration")));
@@ -79,7 +110,7 @@ namespace UITests
             {
                 throw new FileNotFoundException("テストするアプリがビルドされていません。", Path.Combine(outputDirectory, exeName));
             }
-            return new AppSession(outputDirectory, exeName, excludedFiles);
+            return new AppSession(outputDirectory, exeName, options);
         }
 
         /// <summary>
@@ -97,11 +128,12 @@ namespace UITests
         }
 
         /// <summary>
-        /// メインのウィンドウの上に開いたモーダルのウィンドウ（メッセージボックスなど）を待って返します。
+        /// ウィンドウ（省略したときはメインのウィンドウ）の上に開いたモーダルのウィンドウ（メッセージボックスなど）を待って返します。
         /// </summary>
-        public Window WaitForModal()
+        public Window WaitForModal(Window owner = null)
         {
-            var result = Retry.WhileNull(() => MainWindow.ModalWindows.FirstOrDefault(), defaultTimeout);
+            owner ??= MainWindow;
+            var result = Retry.WhileNull(() => owner.ModalWindows.FirstOrDefault(), defaultTimeout);
             return result.Result ?? throw new TimeoutException("モーダルのウィンドウが開きませんでした。");
         }
 
@@ -178,6 +210,11 @@ namespace UITests
             }
             application.Dispose();
             Automation.Dispose();
+            DeleteWorkDirectory();
+        }
+
+        private void DeleteWorkDirectory()
+        {
             // 終了したばかりのプロセスがファイルを握っていることがあるので、何度か試す
             for (int i = 0; i < 10 && Directory.Exists(WorkDirectory); i++)
             {
@@ -219,5 +256,27 @@ namespace UITests
                 CopyDirectory(directory, Path.Combine(destination, Path.GetFileName(directory)), excluded);
             }
         }
+    }
+
+    /// <summary>
+    /// アプリの起動のしかたです。
+    /// </summary>
+    public sealed class AppStartOptions
+    {
+        /// <summary>
+        /// ほかにコピーしないファイルの名前です。
+        /// </summary>
+        public string[] ExcludedFiles { get; init; } = [];
+
+        /// <summary>
+        /// 起動する前に、作業のフォルダ（引数）を準備する処理です（テスト用のデータを置く、コピーしてはいけないものがないか確かめるなど）。
+        /// 例外を投げると、アプリを起動しない。
+        /// </summary>
+        public Action<string> Prepare { get; init; }
+
+        /// <summary>
+        /// アプリの環境変数です。値の「{WorkDirectory}」は、作業のフォルダのパスにする。
+        /// </summary>
+        public System.Collections.Generic.Dictionary<string, string> Environment { get; init; } = [];
     }
 }

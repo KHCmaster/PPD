@@ -26,6 +26,7 @@
     <ProjectReference Include="..\BezierDrawControlTest\BezierDrawControlTest.csproj" ReferenceOutputAssembly="false" />
     <ProjectReference Include="..\PPDUpdater\PPDUpdater.csproj" ReferenceOutputAssembly="false" />
     <ProjectReference Include="..\FolderDiffChecker\FolderDiffChecker.csproj" ReferenceOutputAssembly="false" />
+    <ProjectReference Include="..\PPDInstaller\PPDInstaller\PPDInstaller.csproj" ReferenceOutputAssembly="false" />
   </ItemGroup>
   <ItemGroup>
     <!-- テストするアプリのビルドの場所を探すための、リポジトリの場所と構成 -->

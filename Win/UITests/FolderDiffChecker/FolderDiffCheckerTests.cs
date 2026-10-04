@@ -15,12 +15,11 @@ namespace UITests.FolderDiffChecker
     /// </remarks>
     public sealed class FolderDiffCheckerTests : IDisposable
     {
-        readonly AppSession session = AppSession.Start("FolderDiffChecker", "FolderDiffChecker.exe");
-
-        public FolderDiffCheckerTests()
+        readonly AppSession session = AppSession.Start("FolderDiffChecker", "FolderDiffChecker.exe", new AppStartOptions
         {
-            Assert.Empty(Directory.GetFiles(session.WorkDirectory, "*.ppk"));
-        }
+            // 起動する前に、鍵をコピーしていないことを確かめる
+            Prepare = workDirectory => Assert.Empty(Directory.GetFiles(workDirectory, "*.ppk")),
+        });
 
         public void Dispose()
         {
