@@ -34,7 +34,8 @@ namespace PPDEditor.ViewModels.Docks
             }
             long total = times[^1] - times[0];
             Interval = (times[^1] - times[^2]).ToString();
-            Bpm = (60f / (total / 1000f) * times.Count).ToString();
+            // n 回押したときの拍の間は n - 1 個（以前は n 個として数えていたので、BPM が n / (n - 1) 倍に高く出ていた）
+            Bpm = (60f / (total / 1000f) * (times.Count - 1)).ToString();
         }
 
         [RelayCommand]
