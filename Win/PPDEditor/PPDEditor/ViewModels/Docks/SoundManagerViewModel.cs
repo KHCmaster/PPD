@@ -449,7 +449,8 @@ namespace PPDEditor.ViewModels.Docks
                 return;
             }
             var path = paths[0];
-            if (data.Paths[index] == path)
+            var oldPath = data.Paths[index];
+            if (oldPath == path)
             {
                 // 同じファイルなら、読み込み直す
                 host.UnloadSound(path);
@@ -460,6 +461,11 @@ namespace PPDEditor.ViewModels.Docks
                 host.LoadSound(path);
             }
             data.ReplaceSound(index, path);
+            // 前のファイルをもう使っていなければ外す（以前は読み込んだまま残っていた）
+            if (oldPath != path && !data.Paths.Contains(oldPath))
+            {
+                host.UnloadSound(oldPath);
+            }
             RefreshSoundNames();
             RefreshRows();
             OnChanged();
