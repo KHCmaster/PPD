@@ -163,7 +163,7 @@ namespace UITests.PPDInstaller
             AppSession.InvokeAsync(Find(window, "CancelButton"));
             MessageBoxes.Press(session.WaitForModal(window), MessageBoxButton.No);
 
-            Assert.True(AppSession.WaitUntil(() => window.ModalWindows.Length == 0));
+            Assert.True(session.WaitForNoModal(window));
             Assert.True(IsShown(window, "StartPage"));
             Assert.False(session.HasExited);
         }

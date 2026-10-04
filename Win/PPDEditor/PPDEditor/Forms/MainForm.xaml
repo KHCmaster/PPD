@@ -103,10 +103,10 @@
                             </Style>
                         </Menu.Style>
                         <MenuItem x:Name="fileMenu" Header="{Binding Texts[File]}">
-                            <MenuItem Header="{Binding Texts[CPF]}" Command="{Binding NewProjectCommand}" />
+                            <MenuItem AutomationProperties.AutomationId="NewProjectMenuItem" Header="{Binding Texts[CPF]}" Command="{Binding NewProjectCommand}" />
                             <MenuItem Header="{Binding Texts[OpenProject]}" Command="{Binding OpenProjectCommand}" />
                             <MenuItem Header="{Binding Texts[OverWriteProject]}" InputGestureText="Ctrl+S" Command="{Binding OverwriteProjectCommand}" />
-                            <MenuItem Header="{Binding Texts[MergeProject]}" Command="{Binding MergeProjectCommand}" />
+                            <MenuItem AutomationProperties.AutomationId="MergeProjectMenuItem" Header="{Binding Texts[MergeProject]}" Command="{Binding MergeProjectCommand}" />
                             <MenuItem Header="{Binding Texts[Open]}">
                                 <MenuItem Header="*.ppd" Command="{Binding OpenPpdCommand}" />
                                 <MenuItem Header="movie.*" Command="{Binding OpenMovieCommand}" />
@@ -141,7 +141,7 @@
                         <MenuItem x:Name="editMenu" Header="{Binding Texts[Edit]}">
                             <MenuItem Header="{Binding Texts[Undo]}" Command="{Binding UndoCommand}" />
                             <MenuItem Header="{Binding Texts[Redo]}" Command="{Binding RedoCommand}" />
-                            <MenuItem Header="{Binding Texts[SwapLine]}" Command="{Binding SwapLineCommand}" />
+                            <MenuItem AutomationProperties.AutomationId="SwapLineMenuItem" Header="{Binding Texts[SwapLine]}" Command="{Binding SwapLineCommand}" />
                             <MenuItem Header="{Binding Texts[ForceFit]}">
                                 <MenuItem Header="{Binding Texts[EntireSelectedLayer]}" Command="{Binding ForceFitLayerCommand}" />
                                 <MenuItem Header="{Binding Texts[OnlyInSelection]}" Command="{Binding ForceFitSelectionCommand}" />
@@ -162,7 +162,7 @@
                             <MenuItem Header="{Binding Texts[Pause]}" Command="{Binding PauseCommand}" />
                             <MenuItem Header="{Binding Texts[Stop]}" Command="{Binding StopCommand}" />
                             <MenuItem Header="{Binding Texts[RecordKey]}" Command="{Binding RecordKeyCommand}" />
-                            <MenuItem Header="{Binding Texts[Cut]}" Command="{Binding CutMovieCommand}" />
+                            <MenuItem AutomationProperties.AutomationId="CutMovieMenuItem" Header="{Binding Texts[Cut]}" Command="{Binding CutMovieCommand}" />
                         </MenuItem>
                         <MenuItem x:Name="showMenu" Header="{Binding Texts[Show]}" SubmenuOpened="ShowMenu_SubmenuOpened" ItemContainerStyle="{StaticResource DockItem}">
                             <MenuItem.ItemsSource>
@@ -207,17 +207,17 @@
                                       IsEnabled="{Binding AvailableDifficulty, Converter={StaticResource HasFlag}, ConverterParameter=Base}" />
                             <MenuItem Header="{Binding Texts[CopyCurrentDifficulty]}" Command="{Binding CopyDifficultyCommand}" />
                         </MenuItem>
-                        <MenuItem Header="{Binding Texts[Language]}" ItemsSource="{Binding Languages}" ItemContainerStyle="{StaticResource LanguageItem}" />
-                        <MenuItem Header="{Binding Texts[Others]}">
+                        <MenuItem AutomationProperties.AutomationId="LanguageMenu" Header="{Binding Texts[Language]}" ItemsSource="{Binding Languages}" ItemContainerStyle="{StaticResource LanguageItem}" />
+                        <MenuItem AutomationProperties.AutomationId="OthersMenu" Header="{Binding Texts[Others]}">
                             <MenuItem Header="{Binding Texts[HideToolBar]}" IsCheckable="True" IsChecked="{Binding IsMenuHidden, Mode=TwoWay}" />
-                            <MenuItem Header="{Binding Texts[Setting]}" Command="{Binding OpenSettingCommand}" />
+                            <MenuItem AutomationProperties.AutomationId="SettingMenuItem" Header="{Binding Texts[Setting]}" Command="{Binding OpenSettingCommand}" />
                         </MenuItem>
                     </Menu>
                     <ToolBarTray Background="Transparent" IsLocked="True">
                         <ToolBar Background="Transparent">
-                            <TextBox Text="{Binding BpmText, UpdateSourceTrigger=PropertyChanged}" Width="100" ToolTip="BPM" />
+                            <TextBox AutomationProperties.AutomationId="BpmBox" Text="{Binding BpmText, UpdateSourceTrigger=PropertyChanged}" Width="100" ToolTip="BPM" />
                             <TextBox Text="{Binding BpmOffsetText, UpdateSourceTrigger=PropertyChanged}" Width="100" ToolTip="BPM offset(1/BPM)" />
-                            <TextBox Text="{Binding DisplayWidthText, UpdateSourceTrigger=PropertyChanged}" Width="100" ToolTip="{Binding Texts[DisplayWidth]}" />
+                            <TextBox AutomationProperties.AutomationId="DisplayWidthBox" Text="{Binding DisplayWidthText, UpdateSourceTrigger=PropertyChanged}" Width="100" ToolTip="{Binding Texts[DisplayWidth]}" />
                             <Separator />
                             <ComboBox Width="180" ItemsSource="{Binding DisplayModes}" DisplayMemberPath="Text" SelectedIndex="{Binding DisplayModeIndex}" />
                             <ComboBox Width="150" ItemsSource="{Binding BeatTypes}" DisplayMemberPath="Text" SelectedIndex="{Binding BeatTypeIndex}" />
@@ -240,18 +240,18 @@
                             <ToggleButton IsChecked="{Binding MarkFocus}" ToolTip="{Binding Texts[MarkFocus]}" Style="{StaticResource ToolImageButton}">
                                 <Image Source="/img/markfocus.png" Stretch="None" />
                             </ToggleButton>
-                            <Button Style="{StaticResource DropDownArrow}" Click="DropDownButton_Click">
+                            <Button AutomationProperties.AutomationId="FarnessDropDown" Style="{StaticResource DropDownArrow}" Click="DropDownButton_Click">
                                 <Path Data="M 0 0 L 6 0 L 3 3 Z" Fill="Black" VerticalAlignment="Center" />
                                 <Button.ContextMenu>
                                     <ContextMenu DataContext="{Binding Data, Source={StaticResource Proxy}}">
-                                        <MenuItem Header="{Binding Texts[GridDetailSetting]}" Command="{Binding EditFarnessCommand}" />
+                                        <MenuItem AutomationProperties.AutomationId="FarnessDetailMenuItem" Header="{Binding Texts[GridDetailSetting]}" Command="{Binding EditFarnessCommand}" />
                                     </ContextMenu>
                                 </Button.ContextMenu>
                             </Button>
                             <ToggleButton IsChecked="{Binding DisplayGrid}" ToolTip="{Binding Texts[DisplayGrid]}" Style="{StaticResource ToolImageButton}">
                                 <Image Source="/img/grid.png" Stretch="None" />
                             </ToggleButton>
-                            <Button Style="{StaticResource DropDownArrow}" Click="DropDownButton_Click">
+                            <Button AutomationProperties.AutomationId="GridDropDown" Style="{StaticResource DropDownArrow}" Click="DropDownButton_Click">
                                 <Path Data="M 0 0 L 6 0 L 3 3 Z" Fill="Black" VerticalAlignment="Center" />
                                 <Button.ContextMenu>
                                     <ContextMenu DataContext="{Binding Data, Source={StaticResource Proxy}}">
@@ -261,7 +261,7 @@
                                                   IsChecked="{Binding GridSize, Mode=OneWay, Converter={StaticResource EnumToBoolean}, ConverterParameter=Px20}" />
                                         <MenuItem Header="50px" Command="{Binding SetGridSizeCommand}" CommandParameter="{x:Static vm:GridSizeChoice.Px50}"
                                                   IsChecked="{Binding GridSize, Mode=OneWay, Converter={StaticResource EnumToBoolean}, ConverterParameter=Px50}" />
-                                        <MenuItem Header="{Binding Texts[GridDetailSetting]}" Command="{Binding EditGridCommand}"
+                                        <MenuItem AutomationProperties.AutomationId="GridDetailMenuItem" Header="{Binding Texts[GridDetailSetting]}" Command="{Binding EditGridCommand}"
                                                   IsChecked="{Binding GridSize, Mode=OneWay, Converter={StaticResource EnumToBoolean}, ConverterParameter=Custom}" />
                                     </ContextMenu>
                                 </Button.ContextMenu>
@@ -269,11 +269,11 @@
                             <ToggleButton IsChecked="{Binding IsTimeLineRowLimited}" ToolTip="{Binding Texts[LimitTimeLineRow]}" Style="{StaticResource ToolImageButton}">
                                 <Image Source="/img/timeline.png" Stretch="None" />
                             </ToggleButton>
-                            <Button Style="{StaticResource DropDownArrow}" Click="DropDownButton_Click">
+                            <Button AutomationProperties.AutomationId="TimeLineRowDropDown" Style="{StaticResource DropDownArrow}" Click="DropDownButton_Click">
                                 <Path Data="M 0 0 L 6 0 L 3 3 Z" Fill="Black" VerticalAlignment="Center" />
                                 <Button.ContextMenu>
                                     <ContextMenu DataContext="{Binding Data, Source={StaticResource Proxy}}">
-                                        <MenuItem Header="{Binding Texts[GridDetailSetting]}" Command="{Binding EditTimeLineRowsCommand}" />
+                                        <MenuItem AutomationProperties.AutomationId="TimeLineRowDetailMenuItem" Header="{Binding Texts[GridDetailSetting]}" Command="{Binding EditTimeLineRowsCommand}" />
                                     </ContextMenu>
                                 </Button.ContextMenu>
                             </Button>

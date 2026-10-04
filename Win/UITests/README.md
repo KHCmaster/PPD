@@ -7,10 +7,13 @@
 デスクトップにログオンした状態で実行します（画面のないセッションでは動きません）。
 
 ```
-dotnet test UITests\UITests.csproj -c Debug -p:Platform=x64
+dotnet test UITests\UITests.csproj -c Debug -p:Platform=x64 --blame-hang --blame-hang-timeout 3min --blame-hang-dump-type none
 ```
 
-テストするアプリ（BMSTOPPD、KeyConfiger、FlowScriptControlTest、BezierDrawControlTest、PPDUpdater、FolderDiffChecker、PPDInstaller、PPDConfig）は、テストの前にビルドされます。Visual Studio のテスト エクスプローラーからも実行できます。
+`--blame-hang` は、テストが止まったときに 3 分で終わらせるための指定です。
+テストで起動したアプリは Windows のジョブに入れてあるので、テストのプロセスが終わると（止まって強制終了されたときも）一緒に終わります。
+
+テストするアプリ（BMSTOPPD、KeyConfiger、FlowScriptControlTest、BezierDrawControlTest、PPDUpdater、FolderDiffChecker、PPDInstaller、PPDConfig、PPDEditor）は、テストの前にビルドされます。Visual Studio のテスト エクスプローラーからも実行できます。
 
 ## テストの書き方
 
@@ -23,6 +26,13 @@ dotnet test UITests\UITests.csproj -c Debug -p:Platform=x64
 - PPDInstaller はインストールしません。本物の Data.pak は使わず、テストで小さなものを作ります。
   「かんたんインストール」と、確認のページの「次へ」は押しません。
 - PPDConfig は、テスト用の PPD.ini を作って使います。BlueSky のタブは開かず、OK（保存）は押しません。
+- PPDEditor は、プロジェクト（Projects）、最近使ったプロジェクト、PPDFramework.setting.db をコピーしません。
+  設定のダイアログでは OK（設定の保存）を押しません。
+- 起動に時間がかかるアプリ（PPDEditor）は、`IClassFixture` で 1 回だけ起動して、テストのクラスの中で使い回します。
+  テストの後には、開いたダイアログを閉じておきます。
+- ウィンドウ（メインのウィンドウ、ダイアログ、メッセージボックス）は Win32 で探します。
+  UI Automation はアプリの UI のスレッドに問い合わせるので、PPDEditor のようにゲームのループで UI のスレッドが忙しいアプリでは、
+  1 回の問い合わせに 1 フレームほどかかります。PPDEditor では、子孫をすべて探す検索はなるべく避けてください。
 - 画面の部品は `AutomationProperties.AutomationId` で探します（表示の文字は言語で変わるため）。
 - メッセージボックスなどのモーダルのウィンドウを開くボタンは、`AppSession.InvokeAsync` で押します（閉じるまで戻らないため）。
 - メッセージボックスは `MessageBoxes`、ファイルを開く・保存するダイアログは `FileDialogs` で操作します

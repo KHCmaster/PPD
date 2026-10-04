@@ -76,14 +76,26 @@ namespace UITests
                 startInfo.Environment[name] = value.Replace("{WorkDirectory}", WorkDirectory);
             }
             application = Application.Launch(startInfo);
-            // 最初に開いたウィンドウを待つ。タスクバーに出ないウィンドウ（ShowInTaskbar="False"）は、
-            // プロセスのメインのウィンドウにならないので、プロセスのトップレベルのウィンドウから探す
-            MainWindow = Retry.WhileNull(() => application.GetAllTopLevelWindows(Automation).FirstOrDefault(), defaultTimeout).Result;
-            if (MainWindow == null)
+            try
+            {
+                // テストが止まって強制終了されても、アプリを残さない
+                ChildProcessJob.Add(application.ProcessId);
+                // 最初に開いたウィンドウを待つ。タスクバーに出ないウィンドウ（ShowInTaskbar="False"）は、
+                // プロセスのメインのウィンドウにならないので、プロセスのトップレベルのウィンドウから探す。
+                // 起動の画面（スプラッシュ）を出すアプリは、タイトルでメインのウィンドウを選ぶ
+                var handle = Retry.While(() => NativeWindows.OfProcess(application.ProcessId)
+                    .FirstOrDefault(h => options.MainWindowTitle == null || NativeWindows.GetTitle(h) == options.MainWindowTitle), h => h == IntPtr.Zero, options.StartupTimeout ?? defaultTimeout).Result;
+                if (handle == IntPtr.Zero)
+                {
+                    throw new InvalidOperationException(exeName + " のウィンドウが開きませんでした。");
+                }
+                MainWindow = Automation.FromHandle(handle).AsWindow();
+            }
+            catch
             {
                 // 起動に失敗したときも、アプリを残さない（例外を投げるとテストの Dispose は呼ばれない）
                 Dispose();
-                throw new InvalidOperationException(exeName + " のウィンドウが開きませんでした。");
+                throw;
             }
         }
 
@@ -114,17 +126,19 @@ namespace UITests
         }
 
         /// <summary>
-        /// 指定のタイトルの、このアプリのウィンドウを待って返します。
+        /// 指定のタイトルの、このアプリのトップレベルのウィンドウ（所有者のあるものも含む）を待って返します。
         /// </summary>
         /// <remarks>
-        /// 所有者のあるウィンドウ（Owner を設定したもの）は、UI Automation では所有者のウィンドウの子になるので、そこも探す。
+        /// ウィンドウは Win32 で探す（UI Automation で探すと、ゲームのループのように UI のスレッドが忙しいアプリでは時間がかかる）。
         /// </remarks>
         public Window WaitForWindow(string title)
         {
-            var result = Retry.WhileNull(() => application.GetAllTopLevelWindows(Automation)
-                .Concat(MainWindow.FindAllChildren(cf => cf.ByControlType(ControlType.Window)).Select(w => w.AsWindow()))
-                .FirstOrDefault(w => w.Title == title), defaultTimeout);
-            return result.Result ?? throw new TimeoutException("ウィンドウ「" + title + "」が開きませんでした。");
+            var result = Retry.While(() => NativeWindows.OfProcess(application.ProcessId).FirstOrDefault(h => NativeWindows.GetTitle(h) == title), h => h == IntPtr.Zero, defaultTimeout);
+            if (result.Result == IntPtr.Zero)
+            {
+                throw new TimeoutException("ウィンドウ「" + title + "」が開きませんでした。");
+            }
+            return Automation.FromHandle(result.Result).AsWindow();
         }
 
         /// <summary>
@@ -133,7 +147,7 @@ namespace UITests
         public Window WaitForModal(Window owner = null)
         {
             owner ??= MainWindow;
-            var result = Retry.WhileNull(() => owner.ModalWindows.FirstOrDefault(), defaultTimeout);
+            var result = Retry.WhileNull(() => ModalWindowsOf(owner).FirstOrDefault(), defaultTimeout);
             return result.Result ?? throw new TimeoutException("モーダルのウィンドウが開きませんでした。");
         }
 
@@ -161,6 +175,80 @@ namespace UITests
                     ?? throw new InvalidOperationException("メニューに " + id + " がありません。");
             }
             return item;
+        }
+
+        /// <summary>
+        /// ウィンドウ（省略したときはメインのウィンドウ）の上に開いているモーダルのウィンドウです。
+        /// </summary>
+        /// <remarks>
+        /// モーダルのウィンドウ（ダイアログやメッセージボックス）を開くと、所有者のウィンドウは使えなくなる。
+        /// そのときの、所有者のウィンドウが持つ見えているウィンドウを返す。ウィンドウは Win32 で探す（速いため）。
+        /// </remarks>
+        public Window[] ModalWindowsOf(Window owner = null)
+        {
+            var ownerHandle = HandleOf(owner ?? MainWindow);
+            if (NativeWindows.IsEnabled(ownerHandle))
+            {
+                return [];
+            }
+            return [.. NativeWindows.OfProcess(application.ProcessId)
+                .Where(h => NativeWindows.GetOwner(h) == ownerHandle && NativeWindows.HasCaption(h))
+                .Select(h => Automation.FromHandle(h).AsWindow())];
+        }
+
+        /// <summary>
+        /// ウィンドウのハンドルです（UI Automation に聞くのは 1 回だけにする）。
+        /// </summary>
+        private IntPtr HandleOf(Window window)
+        {
+            if (!handles.TryGetValue(window, out var handle))
+            {
+                handle = window.Properties.NativeWindowHandle.Value;
+                handles[window] = handle;
+            }
+            return handle;
+        }
+
+        readonly System.Collections.Generic.Dictionary<Window, IntPtr> handles = [];
+
+        /// <summary>
+        /// ウィンドウを閉じます（閉じるボタンと同じ。ダイアログではキャンセルになる）。
+        /// </summary>
+        public void CloseWindow(Window window)
+        {
+            NativeWindows.Close(HandleOf(window));
+        }
+
+        /// <summary>
+        /// 開いているモーダルのウィンドウのタイトルです（テストの失敗のメッセージ用）。
+        /// </summary>
+        public string DescribeModalWindows(Window owner = null)
+        {
+            var ownerHandle = HandleOf(owner ?? MainWindow);
+            return string.Join(", ", NativeWindows.OfProcess(application.ProcessId)
+                .Where(h => NativeWindows.GetOwner(h) == ownerHandle)
+                .Select(h => "「" + NativeWindows.GetTitle(h) + "」" + (NativeWindows.HasCaption(h) ? "" : "(タイトルバーなし)")));
+        }
+
+        /// <summary>
+        /// モーダルのウィンドウがすべて閉じるまで待ちます。
+        /// </summary>
+        /// <returns>閉じたかどうか。</returns>
+        public bool WaitForNoModal(Window owner = null)
+        {
+            return WaitUntil(() => ModalWindowsOf(owner).Length == 0);
+        }
+
+        /// <summary>
+        /// ポップアップ（右クリックのメニューなど、このアプリの別のウィンドウ）の中の、AutomationId の要素を待って返します。
+        /// </summary>
+        public AutomationElement FindInPopups(string automationId)
+        {
+            var result = Retry.WhileNull(() => Automation.GetDesktop()
+                .FindAllChildren(cf => cf.ByProcessId(application.ProcessId))
+                .Select(window => window.FindFirstDescendant(cf => cf.ByAutomationId(automationId)))
+                .FirstOrDefault(element => element != null), defaultTimeout);
+            return result.Result ?? throw new InvalidOperationException(automationId + " がポップアップにありません。");
         }
 
         /// <summary>
@@ -253,6 +341,10 @@ namespace UITests
             }
             foreach (var directory in Directory.GetDirectories(source))
             {
+                if (IsExcluded(Path.GetFileName(directory), excluded))
+                {
+                    continue;
+                }
                 CopyDirectory(directory, Path.Combine(destination, Path.GetFileName(directory)), excluded);
             }
         }
@@ -264,7 +356,7 @@ namespace UITests
     public sealed class AppStartOptions
     {
         /// <summary>
-        /// ほかにコピーしないファイルの名前です。
+        /// ほかにコピーしないファイルやフォルダの名前です。
         /// </summary>
         public string[] ExcludedFiles { get; init; } = [];
 
@@ -278,5 +370,15 @@ namespace UITests
         /// アプリの環境変数です。値の「{WorkDirectory}」は、作業のフォルダのパスにする。
         /// </summary>
         public System.Collections.Generic.Dictionary<string, string> Environment { get; init; } = [];
+
+        /// <summary>
+        /// メインのウィンドウのタイトルです。省略したときは、最初に開いたウィンドウをメインのウィンドウにする。
+        /// </summary>
+        public string MainWindowTitle { get; init; }
+
+        /// <summary>
+        /// メインのウィンドウが開くまで待つ時間です。省略したときは既定の時間。
+        /// </summary>
+        public TimeSpan? StartupTimeout { get; init; }
     }
 }

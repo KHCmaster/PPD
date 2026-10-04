@@ -56,7 +56,7 @@ namespace UITests.KeyConfiger
             var dialog = session.WaitForModal();
             dialog.FindFirstDescendant(cf => cf.ByAutomationId("NameTextBox")).AsTextBox().Text = name;
             dialog.FindFirstDescendant(cf => cf.ByAutomationId("OkButton")).AsButton().Invoke();
-            Assert.True(AppSession.WaitUntil(() => session.MainWindow.ModalWindows.Length == 0));
+            Assert.True(session.WaitForNoModal());
         }
 
         private void InvokeDeleteSetting()
@@ -112,7 +112,7 @@ namespace UITests.KeyConfiger
             Assert.Contains("Are you sure you want to delete current setting?", MessageBoxes.GetText(confirm));
             MessageBoxes.Press(confirm, MessageBoxButton.Ok);
 
-            Assert.True(AppSession.WaitUntil(() => session.MainWindow.ModalWindows.Length == 0));
+            Assert.True(session.WaitForNoModal());
             Assert.DoesNotContain("uitest", MenuItemNames("SettingMenu"));
         }
 
@@ -123,7 +123,7 @@ namespace UITests.KeyConfiger
             InvokeDeleteSetting();
             MessageBoxes.Press(session.WaitForModal(), MessageBoxButton.Cancel);
 
-            Assert.True(AppSession.WaitUntil(() => session.MainWindow.ModalWindows.Length == 0));
+            Assert.True(session.WaitForNoModal());
             Assert.Contains("uitest", MenuItemNames("SettingMenu"));
         }
 

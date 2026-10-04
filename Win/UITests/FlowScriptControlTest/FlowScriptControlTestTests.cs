@@ -40,7 +40,7 @@ namespace UITests.FlowScriptControlTest
             File.Copy(Path.Combine(AppContext.BaseDirectory, "FlowScriptControlTest", "TestData", fileName), path);
             AppSession.InvokeAsync(session.FindMenuItem("FileMenu", "OpenMenuItem"));
             FileDialogs.Accept(session.WaitForModal(), path);
-            Assert.True(AppSession.WaitUntil(() => session.MainWindow.ModalWindows.Length == 0));
+            Assert.True(session.WaitForNoModal());
         }
 
         /// <summary>
@@ -95,7 +95,7 @@ namespace UITests.FlowScriptControlTest
             FileDialogs.Accept(session.WaitForModal(), path);
 
             Assert.True(AppSession.WaitUntil(() => File.Exists(path) && new FileInfo(path).Length > 0));
-            Assert.True(AppSession.WaitUntil(() => session.MainWindow.ModalWindows.Length == 0));
+            Assert.True(session.WaitForNoModal());
             Assert.Contains("Hello MVVM", File.ReadAllText(path));
         }
 
@@ -106,7 +106,7 @@ namespace UITests.FlowScriptControlTest
             var window = session.WaitForModal();
             window.FindFirstDescendant(cf => cf.ByAutomationId("StdinTextBox")).AsTextBox().Text = "abc";
             window.FindFirstDescendant(cf => cf.ByAutomationId("OkButton")).AsButton().Invoke();
-            Assert.True(AppSession.WaitUntil(() => session.MainWindow.ModalWindows.Length == 0));
+            Assert.True(session.WaitForNoModal());
 
             AppSession.InvokeAsync(session.FindMenuItem("ConsoleMenu", "StdinMenuItem"));
             window = session.WaitForModal();
