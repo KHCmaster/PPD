@@ -74,18 +74,30 @@ namespace FolderDiffChecker
             var tempFileName = Path.GetTempFileName();
             var tempDir = Path.Combine(Path.GetDirectoryName(tempFileName), Path.GetFileNameWithoutExtension(tempFileName));
             var dirName = Path.GetFileName(sourceDir);
-            Directory.CreateDirectory(tempDir);
-            var targetDir = Path.Combine(tempDir, dirName);
-            Directory.CreateDirectory(targetDir);
-            Utility.CopyDirectory(sourceDir, targetDir, exceptFiles);
-
-            // ファイル名は、従来（SharpZipLib 0.86）と同じく OEM コードページで書く（古い PPDUpdater でも読めるように）
-            ZipStrings.CodePage = System.Globalization.CultureInfo.CurrentCulture.TextInfo.OEMCodePage;
-            var fastZip = new FastZip
+            try
             {
-                CreateEmptyDirectories = true
-            };
-            fastZip.CreateZip(fileName, tempDir, true, null);
+                Directory.CreateDirectory(tempDir);
+                var targetDir = Path.Combine(tempDir, dirName);
+                Directory.CreateDirectory(targetDir);
+                Utility.CopyDirectory(sourceDir, targetDir, exceptFiles);
+
+                // ファイル名は、従来（SharpZipLib 0.86）と同じく OEM コードページで書く（古い PPDUpdater でも読めるように）
+                ZipStrings.CodePage = System.Globalization.CultureInfo.CurrentCulture.TextInfo.OEMCodePage;
+                var fastZip = new FastZip
+                {
+                    CreateEmptyDirectories = true
+                };
+                fastZip.CreateZip(fileName, tempDir, true, null);
+            }
+            finally
+            {
+                // 作業用の一時ファイルとフォルダーを消す（以前は残ったままだった）
+                if (Directory.Exists(tempDir))
+                {
+                    Directory.Delete(tempDir, true);
+                }
+                File.Delete(tempFileName);
+            }
         }
     }
 }
