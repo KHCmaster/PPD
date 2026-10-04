@@ -163,7 +163,8 @@ namespace PPDEditor.Models
             }
             if (Path.GetExtension(path).Equals(".etd", StringComparison.CurrentCultureIgnoreCase))
             {
-                var dir = Path.Combine(projectDir, Path.GetDirectoryName(path), Path.GetFileName(path));
+                // 画像のフォルダーはエフェクトの名前（拡張子なし）。以前は拡張子付きの名前で探していたので消えなかった
+                var dir = Path.Combine(Path.GetDirectoryName(path), Path.GetFileNameWithoutExtension(path));
                 if (Directory.Exists(dir))
                 {
                     Directory.Delete(dir, true);
