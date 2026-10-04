@@ -212,6 +212,20 @@ namespace UITests
         readonly System.Collections.Generic.Dictionary<Window, IntPtr> handles = [];
 
         /// <summary>
+        /// 要素の左上からの位置（WPF の単位。DPI で倍率を掛ける前の値）を、マウスでクリックします。
+        /// 描いて表示するもの（タイムラインなど）の中をクリックするときに使う。マウスを実際に動かす。
+        /// </summary>
+        public void ClickAt(AutomationElement element, double x, double y, bool rightButton = false)
+        {
+            MainWindow.SetForeground();
+            var scale = NativeWindows.GetScale(HandleOf(MainWindow));
+            var bounds = element.BoundingRectangle;
+            FlaUI.Core.Input.Mouse.Click(new System.Drawing.Point(bounds.X + (int)(x * scale), bounds.Y + (int)(y * scale)),
+                rightButton ? FlaUI.Core.Input.MouseButton.Right : FlaUI.Core.Input.MouseButton.Left);
+            FlaUI.Core.Input.Wait.UntilInputIsProcessed();
+        }
+
+        /// <summary>
         /// ウィンドウを閉じます（閉じるボタンと同じ。ダイアログではキャンセルになる）。
         /// </summary>
         public void CloseWindow(Window window)

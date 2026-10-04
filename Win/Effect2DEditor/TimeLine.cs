@@ -148,6 +148,8 @@ namespace Effect2DEditor
         private static MenuItem CreateMenuItem(string textKey)
         {
             var item = new MenuItem();
+            // UI の自動テストで探すための ID（言語ファイルのキー）
+            System.Windows.Automation.AutomationProperties.SetAutomationId(item, textKey + "MenuItem");
             item.SetBinding(HeaderedItemsControl.HeaderProperty, new System.Windows.Data.Binding("[" + textKey + "]") { Source = ViewModels.LanguageTexts.Instance });
             return item;
         }

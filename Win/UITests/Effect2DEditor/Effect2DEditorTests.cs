@@ -114,6 +114,118 @@ namespace UITests.Effect2DEditor
             Assert.True(session.WaitForNoModal());
         }
 
+        /// <summary>
+        /// タイムラインの、1 つ目のエフェクトのフレーム（0 から）のステートをクリックして選びます。
+        /// </summary>
+        /// <remarks>
+        /// タイムラインは描いて表示するので、位置でクリックする（上の 20 が時間の目盛り、1 行が 18、1 フレームが 10）。
+        /// </remarks>
+        private void SelectState(int frame)
+        {
+            session.ClickAt(session.Find("timeLine1"), frame * 10 + 5, 20 + 9);
+        }
+
+        private string ValueOf(string type)
+        {
+            return session.Find(type + "Box").AsTextBox().Text;
+        }
+
+        [Fact]
+        public void SelectState_ShowsValuesInPropertyPanel()
+        {
+            AddSampleImage();
+            Assert.Equal("", ValueOf("X"));
+
+            SelectState(0);
+
+            Assert.True(AppSession.WaitUntil(() => ValueOf("X") == "0"));
+            Assert.Equal("1", ValueOf("Alpha"));
+            Assert.Equal("1", ValueOf("ScaleX"));
+        }
+
+        [Fact]
+        public void EditStateValue_ThenUndoAndRedo()
+        {
+            AddSampleImage();
+            SelectState(0);
+            Assert.True(AppSession.WaitUntil(() => ValueOf("X") == "0"));
+
+            session.Find("XBox").AsTextBox().Text = "25";
+            session.FindMenuItem("EditMenu", "UndoMenuItem").Invoke();
+            Assert.True(AppSession.WaitUntil(() => ValueOf("X") == "0"));
+
+            session.FindMenuItem("EditMenu", "RedoMenuItem").Invoke();
+            Assert.True(AppSession.WaitUntil(() => ValueOf("X") == "25"));
+        }
+
+        [Fact]
+        public void EditStateValue_OutOfRangeIsClamped()
+        {
+            AddSampleImage();
+            SelectState(0);
+            Assert.True(AppSession.WaitUntil(() => ValueOf("Alpha") == "1"));
+
+            // 透明度は 0 から 1、大きさは 0 以上
+            session.Find("AlphaBox").AsTextBox().Text = "5";
+            Assert.True(AppSession.WaitUntil(() => ValueOf("Alpha") == "1"));
+            session.Find("ScaleXBox").AsTextBox().Text = "-2";
+            Assert.True(AppSession.WaitUntil(() => ValueOf("ScaleX") == "0"));
+        }
+
+        [Fact]
+        public void InsertKeyState_FromTimelineMenu()
+        {
+            AddSampleImage();
+
+            // 5 フレーム目を右クリックして、キーのステートを入れる
+            session.ClickAt(session.Find("timeLine1"), 5 * 10 + 5, 20 + 9, rightButton: true);
+            session.FindInPopups("InsertKeyStateMenuItem").AsMenuItem().Invoke();
+
+            SelectState(5);
+            Assert.True(AppSession.WaitUntil(() => ValueOf("X") == "0"));
+            Assert.True(IsMenuItemEnabled("EditMenu", "UndoMenuItem"));
+        }
+
+        [Fact]
+        public void SaveAndOpen_RestoresEffect()
+        {
+            AddSampleImage();
+            var path = Path.Combine(session.WorkDirectory, "saved.etd");
+            AppSession.InvokeAsync(session.FindMenuItem("FileMenu", "SaveAsMenuItem"));
+            FileDialogs.Accept(session.WaitForModal(), path);
+            Assert.True(AppSession.WaitUntil(() => File.Exists(path)));
+            Assert.True(session.WaitForNoModal());
+
+            // 新しく作ってから（保存してあるので、保存するかは聞かない）、保存したファイルを開く
+            session.FindMenuItem("FileMenu", "NewMenuItem").Invoke();
+            Assert.True(AppSession.WaitUntil(() => !IsMenuItemEnabled("EditMenu", "UndoMenuItem")));
+            AppSession.InvokeAsync(session.FindMenuItem("FileMenu", "OpenMenuItem"));
+            FileDialogs.Accept(session.WaitForModal(), path);
+            Assert.True(session.WaitForNoModal());
+
+            SelectState(0);
+            Assert.True(AppSession.WaitUntil(() => ValueOf("X") == "0"));
+        }
+
+        [Fact]
+        public void New_WithUnsavedChanges_AsksToSave()
+        {
+            AddSampleImage();
+            AppSession.InvokeAsync(session.FindMenuItem("FileMenu", "NewMenuItem"));
+            var ask = session.WaitForModal();
+
+            // キャンセルすると、今のエフェクトのまま
+            MessageBoxes.Press(ask, MessageBoxButton.Cancel);
+            Assert.True(session.WaitForNoModal());
+            Assert.True(IsMenuItemEnabled("EditMenu", "UndoMenuItem"));
+
+            // 保存しないで新しくする
+            AppSession.InvokeAsync(session.FindMenuItem("FileMenu", "NewMenuItem"));
+            MessageBoxes.Press(session.WaitForModal(), MessageBoxButton.No);
+            Assert.True(session.WaitForNoModal());
+            Assert.True(AppSession.WaitUntil(() => !IsMenuItemEnabled("EditMenu", "UndoMenuItem")));
+        }
+
         [Fact]
         public void Language_SwitchToEnglish_ChangesTexts()
         {

@@ -70,6 +70,15 @@ namespace UITests
             PostMessage(handle, WM_CLOSE, IntPtr.Zero, IntPtr.Zero);
         }
 
+        /// <summary>
+        /// ウィンドウの DPI の倍率です（96 DPI のときが 1）。
+        /// </summary>
+        public static double GetScale(IntPtr handle)
+        {
+            var dpi = GetDpiForWindow(handle);
+            return dpi == 0 ? 1 : dpi / 96.0;
+        }
+
         delegate bool EnumWindowsProc(IntPtr handle, IntPtr lParam);
 
         [DllImport("user32.dll")]
@@ -95,6 +104,9 @@ namespace UITests
 
         [DllImport("user32.dll")]
         static extern IntPtr GetWindowLongPtr(IntPtr handle, int index);
+
+        [DllImport("user32.dll")]
+        static extern uint GetDpiForWindow(IntPtr handle);
 
         [DllImport("user32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]

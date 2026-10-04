@@ -46,8 +46,8 @@
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
                         <local:ChangeValueLabel Text="{Binding Label}" Style="{StaticResource ValueLabel}" ValueChange="ValueLabel_ValueChange" />
-                        <TextBox Grid.Column="1" Text="{Binding Text, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsTextEnabled}" />
-                        <Button Grid.Column="2" IsEnabled="{Binding IsRatioEnabled}"
+                        <TextBox AutomationProperties.AutomationId="{Binding Type, StringFormat={}{0}Box}" Grid.Column="1" Text="{Binding Text, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsTextEnabled}" />
+                        <Button AutomationProperties.AutomationId="{Binding Type, StringFormat={}{0}RatioButton}" Grid.Column="2" IsEnabled="{Binding IsRatioEnabled}"
                                 Command="{Binding DataContext.EditRatioCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}" CommandParameter="{Binding Type}" />
                     </Grid>
                 </DataTemplate>
