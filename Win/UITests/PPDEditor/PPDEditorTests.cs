@@ -122,6 +122,38 @@ namespace UITests.PPDEditor
         }
 
         [Fact]
+        public void Setting_CancelDiscardsChanges()
+        {
+            var dialog = OpenDialogFromMenu("OthersMenu", "SettingMenuItem", out _);
+            var authorName = dialog.FindFirstDescendant(cf => cf.ByAutomationId("AuthorNameBox")).AsTextBox();
+            var original = authorName.Text;
+            authorName.Text = "uitest-author";
+            // キャンセルする（OK は押さない。押すと設定が保存される）
+            CloseDialog(dialog);
+
+            dialog = OpenDialogFromMenu("OthersMenu", "SettingMenuItem", out _);
+
+            Assert.Equal(original, dialog.FindFirstDescendant(cf => cf.ByAutomationId("AuthorNameBox")).AsTextBox().Text);
+            CloseDialog(dialog);
+        }
+
+        [Fact]
+        public void Language_SwitchToEnglishAndBack()
+        {
+            var menu = session.FindMenuItem("LanguageMenu");
+            menu.Expand();
+            menu.Items.First(i => i.Name == "English").Invoke();
+            Assert.True(AppSession.WaitUntil(() => session.Find("fileMenu").Name == "File"));
+            Assert.Equal("Edit", session.Find("editMenu").Name);
+
+            // ほかのテストのために、日本語に戻す
+            menu = session.FindMenuItem("LanguageMenu");
+            menu.Expand();
+            menu.Items.First(i => i.Name == "日本語").Invoke();
+            Assert.True(AppSession.WaitUntil(() => session.Find("fileMenu").Name == "ファイル"));
+        }
+
+        [Fact]
         public void Toolbar_ShowsDefaultValues()
         {
             Assert.Equal("100", session.Find("BpmBox").AsTextBox().Text);

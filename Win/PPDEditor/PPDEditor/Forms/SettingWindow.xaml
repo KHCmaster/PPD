@@ -50,9 +50,9 @@
                         </Style>
                     </StackPanel.Style>
                     <TextBlock Text="{Binding Texts[SFAutherName]}" />
-                    <TextBox Text="{Binding AuthorName, UpdateSourceTrigger=PropertyChanged}" Height="20" Margin="2,3,0,0" VerticalContentAlignment="Center" />
+                    <TextBox AutomationProperties.AutomationId="AuthorNameBox" Text="{Binding AuthorName, UpdateSourceTrigger=PropertyChanged}" Height="20" Margin="2,3,0,0" VerticalContentAlignment="Center" />
                     <TextBlock Text="{Binding Texts[SFMovieLatency]}" Margin="0,8,0,0" />
-                    <TextBox Text="{Binding MovieLatency, UpdateSourceTrigger=PropertyChanged}" Height="20" Margin="2,3,0,0" VerticalContentAlignment="Center" />
+                    <TextBox AutomationProperties.AutomationId="MovieLatencyBox" Text="{Binding MovieLatency, UpdateSourceTrigger=PropertyChanged}" Height="20" Margin="2,3,0,0" VerticalContentAlignment="Center" />
                     <CheckBox IsChecked="{Binding EnableToChangeMarkTypeAndTime}" Margin="2,12,0,0">
                         <TextBlock Text="{Binding Texts[SFCheckBox3]}" TextWrapping="Wrap" />
                     </CheckBox>
