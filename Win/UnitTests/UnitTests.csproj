@@ -38,6 +38,10 @@
     <ProjectReference Include="..\FlowScriptEngine\FlowScriptEngine.csproj" />
     <ProjectReference Include="..\FlowScriptEngineBasic\FlowScriptEngineBasic.csproj" />
     <ProjectReference Include="..\FlowScriptEngineConsole\FlowScriptEngineConsole.csproj" />
+    <ProjectReference Include="..\PPDEditor\PPDEditor\PPDEditor.csproj" />
+    <ProjectReference Include="..\PPDEditorCommon\PPDEditorCommon.csproj" />
+    <ProjectReference Include="..\PPDPack\PPDPack.csproj" />
+    <ProjectReference Include="..\PPDConfiguration\PPDConfiguration.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Update="xunit.runner.json" CopyToOutputDirectory="PreserveNewest" />
