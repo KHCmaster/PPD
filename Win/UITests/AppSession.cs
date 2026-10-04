@@ -34,6 +34,18 @@ namespace UITests
         public UIA3Automation Automation { get; } = new();
 
         /// <summary>
+        /// テストのプロセスを、モニターごとの DPI に対応させます（UI Automation の座標と、画面を撮る座標・マウスの座標を合わせるため）。
+        /// </summary>
+        static AppSession()
+        {
+            SetProcessDpiAwarenessContext(new IntPtr(-4));
+        }
+
+        [System.Runtime.InteropServices.DllImport("user32.dll")]
+        [return: System.Runtime.InteropServices.MarshalAs(System.Runtime.InteropServices.UnmanagedType.Bool)]
+        static extern bool SetProcessDpiAwarenessContext(IntPtr value);
+
+        /// <summary>
         /// アプリをコピーした作業のフォルダです。
         /// </summary>
         public string WorkDirectory { get; }

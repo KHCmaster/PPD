@@ -23,6 +23,7 @@
     <ProjectReference Include="..\BMSTOPPD\BMSTOPPD\BMSTOPPD.csproj" ReferenceOutputAssembly="false" />
     <ProjectReference Include="..\KeyConfiger\KeyConfiger\KeyConfiger.csproj" ReferenceOutputAssembly="false" />
     <ProjectReference Include="..\FlowScriptControlTest\FlowScriptControlTest.csproj" ReferenceOutputAssembly="false" />
+    <ProjectReference Include="..\BezierDrawControlTest\BezierDrawControlTest.csproj" ReferenceOutputAssembly="false" />
   </ItemGroup>
   <ItemGroup>
     <!-- テストするアプリのビルドの場所を探すための、リポジトリの場所と構成 -->
