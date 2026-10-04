@@ -21,11 +21,8 @@ namespace Effect2DEditor.Command
             }
             else if (previousset1 != null)
             {
-                manager.Sets.Add(previousset1.StartFrame, previousset1);
-            }
-            else if (previousset2 != null)
-            {
-                manager.Sets.Add(previousset1.StartFrame, previousset1);
+                // 最初か最後のステートを消したときは、消した組をエフェクトに戻す（以前はエフェクトでなく EffectManager に足していた）
+                effect.Sets.Add(previousset1.StartFrame, previousset1);
             }
         }
 
