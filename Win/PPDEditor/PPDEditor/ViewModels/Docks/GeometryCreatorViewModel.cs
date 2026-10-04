@@ -347,8 +347,9 @@ namespace PPDEditor.ViewModels.Docks
             }
             var x = point.X - StartX;
             var y = point.Y - StartY;
-            var nearest = new PointF((int)((x + SquareGrid.Width / 2f) / SquareGrid.Width) * SquareGrid.Width + SquareGrid.NormalizedOffsetX,
-                (int)((y + SquareGrid.Height / 2f) / SquareGrid.Height) * SquareGrid.Height + SquareGrid.NormalizedOffsetY);
+            // ずらした分を引いてから一番近い格子点を求める（以前はずらす前に丸め、0 の方へ切り捨てていたので、ずれが半分より大きいときや枠の左上の外で違う格子点になっていた）
+            var nearest = new PointF(MathF.Floor((x - SquareGrid.NormalizedOffsetX) / SquareGrid.Width + 0.5f) * SquareGrid.Width + SquareGrid.NormalizedOffsetX,
+                MathF.Floor((y - SquareGrid.NormalizedOffsetY) / SquareGrid.Height + 0.5f) * SquareGrid.Height + SquareGrid.NormalizedOffsetY);
             var diffX = nearest.X - x;
             var diffY = nearest.Y - y;
             if (Math.Sqrt(diffX * diffX + diffY * diffY) >= 10)
