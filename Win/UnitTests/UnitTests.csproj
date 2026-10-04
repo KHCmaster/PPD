@@ -20,6 +20,8 @@
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <PackageReference Include="xunit" />
     <PackageReference Include="xunit.runner.visualstudio" />
+    <!-- PPDMath（SharpDX の計算を移したもの）が元と同じ結果になるかを、元の SharpDX と比べて確かめる。テストだけで使う -->
+    <PackageReference Include="SharpDX.Mathematics" VersionOverride="4.2.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BMSTOPPD\BMSTOPPD\BMSTOPPD.csproj" />
