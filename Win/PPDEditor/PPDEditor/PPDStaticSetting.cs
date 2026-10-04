@@ -34,7 +34,7 @@ namespace PPDEditor
 
         static PPDStaticSetting()
         {
-            var path = Path.Combine(Utility.AppDir, EditorForm.iniFileName);
+            var path = Path.Combine(Utility.AppDir, Models.EditorSettingsStore.IniFileName);
             if (!File.Exists(path))
             {
                 return;

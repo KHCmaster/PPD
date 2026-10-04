@@ -184,7 +184,7 @@ namespace PPDEditor
         // プロジェクトを開いていて難易度が 2 つ以上あるときの、今の難易度以外の .scd
         string[] ISoundManagerHost.GetOtherDifficultyScdPaths()
         {
-            var main = WindowUtility.MainForm;
+            var main = WindowUtility.Editor;
             if (!main.IsProjectLoaded || main.AvailableDifficultyCount <= 1)
             {
                 return [];

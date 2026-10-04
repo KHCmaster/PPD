@@ -103,10 +103,10 @@ namespace PPDEditor.Controls
             var sign = Math.Sign(e.Delta);
             if (Keyboard.Modifiers.HasFlag(ModifierKeys.Shift))
             {
-                int result = WindowUtility.MainForm.DisplayWidth + 50 * sign;
+                int result = WindowUtility.Editor.DisplayWidth + 50 * sign;
                 if (result < 50) result = 50;
                 if (result > 300) result = 300;
-                WindowUtility.MainForm.DisplayWidth = result;
+                WindowUtility.Editor.DisplayWidth = result;
             }
             else if (Keyboard.Modifiers.HasFlag(ModifierKeys.Control))
             {
@@ -413,7 +413,7 @@ namespace PPDEditor.Controls
         {
             get
             {
-                if (!WindowUtility.MainForm.DrawToggle) return null;
+                if (!WindowUtility.Editor.DrawToggle) return null;
                 PPDSheet ppdsheet = WindowUtility.LayerManager.SelectedPpdSheet;
                 if (ppdsheet == null) return null;
                 return ppdsheet.SelectedMark;
@@ -424,7 +424,7 @@ namespace PPDEditor.Controls
         {
             get
             {
-                if (!WindowUtility.MainForm.DrawToggle) return null;
+                if (!WindowUtility.Editor.DrawToggle) return null;
                 PPDSheet ppdsheet = WindowUtility.LayerManager.SelectedPpdSheet;
                 if (ppdsheet == null) return null;
                 var marks = ppdsheet.GetAreaData(true);
@@ -526,9 +526,9 @@ namespace PPDEditor.Controls
         }
         private static Point ChangePos(Point p)
         {
-            if (WindowUtility.MainForm.DisplayGrid)
+            if (WindowUtility.Editor.DisplayGrid)
             {
-                SquareGrid Grid = WindowUtility.MainForm.Grid;
+                SquareGrid Grid = WindowUtility.Editor.Grid;
                 int offsetx = Grid.NormalizedOffsetX;
                 int offsety = Grid.NormalizedOffsetY;
                 p = new Point((p.X + Grid.Width / 2) / Grid.Width * Grid.Width + offsetx, (p.Y + Grid.Height / 2) / Grid.Height * Grid.Height + offsety);
@@ -692,8 +692,8 @@ namespace PPDEditor.Controls
                 {
                     Currenttime = time;
                 }
-                WindowUtility.MainForm.Pause();
-                WindowUtility.MainForm.SeekMovie(currentTime);
+                WindowUtility.Editor.Pause();
+                WindowUtility.Editor.SeekMovie(currentTime);
                 this.DrawAndRefresh();
             }
         }
@@ -737,14 +737,14 @@ namespace PPDEditor.Controls
                     {
                         UpdateInfo();
                         SeekToNearSelected();
-                        if (!WindowUtility.MainForm.Bpmfixed)
+                        if (!WindowUtility.Editor.Bpmfixed)
                         {
                             timer2.Start();
                         }
                         ppdsheet.RecStart = new CustomPoint(-1, 0);
                         ppdsheet.RecEnd = new CustomPoint(-1, 0);
                         foundpoint = true;
-                        WindowUtility.MainForm.ChangeAreaSelect(false);
+                        WindowUtility.Editor.ChangeAreaSelect(false);
                     }
                     if (Keyboard.Modifiers == ModifierKeys.Control && foundpoint)
                     {
@@ -778,7 +778,7 @@ namespace PPDEditor.Controls
                     }
                     ppdsheet.RecStart = new CustomPoint((float)(pos.X + ScrollValue) / defaultInterval / bpm * 60, rowIndex);
                     ppdsheet.RecEnd = new CustomPoint((float)(pos.X + ScrollValue) / defaultInterval / bpm * 60, rowIndex);
-                    WindowUtility.MainForm.ChangeAreaSelect(true);
+                    WindowUtility.Editor.ChangeAreaSelect(true);
                     timer3.Start();
                 }
             }
@@ -876,12 +876,12 @@ namespace PPDEditor.Controls
                 Mark mk = ppdsheet.SelectedMark;
                 if (mk != null)
                 {
-                    WindowUtility.MainForm.SetMarkInfo(mk);
+                    WindowUtility.Editor.SetMarkInfo(mk);
                 }
             }
             else
             {
-                WindowUtility.MainForm.SetMarksInfo(ppdsheet.GetAreaData());
+                WindowUtility.Editor.SetMarksInfo(ppdsheet.GetAreaData());
             }
         }
         private void Canvas_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
@@ -1034,7 +1034,7 @@ namespace PPDEditor.Controls
 
             if (!ppdsheet.AreaSelectionEnabled)
             {
-                WindowUtility.MainForm.ChangeAreaSelect(false);
+                WindowUtility.Editor.ChangeAreaSelect(false);
                 DrawAndRefresh();
             }
 
@@ -1109,14 +1109,14 @@ namespace PPDEditor.Controls
                         }
                         ppdsheet.EndGroupCommand();
                         ppdsheet.RecStart = new CustomPoint(-1, -1);
-                        WindowUtility.MainForm.ChangeAreaSelect(false);
+                        WindowUtility.Editor.ChangeAreaSelect(false);
                         DrawAndRefresh();
                     }
                     else
                     {
                         ppdsheet.AddMark(time, num);
                         ppdsheet.RecStart = new CustomPoint(-1, -1);
-                        WindowUtility.MainForm.ChangeAreaSelect(false);
+                        WindowUtility.Editor.ChangeAreaSelect(false);
                         DrawAndRefresh();
                     }
                 }
@@ -1124,7 +1124,7 @@ namespace PPDEditor.Controls
         }
         private float AdjusttimeWhenFixed(float time)
         {
-            if (WindowUtility.MainForm.Bpmfixed)
+            if (WindowUtility.Editor.Bpmfixed)
             {
                 double size = 1;
                 switch (DisplayMode)
@@ -1260,12 +1260,12 @@ namespace PPDEditor.Controls
 
         public void SeekToNearSelected()
         {
-            if (!WindowUtility.MainForm.MarkFocus) return;
+            if (!WindowUtility.Editor.MarkFocus) return;
             PPDSheet ppdsheet = WindowUtility.LayerManager.SelectedPpdSheet;
             if (ppdsheet == null || ppdsheet.SelectedMark == null) return;
-            float scale = (float)ppdsheet.BPM * WindowUtility.MainForm.SpeedScaleAsFloat / Mark.defaultbpm;
-            Currenttime = ppdsheet.SelectedMark.Time - (2 / scale) * WindowUtility.MainForm.Farness;
-            WindowUtility.MainForm.SeekMovie(currentTime);
+            float scale = (float)ppdsheet.BPM * WindowUtility.Editor.SpeedScaleAsFloat / Mark.defaultbpm;
+            Currenttime = ppdsheet.SelectedMark.Time - (2 / scale) * WindowUtility.Editor.Farness;
+            WindowUtility.Editor.SeekMovie(currentTime);
         }
         private static int GetMove(ShortcutType shortcutType)
         {
@@ -1295,7 +1295,7 @@ namespace PPDEditor.Controls
             }
             if (shortcutInfo.ShortcutType == ShortcutType.Custom)
             {
-                WindowUtility.MainForm.ExecuteScript(shortcutInfo.ScriptPathWithExtension);
+                WindowUtility.Editor.ExecuteScript(shortcutInfo.ScriptPathWithExtension);
             }
             else
             {
@@ -1473,14 +1473,14 @@ namespace PPDEditor.Controls
                         }
                         if (copyBuffer.Length > 0)
                         {
-                            WindowUtility.MainForm.ChangeCopyBuffer(true);
+                            WindowUtility.Editor.ChangeCopyBuffer(true);
                         }
                         break;
                     case ShortcutType.ClearCopyBuffer:
                         if (copyBuffer != null && copyBuffer.Length != 0)
                         {
                             copyBuffer = null;
-                            WindowUtility.MainForm.ChangeCopyBuffer(false);
+                            WindowUtility.Editor.ChangeCopyBuffer(false);
                         }
                         break;
                     case ShortcutType.InterpolateAngleClockwise:

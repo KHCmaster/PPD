@@ -40,6 +40,22 @@ namespace PPDEditor.Converters
     }
 
     /// <summary>
+    /// フラグの列挙の値が、ConverterParameter（値の名前）のフラグを持つかを bool にします（難易度のメニューを使えるかなど）。
+    /// </summary>
+    public class HasFlagConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return value is Enum flags && flags.HasFlag((Enum)Enum.Parse(flags.GetType(), (string)parameter));
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotSupportedException();
+        }
+    }
+
+    /// <summary>
     /// System.Drawing.Color をブラシにします（設定ファイルやスキンが System.Drawing.Color で色を持っているため）。
     /// </summary>
     public class DrawingColorToBrushConverter : IValueConverter

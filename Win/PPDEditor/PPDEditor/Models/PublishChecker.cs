@@ -82,7 +82,7 @@ namespace PPDEditor.Models
 
         private static IEnumerable<AvailableDifficulty> GetDifficulties(AvailableDifficulty difficulties)
         {
-            foreach (var difficulty in Forms.EditorForm.DifficultyArray)
+            foreach (var difficulty in ProjectFiles.DifficultyArray)
             {
                 if (difficulty != AvailableDifficulty.None && (difficulties & difficulty) == difficulty)
                 {

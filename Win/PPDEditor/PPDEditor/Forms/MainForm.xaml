@@ -1,13 +1,29 @@
 <Window x:Class="PPDEditor.Forms.EditorForm"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:ad="https://github.com/Dirkster99/AvalonDock"
-        xmlns:controls="clr-namespace:PPDEditor.Controls"
-        Title="PPDEditor" Width="1008" Height="820" Icon="/ed.ico"
-        AllowDrop="True" DragEnter="Form1_DragEnter" DragOver="Form1_DragEnter" Drop="Form1_DragDrop"
-        Closing="Form1_FormClosing" Loaded="MainForm_Load" SourceInitialized="Window_SourceInitialized"
+        xmlns:local="clr-namespace:PPDEditor"
+        xmlns:vm="clr-namespace:PPDEditor.ViewModels"
+        xmlns:conv="clr-namespace:PPDEditor.Converters"
+        mc:Ignorable="d" d:DataContext="{d:DesignInstance Type=vm:MainWindowViewModel}"
+        Title="{Binding WindowTitle}" Width="1008" Height="820" Icon="/ed.ico"
+        AllowDrop="True" DragEnter="Window_DragEnter" DragOver="Window_DragEnter" Drop="Window_Drop"
+        Closing="Window_Closing" Loaded="Window_Loaded" SourceInitialized="Window_SourceInitialized"
         PreviewKeyDown="Window_PreviewKeyDown">
+    <Window.InputBindings>
+        <!-- メニューのショートカット。ゲームの画面（WPF の外のウィンドウ）で押したときにも、ここから探して実行する -->
+        <KeyBinding Key="S" Modifiers="Control" Command="{Binding OverwriteProjectCommand}" />
+        <KeyBinding Key="G" Modifiers="Control" Command="{Binding StartGameCommand}" CommandParameter="Current" />
+        <KeyBinding Key="G" Modifiers="Control+Shift" Command="{Binding StartGameCommand}" CommandParameter="Beginning" />
+        <KeyBinding Key="D1" Modifiers="Control" Command="{Binding StartGameCommand}" CommandParameter="CurrentAuto" />
+        <KeyBinding Key="D1" Modifiers="Control+Shift" Command="{Binding StartGameCommand}" CommandParameter="BeginningAuto" />
+    </Window.InputBindings>
     <Window.Resources>
+        <conv:BindingProxy x:Key="Proxy" Data="{Binding}" />
+        <conv:EnumToBooleanConverter x:Key="EnumToBoolean" />
+        <conv:HasFlagConverter x:Key="HasFlag" />
         <Style x:Key="ToolImageButton" TargetType="ButtonBase">
             <Setter Property="Padding" Value="2" />
             <Setter Property="VerticalAlignment" Value="Center" />
@@ -15,6 +31,57 @@
         <Style x:Key="DropDownArrow" TargetType="Button" BasedOn="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">
             <Setter Property="Padding" Value="1,2" />
             <Setter Property="VerticalAlignment" Value="Stretch" />
+        </Style>
+        <!-- 項目を並べるメニューに直接置く項目（並べる項目のスタイルが当たらないように、スタイルを決めておく） -->
+        <Style x:Key="FixedMenuItem" TargetType="MenuItem" BasedOn="{StaticResource {x:Type MenuItem}}" />
+        <Style x:Key="FixedSeparator" TargetType="Separator" BasedOn="{StaticResource {x:Static MenuItem.SeparatorStyleKey}}" />
+        <!-- 最近使ったプロジェクト -->
+        <Style x:Key="RecentProjectItem" TargetType="MenuItem">
+            <Setter Property="Header" Value="{Binding Header}" />
+            <Setter Property="Command" Value="{Binding Data.OpenRecentProjectCommand, Source={StaticResource Proxy}}" />
+            <Setter Property="CommandParameter" Value="{Binding}" />
+        </Style>
+        <!-- 言語 -->
+        <Style x:Key="LanguageItem" TargetType="MenuItem">
+            <Setter Property="Header" Value="{Binding Header}" />
+            <Setter Property="IsChecked" Value="{Binding IsChecked, Mode=OneWay}" />
+            <Setter Property="Command" Value="{Binding Data.SelectLanguageCommand, Source={StaticResource Proxy}}" />
+            <Setter Property="CommandParameter" Value="{Binding}" />
+        </Style>
+        <!-- ビューの配置 -->
+        <Style x:Key="ViewLayoutItem" TargetType="MenuItem">
+            <Setter Property="Header" Value="{Binding Header}" />
+            <Setter Property="Command" Value="{Binding Data.LoadViewLayoutCommand, Source={StaticResource Proxy}}" />
+            <Setter Property="CommandParameter" Value="{Binding}" />
+        </Style>
+        <!-- ドックのウィンドウ -->
+        <Style x:Key="DockItem" TargetType="MenuItem">
+            <Setter Property="Header" Value="{Binding Text}" />
+            <Setter Property="IsChecked" Value="{Binding IsShown, Mode=OneWay}" />
+            <Setter Property="Command" Value="{Binding Data.ToggleDockCommand, Source={StaticResource Proxy}}" />
+            <Setter Property="CommandParameter" Value="{Binding}" />
+        </Style>
+        <!-- コマンド。フォルダは子を出し、スクリプトは実行する -->
+        <Style x:Key="CommandItem" TargetType="MenuItem">
+            <Setter Property="Header" Value="{Binding Header}" />
+            <Setter Property="InputGestureText" Value="{Binding InputGesture}" />
+            <Setter Property="ItemsSource" Value="{Binding Children}" />
+            <Setter Property="ItemContainerStyle" Value="{DynamicResource CommandItem}" />
+            <Setter Property="Command" Value="{Binding Data.ExecuteCommandCommand, Source={StaticResource Proxy}}" />
+            <Setter Property="CommandParameter" Value="{Binding}" />
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsFolder}" Value="True">
+                    <Setter Property="Command" Value="{x:Null}" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <!-- MOD。フォルダは子を出し、MOD はチェックで使うかを決める -->
+        <Style x:Key="ModItem" TargetType="MenuItem">
+            <Setter Property="Header" Value="{Binding Header}" />
+            <Setter Property="ItemsSource" Value="{Binding Children}" />
+            <Setter Property="ItemContainerStyle" Value="{DynamicResource ModItem}" />
+            <Setter Property="IsCheckable" Value="{Binding IsMod}" />
+            <Setter Property="IsChecked" Value="{Binding IsChecked, Mode=TwoWay}" />
         </Style>
     </Window.Resources>
     <Grid x:Name="rootGrid">
@@ -25,134 +92,136 @@
             <Grid DockPanel.Dock="Top">
                 <Rectangle x:Name="topOverlay" />
                 <StackPanel>
-                    <Menu x:Name="menuStrip1" Background="Transparent">
-                        <MenuItem x:Name="ファイルToolStripMenuItem" Header="ファイル">
-                            <MenuItem x:Name="新規プロジェクトを作成ToolStripMenuItem" Header="新規プロジェクトを作成" Click="新規プロジェクトを作成ToolStripMenuItem_Click" />
-                            <MenuItem x:Name="プロジェクトを開くToolStripMenuItem" Header="プロジェクトを開く" Click="プロジェクトを開くToolStripMenuItem_Click" />
-                            <MenuItem x:Name="プロジェクトを上書き保存ToolStripMenuItem" Header="プロジェクトを上書き保存" InputGestureText="Ctrl+S" IsEnabled="False" Click="プロジェクトを上書き保存ToolStripMenuItem_Click" />
-                            <MenuItem x:Name="プロジェクトをマージToolStripMenuItem" Header="プロジェクトをマージ" Click="プロジェクトをマージToolStripMenuItem_Click" />
-                            <MenuItem x:Name="開くToolStripMenuItem" Header="開く">
-                                <MenuItem x:Name="ppdToolStripMenuItem" Header="*.ppd" Click="PpdToolStripMenuItem_Click" />
-                                <MenuItem x:Name="movieToolStripMenuItem" Header="movie.*" Click="MovieToolStripMenuItem_Click" />
-                                <MenuItem x:Name="kasitxtToolStripMenuItem1" Header="kasi.txt" Click="KasitxtToolStripMenuItem1_Click" />
-                                <MenuItem x:Name="datainiToolStripMenuItem1" Header="data.ini" IsEnabled="False" Click="DatainiToolStripMenuItem1_Click" />
-                                <MenuItem x:Name="evdToolStripMenuItem1" Header="*.evd" Click="EvdToolStripMenuItem1_Click" />
+                    <Menu x:Name="mainMenu" Background="Transparent">
+                        <Menu.Style>
+                            <Style TargetType="Menu">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsMenuHidden}" Value="True">
+                                        <Setter Property="Visibility" Value="Collapsed" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Menu.Style>
+                        <MenuItem x:Name="fileMenu" Header="{Binding Texts[File]}">
+                            <MenuItem Header="{Binding Texts[CPF]}" Command="{Binding NewProjectCommand}" />
+                            <MenuItem Header="{Binding Texts[OpenProject]}" Command="{Binding OpenProjectCommand}" />
+                            <MenuItem Header="{Binding Texts[OverWriteProject]}" InputGestureText="Ctrl+S" Command="{Binding OverwriteProjectCommand}" />
+                            <MenuItem Header="{Binding Texts[MergeProject]}" Command="{Binding MergeProjectCommand}" />
+                            <MenuItem Header="{Binding Texts[Open]}">
+                                <MenuItem Header="*.ppd" Command="{Binding OpenPpdCommand}" />
+                                <MenuItem Header="movie.*" Command="{Binding OpenMovieCommand}" />
+                                <MenuItem Header="kasi.txt" Command="{Binding OpenKasiCommand}" />
+                                <MenuItem Header="data.ini" IsEnabled="False" Command="{Binding OpenDataIniCommand}" />
+                                <MenuItem Header="*.evd" Command="{Binding OpenEvdCommand}" />
                             </MenuItem>
-                            <MenuItem x:Name="保存ToolStripMenuItem" Header="保存">
-                                <MenuItem x:Name="ppdToolStripMenuItem1" Header="*.ppd" Click="PpdToolStripMenuItem1_Click" />
-                                <MenuItem x:Name="kasitxtToolStripMenuItem" Header="kasi.txt" Click="KasitxtToolStripMenuItem_Click" />
-                                <MenuItem x:Name="soundsettxtToolStripMenuItem" Header="soundset.txt" Click="SoundsettxtToolStripMenuItem_Click" />
-                                <MenuItem x:Name="scdToolStripMenuItem" Header="*.scd" Click="ScdToolStripMenuItem_Click" />
-                                <MenuItem x:Name="datainiToolStripMenuItem" Header="data.ini" IsEnabled="False" Click="DatainiToolStripMenuItem_Click" />
-                                <MenuItem x:Name="evdToolStripMenuItem" Header="*.evd" Click="EvdToolStripMenuItem_Click" />
+                            <MenuItem Header="{Binding Texts[Save]}">
+                                <MenuItem Header="*.ppd" Command="{Binding SavePpdAsCommand}" />
+                                <MenuItem Header="kasi.txt" Command="{Binding SaveKasiAsCommand}" />
+                                <MenuItem Header="soundset.txt" Command="{Binding SaveSoundSetAsCommand}" />
+                                <MenuItem Header="*.scd" Command="{Binding SaveScdAsCommand}" />
+                                <MenuItem Header="data.ini" IsEnabled="False" Command="{Binding SaveDataIniAsCommand}" />
+                                <MenuItem Header="*.evd" Command="{Binding SaveEvdAsCommand}" />
                             </MenuItem>
-                            <MenuItem x:Name="インポートToolStripMenuItem" Header="インポート">
-                                <MenuItem x:Name="イベントToolStripMenuItem" Header="イベント" SubmenuOpened="イベントToolStripMenuItem_DropDownOpening">
-                                    <MenuItem x:Name="easyToolStripMenuItem1" Header="Easy" Click="EasyToolStripMenuItem1_Click" />
-                                    <MenuItem x:Name="normalToolStripMenuItem1" Header="Normal" Click="NormalToolStripMenuItem1_Click" />
-                                    <MenuItem x:Name="hardToolStripMenuItem1" Header="Hard" Click="HardToolStripMenuItem1_Click" />
-                                    <MenuItem x:Name="extremeToolStripMenuItem1" Header="Extreme" Click="ExtremeToolStripMenuItem1_Click" />
-                                    <MenuItem x:Name="baseToolStripMenuItem1" Header="Base" Click="BaseToolStripMenuItem1_Click" />
-                                    <MenuItem x:Name="別のファイルToolStripMenuItem" Header="別のファイル" Click="別のファイルToolStripMenuItem_Click" />
+                            <MenuItem Header="{Binding Texts[Import]}">
+                                <MenuItem Header="{Binding Texts[Event]}">
+                                    <MenuItem Header="Easy" Command="{Binding ImportEventCommand}" CommandParameter="{x:Static local:AvailableDifficulty.Easy}" />
+                                    <MenuItem Header="Normal" Command="{Binding ImportEventCommand}" CommandParameter="{x:Static local:AvailableDifficulty.Normal}" />
+                                    <MenuItem Header="Hard" Command="{Binding ImportEventCommand}" CommandParameter="{x:Static local:AvailableDifficulty.Hard}" />
+                                    <MenuItem Header="Extreme" Command="{Binding ImportEventCommand}" CommandParameter="{x:Static local:AvailableDifficulty.Extreme}" />
+                                    <MenuItem Header="Base" Command="{Binding ImportEventCommand}" CommandParameter="{x:Static local:AvailableDifficulty.Base}" />
+                                    <MenuItem Header="{Binding Texts[Other Files]}" Command="{Binding ImportEventFileCommand}" />
                                 </MenuItem>
                             </MenuItem>
-                            <MenuItem x:Name="発行ToolStripMenuItem" Header="発行" IsEnabled="False" Click="発行ToolStripMenuItem_Click" />
-                            <MenuItem x:Name="mODを発行ToolStripMenuItem" Header="MODを発行" IsEnabled="False" Click="MODを発行ToolStripMenuItem_Click" />
+                            <MenuItem Header="{Binding Texts[Publish]}" Command="{Binding PublishCommand}" />
+                            <MenuItem Header="{Binding Texts[PublishMod]}" Command="{Binding PublishModCommand}" />
                             <Separator />
-                            <MenuItem x:Name="最近使用したプロジェクトToolStripMenuItem" Header="最近使用したプロジェクト" />
-                            <MenuItem x:Name="終了ToolStripMenuItem" Header="終了" Click="終了ToolStripMenuItem_Click" />
+                            <MenuItem Header="{Binding Texts[RecentUsedFile]}" ItemsSource="{Binding RecentProjects}" ItemContainerStyle="{StaticResource RecentProjectItem}" />
+                            <MenuItem Header="{Binding Texts[Exit]}" Command="{Binding ExitCommand}" />
                         </MenuItem>
-                        <MenuItem x:Name="編集ToolStripMenuItem" Header="編集">
-                            <MenuItem x:Name="元に戻すToolStripMenuItem" Header="元に戻す" Click="元に戻すToolStripMenuItem_Click" />
-                            <MenuItem x:Name="やり直すToolStripMenuItem" Header="やり直す" Click="やり直すToolStripMenuItem_Click" />
-                            <MenuItem x:Name="ライン入れ替えToolStripMenuItem" Header="ライン入れ替え" Click="ライン入れ替えToolStripMenuItem_Click" />
-                            <MenuItem x:Name="強制的にラインに乗せるToolStripMenuItem" Header="強制的にラインに乗せる">
-                                <MenuItem x:Name="レイヤー全体ToolStripMenuItem" Header="レイヤー全体" Click="シート全体ToolStripMenuItem_Click" />
-                                <MenuItem x:Name="選択範囲のみToolStripMenuItem" Header="選択範囲のみ" Click="選択範囲のみToolStripMenuItem_Click" />
+                        <MenuItem x:Name="editMenu" Header="{Binding Texts[Edit]}">
+                            <MenuItem Header="{Binding Texts[Undo]}" Command="{Binding UndoCommand}" />
+                            <MenuItem Header="{Binding Texts[Redo]}" Command="{Binding RedoCommand}" />
+                            <MenuItem Header="{Binding Texts[SwapLine]}" Command="{Binding SwapLineCommand}" />
+                            <MenuItem Header="{Binding Texts[ForceFit]}">
+                                <MenuItem Header="{Binding Texts[EntireSelectedLayer]}" Command="{Binding ForceFitLayerCommand}" />
+                                <MenuItem Header="{Binding Texts[OnlyInSelection]}" Command="{Binding ForceFitSelectionCommand}" />
                             </MenuItem>
                         </MenuItem>
-                        <MenuItem x:Name="コマンドToolStripMenuItem" Header="コマンド">
+                        <MenuItem Header="{Binding Texts[Command]}" IsEnabled="{Binding IsMenuOfCommandsEnabled}" ItemContainerStyle="{StaticResource CommandItem}">
+                            <MenuItem.ItemsSource>
+                                <CompositeCollection>
+                                    <CollectionContainer Collection="{Binding Data.Commands, Source={StaticResource Proxy}}" />
+                                    <Separator Style="{StaticResource FixedSeparator}" />
+                                    <MenuItem Style="{StaticResource FixedMenuItem}" Header="{Binding Data.Texts[ReloadList], Source={StaticResource Proxy}}"
+                                              Command="{Binding Data.ReadCommandsCommand, Source={StaticResource Proxy}}" />
+                                </CompositeCollection>
+                            </MenuItem.ItemsSource>
+                        </MenuItem>
+                        <MenuItem x:Name="movieMenu" Header="{Binding Texts[Movie]}">
+                            <MenuItem Header="{Binding Texts[Play]}" Command="{Binding PlayCommand}" />
+                            <MenuItem Header="{Binding Texts[Pause]}" Command="{Binding PauseCommand}" />
+                            <MenuItem Header="{Binding Texts[Stop]}" Command="{Binding StopCommand}" />
+                            <MenuItem Header="{Binding Texts[RecordKey]}" Command="{Binding RecordKeyCommand}" />
+                            <MenuItem Header="{Binding Texts[Cut]}" Command="{Binding CutMovieCommand}" />
+                        </MenuItem>
+                        <MenuItem x:Name="showMenu" Header="{Binding Texts[Show]}" SubmenuOpened="ShowMenu_SubmenuOpened" ItemContainerStyle="{StaticResource DockItem}">
+                            <MenuItem.ItemsSource>
+                                <CompositeCollection>
+                                    <CollectionContainer Collection="{Binding Data.Docks, Source={StaticResource Proxy}}" />
+                                    <Separator Style="{StaticResource FixedSeparator}" />
+                                    <MenuItem Style="{StaticResource FixedMenuItem}" Header="{Binding Data.Texts[ReadView], Source={StaticResource Proxy}}"
+                                              ItemsSource="{Binding Data.ViewLayouts, Source={StaticResource Proxy}}" ItemContainerStyle="{StaticResource ViewLayoutItem}" />
+                                    <MenuItem Style="{StaticResource FixedMenuItem}" Header="{Binding Data.Texts[FixDockPanel], Source={StaticResource Proxy}}"
+                                              IsCheckable="True" IsChecked="{Binding Data.FixDockPanel, Source={StaticResource Proxy}, Mode=TwoWay}" />
+                                </CompositeCollection>
+                            </MenuItem.ItemsSource>
+                        </MenuItem>
+                        <MenuItem Header="{Binding Texts[Game]}" IsEnabled="{Binding IsMenuOfCommandsEnabled}">
+                            <MenuItem Header="{Binding Texts[GameStart1]}" InputGestureText="Ctrl+G" Command="{Binding StartGameCommand}" CommandParameter="Current" />
+                            <MenuItem Header="{Binding Texts[GameStart2]}" InputGestureText="Ctrl+Shift+G" Command="{Binding StartGameCommand}" CommandParameter="Beginning" />
+                            <MenuItem Header="{Binding Texts[GameStart3]}" InputGestureText="Ctrl+1" Command="{Binding StartGameCommand}" CommandParameter="CurrentAuto" />
+                            <MenuItem Header="{Binding Texts[GameStart4]}" InputGestureText="Ctrl+Shift+1" Command="{Binding StartGameCommand}" CommandParameter="BeginningAuto" />
+                            <MenuItem Header="{Binding Texts[StartFromMenu]}" Command="{Binding StartGameFromMenuCommand}" />
+                            <MenuItem Header="{Binding Texts[ExitPPDProcess]}" Command="{Binding KillProcessCommand}" />
                             <Separator />
-                            <MenuItem x:Name="一覧を再読み込みToolStripMenuItem" Header="一覧を再読み込み" Click="一覧を再読み込みToolStripMenuItem_Click" />
-                        </MenuItem>
-                        <MenuItem x:Name="動画ToolStripMenuItem" Header="動画">
-                            <MenuItem x:Name="再生ToolStripMenuItem" Header="再生" Click="再生ToolStripMenuItem_Click" />
-                            <MenuItem x:Name="一時停止ToolStripMenuItem" Header="一時停止" Click="一時停止ToolStripMenuItem_Click" />
-                            <MenuItem x:Name="停止ToolStripMenuItem" Header="停止" Click="停止ToolStripMenuItem_Click" />
-                            <MenuItem x:Name="打鍵記録ToolStripMenuItem" Header="打鍵記録" Click="打鍵記録ToolStripMenuItem_Click" />
-                            <MenuItem x:Name="切り取りToolStripMenuItem" Header="切り取り" Click="切り取りToolStripMenuItem_Click" />
-                        </MenuItem>
-                        <MenuItem x:Name="表示ToolStripMenuItem" Header="表示" SubmenuOpened="表示ToolStripMenuItem_SubmenuOpened">
-                            <MenuItem x:Name="ゲームウィンドウToolStripMenuItem" Header="ゲームウィンドウ" Click="ゲームウィンドウToolStripMenuItem_Click" />
-                            <MenuItem x:Name="タイムラインウィンドウToolStripMenuItem" Header="タイムラインウィンドウ" Click="タイムラインウィンドウToolStripMenuItem_Click" />
-                            <MenuItem x:Name="プロパティウィンドウToolStripMenuItem" Header="プロパティウィンドウ" Click="プロパティウィンドウToolStripMenuItem_Click" />
-                            <MenuItem x:Name="位置角度ローダーセーバーToolStripMenuItem" Header="位置角度ローダーセーバー" Click="位置角度ローダーセーバーToolStripMenuItem_Click" />
-                            <MenuItem x:Name="歌詞エディターToolStripMenuItem" Header="歌詞エディター" Click="歌詞エディターToolStripMenuItem_Click" />
-                            <MenuItem x:Name="サウンドマネージャーToolStripMenuItem" Header="サウンドマネージャー" Click="サウンドマネージャーToolStripMenuItem_Click" />
-                            <MenuItem x:Name="設定ファイルライターToolStripMenuItem" Header="設定ファイルライター" Click="設定ファイルライターToolStripMenuItem_Click" />
-                            <MenuItem x:Name="bPMToolStripMenuItem" Header="BPM測定" Click="BPMToolStripMenuItem_Click" />
-                            <MenuItem x:Name="レイヤーマネージャーToolStripMenuItem" Header="レイヤーマネージャー" Click="レイヤーマネージャーToolStripMenuItem_Click" />
-                            <MenuItem x:Name="イベントマネージャーToolStripMenuItem" Header="イベントマネージャー" Click="イベントマネージャーToolStripMenuItem_Click" />
-                            <MenuItem x:Name="幾何クリエーターToolStripMenuItem" Header="幾何クリエーター" Click="幾何クリエーターToolStripMenuItem_Click" />
-                            <MenuItem x:Name="メモToolStripMenuItem" Header="メモ" Click="メモToolStripMenuItem_Click" />
-                            <MenuItem x:Name="リソースマネージャーToolStripMenuItem" Header="リソースマネージャー" Click="リソースマネージャーToolStripMenuItem_Click" />
-                            <MenuItem x:Name="スクリプトマネージャーToolStripMenuItem" Header="スクリプトマネージャー" Click="スクリプトマネージャーToolStripMenuItem_Click" />
-                            <MenuItem x:Name="統計ToolStripMenuItem" Header="統計" Click="統計ToolStripMenuItem_Click" />
-                            <MenuItem x:Name="ヘルプToolStripMenuItem" Header="ヘルプ" Click="ヘルプToolStripMenuItem_Click" />
+                            <MenuItem Header="Connect" IsCheckable="True" IsChecked="{Binding Connect, Mode=TwoWay}" />
+                            <MenuItem Header="MOD" ItemsSource="{Binding Mods}" ItemContainerStyle="{StaticResource ModItem}" />
                             <Separator />
-                            <MenuItem x:Name="ビューを読み込むToolStripMenuItem" Header="ビューを読み込む" />
-                            <MenuItem x:Name="ドックを固定ToolStripMenuItem" Header="ドックを固定" Click="ドックを固定ToolStripMenuItem_Click" />
+                            <MenuItem Header="{Binding Texts[DisableExpansion]}" IsCheckable="True" IsChecked="{Binding DisableExpansion, Mode=TwoWay}" />
                         </MenuItem>
-                        <MenuItem x:Name="ゲームToolStripMenuItem" Header="ゲーム">
-                            <MenuItem x:Name="現在の時間から開始ToolStripMenuItem" Header="現在の時間から開始" InputGestureText="Ctrl+G" Click="現在の時間から開始ToolStripMenuItem_Click" />
-                            <MenuItem x:Name="最初から開始ToolStripMenuItem" Header="最初から開始" InputGestureText="Ctrl+Shift+G" Click="最初から開始ToolStripMenuItem_Click" />
-                            <MenuItem x:Name="現在の時間から開始オートToolStripMenuItem" Header="現在の時間から開始(オート)" InputGestureText="Ctrl+1" Click="現在の時間から開始オートToolStripMenuItem_Click" />
-                            <MenuItem x:Name="最初から開始オートToolStripMenuItem" Header="最初から開始(オート)" InputGestureText="Ctrl+Shift+1" Click="最初から開始オートToolStripMenuItem_Click" />
-                            <MenuItem x:Name="メニューから開始ToolStripMenuItem" Header="メニューから開始" Click="メニューから開始ToolStripMenuItem_Click" />
-                            <MenuItem x:Name="pPDプロセスを強制終了ToolStripMenuItem" Header="PPDプロセスを強制終了" IsEnabled="False" Click="PPDプロセスを強制終了ToolStripMenuItem_Click" />
-                            <Separator />
-                            <MenuItem x:Name="connectToolStripMenuItem" Header="Connect" Click="ConnectToolStripMenuItem_Click" />
-                            <MenuItem x:Name="mODToolStripMenuItem" Header="MOD" />
-                            <Separator />
-                            <MenuItem x:Name="disableExpansionToolStripMenuItem" Header="Expansionを起動しない" Click="DisableExpansionToolStripMenuItem_Click" />
+                        <MenuItem Header="{Binding Texts[Difficulty]}" IsEnabled="{Binding ProjectMenusEnabled}">
+                            <MenuItem Header="Easy" Command="{Binding ChangeDifficultyCommand}" CommandParameter="{x:Static local:AvailableDifficulty.Easy}"
+                                      IsChecked="{Binding CurrentDifficulty, Mode=OneWay, Converter={StaticResource EnumToBoolean}, ConverterParameter=Easy}"
+                                      IsEnabled="{Binding AvailableDifficulty, Converter={StaticResource HasFlag}, ConverterParameter=Easy}" />
+                            <MenuItem Header="Normal" Command="{Binding ChangeDifficultyCommand}" CommandParameter="{x:Static local:AvailableDifficulty.Normal}"
+                                      IsChecked="{Binding CurrentDifficulty, Mode=OneWay, Converter={StaticResource EnumToBoolean}, ConverterParameter=Normal}"
+                                      IsEnabled="{Binding AvailableDifficulty, Converter={StaticResource HasFlag}, ConverterParameter=Normal}" />
+                            <MenuItem Header="Hard" Command="{Binding ChangeDifficultyCommand}" CommandParameter="{x:Static local:AvailableDifficulty.Hard}"
+                                      IsChecked="{Binding CurrentDifficulty, Mode=OneWay, Converter={StaticResource EnumToBoolean}, ConverterParameter=Hard}"
+                                      IsEnabled="{Binding AvailableDifficulty, Converter={StaticResource HasFlag}, ConverterParameter=Hard}" />
+                            <MenuItem Header="Extreme" Command="{Binding ChangeDifficultyCommand}" CommandParameter="{x:Static local:AvailableDifficulty.Extreme}"
+                                      IsChecked="{Binding CurrentDifficulty, Mode=OneWay, Converter={StaticResource EnumToBoolean}, ConverterParameter=Extreme}"
+                                      IsEnabled="{Binding AvailableDifficulty, Converter={StaticResource HasFlag}, ConverterParameter=Extreme}" />
+                            <MenuItem Header="Base" Command="{Binding ChangeDifficultyCommand}" CommandParameter="{x:Static local:AvailableDifficulty.Base}"
+                                      IsChecked="{Binding CurrentDifficulty, Mode=OneWay, Converter={StaticResource EnumToBoolean}, ConverterParameter=Base}"
+                                      IsEnabled="{Binding AvailableDifficulty, Converter={StaticResource HasFlag}, ConverterParameter=Base}" />
+                            <MenuItem Header="{Binding Texts[CopyCurrentDifficulty]}" Command="{Binding CopyDifficultyCommand}" />
                         </MenuItem>
-                        <MenuItem x:Name="難易度ToolStripMenuItem" Header="難易度" IsEnabled="False">
-                            <MenuItem x:Name="easyToolStripMenuItem" Header="Easy" IsEnabled="False" Click="EasyToolStripMenuItem_Click" />
-                            <MenuItem x:Name="normalToolStripMenuItem" Header="Normal" IsEnabled="False" Click="NormalToolStripMenuItem_Click" />
-                            <MenuItem x:Name="hardToolStripMenuItem" Header="Hard" IsEnabled="False" Click="HardToolStripMenuItem_Click" />
-                            <MenuItem x:Name="extremeToolStripMenuItem" Header="Extreme" IsEnabled="False" Click="ExtremeToolStripMenuItem_Click" />
-                            <MenuItem x:Name="baseToolStripMenuItem" Header="Base" Click="BaseToolStripMenuItem_Click" />
-                            <MenuItem x:Name="現在の難易度をコピーToolStripMenuItem" Header="現在の難易度をコピー" Click="現在の難易度をコピーToolStripMenuItem_Click" />
-                        </MenuItem>
-                        <MenuItem x:Name="言語ToolStripMenuItem" Header="言語" />
-                        <MenuItem x:Name="その他ToolStripMenuItem" Header="その他">
-                            <MenuItem x:Name="ツールバーを隠すToolStripMenuItem" Header="ツールバーを隠す" Click="ツールバーを隠すToolStripMenuItem_Click" />
-                            <MenuItem x:Name="設定ToolStripMenuItem" Header="設定" Click="設定ToolStripMenuItem_Click" />
+                        <MenuItem Header="{Binding Texts[Language]}" ItemsSource="{Binding Languages}" ItemContainerStyle="{StaticResource LanguageItem}" />
+                        <MenuItem Header="{Binding Texts[Others]}">
+                            <MenuItem Header="{Binding Texts[HideToolBar]}" IsCheckable="True" IsChecked="{Binding IsMenuHidden, Mode=TwoWay}" />
+                            <MenuItem Header="{Binding Texts[Setting]}" Command="{Binding OpenSettingCommand}" />
                         </MenuItem>
                     </Menu>
-                    <ToolBarTray x:Name="toolBarTray" Background="Transparent" IsLocked="True">
-                        <ToolBar x:Name="toolStrip1" Background="Transparent">
-                            <TextBox x:Name="toolStripTextBox1" Text="100" Width="100" ToolTip="BPM" TextChanged="ToolStripTextBox1_TextChanged" />
-                            <TextBox x:Name="toolStripTextBox2" Text="0" Width="100" ToolTip="BPM offset(1/BPM)" TextChanged="ToolStripTextBox2_TextChanged" />
-                            <TextBox x:Name="toolStripTextBox3" Text="240" Width="100" ToolTip="タイムラインの幅" TextChanged="ToolStripTextBox3_TextChanged" />
+                    <ToolBarTray Background="Transparent" IsLocked="True">
+                        <ToolBar Background="Transparent">
+                            <TextBox Text="{Binding BpmText, UpdateSourceTrigger=PropertyChanged}" Width="100" ToolTip="BPM" />
+                            <TextBox Text="{Binding BpmOffsetText, UpdateSourceTrigger=PropertyChanged}" Width="100" ToolTip="BPM offset(1/BPM)" />
+                            <TextBox Text="{Binding DisplayWidthText, UpdateSourceTrigger=PropertyChanged}" Width="100" ToolTip="{Binding Texts[DisplayWidth]}" />
                             <Separator />
-                            <ComboBox x:Name="toolStripComboBox1" Width="180" SelectionChanged="ToolStripComboBox1_SelectedIndexChanged">
-                                <ComboBoxItem Content="４分の１拍子まで表示" />
-                                <ComboBoxItem Content="８分の１拍子まで表示" />
-                                <ComboBoxItem Content="１６分の１拍子まで表示" />
-                                <ComboBoxItem Content="３２分の１拍子まで表示" />
-                                <ComboBoxItem Content="６４分の１拍子まで表示" />
-                                <ComboBoxItem Content="１２分の１拍子まで表示" />
-                                <ComboBoxItem Content="２４分の１拍子まで表示" />
-                                <ComboBoxItem Content="４８分の１拍子まで表示" />
-                            </ComboBox>
-                            <ComboBox x:Name="toolStripComboBox3" Width="150" SelectionChanged="ToolStripComboBox3_SelectedIndexChanged">
-                                <ComboBoxItem Content="2拍子" />
-                                <ComboBoxItem Content="3拍子" />
-                                <ComboBoxItem Content="4拍子" />
-                                <ComboBoxItem Content="5拍子" />
-                            </ComboBox>
-                            <ComboBox x:Name="toolStripComboBox2" Width="75" SelectionChanged="ToolStripComboBox2_SelectedIndexChanged">
+                            <ComboBox Width="180" ItemsSource="{Binding DisplayModes}" DisplayMemberPath="Text" SelectedIndex="{Binding DisplayModeIndex}" />
+                            <ComboBox Width="150" ItemsSource="{Binding BeatTypes}" DisplayMemberPath="Text" SelectedIndex="{Binding BeatTypeIndex}" />
+                            <ComboBox Width="75" SelectedIndex="{Binding SpeedScale}">
                                 <ComboBoxItem Content="x 0.5" />
                                 <ComboBoxItem Content="x 0.75" />
                                 <ComboBoxItem Content="x 1.0" />
@@ -162,50 +231,53 @@
                                 <ComboBoxItem Content="x 2.0" />
                             </ComboBox>
                             <Separator />
-                            <ToggleButton x:Name="toolStripButton1" IsChecked="True" ToolTip="打鍵操作をBPMに固定" Style="{StaticResource ToolImageButton}">
+                            <ToggleButton IsChecked="{Binding Bpmfixed}" ToolTip="{Binding Texts[FixOp]}" Style="{StaticResource ToolImageButton}">
                                 <Image Source="/img/fix.png" Stretch="None" />
                             </ToggleButton>
-                            <ToggleButton x:Name="toolStripButton2" IsChecked="True" ToolTip="トグルを表示" Style="{StaticResource ToolImageButton}">
+                            <ToggleButton IsChecked="{Binding DrawToggle}" ToolTip="{Binding Texts[Drawtoggle]}" Style="{StaticResource ToolImageButton}">
                                 <Image Source="/img/toggle.png" Stretch="None" />
                             </ToggleButton>
-                            <ToggleButton x:Name="toolStripButton4" ToolTip="マークフォーカス" Style="{StaticResource ToolImageButton}">
+                            <ToggleButton IsChecked="{Binding MarkFocus}" ToolTip="{Binding Texts[MarkFocus]}" Style="{StaticResource ToolImageButton}">
                                 <Image Source="/img/markfocus.png" Stretch="None" />
                             </ToggleButton>
-                            <Button x:Name="toolStripButton4DropDown" Style="{StaticResource DropDownArrow}" Click="DropDownButton_Click">
+                            <Button Style="{StaticResource DropDownArrow}" Click="DropDownButton_Click">
                                 <Path Data="M 0 0 L 6 0 L 3 3 Z" Fill="Black" VerticalAlignment="Center" />
                                 <Button.ContextMenu>
-                                    <ContextMenu>
-                                        <MenuItem x:Name="詳細設定ToolStripMenuItem1" Header="詳細設定" Click="詳細設定ToolStripMenuItem1_Click" />
+                                    <ContextMenu DataContext="{Binding Data, Source={StaticResource Proxy}}">
+                                        <MenuItem Header="{Binding Texts[GridDetailSetting]}" Command="{Binding EditFarnessCommand}" />
                                     </ContextMenu>
                                 </Button.ContextMenu>
                             </Button>
-                            <ToggleButton x:Name="exToolStripSplitButton1" ToolTip="グリッド表示" Style="{StaticResource ToolImageButton}">
+                            <ToggleButton IsChecked="{Binding DisplayGrid}" ToolTip="{Binding Texts[DisplayGrid]}" Style="{StaticResource ToolImageButton}">
                                 <Image Source="/img/grid.png" Stretch="None" />
                             </ToggleButton>
-                            <Button x:Name="exToolStripSplitButton1DropDown" Style="{StaticResource DropDownArrow}" Click="DropDownButton_Click">
+                            <Button Style="{StaticResource DropDownArrow}" Click="DropDownButton_Click">
                                 <Path Data="M 0 0 L 6 0 L 3 3 Z" Fill="Black" VerticalAlignment="Center" />
                                 <Button.ContextMenu>
-                                    <ContextMenu x:Name="gridMenu">
-                                        <MenuItem x:Name="pxToolStripMenuItem1" Header="10px" IsCheckable="True" Click="PxToolStripMenuItem1_Click" />
-                                        <MenuItem x:Name="pxToolStripMenuItem2" Header="20px" IsCheckable="True" Click="PxToolStripMenuItem2_Click" />
-                                        <MenuItem x:Name="pxToolStripMenuItem3" Header="50px" IsCheckable="True" Click="PxToolStripMenuItem3_Click" />
-                                        <MenuItem x:Name="詳細設定ToolStripMenuItem" Header="詳細設定" IsCheckable="True" Click="詳細設定ToolStripMenuItem_Click" />
+                                    <ContextMenu DataContext="{Binding Data, Source={StaticResource Proxy}}">
+                                        <MenuItem Header="10px" Command="{Binding SetGridSizeCommand}" CommandParameter="{x:Static vm:GridSizeChoice.Px10}"
+                                                  IsChecked="{Binding GridSize, Mode=OneWay, Converter={StaticResource EnumToBoolean}, ConverterParameter=Px10}" />
+                                        <MenuItem Header="20px" Command="{Binding SetGridSizeCommand}" CommandParameter="{x:Static vm:GridSizeChoice.Px20}"
+                                                  IsChecked="{Binding GridSize, Mode=OneWay, Converter={StaticResource EnumToBoolean}, ConverterParameter=Px20}" />
+                                        <MenuItem Header="50px" Command="{Binding SetGridSizeCommand}" CommandParameter="{x:Static vm:GridSizeChoice.Px50}"
+                                                  IsChecked="{Binding GridSize, Mode=OneWay, Converter={StaticResource EnumToBoolean}, ConverterParameter=Px50}" />
+                                        <MenuItem Header="{Binding Texts[GridDetailSetting]}" Command="{Binding EditGridCommand}"
+                                                  IsChecked="{Binding GridSize, Mode=OneWay, Converter={StaticResource EnumToBoolean}, ConverterParameter=Custom}" />
                                     </ContextMenu>
                                 </Button.ContextMenu>
                             </Button>
-                            <ToggleButton x:Name="toolStripSplitButton1" Style="{StaticResource ToolImageButton}"
-                                          Checked="ToolStripSplitButton1_CheckStateChanged" Unchecked="ToolStripSplitButton1_CheckStateChanged">
+                            <ToggleButton IsChecked="{Binding IsTimeLineRowLimited}" ToolTip="{Binding Texts[LimitTimeLineRow]}" Style="{StaticResource ToolImageButton}">
                                 <Image Source="/img/timeline.png" Stretch="None" />
                             </ToggleButton>
-                            <Button x:Name="toolStripSplitButton1DropDown" Style="{StaticResource DropDownArrow}" Click="DropDownButton_Click">
+                            <Button Style="{StaticResource DropDownArrow}" Click="DropDownButton_Click">
                                 <Path Data="M 0 0 L 6 0 L 3 3 Z" Fill="Black" VerticalAlignment="Center" />
                                 <Button.ContextMenu>
-                                    <ContextMenu>
-                                        <MenuItem x:Name="詳細設定ToolStripMenuItem2" Header="詳細設定" Click="詳細設定ToolStripMenuItem2_Click" />
+                                    <ContextMenu DataContext="{Binding Data, Source={StaticResource Proxy}}">
+                                        <MenuItem Header="{Binding Texts[GridDetailSetting]}" Command="{Binding EditTimeLineRowsCommand}" />
                                     </ContextMenu>
                                 </Button.ContextMenu>
                             </Button>
-                            <ToggleButton x:Name="toolStripButton3" IsChecked="True" ToolTip="ホールドの範囲を表示" Style="{StaticResource ToolImageButton}">
+                            <ToggleButton IsChecked="{Binding ShowHoldExtent}" ToolTip="{Binding Texts[ShowHoldExtent]}" Style="{StaticResource ToolImageButton}">
                                 <Image Source="/img/showholdextent.png" Stretch="None" />
                             </ToggleButton>
                         </ToolBar>
@@ -214,15 +286,15 @@
             </Grid>
             <Grid DockPanel.Dock="Bottom">
                 <Rectangle x:Name="bottomOverlay" />
-                <StatusBar x:Name="statusStrip1" Background="Transparent">
+                <StatusBar Background="Transparent">
                     <StatusBarItem Width="79">
-                        <TextBlock x:Name="toolStripStatusLabel1" Text="0:00:00:000" />
+                        <TextBlock x:Name="timeLabel" Text="{Binding TimeText}" />
                     </StatusBarItem>
                     <StatusBarItem Width="292">
-                        <TextBlock x:Name="toolStripStatusLabel2" Text="エリア選択オフ" />
+                        <TextBlock x:Name="areaSelectionLabel" Text="{Binding AreaSelectionText}" />
                     </StatusBarItem>
                     <StatusBarItem>
-                        <TextBlock x:Name="toolStripStatusLabel3" />
+                        <TextBlock x:Name="copyBufferLabel" Text="{Binding CopyBufferText}" />
                     </StatusBarItem>
                 </StatusBar>
             </Grid>

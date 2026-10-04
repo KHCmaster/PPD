@@ -55,7 +55,7 @@ namespace PPDEditor
         protected override void Initialize()
         {
             base.Initialize();
-            this.Window.MyGame = this;
+            this.Window.ViewModel.MyGame = this;
             // 入力と音は、メインのウィンドウに結びつける
             var windowHandle = new WindowInteropHelper(this.Window).EnsureHandle();
             //Inputクラスの生成
@@ -75,10 +75,10 @@ namespace PPDEditor
             }
             resourceManager = new PPDFramework.Resource.SpriteResourceManager(device, @"img\PPDEditor");
             CreateResource();
-            sm = this.Window.SoundManager;
+            sm = WindowUtility.SoundManager;
             sm.SetSound(this.sound);
-            this.Window.ResourceManager.SetSound(sound);
-            mg = new MainGame(device, resourceManager, Window.Grid);
+            WindowUtility.ResourceManager.SetSound(sound);
+            mg = new MainGame(device, resourceManager, Window.ViewModel.Grid);
             mg.Dummy.Drawing += Dummy_Drawing;
             Utility.Device = device;
             Utility.ResourceManager = resourceManager;
@@ -88,7 +88,7 @@ namespace PPDEditor
 
         private void Dummy_Drawing()
         {
-            this.Window.DrawMark();
+            WindowUtility.Seekmain.DrawMark();
         }
 
         private void CreateResource()
@@ -138,7 +138,7 @@ namespace PPDEditor
         {
             if (recording)
             {
-                this.Window.Refleshdata();
+                WindowUtility.Seekmain.DrawAndRefresh();
             }
             recording = false;
         }
@@ -172,7 +172,7 @@ namespace PPDEditor
         {
             if (recording || playing)
             {
-                this.Window.UpdateStatus();
+                this.Window.ViewModel.UpdateStatus();
             }
             if (recording)
             {
@@ -181,28 +181,28 @@ namespace PPDEditor
                 inputInfo ??= EmptyInputInfo.Instance;
                 if (shouldbecheck)
                 {
-                    double movietime = Window.CurrentTime;
+                    double movietime = Window.ViewModel.CurrentTime;
                     for (int i = 0; i < keyConfigManager.CurrentConfig.Buttons.Length; i++)
                     {
                         if (inputInfo.IsPressed((ButtonType)i))
                         {
-                            this.Window.Record(movietime, i);
+                            this.Window.ViewModel.Record(movietime, i);
                         }
                     }
                 }
             }
             if (!recording)
             {
-                var ret = this.Window.Updatemark(this.Window.CurrentTime);
+                var ret = this.Window.ViewModel.Updatemark(this.Window.ViewModel.CurrentTime);
                 if (playing)
                 {
                     sm.Playsound(ret);
                 }
             }
-            mg.UpdateAssist(this.Window.MarkSelectMode, this.Window.OnMouseMarkSelectMode);
-            mg.Grid.Hidden = !this.Window.DisplayGrid;
-            mg.Kasi.Text = this.Window.CurrentKasi;
-            mg.MarkPointDrawer.DrawAngle = this.Window.DrawAngle;
+            mg.UpdateAssist(WindowUtility.Seekmain.MarkSelectMode, WindowUtility.Seekmain.OnMouseMarkSelectMode);
+            mg.Grid.Hidden = !this.Window.ViewModel.DisplayGrid;
+            mg.Kasi.Text = this.Window.ViewModel.CurrentKasi;
+            mg.MarkPointDrawer.DrawAngle = WindowUtility.PosAndAngleLoaderSaver.DrawAngle;
             mg.MarkPointDrawer.Hidden = !this.Window.DrawPoint;
             if (mg != null && !mg.Disposed)
             {

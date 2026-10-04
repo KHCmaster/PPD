@@ -1,6 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using PPDEditor.Forms;
+using PPDEditor.Models;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
@@ -100,7 +100,7 @@ namespace PPDEditor.ViewModels.Dialogs
             var mergeDifficulty = MergeDifficulty;
             var selected = BaseInfoProjectDifficulty;
             BaseDifficulties.Clear();
-            foreach (var difficulty in EditorForm.DifficultyArray)
+            foreach (var difficulty in ProjectFiles.DifficultyArray)
             {
                 if (difficulty != AvailableDifficulty.None && (mergeDifficulty & difficulty) == difficulty)
                 {
@@ -146,7 +146,7 @@ namespace PPDEditor.ViewModels.Dialogs
         public void Load(string path)
         {
             ProjectPath = path;
-            ProjectVersion = EditorForm.GetProjectVersion(path);
+            ProjectVersion = ProjectFiles.GetVersion(path);
             Difficulties.Clear();
             if (ProjectVersion == 1)
             {
@@ -154,8 +154,8 @@ namespace PPDEditor.ViewModels.Dialogs
             }
             else
             {
-                var available = EditorForm.GetDifficultyAvailable(Path.Combine(Path.GetDirectoryName(path), Path.GetFileNameWithoutExtension(path)));
-                foreach (var d in EditorForm.DifficultyArray)
+                var available = ProjectFiles.GetAvailableDifficulty(Path.Combine(Path.GetDirectoryName(path), Path.GetFileNameWithoutExtension(path)));
+                foreach (var d in ProjectFiles.DifficultyArray)
                 {
                     if (d != AvailableDifficulty.None && (available & d) == d)
                     {

@@ -254,17 +254,17 @@ namespace PPDEditor
 
         (float Bpm, float BpmOffset, int DisplayWidth) ILayerHost.CurrentSettings
         {
-            get { return (WindowUtility.MainForm.BPM, WindowUtility.MainForm.BPMOffset, WindowUtility.MainForm.DisplayWidth); }
+            get { return (WindowUtility.Editor.BPM, WindowUtility.Editor.BPMOffset, WindowUtility.Editor.DisplayWidth); }
         }
 
         void ILayerHost.ApplySheetSettings(PPDSheet sheet)
         {
             WindowUtility.Seekmain.SetSelectedSheetInfo(sheet.BPM, sheet.BPMStart, sheet.DisplayWidth, sheet.DisplayMode, sheet.BeatType);
-            WindowUtility.MainForm.BPM = sheet.BPM;
-            WindowUtility.MainForm.BPMOffset = sheet.BPMStart;
-            WindowUtility.MainForm.DisplayWidth = sheet.DisplayWidth;
-            WindowUtility.MainForm.DisplayMode = sheet.DisplayMode;
-            WindowUtility.MainForm.BeatType = sheet.BeatType;
+            WindowUtility.Editor.BPM = sheet.BPM;
+            WindowUtility.Editor.BPMOffset = sheet.BPMStart;
+            WindowUtility.Editor.DisplayWidth = sheet.DisplayWidth;
+            WindowUtility.Editor.DisplayMode = sheet.DisplayMode;
+            WindowUtility.Editor.BeatType = sheet.BeatType;
         }
 
         void ILayerHost.RefreshTimeline()

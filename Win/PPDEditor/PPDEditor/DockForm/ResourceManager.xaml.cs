@@ -150,12 +150,12 @@ namespace PPDEditor
 
         bool IResourceHost.IsProjectLoaded
         {
-            get { return WindowUtility.MainForm.IsProjectLoaded; }
+            get { return WindowUtility.Editor.IsProjectLoaded; }
         }
 
         string IResourceHost.ProjectDir
         {
-            get { return WindowUtility.MainForm.CurrentProjectDir; }
+            get { return WindowUtility.Editor.CurrentProjectDir; }
         }
 
         string[] IResourceHost.AskFiles(string filter)

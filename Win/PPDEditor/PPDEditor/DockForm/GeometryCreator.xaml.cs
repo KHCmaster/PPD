@@ -145,7 +145,7 @@ namespace PPDEditor
 
         float IGeometryHost.Bpm
         {
-            get { return WindowUtility.MainForm.BPM; }
+            get { return WindowUtility.Editor.BPM; }
         }
 
         (int Width, int Height) IGeometryHost.CanvasSize

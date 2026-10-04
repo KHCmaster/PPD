@@ -1,5 +1,9 @@
 using PPDEditor.Controls;
+using PPDEditor.ViewModels;
 using System;
+using System.Linq;
+using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows;
 using System.Windows.Input;
 using Keys = System.Windows.Forms.Keys;
@@ -13,25 +17,23 @@ namespace PPDEditor.Forms
     public partial class EditorForm
     {
         /// <summary>
-        /// メニューのショートカットキーです。ゲームの画面（WPF の外のウィンドウ）で押したときにも使う。
+        /// メニューのショートカットキー（ウィンドウの InputBindings）を実行します。ゲームの画面（WPF の外のウィンドウ）で押したときにも使う。
         /// </summary>
         private bool ProcessMenuShortcut(Key key, ModifierKeys modifiers)
         {
-            System.Windows.Controls.MenuItem target = (modifiers, key) switch
+            foreach (var binding in InputBindings.OfType<KeyBinding>())
             {
-                (ModifierKeys.Control, Key.S) => プロジェクトを上書き保存ToolStripMenuItem,
-                (ModifierKeys.Control, Key.G) => 現在の時間から開始ToolStripMenuItem,
-                (ModifierKeys.Control | ModifierKeys.Shift, Key.G) => 最初から開始ToolStripMenuItem,
-                (ModifierKeys.Control, Key.D1) => 現在の時間から開始オートToolStripMenuItem,
-                (ModifierKeys.Control | ModifierKeys.Shift, Key.D1) => 最初から開始オートToolStripMenuItem,
-                _ => null,
-            };
-            if (target == null || !target.IsEnabled || !ゲームToolStripMenuItem.IsEnabled && target != プロジェクトを上書き保存ToolStripMenuItem)
-            {
-                return false;
+                if (binding.Key == key && binding.Modifiers == modifiers && binding.Command != null)
+                {
+                    if (!binding.Command.CanExecute(binding.CommandParameter))
+                    {
+                        return false;
+                    }
+                    binding.Command.Execute(binding.CommandParameter);
+                    return true;
+                }
             }
-            target.RaiseEvent(new RoutedEventArgs(System.Windows.Controls.MenuItem.ClickEvent, target));
-            return true;
+            return false;
         }
 
         private void Window_PreviewKeyDown(object sender, KeyEventArgs e)
@@ -62,7 +64,7 @@ namespace PPDEditor.Forms
 
         private void GameView_GameMouseLeave(object sender, EventArgs e)
         {
-            ChangeMousePos(new Point(-1, -1));
+            ViewModel.ChangeMousePos(new Point(-1, -1));
         }
 
         private void GameView_GameMouseDown(object sender, Point e)
@@ -85,7 +87,7 @@ namespace PPDEditor.Forms
             }
             if (e.Key == Key.Space && e.Modifiers == ModifierKeys.None)
             {
-                PlayOrPause();
+                ViewModel.PlayOrPause();
                 e.Handled = true;
                 return;
             }
@@ -124,19 +126,10 @@ namespace PPDEditor.Forms
             {
                 return;
             }
-            var separator = new System.Windows.Controls.Separator();
-            var items = new System.Windows.Controls.Control[] { 画面比を169にMenuItem, 標準解像度にするMenuItem, separator };
             // 同じ項目を 2 つのメニューに入れることはできないので、メニューごとに作る
-            if (画面比を169にMenuItem.Parent != null)
-            {
-                var aspect = new System.Windows.Controls.MenuItem { Header = 画面比を169にMenuItem.Header };
-                aspect.Click += 画面比を169にMenuItem_Click;
-                var standard = new System.Windows.Controls.MenuItem { Header = 標準解像度にするMenuItem.Header };
-                standard.Click += 標準解像度にするMenuItem_Click;
-                items = [aspect, standard, separator];
-                extraGameWindowMenuItems.Add(aspect);
-                extraGameWindowMenuItems.Add(standard);
-            }
+            var aspect = CreateGameWindowMenuItem("ChangeAspect", 画面比を169にMenuItem_Click);
+            var standard = CreateGameWindowMenuItem("GWDefaultResolution", 標準解像度にするMenuItem_Click);
+            var items = new System.Windows.Controls.Control[] { aspect, standard, new System.Windows.Controls.Separator() };
             for (int i = 0; i < items.Length; i++)
             {
                 menu.Items.Insert(i, items[i]);
@@ -150,11 +143,20 @@ namespace PPDEditor.Forms
                     item.Visibility = isGameWindow ? Visibility.Visible : Visibility.Collapsed;
                 }
                 // 画面の大きさを変えるのは、浮かせているときだけ
-                items[0].IsEnabled = items[1].IsEnabled = dxfDock.IsFloating;
+                aspect.IsEnabled = standard.IsEnabled = docks[DockKind.GameWindow].IsFloating;
             };
         }
 
-        readonly System.Collections.Generic.List<System.Windows.Controls.MenuItem> extraGameWindowMenuItems = [];
+        /// <summary>
+        /// ゲームウィンドウのメニューの項目を作ります。表示する文字は今の言語の文字にする。
+        /// </summary>
+        private static System.Windows.Controls.MenuItem CreateGameWindowMenuItem(string textKey, RoutedEventHandler click)
+        {
+            var item = new System.Windows.Controls.MenuItem();
+            item.SetBinding(HeaderedItemsControl.HeaderProperty, new Binding("[" + textKey + "]") { Source = LanguageTexts.Instance });
+            item.Click += click;
+            return item;
+        }
 
         private void 画面比を169にMenuItem_Click(object sender, RoutedEventArgs e)
         {

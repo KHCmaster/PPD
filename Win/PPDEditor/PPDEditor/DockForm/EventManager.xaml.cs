@@ -140,7 +140,7 @@ namespace PPDEditor
 
         void IEventManagerHost.ChangeMovieVolume(int volume)
         {
-            WindowUtility.MainForm.ChangeVolume(volume);
+            WindowUtility.Editor.ChangeVolume(volume);
         }
     }
 }

@@ -15,7 +15,7 @@ namespace PPDEditor.ViewModels.Dialogs
         public CopyDifficultyViewModel(AvailableDifficulty currentDifficulty)
         {
             CurrentDifficulty = currentDifficulty;
-            Difficulties = [.. EditorForm.DifficultyArray.Where(d => d != currentDifficulty && d != AvailableDifficulty.None)];
+            Difficulties = [.. Models.ProjectFiles.DifficultyArray.Where(d => d != currentDifficulty && d != AvailableDifficulty.None)];
             destDifficulty = Difficulties[0];
         }
 

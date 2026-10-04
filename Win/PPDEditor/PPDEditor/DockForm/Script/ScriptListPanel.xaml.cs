@@ -226,17 +226,17 @@ namespace PPDEditor.DockForm.Script
 
         bool IScriptListHost.IsProjectLoaded
         {
-            get { return WindowUtility.MainForm.IsProjectLoaded; }
+            get { return WindowUtility.Editor.IsProjectLoaded; }
         }
 
         string IScriptListHost.ProjectDir
         {
-            get { return WindowUtility.MainForm.CurrentProjectDir; }
+            get { return WindowUtility.Editor.CurrentProjectDir; }
         }
 
         AvailableDifficulty IScriptListHost.CurrentDifficulty
         {
-            get { return WindowUtility.MainForm.CurrentDifficulty; }
+            get { return WindowUtility.Editor.CurrentDifficulty; }
         }
 
         void IScriptListHost.ShowMessage(string text)

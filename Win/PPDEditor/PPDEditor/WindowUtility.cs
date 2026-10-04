@@ -11,6 +11,15 @@ namespace PPDEditor
             get;
             set;
         }
+
+        /// <summary>
+        /// メインのウィンドウの ViewModel です（エディターの状態とプロジェクト）。
+        /// </summary>
+        public static ViewModels.MainWindowViewModel Editor
+        {
+            get;
+            set;
+        }
         public static BPMMeasure BPMMeasure
         {
             get;

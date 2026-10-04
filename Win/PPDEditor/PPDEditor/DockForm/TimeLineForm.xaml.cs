@@ -52,7 +52,7 @@ namespace PPDEditor
         {
             if (e.Key == Key.Space)
             {
-                WindowUtility.MainForm.PlayOrPause();
+                WindowUtility.Editor.PlayOrPause();
                 e.Handled = true;
             }
         }

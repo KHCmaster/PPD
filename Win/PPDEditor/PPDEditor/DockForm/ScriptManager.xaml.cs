@@ -82,12 +82,12 @@ namespace PPDEditor
 
         string IScriptWorkspace.ProjectDir
         {
-            get { return WindowUtility.MainForm.CurrentProjectDir; }
+            get { return WindowUtility.Editor.CurrentProjectDir; }
         }
 
         AvailableDifficulty IScriptWorkspace.CurrentDifficulty
         {
-            get { return WindowUtility.MainForm.CurrentDifficulty; }
+            get { return WindowUtility.Editor.CurrentDifficulty; }
         }
 
         void ScriptManager_Loaded(object sender, RoutedEventArgs e)
@@ -98,10 +98,10 @@ namespace PPDEditor
                 return;
             }
             mainFormEventsAttached = true;
-            WindowUtility.MainForm.ProcessStarted += ViewModel.OnProcessStarted;
-            WindowUtility.MainForm.CommandExecuting += ViewModel.OnCommandExecuting;
-            WindowUtility.MainForm.ProcessExited += ViewModel.StopDebugging;
-            WindowUtility.MainForm.CommandExecuted += fileName => ViewModel.StopDebugging();
+            WindowUtility.Editor.ProcessStarted += ViewModel.OnProcessStarted;
+            WindowUtility.Editor.CommandExecuting += ViewModel.OnCommandExecuting;
+            WindowUtility.Editor.ProcessExited += ViewModel.StopDebugging;
+            WindowUtility.Editor.CommandExecuted += fileName => ViewModel.StopDebugging();
         }
 
         int? IScriptWorkspace.ShowExecutingSource(string fileName, string sourceText)

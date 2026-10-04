@@ -198,7 +198,7 @@ namespace PPDEditor
                                 var holdExtentTime = f + 5 + PPDSetting.Setting.GoodArea;
                                 var drawHoldExtent = holdExtentTime >= drawstarttime && holdExtentTime <= drawendtime;
 
-                                if (WindowUtility.MainForm.ShowHoldExtent && (drawLongNote || drawHoldExtent))
+                                if (WindowUtility.Editor.ShowHoldExtent && (drawLongNote || drawHoldExtent))
                                 {
                                     if (!exmk.IsScratch && (exmk.NoteType == PPDFramework.NoteType.AC || exmk.NoteType == PPDFramework.NoteType.ACFT))
                                     {

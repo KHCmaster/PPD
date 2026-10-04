@@ -62,7 +62,7 @@ namespace PPDEditor.Controls
             if (propertyName.Contains("Time") && propertyType == typeof(float))
             {
                 return ShowSuggest([
-                    new(Utility.Language["CurrentMovieTime"], ((float)WindowUtility.MainForm.CurrentTime).ToString())                ]);
+                    new(Utility.Language["CurrentMovieTime"], ((float)WindowUtility.Editor.CurrentTime).ToString())                ]);
             }
             if (sourceName.Contains("ByID") && propertyType == typeof(int))
             {

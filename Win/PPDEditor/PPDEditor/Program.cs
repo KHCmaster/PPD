@@ -72,7 +72,7 @@ namespace PPDEditor
                 {
                     try
                     {
-                        game.Window.RescueData();
+                        game.Window.ViewModel.RescueData();
                     }
                     catch
                     {

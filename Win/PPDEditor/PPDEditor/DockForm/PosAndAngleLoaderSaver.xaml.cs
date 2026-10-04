@@ -72,7 +72,7 @@ namespace PPDEditor
 
         void IPosAndAngleHost.ShowPreview(Vector2[] positions, float[] angles)
         {
-            WindowUtility.MainForm?.ChangeData(positions, angles);
+            WindowUtility.Editor?.ChangeData(positions, angles);
         }
     }
 }
