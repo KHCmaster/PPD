@@ -7,6 +7,8 @@
     <Platforms>x64</Platforms>
     <PlatformTarget>x64</PlatformTarget>
     <UseWPF>true</UseWPF>
+    <!-- PPDEditor のショートカット（System.Windows.Forms.Keys）を使う -->
+    <UseWindowsForms>true</UseWindowsForms>
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
     <Nullable>disable</Nullable>
