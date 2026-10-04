@@ -4,7 +4,7 @@
         Title="setting" Width="453" Height="373" ResizeMode="CanMinimize" ShowInTaskbar="False"
         Closing="Window_Closing">
     <!-- DataContext は MarkSetting の一覧 -->
-    <DataGrid x:Name="dataGrid" ItemsSource="{Binding}" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False"
+    <DataGrid x:Name="dataGrid" AutomationProperties.AutomationId="SettingGrid" ItemsSource="{Binding}" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False"
               CanUserSortColumns="False" CanUserReorderColumns="False" HeadersVisibility="All"
               RowHeaderWidth="70" SelectionUnit="Cell">
         <DataGrid.Resources>

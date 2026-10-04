@@ -7,6 +7,7 @@
         mc:Ignorable="d" d:DataContext="{d:DesignInstance Type=vm:MainWindowViewModel}"
         Title="BMSTOPPD" SizeToContent="WidthAndHeight" ResizeMode="CanMinimize"
         Icon="bmstoppd.ico">
+    <!-- AutomationId は UI の自動テスト（UITests）で使う -->
     <Grid Margin="12,8,12,12">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="191" />
@@ -21,17 +22,17 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <TextBlock Grid.Row="0" Text="filename" />
-        <TextBox Grid.Row="1" Grid.Column="0" Margin="0,2,0,0" VerticalContentAlignment="Center"
+        <TextBox AutomationProperties.AutomationId="FileNameBox" Grid.Row="1" Grid.Column="0" Margin="0,2,0,0" VerticalContentAlignment="Center"
                  Text="{Binding FileName, UpdateSourceTrigger=PropertyChanged}" />
-        <Button Grid.Row="1" Grid.Column="2" Content="open" Margin="0,2,0,0" Command="{Binding OpenCommand}" />
+        <Button AutomationProperties.AutomationId="OpenButton" Grid.Row="1" Grid.Column="2" Content="open" Margin="0,2,0,0" Command="{Binding OpenCommand}" />
         <TextBlock Grid.Row="2" Text="timeoffset" Margin="0,10,0,0" />
         <StackPanel Grid.Row="3" Grid.Column="0" Orientation="Horizontal" Margin="0,2,0,0">
-            <TextBox Width="100" VerticalContentAlignment="Center" Text="{Binding TimeOffset, UpdateSourceTrigger=PropertyChanged}" />
+            <TextBox AutomationProperties.AutomationId="TimeOffsetBox" Width="100" VerticalContentAlignment="Center" Text="{Binding TimeOffset, UpdateSourceTrigger=PropertyChanged}" />
         </StackPanel>
-        <Button Grid.Row="3" Grid.Column="2" Content="convert" Margin="0,2,0,0" Command="{Binding ConvertCommand}" />
+        <Button AutomationProperties.AutomationId="ConvertButton" Grid.Row="3" Grid.Column="2" Content="convert" Margin="0,2,0,0" Command="{Binding ConvertCommand}" />
         <StackPanel Grid.Row="4" Grid.ColumnSpan="3" Orientation="Horizontal" Margin="0,10,0,0">
-            <Button Content="setting" Width="75" Command="{Binding ShowSettingCommand}" />
-            <CheckBox Content="DTXformat?" Margin="52,0,0,0" VerticalAlignment="Center" IsChecked="{Binding IsDtx}" />
+            <Button AutomationProperties.AutomationId="SettingButton" Content="setting" Width="75" Command="{Binding ShowSettingCommand}" />
+            <CheckBox AutomationProperties.AutomationId="DtxCheckBox" Content="DTXformat?" Margin="52,0,0,0" VerticalAlignment="Center" IsChecked="{Binding IsDtx}" />
         </StackPanel>
     </Grid>
 </Window>
