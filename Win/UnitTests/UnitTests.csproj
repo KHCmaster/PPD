@@ -32,6 +32,12 @@
     <ProjectReference Include="..\BezierCaliculator\BezierCaliculator.csproj" />
     <ProjectReference Include="..\BezierDrawControl\BezierDrawControl\BezierDrawControl.csproj" />
     <ProjectReference Include="..\BezierDrawControlTest\BezierDrawControlTest.csproj" />
+    <ProjectReference Include="..\FlowScriptControlTest\FlowScriptControlTest.csproj" />
+    <ProjectReference Include="..\FlowScriptControl\FlowScriptControl.csproj" />
+    <ProjectReference Include="..\FlowScriptDrawControl\FlowScriptDrawControl.csproj" />
+    <ProjectReference Include="..\FlowScriptEngine\FlowScriptEngine.csproj" />
+    <ProjectReference Include="..\FlowScriptEngineBasic\FlowScriptEngineBasic.csproj" />
+    <ProjectReference Include="..\FlowScriptEngineConsole\FlowScriptEngineConsole.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Update="xunit.runner.json" CopyToOutputDirectory="PreserveNewest" />
@@ -41,6 +47,7 @@
     <None Include="..\PPDUpdater\Lang\*.ini" Link="Apps\PPDUpdater\Lang\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
     <None Include="..\PPDInstaller\PPDInstaller\Lang\*.ini" Link="Apps\PPDInstaller\Lang\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
     <None Include="..\Effect2DEditor\Lang\*.ini" Link="Apps\Effect2DEditor\Lang\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\PPDEditor\PPDEditor\Lang\lang_FlowScript_jp.ini;..\PPDEditor\PPDEditor\Lang\lang_PPDEditor_jp.ini" Link="Apps\FlowScriptControlTest\Lang\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
     <None Update="coverage.runsettings" CopyToOutputDirectory="Never" />
   </ItemGroup>
 </Project>
