@@ -59,7 +59,8 @@ namespace FlowScriptEngineSlimDX.TypeFormatters
                         r = int.Parse(str[..1], NumberStyles.HexNumber);
                         g = int.Parse(str.Substring(1, 1), NumberStyles.HexNumber);
                         b = int.Parse(str.Substring(2, 1), NumberStyles.HexNumber);
-                        color = new Vortice.Mathematics.Color4(r / 255f, g / 255f, b / 255f, 1f);
+                        // 1 桁は同じ数字を 2 つ並べたもの（#FFF は #FFFFFF）。以前は 1 桁をそのまま 255 で割っていたので、暗い色になっていた
+                        color = new Vortice.Mathematics.Color4(r * 17 / 255f, g * 17 / 255f, b * 17 / 255f, 1f);
                         return true;
                     case 6:
                         r = int.Parse(str[..2], NumberStyles.HexNumber);
