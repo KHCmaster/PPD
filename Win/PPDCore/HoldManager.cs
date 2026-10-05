@@ -423,7 +423,7 @@ namespace PPDCore
         {
             if (holdInfo != null)
             {
-                HoldMaxHold(holdInfo);
+                HoldMaxHold?.Invoke(holdInfo);
             }
         }
 
