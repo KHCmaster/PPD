@@ -29,12 +29,14 @@ namespace UnitTests.Graphics
 
         public MainGameComponent Game { get; }
 
-        public GameSession(GraphicsDevice graphics, MarkData[] marks, IEVDData[] events, AutoMode auto = AutoMode.None)
+        public GameSession(GraphicsDevice graphics, MarkData[] marks, IEVDData[] events, AutoMode auto = AutoMode.None,
+            bool withInterface = false, GameResultBase result = null, PauseMenuBase pauseMenu = null)
         {
             Assert.False(TcpDebugControllerBase.IsListening());
             Directory.CreateDirectory("dlls");
             resources = new GameResources(graphics, setCurrentDirectory: false);
-            foreach (var effect in new[] { @"hold\holdback.etd", @"hold\maxback.etd", @"slide\max_slide_effect.etd", @"slide\hatch_right.etd", @"slide\hatch_left.etd" })
+            foreach (var effect in new[] { @"hold\holdback.etd", @"hold\maxback.etd", @"slide\max_slide_effect.etd", @"slide\hatch_right.etd", @"slide\hatch_left.etd",
+                @"lifegage\dangerflare.etd", @"lifegage\normalflare.etd", @"lifegage\fullflare.etd" })
             {
                 resources.WriteEffect(Path.Combine(@"img\PPD\main_game", effect));
             }
@@ -53,8 +55,15 @@ namespace UnitTests.Graphics
             };
             var host = Nothing.Create<IGameHost>();
             ((Nothing)(object)host).Results[nameof(IGameHost.GetMovie)] = Movie;
-            Game = new MainGameComponent(graphics.Device, host, resources.Resources, Nothing.Create<ISound>(), null,
-                Utility, null, resources.MarkImages, null, null, MainGameConfigBase.Default, 0, 0);
+            var sound = Nothing.Create<ISound>();
+            GameInterfaceBase gameInterface = null;
+            if (withInterface)
+            {
+                gameInterface = new GameInterface(graphics.Device) { ResourceManager = resources.Resources, PPDGameUtility = Utility, Sound = sound };
+                gameInterface.Load();
+            }
+            Game = new MainGameComponent(graphics.Device, host, resources.Resources, sound, null,
+                Utility, gameInterface, resources.MarkImages, result, pauseMenu, MainGameConfigBase.Default, 0, 0);
         }
 
         public void Dispose()

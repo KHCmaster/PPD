@@ -24,16 +24,115 @@ namespace UnitTests.Graphics
             for (var time = from; time <= to; time += 1 / 60d)
             {
                 session.Movie.Position = time;
-                var buttons = pressed?.Invoke(time) ?? [];
-                var count = new int[10];
-                var p = new bool[10];
-                foreach (var button in buttons)
-                {
-                    p[(int)button] = true;
-                    count[(int)button] = 1;
-                }
-                session.Game.Update(new CustomInputInfo(count, p, new bool[10], EmptyInputInfo.Instance), MouseInfo.Empty);
+                session.Game.Update(new TestInput(pressed?.Invoke(time) ?? []), MouseInfo.Empty);
             }
+        }
+
+        /// <summary>
+        /// このフレームで押したボタンだけを返す入力です。
+        /// </summary>
+        sealed class TestInput(ButtonType[] pressed) : InputInfoBase(false)
+        {
+            public override bool IsPressed(ButtonType buttonType) => pressed.Contains(buttonType);
+            public override bool IsReleased(ButtonType buttonType) => false;
+            public override int GetPressingFrame(ButtonType buttonType) => pressed.Contains(buttonType) ? 1 : 0;
+        }
+
+        /// <summary>
+        /// ボタンの代わりに、テストからメニューの操作を起こすポーズメニューです。
+        /// </summary>
+        sealed class TestPauseMenu(PPDDevice device) : PauseMenuBase(device)
+        {
+            public override event System.EventHandler Resumed;
+            public override event System.EventHandler Retryed;
+            public override event System.EventHandler Replayed;
+            public override event System.EventHandler Returned;
+            public override event ChangeLatencyEventHandler LatencyChanged;
+            public int Updates { get; private set; }
+            public List<bool> Retries { get; } = [];
+            public override void Load() { }
+            public override void Update(InputInfoBase inputInfo) => Updates++;
+            public override void Retry(bool canReplay) => Retries.Add(canReplay);
+            public void Resume() => Resumed?.Invoke(this, System.EventArgs.Empty);
+            public void DoRetry() => Retryed?.Invoke(this, System.EventArgs.Empty);
+            public void DoReplay() => Replayed?.Invoke(this, System.EventArgs.Empty);
+            public void Return() => Returned?.Invoke(this, System.EventArgs.Empty);
+            public float ChangeLatency(int sign) => LatencyChanged(sign);
+        }
+
+        sealed class TestResult(PPDDevice device) : GameResultBase(device)
+        {
+            public override event System.EventHandler Returned;
+            public override event System.EventHandler Retryed;
+            public override event System.EventHandler Replayed;
+            public int Updates { get; private set; }
+            public int[] Evaluations => MarkEvals;
+            public bool IsHighScore => HighScore;
+            public int ResultScore => Score;
+            public override void Load() { }
+            public override void Update(InputInfoBase inputInfo) => Updates++;
+            public override void Retry() { }
+            public void DoRetry() => Retryed?.Invoke(this, System.EventArgs.Empty);
+            public void DoReplay() => Replayed?.Invoke(this, System.EventArgs.Empty);
+            public void Return() => Returned?.Invoke(this, System.EventArgs.Empty);
+        }
+
+        static void Press(GameSession session, double time, params ButtonType[] buttons)
+        {
+            Run(session, time, time, _ => buttons);
+        }
+
+        [Fact]
+        public void Interface_PauseAndResult()
+        {
+            var pause = new TestPauseMenu(graphics.Device);
+            var result = new TestResult(graphics.Device);
+            using var session = new GameSession(graphics, Marks, [], withInterface: true, result: result, pauseMenu: pause);
+            // ゲームの Maingame と同じく、結果の画面にもゲームの情報を渡す
+            result.PPDGameUtility = session.Utility;
+            var paused = 0;
+            session.Game.Paused += (s, e) => paused++;
+            session.Game.Initialize();
+            Assert.True(result.CanReplay);
+
+            Run(session, 0, 1.5, time => time is > 0.995 and < 1.01 ? [ButtonType.Circle] : []);
+            graphics.Render(session.Game);
+
+            // スタートでポーズ。ポーズ中は時間が進まず、メニューを動かす
+            Press(session, 1.5, ButtonType.Start);
+            Assert.Equal(1, paused);
+            Assert.False(pause.Hidden);
+            Assert.Contains("Pause", session.Movie.Calls);
+            Run(session, 1.5, 1.6);
+            Assert.True(pause.Updates > 0);
+            graphics.Render(session.Game);
+            // 遅延の調整はデータベースに残す
+            var latency = pause.ChangeLatency(1);
+            Assert.NotEqual(0, latency);
+            pause.ChangeLatency(-1);
+            // 再開（メニューを隠すのはメニューの側）
+            var plays = session.Movie.Calls.Count(c => c == "Play");
+            pause.Resume();
+            Assert.Equal(plays + 1, session.Movie.Calls.Count(c => c == "Play"));
+
+            Run(session, 1.6, 5.1, time => time is > 2.995 and < 3.01 ? [ButtonType.Square] : []);
+            session.Game.ShowResult();
+
+            // 結果を出して、データベースに自己ベストを残す
+            Assert.Equal(ResultEvaluateType.Cheap, result.Result);
+            Assert.Equal((2, 1), (result.Evaluations[0], result.Evaluations[4]));
+            Assert.True(result.IsHighScore);
+            Assert.Equal(result.ResultScore.ToString("D7"), session.Utility.SongInformation.GetScore(PPDFrameworkCore.Difficulty.Easy));
+            Run(session, 5.1, 5.2);
+            Assert.True(result.Updates > 0);
+            graphics.Render(session.Game);
+
+            // 結果の画面からリトライ
+            result.DoRetry();
+            Assert.Equal(0, session.Game.GameResultManager.CoolCount);
+            pause.Return();
+            pause.DoRetry();
+            pause.DoReplay();
         }
 
         [Fact]
