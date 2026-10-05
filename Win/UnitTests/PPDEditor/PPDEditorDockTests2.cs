@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 using Color = System.Drawing.Color;
+using Utility = PPDEditor.Utility;
 
 namespace UnitTests.PPDEditor
 {

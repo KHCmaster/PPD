@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Xunit;
+using Utility = PPDEditor.Utility;
 
 namespace UnitTests.PPDEditor
 {

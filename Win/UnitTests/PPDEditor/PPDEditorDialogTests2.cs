@@ -10,6 +10,7 @@ using System.IO;
 using System.Linq;
 using Xunit;
 using Keys = System.Windows.Forms.Keys;
+using Utility = PPDEditor.Utility;
 
 namespace UnitTests.PPDEditor
 {
