@@ -41,9 +41,18 @@ namespace PPDMultiCommon.Tcp
                 MethodType.GoToPlayPrepare => ParseAndGetRest<GoToPlayPrepareNetworkData>(bytes, out rest),
                 MethodType.PlayMainGame => ParseAndGetRest<PlayMainGameNetworkData>(bytes, out rest),
                 MethodType.GoToMenu => ParseAndGetRest<GoToMenuNetworkData>(bytes, out rest),
-                _ => null,
+                _ => SkipUnknown(bytes, out rest),
             };
             return networkData;
+        }
+
+        // 知らない種類のデータは 1 つ分を読み飛ばす（元は残りがなくなり、読む側が例外で止まっていた）
+        private static NetworkData SkipUnknown(byte[] bytes, out byte[] rest)
+        {
+            var reader = new MessagePackReader(bytes);
+            reader.Skip();
+            rest = bytes[(int)reader.Consumed..];
+            return null;
         }
 
         private static NetworkData ParseAndGetRest<T>(byte[] bytes, out byte[] rest) where T : NetworkData

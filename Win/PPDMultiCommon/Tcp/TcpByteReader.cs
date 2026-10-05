@@ -47,7 +47,10 @@ namespace PPDMultiCommon.Tcp
                     {
                         var networkData = Parser.Parse(data, out byte[] rest);
                         data = rest;
-                        ByteReaded?.Invoke(new ReadInfo(networkData), id);
+                        if (networkData != null)
+                        {
+                            ByteReaded?.Invoke(new ReadInfo(networkData), id);
+                        }
                     }
                     catch (ThreadAbortException)
                     {
