@@ -155,6 +155,44 @@ namespace UnitTests.Libraries
             Assert.False(Load(WriteMod("new.mod", version: "99.0.0.0")).CanApply());
         }
 
+        static NodeHarness ModNode(string name, Dictionary<string, object> items = null, params (string Name, object Value)[] inputs)
+        {
+            var type = typeof(FlowScriptEnginePPD.ToolTipText).Assembly.GetType($"FlowScriptEnginePPD.FlowSourceObjects.Mod.{name}FlowSourceObject", true);
+            var harness = new NodeHarness(type);
+            foreach (var (key, value) in items ?? [])
+            {
+                harness.Items[key] = value;
+            }
+            harness.Initialize();
+            foreach (var (n, v) in inputs)
+            {
+                harness.Set(n, v);
+            }
+            return harness;
+        }
+
+        [Fact]
+        public void ModNodes_ReadModInfo()
+        {
+            var mod = Load(WriteMod("node.mod"));
+
+            var value = ModNode("ModInfo.Value", null, ("Value", mod));
+            Assert.Equal(name, value.Get("DisplayName"));
+            Assert.Equal("作者", value.Get("AuthorName"));
+            Assert.Equal("node.mod", value.Get("FileName"));
+            var empty = ModNode("ModInfo.Value");
+            Assert.Equal(("", "", ""), ((string)empty.Get("DisplayName"), (string)empty.Get("AuthorName"), (string)empty.Get("FileName")));
+
+            var items = new Dictionary<string, object> { ["ModInfo"] = mod, ["ModInfos"] = new[] { mod } };
+            Assert.Same(mod, ModNode("Current", items).Get("Value"));
+            Assert.Same(mod, Assert.Single((object[])ModNode("UsingMods", items).Get("Mods")));
+            Assert.Equal(true, ModNode("ModInfo.IsType", null, ("Target", mod)).Get("Value"));
+
+            var element = new System.Xml.Linq.XElement("Value");
+            new FlowScriptEnginePPD.TypeSerializers.ModInfoTypeSerializer().Serialize(new Serializer(), element, mod);
+            Assert.Equal(["DisplayName", "AuthorName", "FileName"], element.Elements("Property").Select(e => e.Attribute("Name").Value));
+        }
+
         [Fact]
         public void ModTree()
         {
