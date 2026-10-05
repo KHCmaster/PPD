@@ -89,6 +89,8 @@ namespace PPDFramework
 
             connection.Close();
             connection = null;
+            // 閉じたことにする（しないと、もう一度開けず、二回閉じると例外になる）
+            IsClosed = true;
         }
 
         /// <summary>
