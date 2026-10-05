@@ -357,6 +357,8 @@ namespace PPDEditorCommon
                     sb.Append(',');
                 }
                 sb.Append(type.ToString());
+                // 元は iter を増やしておらず、区切りのカンマが入らなかった
+                iter++;
             }
             return sb.ToString();
         }
