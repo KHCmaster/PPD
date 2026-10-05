@@ -58,6 +58,12 @@ namespace FlowScriptEnginePPDEditor.FlowSourceObjects.Layer
                 SetValue(nameof(Time));
                 SetValue(nameof(Type));
                 Layer.ChangeMarkPropertyManager.AddMark(Position, Rotation, Time, Type);
+                OnSuccess();
+            }
+            else
+            {
+                // 以前は Success も Failed も出さなかったので、後につないだ処理が動かなかった
+                OnFailed();
             }
         }
     }

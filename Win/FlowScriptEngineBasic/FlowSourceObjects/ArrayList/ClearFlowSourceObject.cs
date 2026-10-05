@@ -13,7 +13,16 @@ namespace FlowScriptEngineBasic.FlowSourceObjects.ArrayList
         public override void In(FlowEventArgs e)
         {
             SetArrayList();
-            ArrayList?.Clear();
+            if (ArrayList != null)
+            {
+                ArrayList.Clear();
+                OnSuccess();
+            }
+            else
+            {
+                // 以前は Success も Failed も出さなかったので、後につないだ処理が動かなかった
+                OnFailed();
+            }
         }
     }
 }
