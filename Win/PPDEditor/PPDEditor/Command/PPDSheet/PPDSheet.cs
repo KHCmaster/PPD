@@ -36,6 +36,16 @@ namespace PPDEditor.Command.PPDSheet
         readonly List<Mark> dataForColorDraw;
         readonly CommandManager commandManager;
         const int buttonnum = 10;
+
+        /// <summary>
+        /// 時間軸に表示している行（範囲選択で使う）を返します。テストで差し替えます。
+        /// </summary>
+        internal Func<int[]> GetVisibleRows { get; set; } = () => WindowUtility.TimeLineForm.RowManager.OrderedVisibleRows;
+
+        /// <summary>
+        /// 次のマークの ID を返します。テストで差し替えます。
+        /// </summary>
+        internal Func<uint> NextID { get; set; } = () => WindowUtility.LayerManager.IDProvider.Next();
         public PPDSheet()
         {
             dataForColorDraw = [];
@@ -253,7 +263,7 @@ namespace PPDEditor.Command.PPDSheet
             {
                 return [];
             }
-            var rows = WindowUtility.TimeLineForm.RowManager.OrderedVisibleRows;
+            var rows = GetVisibleRows();
             var width = Math.Abs(recstart.X - recend.X);
             int starty = (recstart.Y <= recend.Y ? recstart.Y : recend.Y);
             int height = Math.Abs(recstart.Y - recend.Y) + 1;
@@ -927,7 +937,7 @@ namespace PPDEditor.Command.PPDSheet
             }
             else
             {
-                return WindowUtility.LayerManager.IDProvider.Next();
+                return NextID();
             }
         }
         public uint GetCorrectID(MarkData mark)
@@ -940,7 +950,7 @@ namespace PPDEditor.Command.PPDSheet
             }
             else
             {
-                return WindowUtility.LayerManager.IDProvider.Next();
+                return NextID();
             }
         }
         private bool Checklongmark(int num, float time)
@@ -1322,7 +1332,7 @@ namespace PPDEditor.Command.PPDSheet
 
         public void AssignID(Mark mk)
         {
-            var command = new AssignIDCommand(mk, WindowUtility.LayerManager.IDProvider.Next());
+            var command = new AssignIDCommand(mk, NextID());
             commandManager.AddCommand(command);
         }
 
@@ -1475,7 +1485,7 @@ namespace PPDEditor.Command.PPDSheet
 
             if (mk.ID == 0)
             {
-                var assignCommand = new AssignIDCommand(mk, WindowUtility.LayerManager.IDProvider.Next());
+                var assignCommand = new AssignIDCommand(mk, NextID());
                 commandManager.AddCommand(assignCommand);
             }
             var command = new ChangeParameterCommand(mk, key, value);
