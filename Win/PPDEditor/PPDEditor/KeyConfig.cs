@@ -27,6 +27,8 @@ namespace PPDEditor
                 }
                 catch
                 {
+                    // XML でなければ古い形式（途中まで読んだ設定は捨てる）
+                    keyConfigs.Clear();
                     ReadKeySettingFromIni(fileName);
                 }
             }
@@ -77,7 +79,8 @@ namespace PPDEditor
 
         private void ReadKeySettingFromXml(string fileName)
         {
-            var reader = XmlReader.Create(fileName, new XmlReaderSettings());
+            // 読めなかったときもファイルを閉じる（開いたままだと、後で書けなかった）
+            using var reader = XmlReader.Create(fileName, new XmlReaderSettings());
             while (reader.Read())
             {
                 if (reader.IsStartElement())
