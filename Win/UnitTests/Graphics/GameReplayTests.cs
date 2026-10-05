@@ -1,4 +1,4 @@
-using PPDCore;
+﻿using PPDCore;
 using PPDFramework;
 using PPDFramework.PPDStructure.EVDData;
 using PPDFramework.PPDStructure.PPDData;
@@ -23,20 +23,6 @@ namespace UnitTests.Graphics
     [Collection(GraphicsCollection.Name)]
     public sealed class GameReplayTests(GraphicsDevice graphics)
     {
-        /// <summary>
-        /// どのメソッドも何もせず、既定の値を返すインターフェースの実装を作ります。
-        /// </summary>
-        public class Nothing : DispatchProxy
-        {
-            public static T Create<T>() => DispatchProxy.Create<T, Nothing>();
-
-            protected override object Invoke(MethodInfo targetMethod, object[] args)
-            {
-                var type = targetMethod.ReturnType;
-                return type == typeof(void) || !type.IsValueType ? null : Activator.CreateInstance(type);
-            }
-        }
-
         static PPDPlayRecorder Record(params (float Time, ButtonType[] Pressed, ButtonType[] Released)[] frames)
         {
             var recorder = new PPDPlayRecorder();
@@ -113,32 +99,14 @@ namespace UnitTests.Graphics
 
         GhostFrame[] Ghost(MarkData[] marks, IEVDData[] events, PPDPlayRecorder replay)
         {
-            Assert.False(TcpDebugControllerBase.IsListening());
-            using var database = new SongDatabase();
-            Directory.CreateDirectory("dlls");
-            using var resources = new GameResources(graphics, setCurrentDirectory: false);
-            foreach (var effect in new[] { @"hold\holdback.etd", @"hold\maxback.etd", @"slide\max_slide_effect.etd", @"slide\hatch_right.etd", @"slide\hatch_left.etd" })
-            {
-                resources.WriteEffect(Path.Combine(@"img\PPD\main_game", effect));
-            }
-            var dir = database.AddSong("song", "guid", 130, ("Easy", null));
-            ChartFiles.WritePack(Path.Combine(dir, "Easy.ppd"), marks, events);
-            SongInformation.Update();
-            var utility = new PPDGameUtility
-            {
-                SongInformation = SongDatabase.Song("song"),
-                Difficulty = Difficulty.Easy,
-                Profile = ProfileManager.Instance.Default,
-                SpeedScale = 1,
-                AppliedMods = [],
-            };
-            using var game = new MainGameComponent(graphics.Device, Nothing.Create<IGameHost>(), resources.Resources, Nothing.Create<ISound>(), null,
-                utility, null, resources.MarkImages, null, null, MainGameConfigBase.Default, 0, 0);
+            using var session = new GameSession(graphics, marks, events);
 
-            game.Initialize(play: false, isGhost: true);
+            session.Game.Initialize(play: false, isGhost: true);
             var progress = new List<int>();
-            var frames = game.GetGhostFrames(replay.GetBytes(), progress.Add);
+            var frames = session.Game.GetGhostFrames(replay.GetBytes(), progress.Add);
 
+            // ゴーストでは動画を使わない
+            Assert.Empty(session.Movie.Calls);
             Assert.Equal(100, progress.Last());
             return frames;
         }
