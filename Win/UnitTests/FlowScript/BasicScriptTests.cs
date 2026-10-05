@@ -208,8 +208,9 @@ namespace UnitTests.FlowScript
             var table = s.Node("Hashtable.Value");
             var add = s.Node("Hashtable.Add");
             var get = s.Node("Hashtable.GetValue");
-            var missing = s.Node("Hashtable.ContainsKey");
-            var missingProbe = s.Probe("missing");
+            var missing = s.Node("Hashtable.GetValue");
+            var contains = s.Node("Hashtable.ContainsKey");
+            var missingProbe = s.Probe("contains");
             var key = s.Node("String.Value", ("Value", "key"));
             var other = s.Node("String.Value", ("Value", "other"));
             var value = s.Node("Int32.Value", ("Value", "7"));
@@ -220,13 +221,17 @@ namespace UnitTests.FlowScript
                 .Flow(seq, "Out2", get, "In").Flow(table, "Value", get, "Hashtable").Flow(key, "Value", get, "Key")
                 .Flow(get, "Success", probe, "In").Flow(get, "Value", probe, "Value")
                 .Flow(seq, "Out3", missing, "In").Flow(table, "Value", missing, "Hashtable").Flow(other, "Value", missing, "Key")
-                .Flow(missing, "Success", missingProbe, "In").Flow(missing, "Value", missingProbe, "Value");
+                .Flow(missing, "Failed", s.Probe("missing"), "In").Flow(missing, "Success", s.Probe("missing ok"), "In")
+                .Flow(seq, "Out4", contains, "In").Flow(table, "Value", contains, "Hashtable").Flow(other, "Value", contains, "Key")
+                .Flow(contains, "Success", missingProbe, "In").Flow(contains, "Value", missingProbe, "Value");
 
             var records = s.Run();
 
             Assert.Equal(new object[] { 7 }, Values(records, "value"));
-            // ない鍵は ContainsKey で調べる（GetValue はいつも Success で、値を読むとエラーになる。以前と同じ）
-            Assert.Equal(new object[] { false }, Values(records, "missing"));
+            // ない鍵は Failed になる（以前はいつも Success で、値を読むとエラーになっていた）
+            Assert.Single(records, r => r.Label == "missing");
+            Assert.DoesNotContain(records, r => r.Label == "missing ok");
+            Assert.Equal(new object[] { false }, Values(records, "contains"));
         }
 
         // "a,b,a" のうち "a" だけを残して数える
@@ -247,6 +252,29 @@ namespace UnitTests.FlowScript
                 .Flow(where, "Enumerable", count, "Enumerable").Flow(count, "Count", probe, "Value");
 
             Assert.Equal(new object[] { 2 }, s.Run().Select(r => r.Value));
+        }
+
+        // 別の名前のイベントを前もって受けるノードが 2 つあっても、イベントは 1 回だけ届く
+        [Fact]
+        public void ScopeEvent_DeliveredOnceWithSeveralPreviewHandlers()
+        {
+            var s = new ScriptRunner();
+            var entry = s.Entry();
+            var invoke = s.Node("Scope.InvokeEvent", ("EventName", "x"));
+            var previewX = s.Node("Scope.PreviewHandleEvent", ("EventName", "x"));
+            var previewY = s.Node("Scope.PreviewHandleEvent", ("EventName", "y"));
+            var handle = s.Node("Scope.HandleEvent", ("EventName", "x"));
+            var arg = s.Node("Int32.Value", ("Value", "5"));
+            var probe = s.Probe("handled");
+            s.Flow(entry, "Start", previewX, "In").Flow(entry, "Start", previewY, "In").Flow(entry, "Start", handle, "In").Flow(entry, "Start", invoke, "In")
+                .Flow(arg, "Value", invoke, "Arg")
+                .Flow(previewX, "Invoked", s.Probe("preview x"), "In")
+                .Flow(handle, "Invoked", probe, "In").Flow(handle, "Arg", probe, "Value");
+
+            var records = s.Run();
+
+            Assert.Equal(new object[] { 5 }, Values(records, "handled"));
+            Assert.Single(records, r => r.Label == "preview x");
         }
 
         [Fact]

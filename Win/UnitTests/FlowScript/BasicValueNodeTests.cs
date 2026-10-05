@@ -162,9 +162,13 @@ namespace UnitTests.FlowScript
             AddOut("Bit.ZerosCount", "Count", 29, ("Value", 0b1011));
             AddOut("Bit.LeadingZerosCount", "Count", 28, ("Value", 0b1011));
             AddOut("Bit.TrailingZerosCount", "Count", 3, ("Value", 0b1000));
-            // 以前から、名前は Index だが、位置ではなくその桁だけを残した値を返す（スクリプトの結果を変えないため、そのままにする）
-            AddOut("Bit.MostSignificant", "Index", 0b1000, ("Value", 0b1011));
-            AddOut("Bit.LeastSignificant", "Index", 0b0010, ("Value", 0b1010));
+            // 1 になっている一番上・一番下のビットの位置（以前は位置ではなく、そのビットだけを残した値を返していた）
+            AddOut("Bit.MostSignificant", "Index", 3, ("Value", 0b1011));
+            AddOut("Bit.MostSignificant", "Index", 31, ("Value", -1));
+            AddOut("Bit.MostSignificant", "Index", -1, ("Value", 0));
+            AddOut("Bit.LeastSignificant", "Index", 1, ("Value", 0b1010));
+            AddOut("Bit.LeastSignificant", "Index", 31, ("Value", int.MinValue));
+            AddOut("Bit.LeastSignificant", "Index", -1, ("Value", 0));
             AddOut("Bit.NextLargestPowerOfTwo", "Result", 16, ("Value", 9));
             AddOut("Bit.PreviousLargestPowerOfTwo", "Result", 8, ("Value", 9));
             AddOut("Bit.Reverse", "Result", unchecked((int)0x80000000), ("Value", 1));

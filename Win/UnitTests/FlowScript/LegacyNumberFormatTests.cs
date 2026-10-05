@@ -127,8 +127,9 @@ namespace UnitTests.FlowScript
         }
 
         [Theory]
-        // 以前から、3 桁の書き方は 1 桁をそのまま 255 で割っている（#FFF は白ではなく暗い灰色）。スクリプトの見た目を変えないため、そのままにする
-        [InlineData("#FFF", 15 / 255f, 15 / 255f, 15 / 255f, 1)]
+        // 3 桁は 1 桁を 2 つ並べたもの（以前は #FFF が暗い灰色になっていた）
+        [InlineData("#FFF", 1, 1, 1, 1)]
+        [InlineData("#F80", 1, 0x88 / 255f, 0, 1)]
         [InlineData("#FF8000", 1, 128 / 255f, 0, 1)]
         [InlineData("#80FF0000", 1, 0, 0, 128 / 255f)]
         [InlineData("white", 1, 1, 1, 1)]

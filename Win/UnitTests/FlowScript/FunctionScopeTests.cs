@@ -81,11 +81,10 @@ namespace UnitTests.FlowScript
             Assert.Equal(0, parentReached);
         }
 
-        // スコープの中に、別の名前のイベントを受けるノードが 2 つあるとき。
-        // 以前から、受けるノードがそれぞれ次へ進めるので、子のスコープに 2 回届く（受けるノードの数だけ増える）。
-        // Mod のイベントの動きが変わるので、直すかは決めていない。今の動きを確かめておく
+        // スコープの中に、別の名前のイベントを受けるノードが 2 つあるとき
+        // （以前は、受けるノードがそれぞれ次へ進めたので、子のスコープに受けるノードの数だけ届いていた）
         [Fact]
-        public void SeveralHandlers_EventIsDeliveredOncePerPreviewHandler()
+        public void SeveralHandlers_EventIsDeliveredOnce()
         {
             var (parent, child) = CreateScopes();
             var handled = 0;
@@ -103,7 +102,63 @@ namespace UnitTests.FlowScript
 
             parent.InvokeEvent("x", null);
 
-            Assert.Equal(2, handled);
+            Assert.Equal(1, handled);
+        }
+
+        [Fact]
+        public void SeveralHandlers_AnyHandledStopsEvent()
+        {
+            var (parent, child) = CreateScopes();
+            var reached = 0;
+            var parentReached = 0;
+            parent.PreviewEventInvoked += e => e.OnEndInvoked();
+            parent.PreviewEventInvoked += e => { e.Handled = true; e.OnEndInvoked(); };
+            child.EventInvoked += e => { reached++; e.OnEndInvoked(); };
+            parent.EventInvoked += e => { parentReached++; e.OnEndInvoked(); };
+
+            parent.InvokeEvent("x", null);
+
+            Assert.Equal((0, 0), (reached, parentReached));
+        }
+
+        // 受けるものが後で終わる（スクリプトのノードはイベントの処理が終わってから次へ進める）ときも、すべて終わってから進める
+        [Fact]
+        public void SeveralHandlers_WaitForAllToEnd()
+        {
+            var (parent, child) = CreateScopes();
+            var pending = new List<FunctionScopeArg>();
+            var reached = 0;
+            parent.PreviewEventInvoked += pending.Add;
+            parent.PreviewEventInvoked += pending.Add;
+            child.EventInvoked += e => { reached++; e.OnEndInvoked(); };
+
+            parent.InvokeEvent("x", null);
+            Assert.Equal(0, reached);
+            pending[0].OnEndInvoked();
+            Assert.Equal(0, reached);
+            pending[1].OnEndInvoked();
+
+            Assert.Equal(1, reached);
+        }
+
+        [Fact]
+        public void SeveralChildren_ParentRunsAfterAllChildren()
+        {
+            var parent = new FunctionScope(ScopeType.Global);
+            var order = new List<string>();
+            foreach (var name in new[] { "a", "b" })
+            {
+                var child = new FunctionScope(ScopeType.Default);
+                typeof(FunctionScope).GetMethod("AddChild", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).Invoke(parent, [child]);
+                child.EventInvoked += e => { order.Add(name + "1"); e.OnEndInvoked(); };
+                child.EventInvoked += e => { order.Add(name + "2"); e.OnEndInvoked(); };
+            }
+            parent.EventInvoked += e => { order.Add("parent"); e.OnEndInvoked(); };
+
+            parent.InvokeEvent("x", null);
+
+            // 以前は、子の受けるものが 2 つあると、1 つ目の子が 2 回終わったことになり、2 つ目の子より先に親が動いていた
+            Assert.Equal(["a1", "a2", "b1", "b2", "parent"], order);
         }
     }
 }
