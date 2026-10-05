@@ -1,6 +1,8 @@
 ﻿using PPDFramework.PPDStructure.PPDData;
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Xml.Linq;
 
@@ -44,6 +46,26 @@ namespace PPDFramework.PPDStructure
         /// <param name="stream"></param>
         /// <param name="signError"></param>
         /// <returns></returns>
+        // 以前の PPDWriter は長さに文字数を書いていたので、日本語などがあると足りない。足りなければ </Root> まで読む
+        private static byte[] ReadRestOfOldParameters(Stream stream, byte[] read)
+        {
+            var end = Encoding.UTF8.GetBytes("</Root>");
+            if (read.AsSpan().EndsWith(end))
+            {
+                return read;
+            }
+            var bytes = new List<byte>(read);
+            while (stream.Position < stream.Length)
+            {
+                bytes.Add((byte)stream.ReadByte());
+                if (bytes.TakeLast(end.Length).SequenceEqual(end))
+                {
+                    break;
+                }
+            }
+            return [.. bytes];
+        }
+
         public static MarkDataBase[] Read(Stream stream, ref bool signError)
         {
             var data = new List<MarkDataBase>();
@@ -75,6 +97,7 @@ namespace PPDFramework.PPDStructure
                         var length = System.BitConverter.ToInt32(fdata, 0);
                         byte[] temp = new byte[length];
                         stream.ReadAtLeast(temp, temp.Length, throwOnEndOfStream: false);
+                        temp = ReadRestOfOldParameters(stream, temp);
                         if (!dict.TryGetValue((int)markId, out MarkDataBase ppdData))
                         {
                             continue;

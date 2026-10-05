@@ -87,7 +87,8 @@ namespace PPDFramework.PPDStructure
                 }
                 var str = document.ToString();
                 var bytes = Encoding.UTF8.GetBytes(str);
-                fdata = System.BitConverter.GetBytes(str.Length);
+                // 長さはバイト数（元は文字数で、日本語などのパラメーターがあると読めなくなっていた）
+                fdata = System.BitConverter.GetBytes(bytes.Length);
                 stream.Write(fdata, 0, fdata.Length);
                 stream.Write(bytes, 0, bytes.Length);
             }
