@@ -32,7 +32,8 @@ namespace FlowScriptEnginePPD.FlowSourceObjects.SoundManager
                 SetValue(nameof(Button));
                 SetValue(nameof(Volume));
                 Volume = Volume >= SoundMasterControl.Max ? SoundMasterControl.Max : (Volume < SoundMasterControl.Min ? SoundMasterControl.Min : Volume);
-                if (soundManager.Play(Button, Volume))
+                // 元は Play(Button, Volume) で、音量が再生速度の Play(MarkType, double) に渡り、音量は使われていなかった
+                if (soundManager.Play(Button, Volume, playRatio))
                 {
                     OnSuccess();
                 }
