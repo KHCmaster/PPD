@@ -62,6 +62,7 @@ namespace UnitTests.FlowScript
 
         readonly XElement sources = new("Sources");
         readonly XElement flows = new("Flows");
+        readonly XElement scopes = new("Scopes");
         int nextId = 1;
 
         /// <summary>
@@ -132,6 +133,33 @@ namespace UnitTests.FlowScript
             return (list, items.Length + 1);
         }
 
+        /// <summary>
+        /// スコープ（エディターで囲んだ範囲）を足します。parent がなければ一番外のスコープの中です。
+        /// </summary>
+        public int Scope(int? parent = null)
+        {
+            var id = nextId++;
+            var scope = new XElement("Scope", new XAttribute("ID", id));
+            if (parent != null)
+            {
+                scope.Add(new XAttribute("ScopeID", parent.Value));
+            }
+            scopes.Add(scope);
+            return id;
+        }
+
+        /// <summary>
+        /// ノードをスコープの中に入れます。
+        /// </summary>
+        public ScriptRunner InScope(int scope, params int[] nodes)
+        {
+            foreach (var node in nodes)
+            {
+                sources.Elements("Source").Single(e => (int)e.Attribute("ID") == node).SetAttributeValue("ScopeID", scope);
+            }
+            return this;
+        }
+
         public ScriptRunner Flow(int srcId, string srcName, int destId, string destName)
         {
             flows.Add(new XElement("Flow", new XAttribute("SrcID", srcId), new XAttribute("SrcName", srcName), new XAttribute("DestID", destId), new XAttribute("DestName", destName)));
@@ -140,7 +168,7 @@ namespace UnitTests.FlowScript
 
         public string ToXml()
         {
-            return new XElement("Root", sources, flows, new XElement("Comments"), new XElement("Scopes")).ToString();
+            return new XElement("Root", sources, flows, new XElement("Comments"), scopes).ToString();
         }
 
         /// <summary>
