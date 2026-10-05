@@ -11,7 +11,7 @@ namespace UnitTests.FlowScript
     /// </summary>
     public class NodeEventTests
     {
-        static IEnumerable<Type> NodeTypes()
+        public static IEnumerable<Type> NodeTypes()
         {
             Type[] anchors =
             [
