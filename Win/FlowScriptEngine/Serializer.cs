@@ -83,7 +83,8 @@ namespace FlowScriptEngine
             }
             var valueElem = new XElement("Value", new XAttribute("Type", typeText));
             element.Add(valueElem);
-            if (type.IsArray && value != null)
+            // null のときは型がないので、先に調べる（以前は型を先に見て例外になり、null の値が出なかった）
+            if (value != null && type.IsArray)
             {
                 var array = (Array)value;
                 for (var i = 0; i < array.Length; i++)
