@@ -53,6 +53,28 @@ namespace UnitTests.FlowScript
             Assert.All(colors, c => Assert.Equal(255, c.Value.A));
         }
 
+        [Fact]
+        public void EnumFormatters_ConvertEveryName()
+        {
+            var formatters = NodeEventTests.NodeTypes().Select(t => t.Assembly).Distinct().SelectMany(a => a.GetTypes())
+                .Where(t => !t.IsAbstract && t.BaseType is { IsGenericType: true } b && b.GetGenericTypeDefinition() == typeof(EnumTypeFormatterBase<>))
+                .Select(t => (TypeFormatterBase)Activator.CreateInstance(t)).ToArray();
+
+            Assert.True(formatters.Length >= 10, $"列挙型のフォーマッター: {formatters.Length}");
+            foreach (var formatter in formatters)
+            {
+                Assert.True(formatter.Type.IsEnum);
+                Assert.Equal(Enum.GetNames(formatter.Type), formatter.AllowedPropertyString);
+                foreach (var name in Enum.GetNames(formatter.Type))
+                {
+                    Assert.True(formatter.Format(name, out var value));
+                    Assert.Equal(Enum.Parse(formatter.Type, name), value);
+                }
+                Assert.False(formatter.Format("no such value", out var none));
+                Assert.Null(none);
+            }
+        }
+
         // 書き出す型ごとの例（作るのにデバイスなどが要る型はない）
         static readonly Dictionary<Type, object> samples = new()
         {
