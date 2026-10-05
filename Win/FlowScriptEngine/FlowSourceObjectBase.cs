@@ -637,7 +637,8 @@ namespace FlowScriptEngine
             actualDestName = methodNameOfDest;
             if (eventList.ContainsKey(methodNameOfSource) || replacedEventNames.TryGetValue(methodNameOfSource, out actualSrcName))
             {
-                if (destObject.methodList.ContainsKey(methodNameOfDest) || replacedMethodNames.TryGetValue(methodNameOfDest, out actualDestName))
+                // 古い名前は、つなぐ先のノードの名前で探す（元はつなぐ元のノードで探していて、見つからなかった）
+                if (destObject.methodList.ContainsKey(methodNameOfDest) || destObject.replacedMethodNames.TryGetValue(methodNameOfDest, out actualDestName))
                 {
                     MethodInfo mi = destObject.methodList[actualDestName].MemberInfo;
                     ConnectEvent(actualSrcName, (FlowEventHandler)Delegate.CreateDelegate(typeof(FlowEventHandler), destObject, mi));
