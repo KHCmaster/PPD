@@ -49,7 +49,8 @@ namespace PPDFramework
         public void Remove(T[] array)
         {
             var existTree = GetExistTree(array, 0);
-            existTree?.subtrees.Remove(array[existTree.depth - 1]);
+            // 見つけた木を親から外す（元は見つけた木の子から外していて、消えなかった）
+            existTree?.parent?.subtrees.Remove(array[existTree.depth - 1]);
         }
 
         public V Find(T[] array)
