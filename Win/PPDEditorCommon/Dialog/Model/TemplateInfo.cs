@@ -260,9 +260,10 @@ namespace PPDEditorCommon.Dialog.Model
         public string ReadAttribute(XElement elem, string name)
         {
             var attr = elem.Attribute(name);
-            if (name == null)
+            // ない属性は空にする（元は name を調べていて、属性がないテンプレートは読めなかった）
+            if (attr == null)
             {
-                return null;
+                return "";
             }
             return attr.Value;
         }
