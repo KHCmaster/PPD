@@ -1,15 +1,12 @@
-using PPDEditor;
+﻿using PPDEditor;
 using PPDEditor.Command.PPDSheet;
 using PPDFramework;
 using PPDFramework.PPDStructure.PPDData;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Numerics;
-using System.Reflection;
 using Xunit;
-using EditorUtility = PPDEditor.Utility;
 
 namespace UnitTests.Graphics
 {
@@ -17,63 +14,23 @@ namespace UnitTests.Graphics
     /// エディターの譜面（PPDSheet）のマークの編集と、元に戻す・やり直しのテストです。
     /// </summary>
     /// <remarks>
-    /// マークは画像を持つので、本物のデバイスを使う。スキンの画像は、テストで作った画像に差し替える。
+    /// マークは画像を持つので、本物のデバイスを使う（EditorMarkEnvironment）。
     /// 時間軸の行と ID は、ウィンドウの代わりに PPDSheet の差し替え口から渡す。
     /// </remarks>
     [Collection(GraphicsCollection.Name)]
     public sealed class PPDSheetTests : IDisposable
     {
-        readonly TempFolder folder = new();
-        readonly PPDFramework.Resource.ResourceManager resources = new();
-        readonly List<(FieldInfo Field, object Value)> savedSkin = [];
-        readonly (PPDDevice, PPDFramework.Resource.ResourceManager, Vector2[]) savedUtility;
+        readonly EditorMarkEnvironment environment;
         uint lastID = 100;
 
         public PPDSheetTests(GraphicsDevice graphics)
         {
-            var image = folder.Combine("mark.png");
-            using (var bitmap = new System.Drawing.Bitmap(8, 8))
-            {
-                bitmap.Save(image, System.Drawing.Imaging.ImageFormat.Png);
-            }
-            var path = PathObject.Absolute(image);
-            var skin = PPDEditorSkin.Skin;
-            foreach (var field in typeof(PPDEditorSkin).GetFields(BindingFlags.Instance | BindingFlags.NonPublic))
-            {
-                if (field.FieldType == typeof(PathObject))
-                {
-                    savedSkin.Add((field, field.GetValue(skin)));
-                    field.SetValue(skin, path);
-                }
-                else if (field.FieldType == typeof(PathObject[]))
-                {
-                    var paths = (PathObject[])field.GetValue(skin);
-                    savedSkin.Add((field, paths.Clone()));
-                    Array.Fill(paths, path);
-                }
-            }
-            savedUtility = (EditorUtility.Device, EditorUtility.ResourceManager, EditorUtility.CirclePoints);
-            EditorUtility.Device = graphics.Device;
-            EditorUtility.ResourceManager = resources;
-            EditorUtility.CirclePoints = [new Vector2(0, -10), new Vector2(10, 0), new Vector2(0, 10), new Vector2(-10, 0)];
+            environment = new EditorMarkEnvironment(graphics);
         }
 
         public void Dispose()
         {
-            foreach (var (field, value) in savedSkin)
-            {
-                if (value is PathObject[] paths)
-                {
-                    Array.Copy(paths, (PathObject[])field.GetValue(PPDEditorSkin.Skin), paths.Length);
-                }
-                else
-                {
-                    field.SetValue(PPDEditorSkin.Skin, value);
-                }
-            }
-            (EditorUtility.Device, EditorUtility.ResourceManager, EditorUtility.CirclePoints) = savedUtility;
-            resources.Dispose();
-            folder.Dispose();
+            environment.Dispose();
         }
 
         PPDSheet Sheet() => new() { GetVisibleRows = () => [.. Enumerable.Range(0, 10)], NextID = () => ++lastID };
