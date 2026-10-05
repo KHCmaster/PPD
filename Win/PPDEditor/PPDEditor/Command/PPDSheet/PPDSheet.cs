@@ -1099,10 +1099,11 @@ namespace PPDEditor.Command.PPDSheet
                 if (next == null)
                 {
                     // find from next time;
-                    var nextTime = data2.Keys.FirstOrDefault(t => t > time);
-                    if (nextTime > 0)
+                    // （時間で探すと、見つからないときの 0 と 0 秒の時間が区別できないので、位置で探す）
+                    var nextIndex = data2.IndexOfKey(time) + 1;
+                    if (nextIndex < data2.Count)
                     {
-                        list = data2[nextTime];
+                        list = data2.Values[nextIndex];
                         next = list.OrderBy(m => typeConverter[(int)m.Type]).First();
                     }
                 }
@@ -1113,10 +1114,10 @@ namespace PPDEditor.Command.PPDSheet
                 if (next == null)
                 {
                     // find from next time;
-                    var prevTime = data2.Keys.Reverse().FirstOrDefault(t => t < time);
-                    if (prevTime > 0)
+                    var prevIndex = data2.IndexOfKey(time) - 1;
+                    if (prevIndex >= 0)
                     {
-                        list = data2[prevTime];
+                        list = data2.Values[prevIndex];
                         next = list.OrderByDescending(m => typeConverter[(int)m.Type]).First();
                     }
                 }
@@ -1219,10 +1220,10 @@ namespace PPDEditor.Command.PPDSheet
                         newPos = new Vector2((mk.Position.X >= dx ? mk.Position.X - dx : 0), mk.Position.Y);
                         break;
                     case Direction.Down:
-                        newPos = new Vector2(mk.Position.X, (mk.Position.Y <= 450 - dx ? mk.Position.Y + dx : 0));
+                        newPos = new Vector2(mk.Position.X, (mk.Position.Y <= 450 - dx ? mk.Position.Y + dx : 450));
                         break;
                     case Direction.Right:
-                        newPos = new Vector2((mk.Position.X <= 800 - dx ? mk.Position.X + dx : 0), mk.Position.Y);
+                        newPos = new Vector2((mk.Position.X <= 800 - dx ? mk.Position.X + dx : 800), mk.Position.Y);
                         break;
                 }
                 if (commandManager.LastDoneCommand is not ChangeMarkPosOrAngleCommand command || command.TType != ChangeMarkPosOrAngleCommand.TransType.Position || command.Mark != mk)
@@ -1268,10 +1269,10 @@ namespace PPDEditor.Command.PPDSheet
                             newPos = new Vector2((mk.Position.X >= dx ? mk.Position.X - dx : 0), mk.Position.Y);
                             break;
                         case Direction.Down:
-                            newPos = new Vector2(mk.Position.X, (mk.Position.Y <= 450 - dx ? mk.Position.Y + dx : 0));
+                            newPos = new Vector2(mk.Position.X, (mk.Position.Y <= 450 - dx ? mk.Position.Y + dx : 450));
                             break;
                         case Direction.Right:
-                            newPos = new Vector2((mk.Position.X <= 800 - dx ? mk.Position.X + dx : 0), mk.Position.Y);
+                            newPos = new Vector2((mk.Position.X <= 800 - dx ? mk.Position.X + dx : 800), mk.Position.Y);
                             break;
                     }
                     var command = new ChangeMarkPosOrAngleCommand(mk, ChangeMarkPosOrAngleCommand.TransType.Position, newPos, 0);
@@ -1306,7 +1307,7 @@ namespace PPDEditor.Command.PPDSheet
                 marks = GetAreaData();
             }
 
-            if (marks == null && marks.Length == 0)
+            if (marks == null || marks.Length == 0)
             {
                 return;
             }
@@ -1337,7 +1338,7 @@ namespace PPDEditor.Command.PPDSheet
                 marks = GetAreaData();
             }
 
-            if (marks == null && marks.Length == 0)
+            if (marks == null || marks.Length == 0)
             {
                 return;
             }
