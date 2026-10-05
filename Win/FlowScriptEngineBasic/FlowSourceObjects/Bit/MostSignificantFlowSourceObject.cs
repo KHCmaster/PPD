@@ -23,13 +23,8 @@ namespace FlowScriptEngineBasic.FlowSourceObjects.Bit
             get
             {
                 SetValue(nameof(Value));
-                var x = (uint)Value;
-                x |= (x >> 1);
-                x |= (x >> 2);
-                x |= (x >> 4);
-                x |= (x >> 8);
-                x |= (x >> 16);
-                return (int)(x & ~(x >> 1));
+                // 1 になっている一番上のビットの位置（ないときは -1）。以前は位置ではなく、そのビットだけを残した値を返していた
+                return Value == 0 ? -1 : 31 - System.Numerics.BitOperations.LeadingZeroCount((uint)Value);
             }
         }
     }
