@@ -45,7 +45,8 @@ namespace PPDCoreModel
             EffectObject eo;
             if (nonUsedList.Count == 0)
             {
-                eo = CreateEffect();
+                // 足りなくて作ったものも、終わったら使い回す（元は CreateEffect で作り、プールに戻らなかった）
+                eo = CreateEffectInner();
             }
             else
             {
