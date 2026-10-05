@@ -59,6 +59,8 @@ namespace UnitTests.FlowScript
             Assert.Equal(["z", "b", "c", "b"], list);
             Ok("ArrayList.SetRange", ("ArrayList", list), ("Index", 0), ("Value", List("x", "y")));
             Assert.Equal(["x", "y", "c", "b"], list);
+            Ok("ArrayList.SetRange", ("ArrayList", list), ("Index", 1), ("Value", List("p", "q")));
+            Assert.Equal(["x", "p", "q", "b"], list);
             Assert.Equal([7, 7, 7], (List<object>)Ok("ArrayList.Repeat", ("Object", 7), ("Count", 3)).Get("Value"));
             Assert.Equal(true, new NodeHarness("ArrayList.IsType").Set("Target", list).Get("Value"));
             Assert.Equal(false, new NodeHarness("ArrayList.IsType").Set("Target", "list").Get("Value"));
@@ -109,6 +111,24 @@ namespace UnitTests.FlowScript
             var value = (List<object>)Assert.Single(ScriptRunner.Values(s.Run(), "list"));
 
             Assert.Equal([1, 1, 3], value);
+        }
+
+        // 型がインターフェースの IsType も、それを実装したものなら true
+        [Fact]
+        public void IsType_WithInterfaceTypes()
+        {
+            object[] items = [1, 2];
+            bool IsType(string node, object target) => (bool)new NodeHarness(node).Set("Target", target).Get("Value");
+
+            Assert.True(IsType("Enumerable.IsType", List(1)));
+            Assert.True(IsType("Enumerable.IsType", items));
+            Assert.False(IsType("Enumerable.IsType", 1));
+            Assert.True(IsType("Enumerable.Ordered.IsType", items.OrderBy(i => i)));
+            Assert.False(IsType("Enumerable.Ordered.IsType", items));
+            Assert.True(IsType("Enumerable.Grouping.IsType", items.GroupBy(i => i).First()));
+            Assert.True(IsType("Enumerable.Lookup.IsType", items.ToLookup(i => i)));
+            Assert.False(IsType("Enumerable.Lookup.IsType", null));
+            Assert.True(IsType("Object.IsType", "any"));
         }
 
         static IOrderedEnumerable<object> ByLength(params object[] items) => items.OrderBy(i => ((string)i).Length);

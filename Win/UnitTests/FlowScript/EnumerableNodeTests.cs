@@ -87,6 +87,7 @@ namespace UnitTests.FlowScript
             Assert.Equal("none", Query("LastOrDefaultWithPredicate", "Last", h => false, ("Default", "none")));
             Assert.Equal(1, Query("LastOrDefaultWithPredicate", "Last", h => Int(h) < 2, ("Default", "none")));
             Assert.Equal("none", Query("SingleOrDefaultWithPredicate", "Single", h => Int(h) == 1, ("Default", "none")));
+            Assert.Equal("none", Query("SingleOrDefaultWithPredicate", "Single", h => false, ("Default", "none")));
             Assert.Equal(3, Query("SingleOrDefaultWithPredicate", "Single", h => Int(h) == 3, ("Default", "none")));
         }
 
@@ -99,6 +100,7 @@ namespace UnitTests.FlowScript
             Assert.Null(Node("FirstWithPredicate").Read("First"));
             Assert.Null(Node("LastWithPredicate").Read("Last"));
             Assert.Null(Node("SingleWithPredicate").Read("Single"));
+            Assert.Equal("none", Node("SingleOrDefaultWithPredicate", ("Default", "none")).Read("Single"));
         }
 
         [Fact]
@@ -227,7 +229,9 @@ namespace UnitTests.FlowScript
                 .On("Select", h => h.Set("Result", $"{h.Get("Obj1")}{h.Get("Obj2")}"));
             Assert.Equal(new object[] { "1a", "2b" }, ReadAll(zip));
 
+            // 片方しかなければ、そのまま
             Assert.Equal(new object[] { "a" }, ReadAll(Node("Zip", ("Second", new object[] { "a" }))));
+            Assert.Equal(new object[] { 1 }, ReadAll(Node("Zip", ("First", new object[] { 1 }))));
             Assert.Empty(ReadAll(Node("Zip")));
         }
 
