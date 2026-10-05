@@ -2,6 +2,7 @@ using PPDFramework;
 using PPDFramework.Mod;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using Xunit;
 
@@ -99,6 +100,59 @@ namespace UnitTests.Libraries
 
             Assert.Equal(1, component.Disposed);
             Assert.True(component.disposed);
+        }
+
+        static ProfileManager NewProfileManager()
+        {
+            var constructor = typeof(ProfileManager).GetConstructor(BindingFlags.Instance | BindingFlags.NonPublic, Type.EmptyTypes);
+            return (ProfileManager)constructor.Invoke(null);
+        }
+
+        [Fact]
+        public void ProfileManager_ReadsProfilesAndCycles()
+        {
+            using var folder = new TempFolder(setCurrentDirectory: true);
+            folder.Write(System.IO.Path.Combine("profiles", $"profile_{PPDSetting.Setting.LangISO}.xml"), """
+                <Profiles>
+                  <Profile DisplayText="最初" CoolPoint="1" GoodPoint="1" SafePoint="1" SadPoint="1" WorstPoint="1" GodMode="1" />
+                  <Profile DisplayText="無敵" CoolPoint="9" GoodPoint="8" SafePoint="7" SadPoint="6" WorstPoint="5" GodMode="1" MuteSE="1" Connect="1" />
+                  <Profile DisplayText="壊れた" CoolPoint="x" />
+                  <Profile DisplayText="普通" CoolPoint="3" GoodPoint="2" SafePoint="1" SadPoint="0" WorstPoint="-1" />
+                </Profiles>
+                """);
+
+            var manager = NewProfileManager();
+
+            // 読めないものは飛ばす。最初のものは、いつもの点数（神モードなし）になる
+            Assert.Equal(["", "無敵", "普通"], manager.Profiles.Select(p => p.DisplayText));
+            Assert.Same(manager.Profiles[0], manager.Default);
+            Assert.Equal((5, 2, 0, -20, -51, false), (manager.Default.CoolPoint, manager.Default.GoodPoint, manager.Default.SafePoint,
+                manager.Default.SadPoint, manager.Default.WorstPoint, manager.Default.GodMode));
+            var god = manager.Profiles[1];
+            Assert.Equal((9, 8, 7, 6, 5, true, true, true, 1), (god.CoolPoint, god.GoodPoint, god.SafePoint, god.SadPoint, god.WorstPoint,
+                god.GodMode, god.MuteSE, god.Connect, god.Index));
+            Assert.False(manager.Profiles[2].GodMode);
+
+            // 順に回る
+            Assert.Same(manager.Default, manager.Current);
+            Assert.Same(god, manager.Next());
+            Assert.Same(manager.Profiles[2], manager.Next());
+            Assert.Same(manager.Default, manager.Next());
+            Assert.Same(manager.Profiles[2], manager.Previous());
+            Assert.Same(manager.Profiles[2], manager.Current);
+        }
+
+        [Fact]
+        public void ProfileManager_WithoutFile_HasOnlyDefault()
+        {
+            using var folder = new TempFolder(setCurrentDirectory: true);
+
+            var manager = NewProfileManager();
+
+            Assert.Same(manager.Default, Assert.Single(manager.Profiles));
+            Assert.Same(manager.Default, manager.Next());
+            Assert.Same(manager.Default, manager.Previous());
+            Assert.NotNull(ProfileManager.Instance.Default);
         }
 
         [Fact]
