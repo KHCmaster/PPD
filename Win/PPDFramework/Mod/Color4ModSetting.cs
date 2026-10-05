@@ -42,9 +42,12 @@ namespace PPDFramework.Mod
             var regex = ColorCodeRegex();
             var regex2 = ShortColorCodeRegex();
             var match = regex.Match(value);
+            // #RGB は #RRGGBB と同じ（元は #FFF が #0F0F0F になっていた）
+            var scale = 1;
             if (!match.Success)
             {
                 match = regex2.Match(value);
+                scale = 17;
             }
 
             if (!match.Success)
@@ -56,7 +59,7 @@ namespace PPDFramework.Mod
             int r = int.Parse(match.Groups[1].Value, NumberStyles.HexNumber),
                 g = int.Parse(match.Groups[2].Value, NumberStyles.HexNumber),
                 b = int.Parse(match.Groups[3].Value, NumberStyles.HexNumber);
-            val = new Color4(r / 255f, g / 255f, b / 255f, 1f);
+            val = new Color4(r * scale / 255f, g * scale / 255f, b * scale / 255f, 1f);
             return true;
         }
 
