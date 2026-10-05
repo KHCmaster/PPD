@@ -256,12 +256,12 @@ namespace UITests
         /// <summary>
         /// ポップアップ（右クリックのメニューなど、このアプリの別のウィンドウ）の中の、AutomationId の要素を待って返します。
         /// </summary>
-        public AutomationElement FindInPopups(string automationId)
+        public AutomationElement FindInPopups(string automationId, TimeSpan? timeout = null)
         {
             var result = Retry.WhileNull(() => Automation.GetDesktop()
                 .FindAllChildren(cf => cf.ByProcessId(application.ProcessId))
                 .Select(window => window.FindFirstDescendant(cf => cf.ByAutomationId(automationId)))
-                .FirstOrDefault(element => element != null), defaultTimeout);
+                .FirstOrDefault(element => element != null), timeout ?? defaultTimeout);
             return result.Result ?? throw new InvalidOperationException(automationId + " がポップアップにありません。");
         }
 

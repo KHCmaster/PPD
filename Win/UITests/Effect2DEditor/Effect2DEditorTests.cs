@@ -178,8 +178,21 @@ namespace UITests.Effect2DEditor
             AddSampleImage();
 
             // 5 フレーム目を右クリックして、キーのステートを入れる
-            session.ClickAt(session.Find("timeLine1"), 5 * 10 + 5, 20 + 9, rightButton: true);
-            session.FindInPopups("InsertKeyStateMenuItem").AsMenuItem().Invoke();
+            // （画像を足した直後はタイムラインの更新が終わっておらず、メニューが出ないことがあるので、出るまで右クリックし直す）
+            AutomationElement menuItem = null;
+            for (var i = 0; i < 3 && menuItem == null; i++)
+            {
+                session.ClickAt(session.Find("timeLine1"), 5 * 10 + 5, 20 + 9, rightButton: true);
+                try
+                {
+                    menuItem = session.FindInPopups("InsertKeyStateMenuItem", TimeSpan.FromSeconds(3));
+                }
+                catch (InvalidOperationException)
+                {
+                }
+            }
+            Assert.NotNull(menuItem);
+            menuItem.AsMenuItem().Invoke();
 
             SelectState(5);
             Assert.True(AppSession.WaitUntil(() => ValueOf("X") == "0"));
