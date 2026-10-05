@@ -56,6 +56,20 @@ namespace UnitTests.FlowScript
         public FlowSourceObjectBase Node { get; }
 
         /// <summary>
+        /// ゲームやエディターがスクリプトに渡すもの（"MarkManager" など）です。入れたあとで <see cref="Initialize"/> を呼びます。
+        /// </summary>
+        public Dictionary<string, object> Items => manager.Items;
+
+        /// <summary>
+        /// ノードを初期化します（スクリプトを読んだときと同じく、Items からほしいものを取る）。
+        /// </summary>
+        public NodeHarness Initialize()
+        {
+            typeof(FlowSourceObjectBase).GetMethod("Initialize", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(Node, null);
+            return this;
+        }
+
+        /// <summary>
         /// 出たイベントの名前（順に）です。
         /// </summary>
         public List<string> Fired { get; } = [];
