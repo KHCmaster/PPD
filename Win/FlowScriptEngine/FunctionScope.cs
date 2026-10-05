@@ -162,25 +162,47 @@ namespace FlowScriptEngine
 
         protected void OnPreviewEventInvoked(FunctionScopeArg arg)
         {
-            if (PreviewEventInvoked != null)
-            {
-                PreviewEventInvoked.Invoke(arg);
-            }
-            else
-            {
-                arg.OnEndInvoked();
-            }
+            Dispatch(PreviewEventInvoked, arg);
         }
 
         protected void OnEventInvoked(FunctionScopeArg arg)
         {
-            if (EventInvoked != null)
-            {
-                EventInvoked.Invoke(arg);
-            }
-            else
+            Dispatch(EventInvoked, arg);
+        }
+
+        /// <summary>
+        /// イベントを受けるもの（ノード）それぞれに渡し、すべてが終わったときに 1 回だけ次へ進めます。どれかが処理したら、処理したことにします。
+        /// </summary>
+        /// <remarks>
+        /// 以前は同じ引数をすべてに渡していたので、受けるものがそれぞれ次へ進め、子のスコープにイベントが何回も届いていた。
+        /// </remarks>
+        private static void Dispatch(Action<FunctionScopeArg> handlers, FunctionScopeArg arg)
+        {
+            if (handlers == null)
             {
                 arg.OnEndInvoked();
+                return;
+            }
+            var list = handlers.GetInvocationList();
+            if (list.Length == 1)
+            {
+                handlers(arg);
+                return;
+            }
+            var remaining = list.Length;
+            var handled = arg.Handled;
+            foreach (Action<FunctionScopeArg> handler in list)
+            {
+                handler(new FunctionScopeArg(arg.EventName, arg.Arg, e =>
+                {
+                    handled |= e.Handled;
+                    remaining--;
+                    if (remaining == 0)
+                    {
+                        arg.Handled = handled;
+                        arg.OnEndInvoked();
+                    }
+                }));
             }
         }
 
