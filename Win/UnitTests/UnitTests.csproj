@@ -29,6 +29,7 @@
     <ProjectReference Include="..\BMSTOPPD\BMSTOPPD\BMSTOPPD.csproj" />
     <ProjectReference Include="..\KeyConfiger\KeyConfiger\KeyConfiger.csproj" />
     <ProjectReference Include="..\PPDFramework\PPDFramework.csproj" />
+    <ProjectReference Include="..\PPDMultiCommon\PPDMultiCommon.csproj" />
     <ProjectReference Include="..\PPDConfig\PPDConfig.csproj" />
     <ProjectReference Include="..\PPDUpdater\PPDUpdater.csproj" />
     <ProjectReference Include="..\FolderDiffChecker\FolderDiffChecker.csproj" />
