@@ -25,7 +25,8 @@ namespace FlowScriptEngineSlimDX.FlowSourceObjects
                 }
                 Type type = typeof(T);
                 var targetType = Target.GetType();
-                return targetType.IsSubclassOf(type) || targetType == type;
+                // 元は IsSubclassOf と == で比べていて、型がインターフェースのときはいつも false だった
+                return type.IsAssignableFrom(targetType);
             }
         }
     }
