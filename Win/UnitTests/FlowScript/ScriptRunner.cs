@@ -165,6 +165,30 @@ namespace UnitTests.FlowScript
         }
 
         /// <summary>
+        /// いくつかのスクリプトを 1 つのエンジンで（読んだ順に）動かし、記録した値を返します。
+        /// GlobalScope はすべてで同じで、ContextScope は context が同じスクリプトどうしで同じです。
+        /// </summary>
+        public static List<(string Label, object Value, object Value2)> RunTogether(params (ScriptRunner Script, Guid Context)[] scripts)
+        {
+            RegisterNodes();
+            ProbeFlowSourceObject.Records.Clear();
+            var errors = new List<FlowExecutionException>();
+            var engine = new Engine(new StringReader(""));
+            engine.Error += errors.Add;
+            foreach (var (script, context) in scripts)
+            {
+                using var stream = new MemoryStream(Encoding.UTF8.GetBytes(script.ToXml()));
+                engine.Load(stream, false, context, null).Initialize();
+            }
+            engine.Start();
+            if (errors.Count > 0)
+            {
+                throw new InvalidOperationException("スクリプトでエラーになりました", errors[0]);
+            }
+            return [.. ProbeFlowSourceObject.Records];
+        }
+
+        /// <summary>
         /// 記録した値のうち、ラベルが同じものの Value です。
         /// </summary>
         public static object[] Values(List<(string Label, object Value, object Value2)> records, string label)
