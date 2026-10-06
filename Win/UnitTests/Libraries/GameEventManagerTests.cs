@@ -155,6 +155,34 @@ namespace UnitTests.Libraries
             Assert.Equal(10, events.GetVolPercent(9));
             Assert.True(events.KeepPlayings[7]);
             Assert.True(events.GetReleaseSound(0));
+            // ボタンで読む
+            Assert.Equal(10, events.GetVolumePercent(MarkType.L));
+            Assert.True(events.GetKeepPlaying(MarkType.Up));
+            Assert.True(events.GetReleaseSound(MarkType.Square));
+            Assert.False(events.SetKeepPlaying((MarkType)20, true));
+            Assert.False(events.SetReleaseSound((MarkType)20, true));
+        }
+
+        [Fact]
+        public void OldSong_ReadsEvdFile()
+        {
+            // 古い形式の譜面は、難易度の名前の .evd を直接読む
+            using var folder = new TempFolder();
+            EVDWriter.Write(folder.Combine("Hard.evd"), [new ChangeVolumeEvent(0, 40, 1)]);
+            var song = new SongInformation();
+            typeof(SongInformation).GetProperty(nameof(SongInformation.DirectoryPath)).SetValue(song, folder.Path);
+            typeof(SongInformation).GetProperty(nameof(SongInformation.BPM)).SetValue(song, 100f);
+
+            var events = new EventManager(new PPDGameUtility { SongInformation = song, Difficulty = PPDFrameworkCore.Difficulty.Hard }, MainGameConfigBase.Default, Script());
+            events.Update(0);
+
+            Assert.Equal(40, events.GetVolPercent(0));
+            Assert.Equal(100f, events.BPM);
+
+            // ファイルがなければ何も変えない
+            var missing = new EventManager(new PPDGameUtility { SongInformation = song, Difficulty = PPDFrameworkCore.Difficulty.Easy }, MainGameConfigBase.Default, Script());
+            missing.Update(0);
+            Assert.Equal(90, missing.GetVolPercent(0));
         }
 
         [Fact]
