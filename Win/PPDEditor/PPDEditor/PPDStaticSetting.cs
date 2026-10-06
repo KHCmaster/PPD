@@ -71,8 +71,8 @@ namespace PPDEditor
                 LastWindowLocation = new Point(0, 0);
             }
             AuthorName = setting.ReadString("AuthorName");
-            var movielatency = setting.ReadString("MovieLatency");
-            _ = float.TryParse(movielatency, out MovieLatency);
+            // 保存するときと同じく、言語の設定によらない形式で読む
+            MovieLatency = ReadFloat(setting, "MovieLatency", 0);
             langFileISO = setting.ReadString("Language");
             if (langFileISO == "")
             {
