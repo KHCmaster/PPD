@@ -196,13 +196,15 @@ namespace BezierDrawControl
         public void Draw(IBezierDrawContext context)
         {
             OnBeforePaint(context);
+            // 点は中心からの位置なので、中心をずらして描く（マウスの位置も中心からの位置に直している）
+            var centered = Center.IsEmpty ? context : new CenteredDrawContext(context, Center);
             if (tmode > TransformMode.None)
             {
-                DrawTransData(context);
+                DrawTransData(centered);
             }
             else
             {
-                DrawNormalData(context);
+                DrawNormalData(centered);
             }
             OnAfterPaint(context);
         }

@@ -14,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Color = System.Drawing.Color;
 using Point = System.Drawing.Point;
+using PointF = System.Drawing.PointF;
 
 namespace Effect2DEditor.DockForm
 {
@@ -205,10 +206,13 @@ namespace Effect2DEditor.DockForm
 
         private void DrawBezierMark(IBezierDrawContext context)
         {
-            if (bezierControl1.Controller.BCPS != null && bezierControl1.Controller.BCPS.Length >= 2)
+            var bcps = bezierControl1.Controller.BCPS;
+            if (bcps != null && bcps.Length >= 2)
             {
-                context.DrawString("S", Color.Black, FontHeight, bezierControl1.Controller.BCPS[0].Second);
-                context.DrawString("T", Color.Black, FontHeight, bezierControl1.Controller.BCPS[^1].Second);
+                // 点は真ん中からの位置
+                var center = bezierControl1.Controller.Center;
+                context.DrawString("S", Color.Black, FontHeight, new PointF(bcps[0].Second.X + center.X, bcps[0].Second.Y + center.Y));
+                context.DrawString("T", Color.Black, FontHeight, new PointF(bcps[^1].Second.X + center.X, bcps[^1].Second.Y + center.Y));
             }
         }
 
