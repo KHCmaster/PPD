@@ -1,4 +1,5 @@
 ﻿using PPDEditorCommon;
+using PPDEditor.ViewModels.Docks;
 using PPDFramework;
 using PPDFramework.PPDStructure.PPDData;
 using System.Numerics;
@@ -46,6 +47,11 @@ namespace PPDEditor.Command.PPDSheet
         /// 次のマークの ID を返します。テストで差し替えます。
         /// </summary>
         internal Func<uint> NextID { get; set; } = () => WindowUtility.LayerManager.IDProvider.Next();
+
+        /// <summary>
+        /// 譜面のイベント（表示やノーツの種類、描く順番）です。テストで差し替えます。
+        /// </summary>
+        internal Func<EventManagerViewModel> GetEvents { get; set; } = () => WindowUtility.EventManager.ViewModel;
         public PPDSheet()
         {
             dataForColorDraw = [];
@@ -424,16 +430,17 @@ namespace PPDEditor.Command.PPDSheet
             var command = new SwapLineCommand(data, first, second);
             commandManager.AddCommand(command);
         }
-        public bool[] UpdateMark(float time, float speedscale, EventManager em)
+        public bool[] UpdateMark(float time, float speedscale)
         {
             bool[] ret = new bool[buttonnum];
             if (data2 != null)
             {
-                var last = WindowUtility.EventManager.GetEvent(0);
+                var em = GetEvents();
+                var last = em.GetEvent(0);
                 last ??= new EventData();
                 foreach (KeyValuePair<float, SameTimingMarks> pair in data2)
                 {
-                    var current = WindowUtility.EventManager.GetEvent(pair.Key);
+                    var current = em.GetEvent(pair.Key);
                     if (last != current && current != null)
                     {
                         last = current;
@@ -469,7 +476,7 @@ namespace PPDEditor.Command.PPDSheet
                     maxy = Math.Max(recstart.Y, recend.Y);
                     minx = Math.Min(recstart.X, recend.X);
                     maxx = Math.Max(recstart.X, recend.X);
-                    var rows = WindowUtility.TimeLineForm.RowManager.OrderedVisibleRows;
+                    var rows = GetVisibleRows();
                     for (int i = miny; i < Math.Min(maxy + 1, rows.Length); i++)
                     {
                         areaDraws.Add(rows[i], true);
@@ -477,11 +484,12 @@ namespace PPDEditor.Command.PPDSheet
                 }
 
                 dataForColorDraw.Clear();
-                var last = WindowUtility.EventManager.GetEvent(0);
+                var events = GetEvents();
+                var last = events.GetEvent(0);
                 int[] drawingOrder = last != null ? last.DrawingOrder : defaultDrawingOrder;
                 foreach (KeyValuePair<float, SameTimingMarks> pair in data2)
                 {
-                    var current = WindowUtility.EventManager.GetEvent(pair.Key);
+                    var current = events.GetEvent(pair.Key);
                     if (last != current && current != null)
                     {
                         drawingOrder = current.DrawingOrder;

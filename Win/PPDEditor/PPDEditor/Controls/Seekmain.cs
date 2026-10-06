@@ -394,7 +394,7 @@ namespace PPDEditor.Controls
             bool[] ret = new bool[10];
             foreach (var sheet in WindowUtility.LayerManager.Sheets)
             {
-                var temp = sheet.UpdateMark((float)time, speedScale, WindowUtility.EventManager);
+                var temp = sheet.UpdateMark((float)time, speedScale);
                 for (int j = 0; j < ret.Length; j++)
                 {
                     ret[j] |= temp[j];
