@@ -12,12 +12,12 @@
     </forms:DockView.Resources>
     <DockPanel>
         <Menu DockPanel.Dock="Top">
-            <MenuItem Header="{Binding Texts[Edit]}" SubmenuOpened="EditMenu_SubmenuOpened">
-                <MenuItem Header="{Binding Texts[Parameter]}" Command="{Binding EditParametersCommand}" />
-                <MenuItem Header="{Binding Texts[Copy]}" Command="{Binding CopyCommand}" IsEnabled="{Binding CanCopy}" />
-                <MenuItem Header="{Binding Texts[Paste]}" Command="{Binding PasteCommand}" IsEnabled="{Binding CanPaste}" />
+            <MenuItem AutomationProperties.AutomationId="InfoEditMenu" Header="{Binding Texts[Edit]}" SubmenuOpened="EditMenu_SubmenuOpened">
+                <MenuItem AutomationProperties.AutomationId="InfoParameterMenuItem" Header="{Binding Texts[Parameter]}" Command="{Binding EditParametersCommand}" />
+                <MenuItem AutomationProperties.AutomationId="InfoCopyMenuItem" Header="{Binding Texts[Copy]}" Command="{Binding CopyCommand}" IsEnabled="{Binding CanCopy}" />
+                <MenuItem AutomationProperties.AutomationId="InfoPasteMenuItem" Header="{Binding Texts[Paste]}" Command="{Binding PasteCommand}" IsEnabled="{Binding CanPaste}" />
             </MenuItem>
-            <MenuItem Header="{Binding Texts[Preset]}" SubmenuOpened="PresetMenu_SubmenuOpened">
+            <MenuItem AutomationProperties.AutomationId="InfoPresetMenu" Header="{Binding Texts[Preset]}" SubmenuOpened="PresetMenu_SubmenuOpened">
                 <MenuItem Header="{Binding Texts[Load]}" ItemsSource="{Binding PresetNodes}">
                     <MenuItem.ItemContainerStyle>
                         <Style TargetType="MenuItem">
@@ -41,7 +41,7 @@
                         </HierarchicalDataTemplate>
                     </MenuItem.ItemTemplate>
                 </MenuItem>
-                <MenuItem Header="{Binding Texts[Save]}" Command="{Binding SavePresetCommand}" />
+                <MenuItem AutomationProperties.AutomationId="InfoSavePresetMenuItem" Header="{Binding Texts[Save]}" Command="{Binding SavePresetCommand}" />
             </MenuItem>
         </Menu>
         <Grid>

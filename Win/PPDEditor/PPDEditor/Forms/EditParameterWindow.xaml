@@ -23,11 +23,11 @@
             </DataGrid.Columns>
         </DataGrid>
         <DockPanel Grid.Column="1" Margin="12,0,0,0" LastChildFill="False">
-            <Button DockPanel.Dock="Top" Content="{Binding Texts[Add]}" MinWidth="75" Height="23" Command="{Binding AddCommand}" />
+            <Button DockPanel.Dock="Top" AutomationProperties.AutomationId="ParameterAddButton" Content="{Binding Texts[Add]}" MinWidth="75" Height="23" Command="{Binding AddCommand}" />
             <Button DockPanel.Dock="Top" Content="{Binding Texts[Remove]}" MinWidth="75" Height="23" Margin="0,6,0,0"
                     Command="{Binding RemoveCommand}" CommandParameter="{Binding SelectedItems, ElementName=parameterGrid}" />
             <Button DockPanel.Dock="Bottom" Content="Cancel" MinWidth="75" Height="23" Margin="0,6,0,0" IsCancel="True" />
-            <Button DockPanel.Dock="Bottom" Content="OK" MinWidth="75" Height="23" Click="OkButton_Click" />
+            <Button DockPanel.Dock="Bottom" AutomationProperties.AutomationId="ParameterOkButton" Content="OK" MinWidth="75" Height="23" Click="OkButton_Click" />
         </DockPanel>
     </Grid>
 </Window>
