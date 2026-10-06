@@ -254,6 +254,26 @@ namespace UITests
         }
 
         /// <summary>
+        /// 要素を右クリックして、出たメニューの中の AutomationId の要素を返します。メニューが出なければ、3 回まで右クリックし直します
+        /// （画面の更新の直後は、右クリックしてもメニューが出ないことがある）。
+        /// </summary>
+        public AutomationElement RightClickForPopup(AutomationElement element, double x, double y, string automationId)
+        {
+            for (var i = 0; i < 3; i++)
+            {
+                ClickAt(element, x, y, rightButton: true);
+                try
+                {
+                    return FindInPopups(automationId, TimeSpan.FromSeconds(3));
+                }
+                catch (InvalidOperationException)
+                {
+                }
+            }
+            throw new InvalidOperationException(automationId + " がポップアップに出ません。");
+        }
+
+        /// <summary>
         /// ポップアップ（右クリックのメニューなど、このアプリの別のウィンドウ）の中の、AutomationId の要素を待って返します。
         /// </summary>
         public AutomationElement FindInPopups(string automationId, TimeSpan? timeout = null)

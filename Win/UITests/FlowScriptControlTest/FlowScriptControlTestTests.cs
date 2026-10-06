@@ -109,8 +109,7 @@ namespace UITests.FlowScriptControlTest
             var tab = session.Find("DocumentTabs").FindAllChildren(cf => cf.ByControlType(ControlType.TabItem)).Last();
 
             // タブの見出しを右クリックして、閉じる
-            session.ClickAt(tab, 10, 8, rightButton: true);
-            session.FindInPopups("CloseTabMenuItem").AsMenuItem().Invoke();
+            session.RightClickForPopup(tab, 10, 8, "CloseTabMenuItem").AsMenuItem().Invoke();
 
             Assert.True(AppSession.WaitUntil(() => TabCount == before - 1));
         }
