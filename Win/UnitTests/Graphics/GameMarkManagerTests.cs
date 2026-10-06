@@ -301,6 +301,67 @@ namespace UnitTests.Graphics
             Assert.Equal([EffectType.Cool, EffectType.Cool, EffectType.Worst], play.Evaluated.Select(e => e.Effect));
         }
 
+        [Theory]
+        [InlineData(0.06f, EffectType.Fine)]
+        [InlineData(-0.1f, EffectType.Safe)]
+        [InlineData(0.14f, EffectType.Sad)]
+        public void ACHoldAndSlide_PressTiming(float offset, EffectType expected)
+        {
+            var hold = Start([Hold(1, 2)], AC);
+            PressAndRelease(hold, ButtonType.Circle, 1 + offset, 2);
+            Assert.Equal([(expected, false)], hold.Evaluated);
+            // ファインなら押している間を知らせる。セーフ以下は押した時に終わる
+            Assert.Equal(expected == EffectType.Fine, hold.Pressing.Contains((ButtonType.Circle, true)));
+
+            var slide = Start([Hold(1, 1.5f, ButtonType.R)], ACFT);
+            slide.Run(0, 0.9f);
+            for (var time = 1 + offset; time < 1.6f; time += 1 / 60f)
+            {
+                slide.Update(time, ButtonType.R);
+            }
+            slide.Run(1.6f, 2.5f);
+            Assert.Equal([(expected, false)], slide.Evaluated);
+            Assert.Equal(expected == EffectType.Fine ? 1 : 0, slide.MaxSlides);
+        }
+
+        [Fact]
+        public void Slide_ReleasedEarly_EndsWithoutMax()
+        {
+            var play = Start([Hold(1, 2, ButtonType.R)], ACFT);
+            play.Run(0, 0.9f);
+
+            for (var time = 1f; time < 1.3f; time += 1 / 60f)
+            {
+                play.Update(time, ButtonType.R);
+            }
+            play.Update(1.3f, [], [ButtonType.R]);
+            play.Run(1.31f, 3);
+
+            Assert.Equal([(EffectType.Cool, false)], play.Evaluated);
+            Assert.NotEmpty(play.Slides);
+            Assert.Equal(0, play.MaxSlides);
+        }
+
+        [Theory]
+        [InlineData(DisplayState.Sudden)]
+        [InlineData(DisplayState.Hidden)]
+        [InlineData(DisplayState.HiddenColor)]
+        [InlineData(DisplayState.SuddenColor)]
+        public void ACHoldsAndSlides_InEachDisplayState(DisplayState displayState)
+        {
+            var events = new IEVDData[] { new ChangeNoteTypeEvent(0, NoteType.ACFT), new ChangeDisplayStateEvent(0, displayState) };
+            var play = Start([Hold(1, 1.5f), Hold(3, 3.5f, ButtonType.R)], events);
+
+            play.Run(0, 5);
+
+            // 押さなければどちらもワースト
+            Assert.Equal([EffectType.Worst, EffectType.Worst], play.Evaluated.Select(e => e.Effect));
+
+            var auto = Start([Hold(1, 1.5f), Hold(3, 3.5f, ButtonType.R)], events, auto: AutoMode.All);
+            auto.Run(0, 5);
+            Assert.Equal([EffectType.Cool, EffectType.Cool], auto.Evaluated.Select(e => e.Effect));
+        }
+
         [Fact]
         public void ACHold_KeepsPressingUntilReleased()
         {
