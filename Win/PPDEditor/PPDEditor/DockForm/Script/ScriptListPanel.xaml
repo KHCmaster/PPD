@@ -12,7 +12,7 @@
         <BooleanToVisibilityConverter x:Key="BoolToVisibility" />
         <!-- スクリプトの項目のメニュー -->
         <ContextMenu x:Key="ScriptMenu" DataContext="{Binding Data, Source={StaticResource Proxy}}">
-            <MenuItem Command="{Binding ToggleDisabledCommand}" IsEnabled="{Binding SelectedNode.IsUnderScripts}">
+            <MenuItem AutomationProperties.AutomationId="ToggleScriptMenuItem" Command="{Binding ToggleDisabledCommand}" IsEnabled="{Binding SelectedNode.IsUnderScripts}">
                 <MenuItem.Style>
                     <Style TargetType="MenuItem">
                         <Setter Property="Header" Value="{Binding Texts[MakeInvalid]}" />
@@ -24,16 +24,16 @@
                     </Style>
                 </MenuItem.Style>
             </MenuItem>
-            <MenuItem Header="{Binding Texts[CreateNewFolder]}" Command="{Binding CreateFolderCommand}" />
-            <MenuItem Header="{Binding Texts[Delete]}" Command="{Binding DeleteCommand}" />
-            <MenuItem Header="{Binding Texts[Rename]}" Command="{Binding BeginRenameCommand}" IsEnabled="{Binding SelectedNode.IsRoot, Converter={StaticResource Inverse}}" />
+            <MenuItem AutomationProperties.AutomationId="CreateScriptFolderMenuItem" Header="{Binding Texts[CreateNewFolder]}" Command="{Binding CreateFolderCommand}" />
+            <MenuItem AutomationProperties.AutomationId="DeleteScriptMenuItem" Header="{Binding Texts[Delete]}" Command="{Binding DeleteCommand}" />
+            <MenuItem AutomationProperties.AutomationId="RenameScriptMenuItem" Header="{Binding Texts[Rename]}" Command="{Binding BeginRenameCommand}" IsEnabled="{Binding SelectedNode.IsRoot, Converter={StaticResource Inverse}}" />
         </ContextMenu>
         <!-- フォルダの項目のメニュー -->
         <ContextMenu x:Key="FolderMenu" DataContext="{Binding Data, Source={StaticResource Proxy}}">
-            <MenuItem Header="{Binding Texts[CreateNewScript]}" Command="{Binding CreateScriptCommand}" />
-            <MenuItem Header="{Binding Texts[CreateNewFolder]}" Command="{Binding CreateFolderCommand}" />
-            <MenuItem Header="{Binding Texts[Delete]}" Command="{Binding DeleteCommand}" IsEnabled="{Binding SelectedNode.IsRoot, Converter={StaticResource Inverse}}" />
-            <MenuItem Header="{Binding Texts[Rename]}" Command="{Binding BeginRenameCommand}" IsEnabled="{Binding SelectedNode.IsRoot, Converter={StaticResource Inverse}}" />
+            <MenuItem AutomationProperties.AutomationId="CreateScriptMenuItem" Header="{Binding Texts[CreateNewScript]}" Command="{Binding CreateScriptCommand}" />
+            <MenuItem AutomationProperties.AutomationId="CreateScriptFolderMenuItem" Header="{Binding Texts[CreateNewFolder]}" Command="{Binding CreateFolderCommand}" />
+            <MenuItem AutomationProperties.AutomationId="DeleteScriptMenuItem" Header="{Binding Texts[Delete]}" Command="{Binding DeleteCommand}" IsEnabled="{Binding SelectedNode.IsRoot, Converter={StaticResource Inverse}}" />
+            <MenuItem AutomationProperties.AutomationId="RenameScriptMenuItem" Header="{Binding Texts[Rename]}" Command="{Binding BeginRenameCommand}" IsEnabled="{Binding SelectedNode.IsRoot, Converter={StaticResource Inverse}}" />
         </ContextMenu>
     </UserControl.Resources>
     <DockPanel>

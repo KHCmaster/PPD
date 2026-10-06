@@ -22,10 +22,10 @@
             </DataGrid>
             <StackPanel Margin="12,6,12,12">
                 <StackPanel Orientation="Horizontal">
-                    <Button Content="{Binding Texts[EMButton1]}" MinWidth="91" Height="23" Padding="6,0" Command="{Binding AddCommand}" />
-                    <Button Content="{Binding Texts[EMButton3]}" MinWidth="120" Height="23" Margin="6,0,0,0" Padding="6,0" Command="{Binding EditSelectedCommand}" />
+                    <Button AutomationProperties.AutomationId="EventAddButton" Content="{Binding Texts[EMButton1]}" MinWidth="91" Height="23" Padding="6,0" Command="{Binding AddCommand}" />
+                    <Button AutomationProperties.AutomationId="EventEditButton" Content="{Binding Texts[EMButton3]}" MinWidth="120" Height="23" Margin="6,0,0,0" Padding="6,0" Command="{Binding EditSelectedCommand}" />
                 </StackPanel>
-                <Button Content="{Binding Texts[EMButton2]}" HorizontalAlignment="Left" MinWidth="182" Height="23" Margin="0,6,0,0" Padding="6,0" Command="{Binding DeleteSelectedCommand}" />
+                <Button AutomationProperties.AutomationId="EventDeleteButton" Content="{Binding Texts[EMButton2]}" HorizontalAlignment="Left" MinWidth="182" Height="23" Margin="0,6,0,0" Padding="6,0" Command="{Binding DeleteSelectedCommand}" />
                 <DockPanel Width="208" HorizontalAlignment="Left" Margin="0,8,0,0">
                     <controls:NumericUpDown DockPanel.Dock="Right" Width="100" DecimalPlaces="2" Increment="0.01" Minimum="-100" Maximum="100" Value="{Binding ShiftAmount}" />
                     <TextBlock Text="{Binding Texts[EMLabel1]}" VerticalAlignment="Center" />

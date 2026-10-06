@@ -27,8 +27,8 @@
                     <TextBlock Text="{Binding Texts[KELabel1]}" VerticalAlignment="Bottom" />
                 </DockPanel>
                 <TextBox x:Name="inputBox" Text="{Binding InputText, UpdateSourceTrigger=PropertyChanged}" Height="98" Margin="0,2,0,0" AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" />
-                <Button Content="{Binding Texts[KEButton1]}" Height="24" Margin="0,4,0,0" Command="{Binding AddAtCurrentTimeCommand}" />
-                <Button Content="{Binding Texts[KEButton2]}" Height="24" Margin="0,6,0,0" Command="{Binding DeleteSelectedCommand}" />
+                <Button AutomationProperties.AutomationId="KasiAddButton" Content="{Binding Texts[KEButton1]}" Height="24" Margin="0,4,0,0" Command="{Binding AddAtCurrentTimeCommand}" />
+                <Button AutomationProperties.AutomationId="KasiDeleteButton" Content="{Binding Texts[KEButton2]}" Height="24" Margin="0,6,0,0" Command="{Binding DeleteSelectedCommand}" />
                 <DockPanel Margin="0,8,0,0">
                     <controls:NumericUpDown DockPanel.Dock="Right" Width="100" DecimalPlaces="2" Increment="0.01" Minimum="-100" Maximum="100" Value="{Binding ShiftAmount}" />
                     <TextBlock Text="{Binding Texts[KELabel2]}" VerticalAlignment="Center" />

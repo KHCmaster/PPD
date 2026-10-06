@@ -145,7 +145,7 @@
             </TabItem>
         </TabControl>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,14,0,14">
-            <Button Content="OK" Width="75" Height="23" IsDefault="True" Command="{Binding OkCommand}" />
+            <Button AutomationProperties.AutomationId="EventOkButton" Content="OK" Width="75" Height="23" IsDefault="True" Command="{Binding OkCommand}" />
             <Button Content="Cancel" Width="75" Height="23" Margin="141,0,0,0" IsCancel="True" />
         </StackPanel>
     </StackPanel>
