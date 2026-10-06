@@ -198,6 +198,45 @@ namespace UnitTests.Libraries
         }
 
         [Fact]
+        public void NestedGroups_DrawTheirLeaves()
+        {
+            // グループ（outer）の中に、葉（a）とグループ（inner、中に葉 c）。FPS はどれも 60
+            var leafA = CreateEffect("a.png");
+            var leafC = CreateEffect("c.png");
+            var inner = CreateEffect("inner.etd");
+            inner.Effects = [leafC];
+            var outer = CreateEffect("outer.etd");
+            outer.Effects = [leafA, inner];
+            foreach (var effect in new[] { leafA, leafC, inner, outer })
+            {
+                effect.FPS = 60;
+            }
+            var manager = new EffectManager { FPS = 60 };
+            manager.Effects.Add(outer);
+            manager.CheckFrameLength();
+            var drawn = new List<string>();
+
+            manager.Seek(5);
+            manager.Draw((file, state) => drawn.Add(file));
+
+            // グループは自分を描かず、中の葉を描く
+            Assert.Equal(["a.png", "c.png"], drawn.Order());
+            Assert.Equal(5, leafC.CurrentFrame);
+
+            // 長さの外では描かない
+            drawn.Clear();
+            manager.Seek(20);
+            manager.Draw((file, state) => drawn.Add(file));
+            Assert.Empty(drawn);
+
+            // 中のエフェクトも複製する
+            var clone = (BaseEffect)outer.Clone();
+            Assert.Equal(2, clone.Effects.Count);
+            Assert.NotSame(leafA, clone.Effects[0]);
+            Assert.Single(((BaseEffect)clone.Effects[1]).Effects);
+        }
+
+        [Fact]
         public void Clone_CopiesEffects()
         {
             var manager = new EffectManager { FPS = 24 };
