@@ -425,6 +425,30 @@ namespace UITests.PPDEditor
         }
 
         [Fact]
+        public void RecordingKeysPlacesMarks()
+        {
+            CreateProject();
+            Save();
+            var emptySize = new FileInfo(LayerFile).Length;
+
+            // ゲームの画面にフォーカスを移してから、記録を始める（キーはゲームの画面で読む）
+            session.ClickAt(session.MainWindow, 200, 200);
+            session.FindMenuItem("movieMenu", "RecordKeyMenuItem").Invoke();
+            session.ClickAt(session.MainWindow, 200, 200);
+            // 既定のキーの割り当て（keyconfig.ini）では、K が ○、J が ×。DirectInput で読むので、スキャンコードで送る
+            foreach (var scanCode in new ushort[] { 0x25, 0x24, 0x25 })
+            {
+                FlaUI.Core.Input.Keyboard.PressScanCode(scanCode, false);
+                System.Threading.Thread.Sleep(150);
+                FlaUI.Core.Input.Keyboard.ReleaseScanCode(scanCode, false);
+                System.Threading.Thread.Sleep(300);
+            }
+            session.FindMenuItem("movieMenu", "RecordKeyMenuItem").Invoke();
+            Save();
+            Assert.True(new FileInfo(LayerFile).Length > emptySize, "キーの記録でマークが置かれません");
+        }
+
+        [Fact]
         public void PlayPauseAndStopMoveTheSeekTime()
         {
             CreateProject();
