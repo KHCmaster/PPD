@@ -14,3 +14,4 @@ Thumbs.db
 /Mono/packages
 /Mono/.vs
 /Win/UnitTests/TestResults
+/Win/CoverageResults

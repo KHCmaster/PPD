@@ -44,3 +44,17 @@ dotnet test UITests\UITests.csproj -c Debug -p:Platform=x64 --blame-hang --blame
 - テストは並べて実行しません（`xunit.runner.json`）。
 - インストール、アップロード、ネットワークにつなぐ操作はテストしません。
   ネットワークにつなぐ設定のファイルは、`AppSession.Start` の最後の引数でコピーしないようにします（PPDUpdater の PPDUpdater.ini など）。
+
+## カバレッジ
+
+単体テストと UI テストを合わせたカバレッジは、ソリューションのフォルダの `coverage.ps1` で測ります。
+UI テストで起動したアプリ（PPDEditor など）も、子のプロセスとして測ります。
+
+```powershell
+dotnet tool install --global dotnet-coverage   # 初めてのときだけ
+powershell -ExecutionPolicy Bypass -File .\coverage.ps1          # 単体テストと UI テスト
+powershell -ExecutionPolicy Bypass -File .\coverage.ps1 -SkipUI  # 単体テストだけ
+```
+
+先にソリューションを Debug|x64 でビルドしておきます。結果は `CoverageResults` に書き、プロジェクトごとの割合を表示します。
+テストで一度も読み込まれないプロジェクト（PPDMovie など）は、結果に出ません。
