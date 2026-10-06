@@ -565,6 +565,62 @@ namespace UnitTests.Graphics
             Assert.Equal(new Vector2(400, 225), marks[1].Position);
         }
 
+        [Theory]
+        [InlineData(false, true)]
+        [InlineData(true, true)]
+        [InlineData(false, false)]
+        [InlineData(true, false)]
+        public void SetData_MorePositionsThanMarks_StopsAtTheEnd(bool reverse, bool withAngle)
+        {
+            var sheet = Sheet();
+            var marks = Enumerable.Range(0, 3).Select(i => sheet.AddMark(i, 400, 225, 0.5f, (int)ButtonType.Circle, 0, false)).ToArray();
+            Vector2[] positions = [new(1, 1), new(2, 2), new(3, 3), new(4, 4), new(5, 5)];
+            float[] angles = [1, 2, 3, 4, 5];
+
+            // 真ん中のマークから（前か後ろの 2 つだけ変わる）
+            sheet.FocusedMark = [(int)ButtonType.Circle, 1];
+            Assert.True(sheet.SetData(positions, angles, reverse, 0, withAngle));
+            var changed = reverse ? new[] { marks[1], marks[0] } : [marks[1], marks[2]];
+            Assert.Equal([new Vector2(1, 1), new Vector2(2, 2)], changed.Select(m => m.Position));
+            Assert.Equal(withAngle ? [1f, 2f] : [0.5f, 0.5f], changed.Select(m => m.Rotation));
+            Assert.Equal(new Vector2(400, 225), (reverse ? marks[2] : marks[0]).Position);
+            sheet.Undo();
+            Assert.All(marks, m => Assert.Equal((new Vector2(400, 225), 0.5f), (m.Position, m.Rotation)));
+
+            // 範囲選択の中（3 つ全部が変わる）
+            Select(sheet, -0.5f, ButtonType.Circle, 2.5f, ButtonType.Circle);
+            Assert.True(sheet.SetData(positions, angles, reverse, 1, withAngle));
+            var ordered = reverse ? marks.Reverse().ToArray() : marks;
+            Assert.Equal([new Vector2(1, 1), new Vector2(2, 2), new Vector2(3, 3)], ordered.Select(m => m.Position));
+            Assert.Equal(withAngle ? [1f, 2f, 3f] : [0.5f, 0.5f, 0.5f], ordered.Select(m => m.Rotation));
+            sheet.Undo();
+            Assert.All(marks, m => Assert.Equal((new Vector2(400, 225), 0.5f), (m.Position, m.Rotation)));
+        }
+
+        [Fact]
+        public void MoveMarkInSame_AvoidsTakenTimeAndMovesHoldEnd()
+        {
+            var sheet = Sheet();
+            var first = sheet.AddMark(1, (int)ButtonType.Circle, false);
+            sheet.AddMark(2, (int)ButtonType.Circle, false);
+            var hold = (ExMark)sheet.AddExMark(3, 4, (int)ButtonType.Circle, false);
+
+            // 同じ時間にマークがあれば、少し前にずらす
+            sheet.MoveMarkInSame(first, 2);
+            Assert.Equal(2 - 0.0001f, first.Time, 5);
+            Assert.Equal(3, sheet.Data[(int)ButtonType.Circle].Count);
+
+            // 長押しは終わりも一緒に動く
+            sheet.MoveMarkInSame(hold, 5);
+            Assert.Equal((5f, 6f), (hold.Time, hold.EndTime));
+
+            sheet.Undo();
+            Assert.Equal((3f, 4f), (hold.Time, hold.EndTime));
+            sheet.Undo();
+            Assert.Equal(1f, first.Time);
+            Assert.Equal([1f, 2f, 3f], Times(sheet, ButtonType.Circle));
+        }
+
         [Fact]
         public void LinesAndData_MoveSwapDelete()
         {
