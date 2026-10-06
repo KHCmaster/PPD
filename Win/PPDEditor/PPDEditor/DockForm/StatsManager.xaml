@@ -9,7 +9,7 @@
                 mc:Ignorable="d" d:DataContext="{d:DesignInstance Type=vm:StatsManagerViewModel}">
     <DockPanel>
         <Menu DockPanel.Dock="Top">
-            <MenuItem Header="{Binding Texts[UpdateData]}" Command="{Binding UpdateCommand}" />
+            <MenuItem AutomationProperties.AutomationId="StatsUpdateMenuItem" Header="{Binding Texts[UpdateData]}" Command="{Binding UpdateCommand}" />
         </Menu>
         <Grid>
             <Grid.ColumnDefinitions>
@@ -17,10 +17,10 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <ListBox ItemsSource="{Binding Layers}" SelectedItem="{Binding SelectedLayer}" DisplayMemberPath="Name" />
+            <ListBox AutomationProperties.AutomationId="StatsLayerList" ItemsSource="{Binding Layers}" SelectedItem="{Binding SelectedLayer}" DisplayMemberPath="Name" />
             <GridSplitter Grid.Column="1" Width="4" HorizontalAlignment="Stretch" />
             <TabControl Grid.Column="2">
-                <TabItem Header="{Binding Texts[Data]}">
+                <TabItem AutomationProperties.AutomationId="StatsDataTab" Header="{Binding Texts[Data]}">
                     <DataGrid ItemsSource="{Binding DataRows}" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="None"
                               CanUserSortColumns="False" CanUserAddRows="False">
                         <DataGrid.Columns>
@@ -29,14 +29,14 @@
                         </DataGrid.Columns>
                     </DataGrid>
                 </TabItem>
-                <TabItem Header="{Binding Texts[Visualization]}">
+                <TabItem AutomationProperties.AutomationId="StatsChartTab" Header="{Binding Texts[Visualization]}">
                     <Grid>
                         <controls:PieChart Items="{Binding PieItems}" Margin="0,32,0,0" />
-                        <ComboBox ItemsSource="{Binding ChartModeNames}" SelectedIndex="{Binding ChartModeIndex}" Width="121" Margin="6"
+                        <ComboBox AutomationProperties.AutomationId="StatsChartModeBox" ItemsSource="{Binding ChartModeNames}" SelectedIndex="{Binding ChartModeIndex}" Width="121" Margin="6"
                                   HorizontalAlignment="Left" VerticalAlignment="Top" />
                     </Grid>
                 </TabItem>
-                <TabItem Header="{Binding Texts[Difficulty]}">
+                <TabItem AutomationProperties.AutomationId="StatsDifficultyTab" Header="{Binding Texts[Difficulty]}">
                     <controls:TimeColumnChart Points="{Binding DifficultyPoints}" HighlightTime="{Binding HighlightTime}" />
                 </TabItem>
             </TabControl>
