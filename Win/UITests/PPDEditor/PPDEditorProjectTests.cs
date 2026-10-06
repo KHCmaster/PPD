@@ -377,6 +377,53 @@ namespace UITests.PPDEditor
             Assert.True(AppSession.WaitUntil(() => session.MainWindow.Title.Contains("Base")), session.MainWindow.Title);
         }
 
+        /// <summary>
+        /// アプリの、メイン以外のウィンドウ（スクリプトが出すメッセージボックスやダイアログ）が出るのを待ちます。
+        /// </summary>
+        Window WaitForOtherWindow()
+        {
+            var processId = session.MainWindow.Properties.ProcessId.Value;
+            var main = session.MainWindow.Properties.NativeWindowHandle.Value;
+            IntPtr found = IntPtr.Zero;
+            Assert.True(AppSession.WaitUntil(() => (found = NativeWindows.OfProcess(processId).FirstOrDefault(h => h != main && NativeWindows.HasCaption(h))) != IntPtr.Zero),
+                "ウィンドウが出ません");
+            return session.Automation.FromHandle(found).AsWindow();
+        }
+
+        [Fact]
+        public void EditorCommandsRunOnMarks()
+        {
+            CreateProject();
+            SetBeatWidth();
+            var timeline = session.Find("Seekmain");
+            session.DoubleClickAt(timeline, Beat(1), Row(2));
+            session.DoubleClickAt(timeline, Beat(2), Row(2));
+            // 範囲で選んで、位置を動かしておく
+            session.DragAt(timeline, Beat(0.5), Row(1), Beat(2.5), Row(3));
+            Press(FlaUI.Core.WindowsAPI.VirtualKeyShort.RIGHT);
+            Press(FlaUI.Core.WindowsAPI.VirtualKeyShort.DOWN);
+            Save();
+            var moved = File.ReadAllBytes(LayerFile);
+
+            // 位置と角度を元に戻すコマンド（スクリプト）を実行する
+            session.FindMenuItem("CommandMenu", "ResetPosAndAngle", "Command").Invoke();
+            Assert.True(AppSession.WaitUntil(() =>
+            {
+                Save();
+                return !moved.SequenceEqual(File.ReadAllBytes(LayerFile));
+            }), "コマンドで位置が戻りません");
+
+            // 使い方はメッセージボックスで出る
+            session.FindMenuItem("CommandMenu", "ResetPosAndAngle", "Usage").Invoke();
+            Assert.NotEqual("", MessageBoxes.ReadAndClose(WaitForOtherWindow()));
+
+            // 設定はダイアログで出る（閉じる）
+            session.FindMenuItem("CommandMenu", "ResetPosAndAngle", "Setting").Invoke();
+            var setting = WaitForOtherWindow();
+            session.CloseWindow(setting);
+            Assert.True(AppSession.WaitUntil(() => NativeWindows.OfProcess(session.MainWindow.Properties.ProcessId.Value).Count(NativeWindows.HasCaption) == 1), "ダイアログが閉じません");
+        }
+
         [Fact]
         public void PlayPauseAndStopMoveTheSeekTime()
         {
