@@ -308,6 +308,50 @@ namespace UITests.PPDEditor
             Assert.Contains("Key1", File.ReadAllText(preset));
         }
 
+        /// <summary>
+        /// ファイルのメニューの、開くか保存の下の項目を押して、ファイルのダイアログで場所を選びます。
+        /// </summary>
+        void ChooseFile(string submenuId, string itemId, string path)
+        {
+            AppSession.InvokeAsync(session.FindMenuItem("fileMenu", submenuId, itemId));
+            FileDialogs.Accept(session.WaitForFileDialog(), path);
+            Assert.True(session.WaitForNoModal(), session.DescribeModalWindows());
+        }
+
+        [Fact]
+        public void FilesAreSavedAndOpenedSeparately()
+        {
+            CreateProject();
+            SetBeatWidth();
+            var timeline = session.Find("Seekmain");
+            session.DoubleClickAt(timeline, Beat(1), Row(2));
+            session.DoubleClickAt(timeline, Beat(2), Row(3));
+            var export = Path.Combine(workDirectory, "export");
+            Directory.CreateDirectory(export);
+
+            // 譜面、歌詞、音の設定、音の割り当て、イベントを、それぞれ別に保存する
+            foreach (var (item, name) in new[]
+            {
+                ("SavePpdAsMenuItem", "chart.ppd"),
+                ("SaveKasiAsMenuItem", "kasi.txt"),
+                ("SaveSoundSetAsMenuItem", "soundset.txt"),
+                ("SaveScdAsMenuItem", "sounds.scd"),
+                ("SaveEvdAsMenuItem", "events.evd"),
+            })
+            {
+                ChooseFile("FileSaveMenu", item, Path.Combine(export, name));
+                Assert.True(AppSession.WaitUntil(() => File.Exists(Path.Combine(export, name))), name + " が保存されません");
+            }
+
+            // 保存したものを開く（譜面は今のレイヤーにマークを足す）
+            ChooseFile("FileOpenMenu", "OpenPpdMenuItem", Path.Combine(export, "chart.ppd"));
+            ChooseFile("FileOpenMenu", "OpenKasiMenuItem", Path.Combine(export, "kasi.txt"));
+            ChooseFile("FileOpenMenu", "OpenEvdMenuItem", Path.Combine(export, "events.evd"));
+            ChooseFile("FileOpenMenu", "OpenMovieMenuItem", Path.Combine(workDirectory, "sound.wav"));
+            Assert.Empty(session.ModalWindowsOf());
+            Save();
+        }
+
         [Fact]
         public void PlayPauseAndStopMoveTheSeekTime()
         {
