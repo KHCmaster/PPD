@@ -38,6 +38,18 @@ namespace UnitTests.Libraries
         }
 
         [Fact]
+        public void Login_SendsSymbolsInNameAndPassword()
+        {
+            using var scope = new WebTestScope();
+            scope.Server.OnXml("/api/login", LoginXml);
+
+            Assert.Equal(ErrorReason.OK, scope.Web.Login("a b", "p&ss#1+%"));
+
+            var request = scope.Server.Requests.Single();
+            Assert.Equal(("a b", "p&ss#1+%", "6"), (request.Query["username"], request.Query["password"], request.Query["version"]));
+        }
+
+        [Fact]
         public void Login_ErrorResultOrServerError()
         {
             using var scope = new WebTestScope();
