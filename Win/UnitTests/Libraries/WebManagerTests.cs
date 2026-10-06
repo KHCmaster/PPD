@@ -271,6 +271,175 @@ namespace UnitTests.Libraries
         }
 
         [Fact]
+        public void Items_ListUseAndReview()
+        {
+            using var scope = new WebTestScope();
+            scope.Server.OnXml("/api/get-item-list", """<Root Result="0"><Item ID="1" Type="0" /><Item ID="2" Type="1" /></Root>""");
+            scope.Server.OnXml("/api/use-item", """<Root Result="0" />""");
+            scope.Server.OnXml("/api/review", """<Root Result="0" />""");
+            var item = new ItemInfo(1, 0);
+            Assert.Empty(scope.Web.GetItems());
+            Assert.False(scope.Web.UseItem(item));
+            Assert.False(scope.Web.Review("good", 5, [1]));
+            Assert.Empty(scope.Server.Requests);
+
+            Login(scope);
+            var items = scope.Web.GetItems();
+            Assert.Equal([1, 2], items.Select(i => i.ItemId));
+            Assert.Equal((ItemType)1, items[1].ItemType);
+            // アイテムの一覧は GET で送る
+            Assert.Equal(("GET", "acc1"), (scope.Server.Requests.Last().Method, scope.Server.Requests.Last().Query["accountid"]));
+
+            Assert.True(scope.Web.UseItem(item));
+            Assert.True(item.IsUsed);
+            Assert.Equal("1", scope.Server.Requests.Last().Form["id"]);
+            Assert.True(scope.Web.Review("よい曲", 5, [0xab]));
+            Assert.Equal(("よい曲", "5", "ab"), (scope.Server.Requests.Last().Form["comment"], scope.Server.Requests.Last().Form["score"], scope.Server.Requests.Last().Form["scorehash"]));
+
+            scope.Server.OnXml("/api/get-item-list", """<Root Result="1"><Item ID="1" Type="0" /></Root>""");
+            scope.Server.OnXml("/api/use-item", """<Root Result="1" />""");
+            scope.Server.OnXml("/api/review", """<Root Result="1" />""");
+            Assert.Empty(scope.Web.GetItems());
+            var other = new ItemInfo(2, 0);
+            Assert.False(scope.Web.UseItem(other));
+            Assert.False(other.IsUsed);
+            Assert.False(scope.Web.Review("x", 1, [1]));
+            scope.Server.On("/api/use-item", _ => TestWebServer.Status(HttpStatusCode.InternalServerError));
+            scope.Server.On("/api/review", _ => TestWebServer.Status(HttpStatusCode.InternalServerError));
+            Assert.False(scope.Web.UseItem(other));
+            Assert.False(scope.Web.Review("x", 1, [1]));
+        }
+
+        [Fact]
+        public void Scores_AreMatchedWithLocalSongs()
+        {
+            using var database = new SongDatabase();
+            database.AddSong("local", "guid", 120, ("Easy", null));
+            PPDFramework.SongInformation.Update();
+            var local = SongDatabase.Song("local");
+            var localHash = PPDFrameworkCore.CryptographyUtility.Getx2Encoding(local.EasyHash);
+            using var scope = new WebTestScope();
+            scope.Server.OnXml("/api/all-score-list", $"""
+                <Root>
+                  <Score Title="新しい" Hash="new" MovieUrl="http://movie" Revision="1"><ScoreDifficulty Difficulty="1" Hash="00ff" Revision="1" /></Score>
+                  <Score Title="持っている" Hash="have" MovieUrl="" Revision="3"><ScoreDifficulty Difficulty="0" Hash="{localHash}" Revision="2" /></Score>
+                </Root>
+                """);
+            scope.Server.OnXml("/api/active-score", """<Root><Entry Title="持っている" ID="have" /><Entry Title="新しい" ID="new" /></Root>""");
+
+            var scores = scope.Web.GetScores();
+
+            Assert.Equal(["new", "have"], scores.Select(s => s.Hash));
+            Assert.Equal(("新しい", "http://movie", 1), (scores[0].Title, scores[0].MovieUrl, scores[0].Revision));
+            // 持っていない譜面は新しい。持っている譜面は、Web の版が新しければ更新できる
+            Assert.True(scores[0].IsNew);
+            Assert.False(scores[1].IsNew);
+            Assert.True(scores[1].CanUpdate);
+            Assert.Same(local, scores[1].GetSongInformation());
+            Assert.Null(scores[0].GetSongInformation());
+            var difficulty = scores[1].Difficulties.Single();
+            Assert.Equal((PPDFrameworkCore.Difficulty.Easy, 2, localHash), (difficulty.Difficulty, difficulty.Revision, difficulty.Hash));
+            Assert.Equal(local.EasyHash, difficulty.HashAsBytes);
+
+            // ランキングの対象の譜面だけを、対象の順に
+            Assert.Equal(["have", "new"], scope.Web.GetScores(true).Select(s => s.Hash));
+            Assert.Equal([("持っている", "have", -1), ("新しい", "new", -1)], scope.Web.GetActiveScores().Select(s => (s.Title, s.Hash, s.Revision)));
+
+            scope.Server.On("/api/all-score-list", _ => TestWebServer.Status(HttpStatusCode.InternalServerError));
+            scope.Server.On("/api/active-score", _ => TestWebServer.Status(HttpStatusCode.InternalServerError));
+            Assert.Empty(scope.Web.GetScores());
+            Assert.Empty(scope.Web.GetActiveScores());
+        }
+
+        [Fact]
+        public void Mods_AndDownloads()
+        {
+            using var scope = new WebTestScope();
+            scope.Server.OnXml("/api/all-mod-list", """<Root><Mod Name="mod" ID="m1" Revision="2"><ModFile Hash="0102" Revision="1" /><ModFile Hash="0304" Revision="2" /></Mod></Root>""");
+            scope.Server.On("/score-library/download/id/song1", _ => new TestWebServer.Response(HttpStatusCode.OK, [1, 2, 3]));
+            scope.Server.On("/script-library/download/id/m1", _ => new TestWebServer.Response(HttpStatusCode.OK, [4, 5]));
+            scope.Server.On("/api/get-avator/s/64/id/acc1", _ => new TestWebServer.Response(HttpStatusCode.OK, [6]));
+
+            var mod = scope.Web.GetMods().Single();
+            Assert.Equal(("mod", "m1", 2), (mod.Name, mod.Id, mod.Revision));
+            Assert.Equal([1, 2], mod.Details.Select(d => d.Revision));
+            Assert.Equal([3, 4], mod.Details[1].HashAsBytes);
+            Assert.Same(mod, mod.Details[0].WebModInfo);
+
+            scope.Web.DownloadFile(new WebSongInformation("t", "song1", "", 1), "song.zip");
+            scope.Web.DownloadFile(mod, "mod.zip");
+            Assert.Equal([1, 2, 3], System.IO.File.ReadAllBytes("song.zip"));
+            Assert.Equal([4, 5], System.IO.File.ReadAllBytes("mod.zip"));
+            Assert.Equal([6], scope.Web.GetAccountImage("acc1", 64));
+            // ない画像は空
+            Assert.Empty(scope.Web.GetAccountImage("none"));
+            Assert.Equal(scope.Server.BaseUrl + "/score/index/id/lib1", scope.Web.GetScorePageUrl("lib1"));
+
+            scope.Server.On("/api/all-mod-list", _ => TestWebServer.Status(HttpStatusCode.InternalServerError));
+            Assert.Empty(scope.Web.GetMods());
+            Assert.ThrowsAny<System.Net.Http.HttpRequestException>(() => scope.Web.DownloadFile(scope.Server.BaseUrl + "/none", "none.zip"));
+        }
+
+        [Fact]
+        public void Contest_InfoAndRanking()
+        {
+            using var scope = new WebTestScope();
+            scope.Server.OnXml("/api/get-latest-contest", """
+                <Root Id="3" ScoreLibraryId="lib" ScoreHash="hash" Difficulty="3" StartTime="2026-01-02 03:04:05" CurrentTime="2026-01-03 00:00:00" EndTime="2026-02-01 12:00:00" Title="大会" />
+                """);
+            scope.Server.OnXml("/api/get-latest-contest-result", """<Root><Result Nickname="a" Score="10" AccountId="x" Rank="1" /><Result Nickname="b" Score="5" AccountId="y" Rank="2" /></Root>""");
+
+            var contest = scope.Web.GetContestInfo();
+            Assert.Equal((3, "lib", "hash", PPDFrameworkCore.Difficulty.Extreme, "大会"), (contest.Id, contest.ScoreLibraryId, contest.ScoreHash, contest.Difficulty, contest.Title));
+            Assert.Equal((new System.DateTime(2026, 1, 2, 3, 4, 5), new System.DateTime(2026, 2, 1, 12, 0, 0)), (contest.StartTime, contest.EndTime));
+            Assert.Equal([("a", 10, "x", 1), ("b", 5, "y", 2)], scope.Web.GetContestRanking().Select(r => (r.Nickname, r.Score, r.ID, r.Rank)));
+
+            // 日時の形が違う、コンテストがない
+            scope.Server.OnXml("/api/get-latest-contest", """<Root Id="3" ScoreLibraryId="lib" ScoreHash="hash" Difficulty="3" StartTime="yesterday" CurrentTime="" EndTime="" Title="" />""");
+            Assert.Null(scope.Web.GetContestInfo());
+            scope.Server.OnXml("/api/get-latest-contest", "<None />");
+            Assert.Null(scope.Web.GetContestInfo());
+            scope.Server.On("/api/get-latest-contest-result", _ => TestWebServer.Status(HttpStatusCode.InternalServerError));
+            Assert.Empty(scope.Web.GetContestRanking());
+        }
+
+        [Fact]
+        public void RankingCache_KeepsRankingForAMinute()
+        {
+            using var scope = new WebTestScope();
+            // ほかのテストのキャッシュと重ならない譜面
+            byte[] hash = [.. System.Guid.NewGuid().ToByteArray()];
+            var hex = PPDFrameworkCore.CryptographyUtility.Getx2Encoding(hash);
+            scope.Server.On("/api/find-score-id", request => request.Query["hash"] == hex
+                ? TestWebServer.Xml("""<Root Result="0" ID="cached" StartTime="0" EndTime="1" />""")
+                : TestWebServer.Xml("""<Root Result="1" />"""));
+            scope.Server.OnXml("/api/ranking", RankingXml);
+            scope.Server.OnXml("/api/rival-ranking", RankingXml);
+            Assert.False(scope.Web.IsRankingAvailable(hash));
+
+            var ranking = RankingCache.Cache.GetRanking(hash);
+            Assert.Equal(2, ranking.Easy.Length);
+            Assert.True(scope.Web.IsRankingAvailable(hash));
+            // 2 回目はキャッシュから（送らない）
+            var count = scope.Server.Requests.Count;
+            Assert.Same(ranking, RankingCache.Cache.GetRanking(hash));
+            Assert.Equal(count, scope.Server.Requests.Count);
+            // 強制すると取り直す
+            Assert.NotSame(ranking, RankingCache.Cache.GetRanking(hash, forceUpdate: true));
+
+            Login(scope);
+            var rival = RankingCache.Cache.GetRivalRanking(hash);
+            Assert.Equal(2, rival.Easy.Length);
+            Assert.Same(rival, RankingCache.Cache.GetRivalRanking(hash));
+            Assert.NotSame(rival, RankingCache.Cache.GetRivalRanking(hash, forceUpdate: true));
+
+            // Web にない譜面
+            byte[] unknown = [.. System.Guid.NewGuid().ToByteArray()];
+            Assert.Null(RankingCache.Cache.GetRanking(unknown));
+            Assert.Null(RankingCache.Cache.GetRivalRanking(unknown));
+        }
+
+        [Fact]
         public void ScoreDetail_FindsIdByHash()
         {
             using var scope = new WebTestScope();
