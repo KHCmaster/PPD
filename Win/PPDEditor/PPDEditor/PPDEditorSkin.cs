@@ -211,11 +211,6 @@ namespace PPDEditor
         {
             return new SolidBrush(GetColor(rgb, argb, setting, exp, ErrorColor));
         }
-        private static Color GetColor(Regex rgb, Regex argb, SettingReader setting, string exp)
-        {
-            var color = setting.ReadString(exp);
-            return GetColorFromString(rgb, argb, color);
-        }
         private static Color GetColor(Regex rgb, Regex argb, SettingReader setting, string exp, Color ErrorColor)
         {
             var color = setting.ReadString(exp);
