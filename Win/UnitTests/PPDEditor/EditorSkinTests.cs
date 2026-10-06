@@ -143,5 +143,29 @@ namespace UnitTests.PPDEditor
             skin.Initialize("missing.ini");
             Assert.Equal(30, skin.TimeLineHeight);
         }
+
+        [Fact]
+        public void Theme_ReadsBackgroundImageAndRowHeight()
+        {
+            using var folder = new TempFolder(setCurrentDirectory: true);
+            using (var bitmap = new Bitmap(4, 3))
+            {
+                bitmap.Save(folder.Combine("back.png"), System.Drawing.Imaging.ImageFormat.Png);
+            }
+            folder.Write("skin.ini", """
+                [BackGround]back.png
+                [DisplayMode]9
+                [TimeLineRowHeight]40
+                """);
+            var skin = NewSkin();
+
+            skin.Initialize("skin.ini");
+
+            Assert.Equal((4, 3), (skin.BackGround.Width, skin.BackGround.Height));
+            // 範囲の外の表示のしかたは変えない
+            Assert.Equal(PPDEditorSkin.BackGroundDisplayMode.right, skin.DisplayMode);
+            Assert.Equal(40, skin.TimeLineRowHeight);
+            skin.BackGround.Dispose();
+        }
     }
 }
