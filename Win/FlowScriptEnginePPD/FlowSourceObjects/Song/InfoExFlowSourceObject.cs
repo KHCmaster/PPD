@@ -159,8 +159,9 @@ namespace FlowScriptEnginePPD.FlowSourceObjects.Song
 
         private static float GetRatio(ResultInfo result)
         {
-            return (float)(result.CoolCount + result.GoodCount) /
-                (result.CoolCount + result.GoodCount + result.SafeCount + result.SadCount + result.WorstCount);
+            var total = result.CoolCount + result.GoodCount + result.SafeCount + result.SadCount + result.WorstCount;
+            // 判定がない（マークのない譜面）ときは 0（NaN にすると、比べるときに例外になった）
+            return total == 0 ? 0 : (float)(result.CoolCount + result.GoodCount) / total;
         }
 
         [ToolTipText("Song_InfoEx_ClearCount")]
