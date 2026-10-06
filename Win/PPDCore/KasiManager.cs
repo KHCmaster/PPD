@@ -30,7 +30,8 @@ namespace PPDCore
                 var datas = data.Split('\n');
                 foreach (string eachdata in datas)
                 {
-                    var temp = eachdata.Split(':');
+                    // 最初の「:」で時間と歌詞に分ける（歌詞の中の「:」で切らない）
+                    var temp = eachdata.Split(':', 2);
                     try
                     {
                         if (temp.Length >= 2) pool.Add(float.Parse(temp[0], CultureInfo.InvariantCulture), temp[1]);

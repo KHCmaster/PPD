@@ -138,7 +138,8 @@ namespace PPDEditor.Models
             text = text.Replace("\t", "").Replace("\r", "");
             foreach (string line in text.Split('\n'))
             {
-                var parts = line.Split(':');
+                // 最初の「:」で時間と歌詞に分ける（歌詞の中の「:」で切らない）
+                var parts = line.Split(':', 2);
                 try
                 {
                     data.Add(float.Parse(parts[0], CultureInfo.InvariantCulture), parts.Length >= 2 ? parts[1] : "");
