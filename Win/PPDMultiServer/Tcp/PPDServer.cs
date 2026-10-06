@@ -66,6 +66,15 @@ namespace PPDMultiServer.Tcp
             private set;
         }
 
+        /// <summary>
+        /// 待ち受けるアドレスです。既定はすべてのアドレス（ほかのコンピューターからつなげる）。Start の前に設定します。
+        /// </summary>
+        public System.Net.IPAddress ListenAddress
+        {
+            get { return host.ListenAddress; }
+            set { host.ListenAddress = value; }
+        }
+
         public PPDServer(int port, WebManager webManager, RoomInfo roomInfo, ITimerManager timerManager)
             : this(port, webManager, roomInfo, timerManager, "", [])
         {
