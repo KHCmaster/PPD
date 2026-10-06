@@ -159,6 +159,41 @@ namespace UnitTests.Graphics
         }
 
         [Fact]
+        public void Executor_StopsAtEditorBreakPointAndCanBeKilled()
+        {
+            Assert.False(PPDCore.TcpDebugControllerBase.IsListening(), "ほかでデバッグの待ち受けをしている");
+            var s = new UnitTests.FlowScript.ScriptRunner();
+            var seq = s.Node("Logic.Sequential");
+            var probe = s.Probe("stopped");
+            s.Flow(s.Entry(), "Start", seq, "In").Flow(seq, "Out0", probe, "In").Flow(seq, "Out1", s.Probe("after"), "In");
+            UnitTests.FlowScript.ScriptRunner.RegisterNodes();
+            using var folder = new TempFolder();
+            var path = folder.Write("script.fsml", s.ToXml());
+            UnitTests.FlowScript.ProbeFlowSourceObject.Records.Clear();
+            // エディターのデバッグ（localhost で待ち受ける）から、ブレークポイントを受け取る
+            var events = new UnitTests.Libraries.TestEvents();
+            using var host = new PPDCore.TcpDebugControllerHost(new() { [path] = [probe] });
+            host.OperationWaited += file => events.Add("waited " + file);
+            host.Create();
+
+            var executor = new Executor(path, []);
+            var finished = false;
+            executor.Finished += (sender, e) => finished = true;
+            executor.Execute();
+            events.WaitFor("waited " + path);
+            Assert.True(executor.IsWorking);
+
+            Assert.Empty(UnitTests.FlowScript.ProbeFlowSourceObject.Records);
+
+            // 止まっている間に中止する（終わりは知らせない）。中止は次のノードで効く
+            executor.Kill();
+
+            Assert.False(executor.IsWorking);
+            Assert.False(finished);
+            Assert.DoesNotContain(UnitTests.FlowScript.ProbeFlowSourceObject.Records, r => r.Label == "after");
+        }
+
+        [Fact]
         public void Executor_ReportsMissingScript()
         {
             using var folder = new TempFolder();
