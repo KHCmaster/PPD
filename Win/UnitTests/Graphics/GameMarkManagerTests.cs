@@ -324,6 +324,26 @@ namespace UnitTests.Graphics
             Assert.Equal(expected == EffectType.Fine ? 1 : 0, slide.MaxSlides);
         }
 
+        [Theory]
+        // 右のスライドは ○ でも、左のスライドは L か △ でもできる
+        [InlineData(ButtonType.R, ButtonType.Circle)]
+        [InlineData(ButtonType.L, ButtonType.L)]
+        [InlineData(ButtonType.L, ButtonType.Triangle)]
+        public void Slide_CanBePlayedWithEitherButtonOfItsSide(ButtonType mark, ButtonType pressed)
+        {
+            var play = Start([Hold(1, 1.5f, mark)], ACFT);
+            play.Run(0, 0.9f);
+
+            for (var time = 1f; time < 1.6f; time += 1 / 60f)
+            {
+                play.Update(time, pressed);
+            }
+            play.Run(1.6f, 2.5f);
+
+            Assert.Equal([(EffectType.Cool, false)], play.Evaluated);
+            Assert.Equal(1, play.MaxSlides);
+        }
+
         [Fact]
         public void Slide_ReleasedEarly_EndsWithoutMax()
         {
