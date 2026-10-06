@@ -104,6 +104,8 @@ namespace PPDEditor.Command
             commandSet = null;
             if (temp.CommandCount > 0)
             {
+                // 新しく変えたので、やり直しはできない（1 つのコマンドのときと同じ。以前は残っていて、古い変更をやり直せてしまった）
+                undonecommand.Clear();
                 donecommand.Push(temp);
                 OnCommandChange(temp.CommandType);
             }
