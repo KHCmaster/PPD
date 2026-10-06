@@ -276,6 +276,55 @@ namespace UITests.PPDEditor
             Assert.NotEqual(BeatWidth.ToString(System.Globalization.CultureInfo.InvariantCulture), ProjectValue("Base.displaywidth"));
         }
 
+        static int CountOf(byte[] data, string text)
+        {
+            var pattern = System.Text.Encoding.UTF8.GetBytes(text);
+            var count = 0;
+            for (var i = 0; i + pattern.Length <= data.Length; i++)
+            {
+                if (data.AsSpan(i, pattern.Length).SequenceEqual(pattern))
+                {
+                    count++;
+                }
+            }
+            return count;
+        }
+
+        [Fact]
+        public void ParametersAreEditedCopiedAndSavedAsPreset()
+        {
+            CreateProject();
+            SetBeatWidth();
+            var timeline = session.Find("Seekmain");
+            session.DoubleClickAt(timeline, Beat(1), Row(2));
+            session.DoubleClickAt(timeline, Beat(2), Row(2));
+
+            // 1 つ目のマークを選んで、パラメーターを足す（足すと Key1）
+            session.ClickAt(timeline, Beat(1), Row(2));
+            AppSession.InvokeAsync(session.FindMenuItem("InfoEditMenu", "InfoParameterMenuItem"));
+            var dialog = session.WaitForModal();
+            dialog.FindFirstDescendant(cf => cf.ByAutomationId("ParameterAddButton")).AsButton().Invoke();
+            AppSession.InvokeAsync(dialog.FindFirstDescendant(cf => cf.ByAutomationId("ParameterOkButton")));
+            Assert.True(session.WaitForNoModal(), session.DescribeModalWindows());
+            Save();
+            Assert.Equal(1, CountOf(File.ReadAllBytes(LayerFile), "Key1"));
+
+            // コピーして、2 つ目のマークに貼る
+            session.FindMenuItem("InfoEditMenu", "InfoCopyMenuItem").Invoke();
+            session.ClickAt(timeline, Beat(2), Row(2));
+            session.FindMenuItem("InfoEditMenu", "InfoPasteMenuItem").Invoke();
+            Save();
+            Assert.Equal(2, CountOf(File.ReadAllBytes(LayerFile), "Key1"));
+
+            // 今のパラメーターをプリセットとして保存する
+            var preset = Path.Combine(workDirectory, "preset_parameters", "uitest.xml");
+            AppSession.InvokeAsync(session.FindMenuItem("InfoPresetMenu", "InfoSavePresetMenuItem"));
+            FileDialogs.Accept(session.WaitForFileDialog(), preset);
+            Assert.True(session.WaitForNoModal(), session.DescribeModalWindows());
+            Assert.True(AppSession.WaitUntil(() => File.Exists(preset)), "プリセットが保存されません");
+            Assert.Contains("Key1", File.ReadAllText(preset));
+        }
+
         [Fact]
         public void PlayPauseAndStopMoveTheSeekTime()
         {
