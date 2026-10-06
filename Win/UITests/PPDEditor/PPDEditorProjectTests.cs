@@ -109,9 +109,10 @@ namespace UITests.PPDEditor
         public void KeyboardEditsMarksWithUndo()
         {
             CreateProject();
+            SetBeatWidth();
             var timeline = session.Find("Seekmain");
-            session.DoubleClickAt(timeline, 200, 22 + 26 * 2 + 13);
-            session.DoubleClickAt(timeline, 400, 22 + 26 * 3 + 13);
+            session.DoubleClickAt(timeline, Beat(1), Row(2));
+            session.DoubleClickAt(timeline, Beat(2), Row(3));
             Save();
             var twoMarks = new FileInfo(LayerFile).Length;
 
@@ -129,6 +130,69 @@ namespace UITests.PPDEditor
             FlaUI.Core.Input.Wait.UntilInputIsProcessed();
             Save();
             Assert.Equal(twoMarks, new FileInfo(LayerFile).Length);
+        }
+
+        /// <summary>
+        /// タイムラインの行の真ん中の高さです（上の時間の欄が 22、行が 26 の高さ）。
+        /// </summary>
+        static double Row(int row) => 22 + 26 * row + 13;
+
+        /// <summary>
+        /// タイムラインの 1 拍の幅（ピクセル）です。マークは拍の区切りに吸着するので、拍ちょうどの位置をクリックする。
+        /// </summary>
+        const int BeatWidth = 100;
+
+        static double Beat(double beat) => BeatWidth * beat;
+
+        void SetBeatWidth()
+        {
+            session.Find("DisplayWidthBox").AsTextBox().Text = BeatWidth.ToString(System.Globalization.CultureInfo.InvariantCulture);
+        }
+
+        [Fact]
+        public void TimelineAreaSelectionDragAndSeek()
+        {
+            CreateProject();
+            SetBeatWidth();
+            var emptySize = new FileInfo(LayerFile).Length;
+            var timeline = session.Find("Seekmain");
+            foreach (var beat in new[] { 1, 2, 3 })
+            {
+                session.DoubleClickAt(timeline, Beat(beat), Row(2));
+            }
+            Save();
+            var threeMarks = new FileInfo(LayerFile).Length;
+
+            // マークをドラッグして時間を動かす。Shift を押しながらなら、別の行へ
+            session.DragAt(timeline, Beat(1), Row(2), Beat(1.5), Row(2));
+            FlaUI.Core.Input.Keyboard.Press(FlaUI.Core.WindowsAPI.VirtualKeyShort.SHIFT);
+            try
+            {
+                session.DragAt(timeline, Beat(2), Row(2), Beat(2), Row(4));
+            }
+            finally
+            {
+                FlaUI.Core.Input.Keyboard.Release(FlaUI.Core.WindowsAPI.VirtualKeyShort.SHIFT);
+            }
+            Save();
+            Assert.Equal(threeMarks, new FileInfo(LayerFile).Length);
+
+            // 範囲を選んで、まとめて消す
+            session.DragAt(timeline, Beat(0.5), Row(1), Beat(3.5), Row(5));
+            FlaUI.Core.Input.Keyboard.Type(FlaUI.Core.WindowsAPI.VirtualKeyShort.DELETE);
+            FlaUI.Core.Input.Wait.UntilInputIsProcessed();
+            Save();
+            Assert.Equal(emptySize, new FileInfo(LayerFile).Length);
+            FlaUI.Core.Input.Keyboard.TypeSimultaneously(FlaUI.Core.WindowsAPI.VirtualKeyShort.CONTROL, FlaUI.Core.WindowsAPI.VirtualKeyShort.KEY_Z);
+            FlaUI.Core.Input.Wait.UntilInputIsProcessed();
+            Save();
+            Assert.Equal(threeMarks, new FileInfo(LayerFile).Length);
+
+            // 上の時間の欄を押すと、その時間へ移る
+            session.DragAt(timeline, Beat(3), 10, Beat(3), 10);
+            Save();
+            var seekTime = double.Parse(ProjectValue("Base.lastseektime"), System.Globalization.CultureInfo.InvariantCulture);
+            Assert.True(seekTime > 0.1, seekTime.ToString(System.Globalization.CultureInfo.InvariantCulture));
         }
 
         [Fact]
@@ -159,8 +223,9 @@ namespace UITests.PPDEditor
             Assert.True(File.Exists(LayerFile));
             var emptySize = new FileInfo(LayerFile).Length;
 
-            // タイムラインの行（上の時間の欄が 22、行が 26 の高さ）をダブルクリックして、マークを置く
-            session.DoubleClickAt(session.Find("Seekmain"), 200, 22 + 26 * 2 + 13);
+            // タイムラインの行をダブルクリックして、マークを置く
+            SetBeatWidth();
+            session.DoubleClickAt(session.Find("Seekmain"), Beat(2), Row(2));
 
             Save();
             Assert.True(AppSession.WaitUntil(() => new FileInfo(LayerFile).Length > emptySize), "マークが保存されません");

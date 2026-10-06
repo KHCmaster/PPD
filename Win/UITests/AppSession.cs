@@ -239,6 +239,35 @@ namespace UITests
         }
 
         /// <summary>
+        /// 要素の左上からの位置（WPF の単位）から別の位置まで、マウスの左ボタンを押したまま動かします。
+        /// 押したまま少し待つ（ドラッグの間のマウスの位置を、タイマーで見るアプリがあるため）。
+        /// </summary>
+        public void DragAt(AutomationElement element, double fromX, double fromY, double toX, double toY)
+        {
+            MainWindow.SetForeground();
+            var scale = NativeWindows.GetScale(HandleOf(MainWindow));
+            var bounds = Retry.WhileException(() => element.BoundingRectangle, TimeSpan.FromSeconds(5), null, throwOnTimeout: true).Result;
+            System.Drawing.Point Point(double x, double y) => new(bounds.X + (int)(x * scale), bounds.Y + (int)(y * scale));
+            FlaUI.Core.Input.Mouse.MoveTo(Point(fromX, fromY));
+            FlaUI.Core.Input.Mouse.Down(FlaUI.Core.Input.MouseButton.Left);
+            try
+            {
+                System.Threading.Thread.Sleep(300);
+                for (var i = 1; i <= 5; i++)
+                {
+                    FlaUI.Core.Input.Mouse.MoveTo(Point(fromX + (toX - fromX) * i / 5, fromY + (toY - fromY) * i / 5));
+                    System.Threading.Thread.Sleep(100);
+                }
+                System.Threading.Thread.Sleep(300);
+            }
+            finally
+            {
+                FlaUI.Core.Input.Mouse.Up(FlaUI.Core.Input.MouseButton.Left);
+            }
+            FlaUI.Core.Input.Wait.UntilInputIsProcessed();
+        }
+
+        /// <summary>
         /// ウィンドウを閉じます（閉じるボタンと同じ。ダイアログではキャンセルになる）。
         /// </summary>
         public void CloseWindow(Window window)
