@@ -222,7 +222,8 @@ namespace PPDEditor
             var dirs = Directory.GetDirectories(sourceDirName);
             foreach (string dir in dirs)
             {
-                CopyDirectory(dir, destDirName + System.IO.Path.GetFileName(dir), exceptFiles);
+                // 下のフォルダーでも上書きを確かめる（以前は確かめずに上書きしていた）
+                CopyDirectory(dir, destDirName + System.IO.Path.GetFileName(dir), exceptFiles, overwriteConfirm);
             }
         }
 
