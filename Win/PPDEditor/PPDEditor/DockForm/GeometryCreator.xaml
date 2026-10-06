@@ -78,18 +78,18 @@
                     <CheckBox Content="グリッドを表示" IsChecked="{Binding SquareGridEnabled}" />
                     <Button Content="グリッドの設定" HorizontalAlignment="Right" MinWidth="110" Command="{Binding EditGridCommand}" />
                     <CheckBox Content="{Binding Texts[GCCheckBox4]}" IsChecked="{Binding ApplyMoved}" Margin="0,8,0,6" />
-                    <Button Content="{Binding Texts[GCButton1]}" Command="{Binding ApplyCommand}" />
+                    <Button AutomationProperties.AutomationId="GeometryApplyButton" Content="{Binding Texts[GCButton1]}" Command="{Binding ApplyCommand}" />
                     <GroupBox Header="{Binding Texts[GCGroup1]}">
                         <StackPanel>
                             <DockPanel>
-                                <RadioButton DockPanel.Dock="Right" GroupName="Shape" Content="{Binding Texts[GCRadioButton2]}" IsChecked="{Binding CreatePolygon}" />
+                                <RadioButton DockPanel.Dock="Right" AutomationProperties.AutomationId="GeometryPolygonRadio" GroupName="Shape" Content="{Binding Texts[GCRadioButton2]}" IsChecked="{Binding CreatePolygon}" />
                                 <RadioButton GroupName="Shape" Content="{Binding Texts[GCRadioButton1]}" IsChecked="{Binding CreatePolygon, Converter={StaticResource Inverse}}" />
                             </DockPanel>
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,4,0,0">
                                 <controls:DragValueLabel Text="{Binding Texts[GCLabel1]}" VerticalAlignment="Center" Margin="0,0,6,0" ValueChange="PolygonCountLabel_ValueChange" />
                                 <TextBox Text="{Binding PolygonCount, UpdateSourceTrigger=PropertyChanged}" Width="47" />
                             </StackPanel>
-                            <Button Content="{Binding Texts[GCButton2]}" HorizontalAlignment="Left" MinWidth="110" Margin="0,4,0,0" Command="{Binding GenerateCommand}" />
+                            <Button AutomationProperties.AutomationId="GeometryGenerateButton" Content="{Binding Texts[GCButton2]}" HorizontalAlignment="Left" MinWidth="110" Margin="0,4,0,0" Command="{Binding GenerateCommand}" />
                         </StackPanel>
                     </GroupBox>
                     <GroupBox Header="{Binding Texts[GCGroup3]}">
@@ -131,7 +131,7 @@
                             <TextBlock Text="{Binding Texts[GCLabel2]}" VerticalAlignment="Center" Margin="0,0,6,0" />
                             <controls:NumericUpDown Width="50" Minimum="0" Maximum="90" Value="{Binding AngleRestriction}" />
                         </StackPanel>
-                        <Button Content="{Binding Texts[GCButton3]}" HorizontalAlignment="Left" MinWidth="110" Margin="0,8,0,0" Command="{Binding ClearCommand}" />
+                        <Button AutomationProperties.AutomationId="GeometryClearButton" Content="{Binding Texts[GCButton3]}" HorizontalAlignment="Left" MinWidth="110" Margin="0,8,0,0" Command="{Binding ClearCommand}" />
                     </StackPanel>
                 </StackPanel>
             </Grid>
