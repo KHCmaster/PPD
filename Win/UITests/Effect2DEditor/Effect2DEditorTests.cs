@@ -1,4 +1,4 @@
-using FlaUI.Core.AutomationElements;
+﻿using FlaUI.Core.AutomationElements;
 using System;
 using System.IO;
 using System.Linq;
@@ -15,7 +15,8 @@ namespace UITests.Effect2DEditor
     /// </remarks>
     public sealed class Effect2DEditorTests : IDisposable
     {
-        readonly AppSession session = AppSession.Start("Effect2DEditor", "Effect2DEditor.exe");
+        // 使う人の設定（背景の色やカンバスの大きさ）と最近使ったファイルはコピーせず、既定の設定で始める
+        readonly AppSession session = AppSession.Start("Effect2DEditor", "Effect2DEditor.exe", "Effect2DEditor.ini", "recentused.ini");
 
         public void Dispose()
         {
@@ -187,15 +188,30 @@ namespace UITests.Effect2DEditor
         }
 
         /// <summary>
-        /// メイン以外の、このアプリのウィンドウ（枠のないウィンドウも含む）を待って返します。
+        /// 比率を変えるウィンドウ（枠のないウィンドウ）を待って返します。
         /// </summary>
-        private Window WaitForOtherWindow()
+        /// <remarks>
+        /// 右クリックのメニューも別のウィンドウなので、OK のボタンがあるウィンドウを探す。
+        /// </remarks>
+        private Window WaitForRatioWindow()
         {
             var processId = session.MainWindow.Properties.ProcessId.Value;
             var main = session.MainWindow.Properties.NativeWindowHandle.Value;
-            IntPtr found = IntPtr.Zero;
-            Assert.True(AppSession.WaitUntil(() => (found = NativeWindows.OfProcess(processId).FirstOrDefault(h => h != main)) != IntPtr.Zero), "ウィンドウが出ません");
-            return session.Automation.FromHandle(found).AsWindow();
+            Window found = null;
+            Assert.True(AppSession.WaitUntil(() => (found = NativeWindows.OfProcess(processId).Where(h => h != main)
+                .Select(h => session.Automation.FromHandle(h).AsWindow())
+                .FirstOrDefault(w => w.FindFirstDescendant(cf => cf.ByAutomationId("RatioOkButton")) != null)) != null), "比率のウィンドウが出ません");
+            return found;
+        }
+
+        /// <summary>
+        /// 比率を変えるウィンドウを OK で閉じます。
+        /// </summary>
+        private void AcceptRatioWindow(Window window)
+        {
+            var handle = window.Properties.NativeWindowHandle.Value;
+            AppSession.InvokeAsync(window.FindFirstDescendant(cf => cf.ByAutomationId("RatioOkButton")));
+            Assert.True(AppSession.WaitUntil(() => !NativeWindows.OfProcess(session.MainWindow.Properties.ProcessId.Value).Contains(handle)), "比率のウィンドウが閉じません");
         }
 
         [Fact]
@@ -215,14 +231,12 @@ namespace UITests.Effect2DEditor
             var ratio = session.Find("XRatioButton").AsButton();
             Assert.True(AppSession.WaitUntil(() => ratio.IsEnabled), "比率のボタンを押せません");
             AppSession.InvokeAsync(ratio);
-            var window = WaitForOtherWindow();
+            var window = WaitForRatioWindow();
             session.DragAt(window, 26 + 40, 12 + 90, 26 + 60, 12 + 30);
             window.FindFirstDescendant(cf => cf.ByAutomationId("RatioCopyButton")).AsButton().Invoke();
             window.FindFirstDescendant(cf => cf.ByAutomationId("RatioLinearButton")).AsButton().Invoke();
             window.FindFirstDescendant(cf => cf.ByAutomationId("RatioPasteButton")).AsButton().Invoke();
-            var handle = window.Properties.NativeWindowHandle.Value;
-            AppSession.InvokeAsync(window.FindFirstDescendant(cf => cf.ByAutomationId("RatioOkButton")));
-            Assert.True(AppSession.WaitUntil(() => !NativeWindows.OfProcess(session.MainWindow.Properties.ProcessId.Value).Contains(handle)), "比率のウィンドウが閉じません");
+            AcceptRatioWindow(window);
 
             // ステートをドラッグで動かす（Ctrl を押すと、後ろのステートも一緒に動く）
             session.DragAt(timeline, 10 * 10 + 5, 20 + 9, 15 * 10 + 5, 20 + 9);
@@ -245,6 +259,85 @@ namespace UITests.Effect2DEditor
 
             // ステートを消す
             session.RightClickForPopup(timeline, 20 * 10 + 5, 20 + 9, "DeleteStateMenuItem").AsMenuItem().Invoke();
+            Assert.True(IsMenuItemEnabled("EditMenu", "UndoMenuItem"));
+        }
+
+        private static bool IsNear(string text, float expected)
+        {
+            return float.TryParse(text, System.Globalization.CultureInfo.InvariantCulture, out var value) && Math.Abs(value - expected) <= 2;
+        }
+
+        /// <summary>
+        /// Ctrl を押したまま、マウスの左ボタンでドラッグします。
+        /// </summary>
+        private void ControlDragAt(AutomationElement element, double fromX, double fromY, double toX, double toY)
+        {
+            FlaUI.Core.Input.Keyboard.Press(FlaUI.Core.WindowsAPI.VirtualKeyShort.CONTROL);
+            try
+            {
+                session.DragAt(element, fromX, fromY, toX, toY);
+            }
+            finally
+            {
+                FlaUI.Core.Input.Keyboard.Release(FlaUI.Core.WindowsAPI.VirtualKeyShort.CONTROL);
+            }
+        }
+
+        [Fact]
+        public void CanvasBezierIsEditedTransformedAndReset()
+        {
+            // カンバスがドックに収まって、真ん中に置かれる大きさにする
+            var dialog = OpenDialogFromMenu("EditMenu", "CanvasSizeMenuItem");
+            dialog.FindFirstDescendant(cf => cf.ByAutomationId("WidthBox")).AsTextBox().Text = "300";
+            dialog.FindFirstDescendant(cf => cf.ByAutomationId("HeightBox")).AsTextBox().Text = "200";
+            dialog.FindFirstDescendant(cf => cf.ByAutomationId("OkButton")).AsButton().Invoke();
+            Assert.True(session.WaitForNoModal());
+
+            AddSampleImage();
+            var timeline = session.Find("timeLine1");
+            session.RightClickForPopup(timeline, 10 * 10 + 5, 20 + 9, "InsertNormalStateMenuItem").AsMenuItem().Invoke();
+            SelectState(10);
+            Assert.True(AppSession.WaitUntil(() => ValueOf("X") == "0"));
+            session.Find("XBox").AsTextBox().Text = "40";
+            Assert.True(AppSession.WaitUntil(() => ValueOf("X") == "40"));
+            // 選び直すと、カンバスに始めと終わりの位置が点で出る
+            SelectState(10);
+
+            // カンバスは描いて表示するので、位置で操作する（エフェクトの原点がカンバスの真ん中）
+            var canvas = session.Find("scrollViewer");
+            var scale = NativeWindows.GetScale(session.MainWindow.Properties.NativeWindowHandle.Value);
+            var cx = canvas.BoundingRectangle.Width / scale / 2;
+            var cy = canvas.BoundingRectangle.Height / scale / 2;
+
+            // 終わりの点を Ctrl を押したまま動かすと、位置がベジエで変わるようになる
+            ControlDragAt(canvas, cx + 40, cy, cx + 40, cy + 30);
+            // プロパティの欄は、ステートを選び直すと変わる（ベジエの位置は、数字では変えられない）
+            SelectState(0);
+            SelectState(10);
+            // マウスの位置は画面の点の単位なので、少しずれることがある
+            Assert.True(AppSession.WaitUntil(() => IsNear(ValueOf("Y"), 30)), "点が動きません: " + ValueOf("Y"));
+            Assert.True(IsNear(ValueOf("X"), 40), ValueOf("X"));
+            Assert.True(AppSession.WaitUntil(() => !session.Find("XBox").IsEnabled), "位置がベジエになりません");
+            var bezierButton = session.Find("BezierPositionButton").AsButton();
+            Assert.True(AppSession.WaitUntil(() => bezierButton.IsEnabled));
+
+            // 線の上をクリックすると点が増え、メニューから消せる
+            session.ClickAt(canvas, cx + 20, cy + 15);
+            session.RightClickForPopup(canvas, cx + 20, cy + 15, "deleteAnchorMenuItem").AsMenuItem().Invoke();
+
+            // 変形を始めて、回して、終える
+            session.RightClickForPopup(canvas, cx, cy, "startTransformMenuItem").AsMenuItem().Invoke();
+            session.DragAt(canvas, cx + 60, cy + 50, cx + 30, cy + 60);
+            session.RightClickForPopup(canvas, cx, cy, "endTransformMenuItem").AsMenuItem().Invoke();
+
+            // 位置のベジエの比率を変える
+            AppSession.InvokeAsync(bezierButton);
+            var window = WaitForRatioWindow();
+            AcceptRatioWindow(window);
+
+            // 元に戻すと、ベジエでない位置の変化になる
+            session.RightClickForPopup(canvas, cx, cy, "resetMenuItem").AsMenuItem().Invoke();
+            Assert.True(AppSession.WaitUntil(() => session.Find("XBox").IsEnabled), "ベジエが元に戻りません");
             Assert.True(IsMenuItemEnabled("EditMenu", "UndoMenuItem"));
         }
 
