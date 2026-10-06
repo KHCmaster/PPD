@@ -219,7 +219,8 @@ namespace UITests
         {
             MainWindow.SetForeground();
             var scale = NativeWindows.GetScale(HandleOf(MainWindow));
-            var bounds = element.BoundingRectangle;
+            // 画面の更新の直後は、UI Automation が一時的に COM のエラーを返すことがあるので、読み直す
+            var bounds = Retry.WhileException(() => element.BoundingRectangle, TimeSpan.FromSeconds(5), null, throwOnTimeout: true).Result;
             FlaUI.Core.Input.Mouse.Click(new System.Drawing.Point(bounds.X + (int)(x * scale), bounds.Y + (int)(y * scale)),
                 rightButton ? FlaUI.Core.Input.MouseButton.Right : FlaUI.Core.Input.MouseButton.Left);
             FlaUI.Core.Input.Wait.UntilInputIsProcessed();
