@@ -13,10 +13,10 @@
             <Border Canvas.Left="25" Canvas.Top="11" BorderBrush="Gray" BorderThickness="1">
                 <local:BezierRatioDrawer x:Name="bezierRatioDrawer1" Width="128" Height="128" />
             </Border>
-            <Button Canvas.Left="159" Canvas.Top="11" Width="75" Height="23" Content="{Binding Texts[RCFButton3]}" Command="{Binding SetLinearCommand}" />
-            <Button Canvas.Left="159" Canvas.Top="40" Width="75" Height="23" Content="{Binding Texts[RCFButton4]}" Command="{Binding CopyCommand}" />
-            <Button Canvas.Left="159" Canvas.Top="69" Width="75" Height="23" Content="{Binding Texts[RCFButton5]}" Command="{Binding PasteCommand}" />
-            <Button Canvas.Left="11" Canvas.Top="171" Width="75" Height="23" Content="OK" IsDefault="True" Command="{Binding OkCommand}" />
+            <Button AutomationProperties.AutomationId="RatioLinearButton" Canvas.Left="159" Canvas.Top="11" Width="75" Height="23" Content="{Binding Texts[RCFButton3]}" Command="{Binding SetLinearCommand}" />
+            <Button AutomationProperties.AutomationId="RatioCopyButton" Canvas.Left="159" Canvas.Top="40" Width="75" Height="23" Content="{Binding Texts[RCFButton4]}" Command="{Binding CopyCommand}" />
+            <Button AutomationProperties.AutomationId="RatioPasteButton" Canvas.Left="159" Canvas.Top="69" Width="75" Height="23" Content="{Binding Texts[RCFButton5]}" Command="{Binding PasteCommand}" />
+            <Button AutomationProperties.AutomationId="RatioOkButton" Canvas.Left="11" Canvas.Top="171" Width="75" Height="23" Content="OK" IsDefault="True" Command="{Binding OkCommand}" />
             <Button Canvas.Left="92" Canvas.Top="171" Width="75" Height="23" Content="Cancel" IsCancel="True" />
         </Canvas>
     </Border>
