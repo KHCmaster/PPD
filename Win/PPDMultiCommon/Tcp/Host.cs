@@ -42,9 +42,18 @@ namespace PPDMultiCommon.Tcp
             set;
         }
 
+        /// <summary>
+        /// 待ち受けるアドレスです。既定はすべてのアドレス（ほかのコンピューターからつなげる）。
+        /// </summary>
+        public IPAddress ListenAddress
+        {
+            get;
+            set;
+        } = IPAddress.Any;
+
         public void Start()
         {
-            _listener = new TcpListener(IPAddress.Any, Port);
+            _listener = new TcpListener(ListenAddress, Port);
             _listener.Start();
             Console.WriteLine("Port{0}のListenを開始しました。", Port);
 
