@@ -146,6 +146,8 @@ namespace PPDMultiServer.Tcp
             {
                 Logger.AddLog("End");
                 Logger.Close();
+                // 閉じた後にもう一度 Close（Dispose）しても書かない
+                Logger = null;
             }
         }
 
