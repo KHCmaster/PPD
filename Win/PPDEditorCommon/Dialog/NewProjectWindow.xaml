@@ -82,15 +82,15 @@
                 <TextBlock Margin="10,0" Grid.Row="0" VerticalAlignment="Center" Grid.Column="0" Text="{PPDEditorCommon:Translate Name, StringFormat={}{0}:}"/>
                 <TextBlock Margin="10,0" Grid.Row="1" VerticalAlignment="Center" Grid.Column="0" Text="{PPDEditorCommon:Translate Location, StringFormat={}{0}:}"/>
                 <TextBlock Margin="10,0" Grid.Row="2" VerticalAlignment="Center" Grid.Column="0" Text="{PPDEditorCommon:Translate Movie, StringFormat={}{0}:}"/>
-                <TextBox x:Name="nameTextBox" Margin="0,2" Grid.Row="0" Grid.Column="1" Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                <TextBox Margin="0,2" Grid.Row="1" Grid.Column="1" Text="{Binding FolderPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                <TextBox Margin="0,2" Grid.Row="2" Grid.Column="1" Text="{Binding MoviePath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBox x:Name="nameTextBox" AutomationProperties.AutomationId="ProjectNameBox" Margin="0,2" Grid.Row="0" Grid.Column="1" Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBox AutomationProperties.AutomationId="ProjectFolderBox" Margin="0,2" Grid.Row="1" Grid.Column="1" Text="{Binding FolderPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBox AutomationProperties.AutomationId="ProjectMovieBox" Margin="0,2" Grid.Row="2" Grid.Column="1" Text="{Binding MoviePath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 <Button Margin="10,0" Width="70" Height="24" Grid.Row="1" Grid.Column="2" Content="{PPDEditorCommon:Translate Refer}" Command="{Binding ReferLocationCommand}"/>
                 <Button Margin="10,0" Width="70" Height="24" Grid.Row="2" Grid.Column="2" Content="{PPDEditorCommon:Translate Refer}" Command="{Binding ReferMovieCommand}"/>
             </Grid>
             <StackPanel HorizontalAlignment="Right" Margin="0,5" Grid.Row="1" Orientation="Horizontal">
                 <TextBlock Foreground="Red" VerticalAlignment="Center" Text="{Binding ValidateResultMessage}"/>
-                <Button IsDefault="True" Width="70" Height="24" Margin="10,0" Content="OK" Command="{Binding OkCommand}" IsEnabled="{Binding IsOkEnabled}"/>
+                <Button IsDefault="True" AutomationProperties.AutomationId="NewProjectOkButton" Width="70" Height="24" Margin="10,0" Content="OK" Command="{Binding OkCommand}" IsEnabled="{Binding IsOkEnabled}"/>
                 <Button IsCancel="True" Width="70" Height="24" Margin="10,0" Content="Cancel" Command="{Binding CancelCommand}"/>
             </StackPanel>
         </Grid>

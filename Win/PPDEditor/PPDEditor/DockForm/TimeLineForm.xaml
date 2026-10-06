@@ -15,7 +15,7 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <controls:Seekex x:Name="seekex1" />
-        <controls:Seekmain x:Name="seekmain1" Grid.Column="2">
+        <controls:Seekmain x:Name="seekmain1" AutomationProperties.AutomationId="Seekmain" Grid.Column="2">
             <controls:Seekmain.ContextMenu>
                 <!-- DataContext はタイムラインの ViewModel（ContextMenu は置いた場所の DataContext を受け継ぐ） -->
                 <ContextMenu Opened="ContextMenu_Opened">

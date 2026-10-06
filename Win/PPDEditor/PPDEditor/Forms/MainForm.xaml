@@ -106,8 +106,8 @@
                         </Menu.Style>
                         <MenuItem x:Name="fileMenu" Header="{Binding Texts[File]}">
                             <MenuItem AutomationProperties.AutomationId="NewProjectMenuItem" Header="{Binding Texts[CPF]}" Command="{Binding NewProjectCommand}" />
-                            <MenuItem Header="{Binding Texts[OpenProject]}" Command="{Binding OpenProjectCommand}" />
-                            <MenuItem Header="{Binding Texts[OverWriteProject]}" InputGestureText="Ctrl+S" Command="{Binding OverwriteProjectCommand}" />
+                            <MenuItem AutomationProperties.AutomationId="OpenProjectMenuItem" Header="{Binding Texts[OpenProject]}" Command="{Binding OpenProjectCommand}" />
+                            <MenuItem AutomationProperties.AutomationId="OverwriteProjectMenuItem" Header="{Binding Texts[OverWriteProject]}" InputGestureText="Ctrl+S" Command="{Binding OverwriteProjectCommand}" />
                             <MenuItem AutomationProperties.AutomationId="MergeProjectMenuItem" Header="{Binding Texts[MergeProject]}" Command="{Binding MergeProjectCommand}" />
                             <MenuItem Header="{Binding Texts[Open]}">
                                 <MenuItem Header="*.ppd" Command="{Binding OpenPpdCommand}" />
