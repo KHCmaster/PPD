@@ -212,6 +212,65 @@ namespace UnitTests.Libraries
         }
 
         [Fact]
+        public void AccountLists_NeedLoginAndStopAtErrors()
+        {
+            using var scope = new WebTestScope();
+            scope.Server.OnXml("/api/get-perfect-trial-list", """
+                <Root Result="0"><Trial Id="1" ScoreLibraryId="lib1" ScoreHash="h1" Difficulty="2" /><Trial Id="2" ScoreLibraryId="lib2" ScoreHash="h2" Difficulty="3" /></Root>
+                """);
+            scope.Server.OnXml("/api/get-list-info", """
+                <Root><List Title="好き" Watch="1"><Score ID="s1" Title="曲1" /><Score ID="s2" Title="曲2" /></List><List Title="あとで" Watch="0" /></Root>
+                """);
+            scope.Server.OnXml("/api/get-replay-list", """
+                <Root Result="0"><Purchase Id="5" ResultId="50" Score="1000" CoolCount="1" GoodCount="2" SafeCount="3" SadCount="4" WorstCount="5" MaxCombo="6" ScoreLibraryId="lib" ScoreHash="hash" Nickname="nick" /></Root>
+                """);
+            scope.Server.On("/api/get-replay", request => new TestWebServer.Response(HttpStatusCode.OK, [9, 8, (byte)int.Parse(request.Form["resultid"])]));
+
+            // ログインしていなければ送らない
+            Assert.Empty(scope.Web.GetPerfectTrials());
+            Assert.Empty(scope.Web.GetListInfos());
+            Assert.Empty(scope.Web.GetReplayInfos());
+            Assert.Null(scope.Web.GetReplayData(7));
+            Assert.Empty(scope.Server.Requests);
+
+            Login(scope);
+            var trials = scope.Web.GetPerfectTrials();
+            Assert.Equal([1, 2], trials.Select(t => t.Id));
+            Assert.Equal(("lib1", "h1", PPDFrameworkCore.Difficulty.Hard), (trials[0].ScoreLibraryId, trials[0].ScoreHash, trials[0].Difficulty));
+
+            var lists = scope.Web.GetListInfos();
+            Assert.Equal([("好き", true), ("あとで", false)], lists.Select(l => (l.Title, l.IsWatch)));
+            Assert.Equal([("s1", "曲1"), ("s2", "曲2")], lists[0].Scores.Select(s => (s.ScoreId, s.Title)));
+            Assert.Same(lists[0], lists[0].Scores[0].Parent);
+            Assert.Empty(lists[1].Scores);
+
+            var replay = scope.Web.GetReplayInfos().Single();
+            Assert.Equal((5, 50, 1000, 1, 2, 3, 4, 5, 6), (replay.Id, replay.ResultId, replay.Score, replay.CoolCount, replay.GoodCount, replay.SafeCount, replay.SadCount, replay.WorstCount, replay.MaxCombo));
+            Assert.Equal(("lib", "hash", "nick"), (replay.ScoreLibraryId, replay.ScoreHash, replay.Nickname));
+            Assert.Equal([9, 8, 7], scope.Web.GetReplayData(7));
+
+            // 失敗の結果、結果のない応答、通信のエラー
+            scope.Server.OnXml("/api/get-perfect-trial-list", """<Root Result="1"><Trial Id="1" ScoreLibraryId="l" ScoreHash="h" Difficulty="0" /></Root>""");
+            scope.Server.OnXml("/api/get-replay-list", "<Root />");
+            Assert.Empty(scope.Web.GetPerfectTrials());
+            Assert.Empty(scope.Web.GetReplayInfos());
+            scope.Server.OnXml("/api/get-perfect-trial-list", """<Root Result="x" />""");
+            scope.Server.OnXml("/api/get-replay-list", """<Root Result="x" />""");
+            Assert.Empty(scope.Web.GetPerfectTrials());
+            Assert.Empty(scope.Web.GetReplayInfos());
+            scope.Server.OnXml("/api/get-replay-list", """<Root Result="2" />""");
+            Assert.Empty(scope.Web.GetReplayInfos());
+            foreach (var path in new[] { "/api/get-perfect-trial-list", "/api/get-list-info", "/api/get-replay-list", "/api/get-replay" })
+            {
+                scope.Server.On(path, _ => TestWebServer.Status(HttpStatusCode.InternalServerError));
+            }
+            Assert.Empty(scope.Web.GetPerfectTrials());
+            Assert.Empty(scope.Web.GetListInfos());
+            Assert.Empty(scope.Web.GetReplayInfos());
+            Assert.Null(scope.Web.GetReplayData(7));
+        }
+
+        [Fact]
         public void ScoreDetail_FindsIdByHash()
         {
             using var scope = new WebTestScope();
