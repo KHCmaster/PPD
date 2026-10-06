@@ -12,7 +12,8 @@ namespace PPDMultiCommon.Web
 {
     public class WebManager
     {
-        private static readonly string baseUrl = @"http://projectdxxx.me" + "/multi-api";
+        // テストでは localhost のテスト用のサーバーにする（readonly にすると、テストから変えられない）
+        private static string baseUrl = @"http://projectdxxx.me" + "/multi-api";
 
         private string token;
         private bool isRoomExist;
