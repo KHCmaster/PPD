@@ -142,6 +142,8 @@ namespace UnitTests.Graphics
 
         Play Start(MarkData[] marks, IEVDData[] events = null, AutoMode auto = AutoMode.None, MainGameConfigBase config = null, bool connect = false, bool random = false)
         {
+            // 判定は設定（PPD.ini）の判定の幅とずれを使う。テストの設定が既定であることを確かめておく
+            Assert.Equal((0f, 0.04f), (PPDSetting.Setting.AdjustGapTime, PPDSetting.Setting.CoolArea));
             var song = new SongInformation();
             typeof(SongInformation).GetProperty(nameof(SongInformation.BPM)).SetValue(song, Bpm);
             var utility = new PPDGameUtility { SongInformation = song, Profile = new Profile(), SpeedScale = 1, AutoMode = auto, Connect = connect, Random = random };

@@ -39,6 +39,8 @@ namespace UnitTests.Libraries
         public SongDatabase(Action<string> prepare = null)
         {
             Directory.CreateDirectory(SongDir);
+            // 設定がまだなければ、ここ（PPD.ini のない一時フォルダー）で作っておく。null に戻すと、後で別のフォルダーの PPD.ini から作られることがある
+            _ = PPDSetting.Setting;
             saved = [.. statics.Select(s => Field(s).GetValue(null))];
             foreach (var s in statics)
             {
