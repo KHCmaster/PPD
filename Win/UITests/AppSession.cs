@@ -31,7 +31,15 @@ namespace UITests
 
         readonly Application application;
 
-        public UIA3Automation Automation { get; } = new();
+        /// <summary>
+        /// UI Automation です。呼び出しには時間の上限を付ける（PPDEditor のように UI のスレッドが忙しいアプリでは、
+        /// 呼び出しがときどき戻らないことがあり、上限がないとテストが止まったままになる）。
+        /// </summary>
+        public UIA3Automation Automation { get; } = new()
+        {
+            ConnectionTimeout = TimeSpan.FromSeconds(20),
+            TransactionTimeout = TimeSpan.FromSeconds(20),
+        };
 
         /// <summary>
         /// テストのプロセスを、モニターごとの DPI に対応させます（UI Automation の座標と、画面を撮る座標・マウスの座標を合わせるため）。
@@ -168,7 +176,8 @@ namespace UITests
         /// </summary>
         public AutomationElement Find(string automationId)
         {
-            return Retry.WhileNull(() => MainWindow.FindFirstDescendant(cf => cf.ByAutomationId(automationId)), defaultTimeout).Result
+            // 時間切れの例外のときも探し直す
+            return Retry.WhileNull(() => MainWindow.FindFirstDescendant(cf => cf.ByAutomationId(automationId)), TimeSpan.FromMinutes(1), ignoreException: true).Result
                 ?? throw new InvalidOperationException(automationId + " が見つかりません。");
         }
 
@@ -333,8 +342,14 @@ namespace UITests
         /// </summary>
         public AutomationElement FindInPopups(string automationId, TimeSpan? timeout = null)
         {
-            var result = Retry.WhileNull(() => Automation.GetDesktop()
-                .FindAllChildren(cf => cf.ByProcessId(application.ProcessId))
+            // メインのウィンドウの中は探さない（PPDEditor のように大きいウィンドウでは、すべてを探すと時間切れになる）
+            var mainHandle = HandleOf(MainWindow);
+            // ポップアップは、Win32 で見えるウィンドウと、UI Automation のデスクトップの子の両方から探す（どちらかにしか出ないことがある）
+            var result = Retry.WhileNull(() => NativeWindows.OfProcess(application.ProcessId)
+                .Where(handle => handle != mainHandle)
+                .Select(handle => Automation.FromHandle(handle))
+                .Concat(Automation.GetDesktop().FindAllChildren(cf => cf.ByProcessId(application.ProcessId))
+                    .Where(window => window.Properties.NativeWindowHandle.ValueOrDefault != mainHandle))
                 .Select(window => window.FindFirstDescendant(cf => cf.ByAutomationId(automationId)))
                 .FirstOrDefault(element => element != null), timeout ?? defaultTimeout);
             return result.Result ?? throw new InvalidOperationException(automationId + " がポップアップにありません。");
@@ -345,7 +360,7 @@ namespace UITests
         /// </summary>
         public static bool WaitUntil(Func<bool> condition)
         {
-            return Retry.WhileFalse(condition, defaultTimeout).Result;
+            return Retry.WhileFalse(condition, defaultTimeout, ignoreException: true).Result;
         }
 
         /// <summary>
