@@ -183,6 +183,96 @@ namespace UnitTests.Libraries
         }
 
         [Fact]
+        public void EachDifficulty_HashAndNoteType()
+        {
+            using var database = new SongDatabase();
+            database.AddSong("all", "guid", 120,
+                ("Easy", [new ChangeNoteTypeEvent(0, NoteType.AC)]),
+                ("Normal", [new ChangeNoteTypeEvent(0, NoteType.ACFT)]),
+                ("Hard", null),
+                ("Extreme", [new ChangeNoteTypeEvent(0, NoteType.Normal), new ChangeNoteTypeEvent(1, NoteType.AC)]));
+            database.AddSong("hard", "guid-h", 120, ("Hard", null));
+            database.AddSong("extreme", "guid-x", 120, ("Extreme", [new ChangeNoteTypeEvent(0, NoteType.AC)]));
+            SongInformation.Update();
+
+            var song = SongDatabase.Song("all");
+            var difficulties = new[] { Difficulty.Easy, Difficulty.Normal, Difficulty.Hard, Difficulty.Extreme };
+            var hashes = new[] { song.EasyHash, song.NormalHash, song.HardHash, song.ExtremeHash };
+            for (var i = 0; i < 4; i++)
+            {
+                Assert.Same(hashes[i], song.GetScoreHash(difficulties[i]));
+                Assert.Equal(difficulties[i], song.GetDifficulty(CryptographyUtility.Getx2Encoding(hashes[i])));
+                Assert.Same(song, SongInformation.FindSongInformationByHash(hashes[i], difficulties[i]));
+            }
+            // 最初の AC か ACFT の変更で決める
+            Assert.Equal([NoteType.AC, NoteType.ACFT, NoteType.Normal, NoteType.AC], difficulties.Select(song.GetNoteType));
+            Assert.Equal([true, false, false, true], difficulties.Select(song.GetIsAC));
+            Assert.Equal([false, true, false, false], difficulties.Select(song.GetIsACFT));
+            // 普通の譜面（AC でも ACFT でもない）はハードだけ
+            Assert.True(song.HasNormal);
+            Assert.False(SongDatabase.Song("extreme").HasNormal);
+
+            // 主なハッシュは、易しい難易度から
+            Assert.Same(song.EasyHash, song.GetPrimaryHash());
+            Assert.Same(SongDatabase.Song("hard").HardHash, SongDatabase.Song("hard").GetPrimaryHash());
+            Assert.Same(SongDatabase.Song("extreme").ExtremeHash, SongDatabase.Song("extreme").GetPrimaryHash());
+            Assert.Null(SongInformation.Root.GetPrimaryHash());
+
+            Assert.Equal(Difficulty.Other, SongInformation.ConvertAvailable(SongInformation.AvailableDifficulty.None));
+            Assert.Equal(SongInformation.AvailableDifficulty.None, SongInformation.ConvertDifficulty(Difficulty.Other));
+        }
+
+        [Fact]
+        public void UserVolume_IsBetween0And200()
+        {
+            var song = new SongInformation { UserVolume = 250 };
+            Assert.Equal(200, song.UserVolume);
+            song.UserVolume = -5;
+            Assert.Equal(0, song.UserVolume);
+        }
+
+        [Fact]
+        public void Comparer_PutsFoldersFirstThenNames()
+        {
+            using var database = new SongDatabase();
+            database.AddSong("b", "guid-b", 120, ("Easy", null));
+            database.AddSong("a", "guid-a", 120, ("Easy", null));
+            database.AddSong(Path.Combine("z", "c"), "guid-c", 120, ("Easy", null));
+            database.AddSong(Path.Combine("y", "d"), "guid-d", 120, ("Easy", null));
+            SongInformation.Update();
+            var comparer = new SongInformationComparer();
+            var folders = SongInformation.Root.Children.Where(s => !s.IsPPDSong).ToArray();
+            var songs = SongInformation.Root.Children.Where(s => s.IsPPDSong).ToArray();
+
+            Assert.Equal(-1, comparer.Compare(null, songs[0]));
+            Assert.Equal(1, comparer.Compare(songs[0], null));
+            Assert.Equal(-1, comparer.Compare(folders[0], songs[0]));
+            Assert.Equal(1, comparer.Compare(songs[0], folders[0]));
+            Assert.Equal(["y", "z", "a", "b"], SongInformation.Root.Children.Order(comparer).Select(s => s.DirectoryName));
+        }
+
+        [Fact]
+        public void MoviePath_FallsBackToMovieAndMusicExtensions()
+        {
+            using var database = new SongDatabase();
+            // 拡張子は PPD.ini から読む（テストには PPD.ini がない）
+            void Set(string name, string[] value) => typeof(PPDSetting).GetProperty(name, BindingFlags.Instance | BindingFlags.NonPublic).SetValue(PPDSetting.Setting, value);
+            Set(nameof(PPDSetting.MovieExtensions), ["avi"]);
+            Set(nameof(PPDSetting.MusicExtensions), ["ogg"]);
+            var video = database.AddSong("video", "guid-v", 120, ("Easy", null));
+            File.WriteAllText(Path.Combine(video, "clip.avi"), "");
+            File.WriteAllText(Path.Combine(video, "song.ogg"), "");
+            var music = database.AddSong("music", "guid-m", 120, ("Easy", null));
+            File.WriteAllText(Path.Combine(music, "song.ogg"), "");
+            // 拡張子が途中で切れている名前（.oggx）は違う
+            File.WriteAllText(Path.Combine(music, "other.oggx"), "");
+
+            // 動画の拡張子が先
+            Assert.Equal(Path.Combine(video, "clip.avi"), SongInformation.ReadData(video).MoviePath);
+            Assert.Equal(Path.Combine(music, "song.ogg"), SongInformation.ReadData(music).MoviePath);
+        }
+
+        [Fact]
         public void ReadData_ReadsFolderWithoutDatabase()
         {
             using var database = new SongDatabase();

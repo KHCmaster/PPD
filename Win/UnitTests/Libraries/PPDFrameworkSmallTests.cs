@@ -199,5 +199,26 @@ namespace UnitTests.Libraries
                 master.ChangeVolume(saved.Item3, SoundType.Se);
             }
         }
+
+        [Theory]
+        [InlineData(PPDFrameworkCore.Difficulty.Easy)]
+        [InlineData(PPDFrameworkCore.Difficulty.Normal)]
+        [InlineData(PPDFrameworkCore.Difficulty.Hard)]
+        [InlineData(PPDFrameworkCore.Difficulty.Extreme)]
+        public void Ranking_PerDifficulty(PPDFrameworkCore.Difficulty difficulty)
+        {
+            PPDFramework.Web.RankingInfo[] info = [new("name", 100, "id", 1)];
+
+            // 1 つの難易度だけのランキング
+            var single = new PPDFramework.Web.Ranking(info, difficulty);
+            Assert.Same(info, single.GetInfo(difficulty));
+            Assert.Single(Enum.GetValues<PPDFrameworkCore.Difficulty>(), d => single.GetInfo(d) != null);
+            Assert.Equal(("name", 100, "id", 1), (info[0].Nickname, info[0].Score, info[0].ID, info[0].Rank));
+
+            PPDFramework.Web.RankingInfo[][] all = [[], [], [], []];
+            var ranking = new PPDFramework.Web.Ranking(all[0], all[1], all[2], all[3]);
+            Assert.Same(all[(int)difficulty], ranking.GetInfo(difficulty));
+            Assert.Null(ranking.GetInfo(PPDFrameworkCore.Difficulty.Other));
+        }
     }
 }
