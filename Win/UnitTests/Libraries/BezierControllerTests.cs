@@ -182,6 +182,44 @@ namespace UnitTests.Libraries
             Assert.Equal(60, anchors[0].Y, 1);
         }
 
+        // 枠（0,0）-（100,50）の取っ手を引いて、中心（50,25）から広げる
+        [Theory]
+        [InlineData(100, 50, 200, 100, 3, 3)]
+        [InlineData(0, 0, -50, -25, 2, 2)]
+        [InlineData(100, 0, 150, -25, 2, 2)]
+        [InlineData(0, 50, -50, 75, 2, 2)]
+        [InlineData(50, 0, 50, -50, 1, 3)]
+        [InlineData(50, 50, 50, 100, 1, 3)]
+        [InlineData(0, 25, -100, 25, 3, 1)]
+        [InlineData(100, 25, 200, 25, 3, 1)]
+        public void Transform_DragHandleScales(float fromX, float fromY, float toX, float toY, float scaleX, float scaleY)
+        {
+            Click(0, 0);
+            Click(100, 50);
+            controller.StartTransform();
+
+            Drag(fromX, fromY, toX, toY, None);
+
+            Assert.Equal(scaleX, controller.TransformScale.X, 2);
+            Assert.Equal(scaleY, controller.TransformScale.Y, 2);
+        }
+
+        [Fact]
+        public void Transform_ShiftKeepsAspect()
+        {
+            Click(0, 0);
+            Click(100, 50);
+            controller.StartTransform();
+
+            // 角を Shift で引くと、縦横の比を保つ（縦の伸びに合わせる）
+            Drag(100, 50, 150, 100, Shift);
+
+            Assert.Equal(3, controller.TransformScale.Y, 2);
+            Assert.Equal(controller.TransformScale.Y, controller.TransformScale.X, 2);
+            controller.EndTransform();
+            Assert.Equal(new PointF(-100, -50), Anchors[0]);
+        }
+
         [Fact]
         public void Transform_DragOutsideRotates()
         {
