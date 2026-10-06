@@ -30,6 +30,7 @@
     <ProjectReference Include="..\KeyConfiger\KeyConfiger\KeyConfiger.csproj" />
     <ProjectReference Include="..\PPDFramework\PPDFramework.csproj" />
     <ProjectReference Include="..\PPDMultiCommon\PPDMultiCommon.csproj" />
+    <ProjectReference Include="..\PPDMultiServer\PPDMultiServer.csproj" />
     <ProjectReference Include="..\PPDCore\PPDCore.csproj" />
     <ProjectReference Include="..\PPDExpansionCore\PPDExpansionCore.csproj" />
     <ProjectReference Include="..\PPDConfig\PPDConfig.csproj" />
