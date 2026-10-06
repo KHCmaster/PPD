@@ -11,7 +11,7 @@ namespace UITests.FlowScriptControlTest
     /// FlowScriptControlTest（フロースクリプトを編集して実行するテスト用のアプリ）の画面のテストです。
     /// </summary>
     /// <remarks>
-    /// ノードの配置やつなぎ方など、編集の領域（描いて表示するもの）の操作はテストしない。
+    /// 編集の領域（描いて表示するもの）は、ノードをノードの一覧からドラッグで足す、消す、元に戻す、拡大縮小を試す。
     /// </remarks>
     public sealed class FlowScriptControlTestTests : IDisposable
     {
@@ -85,6 +85,56 @@ namespace UITests.FlowScriptControlTest
             session.FindMenuItem("ConsoleMenu", "ClearConsoleMenuItem").Invoke();
 
             Assert.True(AppSession.WaitUntil(() => ConsoleText == ""));
+        }
+
+        private string SaveTo(string fileName)
+        {
+            var path = Path.Combine(session.WorkDirectory, fileName);
+            AppSession.InvokeAsync(session.FindMenuItem("FileMenu", "SaveMenuItem"));
+            FileDialogs.Accept(session.WaitForModal(), path);
+            Assert.True(AppSession.WaitUntil(() => File.Exists(path) && new FileInfo(path).Length > 0));
+            Assert.True(session.WaitForNoModal());
+            return File.ReadAllText(path);
+        }
+
+        [Fact]
+        public void NodeIsDraggedFromListDeletedAndRestored()
+        {
+            // ノードの一覧を絞り込む（名前空間を「.」で区切る。合うものまで開く）
+            var filter = session.Find("filterTextBox").AsTextBox();
+            filter.Text = "console.writeline";
+            filter.Focus();
+            FlaUI.Core.Input.Keyboard.Type(FlaUI.Core.WindowsAPI.VirtualKeyShort.ENTER);
+            var tree = session.Find("treeView");
+            AutomationElement item = null;
+            Assert.True(AppSession.WaitUntil(() => (item = tree.FindFirstDescendant(cf => cf.ByName("WriteLine"))) != null), "ノードが一覧にありません");
+
+            // 編集の領域へドラッグして足す
+            var tabs = session.Find("DocumentTabs");
+            session.DragBetween(item, 20, 8, tabs, 200, 150);
+            Assert.Contains("WriteLine", SaveTo("added.fsml"));
+
+            // 落とした位置のノードを選んで、Delete で消し、Ctrl+Z で戻す
+            session.ClickAt(tabs, 215, 165);
+            FlaUI.Core.Input.Keyboard.Type(FlaUI.Core.WindowsAPI.VirtualKeyShort.DELETE);
+            FlaUI.Core.Input.Wait.UntilInputIsProcessed();
+            Assert.DoesNotContain("WriteLine", SaveTo("deleted.fsml"));
+            session.FindMenuItem("EditMenu", "UndoMenuItem").Invoke();
+            Assert.Contains("WriteLine", SaveTo("restored.fsml"));
+            session.FindMenuItem("EditMenu", "RedoMenuItem").Invoke();
+            Assert.DoesNotContain("WriteLine", SaveTo("redone.fsml"));
+            session.FindMenuItem("EditMenu", "UndoMenuItem").Invoke();
+
+            // 位置の自動調整、すべて展開・縮小
+            session.FindMenuItem("EditMenu", "AdjustPositionMenuItem").Invoke();
+            session.FindMenuItem("EditMenu", "ExpandAllMenuItem").Invoke();
+            session.FindMenuItem("EditMenu", "CollapseAllMenuItem").Invoke();
+            Assert.Contains("WriteLine", SaveTo("adjusted.fsml"));
+
+            // ホイールで拡大縮小する
+            FlaUI.Core.Input.Mouse.Scroll(2);
+            FlaUI.Core.Input.Mouse.Scroll(-2);
+            Assert.Empty(session.ModalWindowsOf());
         }
 
         [Fact]

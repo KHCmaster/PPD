@@ -37,8 +37,9 @@ namespace UITests
         /// </summary>
         public UIA3Automation Automation { get; } = new()
         {
-            ConnectionTimeout = TimeSpan.FromSeconds(20),
-            TransactionTimeout = TimeSpan.FromSeconds(20),
+            // カバレッジを測るとアプリが遅くなるので、余裕を持たせる
+            ConnectionTimeout = TimeSpan.FromSeconds(60),
+            TransactionTimeout = TimeSpan.FromSeconds(60),
         };
 
         /// <summary>
@@ -279,6 +280,37 @@ namespace UITests
                 {
                     FlaUI.Core.Input.Mouse.MoveTo(Point(fromX + (toX - fromX) * i / 5, fromY + (toY - fromY) * i / 5));
                     System.Threading.Thread.Sleep(100);
+                }
+                System.Threading.Thread.Sleep(300);
+            }
+            finally
+            {
+                FlaUI.Core.Input.Mouse.Up(FlaUI.Core.Input.MouseButton.Left);
+            }
+            FlaUI.Core.Input.Wait.UntilInputIsProcessed();
+        }
+
+        /// <summary>
+        /// ある要素の上の位置から、別の要素の上の位置まで、マウスの左ボタンを押したまま動かします（ドラッグ＆ドロップ）。
+        /// 位置は、それぞれの要素の左上からの WPF の単位。
+        /// </summary>
+        public void DragBetween(AutomationElement from, double fromX, double fromY, AutomationElement to, double toX, double toY)
+        {
+            MainWindow.SetForeground();
+            var scale = NativeWindows.GetScale(HandleOf(MainWindow));
+            var fromBounds = Retry.WhileException(() => from.BoundingRectangle, TimeSpan.FromSeconds(5), null, throwOnTimeout: true).Result;
+            var toBounds = Retry.WhileException(() => to.BoundingRectangle, TimeSpan.FromSeconds(5), null, throwOnTimeout: true).Result;
+            var start = new System.Drawing.Point(fromBounds.X + (int)(fromX * scale), fromBounds.Y + (int)(fromY * scale));
+            var end = new System.Drawing.Point(toBounds.X + (int)(toX * scale), toBounds.Y + (int)(toY * scale));
+            FlaUI.Core.Input.Mouse.MoveTo(start);
+            FlaUI.Core.Input.Mouse.Down(FlaUI.Core.Input.MouseButton.Left);
+            try
+            {
+                System.Threading.Thread.Sleep(200);
+                for (var i = 1; i <= 10; i++)
+                {
+                    FlaUI.Core.Input.Mouse.MoveTo(new System.Drawing.Point(start.X + (end.X - start.X) * i / 10, start.Y + (end.Y - start.Y) * i / 10));
+                    System.Threading.Thread.Sleep(50);
                 }
                 System.Threading.Thread.Sleep(300);
             }
