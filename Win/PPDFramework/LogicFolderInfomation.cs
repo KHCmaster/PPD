@@ -225,21 +225,6 @@ namespace PPDFramework
             root = null;
         }
 
-        private static string GetChildIDs(int id)
-        {
-            string childids = string.Empty;
-            using (var reader = PPDDatabase.DB.ExecuteReader("select * from LogicFolder where folderid = @folderid;", [
-                new("@folderid",id)]))
-            {
-                while (reader.Reader.Read())
-                {
-                    childids = reader.Reader.GetString(4);
-                    break;
-                }
-            }
-            return childids;
-        }
-
         private static List<LogicFolderInfomation> GetInfos(string ids, LogicFolderInfomation parent)
         {
             if (string.IsNullOrEmpty(ids)) return [];
@@ -278,18 +263,6 @@ namespace PPDFramework
             list.Sort(new LogicFolderInformationComparer(orderList));
 
             return list;
-        }
-
-        private static List<LogicFolderInfomation> GetFromFolder(LogicFolderInfomation info)
-        {
-            if (info.IsFolder)
-            {
-                return GetInfos(info.ChildIDs, info);
-            }
-            else
-            {
-                return [];
-            }
         }
 
         private static LogicFolderInfomation AddFolder(LogicFolderInfomation parent, string name)
