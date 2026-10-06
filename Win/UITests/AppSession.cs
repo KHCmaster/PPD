@@ -152,6 +152,18 @@ namespace UITests
         }
 
         /// <summary>
+        /// ファイルを開く・保存するダイアログ（Windows の共通のダイアログ）が開くのを待って返します。
+        /// </summary>
+        /// <remarks>
+        /// 共通のダイアログは持ち主のウィンドウだけを使えなくするので、浮かせたドックなどのほかのウィンドウと区別するため、クラス名で選ぶ。
+        /// </remarks>
+        public Window WaitForFileDialog(Window owner = null)
+        {
+            var result = Retry.WhileNull(() => ModalWindowsOf(owner).FirstOrDefault(w => w.ClassName == "#32770"), defaultTimeout);
+            return result.Result ?? throw new TimeoutException("ファイルのダイアログが開きませんでした。");
+        }
+
+        /// <summary>
         /// メインのウィンドウの中の、AutomationId の要素を返します（表示されるまで待つ）。
         /// </summary>
         public AutomationElement Find(string automationId)
@@ -191,8 +203,9 @@ namespace UITests
             {
                 return [];
             }
+            // モーダルのウィンドウの間は、ほかの持ち物のウィンドウ（浮かせたドックなど）は使えなくなるので、使えるものだけを返す
             return [.. NativeWindows.OfProcess(application.ProcessId)
-                .Where(h => NativeWindows.GetOwner(h) == ownerHandle && NativeWindows.HasCaption(h))
+                .Where(h => NativeWindows.GetOwner(h) == ownerHandle && NativeWindows.HasCaption(h) && NativeWindows.IsEnabled(h))
                 .Select(h => Automation.FromHandle(h).AsWindow())];
         }
 

@@ -18,16 +18,46 @@ namespace UITests.PPDEditor
         string workDirectory;
         readonly AppSession session;
 
+        /// <summary>
+        /// ドックの配置です（DockPanel Suite の形式）。ゲームの画面を真ん中、タイムラインを下（高さ 300）、プロパティとレイヤーを右に置き、
+        /// リソースは真ん中のゲームの画面の右に大きく置く（小さくドックしていると、中を探すのに時間がかかり、不安定になるため。
+        /// 浮かせると、AvalonDock は中身を別のウィンドウに入れるので、UI Automation から中が見えない）。
+        /// </summary>
+        const string Layout = """
+            <?xml version="1.0" encoding="utf-8"?>
+            <DockPanel FormatVersion="1.0" DockLeftPortion="0.25" DockRightPortion="300" DockTopPortion="0.25" DockBottomPortion="300" ActiveDocumentPane="0" ActivePane="-1">
+              <Contents Count="5">
+                <Content ID="0" PersistString="PPDEditor.DXForm" AutoHidePortion="0.25" IsHidden="False" IsFloat="False" />
+                <Content ID="1" PersistString="PPDEditor.TimeLineForm" AutoHidePortion="0.25" IsHidden="False" IsFloat="False" />
+                <Content ID="2" PersistString="PPDEditor.InfoForm" AutoHidePortion="0.25" IsHidden="False" IsFloat="False" />
+                <Content ID="3" PersistString="PPDEditor.LayerManager" AutoHidePortion="0.25" IsHidden="False" IsFloat="False" />
+                <Content ID="4" PersistString="PPDEditor.ResourceManager" AutoHidePortion="0.25" IsHidden="False" IsFloat="False" />
+              </Contents>
+              <Panes Count="4">
+                <Pane ID="0" DockState="Document" ActiveContent="0"><Contents Count="1"><Content ID="0" RefID="0" /></Contents></Pane>
+                <Pane ID="1" DockState="DockBottom" ActiveContent="1"><Contents Count="1"><Content ID="0" RefID="1" /></Contents></Pane>
+                <Pane ID="2" DockState="DockRight" ActiveContent="2"><Contents Count="2"><Content ID="0" RefID="2" /><Content ID="1" RefID="3" /></Contents></Pane>
+                <Pane ID="3" DockState="Document" ActiveContent="4"><Contents Count="1"><Content ID="0" RefID="4" /></Contents></Pane>
+              </Panes>
+              <DockWindows>
+                <DockWindow ID="0" DockState="Document" ZOrderIndex="0"><NestedPanes Count="2"><Pane ID="0" RefID="0" PrevPane="-1" Alignment="Right" Proportion="0.5" /><Pane ID="1" RefID="3" PrevPane="0" Alignment="Right" Proportion="0.5" /></NestedPanes></DockWindow>
+                <DockWindow ID="1" DockState="DockBottom" ZOrderIndex="1"><NestedPanes Count="1"><Pane ID="0" RefID="1" PrevPane="-1" Alignment="Right" Proportion="0.5" /></NestedPanes></DockWindow>
+                <DockWindow ID="2" DockState="DockRight" ZOrderIndex="2"><NestedPanes Count="1"><Pane ID="0" RefID="2" PrevPane="-1" Alignment="Right" Proportion="0.5" /></NestedPanes></DockWindow>
+              </DockWindows>
+            </DockPanel>
+            """;
+
         public PPDEditorProjectTests()
         {
             session = AppSession.Start(Path.Combine("PPDEditor", "PPDEditor"), "PPDEditor.exe", new AppStartOptions
             {
-                ExcludedFiles = ["Projects", "projectcache.dat", "PPDFramework.setting.db", "PPDUpdater.ini"],
+                ExcludedFiles = ["Projects", "projectcache.dat", "PPDFramework.setting.db", "PPDUpdater.ini", "dockforminfo.xml"],
                 MainWindowTitle = "PPDEditor",
                 StartupTimeout = TimeSpan.FromMinutes(1),
                 Prepare = directory =>
                 {
                     workDirectory = directory;
+                    File.WriteAllText(Path.Combine(directory, "dockforminfo.xml"), Layout);
                     WriteSilentWave(Path.Combine(directory, "sound.wav"), seconds: 3);
                 },
             });
@@ -195,6 +225,88 @@ namespace UITests.PPDEditor
             Assert.True(seekTime > 0.1, seekTime.ToString(System.Globalization.CultureInfo.InvariantCulture));
         }
 
+        static void CopyDirectory(string source, string destination)
+        {
+            Directory.CreateDirectory(destination);
+            foreach (var file in Directory.GetFiles(source))
+            {
+                File.Copy(file, Path.Combine(destination, Path.GetFileName(file)));
+            }
+            foreach (var directory in Directory.GetDirectories(source))
+            {
+                CopyDirectory(directory, Path.Combine(destination, Path.GetFileName(directory)));
+            }
+        }
+
+        /// <summary>
+        /// 表示のメニューの、ドックの項目（並びの番号）を押して、出ていなければ出します。
+        /// </summary>
+        void ShowDock(int index)
+        {
+            var showMenu = session.FindMenuItem("ShowMenu");
+            showMenu.Expand();
+            var item = showMenu.Items[index];
+            if (item.Properties.ItemStatus.ValueOrDefault != "True")
+            {
+                item.Invoke();
+            }
+            else
+            {
+                showMenu.Collapse();
+            }
+        }
+
+        [Fact]
+        public void ResourcesShowImageAndPlayEffect()
+        {
+            CreateProject();
+            // プロジェクトの Resource に、画像とエフェクト（エフェクトが使う画像のフォルダーも）を置いて、開き直す
+            var resource = Path.Combine(workDirectory, "Projects", ProjectName, "Resource");
+            File.Copy(Path.Combine(workDirectory, "img", "PPD", "home", "up.png"), Path.Combine(resource, "Image", "up.png"));
+            File.Copy(Path.Combine(workDirectory, "img", "PPD", "home", "loading.etd"), Path.Combine(resource, "Effect", "loading.etd"));
+            CopyDirectory(Path.Combine(workDirectory, "img", "PPD", "home", "loading"), Path.Combine(resource, "Effect", "loading"));
+            AppSession.InvokeAsync(session.FindMenuItem("fileMenu", "OpenProjectMenuItem"));
+            FileDialogs.Accept(session.WaitForFileDialog(), ProjectFile);
+            Assert.True(session.WaitForNoModal(), "開けません: " + session.DescribeModalWindows());
+
+            // リソースのドックは、真ん中の右にある
+            var tree = session.Find("resourceTree").AsTree();
+            // 種類のフォルダーを開く（中が空のものは開けない）
+            foreach (var root in tree.Items.Where(i => i.ExpandCollapseState != FlaUI.Core.Definitions.ExpandCollapseState.LeafNode))
+            {
+                root.Expand();
+            }
+
+            // 画像を選ぶと画像を、エフェクトを選ぶとエフェクトを出す
+            TreeItem ItemNamed(string name)
+            {
+                // 名前は項目の中の文字にあるので、親の項目をたどる
+                var element = tree.FindFirstDescendant(cf => cf.ByName(name));
+                while (element.ControlType != FlaUI.Core.Definitions.ControlType.TreeItem)
+                {
+                    element = element.Parent;
+                }
+                return element.AsTreeItem();
+            }
+            // 探すのはドックの中だけ（PPDEditor のウィンドウ全体を探すと時間がかかる）
+            var dock = tree.Parent;
+            ItemNamed("up.png").Select();
+            Assert.True(AppSession.WaitUntil(() => dock.FindFirstDescendant(cf => cf.ByAutomationId("pictureBox1")) != null), "画像が出ません");
+            ItemNamed("loading.etd").Select();
+            // エフェクトを描くところ（EffectCanvas）は UI Automation に出ないので、再生のボタンで確かめる
+            Assert.True(AppSession.WaitUntil(() => dock.FindFirstDescendant(cf => cf.ByAutomationId("toolStripSplitButton1")) != null), "エフェクトが出ません");
+
+            // 再生して止める。キャンバスの大きさを変える
+            var play = dock.FindFirstDescendant(cf => cf.ByAutomationId("toolStripSplitButton1")).AsToggleButton();
+            play.Toggle();
+            System.Threading.Thread.Sleep(500);
+            dock.FindFirstDescendant(cf => cf.ByAutomationId("toolStripButton1")).AsButton().Invoke();
+            var size = dock.FindFirstDescendant(cf => cf.ByAutomationId("toolStripComboBox1")).AsComboBox();
+            size.Select(2);
+            Assert.Equal(2, size.SelectedItem == null ? -1 : Array.IndexOf(size.Items, size.SelectedItem));
+            Assert.Empty(session.ModalWindowsOf());
+        }
+
         [Fact]
         public void PlayPauseAndStopMoveTheSeekTime()
         {
@@ -232,7 +344,7 @@ namespace UITests.PPDEditor
 
             // 開き直すと、同じプロジェクトになる
             AppSession.InvokeAsync(session.FindMenuItem("fileMenu", "OpenProjectMenuItem"));
-            FileDialogs.Accept(session.WaitForModal(), ProjectFile);
+            FileDialogs.Accept(session.WaitForFileDialog(), ProjectFile);
             Assert.True(session.WaitForNoModal(), "開けません: " + session.DescribeModalWindows());
             Assert.True(AppSession.WaitUntil(() => session.MainWindow.Title.Contains(ProjectName)), session.MainWindow.Title);
         }
