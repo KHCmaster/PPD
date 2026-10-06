@@ -353,6 +353,31 @@ namespace UITests.PPDEditor
         }
 
         [Fact]
+        public void DifficultyIsCopiedAndSwitched()
+        {
+            CreateProject();
+            SetBeatWidth();
+            session.DoubleClickAt(session.Find("Seekmain"), Beat(1), Row(2));
+            Save();
+
+            // 今の難易度（Base）を、ほかの難易度（最初の候補の Easy）にコピーする。OK は既定のボタン
+            AppSession.InvokeAsync(session.FindMenuItem("DifficultyMenu", "CopyDifficultyMenuItem"));
+            session.WaitForModal();
+            System.Threading.Thread.Sleep(500);
+            FlaUI.Core.Input.Keyboard.Type(FlaUI.Core.WindowsAPI.VirtualKeyShort.ENTER);
+            Assert.True(session.WaitForNoModal(), session.DescribeModalWindows());
+            Assert.True(AppSession.WaitUntil(() => File.Exists(Path.Combine(ProjectDirectory, "Easy_layers", "layer0.ppd"))), "コピーされません");
+
+            // Easy に切り替えて、戻す
+            session.FindMenuItem("DifficultyMenu", "DifficultyEasyMenuItem").Invoke();
+            Assert.True(AppSession.WaitUntil(() => session.MainWindow.Title.Contains("Easy")), session.MainWindow.Title);
+            Save();
+            Assert.Equal("Easy", ProjectValue("selecteddifficulty"));
+            session.FindMenuItem("DifficultyMenu", "DifficultyBaseMenuItem").Invoke();
+            Assert.True(AppSession.WaitUntil(() => session.MainWindow.Title.Contains("Base")), session.MainWindow.Title);
+        }
+
+        [Fact]
         public void PlayPauseAndStopMoveTheSeekTime()
         {
             CreateProject();
