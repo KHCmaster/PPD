@@ -209,6 +209,73 @@ namespace UITests.PPDEditor
             Assert.Equal(2, Directory.GetFiles(Path.GetDirectoryName(LayerFile), "*.ppd").Length);
         }
 
+        static void Press(params FlaUI.Core.WindowsAPI.VirtualKeyShort[] keys)
+        {
+            FlaUI.Core.Input.Keyboard.TypeSimultaneously(keys);
+            FlaUI.Core.Input.Wait.UntilInputIsProcessed();
+        }
+
+        [Fact]
+        public void TimelineShortcutsAndWheel()
+        {
+            const FlaUI.Core.WindowsAPI.VirtualKeyShort Ctrl = FlaUI.Core.WindowsAPI.VirtualKeyShort.CONTROL;
+            const FlaUI.Core.WindowsAPI.VirtualKeyShort Shift = FlaUI.Core.WindowsAPI.VirtualKeyShort.SHIFT;
+            CreateProject();
+            SetBeatWidth();
+            var timeline = session.Find("Seekmain");
+            foreach (var (beat, row) in new[] { (1, 2), (2, 3), (3, 2), (4, 1) })
+            {
+                session.DoubleClickAt(timeline, Beat(beat), Row(row));
+            }
+            Save();
+            var fourMarks = new FileInfo(LayerFile).Length;
+
+            // 選ぶマークを移す（同じ行の前後、すべての行の前後）
+            Press(FlaUI.Core.WindowsAPI.VirtualKeyShort.TAB);
+            Press(Shift, FlaUI.Core.WindowsAPI.VirtualKeyShort.TAB);
+            Press(Ctrl, FlaUI.Core.WindowsAPI.VirtualKeyShort.KEY_A);
+            Press(Ctrl, FlaUI.Core.WindowsAPI.VirtualKeyShort.KEY_D);
+            // 前のマークの角度と位置をコピーする
+            Press(Ctrl, FlaUI.Core.WindowsAPI.VirtualKeyShort.KEY_R);
+            Press(Ctrl, FlaUI.Core.WindowsAPI.VirtualKeyShort.KEY_Q);
+            // 動かす量の違う移動
+            foreach (var arrow in new[] { FlaUI.Core.WindowsAPI.VirtualKeyShort.LEFT, FlaUI.Core.WindowsAPI.VirtualKeyShort.RIGHT, FlaUI.Core.WindowsAPI.VirtualKeyShort.UP, FlaUI.Core.WindowsAPI.VirtualKeyShort.DOWN })
+            {
+                Press(Shift, arrow);
+                Press(Ctrl, arrow);
+            }
+            // 範囲を選んで、まとめて動かす
+            session.DragAt(timeline, Beat(0.5), Row(0), Beat(4.5), Row(4));
+            Press(FlaUI.Core.WindowsAPI.VirtualKeyShort.LEFT);
+            Press(FlaUI.Core.WindowsAPI.VirtualKeyShort.UP);
+            // つなぐ・はずす
+            Press(Ctrl, FlaUI.Core.WindowsAPI.VirtualKeyShort.KEY_F);
+            Press(Ctrl, Shift, FlaUI.Core.WindowsAPI.VirtualKeyShort.KEY_F);
+            // 元に戻して、やり直す
+            Press(Ctrl, FlaUI.Core.WindowsAPI.VirtualKeyShort.KEY_Z);
+            Press(Ctrl, FlaUI.Core.WindowsAPI.VirtualKeyShort.KEY_Y);
+
+            // ホイールでスクロールし、Shift を押しながらなら表示の幅を変える
+            FlaUI.Core.Input.Mouse.Scroll(-3);
+            FlaUI.Core.Input.Mouse.Scroll(3);
+            FlaUI.Core.Input.Keyboard.Press(Shift);
+            try
+            {
+                FlaUI.Core.Input.Mouse.Scroll(1);
+            }
+            finally
+            {
+                FlaUI.Core.Input.Keyboard.Release(Shift);
+            }
+            FlaUI.Core.Input.Wait.UntilInputIsProcessed();
+
+            // マークは消えていない（数は変わらない）
+            Assert.Empty(session.ModalWindowsOf());
+            Save();
+            Assert.True(new FileInfo(LayerFile).Length >= fourMarks, $"{new FileInfo(LayerFile).Length} >= {fourMarks}");
+            Assert.NotEqual(BeatWidth.ToString(System.Globalization.CultureInfo.InvariantCulture), ProjectValue("Base.displaywidth"));
+        }
+
         [Fact]
         public void PlayPauseAndStopMoveTheSeekTime()
         {
