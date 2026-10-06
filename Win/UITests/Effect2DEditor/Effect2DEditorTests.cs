@@ -186,6 +186,68 @@ namespace UITests.Effect2DEditor
             Assert.True(IsMenuItemEnabled("EditMenu", "UndoMenuItem"));
         }
 
+        /// <summary>
+        /// メイン以外の、このアプリのウィンドウ（枠のないウィンドウも含む）を待って返します。
+        /// </summary>
+        private Window WaitForOtherWindow()
+        {
+            var processId = session.MainWindow.Properties.ProcessId.Value;
+            var main = session.MainWindow.Properties.NativeWindowHandle.Value;
+            IntPtr found = IntPtr.Zero;
+            Assert.True(AppSession.WaitUntil(() => (found = NativeWindows.OfProcess(processId).FirstOrDefault(h => h != main)) != IntPtr.Zero), "ウィンドウが出ません");
+            return session.Automation.FromHandle(found).AsWindow();
+        }
+
+        [Fact]
+        public void StatesAreMovedRatioEditedAndDeleted()
+        {
+            AddSampleImage();
+            var timeline = session.Find("timeLine1");
+
+            // 10 フレーム目に普通のステート（前のキーとの間をつなぐ）を入れて、値を変える
+            session.RightClickForPopup(timeline, 10 * 10 + 5, 20 + 9, "InsertNormalStateMenuItem").AsMenuItem().Invoke();
+            SelectState(10);
+            Assert.True(AppSession.WaitUntil(() => ValueOf("X") == "0"));
+            session.Find("XBox").AsTextBox().Text = "40";
+            Assert.True(AppSession.WaitUntil(() => ValueOf("X") == "40"));
+
+            // 普通のステートの終わりを選ぶと、変化の割合（比率）を変えられる
+            var ratio = session.Find("XRatioButton").AsButton();
+            Assert.True(AppSession.WaitUntil(() => ratio.IsEnabled), "比率のボタンを押せません");
+            AppSession.InvokeAsync(ratio);
+            var window = WaitForOtherWindow();
+            session.DragAt(window, 26 + 40, 12 + 90, 26 + 60, 12 + 30);
+            window.FindFirstDescendant(cf => cf.ByAutomationId("RatioCopyButton")).AsButton().Invoke();
+            window.FindFirstDescendant(cf => cf.ByAutomationId("RatioLinearButton")).AsButton().Invoke();
+            window.FindFirstDescendant(cf => cf.ByAutomationId("RatioPasteButton")).AsButton().Invoke();
+            var handle = window.Properties.NativeWindowHandle.Value;
+            AppSession.InvokeAsync(window.FindFirstDescendant(cf => cf.ByAutomationId("RatioOkButton")));
+            Assert.True(AppSession.WaitUntil(() => !NativeWindows.OfProcess(session.MainWindow.Properties.ProcessId.Value).Contains(handle)), "比率のウィンドウが閉じません");
+
+            // ステートをドラッグで動かす（Ctrl を押すと、後ろのステートも一緒に動く）
+            session.DragAt(timeline, 10 * 10 + 5, 20 + 9, 15 * 10 + 5, 20 + 9);
+            SelectState(15);
+            Assert.True(AppSession.WaitUntil(() => ValueOf("X") == "40"), "ステートが動きません");
+            FlaUI.Core.Input.Keyboard.Press(FlaUI.Core.WindowsAPI.VirtualKeyShort.CONTROL);
+            try
+            {
+                session.DragAt(timeline, 15 * 10 + 5, 20 + 9, 20 * 10 + 5, 20 + 9);
+            }
+            finally
+            {
+                FlaUI.Core.Input.Keyboard.Release(FlaUI.Core.WindowsAPI.VirtualKeyShort.CONTROL);
+            }
+            SelectState(20);
+            Assert.True(AppSession.WaitUntil(() => ValueOf("X") == "40"), "ステートが動きません");
+
+            // 上の時間の目盛りを押すと、今のフレームが変わる
+            session.ClickAt(timeline, 7 * 10 + 5, 10);
+
+            // ステートを消す
+            session.RightClickForPopup(timeline, 20 * 10 + 5, 20 + 9, "DeleteStateMenuItem").AsMenuItem().Invoke();
+            Assert.True(IsMenuItemEnabled("EditMenu", "UndoMenuItem"));
+        }
+
         [Fact]
         public void SaveAndOpen_RestoresEffect()
         {
