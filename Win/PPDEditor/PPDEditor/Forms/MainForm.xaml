@@ -160,9 +160,9 @@
                             </MenuItem.ItemsSource>
                         </MenuItem>
                         <MenuItem x:Name="movieMenu" Header="{Binding Texts[Movie]}">
-                            <MenuItem Header="{Binding Texts[Play]}" Command="{Binding PlayCommand}" />
-                            <MenuItem Header="{Binding Texts[Pause]}" Command="{Binding PauseCommand}" />
-                            <MenuItem Header="{Binding Texts[Stop]}" Command="{Binding StopCommand}" />
+                            <MenuItem AutomationProperties.AutomationId="PlayMenuItem" Header="{Binding Texts[Play]}" Command="{Binding PlayCommand}" />
+                            <MenuItem AutomationProperties.AutomationId="PauseMenuItem" Header="{Binding Texts[Pause]}" Command="{Binding PauseCommand}" />
+                            <MenuItem AutomationProperties.AutomationId="StopMenuItem" Header="{Binding Texts[Stop]}" Command="{Binding StopCommand}" />
                             <MenuItem Header="{Binding Texts[RecordKey]}" Command="{Binding RecordKeyCommand}" />
                             <MenuItem AutomationProperties.AutomationId="CutMovieMenuItem" Header="{Binding Texts[Cut]}" Command="{Binding CutMovieCommand}" />
                         </MenuItem>
