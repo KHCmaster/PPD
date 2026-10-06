@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Net;
 using System.Net.Sockets;
 
 namespace PPDExpansionCore.Tcp
@@ -27,7 +28,9 @@ namespace PPDExpansionCore.Tcp
         {
             try
             {
-                tcpClient = new TcpClient("localhost", Port);
+                // 拡張機能は IPv4 の localhost（127.0.0.1）で待ち受ける。"localhost" だと先に IPv6 につなごうとして、断られるまで待つ
+                tcpClient = new TcpClient();
+                tcpClient.Connect(IPAddress.Loopback, Port);
                 connected = true;
             }
             catch
