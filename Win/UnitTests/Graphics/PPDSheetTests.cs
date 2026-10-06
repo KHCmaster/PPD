@@ -21,10 +21,12 @@ namespace UnitTests.Graphics
     public sealed class PPDSheetTests : IDisposable
     {
         readonly EditorMarkEnvironment environment;
+        readonly GraphicsDevice graphics;
         uint lastID = 100;
 
         public PPDSheetTests(GraphicsDevice graphics)
         {
+            this.graphics = graphics;
             environment = new EditorMarkEnvironment(graphics);
         }
 
@@ -678,6 +680,48 @@ namespace UnitTests.Graphics
             Assert.All(new[] { mark, other }, m => Assert.NotEqual(0u, m.ID));
             sheet.AssignID(mark);
             Assert.Equal(lastID, mark.ID);
+        }
+
+        sealed class EventHost : global::PPDEditor.ViewModels.Docks.IEventManagerHost
+        {
+            public float CurrentTime => 0;
+            public float DefaultBpm => 120;
+            public PPDEditorCommon.EventData EditEvent(PPDEditorCommon.EventData eventData) => eventData;
+            public void ShowMessage(string text) { }
+            public bool Confirm(string text, string caption, bool yesNo) => false;
+            public void ShowSelectedRow() { }
+            public void RefreshTimeline() { }
+            public void ChangeMovieVolume(int volume) { }
+        }
+
+        [Fact]
+        public void UpdateAndDrawMarks_FollowTime()
+        {
+            var events = new global::PPDEditor.ViewModels.Docks.EventManagerViewModel(new EventHost());
+            var sheet = Sheet();
+            sheet.GetEvents = () => events;
+            sheet.AddMark(1, 100, 100, 0, (int)ButtonType.Circle, 0, null, false);
+            sheet.AddExMark(2, 3, (int)ButtonType.Cross, selectMark: false);
+            using var dummy = new DummyDrawComponent(graphics.Device);
+            dummy.Drawing += sheet.DrawMark;
+            static bool Red(uint[] pixels, int x, int y) => GraphicsDevice.Rgb(GraphicsDevice.Pixel(pixels, x, y)) == (255, 0, 0);
+
+            // マークの時間の少し前から出る
+            Assert.Equal(new bool[10], sheet.UpdateMark(0.5f, 1));
+            Assert.True(Red(graphics.Render(dummy), 100, 100));
+
+            // マークの時間になったら、そのボタンの音を鳴らす（そのあとは消える）
+            var played = sheet.UpdateMark(1, 1);
+            Assert.True(played[(int)ButtonType.Circle]);
+            Assert.False(played[(int)ButtonType.Cross]);
+            Assert.False(Red(graphics.Render(dummy), 100, 100));
+            Assert.True(sheet.UpdateMark(1.9f, 1).All(p => !p));
+            Assert.True(sheet.UpdateMark(2, 1)[(int)ButtonType.Cross]);
+            Assert.True(sheet.UpdateMark(3.5f, 1).All(p => !p));
+
+            // 消えたマークも、範囲選択の中なら印だけ描く
+            Select(sheet, 0.5f, ButtonType.Circle, 1.5f, ButtonType.Circle);
+            Assert.True(Red(graphics.Render(dummy), 100, 100));
         }
     }
 }
