@@ -191,8 +191,8 @@
                             <Separator />
                             <MenuItem Header="{Binding Texts[DisableExpansion]}" IsCheckable="True" IsChecked="{Binding DisableExpansion, Mode=TwoWay}" />
                         </MenuItem>
-                        <MenuItem Header="{Binding Texts[Difficulty]}" IsEnabled="{Binding ProjectMenusEnabled}">
-                            <MenuItem Header="Easy" Command="{Binding ChangeDifficultyCommand}" CommandParameter="{x:Static local:AvailableDifficulty.Easy}"
+                        <MenuItem AutomationProperties.AutomationId="DifficultyMenu" Header="{Binding Texts[Difficulty]}" IsEnabled="{Binding ProjectMenusEnabled}">
+                            <MenuItem AutomationProperties.AutomationId="DifficultyEasyMenuItem" Header="Easy" Command="{Binding ChangeDifficultyCommand}" CommandParameter="{x:Static local:AvailableDifficulty.Easy}"
                                       IsChecked="{Binding CurrentDifficulty, Mode=OneWay, Converter={StaticResource EnumToBoolean}, ConverterParameter=Easy}"
                                       IsEnabled="{Binding AvailableDifficulty, Converter={StaticResource HasFlag}, ConverterParameter=Easy}" />
                             <MenuItem Header="Normal" Command="{Binding ChangeDifficultyCommand}" CommandParameter="{x:Static local:AvailableDifficulty.Normal}"
@@ -204,10 +204,10 @@
                             <MenuItem Header="Extreme" Command="{Binding ChangeDifficultyCommand}" CommandParameter="{x:Static local:AvailableDifficulty.Extreme}"
                                       IsChecked="{Binding CurrentDifficulty, Mode=OneWay, Converter={StaticResource EnumToBoolean}, ConverterParameter=Extreme}"
                                       IsEnabled="{Binding AvailableDifficulty, Converter={StaticResource HasFlag}, ConverterParameter=Extreme}" />
-                            <MenuItem Header="Base" Command="{Binding ChangeDifficultyCommand}" CommandParameter="{x:Static local:AvailableDifficulty.Base}"
+                            <MenuItem AutomationProperties.AutomationId="DifficultyBaseMenuItem" Header="Base" Command="{Binding ChangeDifficultyCommand}" CommandParameter="{x:Static local:AvailableDifficulty.Base}"
                                       IsChecked="{Binding CurrentDifficulty, Mode=OneWay, Converter={StaticResource EnumToBoolean}, ConverterParameter=Base}"
                                       IsEnabled="{Binding AvailableDifficulty, Converter={StaticResource HasFlag}, ConverterParameter=Base}" />
-                            <MenuItem Header="{Binding Texts[CopyCurrentDifficulty]}" Command="{Binding CopyDifficultyCommand}" />
+                            <MenuItem AutomationProperties.AutomationId="CopyDifficultyMenuItem" Header="{Binding Texts[CopyCurrentDifficulty]}" Command="{Binding CopyDifficultyCommand}" />
                         </MenuItem>
                         <MenuItem AutomationProperties.AutomationId="LanguageMenu" Header="{Binding Texts[Language]}" ItemsSource="{Binding Languages}" ItemContainerStyle="{StaticResource LanguageItem}" />
                         <MenuItem AutomationProperties.AutomationId="OthersMenu" Header="{Binding Texts[Others]}">
