@@ -164,6 +164,21 @@ namespace UnitTests.Libraries
             }
         }
 
+        [Theory]
+        [InlineData(new ButtonType[0], RandomChangeManager.RandomType.None)]
+        [InlineData(new[] { ButtonType.Circle }, RandomChangeManager.RandomType.Symbol)]
+        [InlineData(new[] { ButtonType.Up, ButtonType.R }, RandomChangeManager.RandomType.Direction | RandomChangeManager.RandomType.LR)]
+        // 記号のマークが最後でなくても、記号を入れ替える
+        [InlineData(new[] { ButtonType.Square, ButtonType.L }, RandomChangeManager.RandomType.Symbol | RandomChangeManager.RandomType.LR)]
+        [InlineData(new[] { ButtonType.Triangle, ButtonType.Left, ButtonType.Down }, RandomChangeManager.RandomType.Symbol | RandomChangeManager.RandomType.Direction)]
+        [InlineData(new[] { ButtonType.Cross, ButtonType.Right, ButtonType.R }, RandomChangeManager.RandomType.All)]
+        public void RandomType_FromButtonsInTheChart(ButtonType[] buttons, RandomChangeManager.RandomType expected)
+        {
+            var marks = buttons.Select((button, i) => new MarkData(0, 0, 0, i, button, 0));
+
+            Assert.Equal(expected, MarkManager.GetRandomType(marks));
+        }
+
         [Fact]
         public void SameTimingMarks_TracksButtons()
         {

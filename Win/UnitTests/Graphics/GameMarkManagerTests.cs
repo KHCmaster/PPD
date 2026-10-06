@@ -373,6 +373,99 @@ namespace UnitTests.Graphics
         }
 
         [Fact]
+        public void ThreeSameTimingMarks_AreConnectedAndCounted()
+        {
+            // 3 つ以上の同時押しは、外側のマークを線でつなぐ（中のマークは中から）
+            var spread = Start([new(100, 100, 0, 1, ButtonType.Circle, 0), new(300, 100, 0, 1, ButtonType.Cross, 0),
+                new(200, 300, 0, 1, ButtonType.Square, 0), new(200, 180, 0, 1, ButtonType.Triangle, 0), Mark(2)], connect: true);
+            Assert.Equal(1, spread.Marks.GetMarkCount(0));
+            Assert.Equal(1, spread.Marks.GetMarkCount(3));
+            Assert.Equal(0, spread.Marks.GetMarkCount(10));
+            spread.Run(0, 0.9f);
+            Assert.Contains(graphics.Render(spread.Marks), p => GraphicsDevice.Rgb(p) == (255, 0, 0));
+            spread.Update(1, ButtonType.Circle, ButtonType.Cross, ButtonType.Square, ButtonType.Triangle);
+            Assert.Equal(4, spread.Evaluated.Count(e => e.Effect == EffectType.Cool));
+
+            // 全部同じ場所なら、色付きのマークの位置でつなぐ
+            var stacked = Start([Mark(1), Mark(1, ButtonType.Cross), Mark(1, ButtonType.Square)], connect: true);
+            Assert.Equal(1, stacked.Marks.GetMarkCount(2));
+            stacked.Run(0, 2);
+            Assert.Equal(3, stacked.Evaluated.Count(e => e.Effect == EffectType.Worst));
+        }
+
+        [Fact]
+        public void TriangleWithR_IsSlideInACFT()
+        {
+            // R か L と同時の△は、ACFT ではスライドになる
+            var play = Start([Hold(1, 1.5f, ButtonType.Triangle), Hold(1, 1.5f, ButtonType.R)], ACFT, auto: AutoMode.All);
+
+            play.Run(0, 3);
+
+            Assert.Equal(2, play.MaxSlides);
+            // R か L がなければ AC の長押し
+            var hold = Start([Hold(1, 1.5f, ButtonType.Triangle)], ACFT, auto: AutoMode.All);
+            hold.Run(0, 3);
+            Assert.Equal(0, hold.MaxSlides);
+            Assert.Equal([(EffectType.Cool, false)], hold.Evaluated);
+        }
+
+        sealed class AutoConfig : MainGameConfigBase
+        {
+            public override bool Auto => true;
+        }
+
+        [Fact]
+        public void ConfigAuto_PlaysEveryMark()
+        {
+            var play = Start([Mark(1)], config: new AutoConfig());
+
+            play.Run(0, 2);
+
+            Assert.Equal([(EffectType.Cool, false)], play.Evaluated);
+            Assert.NotNull(play.Marks.ScoreDifficultyMeasureResult);
+        }
+
+        [Fact]
+        public void ChartFromFolderOrBrokenStream()
+        {
+            var song = new SongInformation();
+            typeof(SongInformation).GetProperty(nameof(SongInformation.DirectoryPath)).SetValue(song, folder.Path);
+            typeof(SongInformation).GetProperty(nameof(SongInformation.BPM)).SetValue(song, Bpm);
+            PPDWriter.Write(folder.Combine("Normal.ppd"), [Mark(1), Mark(2)]);
+            MarkManager Create(PPDFrameworkCore.Difficulty difficulty, Stream stream = null)
+            {
+                var utility = new PPDGameUtility { SongInformation = song, Profile = new Profile(), SpeedScale = 1, Difficulty = difficulty };
+                var script = EmptyScript();
+                var effects = new PPDEffectManager(graphics.Device, resources);
+                var manager = stream == null
+                    ? new MarkManager(graphics.Device, resources, utility, new RandomChangeManager(), effects, paths, MainGameConfigBase.Default, script)
+                    : new MarkManager(graphics.Device, resources, utility, new RandomChangeManager(), effects, paths, MainGameConfigBase.Default, script, stream);
+                manager.EventManager = new EventManager(utility, new MemoryStream(), MainGameConfigBase.Default, script);
+                return manager;
+            }
+
+            // 古い形式の譜面は、難易度の名前の .ppd を読む
+            var normal = Create(PPDFrameworkCore.Difficulty.Normal);
+            Assert.Equal(2, normal.AllMarkCount);
+            var count = 0;
+            normal.EvaluateCount += (effect, miss) => count++;
+            for (var time = 0f; time < 3; time += 1 / 60f)
+            {
+                normal.Update(time, new bool[10], new bool[10]);
+            }
+            Assert.Equal(2, count);
+
+            // ファイルがない、読めない譜面は何もしない
+            foreach (var manager in new[] { Create(PPDFrameworkCore.Difficulty.Extreme), Create(PPDFrameworkCore.Difficulty.Normal, new MemoryStream([1, 2, 3])) })
+            {
+                manager.Update(1, new bool[10], new bool[10]);
+                manager.Seek(1);
+                Assert.Equal(0, manager.MarkLayer.ChildrenCount);
+                Assert.DoesNotContain(graphics.Render(manager), p => GraphicsDevice.Rgb(p) == (255, 0, 0));
+            }
+        }
+
+        [Fact]
         public void Random_ChangesButtonsButStillJudges()
         {
             var play = Start([Mark(1)], auto: AutoMode.All, random: true);
