@@ -39,8 +39,15 @@ namespace PPDEditor
             {
                 return;
             }
+            Load(File.ReadAllText(path));
+        }
 
-            var setting = new SettingReader(File.ReadAllText(path));
+        /// <summary>
+        /// 設定のファイル（PPDEditor.ini）の内容を読み込みます。
+        /// </summary>
+        internal static void Load(string text)
+        {
+            var setting = new SettingReader(text);
             if (setting.ReadString("Maximised") == "1")
             {
                 LastWindowState = WindowState.Maximized;
