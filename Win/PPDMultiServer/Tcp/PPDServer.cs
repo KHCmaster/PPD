@@ -301,6 +301,11 @@ namespace PPDMultiServer.Tcp
         {
             var userInput = readInfo.NetworkData is PingNetworkData;
             readInfo.NetworkData.Id = id;
+            if (readInfo.NetworkData is AddUserNetworkData addUser)
+            {
+                // キックした人を覚えるのに使う。送ってきた値ではなく、接続のアドレスにする
+                addUser.Ip = host?.GetIp(id);
+            }
             Enqueue(readInfo.NetworkData);
             if (userInput)
             {
