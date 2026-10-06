@@ -76,9 +76,15 @@ namespace PPDEditor
             var infos = new List<PosAndAngleInfo>();
             foreach (var split in splits.Skip(1))
             {
+                // 空の行（最後の改行の後など）は飛ばす（以前は角度 0 のものが増えた）
+                if (string.IsNullOrWhiteSpace(split))
+                {
+                    continue;
+                }
                 iter = 0;
                 float? x = null, y = null, angle = null;
-                foreach (var info in split.Split(','))
+                // 見出しより多い列は使わない
+                foreach (var info in split.Split(',').Take(modes.Length))
                 {
                     if (!float.TryParse(info, NumberStyles.Float, CultureInfo.InvariantCulture, out float val))
                     {
@@ -146,7 +152,8 @@ namespace PPDEditor
                 }
                 else
                 {
-                    sb.AppendFormat(",{0}", info.Rotation.Value.ToString(CultureInfo.InvariantCulture));
+                    // 角度だけのときは、角度の列だけ（以前は先頭に「,」を付けていて、読むときに列が多すぎて落ちた）
+                    sb.Append(info.Rotation.Value.ToString(CultureInfo.InvariantCulture));
                 }
                 sb.AppendLine();
             }
