@@ -313,5 +313,49 @@ namespace UnitTests.Libraries
             Assert.Equal(["before", "after", "before", "after"], painted);
             Assert.True(draws > 0);
         }
+
+        /// <summary>
+        /// 描いた位置を記録します。
+        /// </summary>
+        sealed class PointRecorder : IBezierDrawContext
+        {
+            public List<PointF> Points { get; } = [];
+            public void DrawString(string text, Color color, float fontSize, PointF point) => Points.Add(point);
+            public void DrawLine(Color color, PointF p1, PointF p2) => Points.AddRange([p1, p2]);
+            public void DrawLines(Color color, PointF[] points) => Points.AddRange(points);
+            public void DrawEllipse(Color color, RectangleF rect) => Points.Add(new PointF(rect.X + rect.Width / 2, rect.Y + rect.Height / 2));
+            public void DrawRectangle(Color color, float x, float y, float width, float height) => Points.Add(new PointF(x + width / 2, y + height / 2));
+            public void FillRectangle(Color color, float x, float y, float width, float height) => Points.Add(new PointF(x + width / 2, y + height / 2));
+        }
+
+        [Fact]
+        public void Draw_WithCenter_DrawsWhereTheMouseOperates()
+        {
+            controller.Center = new Point(100, 50);
+            controller.BCPS = [new BezierControlPoint { Second = new PointF(0, 0) }, new BezierControlPoint { Second = new PointF(40, 0) }];
+            IBezierDrawContext beforePaint = null;
+            controller.BeforePaint += (s, e) => beforePaint = e.Context;
+
+            var normal = new PointRecorder();
+            controller.Draw(normal);
+
+            // 点は中心からの位置なので、中心をずらした位置に描く（マウスで点を押す位置と同じ）
+            Assert.Contains(new PointF(100, 50), normal.Points);
+            Assert.Contains(new PointF(140, 50), normal.Points);
+            Assert.DoesNotContain(new PointF(40, 0), normal.Points);
+            // 前に描くのは、ずらさない（カンバスの背景などは、そのままの位置で描く）
+            Assert.Same(normal, beforePaint);
+
+            // 変形の枠も、中心をずらして描く
+            controller.StartTransform();
+            var transform = new PointRecorder();
+            controller.Draw(transform);
+            Assert.All(transform.Points, p => Assert.True(p.X >= 90 && p.Y >= 40, p.ToString()));
+
+            // 中心をずらした位置を押すと、その点を選ぶ
+            controller.EndTransform();
+            Drag(140, 50, 140, 80, Control);
+            Assert.Equal(new PointF(40, 30), Anchors[1]);
+        }
     }
 }
