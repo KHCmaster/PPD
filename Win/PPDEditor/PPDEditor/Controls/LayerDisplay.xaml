@@ -25,8 +25,8 @@
     </UserControl.Style>
     <UserControl.ContextMenu>
         <ContextMenu>
-            <MenuItem Header="{Binding Texts[LMMenu3]}" Command="{Binding DeleteCommand}" />
-            <MenuItem Header="{Binding Texts[LMMenu2]}" Command="{Binding DuplicateCommand}" />
+            <MenuItem AutomationProperties.AutomationId="DeleteLayerMenuItem" Header="{Binding Texts[LMMenu3]}" Command="{Binding DeleteCommand}" />
+            <MenuItem AutomationProperties.AutomationId="DuplicateLayerMenuItem" Header="{Binding Texts[LMMenu2]}" Command="{Binding DuplicateCommand}" />
         </ContextMenu>
     </UserControl.ContextMenu>
     <Grid>

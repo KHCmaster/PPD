@@ -7,10 +7,10 @@
                 xmlns:controls="clr-namespace:PPDEditor.Controls"
                 xmlns:vm="clr-namespace:PPDEditor.ViewModels.Docks"
                 mc:Ignorable="d" d:DataContext="{d:DesignInstance Type=vm:LayerManagerViewModel}">
-    <ScrollViewer x:Name="scrollViewer" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Background="Transparent">
+    <ScrollViewer x:Name="scrollViewer" AutomationProperties.AutomationId="LayerArea" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Background="Transparent">
         <ScrollViewer.ContextMenu>
             <ContextMenu>
-                <MenuItem Header="{Binding Texts[LMMenu1]}" Command="{Binding NewLayerCommand}" />
+                <MenuItem AutomationProperties.AutomationId="NewLayerMenuItem" Header="{Binding Texts[LMMenu1]}" Command="{Binding NewLayerCommand}" />
             </ContextMenu>
         </ScrollViewer.ContextMenu>
         <Grid VerticalAlignment="Top">
