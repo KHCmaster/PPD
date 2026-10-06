@@ -58,6 +58,8 @@
         <Style x:Key="DockItem" TargetType="MenuItem">
             <Setter Property="Header" Value="{Binding Text}" />
             <Setter Property="IsChecked" Value="{Binding IsShown, Mode=OneWay}" />
+            <!-- チェックの状態は UI Automation では読めない（IsCheckable でないため）ので、状態として出す -->
+            <Setter Property="AutomationProperties.ItemStatus" Value="{Binding IsShown, Mode=OneWay}" />
             <Setter Property="Command" Value="{Binding Data.ToggleDockCommand, Source={StaticResource Proxy}}" />
             <Setter Property="CommandParameter" Value="{Binding}" />
         </Style>
@@ -164,7 +166,7 @@
                             <MenuItem Header="{Binding Texts[RecordKey]}" Command="{Binding RecordKeyCommand}" />
                             <MenuItem AutomationProperties.AutomationId="CutMovieMenuItem" Header="{Binding Texts[Cut]}" Command="{Binding CutMovieCommand}" />
                         </MenuItem>
-                        <MenuItem x:Name="showMenu" Header="{Binding Texts[Show]}" SubmenuOpened="ShowMenu_SubmenuOpened" ItemContainerStyle="{StaticResource DockItem}">
+                        <MenuItem x:Name="showMenu" AutomationProperties.AutomationId="ShowMenu" Header="{Binding Texts[Show]}" SubmenuOpened="ShowMenu_SubmenuOpened" ItemContainerStyle="{StaticResource DockItem}">
                             <MenuItem.ItemsSource>
                                 <CompositeCollection>
                                     <CollectionContainer Collection="{Binding Data.Docks, Source={StaticResource Proxy}}" />
