@@ -98,9 +98,10 @@ namespace PPDFramework.Resource
             }
             lock (resources)
             {
-                if (resources.TryGetValue(resourceName, out ResourceBase value))
+                // 型が違うものは見つからないことにする（以前は null で「見つかった」を返し、親で見つかると子を探さなかった）
+                if (resources.TryGetValue(resourceName, out ResourceBase value) && value is T found)
                 {
-                    resource = value as T;
+                    resource = found;
                     return true;
                 }
             }
@@ -132,13 +133,10 @@ namespace PPDFramework.Resource
         {
             lock (resources)
             {
-                if (TryGetResource<ResourceBase>(resourceName, out ResourceBase resource))
+                // 自分のものだけを消す（以前は親のものを探して破棄し、親に破棄したものが残った）
+                if (resources.Remove(resourceName, out ResourceBase resource))
                 {
                     resource.Dispose();
-                    lock (resources)
-                    {
-                        resources.Remove(resourceName);
-                    }
                 }
             }
         }
