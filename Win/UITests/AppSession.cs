@@ -227,6 +227,18 @@ namespace UITests
         }
 
         /// <summary>
+        /// 要素の左上からの位置（WPF の単位）を、マウスでダブルクリックします。
+        /// </summary>
+        public void DoubleClickAt(AutomationElement element, double x, double y)
+        {
+            MainWindow.SetForeground();
+            var scale = NativeWindows.GetScale(HandleOf(MainWindow));
+            var bounds = Retry.WhileException(() => element.BoundingRectangle, TimeSpan.FromSeconds(5), null, throwOnTimeout: true).Result;
+            FlaUI.Core.Input.Mouse.DoubleClick(new System.Drawing.Point(bounds.X + (int)(x * scale), bounds.Y + (int)(y * scale)));
+            FlaUI.Core.Input.Wait.UntilInputIsProcessed();
+        }
+
+        /// <summary>
         /// ウィンドウを閉じます（閉じるボタンと同じ。ダイアログではキャンセルになる）。
         /// </summary>
         public void CloseWindow(Window window)
