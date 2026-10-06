@@ -96,6 +96,60 @@ namespace UITests.PPDEditor
             // 保存したことを知らせる小さなウィンドウは、しばらくすると消える
         }
 
+        /// <summary>
+        /// 保存したプロジェクトの値です（[キー]値 の行）。
+        /// </summary>
+        string ProjectValue(string key)
+        {
+            var line = File.ReadAllLines(ProjectFile).FirstOrDefault(l => l.StartsWith("[" + key + "]", StringComparison.Ordinal));
+            return line?[(key.Length + 2)..];
+        }
+
+        [Fact]
+        public void KeyboardEditsMarksWithUndo()
+        {
+            CreateProject();
+            var timeline = session.Find("Seekmain");
+            session.DoubleClickAt(timeline, 200, 22 + 26 * 2 + 13);
+            session.DoubleClickAt(timeline, 400, 22 + 26 * 3 + 13);
+            Save();
+            var twoMarks = new FileInfo(LayerFile).Length;
+
+            // 選んでいるマーク（後に置いたもの）を、矢印で動かしてから消す
+            FlaUI.Core.Input.Keyboard.Type(FlaUI.Core.WindowsAPI.VirtualKeyShort.RIGHT);
+            FlaUI.Core.Input.Keyboard.Type(FlaUI.Core.WindowsAPI.VirtualKeyShort.UP);
+            FlaUI.Core.Input.Keyboard.Type(FlaUI.Core.WindowsAPI.VirtualKeyShort.DELETE);
+            FlaUI.Core.Input.Wait.UntilInputIsProcessed();
+            Save();
+            var oneMark = new FileInfo(LayerFile).Length;
+            Assert.True(oneMark < twoMarks, $"{oneMark} < {twoMarks}");
+
+            // 元に戻すと、マークが戻る
+            FlaUI.Core.Input.Keyboard.TypeSimultaneously(FlaUI.Core.WindowsAPI.VirtualKeyShort.CONTROL, FlaUI.Core.WindowsAPI.VirtualKeyShort.KEY_Z);
+            FlaUI.Core.Input.Wait.UntilInputIsProcessed();
+            Save();
+            Assert.Equal(twoMarks, new FileInfo(LayerFile).Length);
+        }
+
+        [Fact]
+        public void PlayPauseAndStopMoveTheSeekTime()
+        {
+            CreateProject();
+
+            // 再生して止めると、その時間が保存される
+            session.FindMenuItem("movieMenu", "PlayMenuItem").Invoke();
+            System.Threading.Thread.Sleep(1500);
+            session.FindMenuItem("movieMenu", "PauseMenuItem").Invoke();
+            Save();
+            var seekTime = double.Parse(ProjectValue("Base.lastseektime"), System.Globalization.CultureInfo.InvariantCulture);
+            Assert.True(seekTime > 0.5, seekTime.ToString(System.Globalization.CultureInfo.InvariantCulture));
+
+            // 止めると最初に戻る
+            session.FindMenuItem("movieMenu", "StopMenuItem").Invoke();
+            Save();
+            Assert.Equal("0", ProjectValue("Base.lastseektime"));
+        }
+
         [Fact]
         public void CreatePlaceMarkSaveAndReopen()
         {
