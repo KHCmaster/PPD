@@ -245,30 +245,38 @@ namespace PPDCore
         {
             if (gameutility.Random)
             {
-                bool hasLR = false, hasDirection = false, hasSymbol = false;
-                foreach (MarkDataBase ppdData in ppdat)
-                {
-                    hasLR |= ppdData.ButtonType == ButtonType.L || ppdData.ButtonType == ButtonType.R;
-                    hasDirection |= ppdData.ButtonType == ButtonType.Left || ppdData.ButtonType == ButtonType.Down
-                        || ppdData.ButtonType == ButtonType.Right || ppdData.ButtonType == ButtonType.Up;
-                    hasSymbol = ppdData.ButtonType == ButtonType.Square || ppdData.ButtonType == ButtonType.Cross
-                        || ppdData.ButtonType == ButtonType.Circle || ppdData.ButtonType == ButtonType.Triangle;
-                }
-                RandomChangeManager.RandomType randomType = RandomChangeManager.RandomType.None;
-                if (hasSymbol)
-                {
-                    randomType |= RandomChangeManager.RandomType.Symbol;
-                }
-                if (hasDirection)
-                {
-                    randomType |= RandomChangeManager.RandomType.Direction;
-                }
-                if (hasLR)
-                {
-                    randomType |= RandomChangeManager.RandomType.LR;
-                }
-                randomChangeManager.Initialize(randomType);
+                randomChangeManager.Initialize(GetRandomType(ppdat));
             }
+        }
+
+        /// <summary>
+        /// 譜面に出てくるボタンの種類から、ランダムで入れ替える範囲を決めます。
+        /// </summary>
+        internal static RandomChangeManager.RandomType GetRandomType(IEnumerable<MarkDataBase> marks)
+        {
+            bool hasLR = false, hasDirection = false, hasSymbol = false;
+            foreach (MarkDataBase ppdData in marks)
+            {
+                hasLR |= ppdData.ButtonType == ButtonType.L || ppdData.ButtonType == ButtonType.R;
+                hasDirection |= ppdData.ButtonType == ButtonType.Left || ppdData.ButtonType == ButtonType.Down
+                    || ppdData.ButtonType == ButtonType.Right || ppdData.ButtonType == ButtonType.Up;
+                hasSymbol |= ppdData.ButtonType == ButtonType.Square || ppdData.ButtonType == ButtonType.Cross
+                    || ppdData.ButtonType == ButtonType.Circle || ppdData.ButtonType == ButtonType.Triangle;
+            }
+            RandomChangeManager.RandomType randomType = RandomChangeManager.RandomType.None;
+            if (hasSymbol)
+            {
+                randomType |= RandomChangeManager.RandomType.Symbol;
+            }
+            if (hasDirection)
+            {
+                randomType |= RandomChangeManager.RandomType.Direction;
+            }
+            if (hasLR)
+            {
+                randomType |= RandomChangeManager.RandomType.LR;
+            }
+            return randomType;
         }
 
         public void AddMark(Vector2 position, float angle, float time, MarkType markType, int id)
