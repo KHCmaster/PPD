@@ -38,23 +38,6 @@ namespace UITests.PPDEditor
             Assert.Equal(twoMarks, new FileInfo(LayerFile).Length);
         }
 
-        /// <summary>
-        /// タイムラインの行の真ん中の高さです（上の時間の欄が 22、行が 26 の高さ）。
-        /// </summary>
-        static double Row(int row) => 22 + 26 * row + 13;
-
-        /// <summary>
-        /// タイムラインの 1 拍の幅（ピクセル）です。マークは拍の区切りに吸着するので、拍ちょうどの位置をクリックする。
-        /// </summary>
-        const int BeatWidth = 100;
-
-        static double Beat(double beat) => BeatWidth * beat;
-
-        void SetBeatWidth()
-        {
-            session.Find("DisplayWidthBox").AsTextBox().Text = BeatWidth.ToString(System.Globalization.CultureInfo.InvariantCulture);
-        }
-
         [Fact]
         public void TimelineAreaSelectionDragAndSeek()
         {

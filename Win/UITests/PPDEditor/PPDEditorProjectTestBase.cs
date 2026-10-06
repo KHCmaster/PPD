@@ -163,6 +163,23 @@ namespace UITests.PPDEditor
             session.FindMenuItem("movieMenu", "PauseMenuItem").Invoke();
         }
 
+        /// <summary>
+        /// タイムラインの行の真ん中の高さです（上の時間の欄が 22、行が 26 の高さ）。
+        /// </summary>
+        protected static double Row(int row) => 22 + 26 * row + 13;
+
+        /// <summary>
+        /// タイムラインの 1 拍の幅（ピクセル）です。マークは拍の区切りに吸着するので、拍ちょうどの位置をクリックする。
+        /// </summary>
+        protected const int BeatWidth = 100;
+
+        protected static double Beat(double beat) => BeatWidth * beat;
+
+        protected void SetBeatWidth()
+        {
+            session.Find("DisplayWidthBox").AsTextBox().Text = BeatWidth.ToString(System.Globalization.CultureInfo.InvariantCulture);
+        }
+
         protected void Save()
         {
             var before = File.GetLastWriteTimeUtc(ProjectFile);
