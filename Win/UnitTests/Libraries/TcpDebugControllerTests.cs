@@ -2,8 +2,6 @@ using FlowScriptEngine;
 using PPDCore;
 using PPDFramework.Logger;
 using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading;
@@ -21,32 +19,6 @@ namespace UnitTests.Libraries
     /// </remarks>
     public class TcpDebugControllerTests
     {
-        static readonly TimeSpan timeout = TimeSpan.FromSeconds(10);
-
-        /// <summary>
-        /// 届いた通知を順に待ちます。
-        /// </summary>
-        sealed class Events
-        {
-            readonly BlockingCollection<string> items = [];
-            public List<string> All { get; } = [];
-
-            public void Add(string item) => items.Add(item);
-
-            public void WaitFor(string expected)
-            {
-                while (items.TryTake(out var item, timeout))
-                {
-                    All.Add(item);
-                    if (item == expected)
-                    {
-                        return;
-                    }
-                }
-                throw new TimeoutException(expected + " が届きません。届いたもの: " + string.Join(", ", All));
-            }
-        }
-
         [Fact]
         public void HostAndClient_DebugAScriptOverLocalhost()
         {
@@ -59,7 +31,7 @@ namespace UnitTests.Libraries
             var second = s.Probe("second");
             s.Flow(entry, "Start", seq, "In").Flow(seq, "Out0", first, "In").Flow(seq, "Out1", second, "In");
 
-            var events = new Events();
+            var events = new TestEvents();
             using var host = new TcpDebugControllerHost(new() { ["a.fsml"] = [first], ["b.fsml"] = [] });
             host.OperationWaited += file => events.Add("waited " + file);
             host.OperationAccepted += file => events.Add("accepted " + file);
@@ -106,7 +78,7 @@ namespace UnitTests.Libraries
             host.Continue();
             events.WaitFor("accepted a.fsml");
 
-            Assert.True(thread.Join(timeout));
+            Assert.True(thread.Join(TestEvents.Timeout));
             Assert.Equal(["first", "second"], ProbeFlowSourceObject.Records.ConvertAll(r => r.Label));
 
             client.Close();
