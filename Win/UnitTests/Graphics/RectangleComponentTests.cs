@@ -156,6 +156,39 @@ namespace UnitTests.Graphics
         }
 
         [Fact]
+        public void TwoColorFilters_AreAppliedInOrder()
+        {
+            using var rectangle = Rectangle(Red, 0, 0, 100, 100);
+            // 赤を反転（シアン）してから、明るさを半分にする
+            rectangle.ColorFilters.Add(new InvertColorFilter { Weight = 1 });
+            rectangle.ColorFilters.Add(new BrightnessColorFilter { Scale = 0.5f, Weight = 1 });
+
+            var actual = Rgb(Pixel(graphics.Render(rectangle), 50, 50));
+
+            Assert.InRange(actual.R, 0, 2);
+            Assert.InRange(actual.G, 126, 130);
+            Assert.InRange(actual.B, 126, 130);
+            // 枠の外は描かない
+            Assert.Equal((0, 0, 0), Rgb(Pixel(graphics.Render(rectangle), 150, 50)));
+        }
+
+        [Fact]
+        public void Clip_SkipsChildrenOutside()
+        {
+            using var parent = new SpriteObject(graphics.Device)
+            {
+                Clip = new ClipInfo(GameSession.Nothing.Create<IGameHost>()) { PositionX = 0, PositionY = 0, Width = 800, Height = 100 },
+            };
+            parent.AddChild(Rectangle(Red, 0, 0, 50, 50));
+            parent.AddChild(Rectangle(Red, 0, 200, 50, 50));
+
+            var pixels = graphics.Render(parent);
+
+            Assert.Equal((255, 0, 0), Rgb(Pixel(pixels, 25, 25)));
+            Assert.Equal((0, 0, 0), Rgb(Pixel(pixels, 25, 225)));
+        }
+
+        [Fact]
         public void ChildManagement()
         {
             using var parent = new SpriteObject(graphics.Device);
