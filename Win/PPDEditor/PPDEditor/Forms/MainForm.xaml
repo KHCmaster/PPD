@@ -66,6 +66,7 @@
         <!-- コマンド。フォルダは子を出し、スクリプトは実行する -->
         <Style x:Key="CommandItem" TargetType="MenuItem">
             <Setter Property="Header" Value="{Binding Header}" />
+            <Setter Property="AutomationProperties.AutomationId" Value="{Binding Header}" />
             <Setter Property="InputGestureText" Value="{Binding InputGesture}" />
             <Setter Property="ItemsSource" Value="{Binding Children}" />
             <Setter Property="ItemContainerStyle" Value="{DynamicResource CommandItem}" />
@@ -149,7 +150,7 @@
                                 <MenuItem Header="{Binding Texts[OnlyInSelection]}" Command="{Binding ForceFitSelectionCommand}" />
                             </MenuItem>
                         </MenuItem>
-                        <MenuItem Header="{Binding Texts[Command]}" IsEnabled="{Binding IsMenuOfCommandsEnabled}" ItemContainerStyle="{StaticResource CommandItem}">
+                        <MenuItem AutomationProperties.AutomationId="CommandMenu" Header="{Binding Texts[Command]}" IsEnabled="{Binding IsMenuOfCommandsEnabled}" ItemContainerStyle="{StaticResource CommandItem}">
                             <MenuItem.ItemsSource>
                                 <CompositeCollection>
                                     <CollectionContainer Collection="{Binding Data.Commands, Source={StaticResource Proxy}}" />
