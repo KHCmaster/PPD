@@ -130,6 +130,50 @@ namespace UnitTests.Graphics
         }
 
         [Fact]
+        public void Executor_RunsScriptWithLayers()
+        {
+            sheet.AddMark(1, (int)ButtonType.Circle, false);
+            var layers = new[] { new Layer(sheet, ids.Clone(), true) };
+            var s = new UnitTests.FlowScript.ScriptRunner();
+            var probe = s.Probe("layers");
+            s.Flow(s.Entry(), "Start", probe, "In").Flow(s.Node(typeof(FlowScriptEnginePPDEditor.FlowSourceObjects.Layer.AllFlowSourceObject)), "All", probe, "Value");
+            UnitTests.FlowScript.ScriptRunner.RegisterNodes();
+            // エディターのノードも使えるようにする
+            _ = FlowScriptEngine.FlowSourceEnumerator.EnumerateFromFile(typeof(FlowScriptEnginePPDEditor.FlowSourceObjects.Layer.AllFlowSourceObject).Assembly.Location,
+                [typeof(FlowScriptEngine.FlowSourceObjectBase)]).ToList();
+            using var folder = new TempFolder();
+            var path = folder.Write("script.fsml", s.ToXml());
+            UnitTests.FlowScript.ProbeFlowSourceObject.Records.Clear();
+
+            var executor = new Executor(path, layers);
+            using var finished = new System.Threading.ManualResetEventSlim();
+            executor.Finished += (sender, e) => finished.Set();
+            executor.Execute();
+
+            Assert.True(finished.Wait(10000));
+            Assert.False(executor.HasError, executor.ErrorText);
+            Assert.False(executor.IsWorking);
+            Assert.Same(layers, Assert.Single(UnitTests.FlowScript.ProbeFlowSourceObject.Records).Value);
+            Assert.Same(layers, executor.Layers);
+            executor.Kill();
+        }
+
+        [Fact]
+        public void Executor_ReportsMissingScript()
+        {
+            using var folder = new TempFolder();
+            var executor = new Executor(folder.Combine("missing.fsml"), []);
+            using var finished = new System.Threading.ManualResetEventSlim();
+            executor.Finished += (sender, e) => finished.Set();
+
+            executor.Execute();
+
+            Assert.True(finished.Wait(10000));
+            Assert.True(executor.HasError);
+            Assert.Contains("missing.fsml", executor.ErrorText);
+        }
+
+        [Fact]
         public void IDs_AreSeenAtOnceAndUndone()
         {
             var mark = sheet.AddMark(1, (int)ButtonType.Circle, false);
