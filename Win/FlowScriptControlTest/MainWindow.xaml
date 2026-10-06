@@ -27,16 +27,16 @@
                 <MenuItem AutomationProperties.AutomationId="OpenMenuItem" Header="開く" Command="{Binding OpenCommand}" />
                 <MenuItem AutomationProperties.AutomationId="SaveMenuItem" Header="保存" Command="{Binding SaveCommand}" />
             </MenuItem>
-            <MenuItem Header="編集">
-                <MenuItem Header="元に戻す" InputGestureText="Ctrl+Z" Command="{Binding UndoCommand}" />
-                <MenuItem Header="やり直す" InputGestureText="Ctrl+Y" Command="{Binding RedoCommand}" />
+            <MenuItem AutomationProperties.AutomationId="EditMenu" Header="編集">
+                <MenuItem AutomationProperties.AutomationId="UndoMenuItem" Header="元に戻す" InputGestureText="Ctrl+Z" Command="{Binding UndoCommand}" />
+                <MenuItem AutomationProperties.AutomationId="RedoMenuItem" Header="やり直す" InputGestureText="Ctrl+Y" Command="{Binding RedoCommand}" />
                 <MenuItem Header="コピー" InputGestureText="Ctrl+C" Command="{Binding CopyCommand}" />
                 <MenuItem Header="貼り付け" InputGestureText="Ctrl+V" Command="{Binding PasteCommand}" />
                 <MenuItem Header="リンクも貼り付け" InputGestureText="Ctrl+Shift+V" Command="{Binding PasteWithLinksCommand}" />
                 <MenuItem Header="削除" InputGestureText="Del" Command="{Binding DeleteCommand}" />
-                <MenuItem Header="位置を自動調整" Command="{Binding AdjustPositionCommand}" />
-                <MenuItem Header="全て展開" Command="{Binding ExpandAllCommand}" />
-                <MenuItem Header="全て縮小" Command="{Binding CollapseAllCommand}" />
+                <MenuItem AutomationProperties.AutomationId="AdjustPositionMenuItem" Header="位置を自動調整" Command="{Binding AdjustPositionCommand}" />
+                <MenuItem AutomationProperties.AutomationId="ExpandAllMenuItem" Header="全て展開" Command="{Binding ExpandAllCommand}" />
+                <MenuItem AutomationProperties.AutomationId="CollapseAllMenuItem" Header="全て縮小" Command="{Binding CollapseAllCommand}" />
             </MenuItem>
             <MenuItem AutomationProperties.AutomationId="ConsoleMenu" Header="コンソール">
                 <MenuItem AutomationProperties.AutomationId="ClearConsoleMenuItem" Header="クリア" Command="{Binding ClearConsoleCommand}" />
