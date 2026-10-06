@@ -94,6 +94,11 @@ namespace UnitTests.Libraries
                 stream.Write(MessagePackSerializer.Serialize(data.GetType(), data));
             }
 
+            public void SendRaw(byte[] bytes)
+            {
+                stream.Write(bytes);
+            }
+
             /// <summary>
             /// 条件に合う値が届くまで、サーバーを動かしながら待ちます。それまでに届いたほかの値は読み捨てます。
             /// </summary>
@@ -214,6 +219,103 @@ namespace UnitTests.Libraries
             b.Dispose();
             a.Expect<ChangeLeaderNetworkData>(d => d.UserId == a.Id);
             a.Expect<DeleteUserNetworkData>(d => d.Id == b.Id);
+        }
+
+        [Fact]
+        public void FullRoom_RefusesTheSeventeenth()
+        {
+            for (var i = 1; i <= 16; i++)
+            {
+                Assert.IsType<SendServerInfoNetworkData>(Join(Connect("127.0.0." + i), "P" + i));
+            }
+
+            var late = Connect("127.0.0.17");
+
+            Assert.Equal(CloseConnectReason.MaximumCapacity, Assert.IsType<CloseConnectNetworkData>(Join(late, "late")).Reason);
+        }
+
+        [Fact]
+        public void ForceStart_StartsWithoutPlayersWhoLackTheSong()
+        {
+            var (a, b) = TwoPlayers();
+            a.Send(new ChangeSongNetworkData { Hash = [1], Difficulty = Difficulty.Easy });
+            b.Expect<ChangeSongNetworkData>();
+            a.Send(new HasSongNetworkData());
+            b.Expect<HasSongNetworkData>(d => d.Id == a.Id);
+            a.Send(new ChangeUserStateNetworkData { State = UserState.Ready });
+            b.Expect<ChangeUserStateNetworkData>(d => d.Id == a.Id);
+
+            // 曲のない人がいると始まらない。リーダーが強制すると、曲のある人だけで始める
+            b.Send(new ForceStartNetworkData());
+            a.Send(new ForceStartNetworkData());
+            b.Expect<ForceStartNetworkData>();
+            a.Expect<GoToPlayPrepareNetworkData>();
+            Assert.Equal([a.Id], a.Expect<GoToPlayNetworkData>().PlayerIds);
+
+            // 遊んでいる人が抜けたら、メニューに戻る
+            a.Send(new MainGameLoadedNetworkData());
+            a.Expect<PlayMainGameNetworkData>();
+            a.Send(new JustGoToMenuNetworkData());
+            a.Expect<JustGoToMenuNetworkData>();
+            a.Send(new ChangeSongNetworkData { Hash = [2], Difficulty = Difficulty.Easy });
+            Assert.Equal([2], b.Expect<ChangeSongNetworkData>(d => d.Hash[0] == 2).Hash);
+        }
+
+        [Fact]
+        public void OldClient_IsDisconnected()
+        {
+            var old = Connect("127.0.0.1");
+
+            // 以前の形式（PPDPACK で始まる）で送ってくるクライアントには、以前の形式で切断を伝えて切る
+            old.SendRaw([.. "PPDPACKV2"u8, 0, 0, 0, 0]);
+
+            old.Expect<CloseNetworkData>();
+        }
+
+        [Fact]
+        public void RoomList_IsCreatedUpdatedAndDeleted()
+        {
+            var baseUrlField = typeof(PPDMultiCommon.Web.WebManager).GetField("baseUrl", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic);
+            var savedBaseUrl = baseUrlField.GetValue(null);
+            using var scope = new WebTestScope();
+            baseUrlField.SetValue(null, scope.Server.BaseUrl + "/multi-api");
+            try
+            {
+                scope.Server.OnXml("/multi-api/createroom", """<Root Token="t1" />""");
+                scope.Server.On("/multi-api/updateroominfo", _ => TestWebServer.Status(HttpStatusCode.BadRequest));
+                scope.Server.On("/multi-api/deleteroom", _ => TestWebServer.Status(HttpStatusCode.OK));
+                var webTimer = new ManualTimer();
+                var room = new PPDMultiCommon.Web.RoomInfo("host", "room", "", 1);
+                using (var webServer = new PPDServer(TestEvents.FreePort(), new PPDMultiCommon.Web.WebManager(), room, webTimer) { ListenAddress = IPAddress.Loopback })
+                {
+                    webServer.Start();
+                    // 部屋を作ったら、定期的に人数を知らせる
+                    Assert.True(SpinWait.SpinUntil(() => webTimer.Callbacks.Count == 2, TestEvents.Timeout));
+                    Assert.Equal("room", scope.Server.Requests.First().Query["roomname"]);
+                    webTimer.Callbacks.Values.ToList().ForEach(callback => callback(0));
+                    // 知らせるのに失敗したら、部屋を作り直す
+                    Assert.True(SpinWait.SpinUntil(() => scope.Server.Requests.Count(r => r.Path == "/multi-api/createroom") == 2, TestEvents.Timeout));
+                    Assert.Equal("0", scope.Server.Requests.Single(r => r.Path == "/multi-api/updateroominfo").Query["playercount"]);
+                }
+                // 閉じたら部屋を消す
+                Assert.True(SpinWait.SpinUntil(() => scope.Server.Requests.Any(r => r.Path == "/multi-api/deleteroom"), TestEvents.Timeout));
+
+                // 部屋を作れなければ知らせる
+                scope.Server.On("/multi-api/createroom", _ => TestWebServer.Status(HttpStatusCode.InternalServerError));
+                using var failed = new PPDServer(TestEvents.FreePort(), new PPDMultiCommon.Web.WebManager(), room, new ManualTimer()) { ListenAddress = IPAddress.Loopback };
+                var failedCount = 0;
+                failed.FailedToCreateRoom += (sender, e) => failedCount++;
+                failed.Start();
+                Assert.True(SpinWait.SpinUntil(() =>
+                {
+                    failed.Update();
+                    return failedCount == 1;
+                }, TestEvents.Timeout));
+            }
+            finally
+            {
+                baseUrlField.SetValue(null, savedBaseUrl);
+            }
         }
 
         [Fact]
