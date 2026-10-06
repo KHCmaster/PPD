@@ -164,7 +164,7 @@
                             <MenuItem AutomationProperties.AutomationId="PlayMenuItem" Header="{Binding Texts[Play]}" Command="{Binding PlayCommand}" />
                             <MenuItem AutomationProperties.AutomationId="PauseMenuItem" Header="{Binding Texts[Pause]}" Command="{Binding PauseCommand}" />
                             <MenuItem AutomationProperties.AutomationId="StopMenuItem" Header="{Binding Texts[Stop]}" Command="{Binding StopCommand}" />
-                            <MenuItem Header="{Binding Texts[RecordKey]}" Command="{Binding RecordKeyCommand}" />
+                            <MenuItem AutomationProperties.AutomationId="RecordKeyMenuItem" Header="{Binding Texts[RecordKey]}" Command="{Binding RecordKeyCommand}" />
                             <MenuItem AutomationProperties.AutomationId="CutMovieMenuItem" Header="{Binding Texts[Cut]}" Command="{Binding CutMovieCommand}" />
                         </MenuItem>
                         <MenuItem x:Name="showMenu" AutomationProperties.AutomationId="ShowMenu" Header="{Binding Texts[Show]}" SubmenuOpened="ShowMenu_SubmenuOpened" ItemContainerStyle="{StaticResource DockItem}">
