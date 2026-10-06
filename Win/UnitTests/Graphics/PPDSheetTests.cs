@@ -449,6 +449,121 @@ namespace UnitTests.Graphics
         }
 
         [Fact]
+        public void MouseDrag_MovesAndRotatesSelectedMark()
+        {
+            var sheet = Sheet();
+            var mark = sheet.AddMark(1, (int)ButtonType.Circle);
+            sheet.ClearHistory();
+
+            // 位置（画面の外は端に）。続けて動かすと 1 回で戻る
+            sheet.MoveMark(new Vortice.Mathematics.Int2(100, 200), 0, false, false, false);
+            sheet.MoveMark(new Vortice.Mathematics.Int2(900, -10), 0, false, false, false);
+            Assert.Equal(new Vector2(800, 0), mark.Position);
+            sheet.Undo();
+            Assert.Equal(new Vector2(400, 225), mark.Position);
+            Assert.False(sheet.CanUndo);
+
+            // 角度はマークから指した点への向き（上が π/2、下が 3π/2）
+            sheet.MoveMark(new Vortice.Mathematics.Int2(400, 125), 1, false, false, false);
+            Assert.Equal(MathF.PI / 2, mark.Rotation, 3);
+            sheet.MoveMark(new Vortice.Mathematics.Int2(400, 325), 1, false, false, false);
+            Assert.Equal(MathF.PI * 3 / 2, mark.Rotation, 3);
+            sheet.Undo();
+            Assert.Equal(0, mark.Rotation);
+        }
+
+        [Fact]
+        public void MouseDrag_SnapsAngleWithModifierKeys()
+        {
+            var sheet = Sheet();
+            var mark = sheet.AddMark(1, (int)ButtonType.Circle);
+            var saved = (int[])PPDStaticSetting.Angles.Clone();
+            try
+            {
+                // Shift で 45 度ずつ
+                PPDStaticSetting.Angles[1] = 45;
+                sheet.MoveMark(new Vortice.Mathematics.Int2(500, 215), 1, true, false, false);
+                Assert.Equal(0, mark.Rotation, 3);
+                sheet.MoveMark(new Vortice.Mathematics.Int2(490, 140), 1, true, false, false);
+                Assert.Equal(MathF.PI / 4, mark.Rotation, 3);
+                // ほかの組み合わせの設定も使う
+                for (var i = 2; i < 8; i++)
+                {
+                    PPDStaticSetting.Angles[i] = 90;
+                }
+                foreach (var (shift, ctrl, alt) in new[] { (false, true, false), (false, false, true), (true, true, false), (true, false, true), (false, true, true), (true, true, true) })
+                {
+                    sheet.MoveMark(new Vortice.Mathematics.Int2(480, 160), 1, shift, ctrl, alt);
+                    Assert.Equal(0, mark.Rotation % (MathF.PI / 2), 3);
+                }
+            }
+            finally
+            {
+                Array.Copy(saved, PPDStaticSetting.Angles, saved.Length);
+            }
+        }
+
+        [Fact]
+        public void MouseDrag_RotatesAllMarksInArea()
+        {
+            var sheet = Sheet();
+            var marks = new[] { sheet.AddMark(1, (int)ButtonType.Circle, false), sheet.AddMark(2, 100, 100, 1, (int)ButtonType.Cross, 0, false) };
+            sheet.ClearHistory();
+            sheet.FocusedMark = [-1, -1];
+            Select(sheet, 0, ButtonType.Circle, 3, ButtonType.Cross);
+
+            // 最初のマークから見た向きを、すべてのマークに
+            sheet.MoveMark(new Vortice.Mathematics.Int2(400, 125), 1, false, false, false);
+            sheet.MoveMark(new Vortice.Mathematics.Int2(500, 225), 1, false, false, false);
+
+            Assert.All(marks, m => Assert.Equal(0, m.Rotation, 3));
+            sheet.Undo();
+            Assert.Equal((0f, 1f), (marks[0].Rotation, marks[1].Rotation));
+            Assert.False(sheet.CanUndo);
+        }
+
+        [Fact]
+        public void MoveAllLines_ShiftsEveryRow()
+        {
+            var sheet = Sheet();
+            sheet.AddMark(1, (int)ButtonType.Circle, false);
+            sheet.AddExMark(2, 3, (int)ButtonType.Cross, false);
+            sheet.ClearHistory();
+
+            // すべての行をまとめて動かす
+            sheet.MoveLine(int.MaxValue, 0.5f);
+
+            Assert.Equal([1.5f], Times(sheet, ButtonType.Circle));
+            Assert.Equal(3.5f, ((ExMark)sheet.Data[(int)ButtonType.Cross][2.5f]).EndTime);
+            sheet.Undo();
+            Assert.Equal([1f], Times(sheet, ButtonType.Circle));
+            Assert.Equal(3f, ((ExMark)sheet.Data[(int)ButtonType.Cross][2]).EndTime);
+        }
+
+        [Fact]
+        public void SetData_InAreaWithoutAngle()
+        {
+            var sheet = Sheet();
+            var marks = Enumerable.Range(0, 3).Select(i => sheet.AddMark(i, 400, 225, 0.5f, (int)ButtonType.Circle, 0, false)).ToArray();
+            Select(sheet, -0.5f, ButtonType.Circle, 2.5f, ButtonType.Circle);
+
+            // 前から、位置だけ（並べる数のほうが多ければ、マークの数まで）
+            Assert.True(sheet.SetData([new(1, 1), new(2, 2), new(3, 3), new(4, 4)], [9, 9, 9, 9], false, 1, false));
+
+            Assert.Equal([new Vector2(1, 1), new Vector2(2, 2), new Vector2(3, 3)], marks.Select(m => m.Position));
+            Assert.All(marks, m => Assert.Equal(0.5f, m.Rotation));
+            sheet.Undo();
+            Assert.All(marks, m => Assert.Equal(new Vector2(400, 225), m.Position));
+
+            // 選んだマークから前へ、位置だけ
+            sheet.FocusedMark = [(int)ButtonType.Circle, 2];
+            Assert.True(sheet.SetData([new(5, 5), new(6, 6)], [0, 0], true, 0, false));
+            Assert.Equal([new Vector2(400, 225), new Vector2(6, 6), new Vector2(5, 5)], marks.Select(m => m.Position));
+            sheet.Undo();
+            Assert.Equal(new Vector2(400, 225), marks[1].Position);
+        }
+
+        [Fact]
         public void LinesAndData_MoveSwapDelete()
         {
             var sheet = Sheet();
