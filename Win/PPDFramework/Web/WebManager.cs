@@ -76,7 +76,8 @@ namespace PPDFramework.Web
         /// <param name="password">パスワード。</param>
         public ErrorReason Login(string username, string password)
         {
-            var url = String.Format("{0}/api/login?username={1}&password={2}&version={3}", BaseUrl, username, password, Version);
+            // 名前とパスワードの記号（&、#、+ など）で URL が切れないようにする
+            var url = String.Format("{0}/api/login?username={1}&password={2}&version={3}", BaseUrl, HttpUtility.UrlEncode(username), HttpUtility.UrlEncode(password), Version);
 
             try
             {
