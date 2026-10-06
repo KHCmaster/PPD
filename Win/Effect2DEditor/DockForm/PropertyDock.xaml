@@ -59,7 +59,7 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             <local:ChangeValueLabel Text="BezierPosition" Style="{StaticResource ValueLabel}" />
-            <Button Grid.Column="1" HorizontalAlignment="Right" IsEnabled="{Binding IsBezierPositionEnabled}"
+            <Button AutomationProperties.AutomationId="BezierPositionButton" Grid.Column="1" HorizontalAlignment="Right" IsEnabled="{Binding IsBezierPositionEnabled}"
                     Command="{Binding EditRatioCommand}" CommandParameter="{x:Static effect:RatioType.BezierPosition}" />
         </Grid>
     </StackPanel>
