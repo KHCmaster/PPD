@@ -896,9 +896,14 @@ namespace PPDEditor.Command.PPDSheet
         }
         public void MoveMarkInSame(Mark mk, float time)
         {
-            var command = new ShiftMarkTimeCommand(data, focusedmark[0], mk, time);
+            // マークの行で動かす（以前は選んでいる行を使っていて、選んでいないマークでは別の行を壊した）
+            var selected = SelectedMark;
+            var command = new ShiftMarkTimeCommand(data, (int)mk.Type, mk, time);
             commandManager.AddCommand(command);
-            focusedmark[1] = data[focusedmark[0]].IndexOfKey(mk.Time);
+            if (selected != null)
+            {
+                focusedmark[1] = data[focusedmark[0]].IndexOfValue(selected);
+            }
         }
         public bool CopyMarkInSame(float time)
         {

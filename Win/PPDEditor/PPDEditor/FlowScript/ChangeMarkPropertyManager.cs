@@ -102,14 +102,15 @@ namespace PPDEditor.FlowScript
         {
             var editorMarkInfo = (EditorMarkInfo)mark;
             tasks.Add(new AssignMarkIdTask(editorMarkInfo));
-            editorMarkInfo.Mark.ID = IDProvider.Next();
+            // スクリプトに見せる ID だけを変える。譜面のマークは Execute で変える（元に戻せるように）
+            editorMarkInfo.ID = IDProvider.Next();
         }
 
         public void UnassignID(IEditorMarkInfo mark)
         {
             var editorMarkInfo = (EditorMarkInfo)mark;
             tasks.Add(new UnassignMarkIdTask(editorMarkInfo));
-            editorMarkInfo.Mark.ID = 0;
+            editorMarkInfo.ID = 0;
         }
 
         public void Remove(IEditorMarkInfo mark)

@@ -32,6 +32,8 @@ namespace PPDEditor.FlowScript
                 IsLong = false;
                 ReleaseTime = 0;
             }
+            // スクリプトにもマークの ID を見せる（以前は写しておらず、いつも 0 だった）
+            ID = mark.ID;
             Parameters = [];
             foreach (var pair in mark.Parameters)
             {
