@@ -19,8 +19,8 @@ namespace UITests.PPDEditor
         readonly AppSession session;
 
         /// <summary>
-        /// ドックの配置です（DockPanel Suite の形式）。ゲームの画面を真ん中、タイムラインを下（高さ 300）、プロパティとレイヤーを右に置き、
-        /// リソースは真ん中のゲームの画面の右に大きく置く（小さくドックしていると、中を探すのに時間がかかり、不安定になるため。
+        /// ドックの配置です（DockPanel Suite の形式）。ゲームの画面を真ん中、タイムラインを下（高さ 300）、プロパティを右に置き、
+        /// リソースとレイヤーは真ん中のゲームの画面の右に（上下に分けて）大きく置く（小さくドックしていると、中を探すのに時間がかかり、不安定になるため。
         /// 浮かせると、AvalonDock は中身を別のウィンドウに入れるので、UI Automation から中が見えない）。
         /// </summary>
         const string Layout = """
@@ -33,14 +33,15 @@ namespace UITests.PPDEditor
                 <Content ID="3" PersistString="PPDEditor.LayerManager" AutoHidePortion="0.25" IsHidden="False" IsFloat="False" />
                 <Content ID="4" PersistString="PPDEditor.ResourceManager" AutoHidePortion="0.25" IsHidden="False" IsFloat="False" />
               </Contents>
-              <Panes Count="4">
+              <Panes Count="5">
                 <Pane ID="0" DockState="Document" ActiveContent="0"><Contents Count="1"><Content ID="0" RefID="0" /></Contents></Pane>
                 <Pane ID="1" DockState="DockBottom" ActiveContent="1"><Contents Count="1"><Content ID="0" RefID="1" /></Contents></Pane>
-                <Pane ID="2" DockState="DockRight" ActiveContent="2"><Contents Count="2"><Content ID="0" RefID="2" /><Content ID="1" RefID="3" /></Contents></Pane>
+                <Pane ID="2" DockState="DockRight" ActiveContent="2"><Contents Count="1"><Content ID="0" RefID="2" /></Contents></Pane>
                 <Pane ID="3" DockState="Document" ActiveContent="4"><Contents Count="1"><Content ID="0" RefID="4" /></Contents></Pane>
+                <Pane ID="4" DockState="Document" ActiveContent="3"><Contents Count="1"><Content ID="0" RefID="3" /></Contents></Pane>
               </Panes>
               <DockWindows>
-                <DockWindow ID="0" DockState="Document" ZOrderIndex="0"><NestedPanes Count="2"><Pane ID="0" RefID="0" PrevPane="-1" Alignment="Right" Proportion="0.5" /><Pane ID="1" RefID="3" PrevPane="0" Alignment="Right" Proportion="0.5" /></NestedPanes></DockWindow>
+                <DockWindow ID="0" DockState="Document" ZOrderIndex="0"><NestedPanes Count="3"><Pane ID="0" RefID="0" PrevPane="-1" Alignment="Right" Proportion="0.5" /><Pane ID="1" RefID="3" PrevPane="0" Alignment="Right" Proportion="0.5" /><Pane ID="2" RefID="4" PrevPane="1" Alignment="Bottom" Proportion="0.5" /></NestedPanes></DockWindow>
                 <DockWindow ID="1" DockState="DockBottom" ZOrderIndex="1"><NestedPanes Count="1"><Pane ID="0" RefID="1" PrevPane="-1" Alignment="Right" Proportion="0.5" /></NestedPanes></DockWindow>
                 <DockWindow ID="2" DockState="DockRight" ZOrderIndex="2"><NestedPanes Count="1"><Pane ID="0" RefID="2" PrevPane="-1" Alignment="Right" Proportion="0.5" /></NestedPanes></DockWindow>
               </DockWindows>
@@ -305,6 +306,52 @@ namespace UITests.PPDEditor
             size.Select(2);
             Assert.Equal(2, size.SelectedItem == null ? -1 : Array.IndexOf(size.Items, size.SelectedItem));
             Assert.Empty(session.ModalWindowsOf());
+        }
+
+        /// <summary>
+        /// レイヤーの並びの n 番目（上から）の真ん中の高さです（1 つのレイヤーの高さは 45）。
+        /// </summary>
+        static double LayerRow(int index) => 45 * index + 22;
+
+        [Fact]
+        public void LayersAddRenameHideDuplicateAndDelete()
+        {
+            CreateProject();
+            var area = session.Find("LayerArea");
+
+            // 余白を右クリックして、名前を付けてレイヤーを足す
+            AppSession.InvokeAsync(session.RightClickForPopup(area, 150, 400, "NewLayerMenuItem"));
+            var dialog = session.WaitForModal();
+            dialog.FindFirstDescendant(cf => cf.ByAutomationId("nameTextBox")).AsTextBox().Text = "added";
+            FlaUI.Core.Input.Keyboard.Type(FlaUI.Core.WindowsAPI.VirtualKeyShort.ENTER);
+            Assert.True(session.WaitForNoModal(), session.DescribeModalWindows());
+            Save();
+            Assert.Equal("added", ProjectValue("Base.layer1"));
+
+            // 名前をダブルクリックして変える（後ろのレイヤーほど上に並ぶので、足したレイヤーは上）
+            session.DoubleClickAt(area, 80, LayerRow(0));
+            FlaUI.Core.Input.Keyboard.TypeSimultaneously(FlaUI.Core.WindowsAPI.VirtualKeyShort.CONTROL, FlaUI.Core.WindowsAPI.VirtualKeyShort.KEY_A);
+            FlaUI.Core.Input.Keyboard.Type("renamed");
+            FlaUI.Core.Input.Keyboard.Type(FlaUI.Core.WindowsAPI.VirtualKeyShort.ENTER);
+            FlaUI.Core.Input.Wait.UntilInputIsProcessed();
+
+            // 目のところを押すと、表示を切り替える
+            session.ClickAt(area, 19, LayerRow(0));
+            Save();
+            Assert.Equal("renamed", ProjectValue("Base.layer1"));
+            Assert.Equal("0", ProjectValue("Base.layer1Visible"));
+
+            // 複製して、消す（確かめるメッセージで OK）
+            AppSession.InvokeAsync(session.RightClickForPopup(area, 150, LayerRow(0), "DuplicateLayerMenuItem"));
+            Save();
+            Assert.NotNull(ProjectValue("Base.layer2"));
+            Assert.Equal(3, Directory.GetFiles(Path.GetDirectoryName(LayerFile), "*.ppd").Length);
+            AppSession.InvokeAsync(session.RightClickForPopup(area, 150, LayerRow(0), "DeleteLayerMenuItem"));
+            MessageBoxes.Press(session.WaitForModal(), MessageBoxButton.Ok);
+            Assert.True(session.WaitForNoModal(), session.DescribeModalWindows());
+            Save();
+            // 消したレイヤーの名前はプロジェクトのファイルに残るが、レイヤーのファイルはなくなる（読むときはファイルのあるところまで）
+            Assert.Equal(2, Directory.GetFiles(Path.GetDirectoryName(LayerFile), "*.ppd").Length);
         }
 
         [Fact]
