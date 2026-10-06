@@ -31,6 +31,19 @@ namespace UnitTests.PPDEditor
         }
 
         [Fact]
+        public void LyricsWithColon_RoundTrip()
+        {
+            var kasi = new KasiData();
+            kasi.Add(1, "Re:Start: 2");
+
+            var loaded = new KasiData();
+            loaded.Parse(kasi.Serialize());
+
+            // 歌詞の中の「:」で切らない
+            Assert.Equal(["Re:Start: 2"], loaded.Texts);
+        }
+
+        [Fact]
         public void AddMoveAndRemove()
         {
             var kasi = new KasiData();
