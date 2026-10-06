@@ -22,8 +22,8 @@ namespace PPDMultiCommon.Web
         {
             try
             {
-                var url = String.Format("{0}/createroom?username={1}&roomname={2}&passwordhash={3}&language={4}&port={5}", baseUrl, roomInfo.UserName,
-                    HttpUtility.UrlEncode(roomInfo.RoomName), roomInfo.PasswordHash, roomInfo.Language, roomInfo.Port);
+                var url = String.Format("{0}/createroom?username={1}&roomname={2}&passwordhash={3}&language={4}&port={5}", baseUrl, HttpUtility.UrlEncode(roomInfo.UserName),
+                    HttpUtility.UrlEncode(roomInfo.RoomName), roomInfo.PasswordHash, HttpUtility.UrlEncode(roomInfo.Language), roomInfo.Port);
                 var req = CreateRequest(url);
                 using var res = req.GetResponse();
                 using XmlReader reader = XmlReader.Create(res.GetResponseStream());
