@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 
@@ -78,7 +79,9 @@ namespace PPDCore
         {
             try
             {
-                tcpClient = new TcpClient(LocalHost, Port);
+                // エディターは IPv4 の localhost（127.0.0.1）で待ち受ける。"localhost" だと先に IPv6 につなごうとして、断られるまで待つ
+                tcpClient = new TcpClient();
+                tcpClient.Connect(IPAddress.Loopback, Port);
 
                 var bytes = GetBytes([MethodName], writer =>
                 {
