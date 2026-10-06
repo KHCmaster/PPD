@@ -251,6 +251,56 @@ namespace UnitTests.Graphics
             Assert.Equal([(EffectType.Worst, false)], notPressed.Evaluated);
         }
 
+        [Theory]
+        // ファインで押せば、離すまで続く
+        [InlineData(0.06f, new[] { EffectType.Fine, EffectType.Cool })]
+        // セーフとサッドで押すと、そこで終わる
+        [InlineData(-0.1f, new[] { EffectType.Safe })]
+        [InlineData(0.14f, new[] { EffectType.Sad })]
+        public void NormalHold_PressTiming(float offset, EffectType[] expected)
+        {
+            var play = Start([Hold(1, 2)]);
+
+            PressAndRelease(play, ButtonType.Circle, 1 + offset, 2);
+
+            Assert.Equal(expected, play.Evaluated.Select(e => e.Effect));
+        }
+
+        [Theory]
+        [InlineData(0.06f, EffectType.Fine)]
+        [InlineData(-0.1f, EffectType.Safe)]
+        [InlineData(0.14f, EffectType.Sad)]
+        public void NormalHold_ReleaseTiming(float offset, EffectType expected)
+        {
+            // 離したときの音は、鳴らすようにしたときだけ（イベントかスクリプトで）
+            var play = Start([Hold(1, 2)]);
+            play.Marks.EventManager.SetReleaseSound(MarkType.Circle, true);
+
+            PressAndRelease(play, ButtonType.Circle, 1, 2 + offset);
+
+            Assert.Equal([(EffectType.Cool, false), (expected, false)], play.Evaluated);
+            Assert.Equal([((int)ButtonType.Circle, false)], play.Sounds.Distinct());
+
+            var silent = Start([Hold(1, 2)]);
+            PressAndRelease(silent, ButtonType.Circle, 1, 2 + offset);
+            Assert.Empty(silent.Sounds);
+        }
+
+        [Theory]
+        [InlineData(DisplayState.Sudden)]
+        [InlineData(DisplayState.Hidden)]
+        [InlineData(DisplayState.HiddenColor)]
+        [InlineData(DisplayState.SuddenColor)]
+        public void Holds_InEachDisplayState(DisplayState displayState)
+        {
+            var play = Start([Hold(1, 2), Mark(3)], [new ChangeDisplayStateEvent(0, displayState)]);
+
+            PressAndRelease(play, ButtonType.Circle, 1, 2);
+            play.Run(3.01f, 4);
+
+            Assert.Equal([EffectType.Cool, EffectType.Cool, EffectType.Worst], play.Evaluated.Select(e => e.Effect));
+        }
+
         [Fact]
         public void ACHold_KeepsPressingUntilReleased()
         {
