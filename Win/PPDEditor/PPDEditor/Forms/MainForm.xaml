@@ -109,20 +109,20 @@
                             <MenuItem AutomationProperties.AutomationId="OpenProjectMenuItem" Header="{Binding Texts[OpenProject]}" Command="{Binding OpenProjectCommand}" />
                             <MenuItem AutomationProperties.AutomationId="OverwriteProjectMenuItem" Header="{Binding Texts[OverWriteProject]}" InputGestureText="Ctrl+S" Command="{Binding OverwriteProjectCommand}" />
                             <MenuItem AutomationProperties.AutomationId="MergeProjectMenuItem" Header="{Binding Texts[MergeProject]}" Command="{Binding MergeProjectCommand}" />
-                            <MenuItem Header="{Binding Texts[Open]}">
-                                <MenuItem Header="*.ppd" Command="{Binding OpenPpdCommand}" />
-                                <MenuItem Header="movie.*" Command="{Binding OpenMovieCommand}" />
-                                <MenuItem Header="kasi.txt" Command="{Binding OpenKasiCommand}" />
+                            <MenuItem AutomationProperties.AutomationId="FileOpenMenu" Header="{Binding Texts[Open]}">
+                                <MenuItem AutomationProperties.AutomationId="OpenPpdMenuItem" Header="*.ppd" Command="{Binding OpenPpdCommand}" />
+                                <MenuItem AutomationProperties.AutomationId="OpenMovieMenuItem" Header="movie.*" Command="{Binding OpenMovieCommand}" />
+                                <MenuItem AutomationProperties.AutomationId="OpenKasiMenuItem" Header="kasi.txt" Command="{Binding OpenKasiCommand}" />
                                 <MenuItem Header="data.ini" IsEnabled="False" Command="{Binding OpenDataIniCommand}" />
-                                <MenuItem Header="*.evd" Command="{Binding OpenEvdCommand}" />
+                                <MenuItem AutomationProperties.AutomationId="OpenEvdMenuItem" Header="*.evd" Command="{Binding OpenEvdCommand}" />
                             </MenuItem>
-                            <MenuItem Header="{Binding Texts[Save]}">
-                                <MenuItem Header="*.ppd" Command="{Binding SavePpdAsCommand}" />
-                                <MenuItem Header="kasi.txt" Command="{Binding SaveKasiAsCommand}" />
-                                <MenuItem Header="soundset.txt" Command="{Binding SaveSoundSetAsCommand}" />
-                                <MenuItem Header="*.scd" Command="{Binding SaveScdAsCommand}" />
+                            <MenuItem AutomationProperties.AutomationId="FileSaveMenu" Header="{Binding Texts[Save]}">
+                                <MenuItem AutomationProperties.AutomationId="SavePpdAsMenuItem" Header="*.ppd" Command="{Binding SavePpdAsCommand}" />
+                                <MenuItem AutomationProperties.AutomationId="SaveKasiAsMenuItem" Header="kasi.txt" Command="{Binding SaveKasiAsCommand}" />
+                                <MenuItem AutomationProperties.AutomationId="SaveSoundSetAsMenuItem" Header="soundset.txt" Command="{Binding SaveSoundSetAsCommand}" />
+                                <MenuItem AutomationProperties.AutomationId="SaveScdAsMenuItem" Header="*.scd" Command="{Binding SaveScdAsCommand}" />
                                 <MenuItem Header="data.ini" IsEnabled="False" Command="{Binding SaveDataIniAsCommand}" />
-                                <MenuItem Header="*.evd" Command="{Binding SaveEvdAsCommand}" />
+                                <MenuItem AutomationProperties.AutomationId="SaveEvdAsMenuItem" Header="*.evd" Command="{Binding SaveEvdAsCommand}" />
                             </MenuItem>
                             <MenuItem Header="{Binding Texts[Import]}">
                                 <MenuItem Header="{Binding Texts[Event]}">
