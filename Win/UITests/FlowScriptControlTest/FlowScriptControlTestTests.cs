@@ -316,6 +316,55 @@ namespace UITests.FlowScriptControlTest
             Assert.True(AppSession.WaitUntil(() => ConsoleText.Contains("Connected")), "つながっていません");
         }
 
+        /// <summary>
+        /// 保存したファイルの、最初の要素の属性の値です。
+        /// </summary>
+        private static string AttributeOf(string xml, string element, string attribute)
+        {
+            var node = System.Xml.Linq.XDocument.Parse(xml).Descendants(element).First();
+            return node.Attribute(attribute)?.Value;
+        }
+
+        /// <summary>
+        /// 動かしている間に左の Ctrl を押します（押すと、動かしているものをスコープに入れる・出す）。
+        /// </summary>
+        private static void PressLeftControl()
+        {
+            FlaUI.Core.Input.Keyboard.Type(FlaUI.Core.WindowsAPI.VirtualKeyShort.LCONTROL);
+            FlaUI.Core.Input.Wait.UntilInputIsProcessed();
+        }
+
+        [Fact]
+        public void CommentsAreEditedAndJoinedToScope()
+        {
+            // ノードを選んで囲むスコープ（タブの左上から 180, 130 から 395, 260）と、その右にコメントを足す
+            var tabs = AddWriteLineNode();
+            session.ClickAt(tabs, 280, 165);
+            session.RightClickForPopup(tabs, 280, 165, "addScopeMenuItem").AsMenuItem().Invoke();
+            session.RightClickForPopup(tabs, 500, 150, "addCommentMenuItem").AsMenuItem().Invoke();
+            Assert.Equal("Comment", AttributeOf(SaveTo("comment.fsml"), "Comment", "Text"));
+
+            // コメントの文字を押すと編集できる（Enter で終わる）
+            session.ClickAt(tabs, 515, 167);
+            FlaUI.Core.Input.Keyboard.Type("Edited");
+            FlaUI.Core.Input.Keyboard.Type(FlaUI.Core.WindowsAPI.VirtualKeyShort.ENTER);
+            FlaUI.Core.Input.Wait.UntilInputIsProcessed();
+            Assert.Equal("Edited", AttributeOf(SaveTo("edited.fsml"), "Comment", "Text"));
+
+            // ノードをドラッグで動かす
+            var before = AttributeOf(SaveTo("before.fsml"), "Source", "Y");
+            session.DragAt(tabs, 240, 165, 240, 185);
+            Assert.NotEqual(before, AttributeOf(SaveTo("moved.fsml"), "Source", "Y"));
+
+            // コメントをスコープの中へ動かして Ctrl を押すと、スコープに入る
+            session.DragAt(tabs, 515, 167, 230, 245, PressLeftControl);
+            Assert.NotNull(AttributeOf(SaveTo("joined.fsml"), "Comment", "ScopeID"));
+
+            // もう一度 Ctrl を押しながら外へ動かすと、スコープから出る
+            session.DragAt(tabs, 230, 245, 500, 350, PressLeftControl);
+            Assert.Null(AttributeOf(SaveTo("dejoined.fsml"), "Comment", "ScopeID"));
+        }
+
         [Fact]
         public void Save_WritesScriptFile()
         {

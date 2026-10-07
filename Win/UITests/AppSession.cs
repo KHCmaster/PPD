@@ -277,7 +277,8 @@ namespace UITests
         /// 要素の左上からの位置（WPF の単位）から別の位置まで、マウスの左ボタンを押したまま動かします。
         /// 押したまま少し待つ（ドラッグの間のマウスの位置を、タイマーで見るアプリがあるため）。
         /// </summary>
-        public void DragAt(AutomationElement element, double fromX, double fromY, double toX, double toY)
+        /// <param name="beforeRelease">動かし終わって、ボタンを離す前にすること（キーを押すなど）。</param>
+        public void DragAt(AutomationElement element, double fromX, double fromY, double toX, double toY, Action beforeRelease = null)
         {
             MainWindow.SetForeground();
             var scale = NativeWindows.GetScale(HandleOf(MainWindow));
@@ -294,6 +295,7 @@ namespace UITests
                     System.Threading.Thread.Sleep(100);
                 }
                 System.Threading.Thread.Sleep(300);
+                beforeRelease?.Invoke();
             }
             finally
             {
