@@ -540,6 +540,92 @@ namespace UITests.Effect2DEditor
         }
 
         [Fact]
+        public void Overwrite_ThenOpenRecentFile()
+        {
+            AddSampleImage();
+            var path = Path.Combine(session.WorkDirectory, "saved.etd");
+            AppSession.InvokeAsync(session.FindMenuItem("FileMenu", "SaveAsMenuItem"));
+            FileDialogs.Accept(session.WaitForModal(), path);
+            Assert.True(AppSession.WaitUntil(() => File.Exists(path)));
+            Assert.True(session.WaitForNoModal());
+            var saved = File.ReadAllBytes(path);
+
+            // 値を変えて、上書きする
+            SelectState(0);
+            session.Find("XBox").AsTextBox().Text = "25";
+            Assert.True(AppSession.WaitUntil(() => ValueOf("X") == "25"));
+            session.FindMenuItem("FileMenu", "OverwriteMenuItem").Invoke();
+            Assert.True(AppSession.WaitUntil(() => !File.ReadAllBytes(path).SequenceEqual(saved)), "上書きされません");
+
+            // 開いたファイルは最近使ったファイルに残るので、新しくしてから、そこから開き直す
+            AppSession.InvokeAsync(session.FindMenuItem("FileMenu", "OpenMenuItem"));
+            FileDialogs.Accept(session.WaitForFileDialog(), path);
+            Assert.True(session.WaitForNoModal());
+            session.FindMenuItem("FileMenu", "NewMenuItem").Invoke();
+            Assert.Empty(session.ModalWindowsOf());
+            var recent = session.FindMenuItem("FileMenu", "RecentFilesMenu");
+            recent.Expand();
+            var item = recent.Items.First();
+            Assert.Contains("saved", item.Name);
+            item.Invoke();
+            SelectState(0);
+            Assert.True(AppSession.WaitUntil(() => ValueOf("X") == "25"), "開き直せません");
+        }
+
+        [Theory]
+        [InlineData("ShowHistoryMenuItem", "historyPanel1")]
+        [InlineData("ShowPropertyMenuItem", "BlendCombo")]
+        [InlineData("ShowTimeLineMenuItem", "FpsBox")]
+        [InlineData("ShowCanvasMenuItem", "scrollViewer")]
+        public void ShowMenu_HidesAndShowsDock(string itemId, string contentId)
+        {
+            bool IsShown() => session.MainWindow.FindFirstDescendant(cf => cf.ByAutomationId(contentId)) != null;
+            Assert.True(IsShown());
+
+            // 前に出ていないドックは、1 回目は前に出すだけで、2 回目で隠れる
+            for (var i = 0; i < 2 && IsShown(); i++)
+            {
+                session.FindMenuItem("ShowMenu", itemId).Invoke();
+                AppSession.WaitUntil(() => !IsShown());
+            }
+            Assert.False(IsShown(), "隠れません");
+            session.FindMenuItem("ShowMenu", itemId).Invoke();
+            Assert.True(AppSession.WaitUntil(IsShown), "出ません");
+        }
+
+        [Fact]
+        public void BlendMode_IsChangedAndKept()
+        {
+            AddSampleImage();
+            SelectState(0);
+            Assert.True(AppSession.WaitUntil(() => ValueOf("X") == "0"));
+            var blend = session.Find("BlendCombo").AsComboBox();
+            var before = blend.SelectedItem?.Text;
+
+            blend.Expand();
+            blend.Select(1);
+            blend.Collapse();
+            var changed = blend.SelectedItem.Text;
+            Assert.NotEqual(before, changed);
+
+            // ほかのステートを選んでから戻っても、変えたまま
+            session.RightClickForPopup(session.Find("timeLine1"), 5 * 10 + 5, 20 + 9, "InsertKeyStateMenuItem").AsMenuItem().Invoke();
+            SelectState(5);
+            SelectState(0);
+            Assert.True(AppSession.WaitUntil(() => session.Find("BlendCombo").AsComboBox().SelectedItem?.Text == changed), "ブレンドが残りません");
+        }
+
+        [Fact]
+        public void Exit_WithoutChanges_SavesSettingsAndCloses()
+        {
+            session.FindMenuItem("FileMenu", "ExitMenuItem").Invoke();
+
+            Assert.True(session.WaitForExit());
+            // 閉じるときに、設定をファイルに残す
+            Assert.True(File.Exists(Path.Combine(session.WorkDirectory, "Effect2DEditor.ini")));
+        }
+
+        [Fact]
         public void SaveAndOpen_RestoresEffect()
         {
             AddSampleImage();
