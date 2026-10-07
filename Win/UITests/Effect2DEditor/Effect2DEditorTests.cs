@@ -434,6 +434,74 @@ namespace UITests.Effect2DEditor
             Assert.True(AppSession.WaitUntil(() => !IsPlaying()), "終わっても止まりません");
         }
 
+        private static AutomationElement In(Window window, string automationId)
+        {
+            return window.FindFirstDescendant(cf => cf.ByAutomationId(automationId));
+        }
+
+        [Fact]
+        public void BackGround_ColorAndImageAreKept()
+        {
+            // 色を選ぶと、色の背景になる
+            var dialog = OpenDialogFromMenu("EditMenu", "BackGroundMenuItem");
+            AppSession.InvokeAsync(In(dialog, "PickColorButton"));
+            var colorWindow = session.WaitForModal(dialog);
+            In(colorWindow, "ColorOkButton").AsButton().Invoke();
+            Assert.True(AppSession.WaitUntil(() => In(dialog, "BackColorRadio").AsRadioButton().IsChecked));
+            In(dialog, "BackOkButton").AsButton().Invoke();
+            Assert.True(session.WaitForNoModal());
+
+            // 次に開いたときも色のまま。画像を選ぶと、画像の背景になる
+            var image = Path.Combine(session.WorkDirectory, "back.png");
+            File.Copy(Path.Combine(AppContext.BaseDirectory, "Effect2DEditor", "TestData", "sample.png"), image, true);
+            dialog = OpenDialogFromMenu("EditMenu", "BackGroundMenuItem");
+            Assert.True(In(dialog, "BackColorRadio").AsRadioButton().IsChecked);
+            AppSession.InvokeAsync(In(dialog, "PickImageButton"));
+            FileDialogs.Accept(session.WaitForFileDialog(dialog), image);
+            Assert.True(AppSession.WaitUntil(() => In(dialog, "BackImageRadio").AsRadioButton().IsChecked));
+            Assert.Equal(image, In(dialog, "BackFileNameBox").AsTextBox().Text);
+            In(dialog, "BackOkButton").AsButton().Invoke();
+            Assert.True(session.WaitForNoModal());
+            AddSampleImage();
+
+            // 市松模様に戻す
+            dialog = OpenDialogFromMenu("EditMenu", "BackGroundMenuItem");
+            Assert.True(In(dialog, "BackImageRadio").AsRadioButton().IsChecked);
+            In(dialog, "BackDefaultRadio").AsRadioButton().IsChecked = true;
+            In(dialog, "BackOkButton").AsButton().Invoke();
+            Assert.True(session.WaitForNoModal());
+            dialog = OpenDialogFromMenu("EditMenu", "BackGroundMenuItem");
+            Assert.True(In(dialog, "BackDefaultRadio").AsRadioButton().IsChecked);
+            session.CloseWindow(dialog);
+            Assert.True(session.WaitForNoModal());
+        }
+
+        [Fact]
+        public void EffectRows_AreReorderedByDragging()
+        {
+            AddSampleImage();
+            SelectState(0);
+            session.Find("CopyEffectButton").AsButton().Invoke();
+            SelectState(0);
+            session.Find("XBox").AsTextBox().Text = "25";
+            Assert.True(AppSession.WaitUntil(() => ValueOf("X") == "25"));
+
+            // 名前の列（タイムラインの左。上の 20 が目盛り、1 行が 18）で、1 行目を 2 行目の下までドラッグする
+            // （名前の列は UI Automation で見えないので、タイムラインからの位置で操作する）
+            var timeline = session.Find("timeLine1");
+            const int names = -100;
+            session.DragAt(timeline, names, 20 + 9, names, 20 + 18 * 2 + 4);
+            SelectState(0, 1);
+            Assert.True(AppSession.WaitUntil(() => ValueOf("X") == "25"), "並びが変わりません");
+            SelectState(0);
+            Assert.True(AppSession.WaitUntil(() => ValueOf("X") == "0"));
+
+            // 2 行目を上の端までドラッグして戻す
+            session.DragAt(timeline, names, 20 + 18 + 9, names, 20 + 2);
+            SelectState(0);
+            Assert.True(AppSession.WaitUntil(() => ValueOf("X") == "25"), "並びが戻りません");
+        }
+
         [Fact]
         public void SaveAndOpen_RestoresEffect()
         {
