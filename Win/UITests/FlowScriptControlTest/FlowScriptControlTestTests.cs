@@ -98,23 +98,34 @@ namespace UITests.FlowScriptControlTest
         }
 
         /// <summary>
-        /// ノードの一覧から WriteLine を探して、編集の領域（タブの左上から 200, 150）へドラッグして足します。
+        /// ノードの一覧を絞り込んで（名前空間を「.」で区切る。合うものまで開く）ノードを探し、編集の領域（タブの左上から x, y）へドラッグして足します。
         /// </summary>
-        /// <returns>編集の領域のあるタブ。ノードは、タブの左上から 215, 165 のところにある。</returns>
-        private AutomationElement AddWriteLineNode()
+        /// <remarks>
+        /// ノードは、落とした位置を左上にして置かれる。
+        /// </remarks>
+        /// <returns>編集の領域のあるタブ。</returns>
+        private AutomationElement AddNode(string filterText, string name, double x, double y)
         {
-            // ノードの一覧を絞り込む（名前空間を「.」で区切る。合うものまで開く）
             var filter = session.Find("filterTextBox").AsTextBox();
-            filter.Text = "console.writeline";
+            filter.Text = filterText;
             filter.Focus();
             FlaUI.Core.Input.Keyboard.Type(FlaUI.Core.WindowsAPI.VirtualKeyShort.ENTER);
             var tree = session.Find("treeView");
             AutomationElement item = null;
-            Assert.True(AppSession.WaitUntil(() => (item = tree.FindFirstDescendant(cf => cf.ByName("WriteLine"))) != null), "ノードが一覧にありません");
+            Assert.True(AppSession.WaitUntil(() => (item = tree.FindFirstDescendant(cf => cf.ByName(name))) != null), "ノードが一覧にありません");
 
             var tabs = session.Find("DocumentTabs");
-            session.DragBetween(item, 20, 8, tabs, 200, 150);
+            session.DragBetween(item, 20, 8, tabs, x, y);
             return tabs;
+        }
+
+        /// <summary>
+        /// WriteLine のノードを、編集の領域（タブの左上から 200, 150）に足します。
+        /// </summary>
+        /// <returns>編集の領域のあるタブ。ノードは、タブの左上から 215, 165 のところにある。</returns>
+        private AutomationElement AddWriteLineNode()
+        {
+            return AddNode("console.writeline", "WriteLine", 200, 150);
         }
 
         private static int CountOf(string text, string value)
@@ -259,6 +270,50 @@ namespace UITests.FlowScriptControlTest
             resume.Invoke();
             Assert.True(AppSession.WaitUntil(() => session.Find("ExecuteButton").IsEnabled), "終わりません");
             Assert.True(AppSession.WaitUntil(() => ConsoleText.Split("Hello MVVM").Length - 1 == 2));
+        }
+
+        [Fact]
+        public void NodesAreConnectedExecutedAndRegionDeleted()
+        {
+            // EntryPoint（左）と WriteLine（右）を置いて、Start の端子から In の端子へドラッグしてつなぐ
+            var tabs = AddWriteLineNode();
+            AddNode("misc.entrypoint", "EntryPoint", 40, 150);
+            const double startX = 178, inX = 212, portY = 193;
+            session.DragAt(tabs, startX, portY, inX, portY);
+            Assert.Equal(1, CountOf(SaveTo("connected.fsml"), "<Flow "));
+
+            // つないだ線の先を、何もないところへドラッグすると、線が消える
+            // （描画の範囲の端から 20 の内側まで動かすとスクロールするので、端には近づけない）
+            session.DragAt(tabs, inX, portY, 450, 300);
+            Assert.Equal(0, CountOf(SaveTo("disconnected.fsml"), "<Flow "));
+
+            // 見出しの右のボタンで、使っていない項目を隠したり出したりする
+            session.ClickAt(tabs, 359, 164);
+            session.ClickAt(tabs, 359, 164);
+
+            // 何もないところから範囲で囲んで、両方選んで消し、元に戻す
+            session.DragAt(tabs, 32, 100, 450, 300);
+            session.RightClickForPopup(tabs, 600, 400, "deleteMenuItem").AsMenuItem().Invoke();
+            Assert.Equal(0, CountOf(SaveTo("cleared.fsml"), "<Source "));
+            session.FindMenuItem("EditMenu", "UndoMenuItem").Invoke();
+            Assert.Equal(2, CountOf(SaveTo("undone.fsml"), "<Source "));
+            session.FindMenuItem("EditMenu", "UndoMenuItem").Invoke();
+            Assert.Equal(1, CountOf(SaveTo("reconnected.fsml"), "<Flow "));
+
+            // WriteLine を選んで、書く文字を入れる
+            session.ClickAt(tabs, 280, 165);
+            var text = session.Find("TextPropertyBox").AsTextBox();
+            text.Text = "Connected";
+            text.Focus();
+            FlaUI.Core.Input.Keyboard.Type(FlaUI.Core.WindowsAPI.VirtualKeyShort.ENTER);
+
+            // 端子を右クリックして、つながっているノードを探す（見つけたノードへ表示が動く）
+            session.RightClickForPopup(tabs, inX, portY, "findLinkedNodeMenuItem").AsMenuItem().Invoke();
+            Assert.True(AppSession.WaitUntil(() => session.Find("SearchResultList").FindAllChildren(cf => cf.ByControlType(ControlType.ListItem)).Length == 1), "見つかりません");
+
+            // 実行すると、つないだ WriteLine が書く
+            ExecuteAndWait();
+            Assert.True(AppSession.WaitUntil(() => ConsoleText.Contains("Connected")), "つながっていません");
         }
 
         [Fact]
