@@ -502,6 +502,43 @@ namespace UITests.Effect2DEditor
             Assert.True(AppSession.WaitUntil(() => ValueOf("X") == "25"), "並びが戻りません");
         }
 
+        /// <summary>
+        /// 並んだエフェクトを、順に表示するアニメーションにします（確かめのメッセージに答える）。
+        /// </summary>
+        private void CreateAnimation(int frameCount, bool withReverse, bool accept)
+        {
+            var dialog = OpenDialogFromMenu("EditMenu", "AnimationMenuItem");
+            In(dialog, "FrameCountBox").AsTextBox().Text = frameCount.ToString();
+            In(dialog, "WithReverseCheck").AsCheckBox().IsChecked = withReverse;
+            AppSession.InvokeAsync(In(dialog, "FrameCountOkButton"));
+            Assert.True(AppSession.WaitUntil(() => session.ModalWindowsOf().FirstOrDefault()?.ClassName == "#32770"), "確かめのメッセージが出ません");
+            MessageBoxes.Press(session.ModalWindowsOf().First(), accept ? MessageBoxButton.Yes : MessageBoxButton.No);
+            Assert.True(session.WaitForNoModal());
+        }
+
+        [Fact]
+        public void Animation_ShowsEffectsInTurn()
+        {
+            AddSampleImage();
+            SelectState(0);
+            session.Find("CopyEffectButton").AsButton().Invoke();
+
+            // やめたときは、何も変わらない
+            CreateAnimation(5, false, false);
+            Assert.True(IsMenuItemEnabled("EditMenu", "UndoMenuItem"));
+
+            // 1 行目は 5 フレームで消える（作り直したので、履歴は消える）
+            CreateAnimation(5, false, true);
+            Assert.False(IsMenuItemEnabled("EditMenu", "UndoMenuItem"));
+            SelectState(5);
+            Assert.True(AppSession.WaitUntil(() => ValueOf("Alpha") == "0"), "アニメーションになりません");
+
+            // 逆にも再生するときは、1 行目は 10 フレームでまた出る
+            CreateAnimation(5, true, true);
+            SelectState(10);
+            Assert.True(AppSession.WaitUntil(() => ValueOf("Alpha") == "1"), "逆の再生になりません");
+        }
+
         [Fact]
         public void SaveAndOpen_RestoresEffect()
         {
