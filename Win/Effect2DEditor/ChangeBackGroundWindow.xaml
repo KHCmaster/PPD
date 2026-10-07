@@ -1,4 +1,4 @@
-<Window x:Class="Effect2DEditor.ChangeBackGroundWindow"
+﻿<Window x:Class="Effect2DEditor.ChangeBackGroundWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -24,21 +24,21 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <RadioButton Content="{Binding Texts[CBGRadioButton1]}" VerticalAlignment="Center"
+        <RadioButton AutomationProperties.AutomationId="BackDefaultRadio" Content="{Binding Texts[CBGRadioButton1]}" VerticalAlignment="Center"
                      IsChecked="{Binding Mode, Converter={StaticResource EnumEquals}, ConverterParameter=Default}" />
-        <RadioButton Grid.Row="1" Content="{Binding Texts[CBGRadioButton2]}" VerticalAlignment="Center"
+        <RadioButton AutomationProperties.AutomationId="BackColorRadio" Grid.Row="1" Content="{Binding Texts[CBGRadioButton2]}" VerticalAlignment="Center"
                      IsChecked="{Binding Mode, Converter={StaticResource EnumEquals}, ConverterParameter=Color}" />
         <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal">
             <Border Width="18" Height="16" BorderBrush="Gray" BorderThickness="1" Margin="0,0,4,0"
                     Background="{Binding Color, Converter={StaticResource ColorToBrush}}" />
-            <Button Content="..." Width="24" Height="18" Command="{Binding PickColorCommand}" />
+            <Button AutomationProperties.AutomationId="PickColorButton" Content="..." Width="24" Height="18" Command="{Binding PickColorCommand}" />
         </StackPanel>
-        <RadioButton Grid.Row="2" Content="{Binding Texts[CBGRadioButton3]}" VerticalAlignment="Center"
+        <RadioButton AutomationProperties.AutomationId="BackImageRadio" Grid.Row="2" Content="{Binding Texts[CBGRadioButton3]}" VerticalAlignment="Center"
                      IsChecked="{Binding Mode, Converter={StaticResource EnumEquals}, ConverterParameter=Image}" />
-        <Button Grid.Row="2" Grid.Column="1" Content="..." Width="24" Height="18" HorizontalAlignment="Right" Command="{Binding PickImageCommand}" />
-        <TextBox Grid.Row="3" Grid.ColumnSpan="2" Height="20" VerticalContentAlignment="Center" Text="{Binding FileName, UpdateSourceTrigger=PropertyChanged}" />
+        <Button AutomationProperties.AutomationId="PickImageButton" Grid.Row="2" Grid.Column="1" Content="..." Width="24" Height="18" HorizontalAlignment="Right" Command="{Binding PickImageCommand}" />
+        <TextBox AutomationProperties.AutomationId="BackFileNameBox" Grid.Row="3" Grid.ColumnSpan="2" Height="20" VerticalContentAlignment="Center" Text="{Binding FileName, UpdateSourceTrigger=PropertyChanged}" />
         <StackPanel Grid.Row="4" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,6,0,0">
-            <Button Content="OK" Width="75" Height="23" IsDefault="True" Command="{Binding OkCommand}" />
+            <Button AutomationProperties.AutomationId="BackOkButton" Content="OK" Width="75" Height="23" IsDefault="True" Command="{Binding OkCommand}" />
             <Button Content="Cancel" Width="75" Height="23" Margin="6,0,0,0" IsCancel="True" />
         </StackPanel>
     </Grid>
