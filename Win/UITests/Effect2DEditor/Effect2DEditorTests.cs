@@ -116,14 +116,14 @@ namespace UITests.Effect2DEditor
         }
 
         /// <summary>
-        /// タイムラインの、1 つ目のエフェクトのフレーム（0 から）のステートをクリックして選びます。
+        /// タイムラインの、エフェクト（行、0 から）のフレーム（0 から）のステートをクリックして選びます。
         /// </summary>
         /// <remarks>
         /// タイムラインは描いて表示するので、位置でクリックする（上の 20 が時間の目盛り、1 行が 18、1 フレームが 10）。
         /// </remarks>
-        private void SelectState(int frame)
+        private void SelectState(int frame, int row = 0)
         {
-            session.ClickAt(session.Find("timeLine1"), frame * 10 + 5, 20 + 9);
+            session.ClickAt(session.Find("timeLine1"), frame * 10 + 5, 20 + 18 * row + 9);
         }
 
         private string ValueOf(string type)
@@ -339,6 +339,99 @@ namespace UITests.Effect2DEditor
             session.RightClickForPopup(canvas, cx, cy, "resetMenuItem").AsMenuItem().Invoke();
             Assert.True(AppSession.WaitUntil(() => session.Find("XBox").IsEnabled), "ベジエが元に戻りません");
             Assert.True(IsMenuItemEnabled("EditMenu", "UndoMenuItem"));
+        }
+
+        [Fact]
+        public void EffectsAreCopiedSwappedDeletedAndCleared()
+        {
+            AddSampleImage();
+            SelectState(0);
+            Assert.True(AppSession.WaitUntil(() => ValueOf("X") == "0"));
+
+            // 選んだエフェクトをコピーして、元のほうの値を変える
+            session.Find("CopyEffectButton").AsButton().Invoke();
+            SelectState(0);
+            session.Find("XBox").AsTextBox().Text = "25";
+            Assert.True(AppSession.WaitUntil(() => ValueOf("X") == "25"));
+            SelectState(0, 1);
+            Assert.True(AppSession.WaitUntil(() => ValueOf("X") == "0"), "コピーしたエフェクトがありません");
+
+            // 並びを逆にする
+            session.Find("SwapButton").AsButton().Invoke();
+            SelectState(0, 1);
+            Assert.True(AppSession.WaitUntil(() => ValueOf("X") == "25"), "並びが変わりません");
+            SelectState(0);
+            Assert.True(AppSession.WaitUntil(() => ValueOf("X") == "0"));
+
+            // 選んだエフェクトを消すと、残りが上に来る
+            session.Find("DeleteButton").AsButton().Invoke();
+            SelectState(0);
+            Assert.True(AppSession.WaitUntil(() => ValueOf("X") == "25"), "エフェクトが消えません");
+
+            // すべて消して、元に戻す
+            session.Find("ClearEffectButton").AsButton().Invoke();
+            session.FindMenuItem("EditMenu", "UndoMenuItem").Invoke();
+            SelectState(0);
+            Assert.True(AppSession.WaitUntil(() => ValueOf("X") == "25"), "元に戻りません");
+        }
+
+        [Fact]
+        public void HistoryCheckBoxes_UndoAndRedo()
+        {
+            AddSampleImage();
+            SelectState(0);
+            session.Find("CopyEffectButton").AsButton().Invoke();
+            Assert.True(AppSession.WaitUntil(() => IsMenuItemEnabled("EditMenu", "UndoMenuItem")));
+
+            // ヒストリーは描いて表示するので、位置でクリックする（1 行が 20、左のチェックの枠が 3 から 17）
+            var history = session.Find("historyPanel1");
+            session.ClickAt(history, 10, 10);
+            Assert.True(AppSession.WaitUntil(() => !IsMenuItemEnabled("EditMenu", "UndoMenuItem")), "最初まで戻りません");
+            Assert.True(IsMenuItemEnabled("EditMenu", "RedoMenuItem"));
+
+            // 消えている行のチェックを押すと、そこまでやり直す（ステートを選んだのも履歴に残るので、まだ後がある）
+            session.ClickAt(history, 10, 10);
+            Assert.True(AppSession.WaitUntil(() => IsMenuItemEnabled("EditMenu", "UndoMenuItem")), "やり直せません");
+            Assert.True(IsMenuItemEnabled("EditMenu", "RedoMenuItem"));
+        }
+
+        /// <summary>
+        /// 再生のしかたを選びます（選ぶと再生する）。
+        /// </summary>
+        private void SelectPlayType(string itemId)
+        {
+            session.Find("playTypeButton").AsButton().Invoke();
+            session.FindInPopups(itemId).AsMenuItem().Invoke();
+        }
+
+        [Fact]
+        public void PlayTypes_PlayPauseAndStop()
+        {
+            AddSampleImage();
+            session.RightClickForPopup(session.Find("timeLine1"), 10 * 10 + 5, 20 + 9, "InsertKeyStateMenuItem").AsMenuItem().Invoke();
+            var play = session.Find("PlayButton").AsToggleButton();
+            bool IsPlaying() => play.ToggleState == FlaUI.Core.Definitions.ToggleState.On;
+
+            // 繰り返すときは、止めるまで再生している
+            SelectPlayType("PlayLoopMenuItem");
+            Assert.True(AppSession.WaitUntil(IsPlaying));
+            play.Toggle();
+            Assert.True(AppSession.WaitUntil(() => !IsPlaying()), "一時停止しません");
+            play.Toggle();
+            Assert.True(AppSession.WaitUntil(IsPlaying));
+            session.Find("StopButton").AsButton().Invoke();
+            Assert.True(AppSession.WaitUntil(() => !IsPlaying()), "止まりません");
+
+            SelectPlayType("PlayReverseLoopMenuItem");
+            Assert.True(AppSession.WaitUntil(IsPlaying));
+            session.Find("StopButton").AsButton().Invoke();
+            Assert.True(AppSession.WaitUntil(() => !IsPlaying()), "止まりません");
+
+            // 1 回だけのときは、終わると止まる
+            SelectPlayType("PlayOnceMenuItem");
+            Assert.True(AppSession.WaitUntil(() => !IsPlaying()), "終わっても止まりません");
+            SelectPlayType("PlayOnceReverseMenuItem");
+            Assert.True(AppSession.WaitUntil(() => !IsPlaying()), "終わっても止まりません");
         }
 
         [Fact]
