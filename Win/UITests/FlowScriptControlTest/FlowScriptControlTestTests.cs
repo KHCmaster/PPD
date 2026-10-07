@@ -1,4 +1,4 @@
-using FlaUI.Core.AutomationElements;
+﻿using FlaUI.Core.AutomationElements;
 using FlaUI.Core.Definitions;
 using System;
 using System.IO;
@@ -97,8 +97,11 @@ namespace UITests.FlowScriptControlTest
             return File.ReadAllText(path);
         }
 
-        [Fact]
-        public void NodeIsDraggedFromListDeletedAndRestored()
+        /// <summary>
+        /// ノードの一覧から WriteLine を探して、編集の領域（タブの左上から 200, 150）へドラッグして足します。
+        /// </summary>
+        /// <returns>編集の領域のあるタブ。ノードは、タブの左上から 215, 165 のところにある。</returns>
+        private AutomationElement AddWriteLineNode()
         {
             // ノードの一覧を絞り込む（名前空間を「.」で区切る。合うものまで開く）
             var filter = session.Find("filterTextBox").AsTextBox();
@@ -109,9 +112,21 @@ namespace UITests.FlowScriptControlTest
             AutomationElement item = null;
             Assert.True(AppSession.WaitUntil(() => (item = tree.FindFirstDescendant(cf => cf.ByName("WriteLine"))) != null), "ノードが一覧にありません");
 
-            // 編集の領域へドラッグして足す
             var tabs = session.Find("DocumentTabs");
             session.DragBetween(item, 20, 8, tabs, 200, 150);
+            return tabs;
+        }
+
+        private static int CountOf(string text, string value)
+        {
+            return text.Split(value).Length - 1;
+        }
+
+        [Fact]
+        public void NodeIsDraggedFromListDeletedAndRestored()
+        {
+            // 編集の領域へドラッグして足す
+            var tabs = AddWriteLineNode();
             Assert.Contains("WriteLine", SaveTo("added.fsml"));
 
             // 落とした位置のノードを選んで、Delete で消し、Ctrl+Z で戻す
@@ -135,6 +150,115 @@ namespace UITests.FlowScriptControlTest
             FlaUI.Core.Input.Mouse.Scroll(2);
             FlaUI.Core.Input.Mouse.Scroll(-2);
             Assert.Empty(session.ModalWindowsOf());
+        }
+
+        [Fact]
+        public void ContextMenu_CommentsScopesAndBreakPoints()
+        {
+            var tabs = AddWriteLineNode();
+            const int nodeX = 215, nodeY = 165;
+            AutomationElement MenuItemAt(double x, double y, string itemId) => session.RightClickForPopup(tabs, x, y, itemId);
+
+            // ノードを選んで、ノードに付くコメントを足して、消す
+            session.ClickAt(tabs, nodeX, nodeY);
+            MenuItemAt(nodeX, nodeY, "addBoundCommentMenuItem").AsMenuItem().Invoke();
+            Assert.Equal(1, CountOf(SaveTo("bound.fsml"), "<Comment "));
+            MenuItemAt(nodeX, nodeY, "removeBoundCommentMenuItem").AsMenuItem().Invoke();
+            Assert.Equal(0, CountOf(SaveTo("unbound.fsml"), "<Comment "));
+
+            // ブレークポイントを付けて、外す（付けているときだけ、外すのメニューが出る）
+            MenuItemAt(nodeX, nodeY, "addBreakPointMenuItem").AsMenuItem().Invoke();
+            MenuItemAt(nodeX, nodeY, "removeBreakPointMenuItem").AsMenuItem().Invoke();
+            MenuItemAt(nodeX, nodeY, "addBreakPointMenuItem").AsMenuItem().Invoke();
+            FlaUI.Core.Input.Keyboard.Type(FlaUI.Core.WindowsAPI.VirtualKeyShort.ESCAPE);
+
+            // 選んだノードを囲むスコープを足す。スコープの中では、中を選ぶ・スコープを消すのメニューが出る
+            MenuItemAt(nodeX, nodeY, "addScopeMenuItem").AsMenuItem().Invoke();
+            Assert.Equal(1, CountOf(SaveTo("scope.fsml"), "<Scope "));
+            MenuItemAt(nodeX, nodeY, "selectAllInScopeMenuItem").AsMenuItem().Invoke();
+            MenuItemAt(nodeX, nodeY, "selectInScopeMenuItem").AsMenuItem().Invoke();
+            MenuItemAt(nodeX, nodeY, "removeScopeMenuItem").AsMenuItem().Invoke();
+            Assert.Equal(0, CountOf(SaveTo("unscoped.fsml"), "<Scope "));
+
+            // 何もないところにコメントを足す
+            MenuItemAt(600, 400, "addCommentMenuItem").AsMenuItem().Invoke();
+            Assert.Equal(1, CountOf(SaveTo("comment.fsml"), "<Comment "));
+
+            // 選んだノードをメニューで消して、全体を表示する
+            session.ClickAt(tabs, nodeX, nodeY);
+            MenuItemAt(nodeX, nodeY, "deleteMenuItem").AsMenuItem().Invoke();
+            Assert.DoesNotContain("WriteLine", SaveTo("deleted.fsml"));
+            MenuItemAt(600, 400, "fitViewMenuItem").AsMenuItem().Invoke();
+            Assert.Empty(session.ModalWindowsOf());
+        }
+
+        /// <summary>
+        /// 検索のタブで探して、見つかったものの数を返します。
+        /// </summary>
+        private AutomationElement[] Search(string query)
+        {
+            session.Find("searchTabItem").AsTabItem().Select();
+            var box = session.Find("SearchQueryBox").AsTextBox();
+            box.Text = query;
+            box.Focus();
+            FlaUI.Core.Input.Keyboard.Type(FlaUI.Core.WindowsAPI.VirtualKeyShort.ENTER);
+            FlaUI.Core.Input.Wait.UntilInputIsProcessed();
+            return session.Find("SearchResultList").FindAllChildren(cf => cf.ByControlType(ControlType.ListItem));
+        }
+
+        [Fact]
+        public void Search_SelectsNodeAndItsPropertyIsEdited()
+        {
+            OpenScript("hello.fsml");
+
+            // 値で探して選ぶと、ノードを選んで、プロパティの欄に値が出る
+            var found = Search("hello mvvm");
+            Assert.Single(found);
+            found[0].AsListBoxItem().Select();
+            var text = session.Find("TextPropertyBox").AsTextBox();
+            Assert.True(AppSession.WaitUntil(() => text.Text == "Hello MVVM"), "プロパティが出ません");
+
+            // プロパティを変えると、保存したファイルにも残る
+            text.Text = "Changed";
+            text.Focus();
+            FlaUI.Core.Input.Keyboard.Type(FlaUI.Core.WindowsAPI.VirtualKeyShort.ENTER);
+            FlaUI.Core.Input.Wait.UntilInputIsProcessed();
+            Assert.Contains("Changed", SaveTo("changed.fsml"));
+
+            // つながっているノードを探す（@ID[In か Out][項目の名前]）
+            Assert.Single(Search("@1[out][start]"));
+            Assert.Empty(Search("not found"));
+        }
+
+        [Fact]
+        public void BreakPoint_StopsExecutionUntilContinued()
+        {
+            OpenScript("hello.fsml");
+            Search("hello mvvm")[0].AsListBoxItem().Select();
+            Assert.True(AppSession.WaitUntil(() => session.Find("TextPropertyBox").AsTextBox().Text == "Hello MVVM"));
+
+            // 選んだノードにブレークポイントを付ける（右クリックしても選んだまま）
+            session.RightClickForPopup(session.Find("DocumentTabs"), 600, 400, "addBreakPointMenuItem").AsMenuItem().Invoke();
+
+            // 実行すると、そのノードの前で止まって、デバッグのタブに値が出る
+            session.Find("ExecuteButton").AsButton().Invoke();
+            var resume = session.Find("ContinueButton").AsButton();
+            Assert.True(AppSession.WaitUntil(() => resume.IsEnabled), "止まりません");
+            Assert.DoesNotContain("Hello MVVM", ConsoleText);
+            session.Find("DebugTabItem").AsTabItem().Select();
+            Assert.True(AppSession.WaitUntil(() => session.Find("ExecutingTree").FindAllChildren().Length > 0), "デバッグのタブに値が出ません");
+
+            // 1 つ進める（止めたノードが最後なので、それで終わる）
+            session.Find("StepInButton").AsButton().Invoke();
+            Assert.True(AppSession.WaitUntil(() => session.Find("ExecuteButton").IsEnabled), "終わりません");
+            Assert.True(AppSession.WaitUntil(() => ConsoleText.Contains("Hello MVVM")));
+
+            // もう一度実行すると、また止まり、続行で終わる
+            session.Find("ExecuteButton").AsButton().Invoke();
+            Assert.True(AppSession.WaitUntil(() => resume.IsEnabled), "止まりません");
+            resume.Invoke();
+            Assert.True(AppSession.WaitUntil(() => session.Find("ExecuteButton").IsEnabled), "終わりません");
+            Assert.True(AppSession.WaitUntil(() => ConsoleText.Split("Hello MVVM").Length - 1 == 2));
         }
 
         [Fact]
