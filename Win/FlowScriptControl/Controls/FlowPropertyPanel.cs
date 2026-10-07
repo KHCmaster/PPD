@@ -97,6 +97,8 @@ namespace FlowScriptControl.Controls
                 textBox.Margin = new Thickness(1);
                 editor = textBox;
             }
+            // AutomationId は UI の自動テスト（UITests）で使う（ボタンの付いた欄は、中の入力欄に付ける）
+            System.Windows.Automation.AutomationProperties.SetAutomationId(editor is DockPanel panel ? panel.Children[1] : editor, name + "PropertyBox");
             Grid.SetRow(editor, row);
             Grid.SetColumn(editor, 1);
             grid.Children.Add(editor);

@@ -24,6 +24,9 @@ namespace FlowScriptControl.Controls
             queryTextBox = new TextBox { Margin = new Thickness(2), VerticalContentAlignment = VerticalAlignment.Center };
             queryTextBox.KeyDown += QueryTextBox_KeyDown;
             resultListBox = new ListBox();
+            // AutomationId は UI の自動テスト（UITests）で使う
+            System.Windows.Automation.AutomationProperties.SetAutomationId(queryTextBox, "SearchQueryBox");
+            System.Windows.Automation.AutomationProperties.SetAutomationId(resultListBox, "SearchResultList");
             ScrollViewer.SetHorizontalScrollBarVisibility(resultListBox, ScrollBarVisibility.Auto);
             resultListBox.SelectionChanged += ResultListBox_SelectionChanged;
             var panel = new DockPanel();

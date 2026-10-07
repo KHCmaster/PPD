@@ -53,13 +53,13 @@
                 </Button>
             </ToolBar>
             <ToolBar Visibility="{Binding IsExecuting, Converter={StaticResource BoolToVisibility}}">
-                <Button Command="{Binding ContinueCommand}" ToolTip="続行">
+                <Button AutomationProperties.AutomationId="ContinueButton" Command="{Binding ContinueCommand}" ToolTip="続行">
                     <Image Source="img/playonce.png" Width="16" Height="16" />
                 </Button>
                 <Button AutomationProperties.AutomationId="StopButton" Command="{Binding StopCommand}" ToolTip="停止">
                     <Image Source="img/stop.png" Width="16" Height="16" />
                 </Button>
-                <Button Command="{Binding StepInCommand}" ToolTip="ステップイン">
+                <Button AutomationProperties.AutomationId="StepInButton" Command="{Binding StepInCommand}" ToolTip="ステップイン">
                     <Image Source="img/stepin.png" Width="16" Height="16" />
                 </Button>
             </ToolBar>
@@ -123,7 +123,7 @@
                     <TabItem x:Name="searchTabItem" Header="検索">
                         <controls:FlowSearchPanel x:Name="flowSearchPanel" />
                     </TabItem>
-                    <TabItem Header="デバッグ">
+                    <TabItem AutomationProperties.AutomationId="DebugTabItem" Header="デバッグ">
                         <controls:FlowExecutingPropertyPanel x:Name="flowExecutingPropertyPanel" />
                     </TabItem>
                 </TabControl>

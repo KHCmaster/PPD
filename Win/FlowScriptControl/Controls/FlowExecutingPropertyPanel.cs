@@ -20,6 +20,8 @@ namespace FlowScriptControl.Controls
         public FlowExecutingPropertyPanel()
         {
             treeView = new TreeView();
+            // AutomationId は UI の自動テスト（UITests）で使う
+            System.Windows.Automation.AutomationProperties.SetAutomationId(treeView, "ExecutingTree");
             Content = treeView;
         }
 
