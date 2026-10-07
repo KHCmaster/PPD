@@ -1,4 +1,4 @@
-using FlaUI.Core.AutomationElements;
+﻿using FlaUI.Core.AutomationElements;
 using System;
 using System.IO;
 using System.Linq;
@@ -130,9 +130,9 @@ namespace UITests.PPDEditor
         {
             AppSession.InvokeAsync(session.FindMenuItem("fileMenu", "NewProjectMenuItem"));
             var dialog = session.WaitForModal();
-            dialog.FindFirstDescendant(cf => cf.ByAutomationId("ProjectNameBox")).AsTextBox().Text = ProjectName;
-            dialog.FindFirstDescendant(cf => cf.ByAutomationId("ProjectMovieBox")).AsTextBox().Text = Path.Combine(workDirectory, "sound.wav");
-            var ok = dialog.FindFirstDescendant(cf => cf.ByAutomationId("NewProjectOkButton")).AsButton();
+            AppSession.FindIn(dialog, "ProjectNameBox").AsTextBox().Text = ProjectName;
+            AppSession.FindIn(dialog, "ProjectMovieBox").AsTextBox().Text = Path.Combine(workDirectory, "sound.wav");
+            var ok = AppSession.FindIn(dialog, "NewProjectOkButton").AsButton();
             Assert.True(AppSession.WaitUntil(() => ok.IsEnabled), "OK を押せません");
             AppSession.InvokeAsync(ok);
             Assert.True(session.WaitForNoModal(), "ダイアログが閉じません: " + session.DescribeModalWindows());

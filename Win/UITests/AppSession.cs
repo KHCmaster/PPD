@@ -1,4 +1,4 @@
-using FlaUI.Core;
+﻿using FlaUI.Core;
 using FlaUI.Core.AutomationElements;
 using FlaUI.Core.Definitions;
 using FlaUI.Core.Tools;
@@ -179,6 +179,18 @@ namespace UITests
         {
             // 時間切れの例外のときも探し直す
             return Retry.WhileNull(() => MainWindow.FindFirstDescendant(cf => cf.ByAutomationId(automationId)), TimeSpan.FromMinutes(1), ignoreException: true).Result
+                ?? throw new InvalidOperationException(automationId + " が見つかりません。");
+        }
+
+        /// <summary>
+        /// 要素（ダイアログなど）の中の、AutomationId の要素を返します（表示されるまで待つ）。
+        /// </summary>
+        /// <remarks>
+        /// 開いたばかりのダイアログは、中身がまだ UI Automation に見えないことがある（カバレッジを測っているときなど、遅いとき）。
+        /// </remarks>
+        public static AutomationElement FindIn(AutomationElement parent, string automationId)
+        {
+            return Retry.WhileNull(() => parent.FindFirstDescendant(cf => cf.ByAutomationId(automationId)), TimeSpan.FromMinutes(1), ignoreException: true).Result
                 ?? throw new InvalidOperationException(automationId + " が見つかりません。");
         }
 

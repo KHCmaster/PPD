@@ -1,4 +1,4 @@
-using FlaUI.Core.AutomationElements;
+﻿using FlaUI.Core.AutomationElements;
 using System;
 using System.IO;
 using System.Linq;
@@ -125,7 +125,7 @@ namespace UITests.PPDEditor
         public void Setting_CancelDiscardsChanges()
         {
             var dialog = OpenDialogFromMenu("OthersMenu", "SettingMenuItem", out _);
-            var authorName = dialog.FindFirstDescendant(cf => cf.ByAutomationId("AuthorNameBox")).AsTextBox();
+            var authorName = AppSession.FindIn(dialog, "AuthorNameBox").AsTextBox();
             var original = authorName.Text;
             authorName.Text = "uitest-author";
             // キャンセルする（OK は押さない。押すと設定が保存される）
@@ -133,7 +133,7 @@ namespace UITests.PPDEditor
 
             dialog = OpenDialogFromMenu("OthersMenu", "SettingMenuItem", out _);
 
-            Assert.Equal(original, dialog.FindFirstDescendant(cf => cf.ByAutomationId("AuthorNameBox")).AsTextBox().Text);
+            Assert.Equal(original, AppSession.FindIn(dialog, "AuthorNameBox").AsTextBox().Text);
             CloseDialog(dialog);
         }
 

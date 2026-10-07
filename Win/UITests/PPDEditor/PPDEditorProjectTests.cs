@@ -1,4 +1,4 @@
-using FlaUI.Core.AutomationElements;
+﻿using FlaUI.Core.AutomationElements;
 using System;
 using System.IO;
 using System.Linq;
@@ -160,7 +160,7 @@ namespace UITests.PPDEditor
             // 余白を右クリックして、名前を付けてレイヤーを足す
             AppSession.InvokeAsync(session.RightClickForPopup(area, 150, 200, "NewLayerMenuItem"));
             var dialog = session.WaitForModal();
-            dialog.FindFirstDescendant(cf => cf.ByAutomationId("nameTextBox")).AsTextBox().Text = "added";
+            AppSession.FindIn(dialog, "nameTextBox").AsTextBox().Text = "added";
             FlaUI.Core.Input.Keyboard.Type(FlaUI.Core.WindowsAPI.VirtualKeyShort.ENTER);
             Assert.True(session.WaitForNoModal(), session.DescribeModalWindows());
             Save();
@@ -279,22 +279,19 @@ namespace UITests.PPDEditor
             CreateProject();
             SetBeatWidth();
             var timeline = session.Find("Seekmain");
+            // マークを置くと、置いたマークを選んだままになる。それにパラメーターを足す（足すと Key1）
             session.DoubleClickAt(timeline, Beat(1), Row(2));
-            session.DoubleClickAt(timeline, Beat(2), Row(2));
-
-            // 1 つ目のマークを選んで、パラメーターを足す（足すと Key1）
-            session.ClickAt(timeline, Beat(1), Row(2));
             AppSession.InvokeAsync(session.FindMenuItem("InfoEditMenu", "InfoParameterMenuItem"));
             var dialog = session.WaitForModal();
-            dialog.FindFirstDescendant(cf => cf.ByAutomationId("ParameterAddButton")).AsButton().Invoke();
-            AppSession.InvokeAsync(dialog.FindFirstDescendant(cf => cf.ByAutomationId("ParameterOkButton")));
+            AppSession.FindIn(dialog, "ParameterAddButton").AsButton().Invoke();
+            AppSession.InvokeAsync(AppSession.FindIn(dialog, "ParameterOkButton"));
             Assert.True(session.WaitForNoModal(), session.DescribeModalWindows());
             Save();
             Assert.Equal(1, CountOf(File.ReadAllBytes(LayerFile), "Key1"));
 
-            // コピーして、2 つ目のマークに貼る
+            // コピーして、次に置いたマークに貼る
             session.FindMenuItem("InfoEditMenu", "InfoCopyMenuItem").Invoke();
-            session.ClickAt(timeline, Beat(2), Row(2));
+            session.DoubleClickAt(timeline, Beat(2), Row(3));
             session.FindMenuItem("InfoEditMenu", "InfoPasteMenuItem").Invoke();
             Save();
             Assert.Equal(2, CountOf(File.ReadAllBytes(LayerFile), "Key1"));
