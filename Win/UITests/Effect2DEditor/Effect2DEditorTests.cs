@@ -626,6 +626,22 @@ namespace UITests.Effect2DEditor
         }
 
         [Fact]
+        public void ValueLabel_DraggingChangesValue()
+        {
+            AddSampleImage();
+            SelectState(0);
+            Assert.True(AppSession.WaitUntil(() => ValueOf("X") == "0"));
+
+            // 名前のラベル（入力欄の左。右に寄せて、間が 6）を右にドラッグすると増え、左にドラッグすると減る
+            var box = session.Find("XBox");
+            session.DragAt(box, -10, 10, 30, 10);
+            Assert.True(AppSession.WaitUntil(() => float.TryParse(ValueOf("X"), System.Globalization.CultureInfo.InvariantCulture, out var x) && x >= 20), "増えません: " + ValueOf("X"));
+            session.DragAt(box, -10, 10, -100, 10);
+            Assert.True(AppSession.WaitUntil(() => float.TryParse(ValueOf("X"), System.Globalization.CultureInfo.InvariantCulture, out var x) && x < 0), "減りません: " + ValueOf("X"));
+            Assert.True(IsMenuItemEnabled("EditMenu", "UndoMenuItem"));
+        }
+
+        [Fact]
         public void SaveAndOpen_RestoresEffect()
         {
             AddSampleImage();
