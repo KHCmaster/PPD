@@ -1,4 +1,4 @@
-<Window x:Class="Effect2DEditor.MainWindow"
+﻿<Window x:Class="Effect2DEditor.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -42,8 +42,8 @@
                 <MenuItem AutomationProperties.AutomationId="OpenMenuItem" Header="{Binding Texts[Open]}" InputGestureText="Ctrl+O" Command="{Binding OpenCommand}" />
                 <MenuItem AutomationProperties.AutomationId="SaveAsMenuItem" Header="{Binding Texts[Save]}" InputGestureText="Ctrl+Shift+S" Command="{Binding SaveAsCommand}" />
                 <MenuItem AutomationProperties.AutomationId="OverwriteMenuItem" Header="{Binding Texts[OverWrite]}" InputGestureText="Ctrl+S" Command="{Binding OverwriteCommand}" />
-                <MenuItem Header="{Binding Texts[RecentUsedFile]}" ItemsSource="{Binding RecentFiles}" ItemContainerStyle="{StaticResource RecentFileItem}" />
-                <MenuItem Header="{Binding Texts[Exit]}" InputGestureText="Alt+F4" Command="{Binding ExitCommand}" />
+                <MenuItem AutomationProperties.AutomationId="RecentFilesMenu" Header="{Binding Texts[RecentUsedFile]}" ItemsSource="{Binding RecentFiles}" ItemContainerStyle="{StaticResource RecentFileItem}" />
+                <MenuItem AutomationProperties.AutomationId="ExitMenuItem" Header="{Binding Texts[Exit]}" InputGestureText="Alt+F4" Command="{Binding ExitCommand}" />
             </MenuItem>
             <MenuItem AutomationProperties.AutomationId="EditMenu" Header="{Binding Texts[Edit]}">
                 <MenuItem AutomationProperties.AutomationId="UndoMenuItem" Header="{Binding Texts[Undo]}" InputGestureText="Ctrl+Z" Command="{Binding UndoCommand}" />
@@ -52,11 +52,11 @@
                 <MenuItem AutomationProperties.AutomationId="CanvasSizeMenuItem" Header="{Binding Texts[CanvasSize]}" Command="{Binding ChangeCanvasSizeCommand}" />
                 <MenuItem AutomationProperties.AutomationId="BackGroundMenuItem" Header="{Binding Texts[CanvasBackGround]}" Command="{Binding ChangeBackGroundCommand}" />
             </MenuItem>
-            <MenuItem Header="{Binding Texts[Show]}">
-                <MenuItem Header="{Binding Texts[CanvasWindow]}" Command="{Binding ToggleDockCommand}" CommandParameter="{x:Static vm:DockKind.Canvas}" />
-                <MenuItem Header="{Binding Texts[PropertyWindow]}" Command="{Binding ToggleDockCommand}" CommandParameter="{x:Static vm:DockKind.Property}" />
-                <MenuItem Header="{Binding Texts[HistoryWindow]}" Command="{Binding ToggleDockCommand}" CommandParameter="{x:Static vm:DockKind.History}" />
-                <MenuItem Header="{Binding Texts[TimeLineWindow]}" Command="{Binding ToggleDockCommand}" CommandParameter="{x:Static vm:DockKind.TimeLine}" />
+            <MenuItem AutomationProperties.AutomationId="ShowMenu" Header="{Binding Texts[Show]}">
+                <MenuItem AutomationProperties.AutomationId="ShowCanvasMenuItem" Header="{Binding Texts[CanvasWindow]}" Command="{Binding ToggleDockCommand}" CommandParameter="{x:Static vm:DockKind.Canvas}" />
+                <MenuItem AutomationProperties.AutomationId="ShowPropertyMenuItem" Header="{Binding Texts[PropertyWindow]}" Command="{Binding ToggleDockCommand}" CommandParameter="{x:Static vm:DockKind.Property}" />
+                <MenuItem AutomationProperties.AutomationId="ShowHistoryMenuItem" Header="{Binding Texts[HistoryWindow]}" Command="{Binding ToggleDockCommand}" CommandParameter="{x:Static vm:DockKind.History}" />
+                <MenuItem AutomationProperties.AutomationId="ShowTimeLineMenuItem" Header="{Binding Texts[TimeLineWindow]}" Command="{Binding ToggleDockCommand}" CommandParameter="{x:Static vm:DockKind.TimeLine}" />
             </MenuItem>
             <MenuItem AutomationProperties.AutomationId="LanguageMenu" Header="{Binding Texts[Language]}" ItemsSource="{Binding Languages}" ItemContainerStyle="{StaticResource LanguageItem}" />
         </Menu>
