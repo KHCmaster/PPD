@@ -21,7 +21,7 @@
             </Grid.RowDefinitions>
             <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
                 <Button Content="Copy" Click="CopyButton_Click" Margin="0,0,5,0"/>
-                <Button Content="X" Click="CloseButton_Click"/>
+                <Button AutomationProperties.AutomationId="ErrorCloseButton" Content="X" Click="CloseButton_Click"/>
             </StackPanel>
             <ScrollViewer Grid.Row="1" x:Name="textBlockScrollViewer" MaxWidth="500" MaxHeight="200" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
                 <control:CustomTextBlock VerticalAlignment="Top" x:Name="textBlock" CustomText="{Binding Text}"/>
