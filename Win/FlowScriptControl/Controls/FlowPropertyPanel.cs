@@ -134,11 +134,22 @@ namespace FlowScriptControl.Controls
         {
             var textBox = new TextBox { Text = value ?? "", VerticalContentAlignment = VerticalAlignment.Center };
             var lastValue = value ?? "";
+            var committing = false;
             void commit()
             {
-                if (textBox.Text != lastValue)
+                // 書式のエラーを知らせるメッセージでフォーカスが外れると、ここがもう一度呼ばれる。同じ値で二度知らせない
+                if (committing || textBox.Text == lastValue)
+                {
+                    return;
+                }
+                committing = true;
+                try
                 {
                     lastValue = Commit(name, formatter, textBox.Text, lastValue, revert => textBox.Text = revert ?? "") ?? "";
+                }
+                finally
+                {
+                    committing = false;
                 }
             }
             textBox.LostKeyboardFocus += (sender, e) => commit();
