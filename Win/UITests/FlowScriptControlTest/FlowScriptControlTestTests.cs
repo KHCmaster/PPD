@@ -411,6 +411,38 @@ namespace UITests.FlowScriptControlTest
         }
 
         [Fact]
+        public void TabKey_MovesCursorToConnectedItem()
+        {
+            var tabs = AddWriteLineNode();
+            AddNode("misc.entrypoint", "EntryPoint", 40, 150);
+            const double startX = 178, inX = 212, portY = 193;
+            session.DragAt(tabs, startX, portY, inX, portY);
+            Assert.Equal(1, CountOf(SaveTo("connected.fsml"), "<Flow "));
+
+            // In の端子の上で Tab を押すと、つながっている Start の端子へカーソルが動く
+            session.ClickAt(tabs, 280, 165);
+            var scale = NativeWindows.GetScale(session.MainWindow.Properties.NativeWindowHandle.Value);
+            var bounds = tabs.BoundingRectangle;
+            double CursorX() => (FlaUI.Core.Input.Mouse.Position.X - bounds.X) / scale;
+            FlaUI.Core.Input.Mouse.MoveTo(new System.Drawing.Point(bounds.X + (int)(inX * scale), bounds.Y + (int)(portY * scale)));
+            System.Threading.Thread.Sleep(300);
+            FlaUI.Core.Input.Keyboard.Type(FlaUI.Core.WindowsAPI.VirtualKeyShort.TAB);
+            Assert.True(AppSession.WaitUntil(() => CursorX() < inX - 20), "カーソルが動きません: " + CursorX());
+
+            // 線を引いている途中で Tab を押すと、つなげる先の端子へカーソルが動く（Shift でつながっているものを飛ばす）
+            var moved = false;
+            session.DragAt(tabs, startX, portY, 400, 350, () =>
+            {
+                FlaUI.Core.Input.Keyboard.Type(FlaUI.Core.WindowsAPI.VirtualKeyShort.TAB);
+                moved = AppSession.WaitUntil(() => CursorX() < 400);
+                FlaUI.Core.Input.Keyboard.TypeSimultaneously(FlaUI.Core.WindowsAPI.VirtualKeyShort.LSHIFT, FlaUI.Core.WindowsAPI.VirtualKeyShort.TAB);
+                FlaUI.Core.Input.Wait.UntilInputIsProcessed();
+            });
+            Assert.True(moved, "カーソルが動きません");
+            Assert.Empty(session.ModalWindowsOf());
+        }
+
+        [Fact]
         public void Save_WritesScriptFile()
         {
             OpenScript("hello.fsml");
