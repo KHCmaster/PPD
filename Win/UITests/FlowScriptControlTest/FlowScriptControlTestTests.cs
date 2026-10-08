@@ -114,6 +114,14 @@ namespace UITests.FlowScriptControlTest
             AutomationElement item = null;
             Assert.True(AppSession.WaitUntil(() => (item = tree.FindFirstDescendant(cf => cf.ByName(name))) != null), "ノードが一覧にありません");
 
+            // 合うノードが多いときは、見えるところまでスクロールしてからドラッグする
+            // （名前で見つかるのは項目の中の文字なので、その項目までたどる）
+            var treeItem = item;
+            while (treeItem != null && treeItem.ControlType != ControlType.TreeItem)
+            {
+                treeItem = treeItem.Parent;
+            }
+            treeItem?.Patterns.ScrollItem.Pattern.ScrollIntoView();
             var tabs = session.Find("DocumentTabs");
             session.DragBetween(item, 20, 8, tabs, x, y);
             return tabs;
@@ -479,6 +487,45 @@ namespace UITests.FlowScriptControlTest
             FlaUI.Core.Input.Keyboard.TypeSimultaneously(FlaUI.Core.WindowsAPI.VirtualKeyShort.CONTROL, FlaUI.Core.WindowsAPI.VirtualKeyShort.KEY_F);
             Assert.True(AppSession.WaitUntil(() => session.Find("filterTextBox").Properties.HasKeyboardFocus.Value), "絞り込みの欄に移りません");
             Assert.True(IsListed("", "Misc"));
+        }
+
+        private static void TypeAndPress(AutomationElement box, string text, FlaUI.Core.WindowsAPI.VirtualKeyShort key)
+        {
+            box.Focus();
+            FlaUI.Core.Input.Keyboard.TypeSimultaneously(FlaUI.Core.WindowsAPI.VirtualKeyShort.CONTROL, FlaUI.Core.WindowsAPI.VirtualKeyShort.KEY_A);
+            FlaUI.Core.Input.Keyboard.Type(text);
+            FlaUI.Core.Input.Keyboard.Type(key);
+            FlaUI.Core.Input.Wait.UntilInputIsProcessed();
+        }
+
+        [Fact]
+        public void PropertyPanel_ChecksFormatAndOffersChoices()
+        {
+            // 整数のノードを選ぶ。整数でない値は知らせて元に戻し、Esc は入力をやめる
+            var tabs = AddNode("int32.value", "Value", 200, 150);
+            session.ClickAt(tabs, 280, 165);
+            var box = session.Find("ValuePropertyBox").AsTextBox();
+            TypeAndPress(box, "abc", FlaUI.Core.WindowsAPI.VirtualKeyShort.ENTER);
+            Assert.True(AppSession.WaitUntil(() => session.ModalWindowsOf().Length > 0), "知らせません");
+            MessageBoxes.ReadAndClose(session.ModalWindowsOf().First());
+            Assert.True(session.WaitForNoModal());
+            // 知らせるのは 1 回だけ
+            System.Threading.Thread.Sleep(500);
+            Assert.Empty(session.ModalWindowsOf());
+            Assert.True(AppSession.WaitUntil(() => box.Text == ""), "元に戻りません: " + box.Text);
+            TypeAndPress(box, "5", FlaUI.Core.WindowsAPI.VirtualKeyShort.ENTER);
+            TypeAndPress(box, "9", FlaUI.Core.WindowsAPI.VirtualKeyShort.ESCAPE);
+            Assert.Equal("5", box.Text);
+            Assert.Contains("Value=\"5\"", SaveTo("int.fsml"));
+
+            // 列挙の値は、選択肢から選ぶ
+            AddNode("dayofweek.value", "Value", 200, 300);
+            session.ClickAt(tabs, 280, 315);
+            var choices = session.Find("ValuePropertyBox").AsComboBox();
+            choices.Expand();
+            choices.Select("Tuesday");
+            choices.Collapse();
+            Assert.Contains("Value=\"Tuesday\"", SaveTo("enum.fsml"));
         }
 
         [Fact]
