@@ -442,6 +442,45 @@ namespace UITests.FlowScriptControlTest
             Assert.Empty(session.ModalWindowsOf());
         }
 
+        /// <summary>
+        /// ノードの一覧を絞り込んで、名前の項目が見えるかを返します。
+        /// </summary>
+        private bool IsListed(string filterText, string name)
+        {
+            var filter = session.Find("filterTextBox").AsTextBox();
+            filter.Text = filterText;
+            filter.Focus();
+            FlaUI.Core.Input.Keyboard.Type(FlaUI.Core.WindowsAPI.VirtualKeyShort.ENTER);
+            FlaUI.Core.Input.Wait.UntilInputIsProcessed();
+            return session.Find("treeView").FindFirstDescendant(cf => cf.ByName(name)) != null;
+        }
+
+        [Fact]
+        public void NodeList_IsFilteredByNameItemAndKind()
+        {
+            // 名前空間とノードの名前、ノードの項目の名前で絞り込める。合わないものは隠れる
+            Assert.True(IsListed("misc.entrypoint", "EntryPoint"));
+            Assert.True(IsListed("start", "EntryPoint"));
+            Assert.False(IsListed("zzzz", "EntryPoint"));
+
+            // どのアプリで使えるノードかで絞り込む
+            var kinds = session.Find("filterComboBox").AsComboBox();
+            Assert.True(kinds.Items.Length > 1);
+            for (var i = kinds.Items.Length - 1; i >= 0; i--)
+            {
+                kinds.Expand();
+                kinds.Select(i);
+                kinds.Collapse();
+            }
+            Assert.True(IsListed("misc.entrypoint", "EntryPoint"));
+
+            // 一覧で Ctrl+F を押すと、絞り込みの欄に移る
+            session.Find("treeView").FindFirstDescendant(cf => cf.ByName("EntryPoint")).Click();
+            FlaUI.Core.Input.Keyboard.TypeSimultaneously(FlaUI.Core.WindowsAPI.VirtualKeyShort.CONTROL, FlaUI.Core.WindowsAPI.VirtualKeyShort.KEY_F);
+            Assert.True(AppSession.WaitUntil(() => session.Find("filterTextBox").Properties.HasKeyboardFocus.Value), "絞り込みの欄に移りません");
+            Assert.True(IsListed("", "Misc"));
+        }
+
         [Fact]
         public void Save_WritesScriptFile()
         {
