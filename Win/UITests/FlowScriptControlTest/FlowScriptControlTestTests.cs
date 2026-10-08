@@ -365,6 +365,51 @@ namespace UITests.FlowScriptControlTest
             Assert.Null(AttributeOf(SaveTo("dejoined.fsml"), "Comment", "ScopeID"));
         }
 
+        /// <summary>
+        /// 実行すると失敗するスクリプトです（文字列の長さより後ろから切り出す）。
+        /// </summary>
+        const string errorScript = """
+            <Root>
+              <Sources>
+                <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Misc.EntryPointFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Misc.EntryPointFlowSourceObject" ID="1" ShowAll="True" X="-300" Y="0" />
+                <Source Name="FlowScriptEngineConsole.FlowSourceObjects.Console.WriteLineFlowSourceObject" FullName="FlowScriptEngineConsole.FlowSourceObjects.Console.WriteLineFlowSourceObject" ID="2" ShowAll="True" X="0" Y="0" />
+                <Source Name="FlowScriptEngineBasic.FlowSourceObjects.String.SubstringFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.String.SubstringFlowSourceObject" ID="3" ShowAll="True" X="-300" Y="150">
+                  <Value Name="A" Value="abc" />
+                  <Value Name="Index" Value="10" />
+                </Source>
+              </Sources>
+              <Flows>
+                <Flow SrcID="1" SrcName="Start" DestID="2" DestName="In" />
+                <Flow SrcID="3" SrcName="Value" DestID="2" DestName="Text" />
+              </Flows>
+              <Comments />
+              <Scopes />
+            </Root>
+            """;
+
+        [Fact]
+        public void ExecutionError_IsShownOnNodeAndClosed()
+        {
+            var path = Path.Combine(session.WorkDirectory, "error.fsml");
+            File.WriteAllText(path, errorScript);
+            AppSession.InvokeAsync(session.FindMenuItem("FileMenu", "OpenMenuItem"));
+            FileDialogs.Accept(session.WaitForModal(), path);
+            Assert.True(session.WaitForNoModal());
+
+            // 失敗したノードに、エラーの吹き出しが出て、そこで止まる（続行で終わる）
+            session.Find("ExecuteButton").AsButton().Invoke();
+            var resume = session.Find("ContinueButton").AsButton();
+            Assert.True(AppSession.WaitUntil(() => resume.IsEnabled), "エラーで止まりません");
+            var close = session.Find("ErrorCloseButton").AsButton();
+            resume.Invoke();
+            Assert.True(AppSession.WaitUntil(() => session.Find("ExecuteButton").IsEnabled), "終わりません");
+            Assert.Empty(session.ModalWindowsOf());
+
+            // 閉じると消える
+            close.Invoke();
+            Assert.True(AppSession.WaitUntil(() => session.MainWindow.FindFirstDescendant(cf => cf.ByAutomationId("ErrorCloseButton")) == null), "エラーが消えません");
+        }
+
         [Fact]
         public void Save_WritesScriptFile()
         {
