@@ -8,9 +8,11 @@ namespace FolderDiffChecker.Models
     /// <summary>
     /// 配布サーバーに SFTP でつなぎ、インストーラーや更新リストをアップロードします。
     /// </summary>
+    /// <remarks>
+    /// 接続先と鍵の場所は、設定ファイル（<see cref="UploadSettings.FileName"/>）から読む。
+    /// </remarks>
     sealed class Uploader : IDisposable
     {
-        const string credentialsPpkFilePath = "credentials.ppk";
         const string lastUserNameFilePath = "lastUser.txt";
 
         readonly Session session;
@@ -36,12 +38,12 @@ namespace FolderDiffChecker.Models
         /// <returns>つなげなかったときは null。</returns>
         public static Uploader Connect(string userName, out string error)
         {
-            if (!File.Exists(credentialsPpkFilePath))
+            var settings = UploadSettings.Load(UploadSettings.FileName, out error);
+            if (settings == null)
             {
-                error = String.Format("Locate {0}.", credentialsPpkFilePath);
                 return null;
             }
-            var process = Process.Start("pageant.exe", String.Format("\"{0}\"", Path.GetFullPath(credentialsPpkFilePath)));
+            var process = Process.Start("pageant.exe", String.Format("\"{0}\"", settings.CredentialsPath));
             process.WaitForExit(4000);
             Session session = null;
             try
@@ -49,11 +51,11 @@ namespace FolderDiffChecker.Models
                 var sessionOptions = new SessionOptions
                 {
                     Protocol = Protocol.Sftp,
-                    HostName = "219.94.253.225",
-                    PortNumber = 52614,
+                    HostName = settings.HostName,
+                    PortNumber = settings.Port,
                     UserName = userName,
-                    SshPrivateKeyPath = Path.GetFullPath(credentialsPpkFilePath),
-                    SshHostKeyFingerprint = "ssh-rsa 2048 09:d6:57:5f:6a:b8:6a:03:8a:b2:37:3d:be:ad:2c:08"
+                    SshPrivateKeyPath = settings.CredentialsPath,
+                    SshHostKeyFingerprint = settings.HostKeyFingerprint
                 };
 
                 session = new Session

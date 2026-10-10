@@ -16,3 +16,6 @@ Thumbs.db
 /Win/UnitTests/TestResults
 /Win/CoverageResults
 /Win/UITests/TestResults
+# FolderDiffChecker のアップロード先の設定と鍵（見本の upload_settings.sample.txt だけをリポジトリに入れる）
+upload_settings.txt
+*.ppk

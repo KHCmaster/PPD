@@ -1,0 +1,13 @@
+# FolderDiffChecker のアップロード先の設定の見本です。
+# upload_settings.txt という名前でコピーして、FolderDiffChecker を起動するフォルダーに置いてください。
+# 本物の値を入れたファイルは、リポジトリに入れないでください。
+
+# 配布サーバーの名前（または IP アドレス）とポート
+HostName=example.com
+Port=22
+
+# サーバーのホスト鍵の指紋（WinSCP の形式。例: ssh-rsa 2048 xx:xx:...）
+HostKeyFingerprint=ssh-rsa 2048 00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00
+
+# 秘密鍵（PuTTY の .ppk）のパス。相対パスのときは、このファイルのあるフォルダーから探す
+CredentialsPath=credentials.ppk
