@@ -1,7 +1,7 @@
 <Project>
   <!-- FlowScript 拡張（FlowScriptEngine*）を、Debug ビルドのときに各アプリの dlls フォルダーへコピーする。
-       コピー先は各プロジェクトの FlowScriptPluginFolder で指定する。 -->
-  <Target Name="CopyFlowScriptPlugin" AfterTargets="Build" Condition="'$(Configuration)' == 'Debug' And '@(FlowScriptPluginFolder)' != ''">
+       コピー先は各プロジェクトの FlowScriptPluginFolder で指定する。コピー先のアプリは Windows 用なので、Linux でのビルド（Linux\Linux.sln）ではコピーしない。 -->
+  <Target Name="CopyFlowScriptPlugin" AfterTargets="Build" Condition="'$(Configuration)' == 'Debug' And '@(FlowScriptPluginFolder)' != '' And '$(OS)' == 'Windows_NT'">
     <Copy SourceFiles="$(TargetPath)" DestinationFolder="%(FlowScriptPluginFolder.FullPath)" SkipUnchangedFiles="true" />
   </Target>
 
@@ -13,8 +13,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)Shared\ProcessInitializer.cs" Link="Properties\ProcessInitializer.cs" />
   </ItemGroup>
 
-  <!-- 全プロジェクトが Windows 専用であることを示す属性（GenerateAssemblyInfo=false では自動生成されないため） -->
-  <ItemGroup Condition="'$(Language)' == 'C#'">
+  <!-- Windows 用（net10.0-windows）のプロジェクトが Windows 専用であることを示す属性（GenerateAssemblyInfo=false では自動生成されないため）。
+       Linux でも使うライブラリ（FlowScriptEngine、PPDMultiServer など。net10.0）には付けない -->
+  <ItemGroup Condition="'$(Language)' == 'C#' And '$(TargetPlatformIdentifier)' == 'windows'">
     <Compile Include="$(MSBuildThisFileDirectory)Shared\SupportedPlatform.cs" Link="Properties\SupportedPlatform.cs" />
   </ItemGroup>
 </Project>
