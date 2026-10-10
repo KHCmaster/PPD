@@ -57,5 +57,27 @@ namespace UnitTests.Libraries
                 context.Unload();
             }
         }
+
+        [Fact]
+        public void Resolve_OlderOrNotManagedDll_ReturnsNull()
+        {
+            // 古い版が残っていても使わない（skins にある正しい版を、.NET の探し方で見つけられるようにする）
+            using var folder = new TempFolder();
+            var source = typeof(PPDMath.MathCompat).Assembly.Location;
+            File.Copy(source, folder.Combine("PPDMath.dll"));
+            folder.Write("Native.dll", "not a .NET dll");
+            var version = AssemblyName.GetAssemblyName(source).Version;
+            var context = new AssemblyLoadContext("ApplicationAssemblyResolverTests", isCollectible: true);
+            try
+            {
+                Assert.Null(Resolve(context, new AssemblyName("PPDMath") { Version = new System.Version(version.Major + 1, 0, 0, 0) }, folder.Path));
+                Assert.NotNull(Resolve(context, new AssemblyName("PPDMath") { Version = version }, folder.Path));
+                Assert.Null(Resolve(context, new AssemblyName("Native"), folder.Path));
+            }
+            finally
+            {
+                context.Unload();
+            }
+        }
     }
 }
