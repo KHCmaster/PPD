@@ -35,4 +35,8 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
+  <ItemGroup>
+    <!-- リリースで配るファイルの一覧（PPDReleaser と PPD で同じものを使う） -->
+    <Compile Include="..\Shared\ReleaseFiles.cs" Link="Properties\ReleaseFiles.cs" />
+  </ItemGroup>
 </Project>

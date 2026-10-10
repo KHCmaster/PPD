@@ -1,8 +1,11 @@
-﻿using System;
+﻿using PPDShared;
+using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text.Json;
 using System.Xml;
 
 namespace PPDReleaser
@@ -14,20 +17,6 @@ namespace PPDReleaser
         private static string resourceDir;
         private static string currentReleaseDir;
         private static string x64Dir;
-        private static readonly string[] configFiles =
-        [
-            "Effect2DEditor.exe.config",
-            "FlowScriptControlTest.exe.config",
-            "KeyConfiger.exe.config",
-            "PPD.exe.config",
-            "PPDConfig.exe.config",
-            "PPDEditor.exe.config",
-            "PPDExpansion.exe.config",
-            "PPDMultiServerService.exe.config",
-            "MultiRoomInfo.xml",
-            "PPDUpdater.exe.config",
-        ];
-
         private static void Main()
         {
             winDir = GetUpDir(5, Assembly.GetExecutingAssembly().Location);
@@ -71,98 +60,29 @@ namespace PPDReleaser
 
         private static void CopyExecutables(string srcDir, string targetDir)
         {
+            // インストーラー（PPDInstaller）は、展開したフォルダーの一番上に置く
             var copyInfo = new CopyInfo(srcDir, targetDir);
             copyInfo.CopyDir("Lang");
             copyInfo.CopyFiles([
+                .. ApplicationFiles("PPDInstaller"),
+                "CommunityToolkit.Mvvm.dll",
                 "ICSharpCode.SharpZipLib.dll",
                 "Interop.IWshRuntimeLibrary.dll",
-                "PPDInstaller.exe",
-                "PPDInstaller.exe.config",
                 "ErrorHandle.dll",
                 "PPDConfiguration.dll"
             ]);
+            var errors = CheckDependencies(targetDir);
 
             copyInfo = new CopyInfo(srcDir, Path.Combine(targetDir, "Data"));
 
             var pdCopyInfo = copyInfo.GetNext("BMSTOPPD");
             pdCopyInfo.CopyFiles([
-                "BMSTOPPD.exe",
-                "BMSTOPPD.exe.config"
+                .. ApplicationFiles("BMSTOPPD"),
+                "CommunityToolkit.Mvvm.dll"
             ]);
+            errors = [.. errors, .. CheckDependencies(pdCopyInfo.Dir)];
 
-            var executables = new string[]{
-                "Effect2DEditor.exe",
-                "FlowScriptControlTest.exe",
-                "KeyConfiger.exe",
-                "PPD.exe",
-                "PPDConfig.exe",
-                "PPDEditor.exe",
-                "PPDExpansion.exe",
-                "PPDMultiServerService.exe",
-                "PPDUpdater.exe",
-                "BezierCaliculator.dll",
-                "BezierDrawControl.dll",
-                "ColorCanvas.dll",
-                "DirectShow.dll",
-                "Effect2D.dll",
-                "ErrorHandle.dll",
-                "FlowScriptControl.dll",
-                "FlowScriptDrawControl.dll",
-                "FlowScriptEngine.dll",
-                "CommunityToolkit.Mvvm.dll",
-                "Microsoft.Bcl.AsyncInterfaces.dll",
-                "System.Buffers.dll",
-                "System.ComponentModel.Annotations.dll",
-                "System.Memory.dll",
-                "System.Numerics.Vectors.dll",
-                "System.Runtime.CompilerServices.Unsafe.dll",
-                "Microsoft.Xaml.Behaviors.dll",
-                "ICSharpCode.SharpZipLib.dll",
-                "MessagePack.dll",
-                "Newtonsoft.Json.dll",
-                "PPDConfiguration.dll",
-                "PPDCore.dll",
-                "PPDCoreModel.dll",
-                "PPDEditorCommon.dll",
-                "PPDExpansionCore.dll",
-                "PPDFramework.dll",
-                "PPDFrameworkCore.dll",
-                "PPDInput.dll",
-                "PPDMovie.dll",
-                "PPDPack.dll",
-                "PPDShareComponent.dll",
-                "PPDSound.dll",
-                "PPDMath.dll",
-                "Vortice.Mathematics.dll",
-                "Vortice.Direct2D1.dll",
-                "Vortice.DirectInput.dll",
-                "Vortice.DirectX.dll",
-                "SharpGen.Runtime.dll",
-                "SharpGen.Runtime.COM.dll",
-                "Vortice.DirectSound.dll",
-                "Vortice.DXGI.dll",
-                "Vortice.Direct3D11.dll",
-                "System.Data.SQLite.dll",
-                "System.Threading.Tasks.Extensions.dll",
-                "System.ValueTuple.dll",
-                "DotNetProjects.DataVisualization.Toolkit.dll",
-                "AvalonDock.dll",
-                "YamlDotNet.dll",
-                "BlueSky.dll",
-                "x64\\SQLite.Interop.dll",
-                "skins\\PPDModSettingUI.dll",
-                "skins\\PPDMulti.dll",
-                "skins\\PPDMultiCommon.dll",
-                "skins\\PPDMultiServer.dll",
-                "skins\\PPDSingle.dll",
-                "dlls\\FlowScriptEngineBasic.dll",
-                "dlls\\FlowScriptEngineBasicExtension.dll",
-                "dlls\\FlowScriptEngineConsole.dll",
-                "dlls\\FlowScriptEngineData.dll",
-                "dlls\\FlowScriptEnginePPD.dll",
-                "dlls\\FlowScriptEnginePPDEditor.dll",
-                "dlls\\FlowScriptEngineSlimDX.dll",
-            };
+            var executables = ReleaseFiles.VersionedFiles;
             pdCopyInfo = copyInfo.GetNext("PPD");
             pdCopyInfo.CopyDir("Lang");
             pdCopyInfo.CopyDir("Functions");
@@ -171,17 +91,77 @@ namespace PPDReleaser
             pdCopyInfo.CopyFiles(
             [
                 .. executables,
-                .. configFiles,
+                .. ReleaseFiles.OtherFiles,
             ]);
 
-            CopyFile("Items\\x64\\fmodex64.dll", Path.Combine(pdCopyInfo.Dir, "fmodex64.dll"));
+            CopyFile("Items\x64\fmodex64.dll", Path.Combine(pdCopyInfo.Dir, "fmodex64.dll"));
             executables = [.. executables, "fmodex64.dll"];
+            errors = [.. errors, .. CheckDependencies(pdCopyInfo.Dir)];
+            if (errors.Length > 0)
+            {
+                // 足りないファイルがあると、そのアプリは起動しない
+                throw new InvalidOperationException("Missing files:" + Environment.NewLine + String.Join(Environment.NewLine, errors));
+            }
 
             var prefixes = new string[] { "", "beta_" };
             foreach (var prefix in prefixes)
             {
                 CreateAssemblyInfo(Path.Combine(Directory.GetParent(targetDir).FullName, String.Format("{0}assembly_x64.xml", prefix)), [.. executables.Select(e => Path.Combine(targetDir, "Data", "PPD", e))]);
             }
+        }
+
+        /// <summary>
+        /// .NET のアプリを動かすのに必要なファイル（起動するための exe と、本体の dll、設定）です。
+        /// </summary>
+        private static string[] ApplicationFiles(string name)
+        {
+            return [name + ".exe", name + ".dll", name + ".runtimeconfig.json", name + ".deps.json", name + ".dll.config"];
+        }
+
+        /// <summary>
+        /// フォルダーのアプリの deps.json に書かれたファイル（x64 の Windows で使うもの）が、すべてあるかを確かめます。
+        /// </summary>
+        /// <returns>足りないファイル。</returns>
+        public static string[] CheckDependencies(string dir)
+        {
+            var missing = new List<string>();
+            foreach (var depsFile in Directory.GetFiles(dir, "*.deps.json"))
+            {
+                using var document = JsonDocument.Parse(File.ReadAllText(depsFile));
+                foreach (var target in document.RootElement.GetProperty("targets").EnumerateObject())
+                {
+                    foreach (var library in target.Value.EnumerateObject())
+                    {
+                        // プロジェクトやパッケージの dll は、deps.json のパス（lib/net8.0/... など）にかかわらず、アプリと同じフォルダーに置かれる
+                        foreach (var kind in new[] { "runtime", "native" })
+                        {
+                            if (library.Value.TryGetProperty(kind, out var assets))
+                            {
+                                foreach (var asset in assets.EnumerateObject())
+                                {
+                                    var path = Path.Combine(dir, Path.GetFileName(asset.Name));
+                                    if (!File.Exists(path))
+                                    {
+                                        missing.Add(String.Format("{0}: {1}", Path.GetFileName(depsFile), asset.Name));
+                                    }
+                                }
+                            }
+                        }
+                        if (library.Value.TryGetProperty("runtimeTargets", out var runtimeTargets))
+                        {
+                            foreach (var asset in runtimeTargets.EnumerateObject())
+                            {
+                                var rid = asset.Value.GetProperty("rid").GetString();
+                                if ((rid == "win" || rid == "win-x64") && !File.Exists(Path.Combine(dir, asset.Name)))
+                                {
+                                    missing.Add(String.Format("{0}: {1}", Path.GetFileName(depsFile), asset.Name));
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return [.. missing];
         }
 
         public static string GetUpDir(int count, string path)
