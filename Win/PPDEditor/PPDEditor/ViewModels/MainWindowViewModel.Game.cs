@@ -342,7 +342,8 @@ namespace PPDEditor.ViewModels
 
         public void ChangeMousePos(Point p)
         {
-            MyGame.ChangeMousepos(p);
+            // 起動して最初のダイアログ（作者名）を出している間は、まだゲームがない
+            MyGame?.ChangeMousepos(p);
         }
 
         public void ChangeData(Vector2[] positions, float[] angles)

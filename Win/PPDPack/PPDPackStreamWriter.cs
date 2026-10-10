@@ -28,9 +28,12 @@ namespace PPDPack
             get { return false; }
         }
 
+        /// <summary>
+        /// 書き込めます（.NET の CopyTo は、書き込めない先には書かない）。
+        /// </summary>
         public override bool CanWrite
         {
-            get { return false; }
+            get { return true; }
         }
 
         public override void Flush()
