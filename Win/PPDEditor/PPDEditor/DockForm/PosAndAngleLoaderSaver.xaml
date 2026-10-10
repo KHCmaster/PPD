@@ -1,0 +1,87 @@
+<forms:DockView x:Class="PPDEditor.PosAndAngleLoaderSaver"
+                xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                xmlns:forms="clr-namespace:PPDEditor.Forms"
+                xmlns:controls="clr-namespace:PPDEditor.Controls"
+                xmlns:vm="clr-namespace:PPDEditor.ViewModels.Docks"
+                xmlns:conv="clr-namespace:PPDEditor.Converters"
+                mc:Ignorable="d" d:DataContext="{d:DesignInstance Type=vm:PosAndAngleViewModel}">
+    <forms:DockView.Resources>
+        <conv:EnumToBooleanConverter x:Key="EnumToBoolean" />
+        <Style x:Key="Coordinate" TargetType="TextBox">
+            <Setter Property="Width" Value="50" />
+            <Setter Property="Height" Value="20" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+        </Style>
+        <Style x:Key="CoordinateLabel" TargetType="controls:DragValueLabel">
+            <Setter Property="Width" Value="18" />
+            <Setter Property="Margin" Value="0,0,2,0" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="TextAlignment" Value="Right" />
+        </Style>
+        <Style x:Key="WideButton" TargetType="Button">
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="MinWidth" Value="190" />
+            <Setter Property="Height" Value="23" />
+            <Setter Property="Margin" Value="0,6,0,0" />
+            <Setter Property="Padding" Value="6,0" />
+        </Style>
+    </forms:DockView.Resources>
+    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+        <StackPanel Width="230" HorizontalAlignment="Left">
+            <ListBox ItemsSource="{Binding FileNames}" SelectedIndex="{Binding SelectedFileIndex}" Height="220" />
+            <!-- 文字の色はスキンに合わせる（SetSkin で変える） -->
+            <StackPanel x:Name="skinPanel">
+                <CheckBox Content="{Binding Texts[PAALSCheckBox]}" IsChecked="{Binding DisplayAngle}" Margin="13,8,0,0" />
+                <StackPanel Orientation="Horizontal" Margin="12,6,0,0">
+                    <Button Content="{Binding Texts[PAALSButton10]}" MinWidth="111" Height="23" Padding="6,0" Command="{Binding DeleteSelectedCommand}" />
+                    <Button Content="{Binding Texts[PAALSButton9]}" MinWidth="91" Height="23" Margin="6,0,0,0" Padding="6,0" Command="{Binding ReloadCommand}" />
+                </StackPanel>
+                <GroupBox x:Name="applyGroup" Header="{Binding Texts[PAALSGroupText]}" Margin="0,6,0,0">
+                    <StackPanel Margin="8,4,4,6">
+                        <RadioButton Content="{Binding Texts[PAALSRadioButton1]}"
+                                     IsChecked="{Binding ApplyMode, Converter={StaticResource EnumToBoolean}, ConverterParameter=None}" />
+                        <RadioButton Content="{Binding Texts[PAALSRadioButton2]}" Margin="0,6,0,0"
+                                     IsChecked="{Binding ApplyMode, Converter={StaticResource EnumToBoolean}, ConverterParameter=Point}" />
+                        <!-- 座標の名前を左右にドラッグすると値が変わる -->
+                        <StackPanel Orientation="Horizontal" Margin="18,4,0,0">
+                            <controls:DragValueLabel Text="X" Tag="X" Style="{StaticResource CoordinateLabel}" ValueChange="CoordinateLabel_ValueChange" />
+                            <TextBox Text="{Binding PointX}" IsEnabled="{Binding IsPointEnabled}" Style="{StaticResource Coordinate}" />
+                            <controls:DragValueLabel Text="Y" Tag="Y" Style="{StaticResource CoordinateLabel}" Margin="6,0,2,0" ValueChange="CoordinateLabel_ValueChange" />
+                            <TextBox Text="{Binding PointY}" IsEnabled="{Binding IsPointEnabled}" Style="{StaticResource Coordinate}" />
+                        </StackPanel>
+                        <RadioButton Content="{Binding Texts[PAALSRadioButton3]}" Margin="0,6,0,0"
+                                     IsChecked="{Binding ApplyMode, Converter={StaticResource EnumToBoolean}, ConverterParameter=Line}" />
+                        <StackPanel Orientation="Horizontal" Margin="18,4,0,0">
+                            <controls:DragValueLabel Text="X1" Tag="X1" Style="{StaticResource CoordinateLabel}" ValueChange="CoordinateLabel_ValueChange" />
+                            <TextBox Text="{Binding LineX1}" IsEnabled="{Binding IsLineXEnabled}" Style="{StaticResource Coordinate}" />
+                            <controls:DragValueLabel Text="Y1" Tag="Y1" Style="{StaticResource CoordinateLabel}" Margin="6,0,2,0" ValueChange="CoordinateLabel_ValueChange" />
+                            <TextBox Text="{Binding LineY1}" IsEnabled="{Binding IsLineYEnabled}" Style="{StaticResource Coordinate}" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="18,4,0,0">
+                            <controls:DragValueLabel Text="X2" Tag="X2" Style="{StaticResource CoordinateLabel}" ValueChange="CoordinateLabel_ValueChange" />
+                            <TextBox Text="{Binding LineX2}" IsEnabled="{Binding IsLineXEnabled}" Style="{StaticResource Coordinate}" />
+                            <controls:DragValueLabel Text="Y2" Tag="Y2" Style="{StaticResource CoordinateLabel}" Margin="6,0,2,0" ValueChange="CoordinateLabel_ValueChange" />
+                            <TextBox Text="{Binding LineY2}" IsEnabled="{Binding IsLineYEnabled}" Style="{StaticResource Coordinate}" />
+                        </StackPanel>
+                        <ComboBox ItemsSource="{Binding LineModeNames}" SelectedIndex="{Binding LineMode, Converter={x:Static conv:EnumIndexConverter.Instance}}"
+                                  IsEnabled="{Binding IsLineEnabled}" Width="121" HorizontalAlignment="Left" Margin="20,6,0,0" />
+                        <CheckBox Content="{Binding Texts[PAALSCheckBox2]}" IsChecked="{Binding SymmetricAngle}" IsEnabled="{Binding IsSymmetricAngleEnabled}" Margin="0,8,0,0" />
+                        <Button Content="{Binding Texts[PAALSButton1]}" Style="{StaticResource WideButton}" MinWidth="155" Command="{Binding ApplyAfterSelectionCommand}" />
+                        <Button Content="{Binding Texts[PAALSButton2]}" Style="{StaticResource WideButton}" MinWidth="155" Command="{Binding ApplyBeforeSelectionCommand}" />
+                        <Button Content="{Binding Texts[PAALSButton3]}" Style="{StaticResource WideButton}" Command="{Binding ApplyInAreaForwardCommand}" />
+                        <Button Content="{Binding Texts[PAALSButton4]}" Style="{StaticResource WideButton}" Command="{Binding ApplyInAreaBackwardCommand}" />
+                    </StackPanel>
+                </GroupBox>
+            </StackPanel>
+            <StackPanel Margin="12,0,0,12">
+                <Button Content="{Binding Texts[PAALSButton5]}" Style="{StaticResource WideButton}" Command="{Binding SaveAfterSelectionCommand}" />
+                <Button Content="{Binding Texts[PAALSButton6]}" Style="{StaticResource WideButton}" Command="{Binding SaveBeforeSelectionCommand}" />
+                <Button Content="{Binding Texts[PAALSButton7]}" Style="{StaticResource WideButton}" Command="{Binding SaveInAreaForwardCommand}" />
+                <Button Content="{Binding Texts[PAALSButton8]}" Style="{StaticResource WideButton}" Command="{Binding SaveInAreaBackwardCommand}" />
+            </StackPanel>
+        </StackPanel>
+    </ScrollViewer>
+</forms:DockView>

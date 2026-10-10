@@ -1,4 +1,5 @@
-﻿using PPDFramework;
+﻿using PPDMath;
+using PPDFramework;
 using PPDFrameworkCore;
 using PPDMulti.Model;
 using PPDMultiCommon.Data;
@@ -8,24 +9,24 @@ namespace PPDMulti
 {
     class MenuUserIcon : BindableGameComponent
     {
-        PPDFramework.Resource.ResourceManager resourceManager;
+        readonly PPDFramework.Resource.ResourceManager resourceManager;
 
-        PictureObject readyIcon;
-        PictureObject notReadyIcon;
-        PictureObject playingIcon;
-        PictureObject watchIcon;
-        PictureObject hasSongIcon;
+        readonly PictureObject readyIcon;
+        readonly PictureObject notReadyIcon;
+        readonly PictureObject playingIcon;
+        readonly PictureObject watchIcon;
+        readonly PictureObject hasSongIcon;
 
         PictureObject userIcon;
-        TextureString userNameString;
-        TextureString accountIdString;
-        PictureObject[] pingPictures;
-        TextureString pingString;
-        PictureObject leaderIcon;
+        readonly TextureString userNameString;
+        readonly TextureString accountIdString;
+        readonly PictureObject[] pingPictures;
+        readonly TextureString pingString;
+        readonly PictureObject leaderIcon;
 
         private string currentUserIconPath = Utility.Path.Combine("noimage_icon.png");
 
-        UserListComponent listComponent;
+        readonly UserListComponent listComponent;
 
         public MenuUserIcon(PPDDevice device, PPDFramework.Resource.ResourceManager resourceManager, UserListComponent listComponent, User user) : base(device)
         {
@@ -36,48 +37,48 @@ namespace PPDMulti
             this.AddChild((leaderIcon = new PictureObject(device, resourceManager, Utility.Path.Combine("leader.png"))));
             this.AddChild((userIcon = new PictureObject(device, resourceManager, PathObject.Absolute(currentUserIconPath), true)
             {
-                Position = new SharpDX.Vector2(21, 21)
+                Position = new System.Numerics.Vector2(21, 21)
             }));
             this.AddChild((userNameString = new TextureString(device, "", 15, 140, PPDColors.White)
             {
-                Position = new SharpDX.Vector2(42, 3)
+                Position = new System.Numerics.Vector2(42, 3)
             }));
             this.AddChild((accountIdString = new TextureString(device, "", 15, 140, PPDColors.White)
             {
-                Position = new SharpDX.Vector2(42, 3)
+                Position = new System.Numerics.Vector2(42, 3)
             }));
             this.AddChild((readyIcon = new PictureObject(device, resourceManager, Utility.Path.Combine("user_state_ready.png"), true)
             {
-                Position = new SharpDX.Vector2(187, 30)
+                Position = new System.Numerics.Vector2(187, 30)
             }));
             this.AddChild((notReadyIcon = new PictureObject(device, resourceManager, Utility.Path.Combine("user_state_notready.png"), true)
             {
-                Position = new SharpDX.Vector2(187, 30)
+                Position = new System.Numerics.Vector2(187, 30)
             }));
             this.AddChild((playingIcon = new PictureObject(device, resourceManager, Utility.Path.Combine("user_state_playing.png"), true)
             {
-                Position = new SharpDX.Vector2(187, 30)
+                Position = new System.Numerics.Vector2(187, 30)
             }));
             this.AddChild((watchIcon = new PictureObject(device, resourceManager, Utility.Path.Combine("user_state_watch.png"), true)
             {
-                Position = new SharpDX.Vector2(187, 30)
+                Position = new System.Numerics.Vector2(187, 30)
             }));
             this.AddChild(hasSongIcon = new PictureObject(device, resourceManager, Utility.Path.Combine("hassong.png"), true)
             {
-                Position = new SharpDX.Vector2(165, 30)
+                Position = new System.Numerics.Vector2(165, 30)
             });
             pingPictures = new PictureObject[5];
             for (int i = 0; i < 5; i++)
             {
                 pingPictures[i] = new PictureObject(device, resourceManager, Utility.Path.Combine(String.Format("ping_{0}.png", i)))
                 {
-                    Position = new SharpDX.Vector2(42, 22)
+                    Position = new System.Numerics.Vector2(42, 22)
                 };
                 this.AddChild(pingPictures[i]);
             }
             this.AddChild(pingString = new TextureString(device, "0", 12, PPDColors.White)
             {
-                Position = new SharpDX.Vector2(60, 24)
+                Position = new System.Numerics.Vector2(60, 24)
             });
             this.AddChild(new PictureObject(device, resourceManager, Utility.Path.Combine("user_back.png")));
 
@@ -139,7 +140,7 @@ namespace PPDMulti
                     this.RemoveChild(userIcon);
                     userIcon = new PictureObject(device, resourceManager, PathObject.Absolute(currentUserIconPath), true)
                     {
-                        Position = new SharpDX.Vector2(21, 21)
+                        Position = new System.Numerics.Vector2(21, 21)
                     };
                     this.InsertChild(userIcon, 1);
                     ChangeUserIconScale();
@@ -229,7 +230,7 @@ namespace PPDMulti
 
         private void ChangeUserIconScale()
         {
-            userIcon.Scale = new SharpDX.Vector2(32 / userIcon.Width, 32 / userIcon.Height);
+            userIcon.Scale = new System.Numerics.Vector2(32 / userIcon.Width, 32 / userIcon.Height);
         }
 
         protected override void UpdateImpl()

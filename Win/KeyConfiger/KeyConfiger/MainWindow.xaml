@@ -1,0 +1,129 @@
+﻿<Window x:Class="KeyConfiger.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:KeyConfiger.ViewModels"
+        mc:Ignorable="d" d:DataContext="{d:DesignInstance Type=vm:MainWindowViewModel}"
+        Title="KeyConfiger" Width="389" Height="430" ResizeMode="CanMinimize" Icon="kc.ico"
+        Loaded="Window_Loaded" Closed="Window_Closed">
+    <Window.Resources>
+        <vm:BindingProxy x:Key="Proxy" Data="{Binding}" />
+        <!-- 選ぶメニューの項目（名前の「_」がアクセスキーとして扱われないように、TextBlock で表示する） -->
+        <Style x:Key="OptionMenuItem" TargetType="MenuItem">
+            <Setter Property="HeaderTemplate">
+                <Setter.Value>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Name}" />
+                    </DataTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="ToolTip" Value="{Binding Name}" />
+            <Setter Property="IsChecked" Value="{Binding IsChecked}" />
+            <Setter Property="CommandParameter" Value="{Binding}" />
+            <Setter Property="AutomationProperties.Name" Value="{Binding Name}" />
+        </Style>
+        <vm:OptionStyleSelector x:Key="LanguageItemSelector">
+            <vm:OptionStyleSelector.OptionStyle>
+                <Style TargetType="MenuItem" BasedOn="{StaticResource OptionMenuItem}">
+                    <Setter Property="Command" Value="{Binding Data.SelectLanguageCommand, Source={StaticResource Proxy}}" />
+                </Style>
+            </vm:OptionStyleSelector.OptionStyle>
+        </vm:OptionStyleSelector>
+        <vm:OptionStyleSelector x:Key="ConfigItemSelector">
+            <vm:OptionStyleSelector.OptionStyle>
+                <Style TargetType="MenuItem" BasedOn="{StaticResource OptionMenuItem}">
+                    <Setter Property="Command" Value="{Binding Data.SelectConfigCommand, Source={StaticResource Proxy}}" />
+                </Style>
+            </vm:OptionStyleSelector.OptionStyle>
+        </vm:OptionStyleSelector>
+        <vm:OptionStyleSelector x:Key="ControllerItemSelector">
+            <vm:OptionStyleSelector.OptionStyle>
+                <Style TargetType="MenuItem" BasedOn="{StaticResource OptionMenuItem}">
+                    <Setter Property="Command" Value="{Binding Data.SelectControllerCommand, Source={StaticResource Proxy}}" />
+                </Style>
+            </vm:OptionStyleSelector.OptionStyle>
+        </vm:OptionStyleSelector>
+    </Window.Resources>
+    <!-- AutomationId は UI の自動テスト（UITests）で使う -->
+    <DockPanel>
+        <Menu DockPanel.Dock="Top">
+            <MenuItem AutomationProperties.AutomationId="LanguageMenu" Header="{Binding Texts[Language]}" ItemsSource="{Binding Languages}" ItemContainerStyleSelector="{StaticResource LanguageItemSelector}" />
+            <MenuItem AutomationProperties.AutomationId="SettingMenu" Header="{Binding Texts[Setting]}" ItemContainerStyleSelector="{StaticResource ConfigItemSelector}">
+                <MenuItem.ItemsSource>
+                    <CompositeCollection>
+                        <MenuItem AutomationProperties.AutomationId="CreateSettingMenuItem" Header="{Binding Data.Texts[CreateNewSetting], Source={StaticResource Proxy}}" Command="{Binding Data.CreateConfigCommand, Source={StaticResource Proxy}}" />
+                        <MenuItem AutomationProperties.AutomationId="DeleteSettingMenuItem" Header="{Binding Data.Texts[DeleteCurrentSetting], Source={StaticResource Proxy}}" Command="{Binding Data.DeleteConfigCommand, Source={StaticResource Proxy}}" />
+                        <Separator />
+                        <CollectionContainer Collection="{Binding Data.Configs, Source={StaticResource Proxy}}" />
+                    </CompositeCollection>
+                </MenuItem.ItemsSource>
+            </MenuItem>
+            <MenuItem AutomationProperties.AutomationId="GamepadMenu" Header="{Binding Texts[Gamepad]}" ItemContainerStyleSelector="{StaticResource ControllerItemSelector}">
+                <MenuItem.ItemsSource>
+                    <CompositeCollection>
+                        <MenuItem Header="{Binding Data.Texts[ResetControllerList], Source={StaticResource Proxy}}" Command="{Binding Data.ReloadControllersCommand, Source={StaticResource Proxy}}" />
+                        <Separator />
+                        <CollectionContainer Collection="{Binding Data.Controllers, Source={StaticResource Proxy}}" />
+                    </CompositeCollection>
+                </MenuItem.ItemsSource>
+            </MenuItem>
+        </Menu>
+        <Grid Margin="12">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <DataGrid x:Name="keyGrid" AutomationProperties.AutomationId="KeyGrid" ItemsSource="{Binding Rows}" SelectedIndex="{Binding SelectedIndex}"
+                      AutoGenerateColumns="False" IsReadOnly="True" CanUserAddRows="False"
+                      CanUserSortColumns="False" CanUserReorderColumns="False" SelectionMode="Single" SelectionUnit="FullRow"
+                      HeadersVisibility="All" RowHeaderWidth="90"
+                      PreviewKeyDown="KeyGrid_PreviewKeyDown" MouseLeftButtonUp="KeyGrid_MouseLeftButtonUp">
+                <DataGrid.Resources>
+                    <!-- 標準のテーマの行見出しは左が白い横向きのグラデーションで、文字の後ろだけ白く浮いて見えるので、単色にする -->
+                    <Style TargetType="DataGridRowHeader">
+                        <Setter Property="Background" Value="#FFF7F7F7" />
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="DataGridRowHeader">
+                                    <Border Background="{TemplateBinding Background}" BorderBrush="#FFE5E5E5" BorderThickness="0,0,1,1" Padding="4,0">
+                                        <ContentPresenter VerticalAlignment="Center" />
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </DataGrid.Resources>
+                <DataGrid.RowHeaderTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding DataContext.Header, RelativeSource={RelativeSource AncestorType=DataGridRow}}" />
+                    </DataTemplate>
+                </DataGrid.RowHeaderTemplate>
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="{Binding Data.Texts[Keyboard], Source={StaticResource Proxy}}" Binding="{Binding Key}" Width="*" />
+                    <DataGridTextColumn Header="{Binding Data.Texts[Gamepad], Source={StaticResource Proxy}}" Binding="{Binding Button}" Width="*" />
+                </DataGrid.Columns>
+            </DataGrid>
+            <DockPanel Grid.Row="1" Margin="0,6,0,0">
+                <Button AutomationProperties.AutomationId="WaitInputButton" Content="{Binding Texts[Button1]}" Width="193" Command="{Binding WaitForInputCommand}" />
+                <TextBlock Text="{Binding Texts[Label1]}" Margin="12,0,0,0" VerticalAlignment="Center">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Visibility" Value="Hidden" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsWaitingInput}" Value="True">
+                                    <Setter Property="Visibility" Value="Visible" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+            </DockPanel>
+            <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,6,0,0">
+                <Button AutomationProperties.AutomationId="OkButton" Content="OK" Width="75" Margin="0,0,24,0" Command="{Binding OkCommand}" />
+                <Button AutomationProperties.AutomationId="CancelButton" Content="Cancel" Width="75" Command="{Binding CancelCommand}" />
+            </StackPanel>
+        </Grid>
+    </DockPanel>
+</Window>

@@ -15,8 +15,8 @@ namespace PPDCore
             All = 7,
         }
 
-        int[] keyChange;
-        Random r = new Random();
+        readonly int[] keyChange;
+        readonly Random r = new();
 
         public ButtonType this[ButtonType type]
         {
@@ -82,11 +82,9 @@ namespace PPDCore
             }
         }
 
-        private int[] Swap(int[] array, int a, int b)
+        private static int[] Swap(int[] array, int a, int b)
         {
-            int swap = array[a];
-            array[a] = array[b];
-            array[b] = swap;
+            (array[b], array[a]) = (array[a], array[b]);
             return array;
         }
     }

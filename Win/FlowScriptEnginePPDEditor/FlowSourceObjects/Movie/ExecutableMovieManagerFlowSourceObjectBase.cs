@@ -9,9 +9,9 @@ namespace FlowScriptEnginePPDEditor.FlowSourceObjects.Movie
         protected override void OnInitialize()
         {
             base.OnInitialize();
-            if (Manager.Items.ContainsKey("MovieManager"))
+            if (Manager.Items.TryGetValue("MovieManager", out object value))
             {
-                movieManager = Manager.Items["MovieManager"] as IMovieManager;
+                movieManager = value as IMovieManager;
             }
         }
     }

@@ -1,0 +1,74 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- ViewModel や Model の単体テストです。画面は表示しないので、デスクトップがなくても実行できる -->
+  <PropertyGroup>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <RootNamespace>UnitTests</RootNamespace>
+    <AssemblyName>UnitTests</AssemblyName>
+    <Platforms>x64</Platforms>
+    <PlatformTarget>x64</PlatformTarget>
+    <UseWPF>true</UseWPF>
+    <!-- PPDEditor のショートカット（System.Windows.Forms.Keys）を使う -->
+    <UseWindowsForms>true</UseWindowsForms>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+    <Nullable>disable</Nullable>
+    <!-- AssemblyInfo.cs がないので、アセンブリの情報を生成する -->
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="coverlet.collector" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="xunit" />
+    <PackageReference Include="xunit.runner.visualstudio" />
+    <!-- PPDMath（SharpDX の計算を移したもの）が元と同じ結果になるかを、元の SharpDX と比べて確かめる。テストだけで使う -->
+    <PackageReference Include="SharpDX.Mathematics" VersionOverride="4.2.0" />
+    <!-- 以前に配った版の FlowScript のノードの DLL を、読み込まずに調べる（Mod の互換性のテスト） -->
+    <PackageReference Include="System.Reflection.MetadataLoadContext" VersionOverride="10.0.12" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BMSTOPPD\BMSTOPPD\BMSTOPPD.csproj" />
+    <ProjectReference Include="..\KeyConfiger\KeyConfiger\KeyConfiger.csproj" />
+    <ProjectReference Include="..\PPDFramework\PPDFramework.csproj" />
+    <ProjectReference Include="..\PPDMultiCommon\PPDMultiCommon.csproj" />
+    <ProjectReference Include="..\PPDMultiServer\PPDMultiServer.csproj" />
+    <ProjectReference Include="..\PPDCore\PPDCore.csproj" />
+    <ProjectReference Include="..\PPDExpansionCore\PPDExpansionCore.csproj" />
+    <ProjectReference Include="..\PPDConfig\PPDConfig.csproj" />
+    <ProjectReference Include="..\PPDUpdater\PPDUpdater.csproj" />
+    <ProjectReference Include="..\FolderDiffChecker\FolderDiffChecker.csproj" />
+    <ProjectReference Include="..\PPDInstaller\PPDInstaller\PPDInstaller.csproj" />
+    <ProjectReference Include="..\Effect2DEditor\Effect2DEditor.csproj" />
+    <ProjectReference Include="..\Effect2D\Effect2D.csproj" />
+    <ProjectReference Include="..\BezierCaliculator\BezierCaliculator.csproj" />
+    <ProjectReference Include="..\BezierDrawControl\BezierDrawControl\BezierDrawControl.csproj" />
+    <ProjectReference Include="..\BezierDrawControlTest\BezierDrawControlTest.csproj" />
+    <ProjectReference Include="..\FlowScriptControlTest\FlowScriptControlTest.csproj" />
+    <ProjectReference Include="..\FlowScriptControl\FlowScriptControl.csproj" />
+    <ProjectReference Include="..\FlowScriptDrawControl\FlowScriptDrawControl.csproj" />
+    <ProjectReference Include="..\FlowScriptEngine\FlowScriptEngine.csproj" />
+    <ProjectReference Include="..\FlowScriptEngineBasic\FlowScriptEngineBasic.csproj" />
+    <ProjectReference Include="..\FlowScriptEngineConsole\FlowScriptEngineConsole.csproj" />
+    <ProjectReference Include="..\FlowScriptEngineBasicExtension\FlowScriptEngineBasicExtension.csproj" />
+    <ProjectReference Include="..\FlowScriptEngineData\FlowScriptEngineData.csproj" />
+    <ProjectReference Include="..\FlowScriptEnginePPD\FlowScriptEnginePPD.csproj" />
+    <ProjectReference Include="..\FlowScriptEnginePPDEditor\FlowScriptEnginePPDEditor.csproj" />
+    <ProjectReference Include="..\FlowScriptEngineSlimDX\FlowScriptEngineSlimDX.csproj" />
+    <ProjectReference Include="..\PPDEditor\PPDEditor\PPDEditor.csproj" />
+    <ProjectReference Include="..\PPDEditorCommon\PPDEditorCommon.csproj" />
+    <ProjectReference Include="..\PPDPack\PPDPack.csproj" />
+    <ProjectReference Include="..\PPDConfiguration\PPDConfiguration.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="xunit.runner.json" CopyToOutputDirectory="PreserveNewest" />
+    <!-- アプリが今のフォルダから読む言語ファイル。テストでは一時フォルダにコピーして使う（AppFiles） -->
+    <None Include="..\KeyConfiger\KeyConfiger\Lang\*.ini" Link="Apps\KeyConfiger\Lang\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\PPDConfig\Lang\*.ini" Link="Apps\PPDConfig\Lang\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\PPDUpdater\Lang\*.ini" Link="Apps\PPDUpdater\Lang\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\PPDInstaller\PPDInstaller\Lang\*.ini" Link="Apps\PPDInstaller\Lang\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\Effect2DEditor\Lang\*.ini" Link="Apps\Effect2DEditor\Lang\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\PPDEditor\PPDEditor\Lang\lang_FlowScript_jp.ini;..\PPDEditor\PPDEditor\Lang\lang_PPDEditor_jp.ini" Link="Apps\FlowScriptControlTest\Lang\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\PPDEditor\PPDEditor\Lang\lang_PPDEditor_*.ini" Link="Apps\PPDEditor\Lang\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+    <None Update="coverage.runsettings" CopyToOutputDirectory="Never" />
+    <None Update="FlowScript\FlowScriptApi_1.2.0.1.txt;FlowScript\NetFrameworkNumbers.txt" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+</Project>

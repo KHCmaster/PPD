@@ -5,11 +5,11 @@ namespace FlowScriptEngine
 {
     public static class TypeSerializerManager
     {
-        static Dictionary<Type, TypeSerializerBase> serializers;
+        static readonly Dictionary<Type, TypeSerializerBase> serializers;
 
         static TypeSerializerManager()
         {
-            serializers = new Dictionary<Type, TypeSerializerBase>();
+            serializers = [];
         }
 
         public static TypeSerializerBase GetSerializer(Type type)
@@ -25,11 +25,7 @@ namespace FlowScriptEngine
 
         internal static void AddSerializer(TypeSerializerBase serializer)
         {
-            if (!serializers.ContainsKey(serializer.Type))
-            {
-                serializers.Add(serializer.Type, serializer);
-            }
-            else
+            if (!serializers.TryAdd(serializer.Type, serializer))
             {
                 Console.WriteLine("Serializer {0} is multiple defined. Type:{1}", serializer, serializer.Type);
             }

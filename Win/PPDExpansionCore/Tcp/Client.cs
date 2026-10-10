@@ -1,10 +1,11 @@
 ﻿using System;
 using System.IO;
+using System.Net;
 using System.Net.Sockets;
 
 namespace PPDExpansionCore.Tcp
 {
-    public class Client : Base
+    public class Client(int port) : Base, IDisposable
     {
         private TcpClient tcpClient;
         private bool connected;
@@ -21,18 +22,15 @@ namespace PPDExpansionCore.Tcp
         {
             get;
             private set;
-        }
-
-        public Client(int port)
-        {
-            Port = port;
-        }
+        } = port;
 
         public void Start()
         {
             try
             {
-                tcpClient = new TcpClient("localhost", Port);
+                // 拡張機能は IPv4 の localhost（127.0.0.1）で待ち受ける。"localhost" だと先に IPv6 につなごうとして、断られるまで待つ
+                tcpClient = new TcpClient();
+                tcpClient.Connect(IPAddress.Loopback, Port);
                 connected = true;
             }
             catch
@@ -60,15 +58,13 @@ namespace PPDExpansionCore.Tcp
             }
             try
             {
-                using (MemoryStream stream = new MemoryStream())
+                using MemoryStream stream = new();
+                using (PPDPack.V2.PackWriter writer = new(stream))
                 {
-                    using (PPDPack.V2.PackWriter writer = new PPDPack.V2.PackWriter(stream))
-                    {
-                        packable.Write(writer);
-                    }
-                    stream.Close();
-                    Send(stream.ToArray());
+                    packable.Write(writer);
                 }
+                stream.Close();
+                Send(stream.ToArray());
             }
             catch (Exception e)
             {
@@ -90,6 +86,27 @@ namespace PPDExpansionCore.Tcp
         {
             connected = false;
             Close();
+        }
+
+        /// <summary>
+        /// 接続を閉じます（Close() と同じ）。
+        /// </summary>
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        /// <summary>
+        /// 破棄します。
+        /// </summary>
+        /// <param name="disposing">Dispose から呼ばれたときは true。</param>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                Close();
+            }
         }
     }
 }

@@ -1,5 +1,5 @@
-﻿using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Command;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using System;
 using System.Windows;
 using System.Windows.Input;
@@ -24,7 +24,7 @@ namespace FlowScriptDrawControl.Model
                 {
                     position = value;
                     Transform = new TranslateTransform(position.X, position.Y);
-                    RaisePropertyChanged("Position");
+                    OnPropertyChanged(nameof(Position));
                 }
             }
         }
@@ -37,8 +37,8 @@ namespace FlowScriptDrawControl.Model
                 if (transform != value)
                 {
                     transform = value;
-                    RaisePropertyChanged("Transform");
-                    RaisePropertyChanged("Transform2");
+                    OnPropertyChanged(nameof(Transform));
+                    OnPropertyChanged("Transform2");
                 }
             }
         }
@@ -47,8 +47,8 @@ namespace FlowScriptDrawControl.Model
         {
             get
             {
-                return sizeChangedCommand ?? (sizeChangedCommand = new RelayCommand(
-                    SizeChangedCommand_Execute));
+                return sizeChangedCommand ??= new RelayCommand(
+                    SizeChangedCommand_Execute);
             }
         }
 

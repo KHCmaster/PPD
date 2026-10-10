@@ -3,7 +3,14 @@
     /// <summary>
     /// 真偽値の設定を扱うクラスです。
     /// </summary>
-    public class BooleanModSetting : TemplateModSetting<bool>
+    /// <remarks>
+    /// コンストラクタです。
+    /// </remarks>
+    /// <param name="key"></param>
+    /// <param name="name"></param>
+    /// <param name="description"></param>
+    /// <param name="defaultValue"></param>
+    public class BooleanModSetting(string key, string name, string description, bool defaultValue) : TemplateModSetting<bool>(key, name, description, defaultValue)
     {
         /// <summary>
         /// 利用可能な値を取得します。
@@ -12,21 +19,8 @@
         {
             get
             {
-                return new object[] { false, true };
+                return [false, true];
             }
-        }
-
-        /// <summary>
-        /// コンストラクタです。
-        /// </summary>
-        /// <param name="key"></param>
-        /// <param name="name"></param>
-        /// <param name="description"></param>
-        /// <param name="defaultValue"></param>
-        public BooleanModSetting(string key, string name, string description, bool defaultValue)
-            : base(key, name, description, defaultValue)
-        {
-
         }
 
         /// <summary>

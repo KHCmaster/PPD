@@ -1,0 +1,104 @@
+<forms:DockView x:Class="PPDEditor.ResourceManager"
+                xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                xmlns:forms="clr-namespace:PPDEditor.Forms"
+                xmlns:vm="clr-namespace:PPDEditor.ViewModels.Docks"
+                xmlns:models="clr-namespace:PPDEditor.Models"
+                xmlns:conv="clr-namespace:PPDEditor.Converters"
+                mc:Ignorable="d" d:DataContext="{d:DesignInstance Type=vm:ResourceManagerViewModel}">
+    <forms:DockView.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVisibility" />
+    </forms:DockView.Resources>
+    <DockPanel>
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="{Binding Texts[AddResource]}" SubmenuOpened="AddMenu_SubmenuOpened">
+                <MenuItem Header="{Binding Texts[AddImage]}" Command="{Binding AddImageCommand}" IsEnabled="{Binding CanAdd}" />
+                <MenuItem Header="{Binding Texts[AddEffect]}" Command="{Binding AddEffectCommand}" IsEnabled="{Binding CanAdd}" />
+                <MenuItem Header="{Binding Texts[AddSound]}" Command="{Binding AddSoundCommand}" IsEnabled="{Binding CanAdd}" />
+                <MenuItem Header="{Binding Texts[AddOthers]}" Command="{Binding AddOthersCommand}" IsEnabled="{Binding CanAdd}" />
+            </MenuItem>
+        </Menu>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="264*" MinWidth="40" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="232*" MinWidth="40" />
+            </Grid.ColumnDefinitions>
+            <TreeView x:Name="resourceTree" ItemsSource="{Binding Roots}" SelectedItemChanged="ResourceTree_SelectedItemChanged"
+                      PreviewMouseRightButtonDown="ResourceTree_PreviewMouseRightButtonDown" ContextMenuOpening="ResourceTree_ContextMenuOpening">
+                <TreeView.InputBindings>
+                    <KeyBinding Modifiers="Ctrl" Key="C" Command="{Binding CopyNameCommand}" />
+                </TreeView.InputBindings>
+                <TreeView.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="{Binding Texts[Delete]}" Command="{Binding DeleteCommand}" />
+                        <MenuItem Command="{Binding ToggleDisabledCommand}">
+                            <MenuItem.Style>
+                                <Style TargetType="MenuItem">
+                                    <Setter Property="Header" Value="{Binding Texts[MakeInvalid]}" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding SelectedNode.IsDisabled}" Value="True">
+                                            <Setter Property="Header" Value="{Binding Texts[MakeValid]}" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </MenuItem.Style>
+                        </MenuItem>
+                    </ContextMenu>
+                </TreeView.ContextMenu>
+                <TreeView.ItemTemplate>
+                    <HierarchicalDataTemplate ItemsSource="{Binding Children}">
+                        <StackPanel Orientation="Horizontal">
+                            <!-- 種類のアイコン。無効のときは印を重ねる -->
+                            <Grid Width="16" Height="16" Margin="0,0,3,0">
+                                <Image>
+                                    <Image.Style>
+                                        <Style TargetType="Image">
+                                            <Setter Property="Source" Value="/PPDEditor;component/img/document.png" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Kind}" Value="{x:Static models:ResourceKind.Folder}">
+                                                    <Setter Property="Source" Value="/PPDEditor;component/img/folder.png" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Kind}" Value="{x:Static models:ResourceKind.Image}">
+                                                    <Setter Property="Source" Value="/PPDEditor;component/img/image.png" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Kind}" Value="{x:Static models:ResourceKind.Effect}">
+                                                    <Setter Property="Source" Value="/PPDEditor;component/img/effect.png" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Kind}" Value="{x:Static models:ResourceKind.Sound}">
+                                                    <Setter Property="Source" Value="/PPDEditor;component/img/sound.png" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Image.Style>
+                                </Image>
+                                <Image Source="/PPDEditor;component/img/disabled.png" Visibility="{Binding IsDisabled, Converter={StaticResource BoolToVisibility}}" />
+                            </Grid>
+                            <TextBlock Text="{Binding Name}" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </HierarchicalDataTemplate>
+                </TreeView.ItemTemplate>
+            </TreeView>
+            <GridSplitter Grid.Column="1" Width="4" HorizontalAlignment="Stretch" />
+            <Grid Grid.Column="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="168*" MinHeight="20" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="161*" MinHeight="20" />
+                </Grid.RowDefinitions>
+                <!-- 画像やエフェクトを選んだときに、その中身を出す -->
+                <ContentControl x:Name="previewHost" />
+                <GridSplitter Grid.Row="1" Height="4" HorizontalAlignment="Stretch" />
+                <DataGrid Grid.Row="2" ItemsSource="{Binding InfoRows}" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="None"
+                          CanUserSortColumns="False" CanUserAddRows="False">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Binding="{Binding Key}" Width="*" />
+                        <DataGridTextColumn Binding="{Binding Value}" Width="*" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+        </Grid>
+    </DockPanel>
+</forms:DockView>

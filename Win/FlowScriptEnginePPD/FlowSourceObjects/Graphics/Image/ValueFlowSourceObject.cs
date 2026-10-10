@@ -1,7 +1,8 @@
 ﻿using FlowScriptEngine;
 using PPDCoreModel;
 using PPDFramework;
-using SharpDX;
+using System.Numerics;
+using PPDMath;
 using System.Collections.Generic;
 
 namespace FlowScriptEnginePPD.FlowSourceObjects.Graphics.Image
@@ -20,9 +21,9 @@ namespace FlowScriptEnginePPD.FlowSourceObjects.Graphics.Image
         {
             base.OnInitialize();
 
-            if (this.Manager.Items.ContainsKey("ResourceManager"))
+            if (this.Manager.Items.TryGetValue("ResourceManager", out object value))
             {
-                resourceManager = this.Manager.Items["ResourceManager"] as ScriptResourceManager;
+                resourceManager = value as ScriptResourceManager;
             }
         }
 

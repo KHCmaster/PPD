@@ -2,15 +2,11 @@
 
 namespace PPDEditor.Command.PPDSheet
 {
-    class AddMarkCommand : Command
+    class AddMarkCommand(SortedList<float, Mark>[] data, Mark mk) : Command
     {
-        private SortedList<float, Mark>[] data;
-        private Mark mk;
-        public AddMarkCommand(SortedList<float, Mark>[] data, Mark mk)
-        {
-            this.data = data;
-            this.mk = mk;
-        }
+        private readonly SortedList<float, Mark>[] data = data;
+        private readonly Mark mk = mk;
+
         public override void Execute()
         {
             data[(int)mk.Type].Add(mk.Time, mk);

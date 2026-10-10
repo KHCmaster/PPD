@@ -4,15 +4,17 @@ namespace FlowScriptEngine
 {
     public abstract class EnumTypeFormatterBase<T> : TypeFormatterBase where T : struct
     {
-        private string[] allowed;
-        private T[] values;
+        private readonly string[] allowed;
+        private readonly T[] values;
         protected EnumTypeFormatterBase()
         {
-            values = (T[])Enum.GetValues(typeof(T));
-            allowed = new string[values.Length];
-            for (int i = 0; i < values.Length; i++)
+            // 名前から作る（値から ToString すると、同じ値の別名（MessageBoxIcon の Hand と Stop など）が同じ名前になり、
+            // 一覧に同じ名前が並び、別名で書いた値が読めなかった）
+            allowed = Enum.GetNames(typeof(T));
+            values = new T[allowed.Length];
+            for (int i = 0; i < allowed.Length; i++)
             {
-                allowed[i] = values[i].ToString();
+                values[i] = (T)Enum.Parse(typeof(T), allowed[i]);
             }
         }
 

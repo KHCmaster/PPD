@@ -1,4 +1,4 @@
-﻿using GalaSoft.MvvmLight;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace PPDEditorCommon.Dialog.ViewModel
 {
@@ -32,7 +32,7 @@ namespace PPDEditorCommon.Dialog.ViewModel
                 if (isValidated != value)
                 {
                     isValidated = value;
-                    RaisePropertyChanged("IsValidated");
+                    OnPropertyChanged(nameof(IsValidated));
                     if (isValidated)
                     {
                         ValidateErrorText = null;
@@ -49,7 +49,7 @@ namespace PPDEditorCommon.Dialog.ViewModel
                 if (validateErrorText != value)
                 {
                     validateErrorText = value;
-                    RaisePropertyChanged("ValidateErrorText");
+                    OnPropertyChanged(nameof(ValidateErrorText));
                 }
             }
         }

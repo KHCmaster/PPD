@@ -1,19 +1,12 @@
-﻿using GalaSoft.MvvmLight.Messaging;
-
+﻿
 namespace PPDEditorCommon.Dialog.Message
 {
-    class SelectMessage : MessageBase
+    class SelectMessage(object sender, string elementName) : MessageBase(sender)
     {
         public string ElementName
         {
             get;
             private set;
-        }
-
-        public SelectMessage(object sender, string elementName)
-            : base(sender)
-        {
-            ElementName = elementName;
-        }
+        } = elementName;
     }
 }

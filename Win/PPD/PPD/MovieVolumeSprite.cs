@@ -1,5 +1,6 @@
 ﻿using PPDFramework;
-using SharpDX;
+using System.Numerics;
+using PPDMath;
 using System;
 
 namespace PPD
@@ -10,12 +11,12 @@ namespace PPD
         private const int RectMargin = 6;
         private const int RectHeight = 35;
 
-        MyGame myGame;
-        PPDFramework.Resource.ResourceManager resourceManager;
+        readonly MyGame myGame;
+        readonly PPDFramework.Resource.ResourceManager resourceManager;
         SongInformation lastSongInformation;
 
-        TextureString volumeText;
-        RectangleComponent[] rects;
+        readonly TextureString volumeText;
+        readonly RectangleComponent[] rects;
 
         int timerId = -1;
         int showCount;
@@ -54,19 +55,12 @@ namespace PPD
         {
             for (int i = 0; i < rects.Length; i++)
             {
-                bool isOver = false;
-                switch (volume)
+                var isOver = volume switch
                 {
-                    case 0:
-                        isOver = false;
-                        break;
-                    case 100:
-                        isOver = true;
-                        break;
-                    default:
-                        isOver = (i + 1) * 2 <= volume;
-                        break;
-                }
+                    0 => false,
+                    100 => true,
+                    _ => (i + 1) * 2 <= volume,
+                };
                 rects[i].Position = new Vector2(80 + i * (RectWidth + RectMargin), 400 + (isOver ? 0 : RectHeight / 4));
                 rects[i].RectangleHeight = isOver ? RectHeight : RectHeight / 2;
             }

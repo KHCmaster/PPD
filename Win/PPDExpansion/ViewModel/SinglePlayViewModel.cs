@@ -65,11 +65,11 @@ namespace PPDExpansion.ViewModel
                 }
                 if (Scores != null && Scores.Count > 0)
                 {
-                    max = Math.Max(max, Scores[Scores.Count - 1].Value);
+                    max = Math.Max(max, Scores[^1].Value);
                 }
                 if (BestScores != null && BestScores.Count > 0)
                 {
-                    max = Math.Max(max, BestScores[BestScores.Count - 1].Value);
+                    max = Math.Max(max, BestScores[^1].Value);
                 }
                 return max;
             }
@@ -83,7 +83,7 @@ namespace PPDExpansion.ViewModel
                 if (score != value)
                 {
                     score = value;
-                    RaisePropertyChanged("Score");
+                    OnPropertyChanged(nameof(Score));
                 }
             }
         }
@@ -96,7 +96,7 @@ namespace PPDExpansion.ViewModel
                 if (coolCount != value)
                 {
                     coolCount = value;
-                    RaisePropertyChanged("CoolCount");
+                    OnPropertyChanged(nameof(CoolCount));
                 }
             }
         }
@@ -109,7 +109,7 @@ namespace PPDExpansion.ViewModel
                 if (goodCount != value)
                 {
                     goodCount = value;
-                    RaisePropertyChanged("GoodCount");
+                    OnPropertyChanged(nameof(GoodCount));
                 }
             }
         }
@@ -122,7 +122,7 @@ namespace PPDExpansion.ViewModel
                 if (safeCount != value)
                 {
                     safeCount = value;
-                    RaisePropertyChanged("SafeCount");
+                    OnPropertyChanged(nameof(SafeCount));
                 }
             }
         }
@@ -135,7 +135,7 @@ namespace PPDExpansion.ViewModel
                 if (sadCount != value)
                 {
                     sadCount = value;
-                    RaisePropertyChanged("SadCount");
+                    OnPropertyChanged(nameof(SadCount));
                 }
             }
         }
@@ -148,7 +148,7 @@ namespace PPDExpansion.ViewModel
                 if (worstCount != value)
                 {
                     worstCount = value;
-                    RaisePropertyChanged("WorstCount");
+                    OnPropertyChanged(nameof(WorstCount));
                 }
             }
         }
@@ -161,7 +161,7 @@ namespace PPDExpansion.ViewModel
                 if (userHighScore != value)
                 {
                     userHighScore = value;
-                    RaisePropertyChanged("UserHighScore");
+                    OnPropertyChanged(nameof(UserHighScore));
                 }
             }
         }
@@ -174,7 +174,7 @@ namespace PPDExpansion.ViewModel
                 if (webHighScore != value)
                 {
                     webHighScore = value;
-                    RaisePropertyChanged("WebHighScore");
+                    OnPropertyChanged(nameof(WebHighScore));
                 }
             }
         }
@@ -187,7 +187,7 @@ namespace PPDExpansion.ViewModel
                 if (scores != value)
                 {
                     scores = value;
-                    RaisePropertyChanged("Scores");
+                    OnPropertyChanged(nameof(Scores));
                 }
             }
         }
@@ -200,7 +200,7 @@ namespace PPDExpansion.ViewModel
                 if (bestScores != value)
                 {
                     bestScores = value;
-                    RaisePropertyChanged("BestScores");
+                    OnPropertyChanged(nameof(BestScores));
                 }
             }
         }
@@ -231,7 +231,7 @@ namespace PPDExpansion.ViewModel
                 if (chartHeight != value)
                 {
                     PPDExpansionSetting.Setting.SinglePlayChartHeight = chartHeight = value;
-                    RaisePropertyChanged("ChartHeight");
+                    OnPropertyChanged(nameof(ChartHeight));
                 }
             }
         }
@@ -244,7 +244,7 @@ namespace PPDExpansion.ViewModel
                 if (scoreName != value)
                 {
                     scoreName = value;
-                    RaisePropertyChanged("ScoreName");
+                    OnPropertyChanged(nameof(ScoreName));
                 }
             }
         }
@@ -257,7 +257,7 @@ namespace PPDExpansion.ViewModel
                 if (difficulty != value)
                 {
                     difficulty = value;
-                    RaisePropertyChanged("Difficulty");
+                    OnPropertyChanged(nameof(Difficulty));
                 }
             }
         }
@@ -270,7 +270,7 @@ namespace PPDExpansion.ViewModel
                 if (scorePercent != value)
                 {
                     scorePercent = value;
-                    RaisePropertyChanged("ScorePercent");
+                    OnPropertyChanged(nameof(ScorePercent));
                 }
             }
         }
@@ -283,7 +283,7 @@ namespace PPDExpansion.ViewModel
                 if (scoreWhitePercent != value)
                 {
                     scoreWhitePercent = value;
-                    RaisePropertyChanged("ScoreWhitePercent");
+                    OnPropertyChanged(nameof(ScoreWhitePercent));
                 }
             }
         }
@@ -296,7 +296,7 @@ namespace PPDExpansion.ViewModel
                 if (userHighScorePercent != value)
                 {
                     userHighScorePercent = value;
-                    RaisePropertyChanged("UserHighScorePercent");
+                    OnPropertyChanged(nameof(UserHighScorePercent));
                 }
             }
         }
@@ -309,7 +309,7 @@ namespace PPDExpansion.ViewModel
                 if (userHighScoreWhitePercent != value)
                 {
                     userHighScoreWhitePercent = value;
-                    RaisePropertyChanged("UserHighScoreWhitePercent");
+                    OnPropertyChanged(nameof(UserHighScoreWhitePercent));
                 }
             }
         }
@@ -322,7 +322,7 @@ namespace PPDExpansion.ViewModel
                 if (userHighScoreRealTimePercent != value)
                 {
                     userHighScoreRealTimePercent = value;
-                    RaisePropertyChanged("UserHighScoreRealTimePercent");
+                    OnPropertyChanged(nameof(UserHighScoreRealTimePercent));
                 }
             }
         }
@@ -335,7 +335,7 @@ namespace PPDExpansion.ViewModel
                 if (userHighScoreRealTimeWhitePercent != value)
                 {
                     userHighScoreRealTimeWhitePercent = value;
-                    RaisePropertyChanged("UserHighScoreRealTimeWhitePercent");
+                    OnPropertyChanged(nameof(UserHighScoreRealTimeWhitePercent));
                 }
             }
         }
@@ -348,7 +348,7 @@ namespace PPDExpansion.ViewModel
                 if (webHighScorePercent != value)
                 {
                     webHighScorePercent = value;
-                    RaisePropertyChanged("WebHighScorePercent");
+                    OnPropertyChanged(nameof(WebHighScorePercent));
                 }
             }
         }
@@ -361,7 +361,7 @@ namespace PPDExpansion.ViewModel
                 if (webHighScoreWhitePercent != value)
                 {
                     webHighScoreWhitePercent = value;
-                    RaisePropertyChanged("WebHighScoreWhitePercent");
+                    OnPropertyChanged(nameof(WebHighScoreWhitePercent));
                 }
             }
         }
@@ -374,7 +374,7 @@ namespace PPDExpansion.ViewModel
                 if (highScoreScoreDiff != value)
                 {
                     highScoreScoreDiff = value;
-                    RaisePropertyChanged("HighScoreScoreDiff");
+                    OnPropertyChanged(nameof(HighScoreScoreDiff));
                 }
             }
         }
@@ -387,7 +387,7 @@ namespace PPDExpansion.ViewModel
                 if (isHighScoreScoreDiffNegative != value)
                 {
                     isHighScoreScoreDiffNegative = value;
-                    RaisePropertyChanged("IsHighScoreScoreDiffNegative");
+                    OnPropertyChanged(nameof(IsHighScoreScoreDiffNegative));
                 }
             }
         }
@@ -400,7 +400,7 @@ namespace PPDExpansion.ViewModel
                 if (realTimeScoreDiff != value)
                 {
                     realTimeScoreDiff = value;
-                    RaisePropertyChanged("RealTimeScoreDiff");
+                    OnPropertyChanged(nameof(RealTimeScoreDiff));
                 }
             }
         }
@@ -413,7 +413,7 @@ namespace PPDExpansion.ViewModel
                 if (isRealTimeScoreDiffNagative != value)
                 {
                     isRealTimeScoreDiffNagative = value;
-                    RaisePropertyChanged("IsRealTimeScoreDiffNagative");
+                    OnPropertyChanged(nameof(IsRealTimeScoreDiffNagative));
                 }
             }
         }
@@ -421,10 +421,10 @@ namespace PPDExpansion.ViewModel
         public SinglePlayViewModel(MainWindowViewModel mainWindowViewModel)
             : base(mainWindowViewModel)
         {
-            Scores = new ObservableCollection<KeyValuePair<DateTime, int>>();
-            HighScores = new ObservableCollection<KeyValuePair<DateTime, int>>();
-            WebHighScores = new ObservableCollection<KeyValuePair<DateTime, int>>();
-            Results = new ObservableCollection<ResultInfo>();
+            Scores = [];
+            HighScores = [];
+            WebHighScores = [];
+            Results = [];
             ChartHeight = PPDExpansionSetting.Setting.SinglePlayChartHeight;
             SetScoreInfo(new ScoreInfo
             {
@@ -432,7 +432,7 @@ namespace PPDExpansion.ViewModel
                 StartTime = 0,
                 UserHighScore = 10000,
                 WebHighScore = 10000,
-                ScoreHash = new byte[0],
+                ScoreHash = [],
                 ScoreName = "",
                 Difficulty = Difficulty.Other
             });
@@ -440,17 +440,17 @@ namespace PPDExpansion.ViewModel
 
         public override void ProcessData(PackableBase packable)
         {
-            if (packable is ScoreInfo)
+            if (packable is ScoreInfo info)
             {
-                SetScoreInfo((ScoreInfo)packable);
+                SetScoreInfo(info);
             }
-            else if (packable is UpdateInfo)
+            else if (packable is UpdateInfo info1)
             {
-                AddUpdateInfo((UpdateInfo)packable);
+                AddUpdateInfo(info1);
             }
-            else if (packable is ResultInfo)
+            else if (packable is ResultInfo info2)
             {
-                SetResultInfo((ResultInfo)packable);
+                SetResultInfo(info2);
             }
         }
 
@@ -491,7 +491,7 @@ namespace PPDExpansion.ViewModel
                         BestScores = Scores;
                         bestResultInfo = currentResultInfo;
                     }
-                    Scores = new ObservableCollection<KeyValuePair<DateTime, int>>();
+                    Scores = [];
                 }
                 isBestScore = false;
                 UpdateScorePercent();

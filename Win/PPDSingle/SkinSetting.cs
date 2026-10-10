@@ -6,7 +6,7 @@ namespace PPDSingle
     {
         public const int MaxRivalGhostCount = 7;
 
-        private static SkinSetting setting = new SkinSetting();
+        private static readonly SkinSetting setting = new();
         public override string Name
         {
             get { return "PPDSingle.setting"; }
@@ -113,7 +113,7 @@ namespace PPDSingle
                 {
                     return 1;
                 }
-                int.TryParse(this["RivalGhostCount"], out int val);
+                _ = int.TryParse(this["RivalGhostCount"], out int val);
                 if (val < 0)
                 {
                     val = 1;

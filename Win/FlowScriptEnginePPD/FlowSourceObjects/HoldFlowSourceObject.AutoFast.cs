@@ -9,17 +9,13 @@ namespace FlowScriptEnginePPD.FlowSourceObjects
     {
         public override object GetPropertyValue(string propertyName)
         {
-            switch (propertyName)
+            return propertyName switch
             {
-                case "CurrentHoldScore":
-                    return CurrentHoldScore;
-                case "HoldMarks":
-                    return HoldMarks;
-                case "MaxHoldBonus":
-                    return MaxHoldBonus;
-                default:
-                    return null;
-            }
+                "CurrentHoldScore" => CurrentHoldScore,
+                "HoldMarks" => HoldMarks,
+                "MaxHoldBonus" => MaxHoldBonus,
+                _ => null,
+            };
         }
 
 

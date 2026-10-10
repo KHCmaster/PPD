@@ -6,7 +6,10 @@ using PPDFramework.Sprites;
 using PPDFramework.Vertex;
 using PPDPack;
 using PPDSound;
-using SharpDX;
+using System.Numerics;
+using PPDMath;
+using Color4 = Vortice.Mathematics.Color4;
+using Color = Vortice.Mathematics.Color;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -18,8 +21,8 @@ namespace PPDCoreModel
     /// </summary>
     public class ScriptResourceManager : DisposableComponent
     {
-        private PPDDevice device;
-        private ISound sound;
+        private readonly PPDDevice device;
+        private readonly ISound sound;
         private PPDFramework.Resource.SpriteResourceManager resourceManager;
         private PPDFramework.PathManager pathManager;
         private bool initialized;
@@ -49,28 +52,32 @@ namespace PPDCoreModel
 
         private void Initialize(string resourceFilePath, string spriteDirName)
         {
-            soundDict = new Dictionary<string, byte[]>();
-            othersDict = new Dictionary<string, byte[]>();
-            createdVertices = new List<VertexInfo>();
+            soundDict = [];
+            othersDict = [];
+            createdVertices = [];
             pathManager = new PathManager("");
 
             if (File.Exists(resourceFilePath))
             {
                 try
                 {
-                    using (PackReader packReader = new PackReader(resourceFilePath))
+                    using (PackReader packReader = new(resourceFilePath))
                     {
                         UnPackAll(packReader, spriteDirName, File.GetLastWriteTime(resourceFilePath));
                     }
                     initialized = true;
                 }
+#if DEBUG
                 catch (Exception e)
                 {
-#if DEBUG
                     Console.WriteLine(e.Message);
                     Console.WriteLine(e.StackTrace);
-#endif
                 }
+#else
+                catch
+                {
+                }
+#endif
             }
         }
 
@@ -95,7 +102,7 @@ namespace PPDCoreModel
                 var key = Path.Combine("Effect", effectName, normalizedEffectImageName);
                 if (!effectImageList.TryGetValue(key, out List<string> effectImageNames))
                 {
-                    effectImageNames = new List<string>();
+                    effectImageNames = [];
                     effectImageList.Add(key, effectImageNames);
                 }
                 effectImageNames.Add(fileName);
@@ -116,9 +123,9 @@ namespace PPDCoreModel
                             {
                                 EffectLoader.Load(ppdpsr, resourceName, (ReadResourceCallBack)((filename) =>
                                 {
-                                    if (effectImageList.ContainsKey(filename))
+                                    if (effectImageList.TryGetValue(filename, out List<string> value))
                                     {
-                                        foreach (var imageFileName in effectImageList[filename])
+                                        foreach (var imageFileName in value)
                                         {
                                             imageList.Add(imageFileName);
                                         }
@@ -128,18 +135,18 @@ namespace PPDCoreModel
                             break;
                         case "Sound":
                             byte[] data = new byte[ppdpsr.Length];
-                            ppdpsr.Read(data, 0, data.Length);
+                            ppdpsr.ReadAtLeast(data, data.Length, throwOnEndOfStream: false);
                             soundDict.Add(resourceName, data);
                             break;
                         case "Others":
                             data = new byte[ppdpsr.Length];
-                            ppdpsr.Read(data, 0, data.Length);
+                            ppdpsr.ReadAtLeast(data, data.Length, throwOnEndOfStream: false);
                             othersDict.Add(resourceName, data);
                             break;
                     }
                 }
             }
-            var spriteManager = new PPDPackSpriteManager(packReader, imageList.ToArray(), spriteDirName, lastWriteTime);
+            var spriteManager = new PPDPackSpriteManager(packReader, [.. imageList], spriteDirName, lastWriteTime);
             spriteManager.Pack();
             resourceManager = new SpriteResourceManager(device, spriteManager);
         }
@@ -148,7 +155,7 @@ namespace PPDCoreModel
         {
             if (initialized)
             {
-                Vector2 position = param != null && param.ContainsKey("Position") ? (Vector2)param["Position"] : Vector2.Zero;
+                Vector2 position = param != null && param.TryGetValue("Position", out object value) ? (Vector2)value : Vector2.Zero;
                 switch (resourceKind)
                 {
                     case ResourceKind.Effect:
@@ -193,10 +200,7 @@ namespace PPDCoreModel
                     case ResourceKind.Polygon:
                         var filename = pathManager.Combine("Image", resourceName);
                         var imageResource = resourceManager.GetResource<ImageResourceBase>(filename);
-                        if (imageResource == null)
-                        {
-                            imageResource = (ImageResourceBase)resourceManager.Add(filename, ImageResourceFactoryManager.Factory.Create(device, filename, false));
-                        }
+                        imageResource ??= (ImageResourceBase)resourceManager.Add(filename, ImageResourceFactoryManager.Factory.Create(device, filename, false));
                         var primitiveType = (PrimitiveType)param["PrimitiveType"];
                         var primitiveCount = (int)param["PrimitiveCount"];
                         var startIndex = (int)param["StartIndex"];
@@ -217,11 +221,8 @@ namespace PPDCoreModel
         protected override void DisposeResource()
         {
             base.DisposeResource();
-            if (resourceManager != null)
-            {
-                resourceManager.Dispose();
-                resourceManager = null;
-            }
+            resourceManager?.Dispose();
+            resourceManager = null;
             foreach (var vertex in createdVertices)
             {
                 vertex.Dispose();

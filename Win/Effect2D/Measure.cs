@@ -5,8 +5,8 @@ namespace Effect2D
 {
     static class Measure
     {
-        static Stopwatch stopwatch;
-        static Stack<long> stack;
+        static readonly Stopwatch stopwatch;
+        static readonly Stack<long> stack;
         static Measure()
         {
 

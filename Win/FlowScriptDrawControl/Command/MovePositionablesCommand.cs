@@ -4,23 +4,16 @@ using System.Windows;
 
 namespace FlowScriptDrawControl.Command
 {
-    class MovePositionablesCommand : CommandBase
+    class MovePositionablesCommand(Positionable[] positionables, Point[] newPoses) : CommandBase
     {
-        Positionable[] positionables;
-        Point[] oldPoses;
+        readonly Positionable[] positionables = positionables;
+        readonly Point[] oldPoses = [.. positionables.Select(s => s.Position)];
 
         public Point[] NewPoses
         {
             get;
             set;
-        }
-
-        public MovePositionablesCommand(Positionable[] positionables, Point[] newPoses)
-        {
-            this.positionables = positionables;
-            NewPoses = newPoses;
-            oldPoses = positionables.Select(s => s.Position).ToArray();
-        }
+        } = newPoses;
 
         public override void Execute()
         {

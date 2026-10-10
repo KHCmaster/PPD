@@ -8,10 +8,10 @@ namespace FlowScriptDrawControl.Model
 {
     class ScopeJoinManager
     {
-        private FlowAreaControl flowAreaControl;
-        private MoveManager moveManager;
-        private Command.CommandManager commandManager;
-        private CommandSet commandSet;
+        private readonly FlowAreaControl flowAreaControl;
+        private readonly MoveManager moveManager;
+        private readonly Command.CommandManager commandManager;
+        private readonly CommandSet commandSet;
 
         public ScopeJoinManager(FlowAreaControl flowAreaControl, Command.CommandManager commandManager, MoveManager moveManager)
         {
@@ -19,11 +19,11 @@ namespace FlowScriptDrawControl.Model
             this.commandManager = commandManager;
             this.moveManager = moveManager;
             commandSet = new CommandSet();
-            moveManager.ControlPressed += moveManager_ControlPressed;
-            moveManager.MoveEnd += moveManager_MoveEnd;
+            moveManager.ControlPressed += MoveManager_ControlPressed;
+            moveManager.MoveEnd += MoveManager_MoveEnd;
         }
 
-        void moveManager_MoveEnd(object sender, EventArgs e)
+        void MoveManager_MoveEnd(object sender, EventArgs e)
         {
             if (commandSet.CommandCount > 0)
             {
@@ -31,7 +31,7 @@ namespace FlowScriptDrawControl.Model
             }
         }
 
-        void moveManager_ControlPressed(object sender, EventArgs e)
+        void MoveManager_ControlPressed(object sender, EventArgs e)
         {
             var moveManager = sender as MoveManager;
             var control = moveManager.Controls.FirstOrDefault(c => (c.CurrentPositionable as ScopeChild).Scope != null);
@@ -65,8 +65,7 @@ namespace FlowScriptDrawControl.Model
         {
             foreach (PositionableControl control in moveManager.Controls)
             {
-                var scopeChild = control.CurrentPositionable as ScopeChild;
-                if (scopeChild == null || scopeChild.Scope == null)
+                if (control.CurrentPositionable is not ScopeChild scopeChild || scopeChild.Scope == null)
                 {
                     continue;
                 }

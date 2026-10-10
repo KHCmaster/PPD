@@ -5,9 +5,16 @@ namespace PPDFramework.Web
     /// <summary>
     /// Webに登録されている譜面の情報です。
     /// </summary>
-    public class WebSongInformation
+    /// <remarks>
+    /// コンストラクタです。
+    /// </remarks>
+    /// <param name="title"></param>
+    /// <param name="hash"></param>
+    /// <param name="movieUrl"></param>
+    /// <param name="revision"></param>
+    public class WebSongInformation(string title, string hash, string movieUrl, int revision)
     {
-        private List<WebSongInformationDifficulty> difficulties;
+        private readonly List<WebSongInformationDifficulty> difficulties = [];
 
         /// <summary>
         /// 譜面名を取得します。
@@ -16,7 +23,7 @@ namespace PPDFramework.Web
         {
             get;
             private set;
-        }
+        } = title;
 
         /// <summary>
         /// 譜面のハッシュを取得します。
@@ -25,7 +32,7 @@ namespace PPDFramework.Web
         {
             get;
             private set;
-        }
+        } = hash;
 
         /// <summary>
         /// 動画のURLを取得します。
@@ -34,7 +41,7 @@ namespace PPDFramework.Web
         {
             get;
             private set;
-        }
+        } = movieUrl;
 
         /// <summary>
         /// リビジョンを取得します。
@@ -43,7 +50,7 @@ namespace PPDFramework.Web
         {
             get;
             private set;
-        }
+        } = revision;
 
         /// <summary>
         /// アップデート可能かどうかを取得します。
@@ -70,24 +77,8 @@ namespace PPDFramework.Web
         {
             get
             {
-                return difficulties.ToArray();
+                return [.. difficulties];
             }
-        }
-
-        /// <summary>
-        /// コンストラクタです。
-        /// </summary>
-        /// <param name="title"></param>
-        /// <param name="hash"></param>
-        /// <param name="movieUrl"></param>
-        /// <param name="revision"></param>
-        public WebSongInformation(string title, string hash, string movieUrl, int revision)
-        {
-            difficulties = new List<WebSongInformationDifficulty>();
-            Title = title;
-            Hash = hash;
-            MovieUrl = movieUrl;
-            Revision = revision;
         }
 
         /// <summary>

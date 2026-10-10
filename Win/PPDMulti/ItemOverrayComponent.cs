@@ -1,22 +1,17 @@
 ﻿using PPDFramework;
 using PPDShareComponent;
-using SharpDX;
+using System.Numerics;
+using PPDMath;
 using System;
 
 namespace PPDMulti
 {
-    class ItemOverrayComponent : GameComponent
+    class ItemOverrayComponent(PPDDevice device, PPDFramework.Resource.ResourceManager resourceManager, ItemManagerComponent itemManagerComponent) : GameComponent(device)
     {
         public event Action ItemSet;
 
-        PPDFramework.Resource.ResourceManager resourceManager;
-        ItemManagerComponent itemManagerComponent;
-
-        public ItemOverrayComponent(PPDDevice device, PPDFramework.Resource.ResourceManager resourceManager, ItemManagerComponent itemManagerComponent) : base(device)
-        {
-            this.resourceManager = resourceManager;
-            this.itemManagerComponent = itemManagerComponent;
-        }
+        readonly PPDFramework.Resource.ResourceManager resourceManager = resourceManager;
+        readonly ItemManagerComponent itemManagerComponent = itemManagerComponent;
 
         public void AddItem(Vector2 pos)
         {
@@ -39,10 +34,7 @@ namespace PPDMulti
                 if (lastPos == gc.Position)
                 {
                     this.RemoveChild(gc);
-                    if (ItemSet != null)
-                    {
-                        ItemSet.Invoke();
-                    }
+                    ItemSet?.Invoke();
                 }
             }
         }

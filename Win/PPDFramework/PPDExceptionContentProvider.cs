@@ -10,12 +10,12 @@ namespace PPDFramework
     /// </summary>
     public class PPDExceptionContentProvider
     {
-        private static PPDExceptionContentProvider provider = new PPDExceptionContentProvider();
-        Dictionary<PPDExceptionType, string> dictionary;
+        private static readonly PPDExceptionContentProvider provider = new();
+        readonly Dictionary<PPDExceptionType, string> dictionary;
         private PPDExceptionContentProvider()
         {
-            dictionary = new Dictionary<PPDExceptionType, string>();
-            var types = (PPDExceptionType[])Enum.GetValues(typeof(PPDExceptionType));
+            dictionary = [];
+            var types = Enum.GetValues<PPDExceptionType>();
             var langFilePath = Path.Combine("Lang", String.Format("lang_{0}_{1}.ini", "PPD", PPDSetting.Setting.LangISO));
             if (File.Exists(langFilePath))
             {
@@ -26,7 +26,7 @@ namespace PPDFramework
                 foreach (PPDExceptionType type in types)
                 {
                     var data = setting.ReadString(type.ToString());
-                    if (!dictionary.ContainsKey(type)) dictionary.Add(type, data);
+                    dictionary.TryAdd(type, data);
                 }
             }
             else
@@ -61,7 +61,7 @@ namespace PPDFramework
                             data = "画像ファイルの読み込みに失敗しました";
                             break;
                     }
-                    if (!dictionary.ContainsKey(type)) dictionary.Add(type, data);
+                    dictionary.TryAdd(type, data);
                 }
             }
         }
@@ -73,9 +73,9 @@ namespace PPDFramework
         /// <returns></returns>
         public string GetContent(PPDExceptionType type)
         {
-            if (dictionary.ContainsKey(type))
+            if (dictionary.TryGetValue(type, out string value))
             {
-                return dictionary[type];
+                return value;
             }
             else return "";
         }

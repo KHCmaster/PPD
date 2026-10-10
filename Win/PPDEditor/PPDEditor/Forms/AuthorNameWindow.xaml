@@ -1,0 +1,16 @@
+<Window x:Class="PPDEditor.Forms.AuthorNameWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:PPDEditor.ViewModels.Dialogs"
+        xmlns:conv="clr-namespace:PPDEditor.Converters"
+        mc:Ignorable="d" d:DataContext="{d:DesignInstance Type=vm:AuthorNameViewModel}"
+        Title="" SizeToContent="WidthAndHeight" ResizeMode="NoResize" ShowInTaskbar="False" Topmost="True"
+        WindowStartupLocation="CenterScreen">
+    <StackPanel Margin="12,9,12,12" Width="330">
+        <TextBlock Text="{Binding Texts[AuthorNameLabel]}" />
+        <TextBox Text="{Binding AuthorName, UpdateSourceTrigger=PropertyChanged}" Width="161" Height="20" HorizontalAlignment="Right" Margin="0,4,0,0" VerticalContentAlignment="Center" />
+        <Button Content="OK" Width="75" Height="23" HorizontalAlignment="Right" Margin="0,6,0,0" IsDefault="True" Command="{Binding OkCommand}" />
+    </StackPanel>
+</Window>

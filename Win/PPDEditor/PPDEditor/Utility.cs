@@ -1,6 +1,8 @@
 ﻿using PPDConfiguration;
+using PPDEditorCommon;
 using PPDFramework;
-using SharpDX;
+using System.Numerics;
+using PPDMath;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -8,19 +10,17 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
-using System.Windows.Forms;
-using WeifenLuo.WinFormsUI.Docking;
 
 namespace PPDEditor
 {
     public static class Utility
     {
-        public static PPDDevice Device;
-        public static PPDFramework.Resource.ResourceManager ResourceManager;
-        public static float[] Eval;
-        public static Vector2[] CirclePoints;
+        public static PPDDevice Device { get; set; }
+        public static PPDFramework.Resource.ResourceManager ResourceManager { get; set; }
+        public static float[] Eval { get; set; }
+        public static Vector2[] CirclePoints { get; set; }
 
-        private static PathManager pathManager = new PathManager(@"img\PPDEditor");
+        private static readonly PathManager pathManager = new(@"img\PPDEditor");
 
         public static PathManager Path
         {
@@ -61,7 +61,7 @@ namespace PPDEditor
         {
             foreach (Char c in System.IO.Path.GetInvalidFileNameChars())
             {
-                if (fileName.IndexOf(c) >= 0)
+                if (fileName.Contains(c))
                 {
                     return false;
                 }
@@ -114,16 +114,13 @@ namespace PPDEditor
         {
             get
             {
-                if (appDir == null)
-                {
-                    appDir = System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-                }
+                appDir ??= System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
                 return appDir;
             }
         }
 
-        private static LanguageReader langReader = new LanguageReader("PPDEditor", PPDStaticSetting.langFileISO);
+        private static LanguageReader langReader = new("PPDEditor", PPDStaticSetting.langFileISO);
 
         public static LanguageReader Language
         {
@@ -136,53 +133,7 @@ namespace PPDEditor
         public static void ChangeLanguage(string langIso)
         {
             langReader = new LanguageReader("PPDEditor", langIso);
-        }
-
-        public static void ShowOrHideWindow(DockPanel dockPanel, DockContent dockcontent, Keys modifierKeys)
-        {
-            if (!dockcontent.Visible || (DockState.DockTopAutoHide <= dockcontent.DockState && dockcontent.DockState <= DockState.DockRightAutoHide))
-            {
-                if (dockcontent.Pane != null)
-                {
-                    dockcontent.Show(dockPanel);
-                    dockcontent.Pane.ActiveContent = dockcontent;
-                }
-                else
-                {
-                    dockcontent.Show(dockPanel, WeifenLuo.WinFormsUI.Docking.DockState.Float);
-                }
-            }
-            else
-            {
-                if (dockPanel.ActivePane == dockcontent.Pane || dockcontent.DockState == DockState.Float)
-                {
-                    dockcontent.Hide();
-                }
-                else
-                {
-                    dockcontent.Focus();
-                }
-            }
-            if (dockcontent.DockState == DockState.Unknown)
-            {
-                dockcontent.Show(dockPanel, DockState.Document);
-                dockcontent.Pane.ActiveContent = dockcontent;
-            }
-            if ((modifierKeys & Keys.Shift) == Keys.Shift)
-            {
-                dockcontent.DockPanel = null;
-                dockcontent.Show(dockPanel, DockState.Float);
-                dockcontent.Pane.ActiveContent = dockcontent;
-            }
-        }
-
-        public static bool CheckVisible(DockContent dc)
-        {
-            if (dc.Visible || (dc.DockState > DockState.Unknown && dc.DockState < DockState.Hidden))
-            {
-                return true;
-            }
-            return false;
+            ViewModels.LanguageTexts.Instance.Refresh();
         }
 
         public static void RecursiveCreateFolder(string filePath)
@@ -223,41 +174,6 @@ namespace PPDEditor
             File.Copy(src, dest, true);
         }
 
-        public static TreeNode GetTreeNodeFromPath(TreeNodeCollection coll, string nodePath)
-        {
-            var split = nodePath.Split('\\');
-            int iter = 0;
-            while (iter < split.Length)
-            {
-                TreeNode found = null;
-                foreach (TreeNode node in coll)
-                {
-                    if (node.Text == split[iter])
-                    {
-                        if (iter == split.Length - 1)
-                        {
-                            return node;
-                        }
-
-                        found = node;
-                        break;
-                    }
-                }
-
-                if (found != null)
-                {
-                    iter++;
-                    coll = found.Nodes;
-                }
-                else
-                {
-                    break;
-                }
-            }
-
-            return null;
-        }
-
         public static void CopyDirectory(string sourceDirName, string destDirName, Regex[] exceptFiles)
         {
             CopyDirectory(sourceDirName, destDirName, exceptFiles, null);
@@ -265,18 +181,15 @@ namespace PPDEditor
 
         public static void CopyDirectory(string sourceDirName, string destDirName, Regex[] exceptFiles, Func<string, bool> overwriteConfirm)
         {
-            if (exceptFiles == null)
-            {
-                exceptFiles = new Regex[0];
-            }
+            exceptFiles ??= [];
             if (!Directory.Exists(destDirName))
             {
                 Directory.CreateDirectory(destDirName);
             }
 
-            if (destDirName[destDirName.Length - 1] != System.IO.Path.DirectorySeparatorChar)
+            if (destDirName[^1] != System.IO.Path.DirectorySeparatorChar)
             {
-                destDirName = destDirName + System.IO.Path.DirectorySeparatorChar;
+                destDirName += System.IO.Path.DirectorySeparatorChar;
             }
 
             var files = Directory.GetFiles(sourceDirName);
@@ -286,7 +199,7 @@ namespace PPDEditor
                 bool ok = true;
                 foreach (Regex regex in exceptFiles)
                 {
-                    if (regex.Match(filename).Success)
+                    if (regex.IsMatch(filename))
                     {
                         ok = false;
                         break;
@@ -309,7 +222,8 @@ namespace PPDEditor
             var dirs = Directory.GetDirectories(sourceDirName);
             foreach (string dir in dirs)
             {
-                CopyDirectory(dir, destDirName + System.IO.Path.GetFileName(dir), exceptFiles);
+                // 下のフォルダーでも上書きを確かめる（以前は確かめずに上書きしていた）
+                CopyDirectory(dir, destDirName + System.IO.Path.GetFileName(dir), exceptFiles, overwriteConfirm);
             }
         }
 
@@ -341,7 +255,7 @@ namespace PPDEditor
 
         public static Dictionary<string, string> GetCommonParameters(Mark[] marks)
         {
-            return GetCommonParameters(marks, out string[] temp);
+            return GetCommonParameters(marks, out _);
         }
 
         public static Dictionary<string, string> GetCommonParameters(Mark[] marks, out string[] existKeys)
@@ -375,7 +289,7 @@ namespace PPDEditor
                     commanParameters.Remove(removeKey);
                 }
             }
-            existKeys = keys.ToArray();
+            existKeys = [.. keys];
             return commanParameters;
         }
 
@@ -384,13 +298,13 @@ namespace PPDEditor
             var sheet = WindowUtility.LayerManager.SelectedPpdSheet;
             if (sheet == null)
             {
-                return new Mark[0];
+                return [];
             }
             var mark = sheet.SelectedMark;
             Mark[] marks;
             if (mark != null)
             {
-                marks = new Mark[] { mark };
+                marks = [mark];
             }
             else
             {
@@ -399,54 +313,21 @@ namespace PPDEditor
             return marks;
         }
 
-        public static void ChangeToolStripCheckState(ToolStripMenuItem root)
+        /// <summary>
+        /// プリセットのパラメーターがすべて当てはまるときは true、一部だけなら null、一つもなければ false を返す。
+        /// </summary>
+        public static bool? GetPresetCheckState(ParameterPreset preset, Dictionary<string, string> parameters)
         {
-            var marks = Utility.GetSelectedMarks();
-            if (marks.Length == 0)
+            int count = 0;
+            foreach (var parameter in parameters)
             {
-                return;
-            }
-
-            var parameters = Utility.GetCommonParameters(marks);
-            var queue = new Queue<ToolStripMenuItem>();
-            queue.Enqueue(root);
-            while (queue.Count > 0)
-            {
-                var menuItem = queue.Dequeue();
-                if (menuItem is InfoForm.CommandToolStripMenuItem commandMenuItem)
+                var param = preset.Parameters.FirstOrDefault(p => p.Key == parameter.Key && p.Value == parameter.Value);
+                if (param.Key != null)
                 {
-                    int count = 0;
-                    foreach (var parameter in parameters)
-                    {
-                        var param = commandMenuItem.Preset.Parameters.FirstOrDefault(p => p.Key == parameter.Key && p.Value == parameter.Value);
-                        if (param.Key != null)
-                        {
-                            count++;
-                        }
-                    }
-                    commandMenuItem.CheckState = count == commandMenuItem.Preset.Parameters.Length ? CheckState.Checked :
-                        (count > 0 ? CheckState.Indeterminate : CheckState.Unchecked);
-                }
-                else
-                {
-                    foreach (var child in menuItem.DropDownItems)
-                    {
-                        queue.Enqueue((ToolStripMenuItem)child);
-                    }
+                    count++;
                 }
             }
-        }
-
-        public static IEnumerable<ToolStripMenuItem> GetDescendants(this ToolStripMenuItem menu)
-        {
-            yield return menu;
-            foreach (var childMenu in menu.DropDownItems.OfType<ToolStripMenuItem>())
-            {
-                foreach (var d in childMenu.GetDescendants())
-                {
-                    yield return d;
-                }
-            }
+            return count == preset.Parameters.Length ? true : (count > 0 ? null : false);
         }
     }
 }

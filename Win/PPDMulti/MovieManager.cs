@@ -3,13 +3,14 @@ using System;
 
 namespace PPDMulti
 {
-    class MovieManager
+    sealed class MovieManager(PPDDevice device, IGameHost gameHost) : IDisposable
     {
         MovieComponent movie;
         SongInformation currentSongInformation;
         SongInformation lastSongInformation;
-        PPDDevice device;
-        IGameHost gameHost;
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2213:Disposable fields should be disposed", Justification = "外部から渡されるもので、このクラスは所有しない")]
+        readonly PPDDevice device = device;
+        readonly IGameHost gameHost = gameHost;
 
         public MovieComponent Movie
         {
@@ -21,13 +22,6 @@ namespace PPDMulti
 
         public event EventHandler MovieChanged;
         public event EventHandler MovieChangeFailed;
-
-
-        public MovieManager(PPDDevice device, IGameHost gameHost)
-        {
-            this.device = device;
-            this.gameHost = gameHost;
-        }
 
         public void Stop()
         {
@@ -41,6 +35,14 @@ namespace PPDMulti
             movie = null;
         }
 
+        /// <summary>
+        /// 動画を止めて破棄します（Stop と同じ）。
+        /// </summary>
+        public void Dispose()
+        {
+            Stop();
+        }
+
         public void Change(bool reload)
         {
             Change(lastSongInformation, reload);
@@ -50,11 +52,8 @@ namespace PPDMulti
         {
             if (songInfo != null && (reload || currentSongInformation != songInfo))
             {
-                if (movie != null)
-                {
-                    movie.Dispose();
-                    movie = null;
-                }
+                movie?.Dispose();
+                movie = null;
 
                 if (!songInfo.IsPPDSong)
                 {
@@ -89,10 +88,7 @@ namespace PPDMulti
 
         public void FadeOut(float fadeStep)
         {
-            if (movie != null)
-            {
-                movie.Movie.FadeOut(fadeStep);
-            }
+            movie?.Movie.FadeOut(fadeStep);
         }
 
         private void OnMovieChanged()

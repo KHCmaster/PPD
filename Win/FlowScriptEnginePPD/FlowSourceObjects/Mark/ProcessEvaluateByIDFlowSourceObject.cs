@@ -1,6 +1,7 @@
 ﻿using FlowScriptEnginePPD.Data;
 using PPDCoreModel;
-using SharpDX;
+using System.Numerics;
+using PPDMath;
 
 namespace FlowScriptEnginePPD.FlowSourceObjects.Mark
 {

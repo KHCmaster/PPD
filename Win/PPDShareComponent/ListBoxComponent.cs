@@ -1,17 +1,18 @@
 ﻿using PPDFramework;
-using SharpDX;
+using System.Numerics;
+using PPDMath;
 using System;
 
 namespace PPDShareComponent
 {
     public class ListBoxComponent : SelectableComponent
     {
-        private object[] items;
+        private readonly object[] items;
 
-        private PictureObject left;
-        private PictureObject right;
-        private TextureString str;
-        private TextureString[] strItems;
+        private readonly PictureObject left;
+        private readonly PictureObject right;
+        private readonly TextureString str;
+        private readonly TextureString[] strItems;
         private int selectedIndex;
 
         public Object SelectedItem

@@ -1,29 +1,25 @@
-﻿using SharpDX;
+﻿using System.Numerics;
+using PPDMath;
+using Point = Vortice.Mathematics.Int2;
+using Size2 = Vortice.Mathematics.SizeI;
 
 namespace PPDFramework.Chars
 {
-    class AvailableSpace : ReturnableComponent
+    class AvailableSpace(SizeTexture sizeTexture, Point position, Size2 size) : ReturnableComponent
     {
-        SizeTexture sizeTexture;
+        readonly SizeTexture sizeTexture = sizeTexture;
 
         public Point Position
         {
             get;
             private set;
-        }
+        } = position;
 
         public Size2 Size
         {
             get;
             private set;
-        }
-
-        public AvailableSpace(SizeTexture sizeTexture, Point position, Size2 size)
-        {
-            this.sizeTexture = sizeTexture;
-            Position = position;
-            Size = size;
-        }
+        } = size;
 
         protected override void DisposeResource()
         {

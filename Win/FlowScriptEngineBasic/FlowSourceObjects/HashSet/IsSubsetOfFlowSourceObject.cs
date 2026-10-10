@@ -31,7 +31,7 @@ namespace FlowScriptEngineBasic.FlowSourceObjects.HashSet
             SetValue(nameof(List));
             if (HashSet != null && List != null)
             {
-                Result = HashSet.IsSubsetOf(List.ToArray());
+                Result = HashSet.IsSubsetOf([.. List]);
                 OnSuccess();
             }
             else

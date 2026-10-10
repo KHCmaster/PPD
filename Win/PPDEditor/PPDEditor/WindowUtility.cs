@@ -1,6 +1,6 @@
 ﻿using PPDEditor.Controls;
 using PPDEditor.Forms;
-using WeifenLuo.WinFormsUI.Docking;
+using AvalonDock;
 
 namespace PPDEditor
 {
@@ -11,12 +11,16 @@ namespace PPDEditor
             get;
             set;
         }
-        public static BPMMeasure BPMMeasure
+
+        /// <summary>
+        /// メインのウィンドウの ViewModel です（エディターの状態とプロジェクト）。
+        /// </summary>
+        public static ViewModels.MainWindowViewModel Editor
         {
             get;
             set;
         }
-        public static DXForm DXForm
+        public static BPMMeasure BPMMeasure
         {
             get;
             set;
@@ -71,7 +75,7 @@ namespace PPDEditor
             get;
             set;
         }
-        public static DockPanel DockPanel
+        public static DockingManager DockPanel
         {
             get;
             set;

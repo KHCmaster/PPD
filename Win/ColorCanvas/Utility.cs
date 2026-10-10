@@ -14,12 +14,12 @@ namespace ColorCanvas
             return MeasureSize(text, fontFamily, fontSize).Width;
         }
 
+        // 旧形式のコンストラクターと同じく、システムの DPI を使う（ツリーにない Visual の DPI はシステムの DPI になる）
+        private static readonly double PixelsPerDip = VisualTreeHelper.GetDpi(new DrawingVisual()).PixelsPerDip;
+
         public static Size MeasureSize(string text, FontFamily fontFamily, double fontSize)
         {
-            if (text == null)
-            {
-                text = "";
-            }
+            text ??= "";
 
             System.Windows.FontStyle fontStyle = FontStyles.Normal;
             FontWeight fontWeight = FontWeights.Medium;
@@ -33,9 +33,9 @@ namespace ColorCanvas
                     fontWeight,
                     FontStretches.Normal),
                     fontSize,
-                    System.Windows.Media.Brushes.Black
+                    System.Windows.Media.Brushes.Black,
+                    PixelsPerDip
                 );
-            Geometry _textGeometry = formattedText.BuildGeometry(new System.Windows.Point(0, 0));
             Geometry _textHighLightGeometry = formattedText.BuildHighlightGeometry(new System.Windows.Point(0, 0));
             return _textHighLightGeometry == null ? new Size(0, 0) : _textHighLightGeometry.Bounds.Size;
         }
@@ -79,7 +79,7 @@ namespace ColorCanvas
                 h *= 60;
                 if (h < 0.0)
                 {
-                    h = h + 360;
+                    h += 360;
                 }
             }
 
@@ -93,8 +93,9 @@ namespace ColorCanvas
 
         public static Color ConvertHsvToRgb(double h, double s, double v)
         {
-            double r = 0, g = 0, b = 0;
-
+            double r;
+            double g;
+            double b;
             if (s == 0)
             {
                 r = v;
@@ -112,7 +113,7 @@ namespace ColorCanvas
                 }
                 else
                 {
-                    h = h / 60;
+                    h /= 60;
                 }
 
                 i = (int)Math.Truncate(h);

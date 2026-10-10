@@ -30,7 +30,7 @@ namespace PPDFramework
 
         private void InnerStruct(ISceneBase baseScene)
         {
-            stack = new List<IFocusable>();
+            stack = [];
             this.baseScene = baseScene;
         }
 
@@ -49,10 +49,7 @@ namespace PPDFramework
             focusObject.FocusManager = this;
             focusObject.Focused = true;
             focusObject.OverFocused = true;
-            if (lastFocusObject != null)
-            {
-                lastFocusObject.Focused = false;
-            }
+            lastFocusObject?.Focused = false;
         }
 
         /// <summary>
@@ -62,15 +59,12 @@ namespace PPDFramework
         {
             if (CurrentFocusObject != null)
             {
-                lastFocusObject = stack[stack.Count - 1];
+                lastFocusObject = stack[^1];
                 stack.RemoveAt(stack.Count - 1);
                 lastFocusObject.OverFocused = false;
                 lastFocusObject.Focused = false;
                 lastFocusObject.FocusManager = null;
-                if (CurrentFocusObject != null)
-                {
-                    CurrentFocusObject.Focused = true;
-                }
+                CurrentFocusObject?.Focused = true;
             }
         }
 
@@ -82,7 +76,7 @@ namespace PPDFramework
             get
             {
                 if (stack.Count == 0) return null;
-                return stack[stack.Count - 1];
+                return stack[^1];
             }
         }
 
@@ -120,7 +114,6 @@ namespace PPDFramework
         public void ProcessInput(InputInfoBase inputInfo)
         {
             IFocusable temp = CurrentFocusObject;
-            int current = stack.Count;
             for (int i = stack.Count - 1; i >= 0; i--)
             {
                 if (i >= stack.Count)

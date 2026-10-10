@@ -4,10 +4,10 @@ namespace PPDEditor.Command.PPDSheet
 {
     class ShiftMarkLineTimeCommand : Command
     {
-        float[][][] lastTime;
-        int index;
+        readonly float[][][] lastTime;
+        readonly int index;
         float dt;
-        SortedList<float, Mark>[] data;
+        readonly SortedList<float, Mark>[] data;
         public ShiftMarkLineTimeCommand(SortedList<float, Mark>[] data, int index, float dt)
         {
             this.data = data;
@@ -20,14 +20,13 @@ namespace PPDEditor.Command.PPDSheet
                 for (int j = 0; j < data[i].Count; j++)
                 {
                     Mark mk = data[i].Values[j];
-                    var exmk = mk as ExMark;
-                    if (exmk == null)
+                    if (mk is not ExMark exmk)
                     {
-                        lastTime[i][j] = new float[] { mk.Time };
+                        lastTime[i][j] = [mk.Time];
                     }
                     else
                     {
-                        lastTime[i][j] = new float[] { exmk.Time, exmk.EndTime };
+                        lastTime[i][j] = [exmk.Time, exmk.EndTime];
                     }
                 }
             }

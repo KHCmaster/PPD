@@ -1,4 +1,6 @@
-﻿using SharpDX;
+﻿using System.Numerics;
+using PPDMath;
+using Color4 = Vortice.Mathematics.Color4;
 using System;
 using System.Globalization;
 using System.Text.RegularExpressions;
@@ -8,19 +10,15 @@ namespace PPDFramework.Mod
     /// <summary>
     /// 色の設定を扱うクラスです。
     /// </summary>
-    public class Color4ModSetting : TemplateModSetting<Color4>
+    /// <remarks>
+    /// コンストラクタです。
+    /// </remarks>
+    /// <param name="key"></param>
+    /// <param name="name"></param>
+    /// <param name="description"></param>
+    /// <param name="defaultValue"></param>
+    public partial class Color4ModSetting(string key, string name, string description, Color4 defaultValue) : TemplateModSetting<Color4>(key, name, description, defaultValue)
     {
-        /// <summary>
-        /// コンストラクタです。
-        /// </summary>
-        /// <param name="key"></param>
-        /// <param name="name"></param>
-        /// <param name="description"></param>
-        /// <param name="defaultValue"></param>
-        public Color4ModSetting(string key, string name, string description, Color4 defaultValue)
-            : base(key, name, description, defaultValue)
-        {
-        }
 
         /// <summary>
         /// 文字列を取得します。
@@ -41,12 +39,15 @@ namespace PPDFramework.Mod
         /// <returns>バリデートの結果。</returns>
         public override bool Validate(string value, out object val)
         {
-            var regex = new Regex("^#([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})$");
-            var regex2 = new Regex("^#([0-9a-fA-F]{1})([0-9a-fA-F]{1})([0-9a-fA-F]{1})$");
+            var regex = ColorCodeRegex();
+            var regex2 = ShortColorCodeRegex();
             var match = regex.Match(value);
+            // #RGB は #RRGGBB と同じ（元は #FFF が #0F0F0F になっていた）
+            var scale = 1;
             if (!match.Success)
             {
                 match = regex2.Match(value);
+                scale = 17;
             }
 
             if (!match.Success)
@@ -58,8 +59,13 @@ namespace PPDFramework.Mod
             int r = int.Parse(match.Groups[1].Value, NumberStyles.HexNumber),
                 g = int.Parse(match.Groups[2].Value, NumberStyles.HexNumber),
                 b = int.Parse(match.Groups[3].Value, NumberStyles.HexNumber);
-            val = new Color4(r / 255f, g / 255f, b / 255f, 1f);
+            val = new Color4(r * scale / 255f, g * scale / 255f, b * scale / 255f, 1f);
             return true;
         }
+
+        [GeneratedRegex("^#([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})$")]
+        private static partial Regex ColorCodeRegex();
+        [GeneratedRegex("^#([0-9a-fA-F]{1})([0-9a-fA-F]{1})([0-9a-fA-F]{1})$")]
+        private static partial Regex ShortColorCodeRegex();
     }
 }

@@ -8,8 +8,8 @@ namespace BezierDrawControl
 {
     class TransformBezierControlPoints
     {
-        TransformRectangle TransRec;
-        BezierControlPoint[] DefaultPoints;
+        readonly TransformRectangle TransRec;
+        readonly BezierControlPoint[] DefaultPoints;
         public TransformBezierControlPoints(BezierControlPoint[] points)
         {
             DefaultPoints = new BezierControlPoint[points.Length];

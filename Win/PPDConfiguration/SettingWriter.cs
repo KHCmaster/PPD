@@ -15,9 +15,9 @@ namespace PPDConfiguration
         /// </summary>
         public bool disposed;
 
-        private bool iniformat;
-        private string filepath;
-        private Dictionary<string, Dictionary<string, string>> inipool = new Dictionary<string, Dictionary<string, string>>();
+        private readonly bool iniformat;
+        private readonly string filepath;
+        private readonly Dictionary<string, Dictionary<string, string>> inipool = [];
         StreamWriter sw;
 
         /// <summary>
@@ -108,20 +108,16 @@ namespace PPDConfiguration
         private void WriteIni(string key, string value, string section)
         {
             Dictionary<string, string> pool;
-            if (inipool.ContainsKey(section))
+            if (inipool.TryGetValue(section, out Dictionary<string, string> value1))
             {
-                pool = inipool[section];
+                pool = value1;
             }
             else
             {
-                pool = new Dictionary<string, string>();
+                pool = [];
                 inipool.Add(section, pool);
             }
-            if (!pool.ContainsKey(key))
-            {
-                pool.Add(key, value);
-            }
-            else
+            if (!pool.TryAdd(key, value))
             {
                 pool[key] = value;
             }
@@ -164,7 +160,7 @@ namespace PPDConfiguration
             GC.SuppressFinalize(this);
         }
 
-        private void Dispose(bool disposing)
+        protected virtual void Dispose(bool disposing)
         {
             if (!this.disposed)
             {

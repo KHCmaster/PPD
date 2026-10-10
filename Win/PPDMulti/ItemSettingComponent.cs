@@ -1,19 +1,20 @@
 ﻿using PPDFramework;
 using PPDMultiCommon.Data;
 using PPDShareComponent;
-using SharpDX;
+using System.Numerics;
+using PPDMath;
 using System;
 
 namespace PPDMulti
 {
     class ItemSettingComponent : FocusableGameComponent
     {
-        PPDFramework.Resource.ResourceManager resourceManager;
-        ISound sound;
-        PictureObject back;
+        readonly PPDFramework.Resource.ResourceManager resourceManager;
+        readonly ISound sound;
+        readonly PictureObject back;
 
-        SpriteObject manualUseSprite;
-        SpriteObject autoUseSprite;
+        readonly SpriteObject manualUseSprite;
+        readonly SpriteObject autoUseSprite;
 
         UseItemComponent current;
 
@@ -47,18 +48,18 @@ namespace PPDMulti
             });
             back.AddChild(new LineRectangleComponent(device, resourceManager, PPDColors.White)
             {
-                Position = new SharpDX.Vector2(50, 100),
+                Position = new System.Numerics.Vector2(50, 100),
                 RectangleHeight = 310,
                 RectangleWidth = 300
             });
             back.AddChild(new LineRectangleComponent(device, resourceManager, PPDColors.White)
             {
-                Position = new SharpDX.Vector2(450, 100),
+                Position = new System.Numerics.Vector2(450, 100),
                 RectangleHeight = 310,
                 RectangleWidth = 300
             });
-            back.AddChild(manualUseSprite = new SpriteObject(device) { Position = new SharpDX.Vector2(60, 105) });
-            back.AddChild(autoUseSprite = new SpriteObject(device) { Position = new SharpDX.Vector2(460, 105) });
+            back.AddChild(manualUseSprite = new SpriteObject(device) { Position = new System.Numerics.Vector2(60, 105) });
+            back.AddChild(autoUseSprite = new SpriteObject(device) { Position = new System.Numerics.Vector2(460, 105) });
 
             back.AddChild(new TextureString(device, Utility.Language["ItemUseSetting"], 30, PPDColors.White)
             {
@@ -72,11 +73,11 @@ namespace PPDMulti
             {
                 autoUseSprite.AddChild(new UseItemComponent(device, resourceManager, ItemUseManager.Manager.AutoUseItemTypes[i])
                 {
-                    Position = new SharpDX.Vector2(0, i * 20)
+                    Position = new System.Numerics.Vector2(0, i * 20)
                 });
             }
 
-            var itemTypeArray = (ItemType[])Enum.GetValues(typeof(ItemType));
+            var itemTypeArray = Enum.GetValues<ItemType>();
             int addedCount = 0;
             for (int i = 1; i < itemTypeArray.Length; i++)
             {
@@ -84,7 +85,7 @@ namespace PPDMulti
                 {
                     manualUseSprite.AddChild(new UseItemComponent(device, resourceManager, itemTypeArray[i])
                     {
-                        Position = new SharpDX.Vector2(0, addedCount * 20)
+                        Position = new System.Numerics.Vector2(0, addedCount * 20)
                     });
                     addedCount++;
                 }
@@ -103,7 +104,7 @@ namespace PPDMulti
 
         void ItemSettingComponent_GotFocused(IFocusable sender, FocusEventArgs args)
         {
-            back.Position = new SharpDX.Vector2(0, 50);
+            back.Position = new System.Numerics.Vector2(0, 50);
             Alpha = 0;
         }
 
@@ -215,23 +216,23 @@ namespace PPDMulti
         {
             if (OverFocused)
             {
-                back.Position = new SharpDX.Vector2(0, AnimationUtility.GetAnimationValue(back.Position.Y, 0));
+                back.Position = new System.Numerics.Vector2(0, AnimationUtility.GetAnimationValue(back.Position.Y, 0));
                 Alpha = AnimationUtility.IncreaseAlpha(Alpha);
             }
             else
             {
-                back.Position = new SharpDX.Vector2(0, AnimationUtility.GetAnimationValue(back.Position.Y, 50));
+                back.Position = new System.Numerics.Vector2(0, AnimationUtility.GetAnimationValue(back.Position.Y, 50));
                 Alpha = AnimationUtility.DecreaseAlpha(Alpha);
             }
         }
 
         class UseItemComponent : GameComponent
         {
-            PPDFramework.Resource.ResourceManager resourceManager;
+            readonly PPDFramework.Resource.ResourceManager resourceManager;
 
             bool selected;
-            RectangleComponent rectangle;
-            TextureString nameString;
+            readonly RectangleComponent rectangle;
+            readonly TextureString nameString;
 
             public UseItemComponent(PPDDevice device, PPDFramework.Resource.ResourceManager resourceManager, ItemType itemType) : base(device)
             {

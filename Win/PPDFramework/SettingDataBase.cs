@@ -34,6 +34,7 @@ namespace PPDFramework
         /// <summary>
         /// コンストラクタです
         /// </summary>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2214:Do not call overridable methods in constructors", Justification = "派生クラスは DB の名前とテーブルの初期値（OnInitialize）だけを決める設計で、派生クラスのフィールドには依存しない")]
         protected SettingDataBase()
         {
             this.Open();
@@ -73,7 +74,7 @@ namespace PPDFramework
             get
             {
                 string ret = null;
-                using (var reader = ExecuteReader("select * from SettingTable where key = @key;", new SQLiteParameter[] { new SQLiteParameter("@key", key) }))
+                using (var reader = ExecuteReader("select * from SettingTable where key = @key;", [new("@key", key)]))
                 {
                     while (reader.Reader.Read())
                     {
@@ -87,17 +88,17 @@ namespace PPDFramework
             {
                 if (this[key] != null)
                 {
-                    ExecuteDataTable("Update SettingTable set value = @value where key = @key;", new SQLiteParameter[] {
-                        new SQLiteParameter("@key", key),
-                        new SQLiteParameter("@value", value)
-                    });
+                    ExecuteDataTable("Update SettingTable set value = @value where key = @key;", [
+                        new("@key", key),
+                        new("@value", value)
+                    ]);
                 }
                 else
                 {
-                    ExecuteDataTable("Insert into SettingTable(key, value) values(@key, @value);", new SQLiteParameter[] {
-                        new SQLiteParameter("@key", key),
-                        new SQLiteParameter("@value", value)
-                    });
+                    ExecuteDataTable("Insert into SettingTable(key, value) values(@key, @value);", [
+                        new("@key", key),
+                        new("@value", value)
+                    ]);
                 }
             }
         }

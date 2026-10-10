@@ -9,15 +9,12 @@ namespace FlowScriptEngineBasic.FlowSourceObjects.Repeat
     {
         public override object GetPropertyValue(string propertyName)
         {
-            switch (propertyName)
+            return propertyName switch
             {
-                case "Iter":
-                    return Iter;
-                case "Value":
-                    return Value;
-                default:
-                    return null;
-            }
+                "Iter" => Iter,
+                "Value" => Value,
+                _ => null,
+            };
         }
 
         protected override void SetPropertyValue(string propertyName, object value)

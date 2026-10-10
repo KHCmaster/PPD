@@ -1,5 +1,5 @@
 ﻿using PPDFramework;
-using SharpDX.DirectInput;
+using Vortice.DirectInput;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -8,7 +8,7 @@ using System.Windows.Forms;
 
 namespace PPDInput
 {
-    public class AccurateInput : Input
+    public class AccurateInput(Form form, int sleepTime) : Input(form)
     {
         private Thread thread;
         private bool finish;
@@ -18,24 +18,18 @@ namespace PPDInput
         private Stopwatch stopwatch;
         private Queue<InputAction> queue;
         private Dictionary<ButtonType, InputAction> lastPressInfos;
-        private readonly object settingLock = new object();
-        private int sleepTime;
-
-        public AccurateInput(Form form, int sleepTime)
-            : base(form)
-        {
-            this.sleepTime = sleepTime;
-        }
+        private readonly Lock settingLock = new();
+        private readonly int sleepTime = sleepTime;
 
         public override void Load()
         {
             base.Load();
-            lastPressInfos = new Dictionary<ButtonType, InputAction>();
+            lastPressInfos = [];
             queue = new Queue<InputAction>();
             stopwatch = new Stopwatch();
             stopwatch.Start();
             finish = false;
-            thread = new Thread(WorkImpl);
+            thread = new Thread(WorkImpl) { IsBackground = true };
             thread.Start();
         }
 
@@ -44,21 +38,11 @@ namespace PPDInput
             if (loaded)
             {
                 finish = true;
-                if (thread != null)
-                {
-                    thread.Join(1000);
-                    if (thread.IsAlive)
-                    {
-                        thread.Abort();
-                        thread.Join(1000);
-                        thread = null;
-                    }
-                }
-                if (stopwatch != null)
-                {
-                    stopwatch.Stop();
-                    stopwatch = null;
-                }
+                // 通常は finish で止まる。止まらなかった場合もバックグラウンドスレッドなのでプロセスの終了は妨げない
+                thread?.Join(1000);
+                thread = null;
+                stopwatch?.Stop();
+                stopwatch = null;
             }
             base.ReleaseObjects();
         }
@@ -110,10 +94,7 @@ namespace PPDInput
                             }
                             lock (lastPressInfos)
                             {
-                                if (lastPressInfos.ContainsKey(buttonType))
-                                {
-                                    lastPressInfos.Remove(buttonType);
-                                }
+                                lastPressInfos.Remove(buttonType);
                             }
                         }
                     }
@@ -129,14 +110,8 @@ namespace PPDInput
         {
             lock (settingLock)
             {
-                if (this.keys == null)
-                {
-                    this.keys = new Key[keys.Length];
-                }
-                if (this.buttons == null)
-                {
-                    this.buttons = new int[buttons.Length];
-                }
+                this.keys ??= new Key[keys.Length];
+                this.buttons ??= new int[buttons.Length];
 
                 this.keys = new Key[keys.Length];
                 Array.Copy(keys, this.keys, keys.Length);
@@ -147,12 +122,12 @@ namespace PPDInput
             Dictionary<ButtonType, InputAction> lastPress;
             lock (queue)
             {
-                actions = queue.ToArray();
+                actions = [.. queue];
                 queue.Clear();
             }
             lock (lastPressInfos)
             {
-                lastPress = new Dictionary<ButtonType, InputAction>();
+                lastPress = [];
                 foreach (KeyValuePair<ButtonType, InputAction> kvp in lastPressInfos)
                 {
                     lastPress[kvp.Key] = kvp.Value;

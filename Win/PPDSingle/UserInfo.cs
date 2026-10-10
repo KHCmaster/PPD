@@ -25,7 +25,7 @@ namespace PPDSingle
                 if (name != value)
                 {
                     name = value;
-                    OnPropertyChanged("Name");
+                    OnPropertyChanged(nameof(Name));
                 }
             }
         }
@@ -41,7 +41,7 @@ namespace PPDSingle
                 if (accountId != value)
                 {
                     accountId = value;
-                    OnPropertyChanged("AccountId");
+                    OnPropertyChanged(nameof(AccountId));
                 }
             }
         }
@@ -54,17 +54,14 @@ namespace PPDSingle
                 if (imagePath != value)
                 {
                     imagePath = value;
-                    OnPropertyChanged("ImagePath");
+                    OnPropertyChanged(nameof(ImagePath));
                 }
             }
         }
 
         protected void OnPropertyChanged(string propertyName)
         {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged.Invoke(propertyName);
-            }
+            PropertyChanged?.Invoke(propertyName);
         }
 
         #region IPropertyChanged メンバ

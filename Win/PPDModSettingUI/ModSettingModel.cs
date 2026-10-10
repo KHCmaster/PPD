@@ -1,5 +1,5 @@
-﻿using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Command;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using PPDConfiguration;
 using PPDFramework.Mod;
 using System;
@@ -9,10 +9,10 @@ using System.Windows.Input;
 
 namespace PPDModSettingUI
 {
-    public class ModSettingModel : ViewModelBase
+    public class ModSettingModel : ObservableObject
     {
-        private ModSetting modSetting;
-        private LanguageReader language;
+        private readonly ModSetting modSetting;
+        private readonly LanguageReader language;
 
         private string name;
         private string description;
@@ -32,7 +32,7 @@ namespace PPDModSettingUI
                 if (name != value)
                 {
                     name = value;
-                    RaisePropertyChanged("Name");
+                    OnPropertyChanged(nameof(Name));
                 }
             }
         }
@@ -45,7 +45,7 @@ namespace PPDModSettingUI
                 if (description != value)
                 {
                     description = value;
-                    RaisePropertyChanged("Description");
+                    OnPropertyChanged(nameof(Description));
                 }
             }
         }
@@ -58,7 +58,7 @@ namespace PPDModSettingUI
                 if (defaultValue != value)
                 {
                     defaultValue = value;
-                    RaisePropertyChanged("DefaultValue");
+                    OnPropertyChanged(nameof(DefaultValue));
                 }
             }
         }
@@ -71,7 +71,7 @@ namespace PPDModSettingUI
                 if (otherValues != value)
                 {
                     otherValues = value;
-                    RaisePropertyChanged("OtherValues");
+                    OnPropertyChanged(nameof(OtherValues));
                 }
             }
         }
@@ -84,7 +84,7 @@ namespace PPDModSettingUI
                 if (newValue != value)
                 {
                     newValue = value;
-                    RaisePropertyChanged("NewValue");
+                    OnPropertyChanged(nameof(NewValue));
                     Validate();
                 }
             }
@@ -98,7 +98,7 @@ namespace PPDModSettingUI
                 if (isOkEnabled != value)
                 {
                     isOkEnabled = value;
-                    RaisePropertyChanged("IsOkEnabled");
+                    OnPropertyChanged(nameof(IsOkEnabled));
                 }
             }
         }
@@ -111,7 +111,7 @@ namespace PPDModSettingUI
                 if (availableValues != value)
                 {
                     availableValues = value;
-                    RaisePropertyChanged("AvailableValues");
+                    OnPropertyChanged(nameof(AvailableValues));
                 }
             }
         }
@@ -124,7 +124,7 @@ namespace PPDModSettingUI
                 if (selectedIndex != value)
                 {
                     selectedIndex = value;
-                    RaisePropertyChanged("SelectedIndex");
+                    OnPropertyChanged(nameof(SelectedIndex));
                     UpdateNewValueBySelectedIndex();
                 }
             }
@@ -134,8 +134,8 @@ namespace PPDModSettingUI
         {
             get
             {
-                return setDefaultCommand ?? (setDefaultCommand = new RelayCommand(
-                    SetDefaultCommand_Execute));
+                return setDefaultCommand ??= new RelayCommand(
+                    SetDefaultCommand_Execute);
             }
         }
 
@@ -192,39 +192,35 @@ namespace PPDModSettingUI
                 UpdateSelectedIndexByNewValue();
             }
 
-            if (modSetting is Int32ModSetting)
+            if (modSetting is Int32ModSetting int32ModSetting)
             {
-                var int32ModSetting = (Int32ModSetting)modSetting;
                 var otherValues = GetOtherValues(int32ModSetting);
                 if (!String.IsNullOrEmpty(otherValues))
                 {
                     OtherValues = otherValues;
                 }
             }
-            else if (modSetting is FloatModSetting)
+            else if (modSetting is FloatModSetting floatModSetting)
             {
-                var floatModSetting = (FloatModSetting)modSetting;
                 var otherValues = GetOtherValues(floatModSetting);
                 if (!String.IsNullOrEmpty(otherValues))
                 {
                     OtherValues = otherValues;
                 }
             }
-            else if (modSetting is DoubleModSetting)
+            else if (modSetting is DoubleModSetting doubleModSetting)
             {
-                var doubleModSetting = (DoubleModSetting)modSetting;
                 var otherValues = GetOtherValues(doubleModSetting);
                 if (!String.IsNullOrEmpty(otherValues))
                 {
                     OtherValues = otherValues;
                 }
             }
-            else if (modSetting is StringModSetting)
+            else if (modSetting is StringModSetting stringModSetting)
             {
-                var stringModSetting = (StringModSetting)modSetting;
                 if (!stringModSetting.IsMaxLengthClassMaxLength)
                 {
-                    OtherValues = String.Format("{0}:{1}}", language["MaxLength"], stringModSetting.MaxLength);
+                    OtherValues = String.Format("{0}:{1}", language["MaxLength"], stringModSetting.MaxLength);
                 }
             }
             DefaultValue = modSetting.GetStringValue(modSetting.Default);
@@ -258,15 +254,12 @@ namespace PPDModSettingUI
             {
                 otherValues.Add(String.Format("{0}:{1}", language["MinValue"], modSetting.MinValue));
             }
-            switch (otherValues.Count)
+            return otherValues.Count switch
             {
-                case 0:
-                    return "";
-                case 1:
-                    return otherValues[0];
-                default:
-                    return otherValues.Aggregate((s1, s2) => String.Format("{0}, {1}", s1, s2));
-            }
+                0 => "",
+                1 => otherValues[0],
+                _ => otherValues.Aggregate((s1, s2) => String.Format("{0}, {1}", s1, s2)),
+            };
         }
 
         private void SetDefaultCommand_Execute()
@@ -280,7 +273,7 @@ namespace PPDModSettingUI
 
         private void Validate()
         {
-            IsOkEnabled = modSetting.Validate(NewValue, out object val);
+            IsOkEnabled = modSetting.Validate(NewValue, out _);
         }
     }
 }

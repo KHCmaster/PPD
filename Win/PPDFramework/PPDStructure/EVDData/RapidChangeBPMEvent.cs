@@ -3,20 +3,14 @@
     /// <summary>
     /// 急速BPM変更イベント
     /// </summary>
-    public class RapidChangeBPMEvent : IEVDData
+    /// <remarks>
+    /// コンストラクタ
+    /// </remarks>
+    /// <param name="time">時間</param>
+    /// <param name="bpm">BPM</param>
+    /// <param name="rapid">急速変化かどうか</param>
+    public class RapidChangeBPMEvent(float time, float bpm, bool rapid) : IEVDData(time, EventType.RapidChangeBPM)
     {
-        /// <summary>
-        /// コンストラクタ
-        /// </summary>
-        /// <param name="time">時間</param>
-        /// <param name="bpm">BPM</param>
-        /// <param name="rapid">急速変化かどうか</param>
-        public RapidChangeBPMEvent(float time, float bpm, bool rapid)
-            : base(time, EventType.RapidChangeBPM)
-        {
-            BPM = bpm;
-            Rapid = rapid;
-        }
 
         /// <summary>
         /// BPM
@@ -25,7 +19,7 @@
         {
             get;
             private set;
-        }
+        } = bpm;
 
         /// <summary>
         /// 急速変化かどうか
@@ -34,6 +28,6 @@
         {
             get;
             private set;
-        }
+        } = rapid;
     }
 }

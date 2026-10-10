@@ -2,14 +2,17 @@
 using PPDFramework.Resource;
 using PPDFramework.Shaders;
 using PPDFramework.Vertex;
-using SharpDX;
+using System.Numerics;
+using PPDMath;
+using Color4 = Vortice.Mathematics.Color4;
+using Color = Vortice.Mathematics.Color;
 using System;
 
 namespace PPDShareComponent
 {
     public class LineRectangleComponent : GameComponent
     {
-        PPDFramework.Resource.ResourceManager resourceManager;
+        readonly PPDFramework.Resource.ResourceManager resourceManager;
         ColorTextureResourceBase resource;
         float borderThickness;
         float rectangleHeight;
@@ -97,7 +100,7 @@ namespace PPDShareComponent
                 propertyChanged = false;
 
                 var borderThickness2 = borderThickness * 2;
-                vertices.Write(new[] {
+                vertices.Write([
                     new ColoredTexturedVertex(new Vector3(0, 0, 0.5f)),
                     new ColoredTexturedVertex(new Vector3(borderThickness, borderThickness, 0.5f)),
                     new ColoredTexturedVertex(new Vector3(0, borderThickness2 + rectangleHeight, 0.5f)),
@@ -108,7 +111,7 @@ namespace PPDShareComponent
                     new ColoredTexturedVertex(new Vector3(borderThickness + rectangleWidth, borderThickness, 0.5f)),
                     new ColoredTexturedVertex(new Vector3(0, 0, 0.5f)),
                     new ColoredTexturedVertex(new Vector3(borderThickness, borderThickness, 0.5f))
-                });
+                ]);
             }
         }
 
@@ -127,11 +130,8 @@ namespace PPDShareComponent
         protected override void DisposeResource()
         {
             base.DisposeResource();
-            if (vertices != null)
-            {
-                vertices.Dispose();
-                vertices = null;
-            }
+            vertices?.Dispose();
+            vertices = null;
         }
     }
 }

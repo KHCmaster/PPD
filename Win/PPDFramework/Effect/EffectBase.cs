@@ -1,21 +1,21 @@
 ﻿using PPDFramework.Texture;
 using PPDFramework.Vertex;
-using SharpDX;
+using System.Numerics;
+using PPDMath;
+using Matrix = System.Numerics.Matrix4x4;
+using Color4 = Vortice.Mathematics.Color4;
 
 namespace PPDFramework.Effect
 {
     /// <summary>
     /// エフェクトのクラスです。
     /// </summary>
-    public abstract class EffectBase : ResettableComponent
+    /// <remarks>
+    /// コンストラクタです。
+    /// </remarks>
+    /// <param name="device"></param>
+    public abstract class EffectBase(PPDDevice device) : ResettableComponent(device)
     {
-        /// <summary>
-        /// コンストラクタです。
-        /// </summary>
-        /// <param name="device"></param>
-        protected EffectBase(PPDDevice device) : base(device)
-        {
-        }
 
         /// <summary>
         /// 入力頂点の情報を取得します。

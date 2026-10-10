@@ -5,18 +5,18 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Text.RegularExpressions;
-using System.Windows.Forms;
+using WindowState = System.Windows.WindowState;
 
 namespace PPDEditor
 {
-    class PPDStaticSetting
+    partial class PPDStaticSetting
     {
-        static Regex rgb = new Regex("(\\d+)\\s*,\\s*(\\d+)\\s*,\\s*(\\d+)");
-        static Regex argb = new Regex("(\\d+)\\s*,\\s*(\\d+)\\s*,\\s*(\\d+)\\s*,\\s*(\\d+)");
+        static readonly Regex rgb = RgbRegex();
+        static readonly Regex argb = ArgbRegex();
 
-        public static FormWindowState LastWindowState = FormWindowState.Normal;
-        public static Size LastWindowSize = new Size(800, 600);
-        public static Point LastWindowLocation = new Point(0, 0);
+        public static WindowState LastWindowState = WindowState.Normal;
+        public static Size LastWindowSize = new(800, 600);
+        public static Point LastWindowLocation = new(0, 0);
         public static string AuthorName = "";
         public static float MovieLatency;
         public static string langFileISO = "";
@@ -34,16 +34,23 @@ namespace PPDEditor
 
         static PPDStaticSetting()
         {
-            var path = Path.Combine(Utility.AppDir, EditorForm.iniFileName);
+            var path = Path.Combine(Utility.AppDir, Models.EditorSettingsStore.IniFileName);
             if (!File.Exists(path))
             {
                 return;
             }
+            Load(File.ReadAllText(path));
+        }
 
-            var setting = new SettingReader(File.ReadAllText(path));
+        /// <summary>
+        /// 設定のファイル（PPDEditor.ini）の内容を読み込みます。
+        /// </summary>
+        internal static void Load(string text)
+        {
+            var setting = new SettingReader(text);
             if (setting.ReadString("Maximised") == "1")
             {
-                LastWindowState = FormWindowState.Maximized;
+                LastWindowState = WindowState.Maximized;
             }
             var size = (setting.ReadString("Size")).Split(',');
             if (size.Length == 2)
@@ -64,8 +71,8 @@ namespace PPDEditor
                 LastWindowLocation = new Point(0, 0);
             }
             AuthorName = setting.ReadString("AuthorName");
-            var movielatency = setting.ReadString("MovieLatency");
-            float.TryParse(movielatency, out MovieLatency);
+            // 保存するときと同じく、言語の設定によらない形式で読む
+            MovieLatency = ReadFloat(setting, "MovieLatency", 0);
             langFileISO = setting.ReadString("Language");
             if (langFileISO == "")
             {
@@ -142,5 +149,10 @@ namespace PPDEditor
             }
             return ret;
         }
+
+        [GeneratedRegex("(\\d+)\\s*,\\s*(\\d+)\\s*,\\s*(\\d+)")]
+        private static partial Regex RgbRegex();
+        [GeneratedRegex("(\\d+)\\s*,\\s*(\\d+)\\s*,\\s*(\\d+)\\s*,\\s*(\\d+)")]
+        private static partial Regex ArgbRegex();
     }
 }

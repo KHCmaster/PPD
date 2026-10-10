@@ -1,17 +1,12 @@
 ﻿using FlowScriptEngine;
 using PPDCoreModel.Data;
-using SharpDX;
+using System.Numerics;
+using PPDMath;
 
 namespace PPDCoreModel
 {
-    public class ProcessEvaluateManager : TemplateManager<IProcessEvaluate>
+    public class ProcessEvaluateManager(Engine engine) : TemplateManager<IProcessEvaluate>(engine)
     {
-        public ProcessEvaluateManager(Engine engine)
-            : base(engine)
-        {
-
-        }
-
         public bool ProcessEvaluate(IMarkInfo markInfo, EffectType effectType, bool missPress, bool release, Vector2 position)
         {
             var handled = false;

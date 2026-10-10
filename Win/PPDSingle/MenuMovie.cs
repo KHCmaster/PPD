@@ -7,7 +7,7 @@ namespace PPDSingle
     /// <summary>
     /// メニュー動画
     /// </summary>
-    class MenuMovie : GameComponent, IMovie
+    class MenuMovie(PPDDevice device) : GameComponent(device), IMovie
     {
         const int FadeStep = 2;
 
@@ -44,10 +44,6 @@ namespace PPDSingle
                     }
                 }
             }
-        }
-
-        public MenuMovie(PPDDevice device) : base(device)
-        {
         }
 
         protected override void UpdateImpl()
@@ -112,11 +108,8 @@ namespace PPDSingle
 
         protected override void DisposeResource()
         {
-            if (movie != null)
-            {
-                movie.Dispose();
-                movie = null;
-            }
+            movie?.Dispose();
+            movie = null;
         }
 
         #region IMovie メンバ
@@ -203,10 +196,7 @@ namespace PPDSingle
             get { return movie != null ? movie.Volume : 0; }
             set
             {
-                if (movie != null)
-                {
-                    movie.Volume = value;
-                }
+                movie?.Volume = value;
             }
         }
 
@@ -280,7 +270,7 @@ namespace PPDSingle
             }
             set
             {
-                if (movie != null) movie.MaximumVolume = value;
+                movie?.MaximumVolume = value;
             }
         }
 
@@ -305,10 +295,7 @@ namespace PPDSingle
             }
             set
             {
-                if (movie != null)
-                {
-                    movie.PlayRate = value;
-                }
+                movie?.PlayRate = value;
             }
         }
 

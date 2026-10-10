@@ -1,12 +1,13 @@
 ﻿using PPDFramework;
-using SharpDX;
+using System.Numerics;
+using PPDMath;
 
 namespace PPDCore
 {
     /// <summary>
     /// メインゲームのUIクラス
     /// </summary>
-    public class GameInterface : GameInterfaceBase
+    public class GameInterface(PPDDevice device) : GameInterfaceBase(device)
     {
 
         GameInterfaceTop mgt;
@@ -14,11 +15,6 @@ namespace PPDCore
         int dangercount;
 
         float currentlife = 50;
-
-
-        public GameInterface(PPDDevice device) : base(device)
-        {
-        }
 
         /// <summary>
         /// 読み込み
@@ -50,6 +46,15 @@ namespace PPDCore
         public override void ChangeKasi(string kasi)
         {
             mgb.Kasi = kasi;
+        }
+
+        /// <summary>
+        /// 歌詞で使われる文字を先に用意する
+        /// </summary>
+        /// <param name="characters"></param>
+        public override void PrefetchKasi(string characters)
+        {
+            mgb.PrefetchKasi(characters);
         }
 
         /// <summary>

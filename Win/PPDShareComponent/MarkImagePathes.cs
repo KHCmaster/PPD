@@ -10,20 +10,20 @@ namespace PPDShareComponent
     /// </summary>
     public class MarkImagePaths : MarkImagePathsBase
     {
-        static PathObject[] colorimagepaths = new PathObject[(int)ButtonType.Start + 4];
-        static PathObject[] imagepaths = new PathObject[(int)ButtonType.Start + 4];
-        static PathObject[] traceimagepaths = new PathObject[(int)ButtonType.Start + 4];
-        static PathObject longnotecirclepath;
-        static float _innerradius;
-        static float _outerradius;
-        static PathObject axisimagepath;
-        static PathObject clockaxisimagepath;
-        static PathObject[] effectpaths = new PathObject[(int)MarkEvaluateType.Worst + 1];
-        static PathObject appeareffectpath;
-        static PathObject slideeffectpath;
-        static PathObject holdpath;
-        static float holdx;
-        static float holdy;
+        static readonly PathObject[] colorimagepaths = new PathObject[(int)ButtonType.Start + 4];
+        static readonly PathObject[] imagepaths = new PathObject[(int)ButtonType.Start + 4];
+        static readonly PathObject[] traceimagepaths = new PathObject[(int)ButtonType.Start + 4];
+        static readonly PathObject longnotecirclepath;
+        static readonly float _innerradius;
+        static readonly float _outerradius;
+        static readonly PathObject axisimagepath;
+        static readonly PathObject clockaxisimagepath;
+        static readonly PathObject[] effectpaths = new PathObject[(int)MarkEvaluateType.Worst + 1];
+        static readonly PathObject appeareffectpath;
+        static readonly PathObject slideeffectpath;
+        static readonly PathObject holdpath;
+        static readonly float holdx;
+        static readonly float holdy;
 
         static MarkImagePaths()
         {

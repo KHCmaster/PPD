@@ -39,7 +39,7 @@ namespace PPDEditorCommon
             {
                 parameters.Add(elem.Attribute("Key").Value, elem.Attribute("Value").Value);
             }
-            Parameters = parameters.ToArray();
+            Parameters = [.. parameters];
         }
     }
 }

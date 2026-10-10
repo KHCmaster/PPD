@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using System.Threading;
 
 namespace PPDFramework.Logger
@@ -13,8 +14,8 @@ namespace PPDFramework.Logger
     {
         const string logFileName = "log.txt";
 
-        private static Logger instance = new Logger();
-        Queue<LogInfo> logs;
+        private static readonly Logger instance = new();
+        readonly Queue<LogInfo> logs;
 
         /// <summary>
         /// インスタンスを取得します。
@@ -37,23 +38,30 @@ namespace PPDFramework.Logger
 
         private void WorkImpl()
         {
+            // ログが来るまで寝て待ち（以前は 1ms ごとに起きて調べていた）、たまった分をまとめて 1 回で書き込む
+            var batch = new List<LogInfo>();
+            var builder = new StringBuilder();
             while (true)
             {
-                LogInfo log = null;
                 lock (logs)
                 {
-                    if (logs.Count > 0)
+                    while (logs.Count == 0)
                     {
-                        log = logs.Dequeue();
+                        Monitor.Wait(logs);
+                    }
+                    while (logs.Count > 0)
+                    {
+                        batch.Add(logs.Dequeue());
                     }
                 }
 
-                if (log == null)
+                foreach (var log in batch)
                 {
-                    Thread.Sleep(1);
-                    continue;
+                    builder.AppendFormat("[{0} {1}]{2}", log.ThreadId, log.DateTime, log.Log).Append(Environment.NewLine);
                 }
-                File.AppendAllText(logFileName, String.Format("[{0} {1}]{2}{3}", log.ThreadId, log.DateTime, log.Log, Environment.NewLine));
+                File.AppendAllText(logFileName, builder.ToString());
+                builder.Clear();
+                batch.Clear();
             }
         }
 
@@ -70,7 +78,8 @@ namespace PPDFramework.Logger
 
             lock (logs)
             {
-                logs.Enqueue(new LogInfo(log, Thread.CurrentThread.ManagedThreadId, DateTime.Now));
+                logs.Enqueue(new LogInfo(log, Environment.CurrentManagedThreadId, DateTime.Now));
+                Monitor.Pulse(logs);
             }
         }
 
@@ -89,32 +98,25 @@ namespace PPDFramework.Logger
             AddLog(String.Format(format, args));
         }
 
-        private class LogInfo
+        private class LogInfo(string log, int threadId, DateTime dateTime)
         {
             public string Log
             {
                 get;
                 private set;
-            }
+            } = log;
 
             public int ThreadId
             {
                 get;
                 private set;
-            }
+            } = threadId;
 
             public DateTime DateTime
             {
                 get;
                 private set;
-            }
-
-            public LogInfo(string log, int threadId, DateTime dateTime)
-            {
-                Log = log;
-                ThreadId = threadId;
-                DateTime = dateTime;
-            }
+            } = dateTime;
         }
     }
 }

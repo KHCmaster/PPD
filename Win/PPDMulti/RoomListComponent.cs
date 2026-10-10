@@ -1,7 +1,8 @@
 ﻿using PPDFramework;
 using PPDMultiCommon.Web;
 using PPDShareComponent;
-using SharpDX;
+using System.Numerics;
+using PPDMath;
 using System;
 
 namespace PPDMulti
@@ -14,22 +15,22 @@ namespace PPDMulti
         const int scrollBarMaxHeight = 330;
         const int MaxDisplayCount = 12;
 
-        PPDFramework.Resource.ResourceManager resourceManager;
-        ISound sound;
-        IGameHost gameHost;
+        readonly PPDFramework.Resource.ResourceManager resourceManager;
+        readonly ISound sound;
+        readonly IGameHost gameHost;
 
-        PictureObject back;
-        SpriteObject listSprite;
+        readonly PictureObject back;
+        readonly SpriteObject listSprite;
 
-        LineRectangleComponent selectRectangle;
-        RectangleComponent scrollBar;
-        EffectObject loading;
+        readonly LineRectangleComponent selectRectangle;
+        readonly RectangleComponent scrollBar;
+        readonly EffectObject loading;
         int currentIndex;
         int scrollIndex;
 
-        GetRoomListExecutor getRoomListExecutor;
+        readonly GetRoomListExecutor getRoomListExecutor;
         bool listGot;
-        int timerID;
+        readonly int timerID;
 
         private RoomContentComponent CurrentComponent
         {
@@ -61,7 +62,7 @@ namespace PPDMulti
             {
                 Position = new Vector2(35, 30)
             });
-            back.AddChild(listSprite = new SpriteObject(device) { Position = new SharpDX.Vector2(38, 77) });
+            back.AddChild(listSprite = new SpriteObject(device) { Position = new System.Numerics.Vector2(38, 77) });
 
             loading.PlayType = Effect2D.EffectManager.PlayType.Loop;
             loading.Play();
@@ -69,9 +70,9 @@ namespace PPDMulti
             loading.Hidden = true;
 
             getRoomListExecutor = new GetRoomListExecutor();
-            getRoomListExecutor.Finished += getRoomListExecutor_Finished;
+            getRoomListExecutor.Finished += GetRoomListExecutor_Finished;
 
-            timerID = gameHost.AddTimerCallBack(timerCallBack, 15000, false, true);
+            timerID = gameHost.AddTimerCallBack(TimerCallBack, 15000, false, true);
 
             Inputed += RoomListComponent_Inputed;
             LostFocused += RoomListComponent_LostFocused;
@@ -85,7 +86,7 @@ namespace PPDMulti
             }
         }
 
-        private void timerCallBack(int obj)
+        private void TimerCallBack(int obj)
         {
             StartGetRoomList();
         }
@@ -96,7 +97,7 @@ namespace PPDMulti
             getRoomListExecutor.Start();
         }
 
-        void getRoomListExecutor_Finished(object sender, EventArgs e)
+        void GetRoomListExecutor_Finished(object sender, EventArgs e)
         {
             loading.Hidden = true;
             listGot = true;
@@ -127,7 +128,7 @@ namespace PPDMulti
         {
             listSprite.AddChild(new RoomContentComponent(device, resourceManager, roomInfo)
             {
-                Position = new SharpDX.Vector2(0, 28 * listSprite.ChildrenCount)
+                Position = new System.Numerics.Vector2(0, 28 * listSprite.ChildrenCount)
             });
 
         }
@@ -148,7 +149,7 @@ namespace PPDMulti
                     if (CurrentComponent.RoomInfo.HasPassword)
                     {
                         var dialog = new PasswordDialog(device, resourceManager, gameHost, CurrentComponent.RoomInfo);
-                        dialog.Processed += dialog_Processed;
+                        dialog.Processed += Dialog_Processed;
                         FocusManager.Focus(dialog);
                         this.InsertChild(dialog, 0);
                     }
@@ -212,7 +213,7 @@ namespace PPDMulti
             }
         }
 
-        void dialog_Processed(object sender, EventArgs e)
+        void Dialog_Processed(object sender, EventArgs e)
         {
             var dialog = sender as PasswordDialog;
             if (dialog.IsValid)
@@ -224,10 +225,7 @@ namespace PPDMulti
         private void GoToRoom()
         {
             gameHost.RemoveTimerCallBack(timerID);
-            if (RoomSelected != null)
-            {
-                RoomSelected.Invoke(CurrentComponent.RoomInfo);
-            }
+            RoomSelected?.Invoke(CurrentComponent.RoomInfo);
         }
 
         protected override void UpdateImpl()
@@ -271,8 +269,8 @@ namespace PPDMulti
         class RoomContentComponent : GameComponent
         {
             private bool selected;
-            TextureString roomName;
-            TextureString userName;
+            readonly TextureString roomName;
+            readonly TextureString userName;
 
 
             public RoomContentComponent(PPDDevice device, PPDFramework.Resource.ResourceManager resourceManager, RoomInfo roomInfo) : base(device)

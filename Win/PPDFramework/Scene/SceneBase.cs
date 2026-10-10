@@ -6,7 +6,11 @@ namespace PPDFramework.Scene
     /// <summary>
     /// 基底シーンクラス
     /// </summary>
-    public abstract class SceneBase : GameComponent, ISceneBase
+    /// <remarks>
+    /// コンストラクタです。
+    /// </remarks>
+    /// <param name="device"></param>
+    public abstract class SceneBase(PPDDevice device) : GameComponent(device), ISceneBase
     {
 
         #region ISceneBase メンバ
@@ -88,15 +92,6 @@ namespace PPDFramework.Scene
         public virtual string SpriteDir
         {
             get;
-        }
-
-        /// <summary>
-        /// コンストラクタです。
-        /// </summary>
-        /// <param name="device"></param>
-        protected SceneBase(PPDDevice device) : base(device)
-        {
-
         }
 
         /// <summary>

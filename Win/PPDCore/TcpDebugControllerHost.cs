@@ -10,23 +10,18 @@ using System.Threading;
 
 namespace PPDCore
 {
-    public class TcpDebugControllerHost : TcpDebugControllerBase
+    public class TcpDebugControllerHost(Dictionary<string, int[]> infos) : TcpDebugControllerBase, IDisposable
     {
         private TcpListener listener;
         private TcpClient client;
         private Thread thread;
-        private Dictionary<string, int[]> infos;
+        private readonly Dictionary<string, int[]> infos = infos;
 
         public event Action<string, string> SourceChanged;
         public event Action<string> OperationWaited;
         public event Action<string> OperationAccepted;
         public event Action<string, int, string> ErrorOccurred;
         public event Action<string, string> LogReceived;
-
-        public TcpDebugControllerHost(Dictionary<string, int[]> infos)
-        {
-            this.infos = infos;
-        }
 
         public void Create()
         {
@@ -35,11 +30,20 @@ namespace PPDCore
             IAsyncResult result = null;
             result = listener.BeginAcceptTcpClient(state =>
             {
-                if (listener == null)
+                var currentListener = listener;
+                if (currentListener == null)
                 {
                     return;
                 }
-                client = listener.EndAcceptTcpClient(result);
+                try
+                {
+                    client = currentListener.EndAcceptTcpClient(result);
+                }
+                catch (Exception ex) when (ex is ObjectDisposedException || ex is SocketException || ex is InvalidOperationException)
+                {
+                    // Close で待ち受けを止めた
+                    return;
+                }
                 thread = ThreadManager.Instance.GetThread(Work);
                 thread.Start();
             }, listener);
@@ -47,28 +51,17 @@ namespace PPDCore
 
         public void Close()
         {
-            if (thread != null && thread.IsAlive)
-            {
-                thread.Abort();
-                thread = null;
-            }
-
-            if (client != null)
-            {
-                client.Close();
-                client = null;
-            }
-
-            if (listener != null)
-            {
-                listener.Stop();
-                listener = null;
-            }
+            // .NET では Thread.Abort が使えない。受信のスレッドは、接続を閉じると Read が終わるので止まる
+            thread = null;
+            client?.Close();
+            client = null;
+            listener?.Dispose();
+            listener = null;
         }
 
         public void Continue()
         {
-            var bytes = GetBytes(new string[] { MethodName }, writer =>
+            var bytes = GetBytes([MethodName], writer =>
             {
                 WriteString(writer, ContinueMethod);
             });
@@ -77,7 +70,7 @@ namespace PPDCore
 
         public void StepIn()
         {
-            var bytes = GetBytes(new string[] { MethodName }, writer =>
+            var bytes = GetBytes([MethodName], writer =>
             {
                 WriteString(writer, StepInMethod);
             });
@@ -86,7 +79,7 @@ namespace PPDCore
 
         public void AddBreakPoint(string fileName, int sourceId)
         {
-            var bytes = GetBytes(new string[] { MethodName, SourceId, FileName }, writer =>
+            var bytes = GetBytes([MethodName, SourceId, FileName], writer =>
             {
                 switch (writer.Filename)
                 {
@@ -106,7 +99,7 @@ namespace PPDCore
 
         public void RemoveBreakPoint(string fileName, int sourceId)
         {
-            var bytes = GetBytes(new string[] { MethodName, SourceId, FileName }, writer =>
+            var bytes = GetBytes([MethodName, SourceId, FileName], writer =>
             {
                 switch (writer.Filename)
                 {
@@ -126,7 +119,7 @@ namespace PPDCore
 
         public void ChangeSource(string fileName, int sourceId)
         {
-            var bytes = GetBytes(new string[] { MethodName, SourceId, FileName }, writer =>
+            var bytes = GetBytes([MethodName, SourceId, FileName], writer =>
             {
                 switch (writer.Filename)
                 {
@@ -146,15 +139,24 @@ namespace PPDCore
 
         public void Work()
         {
-            byte[] lastBytes = new byte[0];
+            byte[] lastBytes = [];
+            Stream stream;
+            try
+            {
+                stream = client.GetStream();
+            }
+            catch (Exception ex) when (ex is ObjectDisposedException || ex is InvalidOperationException || ex is NullReferenceException)
+            {
+                return;
+            }
             while (true)
             {
-                var bytes = Read(client.GetStream());
+                var bytes = Read(stream);
                 if (bytes.Length == 0)
                 {
                     return;
                 }
-                bytes = lastBytes.Concat(bytes).ToArray();
+                bytes = [.. lastBytes, .. bytes];
                 while (true)
                 {
                     var lastLength = bytes.Length;
@@ -173,67 +175,65 @@ namespace PPDCore
         {
             try
             {
-                using (MemoryStream stream = new MemoryStream(bytes))
-                using (PackReader reader = new PackReader(stream))
+                using MemoryStream stream = new(bytes);
+                using PackReader reader = new(stream);
+                var now = DateTime.Now;
+                var methodName = ParseString(reader, MethodName);
+                switch (methodName)
                 {
-                    var now = DateTime.Now;
-                    var methodName = ParseString(reader, MethodName);
-                    switch (methodName)
-                    {
-                        case GetFileList:
-                            var sendBytes = GetBytes(new string[] { Return }, writer =>
-                            {
-                                var fileList = infos.Keys.Aggregate("", (s1, s2) => String.IsNullOrEmpty(s1) ? s2 : String.Format("{0},{1}", s1, s2));
-                                WriteString(writer, fileList);
-                            });
-                            Send(sendBytes);
-                            break;
-                        case GetBreakPoints:
-                            var fileName = ParseString(reader, FileName);
-                            int[] breakPoints;
-                            if (!infos.TryGetValue(fileName, out breakPoints))
-                            {
-                                breakPoints = new int[0];
-                            }
-                            sendBytes = GetBytes(new string[] { Return }, writer =>
-                            {
-                                WriteString(writer, breakPoints.Aggregate("", (s, id) => String.IsNullOrEmpty(s) ? id.ToString() : String.Format("{0},{1}", s, id)));
-                            });
-                            Send(sendBytes);
-                            break;
-                        case SourceChangedEvent:
-                            var serializedText = ParseString(reader, SerializedText);
-                            fileName = ParseString(reader, FileName);
-                            OnSourceChanged(serializedText, fileName);
-                            break;
-                        case OperationAcceptedEvent:
-                            fileName = ParseString(reader, FileName);
-                            OnOperationAccepted(fileName);
-                            break;
-                        case OperationWaitedEvent:
-                            fileName = ParseString(reader, FileName);
-                            OnOperationWaited(fileName);
-                            break;
-                        case ErrorOccurredEvent:
-                            fileName = ParseString(reader, FileName);
-                            var errorText = ParseString(reader, ErrorText);
-                            var errorId = ParseInt(reader, ErrorId);
-                            OnErrorOccurred(fileName, errorId, errorText);
-                            break;
-                        case LogReceivedEvent:
-                            var logType = ParseString(reader, LogType);
-                            var logText = ParseString(reader, LogText);
-                            OnLogReceived(logType, logText);
-                            break;
-                    }
-
-                    byte[] restBytes = new byte[bytes.Length - reader.LastIndex];
-                    if (restBytes.Length > 0)
-                    {
-                        Array.Copy(bytes, reader.LastIndex, restBytes, 0, restBytes.Length);
-                    }
-                    return restBytes;
+                    case GetFileList:
+                        var sendBytes = GetBytes([Return], writer =>
+                        {
+                            var fileList = infos.Keys.Aggregate("", (s1, s2) => String.IsNullOrEmpty(s1) ? s2 : String.Format("{0},{1}", s1, s2));
+                            WriteString(writer, fileList);
+                        });
+                        Send(sendBytes);
+                        break;
+                    case GetBreakPoints:
+                        var fileName = ParseString(reader, FileName);
+                        int[] breakPoints;
+                        if (!infos.TryGetValue(fileName, out breakPoints))
+                        {
+                            breakPoints = [];
+                        }
+                        sendBytes = GetBytes([Return], writer =>
+                        {
+                            WriteString(writer, breakPoints.Aggregate("", (s, id) => String.IsNullOrEmpty(s) ? id.ToString() : String.Format("{0},{1}", s, id)));
+                        });
+                        Send(sendBytes);
+                        break;
+                    case SourceChangedEvent:
+                        var serializedText = ParseString(reader, SerializedText);
+                        fileName = ParseString(reader, FileName);
+                        OnSourceChanged(serializedText, fileName);
+                        break;
+                    case OperationAcceptedEvent:
+                        fileName = ParseString(reader, FileName);
+                        OnOperationAccepted(fileName);
+                        break;
+                    case OperationWaitedEvent:
+                        fileName = ParseString(reader, FileName);
+                        OnOperationWaited(fileName);
+                        break;
+                    case ErrorOccurredEvent:
+                        fileName = ParseString(reader, FileName);
+                        var errorText = ParseString(reader, ErrorText);
+                        var errorId = ParseInt(reader, ErrorId);
+                        OnErrorOccurred(fileName, errorId, errorText);
+                        break;
+                    case LogReceivedEvent:
+                        var logType = ParseString(reader, LogType);
+                        var logText = ParseString(reader, LogText);
+                        OnLogReceived(logType, logText);
+                        break;
                 }
+
+                byte[] restBytes = new byte[bytes.Length - reader.LastIndex];
+                if (restBytes.Length > 0)
+                {
+                    Array.Copy(bytes, reader.LastIndex, restBytes, 0, restBytes.Length);
+                }
+                return restBytes;
             }
             catch
             {
@@ -269,6 +269,27 @@ namespace PPDCore
         private void OnLogReceived(string logType, string logText)
         {
             LogReceived?.Invoke(logType, logText);
+        }
+
+        /// <summary>
+        /// 接続を閉じます（Close() と同じ）。
+        /// </summary>
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        /// <summary>
+        /// 破棄します。
+        /// </summary>
+        /// <param name="disposing">Dispose から呼ばれたときは true。</param>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                Close();
+            }
         }
     }
 }

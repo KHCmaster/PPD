@@ -1,0 +1,10 @@
+<UserControl x:Class="PPDEditor.Controls.SoundVolumeControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Name="root">
+    <StackPanel Orientation="Horizontal">
+        <TextBlock Width="24" Text="{Binding VolumePercent, ElementName=root}" VerticalAlignment="Center" TextAlignment="Right" />
+        <Slider Width="104" Minimum="0" Maximum="100" IsSnapToTickEnabled="True" TickFrequency="1"
+                Value="{Binding VolumePercent, ElementName=root}" SmallChange="1" LargeChange="5" Margin="4,0,0,0" VerticalAlignment="Center" />
+    </StackPanel>
+</UserControl>

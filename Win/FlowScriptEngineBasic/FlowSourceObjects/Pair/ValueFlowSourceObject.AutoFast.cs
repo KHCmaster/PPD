@@ -9,15 +9,12 @@ namespace FlowScriptEngineBasic.FlowSourceObjects.Pair
     {
         public override object GetPropertyValue(string propertyName)
         {
-            switch (propertyName)
+            return propertyName switch
             {
-                case "Key":
-                    return Key;
-                case "Value":
-                    return Value;
-                default:
-                    return null;
-            }
+                "Key" => Key,
+                "Value" => Value,
+                _ => null,
+            };
         }
 
         protected override void SetPropertyValue(string propertyName, object value)

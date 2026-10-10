@@ -68,11 +68,8 @@ namespace PPDMulti
 
         protected override void DisposeResource()
         {
-            if (Movie != null)
-            {
-                Movie.Stop();
-                Movie = null;
-            }
+            Movie?.Stop();
+            Movie = null;
             base.DisposeResource();
         }
     }

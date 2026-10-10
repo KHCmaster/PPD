@@ -2,15 +2,11 @@
 
 namespace PPDTest
 {
-    class Game : GameCore
+    class Game(PPDExecuteArg args) : GameCore(args, new MyForm())
     {
         protected override bool ShowFPS
         {
             get { return true; }
-        }
-
-        public Game(PPDExecuteArg args) : base(args, new MyForm())
-        {
         }
     }
 }

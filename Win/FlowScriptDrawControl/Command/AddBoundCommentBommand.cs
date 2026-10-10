@@ -2,14 +2,9 @@
 
 namespace FlowScriptDrawControl.Command
 {
-    class AddBoundCommentBommand : BoundCommentCommandBase
+    class AddBoundCommentBommand(FlowAreaControl areaControl, SourceControl sourceControl) : BoundCommentCommandBase(areaControl, sourceControl,
+        new BoundCommentControl { DataContext = new Model.Comment { Text = "Comment" } })
     {
-        public AddBoundCommentBommand(FlowAreaControl areaControl, SourceControl sourceControl)
-            : base(areaControl, sourceControl,
-            new BoundCommentControl { DataContext = new Model.Comment { Text = "Comment" } })
-        {
-        }
-
         public override void Execute()
         {
             AddComment();

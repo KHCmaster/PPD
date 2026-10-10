@@ -10,7 +10,7 @@ namespace FlowScriptDrawControl.Model
 {
     class SelectionSerializer
     {
-        private static SelectionSerializer serializer = new SelectionSerializer();
+        private static readonly SelectionSerializer serializer = new();
 
         public static SelectionSerializer Serializer
         {
@@ -20,7 +20,7 @@ namespace FlowScriptDrawControl.Model
             }
         }
 
-        public string Serialize(Selection selection)
+        public static string Serialize(Selection selection)
         {
             var document = new XmlDocument();
             var root = document.AppendChild(document.CreateElement("Root"));
@@ -174,7 +174,7 @@ namespace FlowScriptDrawControl.Model
             return attribute;
         }
 
-        private Selection DeserializeImpl(string xml, Func<string, Source> sourceGenerateFunc)
+        private static Selection DeserializeImpl(string xml, Func<string, Source> sourceGenerateFunc)
         {
             var document = new XmlDocument();
             document.LoadXml(xml);
@@ -208,8 +208,8 @@ namespace FlowScriptDrawControl.Model
             {
                 scope.Parent = scopes.FirstOrDefault(s => s.Id == scope.ParentScopeId);
             }
-            return new Selection(guid, sources.ToArray(), comments.ToArray(),
-                connections.ToArray(), externalConnections.ToArray(), scopes.ToArray());
+            return new Selection(guid, [.. sources], [.. comments],
+                [.. connections], [.. externalConnections], [.. scopes]);
         }
 
         public static Source DeserializeSource(XmlNode node, Func<string, Source> sourceGenerateFunc)
@@ -287,7 +287,7 @@ namespace FlowScriptDrawControl.Model
                 node.Attributes["DestName"].Value);
         }
 
-        public Selection Deserialize(string xml, Func<string, Source> sourceGenerateFunc)
+        public static Selection Deserialize(string xml, Func<string, Source> sourceGenerateFunc)
         {
             try
             {

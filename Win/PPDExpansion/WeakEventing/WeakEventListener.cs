@@ -14,7 +14,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 
-namespace PPDExpansion
+namespace PPDExpansion.WeakEventing
 {
     /// <summary>
     /// Implements a weak event listener that allows the owner to be garbage
@@ -32,13 +32,13 @@ namespace PPDExpansion
         /// <summary>
         /// WeakReference to the rootInstance listening for the event.
         /// </summary>
-        private WeakReference _weakInstance;
+        private readonly WeakReference _weakInstance;
 
         /// <summary>
         /// To hold a reference to source object. With this instance the WeakEventListener 
         /// // can guarantee that the handler get unregistered when listener is released.
         /// </summary>
-        private TSource _source;
+        private readonly TSource _source;
 
         /// <summary>
         /// Delegate to the method to call when the event fires.
@@ -60,16 +60,10 @@ namespace PPDExpansion
         /// <param name="instance">Instance subscribing to the event.</param>
         public WeakEventListener(TInstance instance, TSource source)
         {
-            if (null == instance)
-            {
-                throw new ArgumentNullException(nameof(instance));
-            }
-
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(instance);
 
             _weakInstance = new WeakReference(instance);
-            this._source = source;
+            this._source = source ?? throw new ArgumentNullException(nameof(source));
         }
 
         #endregion

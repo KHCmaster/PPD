@@ -32,9 +32,10 @@ namespace FlowScriptEngineBasic.FlowSourceObjects.ArrayList
             {
                 SetValue(nameof(Value));
                 SetValue(nameof(Index));
-                for (int i = Index; i < Value.Count; i++)
+                // 元は Value の Index 番目からを ArrayList の先頭に入れていた（Index が 0 のときだけ正しかった）
+                for (int i = 0; i < Value.Count; i++)
                 {
-                    ArrayList[i - Index] = Value[i];
+                    ArrayList[Index + i] = Value[i];
                 }
                 OnSuccess();
             }

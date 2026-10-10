@@ -1,11 +1,12 @@
-﻿using FlowScriptEngine;
+﻿using PPDMath;
+using FlowScriptEngine;
 
 namespace FlowScriptEngineSlimDX.FlowSourceObjects.Color4
 {
     [ToolTipText("Color4_Summary")]
     public partial class ValueFlowSourceObject : FlowSourceObjectBase
     {
-        private SharpDX.Color4 color;
+        private Vortice.Mathematics.Color4 color;
 
         public override string Name
         {
@@ -13,7 +14,7 @@ namespace FlowScriptEngineSlimDX.FlowSourceObjects.Color4
         }
 
         [ToolTipText("Color4_Value_Summary")]
-        public SharpDX.Color4 Value
+        public Vortice.Mathematics.Color4 Value
         {
             get
             {

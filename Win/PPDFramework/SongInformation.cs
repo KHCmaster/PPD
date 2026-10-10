@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Data.SQLite;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Windows.Forms;
 
@@ -80,7 +81,7 @@ namespace PPDFramework
             /// </summary>
             Extreme = 8
         }
-        static AvailableDifficulty[] DifficultyArray = (AvailableDifficulty[])Enum.GetValues(typeof(AvailableDifficulty));
+        static readonly AvailableDifficulty[] DifficultyArray = Enum.GetValues<AvailableDifficulty>();
 
         string directoryname = "";
         string directorypath = "";
@@ -515,7 +516,7 @@ namespace PPDFramework
             private set;
         }
 
-        internal int[] resultIDs = { -1, -1, -1, -1 };
+        internal int[] resultIDs = [-1, -1, -1, -1];
 
         /// <summary>
         /// ユーザーの設定した音量
@@ -542,7 +543,7 @@ namespace PPDFramework
         /// </summary>
         public SongInformation()
         {
-            scores = new string[Enum.GetValues(typeof(Difficulty)).Length - 1];
+            scores = new string[Enum.GetValues<Difficulty>().Length - 1];
             difficultystring = new string[scores.Length];
             UserVolume = 100;
         }
@@ -598,7 +599,7 @@ namespace PPDFramework
                     }
                 }
 
-                return ret.ToArray();
+                return [.. ret];
             }
         }
 
@@ -756,11 +757,11 @@ namespace PPDFramework
         {
             if (!Directory.Exists(directory))
             {
-                return new SongInformation[0];
+                return [];
             }
 
             var list = new List<SongInformation>(10);
-            using (var reader = PPDDatabase.DB.ExecuteReader("select * from ScoreTable where parentpath = @parentpath", new SQLiteParameter[] { new SQLiteParameter("@parentpath", directory) }))
+            using (var reader = PPDDatabase.DB.ExecuteReader("select * from ScoreTable where parentpath = @parentpath", [new("@parentpath", directory)]))
             {
                 while (reader.Reader.Read())
                 {
@@ -779,22 +780,22 @@ namespace PPDFramework
                             si.StartTime = DatabaseUtility.GetFloat(reader.Reader, 4);
                             si.EndTime = DatabaseUtility.GetFloat(reader.Reader, 5);
                             si.BPM = DatabaseUtility.GetFloat(reader.Reader, 6);
-                            si.difficultystring = new string[]{
+                            si.difficultystring = [
                                 reader.Reader.GetString(7),
                                 reader.Reader.GetString(8),
                                 reader.Reader.GetString(9),
                                 reader.Reader.GetString(10)
-                            };
+                            ];
                             si.Difficulty |= DatabaseUtility.GetInt32(reader.Reader, 11) == 1 ? AvailableDifficulty.Easy : AvailableDifficulty.None;
                             si.Difficulty |= DatabaseUtility.GetInt32(reader.Reader, 12) == 1 ? AvailableDifficulty.Normal : AvailableDifficulty.None;
                             si.Difficulty |= DatabaseUtility.GetInt32(reader.Reader, 13) == 1 ? AvailableDifficulty.Hard : AvailableDifficulty.None;
                             si.Difficulty |= DatabaseUtility.GetInt32(reader.Reader, 14) == 1 ? AvailableDifficulty.Extreme : AvailableDifficulty.None;
-                            si.resultIDs = new int[]{
+                            si.resultIDs = [
                                 DatabaseUtility.GetInt32(reader.Reader, 15),
                                 DatabaseUtility.GetInt32(reader.Reader, 16),
                                 DatabaseUtility.GetInt32(reader.Reader, 17),
                                 DatabaseUtility.GetInt32(reader.Reader, 18)
-                            };
+                            ];
                             si.TrimmingData = new MovieTrimmingData(
                                 DatabaseUtility.GetFloat(reader.Reader, 21),
                                 DatabaseUtility.GetFloat(reader.Reader, 19),
@@ -849,7 +850,7 @@ namespace PPDFramework
                 si.UpdateScore();
             }
             list.Sort(new SongInformationComparer());
-            return list.ToArray();
+            return [.. list];
         }
 
         internal void UpdateScore()
@@ -872,10 +873,7 @@ namespace PPDFramework
         {
             root = null;
             PPDDatabase.DB.Update(false, songInformations);
-            if (Updated != null)
-            {
-                Updated.Invoke(null, EventArgs.Empty);
-            }
+            Updated?.Invoke(null, EventArgs.Empty);
         }
 
         /// <summary>
@@ -899,34 +897,32 @@ namespace PPDFramework
             if (File.Exists(Path.Combine(directory, "extreme.ppd"))) ret.Difficulty |= AvailableDifficulty.Extreme;
             if (File.Exists(Path.Combine(directory, "data.ini")))
             {
-                using (StreamReader sr = new StreamReader(Path.Combine(directory, "data.ini")))
+                using StreamReader sr = new(Path.Combine(directory, "data.ini"));
+                var ss = sr.ReadToEnd();
+                var setting = new SettingReader(ss);
+                ret.IsOld = !setting.IsIniFormat;
+                if (!float.TryParse(setting.ReadString("bpm"), NumberStyles.Float, CultureInfo.InvariantCulture, out ret.bpm))
                 {
-                    var ss = sr.ReadToEnd();
-                    var setting = new SettingReader(ss);
-                    ret.IsOld = !setting.IsIniFormat;
-                    if (!float.TryParse(setting.ReadString("bpm"), NumberStyles.Float, CultureInfo.InvariantCulture, out ret.bpm))
-                    {
-                        ret.bpm = 100;
-                    }
-                    ret.BPMString = setting.ReadString("bpmstring");
-                    ret.difficultystring[0] = setting.ReadString("difficulty easy");
-                    ret.difficultystring[1] = setting.ReadString("difficulty normal");
-                    ret.difficultystring[2] = setting.ReadString("difficulty hard");
-                    ret.difficultystring[3] = setting.ReadString("difficulty extreme");
-                    ret.AuthorName = setting.ReadString("authorname");
-                    float.TryParse(setting.ReadString("moviecutleft"), NumberStyles.Float, CultureInfo.InvariantCulture, out float left);
-                    float.TryParse(setting.ReadString("moviecutright"), NumberStyles.Float, CultureInfo.InvariantCulture, out float right);
-                    float.TryParse(setting.ReadString("moviecuttop"), NumberStyles.Float, CultureInfo.InvariantCulture, out float top);
-                    float.TryParse(setting.ReadString("moviecutbottom"), NumberStyles.Float, CultureInfo.InvariantCulture, out float bottom);
-                    ret.TrimmingData = new MovieTrimmingData(top, left, right, bottom);
-                    float.TryParse(setting.ReadString("thumbtimestart"), NumberStyles.Float, CultureInfo.InvariantCulture, out ret.thumbstarttime);
-                    float.TryParse(setting.ReadString("thumbtimeend"), NumberStyles.Float, CultureInfo.InvariantCulture, out ret.thumbendtime);
-                    float.TryParse(setting.ReadString("start"), NumberStyles.Float, CultureInfo.InvariantCulture, out ret.starttime);
-                    float.TryParse(setting.ReadString("end"), NumberStyles.Float, CultureInfo.InvariantCulture, out ret.endtime);
-                    // float.TryParse(setting["latency"], NumberStyles.Float, CultureInfo.InvariantCulture, out ret.latency);
-                    ret.GUID = setting.ReadString("guid");
-                    ret.IsOld = !setting.IsIniFormat;
+                    ret.bpm = 100;
                 }
+                ret.BPMString = setting.ReadString("bpmstring");
+                ret.difficultystring[0] = setting.ReadString("difficulty easy");
+                ret.difficultystring[1] = setting.ReadString("difficulty normal");
+                ret.difficultystring[2] = setting.ReadString("difficulty hard");
+                ret.difficultystring[3] = setting.ReadString("difficulty extreme");
+                ret.AuthorName = setting.ReadString("authorname");
+                float.TryParse(setting.ReadString("moviecutleft"), NumberStyles.Float, CultureInfo.InvariantCulture, out float left);
+                float.TryParse(setting.ReadString("moviecutright"), NumberStyles.Float, CultureInfo.InvariantCulture, out float right);
+                float.TryParse(setting.ReadString("moviecuttop"), NumberStyles.Float, CultureInfo.InvariantCulture, out float top);
+                float.TryParse(setting.ReadString("moviecutbottom"), NumberStyles.Float, CultureInfo.InvariantCulture, out float bottom);
+                ret.TrimmingData = new MovieTrimmingData(top, left, right, bottom);
+                float.TryParse(setting.ReadString("thumbtimestart"), NumberStyles.Float, CultureInfo.InvariantCulture, out ret.thumbstarttime);
+                float.TryParse(setting.ReadString("thumbtimeend"), NumberStyles.Float, CultureInfo.InvariantCulture, out ret.thumbendtime);
+                float.TryParse(setting.ReadString("start"), NumberStyles.Float, CultureInfo.InvariantCulture, out ret.starttime);
+                float.TryParse(setting.ReadString("end"), NumberStyles.Float, CultureInfo.InvariantCulture, out ret.endtime);
+                // float.TryParse(setting["latency"], NumberStyles.Float, CultureInfo.InvariantCulture, out ret.latency);
+                ret.GUID = setting.ReadString("guid");
+                ret.IsOld = !setting.IsIniFormat;
             }
             else
             {
@@ -962,18 +958,14 @@ namespace PPDFramework
         /// <returns>難易度。</returns>
         public static Difficulty ConvertAvailable(AvailableDifficulty difficulty)
         {
-            switch (difficulty)
+            return difficulty switch
             {
-                case AvailableDifficulty.Easy:
-                    return PPDFrameworkCore.Difficulty.Easy;
-                case AvailableDifficulty.Normal:
-                    return PPDFrameworkCore.Difficulty.Normal;
-                case AvailableDifficulty.Hard:
-                    return PPDFrameworkCore.Difficulty.Hard;
-                case AvailableDifficulty.Extreme:
-                    return PPDFrameworkCore.Difficulty.Extreme;
-            }
-            return PPDFrameworkCore.Difficulty.Other;
+                AvailableDifficulty.Easy => PPDFrameworkCore.Difficulty.Easy,
+                AvailableDifficulty.Normal => PPDFrameworkCore.Difficulty.Normal,
+                AvailableDifficulty.Hard => PPDFrameworkCore.Difficulty.Hard,
+                AvailableDifficulty.Extreme => PPDFrameworkCore.Difficulty.Extreme,
+                _ => PPDFrameworkCore.Difficulty.Other,
+            };
         }
 
         /// <summary>
@@ -1058,18 +1050,15 @@ namespace PPDFramework
         {
             if (!File.Exists(path))
             {
-                return new byte[0];
+                return [];
             }
             else
             {
-                using (FileStream fs = File.Open(path, FileMode.Open))
-                {
-                    byte[] data = new byte[fs.Length];
-                    fs.Read(data, 0, data.Length);
-                    var SHA256 = new SHA256Managed();
-                    var hash = SHA256.ComputeHash(data);
-                    return hash;
-                }
+                using FileStream fs = File.Open(path, FileMode.Open);
+                byte[] data = new byte[fs.Length];
+                fs.ReadAtLeast(data, data.Length, throwOnEndOfStream: false);
+                var hash = SHA256.HashData(data);
+                return hash;
             }
         }
 
@@ -1089,7 +1078,7 @@ namespace PPDFramework
                     data = EVDReader.Read(pppsr);
                     pr.Close();
                 }
-                foreach (ChangeVolumeEvent evddata in Array.FindAll(data, (evd) => (evd is ChangeVolumeEvent)))
+                foreach (ChangeVolumeEvent evddata in Array.FindAll(data, (evd) => (evd is ChangeVolumeEvent)).Cast<ChangeVolumeEvent>())
                 {
                     if (evddata.Channel == 0 && evddata.Time == 0)
                     {
@@ -1097,7 +1086,7 @@ namespace PPDFramework
                         break;
                     }
                 }
-                foreach (ChangeNoteTypeEvent evddata in Array.FindAll(data, (evd) => (evd is ChangeNoteTypeEvent)))
+                foreach (ChangeNoteTypeEvent evddata in Array.FindAll(data, (evd) => (evd is ChangeNoteTypeEvent)).Cast<ChangeNoteTypeEvent>())
                 {
                     if (evddata.NoteType == NoteType.AC || evddata.NoteType == NoteType.ACFT)
                     {
@@ -1223,18 +1212,14 @@ namespace PPDFramework
         /// <returns></returns>
         public byte[] GetScoreHash(Difficulty difficulty)
         {
-            switch (difficulty)
+            return difficulty switch
             {
-                case PPDFrameworkCore.Difficulty.Easy:
-                    return EasyHash;
-                case PPDFrameworkCore.Difficulty.Normal:
-                    return NormalHash;
-                case PPDFrameworkCore.Difficulty.Hard:
-                    return HardHash;
-                case PPDFrameworkCore.Difficulty.Extreme:
-                    return ExtremeHash;
-            }
-            return null;
+                PPDFrameworkCore.Difficulty.Easy => EasyHash,
+                PPDFrameworkCore.Difficulty.Normal => NormalHash,
+                PPDFrameworkCore.Difficulty.Hard => HardHash,
+                PPDFrameworkCore.Difficulty.Extreme => ExtremeHash,
+                _ => null,
+            };
         }
 
         /// <summary>
@@ -1244,18 +1229,14 @@ namespace PPDFramework
         /// <returns></returns>
         public bool GetIsAC(Difficulty difficulty)
         {
-            switch (difficulty)
+            return difficulty switch
             {
-                case PPDFrameworkCore.Difficulty.Easy:
-                    return IsEasyAC;
-                case PPDFrameworkCore.Difficulty.Normal:
-                    return IsNormalAC;
-                case PPDFrameworkCore.Difficulty.Hard:
-                    return IsHardAC;
-                case PPDFrameworkCore.Difficulty.Extreme:
-                    return IsExtremeAC;
-            }
-            return false;
+                PPDFrameworkCore.Difficulty.Easy => IsEasyAC,
+                PPDFrameworkCore.Difficulty.Normal => IsNormalAC,
+                PPDFrameworkCore.Difficulty.Hard => IsHardAC,
+                PPDFrameworkCore.Difficulty.Extreme => IsExtremeAC,
+                _ => false,
+            };
         }
 
         /// <summary>
@@ -1265,18 +1246,14 @@ namespace PPDFramework
         /// <returns></returns>
         public bool GetIsACFT(Difficulty difficulty)
         {
-            switch (difficulty)
+            return difficulty switch
             {
-                case PPDFrameworkCore.Difficulty.Easy:
-                    return IsEasyACFT;
-                case PPDFrameworkCore.Difficulty.Normal:
-                    return IsNormalACFT;
-                case PPDFrameworkCore.Difficulty.Hard:
-                    return IsHardACFT;
-                case PPDFrameworkCore.Difficulty.Extreme:
-                    return IsExtremeACFT;
-            }
-            return false;
+                PPDFrameworkCore.Difficulty.Easy => IsEasyACFT,
+                PPDFrameworkCore.Difficulty.Normal => IsNormalACFT,
+                PPDFrameworkCore.Difficulty.Hard => IsHardACFT,
+                PPDFrameworkCore.Difficulty.Extreme => IsExtremeACFT,
+                _ => false,
+            };
         }
 
         /// <summary>
@@ -1286,18 +1263,14 @@ namespace PPDFramework
         /// <returns></returns>
         public NoteType GetNoteType(Difficulty difficulty)
         {
-            switch (difficulty)
+            return difficulty switch
             {
-                case PPDFrameworkCore.Difficulty.Easy:
-                    return EasyNoteType;
-                case PPDFrameworkCore.Difficulty.Normal:
-                    return NormalNoteType;
-                case PPDFrameworkCore.Difficulty.Hard:
-                    return HardNoteType;
-                case PPDFrameworkCore.Difficulty.Extreme:
-                    return ExtremeNoteType;
-            }
-            return NoteType.Normal;
+                PPDFrameworkCore.Difficulty.Easy => EasyNoteType,
+                PPDFrameworkCore.Difficulty.Normal => NormalNoteType,
+                PPDFrameworkCore.Difficulty.Hard => HardNoteType,
+                PPDFrameworkCore.Difficulty.Extreme => ExtremeNoteType,
+                _ => NoteType.Normal,
+            };
         }
 
         /// <summary>
@@ -1317,11 +1290,9 @@ namespace PPDFramework
             {
                 try
                 {
-                    using (PackReader pr = new PackReader(path))
-                    {
-                        var pppsr = pr.Read("ppd");
-                        data = PPDReader.Read(pppsr);
-                    }
+                    using PackReader pr = new(path);
+                    var pppsr = pr.Read("ppd");
+                    data = PPDReader.Read(pppsr);
                 }
                 catch
                 {

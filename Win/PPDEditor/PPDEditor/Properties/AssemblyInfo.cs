@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 // アセンブリに関する一般情報は以下の属性セットをとおして制御されます。
@@ -17,6 +18,13 @@ using System.Runtime.InteropServices;
 // 参照不可能になります。COM からこのアセンブリ内の型にアクセスする場合は、
 // その型の ComVisible 属性を true に設定してください。
 [assembly: ComVisible(false)]
+
+// 単体テスト（UnitTests）から内部のクラスを使う
+[assembly: InternalsVisibleTo("UnitTests")]
+
+// WPF のコントロール（FlowScript のエディターなど）を使うと、WPF がプロセスを DPI 対応に切り替え、
+// ほかのアプリ（DPI 非対応で、Windows が拡大して表示する）と画面の大きさが変わってしまうので、切り替えさせない
+[assembly: System.Windows.Media.DisableDpiAwareness]
 
 // 次の GUID は、このプロジェクトが COM に公開される場合の、typelib の ID です
 [assembly: Guid("b3c51486-a27c-41a2-a9b7-06a2d6d15493")]

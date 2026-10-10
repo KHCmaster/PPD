@@ -1,28 +1,23 @@
-﻿using PPDCoreModel;
+﻿using PPDMath;
+using PPDCoreModel;
 using System.Collections.Generic;
 
 namespace PPDCore
 {
-    class SlideMarkInfo : IMarkInfo
+    class SlideMarkInfo(SlideExMark mark, SlideColorMarkInfo slideColorMarkInfo) : IMarkInfo
     {
-        SlideExMark mark;
-        SlideColorMarkInfo slideColorMarkInfo;
-
-        public SlideMarkInfo(SlideExMark mark, SlideColorMarkInfo slideColorMarkInfo)
-        {
-            this.mark = mark;
-            this.slideColorMarkInfo = slideColorMarkInfo;
-        }
+        readonly SlideExMark mark = mark;
+        readonly SlideColorMarkInfo slideColorMarkInfo = slideColorMarkInfo;
 
         #region IMarkInfo メンバー
 
-        public SharpDX.Vector2 ColorPosition
+        public System.Numerics.Vector2 ColorPosition
         {
             get;
             set;
         }
 
-        public SharpDX.Vector2 Position
+        public System.Numerics.Vector2 Position
         {
             get { return slideColorMarkInfo.BasePosition; }
         }

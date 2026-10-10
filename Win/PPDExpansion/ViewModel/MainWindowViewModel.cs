@@ -1,6 +1,6 @@
-﻿using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Command;
-using GalaSoft.MvvmLight.Messaging;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using PPDExpansion.Message;
 using PPDExpansionCore;
 using PPDExpansionCore.Tcp;
@@ -10,7 +10,7 @@ using System.Windows.Threading;
 
 namespace PPDExpansion.ViewModel
 {
-    class MainWindowViewModel : ViewModelBase
+    sealed class MainWindowViewModel : ObservableObject, IDisposable
     {
         private readonly Dispatcher dispatcher;
 
@@ -39,7 +39,7 @@ namespace PPDExpansion.ViewModel
                 if (title != value)
                 {
                     title = value;
-                    RaisePropertyChanged("Title");
+                    OnPropertyChanged(nameof(Title));
                 }
             }
         }
@@ -52,7 +52,7 @@ namespace PPDExpansion.ViewModel
                 if (isConnected != value)
                 {
                     isConnected = value;
-                    RaisePropertyChanged("IsConnected");
+                    OnPropertyChanged(nameof(IsConnected));
                     Title = String.Format("PPDExpansion{0}", isConnected ?
                         String.Format(" - {0}", Utility.Language["Connecting"]) : "");
                 }
@@ -79,7 +79,7 @@ namespace PPDExpansion.ViewModel
                 if (isMulti != value)
                 {
                     isMulti = value;
-                    RaisePropertyChanged("IsMulti");
+                    OnPropertyChanged(nameof(IsMulti));
                 }
             }
         }
@@ -92,7 +92,7 @@ namespace PPDExpansion.ViewModel
                 if (showMyHighScore != value)
                 {
                     PPDExpansionSetting.Setting.ShowMyHighScore = showMyHighScore = value;
-                    RaisePropertyChanged("ShowMyHighScore");
+                    OnPropertyChanged(nameof(ShowMyHighScore));
                 }
             }
         }
@@ -105,7 +105,7 @@ namespace PPDExpansion.ViewModel
                 if (showWebHighScore != value)
                 {
                     PPDExpansionSetting.Setting.ShowWebHighScore = showWebHighScore = value;
-                    RaisePropertyChanged("ShowWebHighScore");
+                    OnPropertyChanged(nameof(ShowWebHighScore));
                 }
             }
         }
@@ -118,7 +118,7 @@ namespace PPDExpansion.ViewModel
                 if (showCurrentStatus != value)
                 {
                     PPDExpansionSetting.Setting.ShowCurrentStatus = showCurrentStatus = value;
-                    RaisePropertyChanged("ShowCurrentStatus");
+                    OnPropertyChanged(nameof(ShowCurrentStatus));
                 }
             }
         }
@@ -131,7 +131,7 @@ namespace PPDExpansion.ViewModel
                 if (showGridLines != value)
                 {
                     PPDExpansionSetting.Setting.ShowGridLines = showGridLines = value;
-                    RaisePropertyChanged("ShowGridLines");
+                    OnPropertyChanged(nameof(ShowGridLines));
                 }
             }
         }
@@ -144,7 +144,7 @@ namespace PPDExpansion.ViewModel
                 if (showIIDXStyle != value)
                 {
                     PPDExpansionSetting.Setting.ShowIIDXStyle = showIIDXStyle = value;
-                    RaisePropertyChanged("ShowIIDXStyle");
+                    OnPropertyChanged(nameof(ShowIIDXStyle));
                 }
             }
         }
@@ -157,7 +157,7 @@ namespace PPDExpansion.ViewModel
                 if (showScoreDiff != value)
                 {
                     PPDExpansionSetting.Setting.ShowScoreDiff = showScoreDiff = value;
-                    RaisePropertyChanged("ShowScoreDiff");
+                    OnPropertyChanged(nameof(ShowScoreDiff));
                 }
             }
         }
@@ -170,7 +170,7 @@ namespace PPDExpansion.ViewModel
                 if (width != value)
                 {
                     width = value;
-                    RaisePropertyChanged("Width");
+                    OnPropertyChanged(nameof(Width));
                 }
             }
         }
@@ -183,7 +183,7 @@ namespace PPDExpansion.ViewModel
                 if (height != value)
                 {
                     height = value;
-                    RaisePropertyChanged("Height");
+                    OnPropertyChanged(nameof(Height));
                 }
             }
         }
@@ -192,8 +192,8 @@ namespace PPDExpansion.ViewModel
         {
             get
             {
-                return closeCommand ?? (closeCommand = new RelayCommand(
-                    CloseCommand_Execute));
+                return closeCommand ??= new RelayCommand(
+                    CloseCommand_Execute);
             }
         }
 
@@ -201,8 +201,8 @@ namespace PPDExpansion.ViewModel
         {
             get
             {
-                return closedCommand ?? (closedCommand = new RelayCommand(
-                    ClosedCommand_Execute));
+                return closedCommand ??= new RelayCommand(
+                    ClosedCommand_Execute);
             }
         }
 
@@ -221,13 +221,13 @@ namespace PPDExpansion.ViewModel
             SinglePlayViewModel = new ViewModel.SinglePlayViewModel(this);
             MultiPlayViewModel = new ViewModel.MultiPlayViewModel(this);
             host = new Host(App.Port);
-            host.DataReceived += host_DataReceived;
-            host.Connected += host_Connected;
-            host.Disconnected += host_Disconnected;
+            host.DataReceived += Host_DataReceived;
+            host.Connected += Host_Connected;
+            host.Disconnected += Host_Disconnected;
             host.Start();
         }
 
-        void host_Disconnected()
+        void Host_Disconnected()
         {
             dispatcher.Invoke((Action)(() =>
             {
@@ -235,7 +235,7 @@ namespace PPDExpansion.ViewModel
             }));
         }
 
-        void host_Connected()
+        void Host_Connected()
         {
             dispatcher.Invoke((Action)(() =>
             {
@@ -243,13 +243,12 @@ namespace PPDExpansion.ViewModel
             }));
         }
 
-        void host_DataReceived(PackableBase obj)
+        void Host_DataReceived(PackableBase obj)
         {
             dispatcher.Invoke((Action)(() =>
             {
-                if (obj is ScoreInfo)
+                if (obj is ScoreInfo scoreInfo)
                 {
-                    var scoreInfo = (ScoreInfo)obj;
                     IsMulti = scoreInfo.PlayType == PlayType.MultiPlay;
                 }
 
@@ -266,16 +265,21 @@ namespace PPDExpansion.ViewModel
 
         private void CloseCommand_Execute()
         {
-            Messenger.Default.Send(new CloseWindowMessage(this));
+            WeakReferenceMessenger.Default.Send(new CloseWindowMessage(this));
+        }
+
+        /// <summary>
+        /// PPD との接続を閉じます。
+        /// </summary>
+        public void Dispose()
+        {
+            host?.Dispose();
+            host = null;
         }
 
         private void ClosedCommand_Execute()
         {
-            if (host != null)
-            {
-                host.Close();
-                host = null;
-            }
+            Dispose();
             PPDExpansionSetting.Setting.Width = Width;
             PPDExpansionSetting.Setting.Height = Height;
         }

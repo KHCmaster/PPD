@@ -16,7 +16,7 @@ namespace PPDFramework
         /// </summary>
         public const int Min = -10000;
 
-        private static SoundMasterControl instance = new SoundMasterControl();
+        private static readonly SoundMasterControl instance = new();
         private int masterVolume;
         private int movieVolume;
         private int seVolume;
@@ -61,16 +61,13 @@ namespace PPDFramework
         /// <returns>ボリューム</returns>
         public int GetVolume(SoundType soundType)
         {
-            switch (soundType)
+            return soundType switch
             {
-                case SoundType.Master:
-                    return masterVolume;
-                case SoundType.Movie:
-                    return movieVolume;
-                case SoundType.Se:
-                    return seVolume;
-            }
-            return 0;
+                SoundType.Master => masterVolume,
+                SoundType.Movie => movieVolume,
+                SoundType.Se => seVolume,
+                _ => 0,
+            };
         }
 
         /// <summary>

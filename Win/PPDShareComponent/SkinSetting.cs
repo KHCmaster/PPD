@@ -4,7 +4,7 @@ namespace PPDShareComponent
 {
     class SkinSetting : SettingDataBase
     {
-        private static SkinSetting setting = new SkinSetting();
+        private static readonly SkinSetting setting = new();
         public override string Name
         {
             get { return "PPDShareComponent.setting"; }

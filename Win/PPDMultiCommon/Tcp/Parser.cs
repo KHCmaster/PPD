@@ -11,97 +11,48 @@ namespace PPDMultiCommon.Tcp
         {
             rest = null;
             var networkData = MessagePackSerializer.Deserialize<NetworkData>(bytes);
-            switch (networkData.MethodType)
+            networkData = networkData.MethodType switch
             {
-                case MethodType.AddUser:
-                    networkData = ParseAndGetRest<AddUserNetworkData>(bytes, out rest);
-                    break;
-                case MethodType.AddMessage:
-                    networkData = ParseAndGetRest<AddMessageNetworkData>(bytes, out rest);
-                    break;
-                case MethodType.AddPrivateMessage:
-                    networkData = ParseAndGetRest<AddPrivateMessageNetworkData>(bytes, out rest);
-                    break;
-                case MethodType.ChangeUserState:
-                    networkData = ParseAndGetRest<ChangeUserStateNetworkData>(bytes, out rest);
-                    break;
-                case MethodType.HasSong:
-                    networkData = ParseAndGetRest<HasSongNetworkData>(bytes, out rest);
-                    break;
-                case MethodType.MainGameLoaded:
-                    networkData = ParseAndGetRest<MainGameLoadedNetworkData>(bytes, out rest);
-                    break;
-                case MethodType.ChangeScore:
-                    networkData = ParseAndGetRest<ChangeScoreNetworkData>(bytes, out rest);
-                    break;
-                case MethodType.ChangeLife:
-                    networkData = ParseAndGetRest<ChangeLifeNetworkData>(bytes, out rest);
-                    break;
-                case MethodType.ChangeEvaluate:
-                    networkData = ParseAndGetRest<ChangeEvaluateNetworkData>(bytes, out rest);
-                    break;
-                case MethodType.SendResult:
-                    networkData = ParseAndGetRest<SendResultNetworkData>(bytes, out rest);
-                    break;
-                case MethodType.AddEffect:
-                    networkData = ParseAndGetRest<AddEffectNetworkData>(bytes, out rest);
-                    break;
-                case MethodType.AddEffectToPlayer:
-                    networkData = ParseAndGetRest<AddEffectToPlayerNetworkData>(bytes, out rest);
-                    break;
-                case MethodType.ChangeGameRule:
-                    networkData = ParseAndGetRest<ChangeGameRuleNetworkData>(bytes, out rest);
-                    break;
-                case MethodType.ChangeSong:
-                    networkData = ParseAndGetRest<ChangeSongNetworkData>(bytes, out rest);
-                    break;
-                case MethodType.Ping:
-                    networkData = ParseAndGetRest<PingNetworkData>(bytes, out rest);
-                    break;
-                case MethodType.JustGoToMenu:
-                    networkData = ParseAndGetRest<JustGoToMenuNetworkData>(bytes, out rest);
-                    break;
-                case MethodType.ForceStart:
-                    networkData = ParseAndGetRest<ForceStartNetworkData>(bytes, out rest);
-                    break;
-                case MethodType.SendScoreList:
-                    networkData = ParseAndGetRest<SendScoreListNetworkData>(bytes, out rest);
-                    break;
-                case MethodType.KickUser:
-                    networkData = ParseAndGetRest<KickUserNetworkData>(bytes, out rest);
-                    break;
-                case MethodType.ChangeLeader:
-                    networkData = ParseAndGetRest<ChangeLeaderNetworkData>(bytes, out rest);
-                    break;
-                case MethodType.DeleteUser:
-                    networkData = ParseAndGetRest<DeleteUserNetworkData>(bytes, out rest);
-                    break;
-                case MethodType.CloseConnect:
-                    networkData = ParseAndGetRest<CloseConnectNetworkData>(bytes, out rest);
-                    break;
-                case MethodType.GoToPlay:
-                    networkData = ParseAndGetRest<GoToPlayNetworkData>(bytes, out rest);
-                    break;
-                case MethodType.SendServerInfo:
-                    networkData = ParseAndGetRest<SendServerInfoNetworkData>(bytes, out rest);
-                    break;
-                case MethodType.PingUser:
-                    networkData = ParseAndGetRest<PingUserNetworkData>(bytes, out rest);
-                    break;
-                case MethodType.GoToPlayPrepare:
-                    networkData = ParseAndGetRest<GoToPlayPrepareNetworkData>(bytes, out rest);
-                    break;
-                case MethodType.PlayMainGame:
-                    networkData = ParseAndGetRest<PlayMainGameNetworkData>(bytes, out rest);
-                    break;
-                case MethodType.GoToMenu:
-                    networkData = ParseAndGetRest<GoToMenuNetworkData>(bytes, out rest);
-                    break;
-                default:
-                    networkData = null;
-                    break;
-            }
+                MethodType.AddUser => ParseAndGetRest<AddUserNetworkData>(bytes, out rest),
+                MethodType.AddMessage => ParseAndGetRest<AddMessageNetworkData>(bytes, out rest),
+                MethodType.AddPrivateMessage => ParseAndGetRest<AddPrivateMessageNetworkData>(bytes, out rest),
+                MethodType.ChangeUserState => ParseAndGetRest<ChangeUserStateNetworkData>(bytes, out rest),
+                MethodType.HasSong => ParseAndGetRest<HasSongNetworkData>(bytes, out rest),
+                MethodType.MainGameLoaded => ParseAndGetRest<MainGameLoadedNetworkData>(bytes, out rest),
+                MethodType.ChangeScore => ParseAndGetRest<ChangeScoreNetworkData>(bytes, out rest),
+                MethodType.ChangeLife => ParseAndGetRest<ChangeLifeNetworkData>(bytes, out rest),
+                MethodType.ChangeEvaluate => ParseAndGetRest<ChangeEvaluateNetworkData>(bytes, out rest),
+                MethodType.SendResult => ParseAndGetRest<SendResultNetworkData>(bytes, out rest),
+                MethodType.AddEffect => ParseAndGetRest<AddEffectNetworkData>(bytes, out rest),
+                MethodType.AddEffectToPlayer => ParseAndGetRest<AddEffectToPlayerNetworkData>(bytes, out rest),
+                MethodType.ChangeGameRule => ParseAndGetRest<ChangeGameRuleNetworkData>(bytes, out rest),
+                MethodType.ChangeSong => ParseAndGetRest<ChangeSongNetworkData>(bytes, out rest),
+                MethodType.Ping => ParseAndGetRest<PingNetworkData>(bytes, out rest),
+                MethodType.JustGoToMenu => ParseAndGetRest<JustGoToMenuNetworkData>(bytes, out rest),
+                MethodType.ForceStart => ParseAndGetRest<ForceStartNetworkData>(bytes, out rest),
+                MethodType.SendScoreList => ParseAndGetRest<SendScoreListNetworkData>(bytes, out rest),
+                MethodType.KickUser => ParseAndGetRest<KickUserNetworkData>(bytes, out rest),
+                MethodType.ChangeLeader => ParseAndGetRest<ChangeLeaderNetworkData>(bytes, out rest),
+                MethodType.DeleteUser => ParseAndGetRest<DeleteUserNetworkData>(bytes, out rest),
+                MethodType.CloseConnect => ParseAndGetRest<CloseConnectNetworkData>(bytes, out rest),
+                MethodType.GoToPlay => ParseAndGetRest<GoToPlayNetworkData>(bytes, out rest),
+                MethodType.SendServerInfo => ParseAndGetRest<SendServerInfoNetworkData>(bytes, out rest),
+                MethodType.PingUser => ParseAndGetRest<PingUserNetworkData>(bytes, out rest),
+                MethodType.GoToPlayPrepare => ParseAndGetRest<GoToPlayPrepareNetworkData>(bytes, out rest),
+                MethodType.PlayMainGame => ParseAndGetRest<PlayMainGameNetworkData>(bytes, out rest),
+                MethodType.GoToMenu => ParseAndGetRest<GoToMenuNetworkData>(bytes, out rest),
+                _ => SkipUnknown(bytes, out rest),
+            };
             return networkData;
+        }
+
+        // 知らない種類のデータは 1 つ分を読み飛ばす（元は残りがなくなり、読む側が例外で止まっていた）
+        private static NetworkData SkipUnknown(byte[] bytes, out byte[] rest)
+        {
+            var reader = new MessagePackReader(bytes);
+            reader.Skip();
+            rest = bytes[(int)reader.Consumed..];
+            return null;
         }
 
         private static NetworkData ParseAndGetRest<T>(byte[] bytes, out byte[] rest) where T : NetworkData

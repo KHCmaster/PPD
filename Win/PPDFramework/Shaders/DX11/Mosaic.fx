@@ -1,20 +1,19 @@
-float2 WidthHeight;
-float4x4 Projection;
-int Size;
+#include "Common.fx"
 
-Texture2D LastRenderTargetTexture;
-Texture2D XTexture;
-Texture2D FilterTexture;
-SamplerState LinearSampler
+cbuffer Parameters : register(b0)
 {
-    Filter = MIN_MAG_MIP_LINEAR;
-	AddressU = Clamp;
-	AddressV = Clamp;
+    float2 WidthHeight;
+    float4x4 Projection;
+    int Size;
 };
+
+Texture2D LastRenderTargetTexture : register(t0);
+Texture2D XTexture : register(t1);
+Texture2D FilterTexture : register(t2);
 
 struct VertexShaderInput
 {
-	float3 Position : POSITION;
+	float4 Position : POSITION;
 	float4 Color    : COLOR;
 	float2 TexCoord : TEXCOORD;
 };
@@ -22,8 +21,8 @@ struct VertexShaderInput
 struct VertexShaderOutput
 {
 	float4 Position : SV_POSITION;
-	float4 Color    : COLOR;
-	float2 TexCoord : TEXCOORD;
+	float4 Color    : COLOR0;
+	float2 TexCoord : TEXCOORD0;
 };
 
 #include "Blend.fx"
@@ -31,13 +30,13 @@ struct VertexShaderOutput
 VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
 {
 	VertexShaderOutput output = (VertexShaderOutput)0;
-	output.Position = mul(float4(input.Position, 1.0), Projection);
+	output.Position = mul(input.Position, Projection);
 	output.TexCoord = input.TexCoord;
 	output.Color = input.Color;
 	return output;
 }
 
-float4 PixelShaderMosaicXFunction(VertexShaderOutput input) : SV_Target{
+float4 PixelShaderMosaicXFunction(VertexShaderOutput input) : SV_TARGET{
 	int start = input.TexCoord.x * WidthHeight.x / Size;
     start *= Size;
     float4 sum = 0;
@@ -48,10 +47,13 @@ float4 PixelShaderMosaicXFunction(VertexShaderOutput input) : SV_Target{
         sum += LastRenderTargetTexture.SampleLevel(LinearSampler, tex, 0) * alpha;
         count += alpha;
 	}
+    if (count.a == 0) {
+        return float4(0, 0, 0, 0);
+    }
     return sum / count;
 }
 
-float4 PixelShaderMosaicYFunction(VertexShaderOutput input) : SV_Target{
+float4 PixelShaderMosaicYFunction(VertexShaderOutput input) : SV_TARGET{
 	int start = input.TexCoord.y * WidthHeight.y / Size;
     start *= Size;
     float4 sum = 0;
@@ -62,6 +64,10 @@ float4 PixelShaderMosaicYFunction(VertexShaderOutput input) : SV_Target{
         sum += XTexture.SampleLevel(LinearSampler, tex, 0) * alpha;
         count += alpha;
 	}
+    // モザイクの範囲外（フィルタのアルファが全て 0）では 0 除算になるので、元の色をそのまま返す
+    if (count.a == 0) {
+        return LastRenderTargetTexture.SampleLevel(LinearSampler, input.TexCoord, 0);
+    }
     float4 color = sum / count;
     color.a *= FilterTexture.SampleLevel(LinearSampler, input.TexCoord, 0).a;
     return Normal(LastRenderTargetTexture.SampleLevel(LinearSampler, input.TexCoord, 0), color);
@@ -69,14 +75,16 @@ float4 PixelShaderMosaicYFunction(VertexShaderOutput input) : SV_Target{
 
 technique11 Mosaic {
 	pass p0 {
-		SetGeometryShader( 0 );
-		SetVertexShader(CompileShader(vs_5_0, VertexShaderFunction()));
-		SetPixelShader(CompileShader(ps_5_0, PixelShaderMosaicXFunction()));
+		SetBlendState(NoBlend, float4(0, 0, 0, 0), 0xFFFFFFFF);
+		SetGeometryShader(NULL);
+		SetVertexShader(CompileShader(vs_4_0, VertexShaderFunction()));
+		SetPixelShader(CompileShader(ps_4_0, PixelShaderMosaicXFunction()));
 	}
 
 	pass p1 {
-		SetGeometryShader( 0 );
-		SetVertexShader(CompileShader(vs_5_0, VertexShaderFunction()));
-		SetPixelShader(CompileShader(ps_5_0, PixelShaderMosaicYFunction()));
+		SetBlendState(NoBlend, float4(0, 0, 0, 0), 0xFFFFFFFF);
+		SetGeometryShader(NULL);
+		SetVertexShader(CompileShader(vs_4_0, VertexShaderFunction()));
+		SetPixelShader(CompileShader(ps_4_0, PixelShaderMosaicYFunction()));
 	}
 }

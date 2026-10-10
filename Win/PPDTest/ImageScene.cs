@@ -1,9 +1,10 @@
-﻿using PPDFramework;
+﻿using PPDMath;
+using PPDFramework;
 using System;
 
 namespace PPDTest
 {
-    class ImageScene : TestSceneBase
+    class ImageScene(TestSceneManager testSceneManager, PPDDevice device) : TestSceneBase(testSceneManager, device)
     {
         protected override string Title
         {
@@ -13,23 +14,18 @@ namespace PPDTest
             }
         }
 
-        public ImageScene(TestSceneManager testSceneManager, PPDDevice device) : base(testSceneManager, device)
-        {
-
-        }
-
         protected override void OnInitialize()
         {
             var pathManager = new PathManager(@"img\PPD\main_game");
-            foreach (var blendMode in (Effect2D.BlendMode[])Enum.GetValues(typeof(Effect2D.BlendMode)))
+            foreach (var blendMode in Enum.GetValues<Effect2D.BlendMode>())
             {
-                contentSprite.AddChild(new TextureString(device, blendMode.ToString(), 20, new SharpDX.Color4(1, 1, 1, 1))
+                contentSprite.AddChild(new TextureString(device, blendMode.ToString(), 20, new Vortice.Mathematics.Color4(1, 1, 1, 1))
                 {
-                    Position = new SharpDX.Vector2(0, ((int)blendMode) * 30),
+                    Position = new System.Numerics.Vector2(0, ((int)blendMode) * 30),
                 });
                 contentSprite.AddChild(new PictureObject(device, ResourceManager, pathManager.Combine("num.png"))
                 {
-                    Position = new SharpDX.Vector2(160, ((int)blendMode) * 30),
+                    Position = new System.Numerics.Vector2(160, ((int)blendMode) * 30),
                     BlendMode = blendMode,
                 });
             }

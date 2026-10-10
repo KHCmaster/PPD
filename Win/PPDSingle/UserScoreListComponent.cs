@@ -1,34 +1,29 @@
-﻿using PPDFramework;
+﻿using PPDMath;
+using PPDFramework;
 using PPDShareComponent;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace PPDSingle
 {
-    class UserScoreListComponent : GameComponent
+    class UserScoreListComponent(PPDDevice device, PPDFramework.Resource.ResourceManager resourceManager) : GameComponent(device)
     {
         const int ItemHeight = 45;
 
-        List<PlayUserIcon> list;
-        PPDFramework.Resource.ResourceManager resourceManager;
+        readonly List<PlayUserIcon> list = [];
+        readonly PPDFramework.Resource.ResourceManager resourceManager = resourceManager;
 
         public PlayUserIcon[] Players
         {
-            get { return list.ToArray(); }
-        }
-
-        public UserScoreListComponent(PPDDevice device, PPDFramework.Resource.ResourceManager resourceManager) : base(device)
-        {
-            this.resourceManager = resourceManager;
-
-            list = new List<PlayUserIcon>();
+            get { return [.. list]; }
         }
 
         public void AddUser(UserPlayState userPlayState, bool showScore, bool showEvaluate, bool showLife)
         {
             var playUserIcon = new PlayUserIcon(device, resourceManager, userPlayState, showScore, showEvaluate, showLife)
             {
-                Position = new SharpDX.Vector2(0, ChildrenCount * ItemHeight)
+                Position = new System.Numerics.Vector2(0, ChildrenCount * ItemHeight)
             };
             this.AddChild(playUserIcon);
             list.Add(playUserIcon);
@@ -43,14 +38,14 @@ namespace PPDSingle
             list.Sort(Compare);
             for (int i = 0; i < list.Count; i++)
             {
-                list[i].Position = new SharpDX.Vector2(0, i * ItemHeight);
+                list[i].Position = new System.Numerics.Vector2(0, i * ItemHeight);
             }
         }
 
         public void DeleteUser(UserPlayState userPlayState)
         {
             PlayUserIcon found = null;
-            foreach (PlayUserIcon playUserIcon in Children)
+            foreach (PlayUserIcon playUserIcon in Children.Cast<PlayUserIcon>())
             {
                 if (playUserIcon.UserPlayState == userPlayState)
                 {
@@ -83,7 +78,7 @@ namespace PPDSingle
 
             for (int i = 0; i < list.Count; i++)
             {
-                list[i].Position = new SharpDX.Vector2(0, AnimationUtility.GetAnimationValue(list[i].Position.Y, i * ItemHeight));
+                list[i].Position = new System.Numerics.Vector2(0, AnimationUtility.GetAnimationValue(list[i].Position.Y, i * ItemHeight));
             }
         }
 

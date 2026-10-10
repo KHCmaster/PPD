@@ -1,5 +1,7 @@
 ﻿using PPDFramework;
-using SharpDX;
+using System.Numerics;
+using PPDMath;
+using RectangleF = Vortice.Mathematics.Rect;
 
 namespace FlowScriptEnginePPD.FlowSourceObjects.Graphics.Image
 {

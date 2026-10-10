@@ -1,32 +1,33 @@
 ﻿using PPDFramework;
 using PPDShareComponent;
-using SharpDX;
+using System.Numerics;
+using PPDMath;
 using System;
 
 namespace PPDSingle
 {
     class ReviewDialog : FocusableGameComponent
     {
-        EffectObject back;
+        readonly EffectObject back;
         int selection;
 
-        TextureString processing;
-        TextureString rate;
-        TextureString content;
-        TextureString review;
+        readonly TextureString processing;
+        readonly TextureString rate;
+        readonly TextureString content;
+        readonly TextureString review;
 
-        RectangleComponent black;
+        readonly RectangleComponent black;
 
-        Button[] buttons;
-        StarObject[] stars;
+        readonly Button[] buttons;
+        readonly StarObject[] stars;
 
-        EffectObject select;
+        readonly EffectObject select;
 
-        ISound Sound;
-        IReviewManager ReviewManager;
+        readonly ISound Sound;
+        readonly IReviewManager ReviewManager;
         bool reviewWaiting;
 
-        GameComponent[] hiddenList;
+        readonly GameComponent[] hiddenList;
 
         int reviewSelection = -1;
         bool opening;
@@ -34,7 +35,7 @@ namespace PPDSingle
         public ReviewDialog(PPDDevice device, PPDFramework.Resource.ResourceManager resourceManager, ISound sound, IReviewManager reviewManager) : base(device)
         {
             this.ReviewManager = reviewManager;
-            reviewManager.ReviewFinished += reviewManager_ReviewFinished;
+            reviewManager.ReviewFinished += ReviewManager_ReviewFinished;
             this.Sound = sound;
             back = new EffectObject(device, resourceManager, Utility.Path.Combine("postconfirm.etd"))
             {
@@ -66,9 +67,9 @@ namespace PPDSingle
             select = new EffectObject(device, resourceManager, Utility.Path.Combine("greenflare.etd"))
             {
                 Position = new Vector2(235, 140),
-                Scale = new Vector2(0.5f, 0.5f)
+                Scale = new Vector2(0.5f, 0.5f),
+                PlayType = Effect2D.EffectManager.PlayType.ReverseLoop
             };
-            select.PlayType = Effect2D.EffectManager.PlayType.ReverseLoop;
             select.Play();
 
             buttons = new Button[2];
@@ -86,10 +87,10 @@ namespace PPDSingle
                 }
                 buttons[i] = new Button(device, resourceManager, Utility.Path, text)
                 {
-                    Position = new Vector2(300 + i * 200, 315)
+                    Position = new Vector2(300 + i * 200, 315),
+                    Selected = false,
+                    Hidden = true
                 };
-                buttons[i].Selected = false;
-                buttons[i].Hidden = true;
                 this.AddChild(buttons[i]);
             }
 
@@ -106,7 +107,7 @@ namespace PPDSingle
             black.Alpha = 0;
             back.Hidden = true;
             processing.Hidden = true;
-            hiddenList = new GameComponent[]{
+            hiddenList = [
                 content,
                 rate,
                 buttons[0],
@@ -118,7 +119,7 @@ namespace PPDSingle
                 stars[4],
                 select,
                 review
-            };
+            ];
 
             foreach (GameComponent hidden in hiddenList)
             {
@@ -140,7 +141,7 @@ namespace PPDSingle
             Rate = 3;
         }
 
-        void reviewManager_ReviewFinished(bool ok)
+        void ReviewManager_ReviewFinished(bool ok)
         {
             processing.Hidden = true;
             reviewWaiting = false;
@@ -255,9 +256,7 @@ namespace PPDSingle
                         Sound.Play(PPDSetting.DefaultSounds[3], -1000);
                         break;
                     case 2:
-                        bool temp = buttons[0].Selected;
-                        buttons[0].Selected = buttons[1].Selected;
-                        buttons[1].Selected = temp;
+                        (buttons[1].Selected, buttons[0].Selected) = (buttons[0].Selected, buttons[1].Selected);
                         Sound.Play(PPDSetting.DefaultSounds[0], -1000);
                         break;
                 }
@@ -276,9 +275,7 @@ namespace PPDSingle
                         Sound.Play(PPDSetting.DefaultSounds[3], -1000);
                         break;
                     case 2:
-                        bool temp = buttons[0].Selected;
-                        buttons[0].Selected = buttons[1].Selected;
-                        buttons[1].Selected = temp;
+                        (buttons[1].Selected, buttons[0].Selected) = (buttons[0].Selected, buttons[1].Selected);
                         Sound.Play(PPDSetting.DefaultSounds[0], -1000);
                         break;
                 }
@@ -334,14 +331,14 @@ namespace PPDSingle
             }
             back.Stop();
             back.PlayType = Effect2D.EffectManager.PlayType.ReverseOnce;
-            back.Finish += back_ReverseFinish;
+            back.Finish += Back_ReverseFinish;
             back.Play();
         }
 
-        void back_ReverseFinish(object sender, EventArgs e)
+        void Back_ReverseFinish(object sender, EventArgs e)
         {
             back.Hidden = true;
-            back.Finish -= back_ReverseFinish;
+            back.Finish -= Back_ReverseFinish;
         }
 
         void ReviewDialog_GotFocused(IFocusable sender, FocusEventArgs args)
@@ -350,12 +347,12 @@ namespace PPDSingle
             Reviewed = false;
             back.Stop();
             back.PlayType = Effect2D.EffectManager.PlayType.Once;
-            back.Finish += back_NormalFinish;
+            back.Finish += Back_NormalFinish;
             back.Play();
             back.Hidden = false;
         }
 
-        void back_NormalFinish(object sender, EventArgs e)
+        void Back_NormalFinish(object sender, EventArgs e)
         {
             foreach (GameComponent hidden in hiddenList)
             {
@@ -364,7 +361,7 @@ namespace PPDSingle
             selection = 0;
             select.Position = new Vector2(235, 140 + 30 * selection);
             buttons[0].Selected = buttons[1].Selected = false;
-            back.Finish -= back_NormalFinish;
+            back.Finish -= Back_NormalFinish;
             opening = false;
         }
 

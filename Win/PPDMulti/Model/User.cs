@@ -1,7 +1,10 @@
 ﻿using PPDFramework;
 using PPDFramework.Web;
 using PPDMultiCommon.Model;
-using SharpDX;
+using System.Numerics;
+using PPDMath;
+using Color4 = Vortice.Mathematics.Color4;
+using Color = Vortice.Mathematics.Color;
 using System.IO;
 
 namespace PPDMulti.Model
@@ -10,7 +13,7 @@ namespace PPDMulti.Model
     {
         private Color4 color;
 
-        private static User systemUser = new User
+        private static readonly User systemUser = new()
         {
             Name = "",
             Color = PPDColors.White
@@ -50,7 +53,7 @@ namespace PPDMulti.Model
                 if (color != value)
                 {
                     color = value;
-                    OnPropertyChanged("Color");
+                    OnPropertyChanged(nameof(Color));
                 }
             }
         }

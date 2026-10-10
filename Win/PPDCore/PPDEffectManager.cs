@@ -1,15 +1,16 @@
 ﻿using PPDFramework;
-using SharpDX;
+using System.Numerics;
+using PPDMath;
 using System;
 using System.Collections.Generic;
 
 namespace PPDCore
 {
-    public class PPDEffectManager : GameComponent
+    public class PPDEffectManager(PPDDevice device, PPDFramework.Resource.ResourceManager resourceManager) : GameComponent(device)
     {
         const int defaulteffectnum = 10;
-        PPDFramework.Resource.ResourceManager resourceManager;
-        Dictionary<string, PPDEffectPool> pools;
+        readonly PPDFramework.Resource.ResourceManager resourceManager = resourceManager;
+        readonly Dictionary<string, PPDEffectPool> pools = [];
 
         public bool SuspendAdd
         {
@@ -17,11 +18,6 @@ namespace PPDCore
             set;
         }
 
-        public PPDEffectManager(PPDDevice device, PPDFramework.Resource.ResourceManager resourceManager) : base(device)
-        {
-            this.resourceManager = resourceManager;
-            pools = new Dictionary<string, PPDEffectPool>();
-        }
         public void CreateEffect(PathObject filename)
         {
             var ppdep = new PPDEffectPool(device, filename, defaulteffectnum, resourceManager);
@@ -34,19 +30,19 @@ namespace PPDCore
                 return;
             }
 
-            if (!String.IsNullOrEmpty(filename) && pools.ContainsKey(filename))
+            if (!String.IsNullOrEmpty(filename) && pools.TryGetValue(filename, out PPDEffectPool value))
             {
-                var eo = pools[filename].Use(pos);
-                eo.Finish += eo_Finish;
+                var eo = value.Use(pos);
+                eo.Finish += Eo_Finish;
                 this.AddChild(eo);
             }
         }
 
-        void eo_Finish(object sender, EventArgs e)
+        void Eo_Finish(object sender, EventArgs e)
         {
             var eo = sender as EffectObject;
             this.RemoveChild(eo);
-            eo.Finish -= eo_Finish;
+            eo.Finish -= Eo_Finish;
         }
 
         public void Clear()

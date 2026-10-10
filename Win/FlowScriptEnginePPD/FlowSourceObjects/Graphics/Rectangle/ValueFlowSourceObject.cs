@@ -1,6 +1,9 @@
 ﻿using PPDCoreModel;
 using PPDFramework;
-using SharpDX;
+using System.Numerics;
+using PPDMath;
+using Color4 = Vortice.Mathematics.Color4;
+using Color = Vortice.Mathematics.Color;
 using System.Collections.Generic;
 
 namespace FlowScriptEnginePPD.FlowSourceObjects.Graphics.Rectangle
@@ -19,9 +22,9 @@ namespace FlowScriptEnginePPD.FlowSourceObjects.Graphics.Rectangle
         {
             base.OnInitialize();
 
-            if (this.Manager.Items.ContainsKey("ResourceManager"))
+            if (this.Manager.Items.TryGetValue("ResourceManager", out object value))
             {
-                resourceManager = this.Manager.Items["ResourceManager"] as ScriptResourceManager;
+                resourceManager = value as ScriptResourceManager;
             }
         }
 

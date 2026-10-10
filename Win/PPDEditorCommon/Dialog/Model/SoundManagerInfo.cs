@@ -5,14 +5,14 @@ namespace PPDEditorCommon.Dialog.Model
 {
     public class SoundManagerInfo
     {
-        List<string> sounds;
-        SortedList<float, ushort[]> changes;
+        readonly List<string> sounds;
+        readonly SortedList<float, ushort[]> changes;
 
         public string[] Sounds
         {
             get
             {
-                return sounds.ToArray();
+                return [.. sounds];
             }
         }
 
@@ -20,14 +20,14 @@ namespace PPDEditorCommon.Dialog.Model
         {
             get
             {
-                return changes.ToArray();
+                return [.. changes];
             }
         }
 
         public SoundManagerInfo()
         {
-            sounds = new List<string>();
-            changes = new SortedList<float, ushort[]>();
+            sounds = [];
+            changes = [];
         }
 
         public void Add(string filePath)

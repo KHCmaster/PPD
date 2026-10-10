@@ -1,4 +1,5 @@
-﻿using FlowScriptEngine;
+﻿using PPDMath;
+using FlowScriptEngine;
 
 namespace FlowScriptEngineSlimDX.FlowSourceObjects.Matrix
 {
@@ -11,19 +12,19 @@ namespace FlowScriptEngineSlimDX.FlowSourceObjects.Matrix
         }
 
         [ToolTipText("Matrix_Translation_Translation_Summary")]
-        public SharpDX.Vector3 Translation
+        public System.Numerics.Vector3 Translation
         {
             private get;
             set;
         }
 
         [ToolTipText("Matrix_Translation_Value_Summary")]
-        public SharpDX.Matrix Value
+        public System.Numerics.Matrix4x4 Value
         {
             get
             {
                 SetValue(nameof(Translation));
-                return SharpDX.Matrix.Translation(Translation);
+                return MathCompat.Translation(Translation);
             }
         }
     }

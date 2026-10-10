@@ -1,5 +1,6 @@
 ﻿using PPDFramework;
-using SharpDX;
+using System.Numerics;
+using PPDMath;
 
 namespace PPDEditor
 {
@@ -12,7 +13,7 @@ namespace PPDEditor
         }
 
         State state = State.downing;
-        PictureObject top;
+        readonly PictureObject top;
 
         public MainGameTop(PPDDevice device, PPDFramework.Resource.ResourceManager resourceManager) : base(device)
         {

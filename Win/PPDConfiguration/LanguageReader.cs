@@ -15,10 +15,10 @@ namespace PPDConfiguration
         /// </summary>
         public const string mainLangIso = "en";
 
-        SettingReader mainAnalyzer;
-        SettingReader analyzer;
-        SettingReader[] appendedAnalyzers;
-        SettingReader[] appendedMainAnalyzers;
+        readonly SettingReader mainAnalyzer;
+        readonly SettingReader analyzer;
+        readonly SettingReader[] appendedAnalyzers;
+        readonly SettingReader[] appendedMainAnalyzers;
 
         /// <summary>
         /// コンストラクタ
@@ -31,13 +31,13 @@ namespace PPDConfiguration
             if (File.Exists(path))
             {
                 analyzer = new SettingReader(File.ReadAllText(path));
-                appendedAnalyzers = GetAppendedLangPaths(componentName, langISO).Select(s => new SettingReader(File.ReadAllText(s))).ToArray();
+                appendedAnalyzers = [.. GetAppendedLangPaths(componentName, langISO).Select(s => new SettingReader(File.ReadAllText(s)))];
             }
             path = GetLangPath(componentName, mainLangIso);
             if (File.Exists(path))
             {
                 mainAnalyzer = new SettingReader(File.ReadAllText(path));
-                appendedMainAnalyzers = GetAppendedLangPaths(componentName, mainLangIso).Select(s => new SettingReader(File.ReadAllText(s))).ToArray();
+                appendedMainAnalyzers = [.. GetAppendedLangPaths(componentName, mainLangIso).Select(s => new SettingReader(File.ReadAllText(s)))];
             }
         }
 
@@ -47,12 +47,12 @@ namespace PPDConfiguration
         /// <param name="componentName">コンポーネント名。</param>
         /// <param name="langISO">言語ファイルISO。</param>
         /// <returns></returns>
-        private string GetLangPath(string componentName, string langISO)
+        private static string GetLangPath(string componentName, string langISO)
         {
             return String.Format("Lang\\lang_{0}_{1}.ini", componentName, langISO);
         }
 
-        private string[] GetAppendedLangPaths(string componentName, string langIso)
+        private static string[] GetAppendedLangPaths(string componentName, string langIso)
         {
             return Directory.GetFiles("Lang", String.Format("lang_{0}_{1}_*.ini", componentName, langIso));
         }

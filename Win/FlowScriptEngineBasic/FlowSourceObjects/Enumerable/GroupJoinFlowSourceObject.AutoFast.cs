@@ -9,21 +9,15 @@ namespace FlowScriptEngineBasic.FlowSourceObjects.Enumerable
     {
         public override object GetPropertyValue(string propertyName)
         {
-            switch (propertyName)
+            return propertyName switch
             {
-                case "Enumerable":
-                    return Enumerable;
-                case "InnerSelectValue":
-                    return InnerSelectValue;
-                case "OuterSelectValue":
-                    return OuterSelectValue;
-                case "ResultSelectValue":
-                    return ResultSelectValue;
-                case "ResultSelectValues":
-                    return ResultSelectValues;
-                default:
-                    return null;
-            }
+                "Enumerable" => Enumerable,
+                "InnerSelectValue" => InnerSelectValue,
+                "OuterSelectValue" => OuterSelectValue,
+                "ResultSelectValue" => ResultSelectValue,
+                "ResultSelectValues" => ResultSelectValues,
+                _ => null,
+            };
         }
 
         protected override void SetPropertyValue(string propertyName, object value)

@@ -2,11 +2,11 @@
 
 namespace FlowScriptDrawControl.Command
 {
-    abstract class BoundCommentCommandBase : CommandBase
+    abstract class BoundCommentCommandBase(FlowAreaControl areaControl, SourceControl sourceControl, BoundCommentControl commentControl) : CommandBase
     {
-        private FlowAreaControl areaControl;
-        private SourceControl sourceControl;
-        private BoundCommentControl commentControl;
+        private readonly FlowAreaControl areaControl = areaControl;
+        private readonly SourceControl sourceControl = sourceControl;
+        private readonly BoundCommentControl commentControl = commentControl;
 
         public BoundCommentControl CommentControl
         {
@@ -14,13 +14,6 @@ namespace FlowScriptDrawControl.Command
             {
                 return commentControl;
             }
-        }
-
-        protected BoundCommentCommandBase(FlowAreaControl areaControl, SourceControl sourceControl, BoundCommentControl commentControl)
-        {
-            this.areaControl = areaControl;
-            this.sourceControl = sourceControl;
-            this.commentControl = commentControl;
         }
 
         protected void AddComment()

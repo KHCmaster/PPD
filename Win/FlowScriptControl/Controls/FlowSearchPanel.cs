@@ -1,99 +1,81 @@
 ﻿using FlowScriptControl.Classes;
 using FlowScriptDrawControl.Model;
 using System;
-using System.Drawing;
 using System.Linq;
-using System.Windows.Forms;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace FlowScriptControl.Controls
 {
-    public partial class FlowSearchPanel : UserControl
+    /// <summary>
+    /// スクリプトの中のノードとコメントを検索するパネルです。
+    /// </summary>
+    public class FlowSearchPanel : UserControl
     {
         public event Func<string, SearchResult> Searched;
         public event Action<SearchResultItem> SelectionChanged;
 
+        private readonly TextBox queryTextBox;
+        private readonly ListBox resultListBox;
+
         public FlowSearchPanel()
         {
-            InitializeComponent();
+            queryTextBox = new TextBox { Margin = new Thickness(2), VerticalContentAlignment = VerticalAlignment.Center };
+            queryTextBox.KeyDown += QueryTextBox_KeyDown;
+            resultListBox = new ListBox();
+            // AutomationId は UI の自動テスト（UITests）で使う
+            System.Windows.Automation.AutomationProperties.SetAutomationId(queryTextBox, "SearchQueryBox");
+            System.Windows.Automation.AutomationProperties.SetAutomationId(resultListBox, "SearchResultList");
+            ScrollViewer.SetHorizontalScrollBarVisibility(resultListBox, ScrollBarVisibility.Auto);
+            resultListBox.SelectionChanged += ResultListBox_SelectionChanged;
+            var panel = new DockPanel();
+            DockPanel.SetDock(queryTextBox, Dock.Top);
+            panel.Children.Add(queryTextBox);
+            panel.Children.Add(resultListBox);
+            Content = panel;
         }
 
         public string SearchQuery
         {
-            get { return toolStripTextBox1.Text; }
+            get { return queryTextBox.Text; }
             set
             {
-                toolStripTextBox1.Text = value;
+                queryTextBox.Text = value;
                 Search();
-            }
-        }
-
-        private void ProcessSearchResult(SearchResult searchResult)
-        {
-            listBox1.Items.Clear();
-            if (searchResult == null)
-            {
-                return;
-            }
-
-            listBox1.Items.AddRange(searchResult.Sources.Select(s => new SearchResultItem(searchResult, s)).ToArray());
-            listBox1.Items.AddRange(searchResult.Comments.Select(c => new SearchResultItem(searchResult, c)).ToArray());
-
-
-            using (Graphics g = listBox1.CreateGraphics())
-            {
-                float maxWidth = 0;
-                foreach (SearchResultItem item in listBox1.Items)
-                {
-                    maxWidth = Math.Max(maxWidth,
-                        g.MeasureString(listBox1.Items[listBox1.Items.Count - 1].ToString(), listBox1.Font).Width);
-                }
-                listBox1.HorizontalExtent = (int)maxWidth + 50;
             }
         }
 
         private void Search()
         {
-            var searchResult = OnSearched(toolStripTextBox1.Text);
-            ProcessSearchResult(searchResult);
+            resultListBox.Items.Clear();
+            var searchResult = Searched?.Invoke(queryTextBox.Text);
+            if (searchResult == null)
+            {
+                return;
+            }
+            foreach (var item in searchResult.Sources.Select(s => new SearchResultItem(searchResult, s))
+                .Concat(searchResult.Comments.Select(c => new SearchResultItem(searchResult, c))))
+            {
+                resultListBox.Items.Add(item);
+            }
         }
 
-        private void toolStripTextBox1_KeyDown(object sender, KeyEventArgs e)
+        private void QueryTextBox_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Enter)
+            if (e.Key == Key.Enter)
             {
                 Search();
                 e.Handled = true;
             }
         }
 
-        private void toolStripTextBox1_KeyPress(object sender, KeyPressEventArgs e)
+        private void ResultListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (e.KeyChar == (char)Keys.Enter)
+            if (resultListBox.SelectedItem is SearchResultItem item)
             {
-                e.Handled = true;
+                SelectionChanged?.Invoke(item);
             }
-        }
-
-        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (listBox1.SelectedIndex >= 0 && listBox1.SelectedIndex < listBox1.Items.Count)
-            {
-                OnSelectionChanged(listBox1.Items[listBox1.SelectedIndex] as SearchResultItem);
-            }
-        }
-
-        private SearchResult OnSearched(string query)
-        {
-            if (Searched != null)
-            {
-                return Searched(query);
-            }
-            return null;
-        }
-
-        private void OnSelectionChanged(SearchResultItem searchResultItem)
-        {
-            SelectionChanged?.Invoke(searchResultItem);
         }
     }
 }

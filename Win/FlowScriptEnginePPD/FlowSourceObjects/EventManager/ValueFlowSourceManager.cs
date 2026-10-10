@@ -19,7 +19,7 @@ namespace FlowScriptEnginePPD.FlowSourceObjects.EventManager
                 {
                     return null;
                 }
-                return eventManager.VolumePercents.Cast<object>().ToArray();
+                return [.. eventManager.VolumePercents.Cast<object>()];
             }
         }
 
@@ -32,7 +32,7 @@ namespace FlowScriptEnginePPD.FlowSourceObjects.EventManager
                 {
                     return null;
                 }
-                return eventManager.KeepPlayings.Cast<object>().ToArray();
+                return [.. eventManager.KeepPlayings.Cast<object>()];
             }
         }
 
@@ -45,7 +45,7 @@ namespace FlowScriptEnginePPD.FlowSourceObjects.EventManager
                 {
                     return null;
                 }
-                return eventManager.ReleaseSounds.Cast<object>().ToArray();
+                return [.. eventManager.ReleaseSounds.Cast<object>()];
             }
         }
     }

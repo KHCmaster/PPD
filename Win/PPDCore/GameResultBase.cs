@@ -11,12 +11,8 @@ namespace PPDCore
     /// ゲームの結果クラスです
     /// 必ずpublic実装する必要があります
     /// </summary>
-    public abstract class GameResultBase : GameComponent
+    public abstract class GameResultBase(PPDDevice device) : GameComponent(device)
     {
-        protected GameResultBase(PPDDevice device) : base(device)
-        {
-
-        }
 
         /// <summary>
         /// 結果がセットされた
@@ -158,7 +154,7 @@ namespace PPDCore
             }
             UpdateScore(util, replaying);
             SendScore(util, inputs, replaying, perfectTrialToken);
-            if (ResultSet != null) ResultSet.Invoke(this, EventArgs.Empty);
+            ResultSet?.Invoke(this, EventArgs.Empty);
         }
 
         private void UpdateScore(PPDGameUtility util, bool replaying)

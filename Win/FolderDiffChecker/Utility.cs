@@ -8,7 +8,7 @@ namespace FolderDiffChecker
     {
         public static void CopyDirectory(string sourceDirName, string destDirName)
         {
-            CopyDirectory(sourceDirName, destDirName, new Regex[0]);
+            CopyDirectory(sourceDirName, destDirName, []);
         }
 
         public static void CopyDirectory(string sourceDirName, string destDirName, Regex[] exceptFiles)
@@ -20,8 +20,8 @@ namespace FolderDiffChecker
             }
 
             //コピー先のディレクトリ名の末尾に"\"をつける
-            if (destDirName[destDirName.Length - 1] != Path.DirectorySeparatorChar)
-                destDirName = destDirName + Path.DirectorySeparatorChar;
+            if (destDirName[^1] != Path.DirectorySeparatorChar)
+                destDirName += Path.DirectorySeparatorChar;
 
             //コピー元のディレクトリにあるファイルをコピー
             var files = Directory.GetFiles(sourceDirName);
@@ -31,7 +31,7 @@ namespace FolderDiffChecker
                 bool ok = true;
                 foreach (Regex regex in exceptFiles)
                 {
-                    if (regex.Match(filename).Success)
+                    if (regex.IsMatch(filename))
                     {
                         ok = false;
                         break;
@@ -51,7 +51,7 @@ namespace FolderDiffChecker
                 bool ok = true;
                 foreach (Regex regex in exceptFiles)
                 {
-                    if (regex.Match(dirName).Success)
+                    if (regex.IsMatch(dirName))
                     {
                         ok = false;
                         break;
@@ -66,7 +66,7 @@ namespace FolderDiffChecker
 
         public static void Zip(string fileName, string sourceDir)
         {
-            Zip(fileName, sourceDir, new Regex[0]);
+            Zip(fileName, sourceDir, []);
         }
 
         public static void Zip(string fileName, string sourceDir, Regex[] exceptFiles)
@@ -74,16 +74,31 @@ namespace FolderDiffChecker
             var tempFileName = Path.GetTempFileName();
             var tempDir = Path.Combine(Path.GetDirectoryName(tempFileName), Path.GetFileNameWithoutExtension(tempFileName));
             var dirName = Path.GetFileName(sourceDir);
-            Directory.CreateDirectory(tempDir);
-            var targetDir = Path.Combine(tempDir, dirName);
-            Directory.CreateDirectory(targetDir);
-            Utility.CopyDirectory(sourceDir, targetDir, exceptFiles);
-
-            var fastZip = new FastZip
+            try
             {
-                CreateEmptyDirectories = true
-            };
-            fastZip.CreateZip(fileName, tempDir, true, null);
+                Directory.CreateDirectory(tempDir);
+                var targetDir = Path.Combine(tempDir, dirName);
+                Directory.CreateDirectory(targetDir);
+                Utility.CopyDirectory(sourceDir, targetDir, exceptFiles);
+
+                // ファイル名は、従来（SharpZipLib 0.86）と同じく OEM コードページで書き、UTF-8 の印を付けない（古い PPDUpdater でも読めるように）。
+                // SharpZipLib 1.4 からは、指定しないと UTF-8 で書く
+                var fastZip = new FastZip
+                {
+                    CreateEmptyDirectories = true,
+                    StringCodec = StringCodec.FromCodePage(System.Globalization.CultureInfo.CurrentCulture.TextInfo.OEMCodePage).WithForcedLegacyEncoding()
+                };
+                fastZip.CreateZip(fileName, tempDir, true, null);
+            }
+            finally
+            {
+                // 作業用の一時ファイルとフォルダーを消す（以前は残ったままだった）
+                if (Directory.Exists(tempDir))
+                {
+                    Directory.Delete(tempDir, true);
+                }
+                File.Delete(tempFileName);
+            }
         }
     }
 }

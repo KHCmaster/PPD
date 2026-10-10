@@ -1,39 +1,95 @@
-﻿using SharpDX;
-using SharpDX.Direct3D11;
+using Vortice.Direct3D11;
+using Vortice.Mathematics;
+using System;
+using System.Runtime.InteropServices;
+using System.Threading;
 
 namespace PPDFramework.Vertex.DX11
 {
-    class VertexBuffer : VertexBufferBase
+    /// <summary>
+    /// DirectX11の頂点バッファーです。
+    /// 書き込まれた頂点はCPU側に保持し、描画スレッドで使われるときにGPUへ転送します。
+    /// </summary>
+    class VertexBuffer(PPDDevice device, ID3D11Buffer buffer, int sizeInBytes) : VertexBufferBase(device, sizeInBytes)
     {
-        public SharpDX.Direct3D11.Buffer _Buffer
+        readonly Lock writeLock = new();
+        int dirtyStart;
+        int dirtyEnd;
+
+        public ID3D11Buffer Buffer
         {
             get;
             private set;
-        }
-
-        public VertexBuffer(PPDDevice device, SharpDX.Direct3D11.Buffer buffer, int sizeInBytes) : base(device, sizeInBytes)
-        {
-            _Buffer = buffer;
-        }
+        } = buffer;
 
         public override void Write(ColoredTexturedVertex[] vertex, int count, int offset)
         {
-            base.Write(vertex, count, offset);
-            var databox = ((PPDFramework.DX11.PPDDevice)device).Context.MapSubresource(_Buffer, MapMode.WriteDiscard, MapFlags.None, out DataStream dataStream);
-            dataStream.Position = ColoredTexturedVertex.Size * offset;
-            dataStream.WriteRange(vertex, 0, count);
-            dataStream.Close();
-            dataStream.Dispose();
-            ((PPDFramework.DX11.PPDDevice)device).Context.UnmapSubresource(_Buffer, 0);
+            lock (writeLock)
+            {
+                base.Write(vertex, count, offset);
+                MarkDirty(offset, count);
+            }
+        }
+
+        public override void Write(ReadOnlySpan<ColoredTexturedVertex> vertex, int offset)
+        {
+            lock (writeLock)
+            {
+                base.Write(vertex, offset);
+                MarkDirty(offset, vertex.Length);
+            }
+        }
+
+        private void MarkDirty(int offset, int count)
+        {
+            if (dirtyEnd <= dirtyStart)
+            {
+                dirtyStart = offset;
+                dirtyEnd = offset + count;
+            }
+            else
+            {
+                dirtyStart = Math.Min(dirtyStart, offset);
+                dirtyEnd = Math.Max(dirtyEnd, offset + count);
+            }
+        }
+
+        /// <summary>
+        /// CPU側で書き込まれた頂点をGPUへ転送します。描画スレッドから呼ぶ必要があります。
+        /// </summary>
+        /// <param name="context"></param>
+        internal void Flush(ID3D11DeviceContext context)
+        {
+            if (dirtyEnd <= dirtyStart)
+            {
+                return;
+            }
+            lock (writeLock)
+            {
+                if (Buffer == null || dirtyEnd <= dirtyStart)
+                {
+                    return;
+                }
+                var handle = GCHandle.Alloc(Vertices, GCHandleType.Pinned);
+                try
+                {
+                    var ptr = handle.AddrOfPinnedObject() + dirtyStart * ColoredTexturedVertex.Size;
+                    context.UpdateSubresource(Buffer, 0,
+                        new Box(dirtyStart * ColoredTexturedVertex.Size, 0, 0, dirtyEnd * ColoredTexturedVertex.Size, 1, 1),
+                        ptr, 0, 0);
+                }
+                finally
+                {
+                    handle.Free();
+                }
+                dirtyStart = dirtyEnd = 0;
+            }
         }
 
         protected override void DisposeResource()
         {
-            if (_Buffer != null)
-            {
-                _Buffer.Dispose();
-                _Buffer = null;
-            }
+            Buffer?.Dispose();
+            Buffer = null;
         }
     }
 }

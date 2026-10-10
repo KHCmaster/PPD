@@ -23,7 +23,7 @@ namespace FlowScriptEngineBasic.FlowSourceObjects.Enumerable
                 SetValue(nameof(Default));
                 if (enumerable == null)
                 {
-                    return new object[] { Default };
+                    return [Default];
                 }
                 return enumerable.DefaultIfEmpty(Default);
             }

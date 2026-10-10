@@ -1,10 +1,11 @@
-﻿using PPDFramework;
+﻿using PPDMath;
+using PPDFramework;
 
 namespace PPDMulti
 {
     class StripeEffectComponent : GameComponent
     {
-        PPDFramework.Resource.ResourceManager resourceManager;
+        readonly PPDFramework.Resource.ResourceManager resourceManager;
 
         int updateCount;
 
@@ -26,7 +27,7 @@ namespace PPDMulti
             int thickness = thick ? 40 : 30;
             this.AddChild(new RectangleComponent(device, resourceManager, PPDColors.Black)
             {
-                Position = new SharpDX.Vector2(-thickness, 0),
+                Position = new System.Numerics.Vector2(-thickness, 0),
                 RectangleWidth = thickness,
                 RectangleHeight = 450
             });
@@ -49,7 +50,7 @@ namespace PPDMulti
 
             for (int i = ChildrenCount - 1; i >= 0; i--)
             {
-                this[i].Position = new SharpDX.Vector2(this[i].Position.X + 1, this[i].Position.Y);
+                this[i].Position = new System.Numerics.Vector2(this[i].Position.X + 1, this[i].Position.Y);
                 if (this[i].Position.X - this[i].Width / 2 >= 800)
                 {
                     this.RemoveChild(this[i]);

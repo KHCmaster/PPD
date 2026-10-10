@@ -2,9 +2,9 @@
 
 namespace PPDFramework.RenderMask
 {
-    class BorderMask : RenderMaskBase
+    class BorderMask(Border border) : RenderMaskBase
     {
-        Border border;
+        readonly Border border = border;
 
         public override bool Enabled
         {
@@ -14,11 +14,6 @@ namespace PPDFramework.RenderMask
         public override int Priority
         {
             get { return 0; }
-        }
-
-        public BorderMask(Border border)
-        {
-            this.border = border;
         }
 
         public override void Draw(PPDDevice device, WorkspaceTexture maskTexture)

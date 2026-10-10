@@ -3,7 +3,11 @@
     /// <summary>
     /// 入力情報を扱うクラスです。
     /// </summary>
-    public abstract class InputInfoBase
+    /// <remarks>
+    /// コンストラクタです。
+    /// </remarks>
+    /// <param name="accurate"></param>
+    public abstract class InputInfoBase(bool accurate)
     {
         /// <summary>
         /// 正確な入力を扱うかどうかを取得します。
@@ -12,16 +16,7 @@
         {
             get;
             private set;
-        }
-
-        /// <summary>
-        /// コンストラクタです。
-        /// </summary>
-        /// <param name="accurate"></param>
-        protected InputInfoBase(bool accurate)
-        {
-            Accurate = accurate;
-        }
+        } = accurate;
 
         /// <summary>
         /// 押されたかどうかを取得します。
@@ -51,7 +46,7 @@
         {
             get
             {
-                return new InputActionBase[0];
+                return [];
             }
         }
     }

@@ -2,27 +2,22 @@
 using PPDFramework;
 using PPDFramework.PPDStructure.EVDData;
 using PPDFramework.PPDStructure.PPDData;
-using SharpDX;
+using System.Numerics;
+using PPDMath;
 using System;
 using System.Collections.Generic;
 
 namespace PPDCore
 {
-    class HoldExMark : ExMarkBase
+    class HoldExMark(PPDDevice device, PPDFramework.Resource.ResourceManager resourceManager, MarkImagePathsBase filenames, ExMarkData emd, ButtonType type, float[] eval,
+        float gap, DisplayState dState, NoteType noteType, int sameTimingMarks, KeyValuePair<string, string>[] parameters, PostDrawManager postDrawManager) : ExMarkBase(device, resourceManager, filenames, emd, type, eval, gap, dState, noteType, sameTimingMarks, parameters, postDrawManager)
     {
-        public HoldExMark(PPDDevice device, PPDFramework.Resource.ResourceManager resourceManager, MarkImagePathsBase filenames, ExMarkData emd, ButtonType type, float[] eval,
-            float gap, DisplayState dState, NoteType noteType, int sameTimingMarks, KeyValuePair<string, string>[] parameters, PostDrawManager postDrawManager)
-            : base(device, resourceManager, filenames, emd, type, eval, gap, dState, noteType, sameTimingMarks, parameters, postDrawManager)
-        {
-        }
-
         public override void Initialize(CreateMarkFunc createMark, GetScriptAllowedButtonsFunc getScriptAllowedButtons)
         {
             base.Initialize(createMark, getScriptAllowedButtons);
             if (!isMarkCreated)
             {
-                var markIndex = -1;
-                markIndex = this.IndexOf(mark);
+                int markIndex = this.IndexOf(mark);
                 this.RemoveChild(mark);
                 mark.Dispose();
                 mark = new SpriteObject(device)

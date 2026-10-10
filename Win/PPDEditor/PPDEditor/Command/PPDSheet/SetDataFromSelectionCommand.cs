@@ -1,4 +1,5 @@
-﻿using SharpDX;
+﻿using System.Numerics;
+using PPDMath;
 using System;
 using System.Collections.Generic;
 
@@ -6,14 +7,14 @@ namespace PPDEditor.Command.PPDSheet
 {
     class SetDataFromSelectionCommand : Command
     {
-        float[][] lastInfo;
-        Vector2[] positions;
-        float[] angles;
-        bool reverse;
-        bool withAngle;
+        readonly float[][] lastInfo;
+        readonly Vector2[] positions;
+        readonly float[] angles;
+        readonly bool reverse;
+        readonly bool withAngle;
 
-        SortedList<float, Mark>[] data;
-        Mark selectedMark;
+        readonly SortedList<float, Mark>[] data;
+        readonly Mark selectedMark;
 
         public SetDataFromSelectionCommand(SortedList<float, Mark>[] data, Vector2[] positions, float[] angles, bool reverse, bool withAngle, Mark selectedMark)
         {
@@ -33,11 +34,11 @@ namespace PPDEditor.Command.PPDSheet
                     Mark mk = data[(int)selectedMark.Type].Values[iter];
                     if (withAngle)
                     {
-                        lastInfo[i] = new float[] { mk.Position.X, mk.Position.Y, mk.Rotation };
+                        lastInfo[i] = [mk.Position.X, mk.Position.Y, mk.Rotation];
                     }
                     else
                     {
-                        lastInfo[i] = new float[] { mk.Position.X, mk.Position.Y };
+                        lastInfo[i] = [mk.Position.X, mk.Position.Y];
                     }
                     iter++;
                     if (iter >= data[(int)selectedMark.Type].Count) break;
@@ -51,11 +52,11 @@ namespace PPDEditor.Command.PPDSheet
                     Mark mk = data[(int)selectedMark.Type].Values[iter];
                     if (withAngle)
                     {
-                        lastInfo[i] = new float[] { mk.Position.X, mk.Position.Y, mk.Rotation };
+                        lastInfo[i] = [mk.Position.X, mk.Position.Y, mk.Rotation];
                     }
                     else
                     {
-                        lastInfo[i] = new float[] { mk.Position.X, mk.Position.Y };
+                        lastInfo[i] = [mk.Position.X, mk.Position.Y];
                     }
                     iter--;
                     if (iter < 0) break;

@@ -15,7 +15,8 @@
 
         protected override void Validate()
         {
-            if (Text.Length >= GetSetting<StringSetting>().MaxLength)
+            // 最大長ちょうどの文字列も使える（元は >= で、最大長の文字列が通らなかった）
+            if (Text.Length > GetSetting<StringSetting>().MaxLength)
             {
                 IsValidated = false;
                 return;

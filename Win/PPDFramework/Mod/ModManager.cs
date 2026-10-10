@@ -17,7 +17,7 @@ namespace PPDFramework.Mod
     {
         private bool initialized;
         private bool loading;
-        private HashSet<string> includeDlls;
+        private readonly HashSet<string> includeDlls;
         private static ModManager instance;
 
         /// <summary>
@@ -27,10 +27,7 @@ namespace PPDFramework.Mod
         {
             get
             {
-                if (instance == null)
-                {
-                    instance = new ModManager();
-                }
+                instance ??= new ModManager();
                 return instance;
             }
         }
@@ -213,7 +210,6 @@ namespace PPDFramework.Mod
         /// <param name="directoryPath">フォルダパス。</param>
         public void EnumerateClasses(string directoryPath)
         {
-            var types = new List<AssemblyAndType>();
             foreach (string dllFile in Directory.GetFiles(directoryPath, "*.dll"))
             {
                 if (!includeDlls.Contains(Path.GetFileName(dllFile)))
@@ -221,9 +217,9 @@ namespace PPDFramework.Mod
                     continue;
                 }
 
-                foreach (AssemblyAndType asm in FlowSourceEnumerator.EnumerateFromFile(dllFile, new Type[0]))
+                // 列挙すると型が読み込まれる（結果は使わない）
+                foreach (var _ in FlowSourceEnumerator.EnumerateFromFile(dllFile, []))
                 {
-
                 }
             }
         }
@@ -236,7 +232,7 @@ namespace PPDFramework.Mod
             EnumerateClasses("dlls");
         }
 
-        private Version GetVersion(string path)
+        private static Version GetVersion(string path)
         {
             var fvi = FileVersionInfo.GetVersionInfo(path);
             return new Version(fvi.FileVersion);

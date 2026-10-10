@@ -1,6 +1,7 @@
 ﻿using FlowScriptEngine;
 using PPDEditorCommon;
-using SharpDX;
+using System.Numerics;
+using PPDMath;
 
 namespace FlowScriptEnginePPDEditor.FlowSourceObjects.Mark.PosAndRotation
 {
@@ -27,7 +28,8 @@ namespace FlowScriptEnginePPDEditor.FlowSourceObjects.Mark.PosAndRotation
                 SetValue(nameof(Value));
                 if (Value != null)
                 {
-                    return Value.Position.Value;
+                    // 位置のないものは 0（元はエラーになっていた。あるかは HasPosition でわかる）
+                    return Value.Position ?? Vector2.Zero;
                 }
                 return Vector2.Zero;
             }
@@ -41,7 +43,8 @@ namespace FlowScriptEnginePPDEditor.FlowSourceObjects.Mark.PosAndRotation
                 SetValue(nameof(Value));
                 if (Value != null)
                 {
-                    return Value.Rotation.Value;
+                    // 角度のないものは 0（元はエラーになっていた。あるかは HasRotation でわかる）
+                    return Value.Rotation ?? 0;
                 }
                 return 0;
             }

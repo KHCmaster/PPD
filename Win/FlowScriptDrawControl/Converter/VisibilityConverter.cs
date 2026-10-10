@@ -10,21 +10,20 @@ namespace FlowScriptDrawControl.Converter
 
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            var param = parameter as string;
             bool val;
-            if (value is bool)
+            if (value is bool v)
             {
-                val = (bool)value;
+                val = v;
             }
-            else if (value is string)
+            else if (value is string v1)
             {
-                val = !String.IsNullOrEmpty((string)value);
+                val = !String.IsNullOrEmpty(v1);
             }
             else
             {
                 val = value != null;
             }
-            if (param != null && param == "Invert")
+            if (parameter is string param && param == "Invert")
             {
                 val = !val;
             }

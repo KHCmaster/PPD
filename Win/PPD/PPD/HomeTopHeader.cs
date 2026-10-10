@@ -1,4 +1,5 @@
-﻿using PPDFramework;
+﻿using PPDMath;
+using PPDFramework;
 using PPDShareComponent;
 using System;
 
@@ -6,10 +7,10 @@ namespace PPD
 {
     class HomeTopHeader : FocusableGameComponent
     {
-        PPDFramework.Resource.ResourceManager resourceManager;
-        HomeBottomMenu hbm;
+        readonly PPDFramework.Resource.ResourceManager resourceManager;
+        readonly HomeBottomMenu hbm;
 
-        TextureString[] strings;
+        readonly TextureString[] strings;
         int drawCount;
         bool operated;
 
@@ -23,26 +24,26 @@ namespace PPD
             {
                 strings[i] = new TextureString(device, Utility.Language[HomeBottomMenu.ModeArray[i].ToString()], 18, true, PPDColors.White)
                 {
-                    Position = new SharpDX.Vector2(400, 5)
+                    Position = new System.Numerics.Vector2(400, 5),
+                    Alpha = 0
                 };
-                strings[i].Alpha = 0;
                 this.AddChild(strings[i]);
             }
 
-            hbm.ModeChanged += hbm_ModeChanged;
+            hbm.ModeChanged += Hbm_ModeChanged;
 
             this.AddChild(new PictureObject(device, resourceManager, Utility.Path.Combine("l.png"))
             {
-                Position = new SharpDX.Vector2(5, 5)
+                Position = new System.Numerics.Vector2(5, 5)
             });
             this.AddChild(new PictureObject(device, resourceManager, Utility.Path.Combine("r.png"))
             {
-                Position = new SharpDX.Vector2(760, 5)
+                Position = new System.Numerics.Vector2(760, 5)
             });
             this.AddChild(new PictureObject(device, resourceManager, Utility.Path.Combine("header.png")));
         }
 
-        void hbm_ModeChanged(object sender, EventArgs e)
+        void Hbm_ModeChanged(object sender, EventArgs e)
         {
             operated = true;
             drawCount = 0;
@@ -66,12 +67,12 @@ namespace PPD
             if (drawCount >= 60 && operated)
             {
                 this.Alpha = AnimationUtility.DecreaseAlpha(this.Alpha, 0.2f);
-                this.Position = new SharpDX.Vector2(0, AnimationUtility.GetAnimationValue(this.Position.Y, -30));
+                this.Position = new System.Numerics.Vector2(0, AnimationUtility.GetAnimationValue(this.Position.Y, -30));
             }
             else
             {
                 this.Alpha = AnimationUtility.IncreaseAlpha(this.Alpha, 0.2f);
-                this.Position = new SharpDX.Vector2(0, AnimationUtility.GetAnimationValue(this.Position.Y, 0));
+                this.Position = new System.Numerics.Vector2(0, AnimationUtility.GetAnimationValue(this.Position.Y, 0));
             }
 
             operated |= drawCount >= 200;

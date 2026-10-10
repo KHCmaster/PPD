@@ -16,12 +16,12 @@ namespace PPDFramework.Mod
     /// </summary>
     public class ModInfo : ModInfoBase
     {
-        private ModManager modManager;
-        private List<ModSetting> settings;
+        private readonly ModManager modManager;
+        private readonly List<ModSetting> settings;
         private ModSettingManager modSettingManager;
         private WebModInfo matchedWebModInfo;
         private WebModInfoDetail matchedWebModInfoDetail;
-        private Guid guid;
+        private readonly Guid guid;
         private bool isApplied;
 
         /// <summary>
@@ -161,7 +161,7 @@ namespace PPDFramework.Mod
         {
             get
             {
-                return settings.ToArray();
+                return [.. settings];
             }
         }
 
@@ -220,7 +220,7 @@ namespace PPDFramework.Mod
         internal ModInfo(string path, ModManager modManager, WebModInfo[] webModInfos)
             : base(path, false)
         {
-            settings = new List<ModSetting>();
+            settings = [];
             this.guid = Guid.NewGuid();
             this.modManager = modManager;
             UpdateInfo();
@@ -231,7 +231,7 @@ namespace PPDFramework.Mod
 
         private void UpdateInfo()
         {
-            using (PackReader reader = new PackReader(ModPath))
+            using (PackReader reader = new(ModPath))
             {
                 DisplayName = ReadString(reader, "Mod\\DisplayName");
                 AuthorName = ReadString(reader, "Mod\\AuthorName");
@@ -244,13 +244,11 @@ namespace PPDFramework.Mod
                 FlowScriptDataVersion = ReadVersion(reader, "Mod\\FlowScriptDataVersion");
                 AnalyzeMod(reader);
             }
-            using (FileStream fs = File.Open(ModPath, FileMode.Open))
-            {
-                byte[] data = new byte[fs.Length];
-                fs.Read(data, 0, data.Length);
-                FileHash = CryptographyUtility.CalcSha256Hash(data);
-                FileHashString = CryptographyUtility.Getx2Encoding(FileHash);
-            }
+            using FileStream fs = File.Open(ModPath, FileMode.Open);
+            byte[] data = new byte[fs.Length];
+            fs.ReadAtLeast(data, data.Length, throwOnEndOfStream: false);
+            FileHash = CryptographyUtility.CalcSha256Hash(data);
+            FileHashString = CryptographyUtility.Getx2Encoding(FileHash);
         }
 
         private void AnalyzeMod(PackReader reader)
@@ -259,14 +257,12 @@ namespace PPDFramework.Mod
             modSettingManager = new ModSettingManager();
             foreach (string content in reader.FileList)
             {
-                using (PPDPackStreamReader ppdpsr = reader.Read(content))
+                using PPDPackStreamReader ppdpsr = reader.Read(content);
+                if (content.StartsWith("Scripts"))
                 {
-                    if (content.StartsWith("Scripts"))
-                    {
-                        var manager = engine.Load(ppdpsr, false);
-                        manager.Items["ModSettingManager"] = modSettingManager;
-                        manager.Initialize();
-                    }
+                    var manager = engine.Load(ppdpsr, false);
+                    manager.Items["ModSettingManager"] = modSettingManager;
+                    manager.Initialize();
                 }
             }
 
@@ -279,10 +275,7 @@ namespace PPDFramework.Mod
             var dict = new Dictionary<string, ModSetting>();
             foreach (ModSetting setting in settings)
             {
-                if (!dict.ContainsKey(setting.Key))
-                {
-                    dict.Add(setting.Key, setting);
-                }
+                dict.TryAdd(setting.Key, setting);
             }
             settings.Clear();
             settings.AddRange(dict.Values);
@@ -290,7 +283,7 @@ namespace PPDFramework.Mod
             var currentSettings = ModSettingDatabase.Setting.GetSetting(UniqueName);
             foreach (ModSetting modSetting in settings)
             {
-                if (!currentSettings.ContainsKey(modSetting.Key))
+                if (!currentSettings.TryGetValue(modSetting.Key, out object value))
                 {
                     currentSettings.Add(modSetting.Key, modSetting.Default);
                 }
@@ -298,7 +291,7 @@ namespace PPDFramework.Mod
                 {
                     try
                     {
-                        var str = modSetting.GetStringValue(currentSettings[modSetting.Key]);
+                        var str = modSetting.GetStringValue(value);
                         if (!modSetting.Validate(str, out object val))
                         {
                             throw new Exception("Validate Failed");
@@ -348,14 +341,11 @@ namespace PPDFramework.Mod
         /// <returns></returns>
         public bool NotModified()
         {
-            using (FileStream fs = File.Open(ModPath, FileMode.Open))
-            {
-                byte[] data = new byte[fs.Length];
-                fs.Read(data, 0, data.Length);
-                var SHA256 = new SHA256Managed();
-                var hash = SHA256.ComputeHash(data);
-                return CompareArray(hash, FileHash);
-            }
+            using FileStream fs = File.Open(ModPath, FileMode.Open);
+            byte[] data = new byte[fs.Length];
+            fs.ReadAtLeast(data, data.Length, throwOnEndOfStream: false);
+            var hash = SHA256.HashData(data);
+            return CompareArray(hash, FileHash);
         }
 
         /// <summary>
@@ -414,7 +404,7 @@ namespace PPDFramework.Mod
             return info.Details.FirstOrDefault(d => CompareArray(d.HashAsBytes, FileHash));
         }
 
-        private bool CompareArray(byte[] array1, byte[] array2)
+        private static bool CompareArray(byte[] array1, byte[] array2)
         {
             if (array1.Length != array2.Length)
             {
@@ -432,21 +422,19 @@ namespace PPDFramework.Mod
             return true;
         }
 
-        private string ReadString(PackReader reader, string key, string defaultValue = "")
+        private static string ReadString(PackReader reader, string key, string defaultValue = "")
         {
-            using (PPDPackStreamReader packReader = reader.Read(key))
+            using PPDPackStreamReader packReader = reader.Read(key);
+            if (packReader == null)
             {
-                if (packReader == null)
-                {
-                    return defaultValue;
-                }
-                byte[] bytes = new byte[packReader.Length];
-                packReader.Read(bytes, 0, bytes.Length);
-                return Encoding.UTF8.GetString(bytes);
+                return defaultValue;
             }
+            byte[] bytes = new byte[packReader.Length];
+            packReader.ReadAtLeast(bytes, bytes.Length, throwOnEndOfStream: false);
+            return Encoding.UTF8.GetString(bytes);
         }
 
-        private Version ReadVersion(PackReader reader, string key)
+        private static Version ReadVersion(PackReader reader, string key)
         {
             var str = ReadString(reader, key);
             if (String.IsNullOrEmpty(str))

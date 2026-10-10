@@ -14,7 +14,6 @@ namespace FlowScriptEnginePPD.TypeSerializers.ColorFilter
 
         public override void Serialize(Serializer serializer, XElement element, object value)
         {
-            var filter = (ColorFilterBase)value;
             Serialize(serializer, element, (ColorFilterBase)value);
         }
 

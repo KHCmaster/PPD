@@ -14,8 +14,8 @@ namespace PPDInstaller
             }
 
             //コピー先のディレクトリ名の末尾に"\"をつける
-            if (destDirName[destDirName.Length - 1] != Path.DirectorySeparatorChar)
-                destDirName = destDirName + Path.DirectorySeparatorChar;
+            if (destDirName[^1] != Path.DirectorySeparatorChar)
+                destDirName += Path.DirectorySeparatorChar;
 
             //コピー元のディレクトリにあるファイルをコピー
             var files = Directory.GetFiles(sourceDirName);
@@ -25,7 +25,7 @@ namespace PPDInstaller
                 bool ok = true;
                 foreach (Regex regex in exceptFiles)
                 {
-                    if (regex.Match(filename).Success && File.Exists(destDirName + filename))
+                    if (regex.IsMatch(filename) && File.Exists(destDirName + filename))
                     {
                         ok = false;
                         break;
@@ -46,12 +46,14 @@ namespace PPDInstaller
         public static void Unzip(string path, string unzippath)
         {
             string fileFilter = "";
+            // UTF-8 フラグのないファイル名は、従来（SharpZipLib 0.86）と同じく OEM コードページで読む
             var fastZip =
                 new ICSharpCode.SharpZipLib.Zip.FastZip
                 {
                     RestoreAttributesOnExtract = true,
                     RestoreDateTimeOnExtract = true,
-                    CreateEmptyDirectories = true
+                    CreateEmptyDirectories = true,
+                    StringCodec = ICSharpCode.SharpZipLib.Zip.StringCodec.FromCodePage(System.Globalization.CultureInfo.CurrentCulture.TextInfo.OEMCodePage)
                 };
             fastZip.ExtractZip(path, unzippath, fileFilter);
         }

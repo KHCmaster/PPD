@@ -8,9 +8,9 @@ namespace PPDConfiguration
     /// <summary>
     /// 設定読み取りクラス
     /// </summary>
-    public class SettingReader
+    public partial class SettingReader
     {
-        Dictionary<string, string> dictionary;
+        readonly Dictionary<string, string> dictionary;
 
         /// <summary>
         /// iniフォーマットかどうか
@@ -59,12 +59,12 @@ namespace PPDConfiguration
 
         private void ReadAsIni(string data)
         {
-            var sectionregex = new Regex("^\\[\\w*\\]");
-            var pairregex = new Regex("^(?<key>[^=]+?) *= *(?<value>.*)$");
+            var sectionregex = SectionRegex();
+            var pairregex = KeyValueRegex();
             foreach (string line in data.Split('\n'))
             {
-                if (line.StartsWith("#")) continue;
-                if (sectionregex.Match(line).Success) continue;
+                if (line.StartsWith('#')) continue;
+                if (sectionregex.IsMatch(line)) continue;
                 var m = pairregex.Match(line);
                 if (m.Success)
                 {
@@ -81,10 +81,10 @@ namespace PPDConfiguration
 
         private void ReadAsNormal(string data)
         {
-            var regex = new Regex(@"^\[([^\]]+)\](.*)");
+            var regex = NormalKeyRegex();
             var key = "";
             var datas = new List<string>();
-            Action addData = () =>
+            void addData()
             {
                 if (datas.Count > 0 && !String.IsNullOrEmpty(key))
                 {
@@ -98,7 +98,7 @@ namespace PPDConfiguration
                 }
                 datas.Clear();
                 key = "";
-            };
+            }
             foreach (var line in data.Split('\n'))
             {
                 var match = regex.Match(line);
@@ -134,13 +134,9 @@ namespace PPDConfiguration
         /// <param name="value">バリュー</param>
         public void ReplaceOrAdd(string key, string value)
         {
-            if (dictionary.ContainsKey(key))
+            if (!dictionary.TryAdd(key, value))
             {
                 dictionary[key] = value;
-            }
-            else
-            {
-                dictionary.Add(key, value);
             }
         }
 
@@ -286,5 +282,12 @@ namespace PPDConfiguration
         {
             return dictionary.ContainsKey(key);
         }
+
+        [GeneratedRegex("^\\[\\w*\\]")]
+        private static partial Regex SectionRegex();
+        [GeneratedRegex("^(?<key>[^=]+?) *= *(?<value>.*)$")]
+        private static partial Regex KeyValueRegex();
+        [GeneratedRegex(@"^\[([^\]]+)\](.*)")]
+        private static partial Regex NormalKeyRegex();
     }
 }

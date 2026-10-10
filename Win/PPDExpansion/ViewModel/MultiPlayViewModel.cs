@@ -22,7 +22,7 @@ namespace PPDExpansion.ViewModel
         private string scoreName;
         private Difficulty difficulty;
 
-        private Dictionary<int, Player> dict;
+        private readonly Dictionary<int, Player> dict;
 
         public override PlayType PlayType
         {
@@ -37,7 +37,7 @@ namespace PPDExpansion.ViewModel
                 if (score != value)
                 {
                     score = value;
-                    RaisePropertyChanged("Score");
+                    OnPropertyChanged(nameof(Score));
                 }
             }
         }
@@ -50,7 +50,7 @@ namespace PPDExpansion.ViewModel
                 if (coolCount != value)
                 {
                     coolCount = value;
-                    RaisePropertyChanged("CoolCount");
+                    OnPropertyChanged(nameof(CoolCount));
                 }
             }
         }
@@ -63,7 +63,7 @@ namespace PPDExpansion.ViewModel
                 if (goodCount != value)
                 {
                     goodCount = value;
-                    RaisePropertyChanged("GoodCount");
+                    OnPropertyChanged(nameof(GoodCount));
                 }
             }
         }
@@ -76,7 +76,7 @@ namespace PPDExpansion.ViewModel
                 if (safeCount != value)
                 {
                     safeCount = value;
-                    RaisePropertyChanged("SafeCount");
+                    OnPropertyChanged(nameof(SafeCount));
                 }
             }
         }
@@ -89,7 +89,7 @@ namespace PPDExpansion.ViewModel
                 if (sadCount != value)
                 {
                     sadCount = value;
-                    RaisePropertyChanged("SadCount");
+                    OnPropertyChanged(nameof(SadCount));
                 }
             }
         }
@@ -102,7 +102,7 @@ namespace PPDExpansion.ViewModel
                 if (worstCount != value)
                 {
                     worstCount = value;
-                    RaisePropertyChanged("WorstCount");
+                    OnPropertyChanged(nameof(WorstCount));
                 }
             }
         }
@@ -122,7 +122,7 @@ namespace PPDExpansion.ViewModel
                     {
                         if (player.Scores.Count > 0)
                         {
-                            max = Math.Max(max, player.Scores[player.Scores.Count - 1].Value);
+                            max = Math.Max(max, player.Scores[^1].Value);
                         }
                     }
                 }
@@ -150,7 +150,7 @@ namespace PPDExpansion.ViewModel
                 if (chartHeight != value)
                 {
                     PPDExpansionSetting.Setting.MultiPlayChartHeight = chartHeight = value;
-                    RaisePropertyChanged("ChartHeight");
+                    OnPropertyChanged(nameof(ChartHeight));
                 }
             }
         }
@@ -163,7 +163,7 @@ namespace PPDExpansion.ViewModel
                 if (scoreName != value)
                 {
                     scoreName = value;
-                    RaisePropertyChanged("ScoreName");
+                    OnPropertyChanged(nameof(ScoreName));
                 }
             }
         }
@@ -176,7 +176,7 @@ namespace PPDExpansion.ViewModel
                 if (difficulty != value)
                 {
                     difficulty = value;
-                    RaisePropertyChanged("Difficulty");
+                    OnPropertyChanged(nameof(Difficulty));
                 }
             }
         }
@@ -184,9 +184,9 @@ namespace PPDExpansion.ViewModel
         public MultiPlayViewModel(MainWindowViewModel mainWindowViewModel)
             : base(mainWindowViewModel)
         {
-            Players = new ObservableCollection<Player>();
-            Items = new ObservableCollection<Item>();
-            dict = new Dictionary<int, Player>();
+            Players = [];
+            Items = [];
+            dict = [];
             ChartHeight = PPDExpansionSetting.Setting.MultiPlayChartHeight;
             SetScoreInfo(new ScoreInfo
             {
@@ -201,21 +201,21 @@ namespace PPDExpansion.ViewModel
 
         public override void ProcessData(PackableBase packable)
         {
-            if (packable is ScoreInfo)
+            if (packable is ScoreInfo info)
             {
-                SetScoreInfo((ScoreInfo)packable);
+                SetScoreInfo(info);
             }
-            else if (packable is PlayerInfo)
+            else if (packable is PlayerInfo info1)
             {
-                AddPlayerInfo((PlayerInfo)packable);
+                AddPlayerInfo(info1);
             }
-            else if (packable is UpdateInfo)
+            else if (packable is UpdateInfo info2)
             {
-                AddUpdateInfo((UpdateInfo)packable);
+                AddUpdateInfo(info2);
             }
-            else if (packable is ItemInfo)
+            else if (packable is ItemInfo info3)
             {
-                AddItemInfo((ItemInfo)packable);
+                AddItemInfo(info3);
             }
         }
 

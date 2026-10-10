@@ -1,4 +1,5 @@
-﻿using FlowScriptEngine;
+﻿using PPDMath;
+using FlowScriptEngine;
 
 namespace FlowScriptEngineSlimDX.FlowSourceObjects.Matrix
 {
@@ -11,7 +12,7 @@ namespace FlowScriptEngineSlimDX.FlowSourceObjects.Matrix
         }
 
         [ToolTipText("Matrix_GetRow_A_Summary")]
-        public SharpDX.Matrix A
+        public System.Numerics.Matrix4x4 A
         {
             private get;
             set;
@@ -25,24 +26,20 @@ namespace FlowScriptEngineSlimDX.FlowSourceObjects.Matrix
         }
 
         [ToolTipText("Matrix_GetRow_Value_Summary")]
-        public SharpDX.Vector4 Value
+        public System.Numerics.Vector4 Value
         {
             get
             {
                 SetValue(nameof(A));
                 SetValue(nameof(Index));
-                switch (Index)
+                return Index switch
                 {
-                    case 0:
-                        return A.Row1;
-                    case 1:
-                        return A.Row2;
-                    case 2:
-                        return A.Row3;
-                    case 3:
-                        return A.Row4;
-                }
-                return SharpDX.Vector4.Zero;
+                    0 => A.Row1,
+                    1 => A.Row2,
+                    2 => A.Row3,
+                    3 => A.Row4,
+                    _ => System.Numerics.Vector4.Zero,
+                };
             }
         }
     }

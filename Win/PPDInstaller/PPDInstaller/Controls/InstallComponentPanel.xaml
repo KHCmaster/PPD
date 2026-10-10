@@ -1,0 +1,23 @@
+<UserControl x:Class="PPDInstaller.Controls.InstallComponentPanel" AutomationProperties.AutomationId="ComponentPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:PPDInstaller.ViewModels"
+             mc:Ignorable="d" d:DataContext="{d:DesignInstance Type=vm:InstallComponentPageViewModel}">
+    <Canvas>
+        <TextBlock Canvas.Left="14" Canvas.Top="12" Text="{Binding Texts[Label5]}" />
+        <CheckBox AutomationProperties.AutomationId="InstallPPDCheck" Canvas.Left="17" Canvas.Top="29" Content="{Binding Texts[CheckBox1]}" IsChecked="{Binding InstallPPD}" />
+        <CheckBox AutomationProperties.AutomationId="LavFiltersCheck" Canvas.Left="69" Canvas.Top="29" Content="LAVFilters" IsChecked="{Binding InstallLAVFilters}" />
+        <GroupBox Canvas.Left="17" Canvas.Top="51" Width="330" Height="48" Header="{Binding Texts[GroupBox1]}">
+            <StackPanel Orientation="Horizontal" Margin="2,4,0,0">
+                <CheckBox AutomationProperties.AutomationId="IpaFontCheck" Content="{Binding Texts[CheckBox4]}" Width="96" IsChecked="{Binding InstallIPAFont}" />
+                <TextBlock VerticalAlignment="Center">
+                    <Hyperlink Command="{Binding OpenIpaFontLicenseCommand}"><Run Text="{Binding Texts[LinkLabel], Mode=OneWay}" /></Hyperlink>
+                </TextBlock>
+            </StackPanel>
+        </GroupBox>
+        <TextBlock Canvas.Left="14" Canvas.Top="121" Text="{Binding Texts[Label6]}" />
+        <CheckBox AutomationProperties.AutomationId="BmstoppdCheck" Canvas.Left="16" Canvas.Top="138" Content="{Binding Texts[CheckBox6]}" IsChecked="{Binding InstallBMSTOPPD}" />
+    </Canvas>
+</UserControl>

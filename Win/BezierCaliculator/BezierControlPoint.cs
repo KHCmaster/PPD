@@ -132,7 +132,7 @@ namespace BezierCaliculator
             };
             return bcp;
         }
-        private PointF GetNormalizePoint(PointF p1)
+        private static PointF GetNormalizePoint(PointF p1)
         {
             var length = (float)(Math.Sqrt(p1.X * p1.X + p1.Y * p1.Y));
             if (length == 0)
@@ -144,7 +144,7 @@ namespace BezierCaliculator
                 return new PointF(p1.X / length, p1.Y / length);
             }
         }
-        private float GetLength(PointF p1)
+        private static float GetLength(PointF p1)
         {
             var length = (float)(Math.Sqrt(p1.X * p1.X + p1.Y * p1.Y));
             return length;
@@ -158,34 +158,34 @@ namespace BezierCaliculator
             var sb = new StringBuilder();
             sb.Append("VF=");
             sb.Append(ValidFirst ? "1" : "0");
-            sb.Append(" ");
+            sb.Append(' ');
             sb.Append("VS=");
             sb.Append(ValidSecond ? "1" : "0");
-            sb.Append(" ");
+            sb.Append(' ');
             sb.Append("VT=");
             sb.Append(ValidThird ? "1" : "0");
-            sb.Append(" ");
+            sb.Append(' ');
             sb.Append("FDX=");
             sb.Append(FirstDirection.X.ToString(CultureInfo.InvariantCulture));
-            sb.Append(" ");
+            sb.Append(' ');
             sb.Append("FDY=");
             sb.Append(FirstDirection.Y.ToString(CultureInfo.InvariantCulture));
-            sb.Append(" ");
+            sb.Append(' ');
             sb.Append("SX=");
             sb.Append(Second.X.ToString(CultureInfo.InvariantCulture));
-            sb.Append(" ");
+            sb.Append(' ');
             sb.Append("SY=");
             sb.Append(Second.Y.ToString(CultureInfo.InvariantCulture));
-            sb.Append(" ");
+            sb.Append(' ');
             sb.Append("TDX=");
             sb.Append(ThirdDirection.X.ToString(CultureInfo.InvariantCulture));
-            sb.Append(" ");
+            sb.Append(' ');
             sb.Append("TDY=");
             sb.Append(ThirdDirection.Y.ToString(CultureInfo.InvariantCulture));
-            sb.Append(" ");
+            sb.Append(' ');
             sb.Append("FL=");
             sb.Append(FirstLength.ToString(CultureInfo.InvariantCulture));
-            sb.Append(" ");
+            sb.Append(' ');
             sb.Append("TL=");
             sb.Append(ThirdLength.ToString(CultureInfo.InvariantCulture));
             return sb.ToString();

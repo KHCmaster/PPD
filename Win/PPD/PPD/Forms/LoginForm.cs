@@ -10,6 +10,7 @@ namespace PPD.Forms
     public partial class LoginForm : Form
     {
         Thread logingThread;
+        volatile bool loginCanceled;
 
         public bool RememberMe
         {
@@ -76,16 +77,17 @@ namespace PPD.Forms
         {
             if (logingThread != null)
             {
-                logingThread.Abort();
+                // .NET では Thread.Abort が使えないので、ログインの結果を画面に反映しないようにするだけにする
+                loginCanceled = true;
                 logingThread = null;
             }
         }
 
-        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void LinkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             try
             {
-                Process.Start(PPDFramework.Web.WebManager.BaseUrl);
+                Process.Start(new ProcessStartInfo(PPDFramework.Web.WebManager.BaseUrl) { UseShellExecute = true });
             }
             catch (Exception ex)
             {
@@ -93,48 +95,58 @@ namespace PPD.Forms
             }
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void Button1_Click(object sender, EventArgs e)
         {
             panel1.Enabled = false;
+            var id = textBox1.Text;
+            var password = maskedTextBox1.Text;
             logingThread = ThreadManager.Instance.GetThread(() =>
             {
-                var errorReason = WebManager.Instance.Login(textBox1.Text, maskedTextBox1.Text);
-                this.Invoke((MethodInvoker)(() =>
+                var errorReason = WebManager.Instance.Login(id, password);
+                if (loginCanceled)
                 {
-                    if (errorReason == ErrorReason.OK)
+                    return;
+                }
+                try
+                {
+                    this.Invoke((MethodInvoker)(() =>
                     {
-                        this.Close();
-                    }
-                    else
-                    {
-                        panel1.Enabled = true;
-                        ShowErrorMessage(errorReason);
-                    }
-                    logingThread = null;
-                }));
+                        if (IsDisposed)
+                        {
+                            return;
+                        }
+                        if (errorReason == ErrorReason.OK)
+                        {
+                            this.Close();
+                        }
+                        else
+                        {
+                            panel1.Enabled = true;
+                            ShowErrorMessage(errorReason);
+                        }
+                        logingThread = null;
+                    }));
+                }
+                catch (Exception ex) when (ex is ObjectDisposedException || ex is InvalidOperationException)
+                {
+                    // ログインの途中でフォームが閉じられた
+                }
             });
             logingThread.Start();
         }
 
-        private void ShowErrorMessage(ErrorReason errorReason)
+        private static void ShowErrorMessage(ErrorReason errorReason)
         {
-            string errorText = "";
-            switch (errorReason)
+            string errorText = errorReason switch
             {
-                case ErrorReason.AuthFailed:
-                    errorText = Utility.Language["LoginAuthFailed"];
-                    break;
-                case ErrorReason.VersionUnmatch:
-                    errorText = Utility.Language["LoginVersionUnmatch"];
-                    break;
-                default:
-                    errorText = Utility.Language["LoginFailed"];
-                    break;
-            }
+                ErrorReason.AuthFailed => Utility.Language["LoginAuthFailed"],
+                ErrorReason.VersionUnmatch => Utility.Language["LoginVersionUnmatch"],
+                _ => Utility.Language["LoginFailed"],
+            };
             MessageBox.Show(errorText);
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void Button2_Click(object sender, EventArgs e)
         {
             this.Close();
         }

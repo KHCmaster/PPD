@@ -3,7 +3,7 @@ using System;
 
 namespace PPDShareComponent
 {
-    public class SelectableComponent : GameComponent
+    public class SelectableComponent(PPDDevice device) : GameComponent(device)
     {
         private bool _checked;
 
@@ -29,11 +29,6 @@ namespace PPDShareComponent
                     OnCheckChanged(this, EventArgs.Empty);
                 }
             }
-        }
-
-        public SelectableComponent(PPDDevice device) : base(device)
-        {
-
         }
 
         public virtual bool Down()

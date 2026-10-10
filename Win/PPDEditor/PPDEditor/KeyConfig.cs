@@ -1,5 +1,5 @@
 ﻿using PPDFramework;
-using SharpDX.DirectInput;
+using Vortice.DirectInput;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -9,11 +9,11 @@ namespace PPDEditor
 {
     public class KeyConfigManager
     {
-        List<KeyConfig> keyConfigs;
+        readonly List<KeyConfig> keyConfigs;
         int currentConfigIndex;
         public KeyConfigManager()
         {
-            keyConfigs = new List<KeyConfig>();
+            keyConfigs = [];
             currentConfigIndex = 0;
         }
 
@@ -27,6 +27,8 @@ namespace PPDEditor
                 }
                 catch
                 {
+                    // XML でなければ古い形式（途中まで読んだ設定は捨てる）
+                    keyConfigs.Clear();
                     ReadKeySettingFromIni(fileName);
                 }
             }
@@ -48,7 +50,7 @@ namespace PPDEditor
         {
             get
             {
-                return keyConfigs.ToArray();
+                return [.. keyConfigs];
             }
         }
 
@@ -77,7 +79,8 @@ namespace PPDEditor
 
         private void ReadKeySettingFromXml(string fileName)
         {
-            var reader = XmlReader.Create(fileName, new XmlReaderSettings());
+            // 読めなかったときもファイルを閉じる（開いたままだと、後で書けなかった）
+            using var reader = XmlReader.Create(fileName, new XmlReaderSettings());
             while (reader.Read())
             {
                 if (reader.IsStartElement())
@@ -106,7 +109,7 @@ namespace PPDEditor
             }
         }
 
-        private void ReadKeySetting(XmlReader reader, KeyConfig keyConfig)
+        private static void ReadKeySetting(XmlReader reader, KeyConfig keyConfig)
         {
             while (reader.Read())
             {
@@ -129,7 +132,7 @@ namespace PPDEditor
             reader.Close();
         }
 
-        private int FindIndex(string value)
+        private static int FindIndex(string value)
         {
             for (int i = 0; i < ButtonUtility.Array.Length; i++)
             {
@@ -184,7 +187,7 @@ namespace PPDEditor
             writer.Close();
         }
 
-        private void WriteSetting(XmlWriter writer, KeyConfig keyConfig)
+        private static void WriteSetting(XmlWriter writer, KeyConfig keyConfig)
         {
             foreach (ButtonType buttonType in ButtonUtility.Array)
             {
@@ -211,8 +214,8 @@ namespace PPDEditor
 
     public class KeyConfig
     {
-        Dictionary<ButtonType, Key> keyMap;
-        Dictionary<ButtonType, int> buttonMap;
+        readonly Dictionary<ButtonType, Key> keyMap;
+        readonly Dictionary<ButtonType, int> buttonMap;
 
         Key[] keys;
         int[] buttons;
@@ -222,8 +225,8 @@ namespace PPDEditor
 
         public KeyConfig()
         {
-            buttonMap = new Dictionary<ButtonType, int>();
-            keyMap = new Dictionary<ButtonType, Key>();
+            buttonMap = [];
+            keyMap = [];
             foreach (ButtonType type in ButtonUtility.Array)
             {
                 buttonMap.Add(type, -1);

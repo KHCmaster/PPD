@@ -13,10 +13,7 @@ namespace PPDMovie
         public static event EventHandler GraphNotify;
         public static void OnGraphNotify()
         {
-            if (GraphNotify != null)
-            {
-                GraphNotify.Invoke(null, EventArgs.Empty);
-            }
+            GraphNotify?.Invoke(null, EventArgs.Empty);
         }
     }
 }

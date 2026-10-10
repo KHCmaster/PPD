@@ -1,0 +1,65 @@
+<UserControl x:Class="PPDEditor.Controls.LayerDisplay"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:PPDEditor.ViewModels.Docks"
+             xmlns:conv="clr-namespace:PPDEditor.Converters"
+             mc:Ignorable="d" d:DataContext="{d:DesignInstance Type=vm:LayerViewModel}"
+             Height="45" MinWidth="238" Focusable="True" Cursor="Hand" BorderBrush="Black" BorderThickness="1"
+             MouseLeftButtonDown="LayerDisplay_MouseLeftButtonDown" ContextMenuOpening="LayerDisplay_ContextMenuOpening">
+    <UserControl.Resources>
+        <conv:DrawingColorToBrushConverter x:Key="ColorToBrush" />
+        <BooleanToVisibilityConverter x:Key="BoolToVisibility" />
+    </UserControl.Resources>
+    <UserControl.Style>
+        <!-- 選んでいるレイヤーは青くする -->
+        <Style TargetType="UserControl">
+            <Setter Property="Background" Value="LightGray" />
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsSelected}" Value="True">
+                    <Setter Property="Background" Value="LightBlue" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Style>
+    <UserControl.ContextMenu>
+        <ContextMenu>
+            <MenuItem AutomationProperties.AutomationId="DeleteLayerMenuItem" Header="{Binding Texts[LMMenu3]}" Command="{Binding DeleteCommand}" />
+            <MenuItem AutomationProperties.AutomationId="DuplicateLayerMenuItem" Header="{Binding Texts[LMMenu2]}" Command="{Binding DuplicateCommand}" />
+        </ContextMenu>
+    </UserControl.ContextMenu>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="38" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <!-- 表示・非表示の切り替え（選択やドラッグにはしない） -->
+        <Border Background="{x:Static SystemColors.MenuBrush}" BorderBrush="Black" BorderThickness="0,0,1,0" Cursor="Arrow"
+                MouseLeftButtonDown="VisibleToggle_MouseLeftButtonDown">
+            <Image Source="/img/eye.png" Width="16" Height="16" Stretch="None">
+                <Image.Style>
+                    <Style TargetType="Image">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding DisplayVisible}" Value="False">
+                                <Setter Property="Visibility" Value="Hidden" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Image.Style>
+            </Image>
+        </Border>
+        <!-- 名前。ダブルクリックで編集する -->
+        <TextBlock Grid.Column="1" Text="{Binding DisplayName}" Margin="3,0,0,0" VerticalAlignment="Center" Cursor="Arrow"
+                   MouseLeftButtonDown="Name_MouseLeftButtonDown" />
+        <TextBox x:Name="nameBox" Grid.Column="1" Width="107" Margin="2,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" Cursor="IBeam"
+                 Text="{Binding EditingName, UpdateSourceTrigger=PropertyChanged}"
+                 Visibility="{Binding IsEditingName, Converter={StaticResource BoolToVisibility}}"
+                 IsVisibleChanged="NameBox_IsVisibleChanged" KeyDown="NameBox_KeyDown" LostKeyboardFocus="NameBox_LostKeyboardFocus" />
+        <TextBlock Grid.Column="1" Text="{Binding BPM}" Margin="0,2,5,0" HorizontalAlignment="Right" VerticalAlignment="Top" Cursor="Arrow" />
+        <!-- マークの色。ダブルクリックで変える -->
+        <Border Grid.Column="1" Width="19" Height="17" Margin="0,0,5,3" HorizontalAlignment="Right" VerticalAlignment="Bottom"
+                Background="{Binding MarkColor, Converter={StaticResource ColorToBrush}}"
+                BorderBrush="Gray" BorderThickness="1" Cursor="Arrow" MouseLeftButtonDown="MarkColor_MouseLeftButtonDown" />
+    </Grid>
+</UserControl>

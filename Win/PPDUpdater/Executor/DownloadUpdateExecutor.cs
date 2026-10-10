@@ -1,14 +1,13 @@
 ﻿using PPDUpdater.Model;
 using System;
 using System.IO;
-using System.Net;
-using System.Windows.Forms;
+using System.Threading;
 
 namespace PPDUpdater.Executor
 {
     class DownloadUpdateExecutor : CExecutor
     {
-        private WebClient downloadClient;
+        private readonly FileDownloader downloadClient;
 
         public UpdateInfo UpdateInfo
         {
@@ -40,8 +39,8 @@ namespace PPDUpdater.Executor
             private set;
         }
 
-        public DownloadUpdateExecutor(UpdateInfo updateInfo, Control control, int index)
-            : base(control)
+        public DownloadUpdateExecutor(UpdateInfo updateInfo, SynchronizationContext context, int index)
+            : base(context)
         {
             this.UpdateInfo = updateInfo;
             this.Index = index;
@@ -51,11 +50,11 @@ namespace PPDUpdater.Executor
             {
                 Directory.CreateDirectory(Dir);
             }
-            FilePath = Path.Combine(Dir, URL.Segments[URL.Segments.Length - 1]);
+            FilePath = Path.Combine(Dir, URL.Segments[^1]);
             updateInfo.FilePath = FilePath;
-            downloadClient = new WebClient();
-            downloadClient.DownloadProgressChanged += downloadClient_DownloadProgressChanged;
-            downloadClient.DownloadFileCompleted += downloadClient_DownloadFileCompleted;
+            downloadClient = new FileDownloader();
+            downloadClient.ProgressChanged += DownloadClient_DownloadProgressChanged;
+            downloadClient.Completed += DownloadClient_DownloadFileCompleted;
         }
 
         public override void Execute()
@@ -72,20 +71,18 @@ namespace PPDUpdater.Executor
             }
         }
 
-        private void downloadClient_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
+        private void DownloadClient_DownloadProgressChanged(int progressPercentage)
         {
-            Progress = e.ProgressPercentage;
+            Progress = progressPercentage;
             OnProgress();
         }
 
-        private void downloadClient_DownloadFileCompleted(object sender, System.ComponentModel.AsyncCompletedEventArgs e)
+        private void DownloadClient_DownloadFileCompleted(Exception error)
         {
-            if (e.Error != null) Success = false;
-            else if (e.Cancelled) Success = false;
-            else Success = true;
+            Success = error == null;
             if (!Success)
             {
-                ErrorLog += e.Error.Message;
+                ErrorLog += error.Message;
             }
             else
             {

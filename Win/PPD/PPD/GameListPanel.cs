@@ -1,26 +1,23 @@
 ﻿using PPDFramework;
 using PPDShareComponent;
-using SharpDX;
+using System.Numerics;
+using PPDMath;
 using System;
+using System.Linq;
 
 namespace PPD
 {
-    class GameListPanel : HomePanelBase
+    class GameListPanel(PPDDevice device, PPDFramework.Resource.ResourceManager resourceManager, ISound sound) : HomePanelBase(device)
     {
         public event EventHandler<GameEventArgs> GameStarted;
         GameList gameList;
         SpriteObject listSprite;
         LineRectangleComponent select;
-        PPDFramework.Resource.ResourceManager resourceManager;
-        ISound sound;
+        readonly PPDFramework.Resource.ResourceManager resourceManager = resourceManager;
+        readonly ISound sound = sound;
 
         int currentIndex;
         int scrollIndex;
-        public GameListPanel(PPDDevice device, PPDFramework.Resource.ResourceManager resourceManager, ISound sound) : base(device)
-        {
-            this.resourceManager = resourceManager;
-            this.sound = sound;
-        }
 
         public override void Load()
         {
@@ -51,17 +48,17 @@ namespace PPD
             var component = new GameInfoComponent(device, resourceManager, gl)
             {
                 PlayingTime = String.Format("{0:F1}{1}", ConvertSecond(GetPlayingSecond(gl)), Utility.Language["Hour"]),
-                Position = new SharpDX.Vector2(0, listSprite.ChildrenCount * 90)
+                Position = new System.Numerics.Vector2(0, listSprite.ChildrenCount * 90)
             };
             listSprite.AddChild(component);
         }
 
-        private string ConvertSecond(int second)
+        private static string ConvertSecond(int second)
         {
             return String.Format("{0:F1}", (float)second / 3600);
         }
 
-        public int GetPlayingSecond(GameLoader gameLoader)
+        public static int GetPlayingSecond(GameLoader gameLoader)
         {
             string lastValue = PPDGeneralSetting.Setting[gameLoader.GetFullName()];
             if (!int.TryParse(lastValue, out int value))
@@ -73,7 +70,7 @@ namespace PPD
 
         public void UpdatePlayingTime(GameLoader gameLoader, int time)
         {
-            foreach (GameInfoComponent gameInfoComponent in listSprite.Children)
+            foreach (GameInfoComponent gameInfoComponent in listSprite.Children.Cast<GameInfoComponent>())
             {
                 if (gameInfoComponent.GameLoader == gameLoader)
                 {
@@ -117,13 +114,13 @@ namespace PPD
 
         protected override void UpdateImpl()
         {
-            select.Position = new SharpDX.Vector2(0, AnimationUtility.GetAnimationValue(select.Position.Y, 90 * currentIndex, 0.2f));
-            this.Position = new SharpDX.Vector2(0, AnimationUtility.GetAnimationValue(this.Position.Y, -90 * scrollIndex));
+            select.Position = new System.Numerics.Vector2(0, AnimationUtility.GetAnimationValue(select.Position.Y, 90 * currentIndex, 0.2f));
+            this.Position = new System.Numerics.Vector2(0, AnimationUtility.GetAnimationValue(this.Position.Y, -90 * scrollIndex));
         }
 
         class GameInfoComponent : GameComponent
         {
-            TextureString playingTimeText;
+            readonly TextureString playingTimeText;
             public GameInfoComponent(PPDDevice device, PPDFramework.Resource.ResourceManager resourceManager, GameLoader gameLoader) : base(device)
             {
                 this.GameLoader = gameLoader;
@@ -180,17 +177,12 @@ namespace PPD
         }
     }
 
-    class GameEventArgs : EventArgs
+    class GameEventArgs(GameLoader gl) : EventArgs
     {
-        public GameEventArgs(GameLoader gl)
-        {
-            GameLoader = gl;
-        }
-
         public GameLoader GameLoader
         {
             get;
             private set;
-        }
+        } = gl;
     }
 }

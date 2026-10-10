@@ -1,4 +1,5 @@
-﻿using FlowScriptEngine;
+﻿using PPDMath;
+using FlowScriptEngine;
 
 namespace FlowScriptEngineSlimDX.FlowSourceObjects.Color4
 {
@@ -39,7 +40,7 @@ namespace FlowScriptEngineSlimDX.FlowSourceObjects.Color4
         }
 
         [ToolTipText("Color4_FromElement_Value")]
-        public SharpDX.Color4 Value
+        public Vortice.Mathematics.Color4 Value
         {
             get
             {
@@ -47,7 +48,7 @@ namespace FlowScriptEngineSlimDX.FlowSourceObjects.Color4
                 SetValue(nameof(Red));
                 SetValue(nameof(Green));
                 SetValue(nameof(Blue));
-                return new SharpDX.Color4(Red, Green, Blue, Alpha);
+                return new Vortice.Mathematics.Color4(Red, Green, Blue, Alpha);
             }
         }
     }

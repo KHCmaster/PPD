@@ -1,0 +1,42 @@
+<forms:DockView x:Class="PPDEditor.KasiEditor"
+                xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                xmlns:forms="clr-namespace:PPDEditor.Forms"
+                xmlns:controls="clr-namespace:PPDEditor.Controls"
+                xmlns:vm="clr-namespace:PPDEditor.ViewModels.Docks"
+                xmlns:conv="clr-namespace:PPDEditor.Converters"
+                mc:Ignorable="d" d:DataContext="{d:DesignInstance Type=vm:KasiEditorViewModel}">
+    <forms:DockView.Resources>
+        <conv:BindingProxy x:Key="Proxy" Data="{Binding}" />
+    </forms:DockView.Resources>
+    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+        <StackPanel Width="232" HorizontalAlignment="Left">
+            <DataGrid x:Name="kasiGrid" ItemsSource="{Binding Items}" SelectedIndex="{Binding SelectedIndex}" Height="196" AutoGenerateColumns="False" IsReadOnly="True" SelectionMode="Single"
+                      SelectionUnit="FullRow" HeadersVisibility="Column" CanUserSortColumns="False" CanUserAddRows="False">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="{Binding Data.Texts[KEGridColumn1], Source={StaticResource Proxy}}" Binding="{Binding Key}" Width="Auto" />
+                    <DataGridTextColumn Header="{Binding Data.Texts[KEGridColumn2], Source={StaticResource Proxy}}" Binding="{Binding Value}" Width="*" />
+                </DataGrid.Columns>
+            </DataGrid>
+            <!-- 文字の色はスキンに合わせる（SetSkin で TextBlock の色を変える） -->
+            <StackPanel x:Name="inputPanel" Margin="12,6,12,0">
+                <DockPanel>
+                    <Button DockPanel.Dock="Right" Content="X" Width="23" Height="21" Command="{Binding ClearInputCommand}" />
+                    <TextBlock Text="{Binding Texts[KELabel1]}" VerticalAlignment="Bottom" />
+                </DockPanel>
+                <TextBox x:Name="inputBox" Text="{Binding InputText, UpdateSourceTrigger=PropertyChanged}" Height="98" Margin="0,2,0,0" AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" />
+                <Button AutomationProperties.AutomationId="KasiAddButton" Content="{Binding Texts[KEButton1]}" Height="24" Margin="0,4,0,0" Command="{Binding AddAtCurrentTimeCommand}" />
+                <Button AutomationProperties.AutomationId="KasiDeleteButton" Content="{Binding Texts[KEButton2]}" Height="24" Margin="0,6,0,0" Command="{Binding DeleteSelectedCommand}" />
+                <DockPanel Margin="0,8,0,0">
+                    <controls:NumericUpDown DockPanel.Dock="Right" Width="100" DecimalPlaces="2" Increment="0.01" Minimum="-100" Maximum="100" Value="{Binding ShiftAmount}" />
+                    <TextBlock Text="{Binding Texts[KELabel2]}" VerticalAlignment="Center" />
+                </DockPanel>
+                <Button Content="{Binding Texts[KEButton3]}" Height="24" Margin="0,6,0,0" Command="{Binding ShiftSelectedCommand}" />
+                <Button Content="{Binding Texts[KEButton4]}" Height="24" Margin="0,6,0,0" Command="{Binding ChangeSelectedTextCommand}" />
+                <Button Content="{Binding Texts[KEButton5]}" Height="24" Margin="0,6,0,12" Command="{Binding CopySelectedToCurrentTimeCommand}" />
+            </StackPanel>
+        </StackPanel>
+    </ScrollViewer>
+</forms:DockView>

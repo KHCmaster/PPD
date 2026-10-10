@@ -9,7 +9,7 @@ namespace PPDCoreModel
         public const int MAXLIFE = 1023;
         public const int DEFAULTLIFE = MAXLIFE / 2;
         int combo;
-        int[] evacount = new int[5];
+        readonly int[] evacount = new int[5];
         int currentlife = MAXLIFE / 2;
 
         public GameResultManager()
@@ -149,13 +149,13 @@ namespace PPDCoreModel
         {
             get
             {
-                return new int[]{
+                return [
                     CoolCount,
                     GoodCount,
                     SafeCount,
                     SadCount,
                     WorstCount
-                };
+                ];
             }
         }
 

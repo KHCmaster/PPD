@@ -1,24 +1,18 @@
 ﻿using PPDFramework;
 using PPDFramework.Shaders;
 using PPDFramework.Vertex;
-using SharpDX;
+using System.Numerics;
+using PPDMath;
 using System;
 using System.Collections.Generic;
 
 namespace PPDCore
 {
-    class MarkConnection : GameComponent
+    class MarkConnection(PPDDevice device, MarkConnectionCommon connectionCommon) : GameComponent(device)
     {
-        List<Mark> convexMarks;
-        List<Mark> inMarks;
-        MarkConnectionCommon connectionCommon;
-
-        public MarkConnection(PPDDevice device, MarkConnectionCommon connectionCommon) : base(device)
-        {
-            this.connectionCommon = connectionCommon;
-            convexMarks = new List<Mark>();
-            inMarks = new List<Mark>();
-        }
+        readonly List<Mark> convexMarks = [];
+        readonly List<Mark> inMarks = [];
+        readonly MarkConnectionCommon connectionCommon = connectionCommon;
 
         public void AddConvex(Mark mk)
         {
@@ -69,9 +63,9 @@ namespace PPDCore
 
         class MarkConnectionLine : GameComponent
         {
-            MarkConnectionCommon markConnectionCommon;
-            Mark mk1;
-            Mark mk2;
+            readonly MarkConnectionCommon markConnectionCommon;
+            readonly Mark mk1;
+            readonly Mark mk2;
             int drawCount;
             VertexInfo[] vertices;
 
@@ -96,7 +90,7 @@ namespace PPDCore
                 {
                     return;
                 }
-                vec.Normalize();
+                vec = MathCompat.NormalizeSharpDX(vec);
                 Position = (pos1 + pos2) / 2;
                 if (vec.Y < 0)
                 {

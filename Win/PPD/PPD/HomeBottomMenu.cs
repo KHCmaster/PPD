@@ -1,4 +1,5 @@
-﻿using PPDFramework;
+﻿using PPDMath;
+using PPDFramework;
 using PPDShareComponent;
 using System;
 
@@ -14,15 +15,15 @@ namespace PPD
             Game,
             Feed
         }
-        public static Mode[] ModeArray = Enum.GetValues(typeof(Mode)) as Mode[];
+        public static Mode[] ModeArray = Enum.GetValues<Mode>() as Mode[];
 
         Mode mode = Mode.Feed;
-        PPDFramework.Resource.ResourceManager resourceManager;
-        ISound sound;
+        readonly PPDFramework.Resource.ResourceManager resourceManager;
+        readonly ISound sound;
 
-        PictureObject back;
-        PictureObject[] icons;
-        TextureString[] strings;
+        readonly PictureObject back;
+        readonly PictureObject[] icons;
+        readonly TextureString[] strings;
 
         int drawCount;
         bool operated;
@@ -39,7 +40,7 @@ namespace PPD
             this.sound = sound;
 
             back = new PictureObject(device, resourceManager, Utility.Path.Combine("bottom_back.png"));
-            back.Position = new SharpDX.Vector2(400 - back.Width / 2, 0);
+            back.Position = new System.Numerics.Vector2(400 - back.Width / 2, 0);
 
             icons = new PictureObject[ModeArray.Length];
             strings = new TextureString[ModeArray.Length];
@@ -53,7 +54,7 @@ namespace PPD
 
             this.AddChild(back);
 
-            this.Position = new SharpDX.Vector2(0, 421);
+            this.Position = new System.Numerics.Vector2(0, 421);
             HandleOverFocusInput = true;
             Inputed += HomeUnderMenu_Inputed;
         }
@@ -66,9 +67,9 @@ namespace PPD
                 mode--;
                 if (mode < 0)
                 {
-                    mode = ModeArray[ModeArray.Length - 1];
+                    mode = ModeArray[^1];
                 }
-                OnModeChanged(mode);
+                OnModeChanged();
                 sound.Play(PPDSetting.DefaultSounds[3], -1000);
                 drawCount = 0;
             }
@@ -80,18 +81,15 @@ namespace PPD
                 {
                     mode = ModeArray[0];
                 }
-                OnModeChanged(mode);
+                OnModeChanged();
                 sound.Play(PPDSetting.DefaultSounds[3], -1000);
                 drawCount = 0;
             }
         }
 
-        private void OnModeChanged(Mode mode)
+        private void OnModeChanged()
         {
-            if (ModeChanged != null)
-            {
-                ModeChanged.Invoke(this, EventArgs.Empty);
-            }
+            ModeChanged?.Invoke(this, EventArgs.Empty);
         }
 
         protected override void UpdateImpl()
@@ -108,30 +106,30 @@ namespace PPD
                     }
                 }
 
-                icons[i].Scale = new SharpDX.Vector2(newScale, newScale);
-                icons[i].Position = new SharpDX.Vector2(nextX + newScale * icons[i].Width / 2, 0);
+                icons[i].Scale = new System.Numerics.Vector2(newScale, newScale);
+                icons[i].Position = new System.Numerics.Vector2(nextX + newScale * icons[i].Width / 2, 0);
                 nextX = icons[i].Position.X + icons[i].Width * newScale / 2 + 10;
             }
             float diff = 400 - (ModeArray.Length % 2 == 0 ? (icons[ModeArray.Length / 2 - 1].Position.X + icons[ModeArray.Length / 2].Position.X) / 2 : icons[ModeArray.Length / 2].Position.X);
             for (int i = 0; i < icons.Length; i++)
             {
-                icons[i].Position = new SharpDX.Vector2(icons[i].Position.X + diff, 0);
+                icons[i].Position = new System.Numerics.Vector2(icons[i].Position.X + diff, 0);
             }
             for (int i = 0; i < strings.Length; i++)
             {
-                strings[i].Position = new SharpDX.Vector2(icons[i].Position.X, -45);
+                strings[i].Position = new System.Numerics.Vector2(icons[i].Position.X, -45);
                 strings[i].Alpha = (icons[i].Scale.X - 0.5f) * 2;
             }
 
             if (drawCount >= 60 && operated)
             {
                 this.Alpha = AnimationUtility.DecreaseAlpha(this.Alpha, 0.2f);
-                this.Position = new SharpDX.Vector2(0, AnimationUtility.GetAnimationValue(this.Position.Y, 480));
+                this.Position = new System.Numerics.Vector2(0, AnimationUtility.GetAnimationValue(this.Position.Y, 480));
             }
             else
             {
                 this.Alpha = AnimationUtility.IncreaseAlpha(this.Alpha, 0.2f);
-                this.Position = new SharpDX.Vector2(0, AnimationUtility.GetAnimationValue(this.Position.Y, 421));
+                this.Position = new System.Numerics.Vector2(0, AnimationUtility.GetAnimationValue(this.Position.Y, 421));
             }
 
             operated |= drawCount >= 200;

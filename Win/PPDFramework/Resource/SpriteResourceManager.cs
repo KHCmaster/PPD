@@ -1,5 +1,4 @@
-﻿using MoreLinq;
-using PPDFramework.Sprites;
+﻿using PPDFramework.Sprites;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -52,7 +51,7 @@ namespace PPDFramework.Resource
                     {
                         if (!loadableImages.TryGetValue(pair.Key, out List<Tuple<SpriteInfo, SpriteDictionary>> list))
                         {
-                            list = new List<Tuple<SpriteInfo, SpriteDictionary>>();
+                            list = [];
                             loadableImages.Add(pair.Key, list);
                         }
                         list.Add(new Tuple<SpriteInfo, SpriteDictionary>(pair.Value, dict));
@@ -65,7 +64,7 @@ namespace PPDFramework.Resource
                 var key = pair.Key;
                 var list = pair.Value;
                 var overScaledList = list.Where(i => i.Item2.ImageScale.Ratio >= device.Scale.X).ToArray();
-                var nearest = overScaledList.Length > 0 ? overScaledList.MinBy(i => Math.Abs(i.Item2.ImageScale.Ratio - device.Scale.X)) : list.MinBy(i => Math.Abs(i.Item2.ImageScale.Ratio - device.Scale.X));
+                var nearest = overScaledList.Length > 0 ? overScaledList.OrderBy(i => Math.Abs(i.Item2.ImageScale.Ratio - device.Scale.X)).First() : list.OrderBy(i => Math.Abs(i.Item2.ImageScale.Ratio - device.Scale.X)).First();
                 if (!usedSpriteDictionary.TryGetValue(nearest.Item2, out var imageResource))
                 {
                     imageResource = ImageResourceFactoryManager.Factory.Create(device, nearest.Item2.ImagePath, true);
@@ -73,7 +72,7 @@ namespace PPDFramework.Resource
                 }
                 Add(pair.Key, new SpriteImageResource(device, imageResource, nearest.Item1, nearest.Item2.ImageScale));
             }
-            this.imageResources = usedSpriteDictionary.Values.ToArray();
+            this.imageResources = [.. usedSpriteDictionary.Values];
         }
 
         /// <summary>

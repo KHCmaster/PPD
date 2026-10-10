@@ -1,21 +1,12 @@
 @ECHO OFF
 cd %~dp0
 
-"..\..\ShaderCompiler\bin\x86\Debug\ShaderCompiler.exe" DX9\%1.fxt
-if errorlevel 0 (
-  "%PROGRAMFILES% (x86)\Windows Kits\10\bin\x64\fxc.exe" DX9\%1.fx /T fx_2_0 /Fo DX9\d3d9_%1.fxc
-  if errorlevel 1 (
-   echo Failure Reason Given is %errorlevel%
-   pause
-  )
-)
+rem Usage: compile_shader.bat <ShaderName>   (e.g. compile_shader.bat AlphaBlend)
+rem Expands DX11\<ShaderName>.fxt into DX11\<ShaderName>.fx and compiles it into DX11\d3d11_<ShaderName>.bin.
+rem Build ShaderCompiler (Release|x64) beforehand.
 
-"..\..\ShaderCompiler\bin\x86\Debug\ShaderCompiler.exe" DX11\%1.fxt
-if errorlevel 0 (
-  "%PROGRAMFILES% (x86)\Windows Kits\10\bin\x64\fxc.exe" DX11\%1.fx /T fx_5_0 /Fo DX11\d3d11_%1.fxc
-  if errorlevel 1 (
-   echo Failure Reason Given is %errorlevel%
-   pause
-  )
+"..\..\ShaderCompiler\bin\x64\Release\ShaderCompiler.exe" DX11\%1.fxt DX11\d3d11_%1.bin
+if errorlevel 1 (
+  echo Failure Reason Given is %errorlevel%
+  pause
 )
-

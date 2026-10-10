@@ -41,7 +41,7 @@ namespace FlowScriptEnginePPDEditor.FlowSourceObjects.Mark.ParameterPreset
                 SetValue(nameof(Value));
                 if (Value != null)
                 {
-                    return Value.Parameters.Select(p => new KeyValuePair<object, object>(p.Key, p.Value)).Cast<object>().ToArray();
+                    return [.. Value.Parameters.Select(p => new KeyValuePair<object, object>(p.Key, p.Value)).Cast<object>()];
                 }
                 return null;
             }

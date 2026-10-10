@@ -6,7 +6,7 @@ namespace PPDCoreModel
 {
     public class StageManager : GameComponent
     {
-        SpriteObject[] sprites;
+        readonly SpriteObject[] sprites;
 
         public PPDFramework.Resource.ResourceManager ResourceManager
         {
@@ -16,7 +16,7 @@ namespace PPDCoreModel
 
         public StageManager(PPDDevice device) : base(device)
         {
-            sprites = new SpriteObject[Enum.GetValues(typeof(LayerType)).Length];
+            sprites = new SpriteObject[Enum.GetValues<LayerType>().Length];
             for (int i = 0; i < sprites.Length; i++)
             {
                 this.AddChild(sprites[i] = new SpriteObject(device));

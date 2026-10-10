@@ -17,7 +17,7 @@ namespace FlowScriptDrawControl.Control
     /// <summary>
     /// FlowAreaControl.xaml の相互作用ロジック
     /// </summary>
-    public partial class FlowAreaControl : UserControl
+    public partial class FlowAreaControl : UserControl, IDisposable
     {
         const int gridThickness = 1;
         const int gridWidth = 10;
@@ -26,7 +26,7 @@ namespace FlowScriptDrawControl.Control
         private Color gridColor = Color.FromRgb(0x91, 0x91, 0x91);
         private int scale = 10;
 
-        private Regex queryRegex = new Regex(@"^@(\d+)\[(In|Out)\]\[(\w+)\]$", RegexOptions.IgnoreCase);
+        private readonly Regex queryRegex = QueryPatternRegex();
 
         private double currentScale = 1;
         private double currentShiftX;
@@ -43,16 +43,16 @@ namespace FlowScriptDrawControl.Control
         private KeyValuePair<SourceItemControl, ArrowControl>[] currentDestItems;
         private ItemPositionManager itemPositionManager;
 
-        private SelectableManager selectableManager;
-        private Command.CommandManager commandManager;
-        private IdManager idManager;
+        private readonly SelectableManager selectableManager;
+        private readonly Command.CommandManager commandManager;
+        private readonly IdManager idManager;
 
         public event Action<string, Dictionary<string, string>> SelectionChanged;
         public event Func<string, string, bool> CanConvert;
         public event Action Modified;
         public event Func<string, Source> GetSource;
 
-        private Guid guid = Guid.NewGuid();
+        private readonly Guid guid = Guid.NewGuid();
 
         Timer autoFocusTimer;
         Timer moveTimer;
@@ -92,27 +92,27 @@ namespace FlowScriptDrawControl.Control
         {
             get
             {
-                return GetAllSourceControls().Where(s => s.CurrentSource.IsSelected).Select(s => s.CurrentSource.Id).ToArray();
+                return [.. GetAllSourceControls().Where(s => s.CurrentSource.IsSelected).Select(s => s.CurrentSource.Id)];
             }
         }
 
         public FlowAreaControl()
         {
             selectableManager = new SelectableManager();
-            selectableManager.SelectionChanged += selectableManager_SelectionChanged;
+            selectableManager.SelectionChanged += SelectableManager_SelectionChanged;
             commandManager = new Command.CommandManager();
-            commandManager.Modified += commandManager_Modified;
+            commandManager.Modified += CommandManager_Modified;
             idManager = new IdManager();
 
             InitializeComponent();
         }
 
-        void commandManager_Modified()
+        void CommandManager_Modified()
         {
             OnModified();
         }
 
-        void selectableManager_SelectionChanged()
+        void SelectableManager_SelectionChanged()
         {
             if (selectableManager.SelectedSelectables.Length == 1 && selectableManager.SelectedSelectables[0] is Source)
             {
@@ -126,7 +126,7 @@ namespace FlowScriptDrawControl.Control
             }
         }
 
-        private void ChangeScopeColor(ScopeControl scopeControl)
+        private static void ChangeScopeColor(ScopeControl scopeControl)
         {
             var dialog = new ColorDialog
             {
@@ -139,7 +139,7 @@ namespace FlowScriptDrawControl.Control
             }
         }
 
-        void scopeControl_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        void ScopeControl_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             var scopeControl = sender as ScopeControl;
             ChangeScopeColor(scopeControl);
@@ -164,19 +164,19 @@ namespace FlowScriptDrawControl.Control
                 DataContext = source,
                 SelectableManager = selectableManager
             };
-            sourceControl.OutItemSelected += sourceControl_OutItemSelected;
-            sourceControl.TryConnected += sourceControl_TryConnected;
-            sourceControl.InItemSelected += sourceControl_InItemSelected;
-            sourceControl.MoveStarted += control_MoveStarted;
-            sourceControl.SourceChanged += sourceControl_SourceChanged;
+            sourceControl.OutItemSelected += SourceControl_OutItemSelected;
+            sourceControl.TryConnected += SourceControl_TryConnected;
+            sourceControl.InItemSelected += SourceControl_InItemSelected;
+            sourceControl.MoveStarted += Control_MoveStarted;
+            sourceControl.SourceChanged += SourceControl_SourceChanged;
             return sourceControl;
         }
 
-        void sourceControl_SourceChanged(object sender, ChangeSourceEventArgs e)
+        void SourceControl_SourceChanged(object sender, ChangeSourceEventArgs e)
         {
             var sourceControl = sender as SourceControl;
             commandManager.StartCommandSet();
-            var command = new RemoveSelectablesCommand(this, new SelectableControl[] { sourceControl });
+            var command = new RemoveSelectablesCommand(this, [sourceControl]);
             commandManager.AddCommand(command);
             sourceControl = AddSourceAtImpl(-1, sourceControl.CurrentSource.Position.X, sourceControl.CurrentSource.Position.Y, e.AssemblyAndType.FullName);
             commandManager.EndCommandSet();
@@ -184,7 +184,7 @@ namespace FlowScriptDrawControl.Control
             selectableManager.AddSelect(sourceControl.CurrentSource);
         }
 
-        void control_MoveStarted(object sender, EventArgs e)
+        void Control_MoveStarted(object sender, EventArgs e)
         {
             var selectableControl = sender as SelectableControl;
             var scopeJoinManager = new ScopeJoinManager(this, commandManager, selectableControl.MoveManager);
@@ -204,7 +204,7 @@ namespace FlowScriptDrawControl.Control
                 DataContext = new Comment(),
                 SelectableManager = selectableManager
             };
-            commentControl.MoveStarted += control_MoveStarted;
+            commentControl.MoveStarted += Control_MoveStarted;
             return commentControl;
         }
 
@@ -218,7 +218,7 @@ namespace FlowScriptDrawControl.Control
             return drawGrid.RenderTransform.Transform(p);
         }
 
-        void sourceControl_TryConnected(object sender, EventArgs e)
+        void SourceControl_TryConnected(object sender, EventArgs e)
         {
             var item = sender as SourceItemControl;
             if (currentItem != null)
@@ -249,11 +249,8 @@ namespace FlowScriptDrawControl.Control
             }
             finally
             {
-                if (currentItem != null)
-                {
-                    currentItem.CurrentItem.IsConnectable = false;
-                    currentItem = null;
-                }
+                currentItem?.CurrentItem.IsConnectable = false;
+                currentItem = null;
                 itemPositionManager = null;
                 DisableIsConnectable(true);
                 DisableMove();
@@ -298,7 +295,7 @@ namespace FlowScriptDrawControl.Control
             }
         }
 
-        void sourceControl_InItemSelected(object sender, EventArgs e)
+        void SourceControl_InItemSelected(object sender, EventArgs e)
         {
             var destItem = sender as SourceItemControl;
             if (destItem.CurrentItem.InConnection == null)
@@ -365,11 +362,8 @@ namespace FlowScriptDrawControl.Control
         }
         private void DisableConnect()
         {
-            if (currentItem != null)
-            {
-                currentItem.CurrentItem.IsConnectable = false;
-                currentItem = null;
-            }
+            currentItem?.CurrentItem.IsConnectable = false;
+            currentItem = null;
             if (currentArrow != null)
             {
                 currentArrow.SrcItem = null;
@@ -389,6 +383,28 @@ namespace FlowScriptDrawControl.Control
                 currentDestItems = null;
             }
             itemPositionManager = null;
+        }
+
+        /// <summary>
+        /// タイマーを破棄します。
+        /// </summary>
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        /// <summary>
+        /// タイマーを破棄します。
+        /// </summary>
+        /// <param name="disposing">Dispose から呼ばれたときは true。</param>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                DisableMove();
+                DisposeAutoFocusTimer();
+            }
         }
 
         private void DisableMove()
@@ -482,7 +498,7 @@ namespace FlowScriptDrawControl.Control
             moveTimer.Start();
         }
 
-        void sourceControl_OutItemSelected(object sender, EventArgs e)
+        void SourceControl_OutItemSelected(object sender, EventArgs e)
         {
             var selectedItem = sender as SourceItemControl;
             if (Keyboard.Modifiers.HasFlag(ModifierKeys.Shift))
@@ -521,7 +537,7 @@ namespace FlowScriptDrawControl.Control
                 commandManager.EndCommandSet();
                 if (count > 0)
                 {
-                    currentDestItems = destItems.ToArray();
+                    currentDestItems = [.. destItems];
                     EnableConnect(true);
                     EnableMove();
                     UpdateCurrentArrow();
@@ -675,7 +691,7 @@ namespace FlowScriptDrawControl.Control
                     ret.Add(selectableControl as SourceControl);
                 }
             }
-            return ret.ToArray();
+            return [.. ret];
         }
 
         public CommentControl[] GetAllCommentControls()
@@ -688,7 +704,7 @@ namespace FlowScriptDrawControl.Control
                     ret.Add(selectableControl as CommentControl);
                 }
             }
-            return ret.ToArray();
+            return [.. ret];
         }
 
         public SelectableControl[] GetAllSelectableControls()
@@ -698,7 +714,7 @@ namespace FlowScriptDrawControl.Control
             {
                 ret.Add(selectableControl);
             }
-            return ret.ToArray();
+            return [.. ret];
         }
 
         public BoundCommentControl[] GetAllBoundCommentControls()
@@ -708,7 +724,7 @@ namespace FlowScriptDrawControl.Control
             {
                 ret.Add(commentControl);
             }
-            return ret.ToArray();
+            return [.. ret];
         }
 
         public ScopeControl[] GetAllScopeControls()
@@ -718,7 +734,7 @@ namespace FlowScriptDrawControl.Control
             {
                 ret.Add(scopeControl);
             }
-            return ret.ToArray();
+            return [.. ret];
         }
 
         public ScopeControl GetScopeByPosition(Point p)
@@ -767,7 +783,7 @@ namespace FlowScriptDrawControl.Control
             UpdateTransform();
         }
 
-        private void backCanvas_SizeChanged(object sender, SizeChangedEventArgs e)
+        private void BackCanvas_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             UpdateGrid();
         }
@@ -884,8 +900,7 @@ namespace FlowScriptDrawControl.Control
             var scopes = new HashSet<Scope>();
             foreach (Selectable selectable in selectableManager.SelectedSelectables)
             {
-                var scopeChild = selectable as ScopeChild;
-                if (scopeChild == null)
+                if (selectable is not ScopeChild scopeChild)
                 {
                     continue;
                 }
@@ -1023,7 +1038,7 @@ namespace FlowScriptDrawControl.Control
                     Position = p
                 }
             };
-            scopeControl.MouseDoubleClick += scopeControl_MouseDoubleClick;
+            scopeControl.MouseDoubleClick += ScopeControl_MouseDoubleClick;
             return scopeControl;
         }
 
@@ -1171,7 +1186,7 @@ namespace FlowScriptDrawControl.Control
         {
             var selectedSources = GetAllSourceControls().Select(s => s.CurrentSource).Where(s => s.IsSelected).ToArray();
             var selectedComments = GetAllCommentControls().Select(c => c.CurrentComment).Where(c => c.IsSelected).ToArray();
-            return SelectionSerializer.Serializer.Serialize(new Selection(guid, selectedSources, selectedComments));
+            return SelectionSerializer.Serialize(new Selection(guid, selectedSources, selectedComments));
         }
 
         private void PasteImpl(Selection selection, bool connectArrows, Point point)
@@ -1276,7 +1291,7 @@ namespace FlowScriptDrawControl.Control
             var scopeIdDict = new Dictionary<int, int>();
             foreach (Scope scope in selection.Scopes)
             {
-                ScopeControl scopeControl = null;
+                ScopeControl scopeControl;
                 if (scope.ParentScopeId < 0)
                 {
                     scopeControl = AddScopeAtImpl(scope.Position, scope.Color, -1, null);
@@ -1293,7 +1308,7 @@ namespace FlowScriptDrawControl.Control
             {
                 parentScopeIdList[scopeControl] = scopeIdDict[parentScopeIdList[scopeControl]];
             }
-            SolveScopeDependencyAndAdd(parentScopeIdList, addedScopes.ToArray());
+            SolveScopeDependencyAndAdd(parentScopeIdList, [.. addedScopes]);
             UpdateLayout();
             foreach (Source source in selection.Sources)
             {
@@ -1466,7 +1481,7 @@ namespace FlowScriptDrawControl.Control
 
         public void AdjustPosition()
         {
-            var adjuster = new PositionAdjuster(GetAllSourceControls().ToArray(), commandManager);
+            var adjuster = new PositionAdjuster([.. GetAllSourceControls()], commandManager);
             adjuster.Adjust();
         }
 
@@ -1521,17 +1536,17 @@ namespace FlowScriptDrawControl.Control
 
         public int[] GetBreakPoints()
         {
-            return GetAllSourceControls().Where(s => s.CurrentSource.IsBreakPointSet).Select(s => s.CurrentSource.Id).ToArray();
+            return [.. GetAllSourceControls().Where(s => s.CurrentSource.IsBreakPointSet).Select(s => s.CurrentSource.Id)];
         }
 
-        private bool ContainsString(string str1, string str2)
+        private static bool ContainsString(string str1, string str2)
         {
             if (str1 == null || str2 == null)
             {
                 return false;
             }
 
-            return str1.ToLower().Contains(str2);
+            return str1.Contains(str2, StringComparison.CurrentCultureIgnoreCase);
         }
 
         public SearchResult Search(string query)
@@ -1539,7 +1554,7 @@ namespace FlowScriptDrawControl.Control
             query = query.ToLower();
             if (String.IsNullOrEmpty(query))
             {
-                return new SearchResult(guid, new Source[0], new Comment[0]);
+                return new SearchResult(guid, [], []);
             }
             var result = SearchWithQuery(query);
             if (result != null)
@@ -1548,7 +1563,7 @@ namespace FlowScriptDrawControl.Control
             }
 
             return new SearchResult(guid,
-                GetAllSourceControls().Select(s => s.CurrentSource).Where(
+                [.. GetAllSourceControls().Select(s => s.CurrentSource).Where(
                 s =>
                 {
                     if (ContainsString(s.Name, query))
@@ -1563,8 +1578,8 @@ namespace FlowScriptDrawControl.Control
 
                     return s.Items.Any(i => ContainsString(i.Name, query) || ContainsString(i.Value, query) ||
                         ContainsString(String.Format("{0}={1}", i.Name, i.Value), query));
-                }).ToArray(),
-                GetAllCommentControls().Select(s => s.CurrentComment).Where(
+                })],
+                [.. GetAllCommentControls().Select(s => s.CurrentComment).Where(
                 c =>
                 {
                     if (ContainsString(c.Text, query))
@@ -1573,7 +1588,7 @@ namespace FlowScriptDrawControl.Control
                     }
 
                     return false;
-                }).ToArray());
+                })]);
         }
 
         public void Select(Selectable selectable)
@@ -1712,7 +1727,7 @@ namespace FlowScriptDrawControl.Control
             try
             {
                 var xml = Clipboard.GetText();
-                return SelectionSerializer.Serializer.Deserialize(xml, OnGetSource);
+                return SelectionSerializer.Deserialize(xml, OnGetSource);
             }
             catch
             {
@@ -1761,8 +1776,7 @@ namespace FlowScriptDrawControl.Control
                     return null;
                 }
 
-                var source = selectableManager.SelectedSelectables[0] as Source;
-                if (source == null)
+                if (selectableManager.SelectedSelectables[0] is not Source source)
                 {
                     return null;
                 }
@@ -1829,7 +1843,7 @@ namespace FlowScriptDrawControl.Control
 
         public bool CanFindLinkedItem(double x, double y)
         {
-            return GetSourceAndItem(x, y, out SourceControl source, out SourceItemControl item);
+            return GetSourceAndItem(x, y, out _, out _);
         }
 
         public string FindLinkedItemQuery(double x, double y)
@@ -1847,7 +1861,7 @@ namespace FlowScriptDrawControl.Control
                 return null;
             }
             var id = int.Parse(match.Groups[1].Value);
-            var isOut = match.Groups[2].Value.ToLower() == "out";
+            var isOut = match.Groups[2].Value.Equals("out", StringComparison.CurrentCultureIgnoreCase);
             var propertyName = match.Groups[3].Value.ToLower();
 
             var source = GetAllSourceControls().FirstOrDefault(s => s.CurrentSource.Id == id);
@@ -1858,23 +1872,23 @@ namespace FlowScriptDrawControl.Control
             Source[] sources;
             if (isOut)
             {
-                var outItem = source.CurrentSource.OutItems.FirstOrDefault(i => i.Name.ToLower() == propertyName);
+                var outItem = source.CurrentSource.OutItems.FirstOrDefault(i => i.Name.Equals(propertyName, StringComparison.CurrentCultureIgnoreCase));
                 if (outItem == null)
                 {
                     return null;
                 }
-                sources = outItem.OutConnections.Select(c => c.Target.Source).ToArray();
+                sources = [.. outItem.OutConnections.Select(c => c.Target.Source)];
             }
             else
             {
-                var inItem = source.CurrentSource.InItems.FirstOrDefault(i => i.Name.ToLower() == propertyName);
+                var inItem = source.CurrentSource.InItems.FirstOrDefault(i => i.Name.Equals(propertyName, StringComparison.CurrentCultureIgnoreCase));
                 if (inItem == null)
                 {
                     return null;
                 }
-                sources = new Source[] { inItem.InConnection.Target.Source };
+                sources = [inItem.InConnection.Target.Source];
             }
-            return new SearchResult(guid, sources, new Comment[0]);
+            return new SearchResult(guid, sources, []);
         }
 
         private bool GetSourceAt(double x, double y, out SourceControl source)
@@ -1896,9 +1910,9 @@ namespace FlowScriptDrawControl.Control
             var target = (DependencyObject)source.InputHitTest(new Point(p.X - source.CurrentPositionable.Position.X, p.Y - source.CurrentPositionable.Position.Y));
             while (target != null)
             {
-                if (target is SourceItemControl)
+                if (target is SourceItemControl control)
                 {
-                    item = (SourceItemControl)target;
+                    item = control;
                     break;
                 }
                 target = VisualTreeHelper.GetParent(target);
@@ -2023,7 +2037,7 @@ namespace FlowScriptDrawControl.Control
                 currentShiftX = itemPositionManager.CurrentShiftX - diffX;
                 currentShiftY = itemPositionManager.CurrentShiftY - diffY;
                 UpdateTransform();
-                System.Windows.Forms.Cursor.Position = new System.Drawing.Point((int)(pos.X - diffX), (int)(pos.Y - diffY));
+                MoveCursorTo(new Point(nextPos.X - diffX, nextPos.Y - diffY));
             }
         }
 
@@ -2071,12 +2085,21 @@ namespace FlowScriptDrawControl.Control
             currentShiftX -= diffX;
             currentShiftY -= diffY;
             UpdateTransform();
-            System.Windows.Forms.Cursor.Position = new System.Drawing.Point((int)(pos.X - diffX), (int)(pos.Y - diffY));
+            MoveCursorTo(new Point(nextPos.X - diffX, nextPos.Y - diffY));
+        }
+
+        /// <summary>
+        /// マウスカーソルを、このコントロールの座標の位置に移動します（スクリーンの物理ピクセルに変換して移動する）。
+        /// </summary>
+        private void MoveCursorTo(Point localPosition)
+        {
+            var screen = PointToScreen(localPosition);
+            _ = NativeMethods.SetCursorPos((int)Math.Round(screen.X), (int)Math.Round(screen.Y));
         }
 
         public bool CanGetNodeName(double x, double y)
         {
-            return GetSourceAt(x, y, out SourceControl source);
+            return GetSourceAt(x, y, out _);
         }
 
 
@@ -2101,5 +2124,8 @@ namespace FlowScriptDrawControl.Control
             }
             return false;
         }
+
+        [GeneratedRegex(@"^@(\d+)\[(In|Out)\]\[(\w+)\]$", RegexOptions.IgnoreCase)]
+        private static partial Regex QueryPatternRegex();
     }
 }

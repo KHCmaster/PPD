@@ -1,4 +1,5 @@
-﻿using FlowScriptEngine;
+﻿using PPDMath;
+using FlowScriptEngine;
 
 namespace FlowScriptEngineSlimDX.FlowSourceObjects.Matrix
 {
@@ -11,14 +12,14 @@ namespace FlowScriptEngineSlimDX.FlowSourceObjects.Matrix
         }
 
         [ToolTipText("FirstArgument")]
-        public SharpDX.Matrix A
+        public System.Numerics.Matrix4x4 A
         {
             private get;
             set;
         }
 
         [ToolTipText("SecondArgument")]
-        public SharpDX.Matrix B
+        public System.Numerics.Matrix4x4 B
         {
             private get;
             set;

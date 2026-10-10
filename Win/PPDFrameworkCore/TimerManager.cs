@@ -1,26 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace PPDFrameworkCore
 {
-    public class TimerManager : ITimerManager
+    public class TimerManager(GameTimer gameTimer) : ITimerManager
     {
         int iter = 1;
-        SortedList<int, TimerInfo> list;
-        SortedList<int, TimerInfo> onceList;
-        Dictionary<int, TimerInfo> afterAddList;
-        Dictionary<int, TimerInfo> afterOnceAddList;
-        GameTimer gameTimer;
-        private readonly object lockObject = new object();
-
-        public TimerManager(GameTimer gameTimer)
-        {
-            this.gameTimer = gameTimer;
-            list = new SortedList<int, TimerInfo>();
-            onceList = new SortedList<int, TimerInfo>();
-            afterAddList = new Dictionary<int, TimerInfo>();
-            afterOnceAddList = new Dictionary<int, TimerInfo>();
-        }
+        readonly SortedList<int, TimerInfo> list = [];
+        readonly SortedList<int, TimerInfo> onceList = [];
+        readonly Dictionary<int, TimerInfo> afterAddList = [];
+        readonly Dictionary<int, TimerInfo> afterOnceAddList = [];
+        readonly GameTimer gameTimer = gameTimer;
+        private readonly Lock lockObject = new();
 
         public void Update()
         {
@@ -82,43 +74,30 @@ namespace PPDFrameworkCore
         {
             lock (lockObject)
             {
-                if (list.ContainsKey(id))
-                {
-                    list.Remove(id);
-                }
-                if (onceList.ContainsKey(id))
-                {
-                    onceList.Remove(id);
-                }
+                list.Remove(id);
+                onceList.Remove(id);
             }
         }
 
-        class TimerInfo
+        class TimerInfo(long startTime, int interval, Action<int> callback)
         {
-            public TimerInfo(long startTime, int interval, Action<int> callback)
-            {
-                StartTime = startTime;
-                Interval = interval;
-                CallBack = callback;
-            }
-
             public long StartTime
             {
                 get;
                 private set;
-            }
+            } = startTime;
 
             public int Interval
             {
                 get;
                 private set;
-            }
+            } = interval;
 
             public Action<int> CallBack
             {
                 get;
                 private set;
-            }
+            } = callback;
 
             public long CallCount
             {

@@ -11,9 +11,9 @@ namespace FlowScriptEnginePPD.FlowSourceObjects.Mod
         {
             base.OnInitialize();
 
-            if (Manager.Items.ContainsKey("ModSettingManager"))
+            if (Manager.Items.TryGetValue("ModSettingManager", out object value))
             {
-                modSettingManager = Manager.Items["ModSettingManager"] as ModSettingManager;
+                modSettingManager = value as ModSettingManager;
             }
         }
     }

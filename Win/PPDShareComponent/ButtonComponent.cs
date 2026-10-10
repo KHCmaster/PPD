@@ -1,25 +1,25 @@
 ﻿using PPDFramework;
-using SharpDX;
+using System.Numerics;
+using PPDMath;
 
 namespace PPDShareComponent
 {
     public class ButtonComponent : SelectableComponent
     {
-        EffectObject select;
+        readonly EffectObject select;
 
         public ButtonComponent(PPDDevice device, PPDFramework.Resource.ResourceManager resourceManager, PathManager pathManager, string text) : base(device)
         {
-            TextureString str;
-            this.AddChild(str = new TextureString(device, text, 20, PPDColors.White)
+            this.AddChild(_ = new TextureString(device, text, 20, PPDColors.White)
             {
                 Position = new Vector2(30, 0)
             });
 
             select = new EffectObject(device, resourceManager, pathManager.Combine("greenflare.etd"))
             {
-                Position = new Vector2(13, 13)
+                Position = new Vector2(13, 13),
+                PlayType = Effect2D.EffectManager.PlayType.ReverseLoop
             };
-            select.PlayType = Effect2D.EffectManager.PlayType.ReverseLoop;
             select.Play();
             select.Alignment = EffectObject.EffectAlignment.Center;
             select.Scale = new Vector2(0.4f, 0.4f);

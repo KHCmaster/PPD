@@ -1,0 +1,49 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- アプリを起動して画面を操作する自動テストです（FlaUI で UI Automation を使う）。デスクトップにログオンした状態で実行する -->
+  <PropertyGroup>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <RootNamespace>UITests</RootNamespace>
+    <AssemblyName>UITests</AssemblyName>
+    <Platforms>x64</Platforms>
+    <PlatformTarget>x64</PlatformTarget>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+    <Nullable>disable</Nullable>
+    <!-- AssemblyInfo.cs がないので、アセンブリの情報（テストするアプリの場所を含む）を生成する -->
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="FlaUI.UIA3" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="xunit" />
+    <PackageReference Include="xunit.runner.visualstudio" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- テストするアプリを先にビルドする（参照はしない。ビルドした exe をコピーして起動する） -->
+    <ProjectReference Include="..\BMSTOPPD\BMSTOPPD\BMSTOPPD.csproj" ReferenceOutputAssembly="false" />
+    <ProjectReference Include="..\KeyConfiger\KeyConfiger\KeyConfiger.csproj" ReferenceOutputAssembly="false" />
+    <ProjectReference Include="..\FlowScriptControlTest\FlowScriptControlTest.csproj" ReferenceOutputAssembly="false" />
+    <ProjectReference Include="..\BezierDrawControlTest\BezierDrawControlTest.csproj" ReferenceOutputAssembly="false" />
+    <ProjectReference Include="..\PPDUpdater\PPDUpdater.csproj" ReferenceOutputAssembly="false" />
+    <ProjectReference Include="..\FolderDiffChecker\FolderDiffChecker.csproj" ReferenceOutputAssembly="false" />
+    <ProjectReference Include="..\PPDInstaller\PPDInstaller\PPDInstaller.csproj" ReferenceOutputAssembly="false" />
+    <ProjectReference Include="..\PPDConfig\PPDConfig.csproj" ReferenceOutputAssembly="false" />
+    <ProjectReference Include="..\PPDEditor\PPDEditor\PPDEditor.csproj" ReferenceOutputAssembly="false" />
+    <ProjectReference Include="..\Effect2DEditor\Effect2DEditor.csproj" ReferenceOutputAssembly="false" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- テストするアプリのビルドの場所を探すための、リポジトリの場所と構成 -->
+    <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+      <_Parameter1>SourceRoot</_Parameter1>
+      <_Parameter2>$(MSBuildThisFileDirectory)..</_Parameter2>
+    </AssemblyAttribute>
+    <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+      <_Parameter1>Configuration</_Parameter1>
+      <_Parameter2>$(Configuration)</_Parameter2>
+    </AssemblyAttribute>
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="**\TestData\*" CopyToOutputDirectory="PreserveNewest" />
+    <None Update="xunit.runner.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+</Project>

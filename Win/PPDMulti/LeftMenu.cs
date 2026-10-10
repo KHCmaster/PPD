@@ -5,7 +5,9 @@ using PPDMulti.Data;
 using PPDMulti.Model;
 using PPDMultiCommon.Model;
 using PPDShareComponent;
-using SharpDX;
+using System.Numerics;
+using PPDMath;
+using Color4 = Vortice.Mathematics.Color4;
 using System;
 
 namespace PPDMulti
@@ -36,15 +38,15 @@ namespace PPDMulti
         public event Action<User> ChangeLeader;
         public event Action<User> KickUser;
 
-        IGameHost gameHost;
-        PPDFramework.Resource.ResourceManager resourceManager;
-        ISound sound;
-        MovieManager movieManager;
-        ChangableList<User> users;
-        AllowedModList allowedModList;
+        readonly IGameHost gameHost;
+        readonly PPDFramework.Resource.ResourceManager resourceManager;
+        readonly ISound sound;
+        readonly MovieManager movieManager;
+        readonly ChangableList<User> users;
+        readonly AllowedModList allowedModList;
 
-        PictureObject back;
-        EffectObject select;
+        readonly PictureObject back;
+        readonly EffectObject select;
         Mode mode = Mode.SongSelect;
         const int selectX = 15;
         const int selectDiffY = 10;
@@ -54,15 +56,15 @@ namespace PPDMulti
         ItemSettingComponent itemSettingComponent;
         UserSelectComponent userSelectComponent;
         ModPanel modPanel;
-        SpriteObject leftSprite;
-        SpriteObject songSelectSprite;
-        SpriteObject userSelectSprite;
-        SpriteObject itemSettingSprite;
-        SpriteObject gameRuleSprite;
-        SpriteObject modSprite;
+        readonly SpriteObject leftSprite;
+        readonly SpriteObject songSelectSprite;
+        readonly SpriteObject userSelectSprite;
+        readonly SpriteObject itemSettingSprite;
+        readonly SpriteObject gameRuleSprite;
+        readonly SpriteObject modSprite;
 
-        User user;
-        bool[] enables;
+        readonly User user;
+        readonly bool[] enables;
 
         public SongInformation SongInformation
         {
@@ -113,7 +115,7 @@ namespace PPDMulti
             this.AddChild(leftSprite = new SpriteObject(device));
             leftSprite.AddChild(back = new PictureObject(device, resourceManager, Utility.Path.Combine("leftmenu.png")));
 
-            enables = new bool[]{
+            enables = [
                 false,
                 false,
                 false,
@@ -125,7 +127,7 @@ namespace PPDMulti
                 true,
                 true,
                 true
-            };
+            ];
 
             user.PropertyChanged += (name) =>
             {
@@ -196,9 +198,9 @@ namespace PPDMulti
 
             select = new EffectObject(device, resourceManager, Utility.Path.Combine("greenflare.etd"))
             {
-                Position = new Vector2(15, back[(int)mode].Position.Y + selectDiffY)
+                Position = new Vector2(15, back[(int)mode].Position.Y + selectDiffY),
+                PlayType = Effect2D.EffectManager.PlayType.ReverseLoop
             };
-            select.PlayType = Effect2D.EffectManager.PlayType.ReverseLoop;
             select.Play();
             select.Alignment = EffectObject.EffectAlignment.Center;
             select.Scale = new Vector2(0.4f, 0.4f);
@@ -240,7 +242,7 @@ namespace PPDMulti
                         if (songSelectComponent == null)
                         {
                             songSelectComponent = new SongSelectComponent(device, resourceManager, sound, this, movieManager);
-                            songSelectComponent.SongSelected += songSelectComponent_SongSelected;
+                            songSelectComponent.SongSelected += SongSelectComponent_SongSelected;
                             songSelectSprite.InsertChild(songSelectComponent, 0);
                         }
                         sound.Play(PPDSetting.DefaultSounds[1], -1000);
@@ -250,7 +252,7 @@ namespace PPDMulti
                         if (gameRuleComponent == null)
                         {
                             gameRuleComponent = new GameRuleComponent(device, resourceManager, sound);
-                            gameRuleComponent.RuleChanged += gameRuleComponent_RuleChanged;
+                            gameRuleComponent.RuleChanged += GameRuleComponent_RuleChanged;
                             gameRuleSprite.InsertChild(gameRuleComponent, 0);
                         }
                         sound.Play(PPDSetting.DefaultSounds[1], -1000);
@@ -260,8 +262,8 @@ namespace PPDMulti
                         if (userSelectComponent == null)
                         {
                             userSelectComponent = new UserSelectComponent(device, resourceManager, sound, users);
-                            userSelectComponent.ChangeLeader += userSelectComponent_ChangeLeader;
-                            userSelectComponent.KickUser += userSelectComponent_KickUser;
+                            userSelectComponent.ChangeLeader += UserSelectComponent_ChangeLeader;
+                            userSelectComponent.KickUser += UserSelectComponent_KickUser;
                             userSelectSprite.InsertChild(userSelectComponent, 0);
                         }
                         sound.Play(PPDSetting.DefaultSounds[1], -1000);
@@ -294,17 +296,11 @@ namespace PPDMulti
                         break;
                     case Mode.ShowResult:
                         sound.Play(PPDSetting.DefaultSounds[1], -1000);
-                        if (ShowResult != null)
-                        {
-                            ShowResult.Invoke(this, EventArgs.Empty);
-                        }
+                        ShowResult?.Invoke(this, EventArgs.Empty);
                         break;
                     case Mode.UpdateDB:
                         sound.Play(PPDSetting.DefaultSounds[1], -1000);
-                        if (UpdateScoreDB != null)
-                        {
-                            UpdateScoreDB.Invoke(this, EventArgs.Empty);
-                        }
+                        UpdateScoreDB?.Invoke(this, EventArgs.Empty);
                         break;
                     case Mode.Mod:
                         if (modPanel == null)
@@ -318,7 +314,7 @@ namespace PPDMulti
                     case Mode.Finish:
                         sound.Play(PPDSetting.DefaultSounds[1], -1000);
                         var confirmComponent = new ConfirmComponent(device, resourceManager, Utility.Path, Utility.Language["FinishConfirm"], Utility.Language["Yes"], Utility.Language["No"], Utility.Language["OK"], ConfirmComponent.ConfirmButtonType.YesNo);
-                        confirmComponent.LostFocused += confirmComponent_LostFocused;
+                        confirmComponent.LostFocused += ConfirmComponent_LostFocused;
                         this.InsertChild(confirmComponent, 0);
                         FocusManager.Focus(confirmComponent);
                         break;
@@ -364,25 +360,22 @@ namespace PPDMulti
             select.Position = new Vector2(select.Position.X, selectDiffY + back[(int)mode].Position.Y);
         }
 
-        void userSelectComponent_KickUser(object sender, EventArgs e)
+        void UserSelectComponent_KickUser(object sender, EventArgs e)
         {
             KickUser?.Invoke(userSelectComponent.SelectedUser);
         }
 
-        void userSelectComponent_ChangeLeader(object sender, EventArgs e)
+        void UserSelectComponent_ChangeLeader(object sender, EventArgs e)
         {
             ChangeLeader?.Invoke(userSelectComponent.SelectedUser);
         }
 
-        void gameRuleComponent_RuleChanged(object sender, EventArgs e)
+        void GameRuleComponent_RuleChanged(object sender, EventArgs e)
         {
-            if (RuleChanged != null)
-            {
-                RuleChanged.Invoke(gameRuleComponent.GameRule);
-            }
+            RuleChanged?.Invoke(gameRuleComponent.GameRule);
         }
 
-        void songSelectComponent_SongSelected(object sender, EventArgs e)
+        void SongSelectComponent_SongSelected(object sender, EventArgs e)
         {
             if (SongSelected != null)
             {
@@ -392,7 +385,7 @@ namespace PPDMulti
             }
         }
 
-        void confirmComponent_LostFocused(IFocusable sender, FocusEventArgs args)
+        void ConfirmComponent_LostFocused(IFocusable sender, FocusEventArgs args)
         {
             if (sender is ConfirmComponent confirmComponent)
             {
@@ -406,10 +399,7 @@ namespace PPDMulti
 
         private void OnClose()
         {
-            if (Closed != null)
-            {
-                Closed.Invoke(this, EventArgs.Empty);
-            }
+            Closed?.Invoke(this, EventArgs.Empty);
         }
 
         private void OnTryToPlayGame()

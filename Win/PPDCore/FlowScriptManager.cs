@@ -13,7 +13,7 @@ namespace PPDCore
 {
     public class FlowScriptManager : DisposableComponent
     {
-        Engine engine;
+        readonly Engine engine;
 
         public BPMManager BPMManager
         {
@@ -95,21 +95,21 @@ namespace PPDCore
 
         public ScriptResourceManager[] ScriptResourceManagers
         {
-            get { return scriptList.Select(s => s.Value.ResourceManager).ToArray(); }
+            get { return [.. scriptList.Select(s => s.Value.ResourceManager)]; }
         }
 
-        Dictionary<string, object> afterLoadList;
-        List<KeyValuePair<MemoryStream, ScriptInfo>> scriptList;
-        List<IPriorityManager> priorityManagers;
+        readonly Dictionary<string, object> afterLoadList;
+        readonly List<KeyValuePair<MemoryStream, ScriptInfo>> scriptList;
+        readonly List<IPriorityManager> priorityManagers;
 
         private TcpDebugControllerClient controllerClient;
         private DebugController debugController;
 
         public FlowScriptManager(PPDDevice device, ISound sound)
         {
-            priorityManagers = new List<IPriorityManager>();
+            priorityManagers = [];
             engine = new Engine();
-            engine.Error += engine_Error;
+            engine.Error += Engine_Error;
             BPMManager = new BPMManager();
             UpdateManager = new UpdateManager(engine);
             CalculatePositionManager = new CalculatePositionManager(engine);
@@ -120,7 +120,7 @@ namespace PPDCore
             ProcessAllowedButtonsManager = new ProcessAllowedButtonsManager(engine);
             InputManager = new InputManager();
             PauseManager = new PauseManager(engine);
-            priorityManagers.AddRange(new IPriorityManager[]{
+            priorityManagers.AddRange([
                 UpdateManager,
                 CalculatePositionManager,
                 ProcessEvaluateManager,
@@ -128,12 +128,12 @@ namespace PPDCore
                 ProcessMarkBPMManager,
                 ProcessMissPressManager,
                 ProcessAllowedButtonsManager,
-            });
+            ]);
             GameResultManager = new GameResultManager();
             StageManager = new StageManager(device);
-            afterLoadList = new Dictionary<string, object>();
+            afterLoadList = [];
 
-            scriptList = new List<KeyValuePair<MemoryStream, ScriptInfo>>();
+            scriptList = [];
             ModManager.Instance.WaitForLoadFinish();
             if (!ModManager.Instance.Initialized)
             {
@@ -157,7 +157,7 @@ namespace PPDCore
             }
         }
 
-        void engine_Error(FlowExecutionException obj)
+        void Engine_Error(FlowExecutionException obj)
         {
             if (SuppressErrorLog)
             {
@@ -190,7 +190,7 @@ namespace PPDCore
             using (stream)
             {
                 byte[] buffer = new byte[stream.Length];
-                stream.Read(buffer, 0, buffer.Length);
+                stream.ReadAtLeast(buffer, buffer.Length, throwOnEndOfStream: false);
                 scriptList.Add(new KeyValuePair<MemoryStream, ScriptInfo>(new MemoryStream(buffer),
                     new ScriptInfo(scriptResourceManager, modInfo, fileName)));
             }
@@ -203,10 +203,7 @@ namespace PPDCore
 
         public void RemoveItem(string key)
         {
-            if (afterLoadList.ContainsKey(key))
-            {
-                afterLoadList.Remove(key);
-            }
+            afterLoadList.Remove(key);
         }
 
         public void Initialize()
@@ -289,6 +286,7 @@ namespace PPDCore
 
         public void Update(bool dontUpdateExtraProcess)
         {
+            using var profile = FrameProfiler.Measure(FrameSection.FlowScript);
             engine.Update();
             if (!dontUpdateExtraProcess)
             {
@@ -311,16 +309,13 @@ namespace PPDCore
             base.DisposeResource();
             foreach (KeyValuePair<MemoryStream, ScriptInfo> kvp in scriptList)
             {
-                if (kvp.Value.ResourceManager != null)
-                {
-                    kvp.Value.ResourceManager.Dispose();
-                }
+                kvp.Value.ResourceManager?.Dispose();
             }
-            if (controllerClient != null)
-            {
-                controllerClient.Close();
-                controllerClient = null;
-            }
+
+            controllerClient?.Dispose();
+            controllerClient = null;
+            debugController?.Dispose();
+            debugController = null;
         }
     }
 }

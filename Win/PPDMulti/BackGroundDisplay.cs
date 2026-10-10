@@ -1,4 +1,5 @@
-﻿using PPDFramework;
+﻿using PPDMath;
+using PPDFramework;
 using System.Globalization;
 using System.IO;
 using System.Xml;
@@ -7,9 +8,9 @@ namespace PPDMulti
 {
     class BackGroundDisplay : GameComponent
     {
-        private PPDFramework.Resource.ResourceManager resourceManager;
-        private string filePath;
-        private string contentElementName;
+        private readonly PPDFramework.Resource.ResourceManager resourceManager;
+        private readonly string filePath;
+        private readonly string contentElementName;
 
         public BackGroundDisplay(PPDDevice device, PPDFramework.Resource.ResourceManager resourceManager, string filePath, string contentElementName) : base(device)
         {
@@ -72,11 +73,11 @@ namespace PPDMulti
             {
                 var po = new PictureObject(device, resourceManager, filePath, reader.GetAttribute("Center") == "1")
                 {
-                    Position = new SharpDX.Vector2(ReadAttribute(reader, "X", 0), ReadAttribute(reader, "Y", 0))
+                    Position = new System.Numerics.Vector2(ReadAttribute(reader, "X", 0), ReadAttribute(reader, "Y", 0)),
+                    Alpha = ReadAttribute(reader, "Alpha", 1),
+                    Scale = new System.Numerics.Vector2(ReadAttribute(reader, "ScaleX", 1), ReadAttribute(reader, "ScaleY", 1)),
+                    Rotation = ReadAttribute(reader, "Rotation", 0)
                 };
-                po.Alpha = ReadAttribute(reader, "Alpha", 1);
-                po.Scale = new SharpDX.Vector2(ReadAttribute(reader, "ScaleX", 1), ReadAttribute(reader, "ScaleY", 1));
-                po.Rotation = ReadAttribute(reader, "Rotation", 0);
                 this.AddChild(po);
             }
         }
@@ -88,40 +89,34 @@ namespace PPDMulti
             {
                 var eo = new EffectObject(device, resourceManager, filePath)
                 {
-                    Position = new SharpDX.Vector2(ReadAttribute(reader, "X", 0), ReadAttribute(reader, "Y", 0))
+                    Position = new System.Numerics.Vector2(ReadAttribute(reader, "X", 0), ReadAttribute(reader, "Y", 0)),
+                    Alignment = reader.GetAttribute("Center") == "1" ? EffectObject.EffectAlignment.Center : EffectObject.EffectAlignment.TopLeft,
+                    Alpha = ReadAttribute(reader, "Alpha", 1),
+                    Scale = new System.Numerics.Vector2(ReadAttribute(reader, "ScaleX", 1), ReadAttribute(reader, "ScaleY", 1)),
+                    Rotation = ReadAttribute(reader, "Rotation", 0),
+                    PlayType = ParsePlayType(reader.GetAttribute("PlayType"))
                 };
-                eo.Alignment = reader.GetAttribute("Center") == "1" ? EffectObject.EffectAlignment.Center : EffectObject.EffectAlignment.TopLeft;
-                eo.Alpha = ReadAttribute(reader, "Alpha", 1);
-                eo.Scale = new SharpDX.Vector2(ReadAttribute(reader, "ScaleX", 1), ReadAttribute(reader, "ScaleY", 1));
-                eo.Rotation = ReadAttribute(reader, "Rotation", 0);
-                eo.PlayType = ParsePlayType(reader.GetAttribute("PlayType"));
                 eo.Play();
                 this.AddChild(eo);
             }
         }
 
-        private Effect2D.EffectManager.PlayType ParsePlayType(string value)
+        private static Effect2D.EffectManager.PlayType ParsePlayType(string value)
         {
-            switch (value)
+            return value switch
             {
-                case "Once":
-                    return Effect2D.EffectManager.PlayType.Once;
-                case "ReverseOnce":
-                    return Effect2D.EffectManager.PlayType.ReverseOnce;
-                case "Loop":
-                    return Effect2D.EffectManager.PlayType.Loop;
-                case "ReserseLoop":
-                    return Effect2D.EffectManager.PlayType.ReverseLoop;
-                default:
-                    return Effect2D.EffectManager.PlayType.Loop;
-            }
+                "Once" => Effect2D.EffectManager.PlayType.Once,
+                "ReverseOnce" => Effect2D.EffectManager.PlayType.ReverseOnce,
+                "Loop" => Effect2D.EffectManager.PlayType.Loop,
+                "ReserseLoop" => Effect2D.EffectManager.PlayType.ReverseLoop,
+                _ => Effect2D.EffectManager.PlayType.Loop,
+            };
         }
 
-        private float ReadAttribute(XmlReader reader, string attribute, float defaultValue)
+        private static float ReadAttribute(XmlReader reader, string attribute, float defaultValue)
         {
-            float ret = defaultValue;
             var value = reader.GetAttribute(attribute);
-            if (!float.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture, out ret))
+            if (!float.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture, out float ret))
             {
                 ret = defaultValue;
             }

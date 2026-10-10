@@ -1,15 +1,15 @@
 ﻿using System;
-using System.Windows.Forms;
+using System.Threading;
 
 namespace PPDInstaller.Executor
 {
-    abstract class CExecutor
+    /// <summary>
+    /// インストールの処理の基底クラスです。終了と進み具合は作ったスレッドの <see cref="SynchronizationContext"/> に通知します。
+    /// </summary>
+    abstract class CExecutor(SynchronizationContext context)
     {
-        public delegate void VoidDelegate();
-
         public event EventHandler Finished;
         public event EventHandler Progressed;
-        Control control;
 
         public bool Success
         {
@@ -17,11 +17,14 @@ namespace PPDInstaller.Executor
             protected set;
         }
 
+        /// <summary>
+        /// 進み具合（%）です。始める前に表示しても数字になるように、最初は 0 にしておきます。
+        /// </summary>
         public string Progress
         {
             get;
             protected set;
-        }
+        } = "0";
 
         public string ErrorLog
         {
@@ -41,11 +44,6 @@ namespace PPDInstaller.Executor
             set;
         }
 
-        protected CExecutor(Control control)
-        {
-            this.control = control;
-        }
-
         public virtual void Execute()
         {
             Progress = "0";
@@ -53,28 +51,12 @@ namespace PPDInstaller.Executor
 
         protected void OnFinish()
         {
-            if (control.InvokeRequired)
-            {
-                control.Invoke(new VoidDelegate(OnFinish));
-                return;
-            }
-            if (Finished != null)
-            {
-                Finished.Invoke(this, EventArgs.Empty);
-            }
+            context.Send(_ => Finished?.Invoke(this, EventArgs.Empty), null);
         }
 
         protected void OnProgress()
         {
-            if (control.InvokeRequired)
-            {
-                control.Invoke(new VoidDelegate(OnProgress));
-                return;
-            }
-            if (Progressed != null)
-            {
-                Progressed.Invoke(this, EventArgs.Empty);
-            }
+            context.Send(_ => Progressed?.Invoke(this, EventArgs.Empty), null);
         }
     }
 }

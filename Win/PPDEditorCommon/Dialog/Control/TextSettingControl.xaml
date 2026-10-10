@@ -4,8 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:converter="clr-namespace:PPDEditorCommon.Dialog.Converter"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
-             xmlns:command="clr-namespace:GalaSoft.MvvmLight.Command;assembly=GalaSoft.MvvmLight.Extras"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              >
     <Grid>
         <Grid.Resources>
@@ -27,7 +26,7 @@
                  ToolTip="{Binding ValidateErrorText}">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="TextChanged">
-                    <command:EventToCommand Command="{Binding Path=ChangedCommand}"/>
+                    <i:InvokeCommandAction Command="{Binding Path=ChangedCommand}"/>
                 </i:EventTrigger>
             </i:Interaction.Triggers>
         </TextBox>

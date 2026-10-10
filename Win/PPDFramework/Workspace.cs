@@ -8,8 +8,8 @@ namespace PPDFramework
     public class Workspace : DisposableComponent
     {
         WorkspaceTexture primal;
-        Stack<WorkspaceTexture> textures;
-        HashSet<WorkspaceTexture> usingTextures;
+        readonly Stack<WorkspaceTexture> textures;
+        readonly HashSet<WorkspaceTexture> usingTextures;
 
         /// <summary>
         /// PPDデバイスを取得します。
@@ -41,39 +41,7 @@ namespace PPDFramework
             {
                 textures.Push(new WorkspaceTexture(device, this));
             }
-            usingTextures = new HashSet<WorkspaceTexture>();
-        }
-
-        /// <summary>
-        /// デバイスがロストしたときの処理です。
-        /// </summary>
-        public void OnLostDevice()
-        {
-            Primal.OnLostDevice();
-            foreach (var texture in usingTextures)
-            {
-                texture.OnLostDevice();
-            }
-            foreach (var texture in textures)
-            {
-                texture.OnLostDevice();
-            }
-        }
-
-        /// <summary>
-        /// デバイスがリセットされたときの処理です。
-        /// </summary>
-        public void OnResetDevice()
-        {
-            Primal.OnResetDevice();
-            foreach (var texture in usingTextures)
-            {
-                texture.OnResetDevice();
-            }
-            foreach (var texture in textures)
-            {
-                texture.OnResetDevice();
-            }
+            usingTextures = [];
         }
 
         /// <summary>
@@ -105,7 +73,7 @@ namespace PPDFramework
                 {
                     ret = textures.Pop();
                 }
-                ret.Use();
+                WorkspaceTexture.Use();
                 usingTextures.Add(ret);
                 return ret;
             }
@@ -140,11 +108,8 @@ namespace PPDFramework
                 texture.DisposeInternal();
             }
             usingTextures.Clear();
-            if (primal != null)
-            {
-                primal.Dispose();
-                primal = null;
-            }
+            primal?.DisposeInternal();
+            primal = null;
         }
     }
 }

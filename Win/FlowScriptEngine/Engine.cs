@@ -7,32 +7,24 @@ using System.Xml;
 
 namespace FlowScriptEngine
 {
-    public class Engine
+    public class Engine(TextReader consoleReader)
     {
         public event Action<FlowExecutionException> Error;
 
-        private List<FlowSourceManager> managers;
-        private FunctionScope globalScope;
+        private readonly List<FlowSourceManager> managers = [];
+        private readonly FunctionScope globalScope = new(ScopeType.Global);
 
-        private Dictionary<Guid, FunctionScope> contexts;
+        private readonly Dictionary<Guid, FunctionScope> contexts = [];
 
         public TextReader ConsoleReader
         {
             get;
             private set;
-        }
+        } = consoleReader;
 
         public Engine()
             : this(Console.In)
         {
-        }
-
-        public Engine(TextReader consoleReader)
-        {
-            ConsoleReader = consoleReader;
-            managers = new List<FlowSourceManager>();
-            globalScope = new FunctionScope(ScopeType.Global);
-            contexts = new Dictionary<Guid, FunctionScope>();
         }
 
         public FlowSourceManager Load(Stream stream, bool debugMode)
@@ -67,7 +59,7 @@ namespace FlowScriptEngine
             return manager;
         }
 
-        private KeyValuePair<FlowSourceObjectBase, KeyValuePair<string, string>[]>[] LoadSync(Stream stream, FlowSourceManager manager)
+        private static KeyValuePair<FlowSourceObjectBase, KeyValuePair<string, string>[]>[] LoadSync(Stream stream, FlowSourceManager manager)
         {
             var reader = XmlReader.Create(stream);
             KeyValuePair<FlowSourceObjectBase, KeyValuePair<string, string>[]>[] defaultValues = null;
@@ -93,7 +85,7 @@ namespace FlowScriptEngine
             return defaultValues;
         }
 
-        private KeyValuePair<FlowSourceObjectBase, KeyValuePair<string, string>[]>[] ReadSources(XmlReader reader, FlowSourceManager manager)
+        private static KeyValuePair<FlowSourceObjectBase, KeyValuePair<string, string>[]>[] ReadSources(XmlReader reader, FlowSourceManager manager)
         {
             var ret = new List<KeyValuePair<FlowSourceObjectBase, KeyValuePair<string, string>[]>>();
             while (reader.Read())
@@ -106,14 +98,10 @@ namespace FlowScriptEngine
                             var fullName = reader.GetAttribute("FullName");
                             var ID = int.Parse(reader.GetAttribute("ID"), CultureInfo.InvariantCulture);
                             var scopeId = ParseId(reader.GetAttribute("ScopeID"));
-                            var source = FlowSourceObjectManager.CreateSource(fullName);
-                            if (source == null)
-                            {
-                                throw new ArgumentException(String.Format("{0} not found", fullName));
-                            }
+                            var source = FlowSourceObjectManager.CreateSource(fullName) ?? throw new ArgumentException(String.Format("{0} not found", fullName));
                             source.Id = ID;
                             source.ScopeId = scopeId;
-                            var defaultValues = ReadValues(reader.ReadSubtree(), source);
+                            var defaultValues = ReadValues(reader.ReadSubtree());
                             ret.Add(new KeyValuePair<FlowSourceObjectBase, KeyValuePair<string, string>[]>(source, defaultValues));
                             manager.AddFlowSourceObject(source);
                             break;
@@ -122,10 +110,10 @@ namespace FlowScriptEngine
             }
             reader.Close();
 
-            return ret.ToArray();
+            return [.. ret];
         }
 
-        private KeyValuePair<string, string>[] ReadValues(XmlReader reader, FlowSourceObjectBase source)
+        private static KeyValuePair<string, string>[] ReadValues(XmlReader reader)
         {
             var ret = new List<KeyValuePair<string, string>>();
             while (reader.Read())
@@ -143,10 +131,10 @@ namespace FlowScriptEngine
             }
             reader.Close();
 
-            return ret.ToArray();
+            return [.. ret];
         }
 
-        private void ReadFlows(XmlReader reader, FlowSourceManager manager)
+        private static void ReadFlows(XmlReader reader, FlowSourceManager manager)
         {
             while (reader.Read())
             {
@@ -168,7 +156,7 @@ namespace FlowScriptEngine
             reader.Close();
         }
 
-        private void ReadScopes(XmlReader reader, FlowSourceManager manager)
+        private static void ReadScopes(XmlReader reader, FlowSourceManager manager)
         {
             while (reader.Read())
             {
@@ -189,7 +177,7 @@ namespace FlowScriptEngine
             reader.Close();
         }
 
-        private int ParseId(string idStr)
+        private static int ParseId(string idStr)
         {
             if (!int.TryParse(idStr, NumberStyles.Integer, CultureInfo.InvariantCulture, out int ret))
             {

@@ -1,4 +1,5 @@
-﻿using PPDCoreModel.Data;
+﻿using PPDMath;
+using PPDCoreModel.Data;
 using PPDEditorCommon;
 using System;
 using System.Collections.Generic;
@@ -21,17 +22,19 @@ namespace PPDEditor.FlowScript
             Angle = mark.Rotation;
             Time = mark.Time;
             Type = (MarkType)mark.Type;
-            if (mark is ExMark)
+            if (mark is ExMark mark1)
             {
                 IsLong = true;
-                ReleaseTime = ((ExMark)mark).EndTime;
+                ReleaseTime = mark1.EndTime;
             }
             else
             {
                 IsLong = false;
                 ReleaseTime = 0;
             }
-            Parameters = new Dictionary<object, object>();
+            // スクリプトにもマークの ID を見せる（以前は写しておらず、いつも 0 だった）
+            ID = mark.ID;
+            Parameters = [];
             foreach (var pair in mark.Parameters)
             {
                 Parameters.Add(pair.Key, pair.Value);
@@ -50,7 +53,7 @@ namespace PPDEditor.FlowScript
 
         #region IMarkInfo メンバー
 
-        public SharpDX.Vector2 ColorPosition
+        public System.Numerics.Vector2 ColorPosition
         {
             get
             {
@@ -62,7 +65,7 @@ namespace PPDEditor.FlowScript
             }
         }
 
-        public SharpDX.Vector2 Position
+        public System.Numerics.Vector2 Position
         {
             get;
             set;

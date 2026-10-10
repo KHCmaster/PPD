@@ -1,9 +1,9 @@
-﻿using GalaSoft.MvvmLight;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using PPDExpansionCore;
 
 namespace PPDExpansion.ViewModel
 {
-    abstract class PlayViewModel : ViewModelBase
+    abstract class PlayViewModel(MainWindowViewModel mainWindowViewModel) : ObservableObject
     {
         public abstract PlayType PlayType { get; }
         public abstract void ProcessData(PackableBase packable);
@@ -12,11 +12,6 @@ namespace PPDExpansion.ViewModel
         {
             get;
             private set;
-        }
-
-        protected PlayViewModel(MainWindowViewModel mainWindowViewModel)
-        {
-            MainWindowViewModel = mainWindowViewModel;
-        }
+        } = mainWindowViewModel;
     }
 }

@@ -3,20 +3,14 @@
     /// <summary>
     /// 長押し開放時サウンド再生変更イベント
     /// </summary>
-    public class ChangeReleaseSoundEvent : IEVDData
+    /// <remarks>
+    /// コンストラクタ
+    /// </remarks>
+    /// <param name="time">時間</param>
+    /// <param name="releasesound">離した時に再生するか</param>
+    /// <param name="channel">チャンネル</param>
+    public class ChangeReleaseSoundEvent(float time, bool releasesound, int channel) : IEVDData(time, EventType.ChangeReleaseSound)
     {
-        /// <summary>
-        /// コンストラクタ
-        /// </summary>
-        /// <param name="time">時間</param>
-        /// <param name="releasesound">離した時に再生するか</param>
-        /// <param name="channel">チャンネル</param>
-        public ChangeReleaseSoundEvent(float time, bool releasesound, int channel)
-            : base(time, EventType.ChangeReleaseSound)
-        {
-            ReleaseSound = releasesound;
-            Channel = channel;
-        }
 
         /// <summary>
         /// 離した時に再生するか
@@ -25,7 +19,7 @@
         {
             get;
             private set;
-        }
+        } = releasesound;
 
         /// <summary>
         /// チャンネル
@@ -34,6 +28,6 @@
         {
             get;
             private set;
-        }
+        } = channel;
     }
 }

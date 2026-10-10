@@ -1,9 +1,10 @@
-﻿using PPDEditor.Forms;
+﻿using PPDEditor.Controls;
+using PPDEditor.Forms;
 using PPDFramework;
 using System;
 using System.IO;
 using System.Reflection;
-using System.Windows.Forms;
+using System.Windows;
 
 namespace PPDEditor
 {
@@ -39,42 +40,52 @@ namespace PPDEditor
         [STAThread]
         static void Main()
         {
-            System.Environment.CurrentDirectory = Path.GetDirectoryName(Application.ExecutablePath);
+            System.Environment.CurrentDirectory = AppDir;
             var errorHandler = new ErrorHandlerPPD();
             errorHandler.Initialize();
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
+            var application = new Application
+            {
+                ShutdownMode = ShutdownMode.OnMainWindowClose
+            };
+            // 画面の操作の中で起きた例外は、以前と同じく知らせてから続ける（ゲームのフレームの中の例外は Game が止めて、下で処理する）
+            application.DispatcherUnhandledException += (sender, e) =>
+            {
+                errorHandler.ProcessError(e.Exception);
+                e.Handled = true;
+            };
             Game game = null;
             try
             {
                 PPDSetting.Initialize();
-                game = new MyGame(new PPDExecuteArg(new string[] { }));
-                game.Run();
+                game = new MyGame(new PPDExecuteArg([]));
+                game.Run(application);
+                if (game.FatalException != null)
+                {
+                    throw new InvalidOperationException("An error occurred in the game loop.", game.FatalException);
+                }
             }
             catch (Exception e)
             {
-                SplashForm.CloseSplash();
-                errorHandler.ProcessError(e);
+                SplashWindow.CloseSplash();
+                errorHandler.ProcessError(e.InnerException ?? e);
                 if (game != null)
                 {
                     try
                     {
-                        game.Window.RescueData();
+                        game.Window.ViewModel.RescueData();
                     }
                     catch
                     {
 
                     }
-                    game.Window.Close();
+                    game.Window.ForceClose();
                 }
             }
             finally
             {
-                if (game != null)
-                {
-                    game.Dispose();
-                    game = null;
-                }
+                game?.Dispose();
+                game?.Window.Dispose();
+                GameView.DestroyRenderWindow();
             }
         }
     }

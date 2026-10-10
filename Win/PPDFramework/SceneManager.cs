@@ -11,7 +11,10 @@ namespace PPDFramework
     /// <summary>
     /// シーンマネージャー
     /// </summary>
-    public class SceneManager : DisposableComponent
+    /// <remarks>
+    /// コンストラクタ
+    /// </remarks>
+    public class SceneManager(PPDDevice device) : DisposableComponent
     {
         /// <summary>
         /// ローディングに入った
@@ -56,12 +59,12 @@ namespace PPDFramework
             set;
         }
 
-        PPDDevice device;
+        readonly PPDDevice device = device;
         ISceneBase nextScene;
         ISceneBase previousScene;
         Thread loadingThread;
-        Dictionary<Type, Dictionary<string, object>> globalPool;
-        Stack<ISceneBase> sceneStack;
+        readonly Dictionary<Type, Dictionary<string, object>> globalPool = [];
+        readonly Stack<ISceneBase> sceneStack = new();
         bool previousSceneResourceUsing;
 
         float lastTime;
@@ -96,16 +99,6 @@ namespace PPDFramework
             {
                 return loadingThread != null;
             }
-        }
-
-        /// <summary>
-        /// コンストラクタ
-        /// </summary>
-        public SceneManager(PPDDevice device)
-        {
-            this.device = device;
-            globalPool = new Dictionary<Type, Dictionary<string, object>>();
-            sceneStack = new Stack<ISceneBase>();
         }
 
         /// <summary>
@@ -215,15 +208,15 @@ namespace PPDFramework
                 }
                 else
                 {
-                    nextScene.ResourceManager = new ResourceManager(new Tuple<ResourceManager, bool>[] {
-                        new Tuple<ResourceManager, bool>( new SpriteResourceManager(device, nextScene.SpriteDir), true),
-                        new Tuple<ResourceManager, bool>( caller.ResourceManager,false)
-                    });
+                    nextScene.ResourceManager = new ResourceManager([
+                        new( new SpriteResourceManager(device, nextScene.SpriteDir), true),
+                        new( caller.ResourceManager,false)
+                    ]);
                     previousSceneResourceUsing = true;
                 }
             }
-            nextScene.Param = param ?? new Dictionary<string, object>();
-            nextScene.PreviousParam = globalPool.ContainsKey(nextScene.GetType()) ? globalPool[nextScene.GetType()] : new Dictionary<string, object>();
+            nextScene.Param = param ?? [];
+            nextScene.PreviousParam = globalPool.ContainsKey(nextScene.GetType()) ? globalPool[nextScene.GetType()] : [];
             if (previousParam != null && caller != null)
             {
                 if (globalPool.ContainsKey(caller.GetType()))
@@ -253,11 +246,8 @@ namespace PPDFramework
                 loadResult = nextScene.Load();
             });
             loadingThread.Start();
-            if (LoadingScene != null)
-            {
-                LoadingScene.EnterLoading();
-            }
-            if (EnterLoading != null) EnterLoading.Invoke(this, EventArgs.Empty);
+            LoadingScene?.EnterLoading();
+            EnterLoading?.Invoke(this, EventArgs.Empty);
         }
 
         /// <summary>
@@ -278,6 +268,11 @@ namespace PPDFramework
                 }
                 previousScene = null;
                 device.GetModule<CharCacheManager>().ClearUnUsed();
+                if (nextScene == null)
+                {
+                    // 読み込みのないシーンの切り替え（スタックからのポップなど）。読み込みがある場合は、読み込みの後にまとめて行う
+                    GCPolicy.CollectNow("scene");
+                }
             }
             if (nextScene != null)
             {
@@ -292,6 +287,8 @@ namespace PPDFramework
                     loadingThread.Join();
                     loadingThread = null;
                     device.GetModule<CharCacheManager>().ClearUnUsed();
+                    // 前のシーンの破棄と読み込みで出たごみを、次のシーンが始まる前に回収する
+                    GCPolicy.CollectNow("scene");
                     if (loadResult)
                     {
                         CurrentScene = nextScene;
@@ -306,13 +303,10 @@ namespace PPDFramework
                         });
                     }
                     nextScene = null;
-                    if (LeaveLoading != null) LeaveLoading.Invoke(this, EventArgs.Empty);
+                    LeaveLoading?.Invoke(this, EventArgs.Empty);
                 }
             }
-            if (CurrentScene != null)
-            {
-                CurrentScene.Update(inputInfo, mouseInfo);
-            }
+            CurrentScene?.Update(inputInfo, mouseInfo);
             if (loadingThread != null && LoadingScene != null)
             {
                 LoadingScene.Update(inputInfo, mouseInfo);
@@ -324,10 +318,7 @@ namespace PPDFramework
         /// </summary>
         public void Draw()
         {
-            if (CurrentScene != null)
-            {
-                CurrentScene.Draw();
-            }
+            CurrentScene?.Draw();
             if (loadingThread != null && LoadingScene != null)
             {
                 LoadingScene.Draw();
@@ -344,11 +335,10 @@ namespace PPDFramework
             {
                 if (loadingThread != null && loadingThread.IsAlive)
                 {
-                    if (nextScene != null)
-                    {
-                        nextScene.ShouldFinishLoad = true;
-                    }
-                    loadingThread.Abort();
+                    nextScene?.ShouldFinishLoad = true;
+                    // 読み込みの中断を要求して、終わるまで少し待つ（.NET では Thread.Abort が使えない）。
+                    // 終わらなかった場合もバックグラウンドスレッドなので、プロセスの終了は妨げない
+                    loadingThread.Join(3000);
                 }
                 while (sceneStack.Count > 0)
                 {
@@ -364,15 +354,12 @@ namespace PPDFramework
             }
         }
 
-        private void DisposeScene(ISceneBase scene)
+        private static void DisposeScene(ISceneBase scene)
         {
             if (scene != null)
             {
                 scene.Dispose();
-                if (scene.ResourceManager != null)
-                {
-                    scene.ResourceManager.Dispose();
-                }
+                scene.ResourceManager?.Dispose();
             }
         }
     }

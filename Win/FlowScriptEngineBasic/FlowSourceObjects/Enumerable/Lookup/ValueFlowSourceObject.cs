@@ -49,7 +49,7 @@ namespace FlowScriptEngineBasic.FlowSourceObjects.Enumerable.Lookup
                 SetValue(nameof(Key));
                 if (Lookup == null)
                 {
-                    return System.Linq.Enumerable.Empty<object>();
+                    return [];
                 }
                 return Lookup[Key];
             }

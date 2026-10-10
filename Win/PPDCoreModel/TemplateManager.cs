@@ -3,16 +3,10 @@ using System.Collections.Generic;
 
 namespace PPDCoreModel
 {
-    public class TemplateManager<T> : IPriorityManager where T : IPriority
+    public class TemplateManager<T>(Engine engine) : IPriorityManager where T : IPriority
     {
-        protected List<T> list;
-        protected Engine engine;
-
-        public TemplateManager(Engine engine)
-        {
-            list = new List<T>();
-            this.engine = engine;
-        }
+        protected List<T> list = [];
+        protected Engine engine = engine;
 
         public void Add(T source)
         {

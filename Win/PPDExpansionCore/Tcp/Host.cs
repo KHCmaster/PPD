@@ -7,12 +7,12 @@ using System.Threading;
 
 namespace PPDExpansionCore.Tcp
 {
-    public class Host : Base
+    public class Host(int port) : Base, IDisposable
     {
         private TcpListener listener;
         private TcpClient client;
         private Thread thread;
-        private bool closed;
+        private volatile bool closed;
 
         public event Action Connected;
         public event Action Disconnected;
@@ -22,12 +22,7 @@ namespace PPDExpansionCore.Tcp
         {
             get;
             private set;
-        }
-
-        public Host(int port)
-        {
-            Port = port;
-        }
+        } = port;
 
         public void Start()
         {
@@ -41,12 +36,21 @@ namespace PPDExpansionCore.Tcp
             IAsyncResult result = null;
             result = listener.BeginAcceptTcpClient(state =>
             {
-                if (listener == null)
+                var currentListener = listener;
+                if (currentListener == null)
                 {
                     return;
                 }
-                client = listener.EndAcceptTcpClient(result);
-                thread = new Thread(Work);
+                try
+                {
+                    client = currentListener.EndAcceptTcpClient(result);
+                }
+                catch (Exception ex) when (ex is ObjectDisposedException || ex is SocketException || ex is InvalidOperationException)
+                {
+                    // Close で待ち受けを止めた
+                    return;
+                }
+                thread = new Thread(Work) { IsBackground = true };
                 thread.Start();
                 OnConnected();
             }, listener);
@@ -55,36 +59,34 @@ namespace PPDExpansionCore.Tcp
         public void Close()
         {
             closed = true;
-            if (thread != null && thread.IsAlive)
-            {
-                thread.Abort();
-                thread = null;
-            }
-
-            if (client != null)
-            {
-                client.Close();
-                client = null;
-            }
-
-            if (listener != null)
-            {
-                listener.Stop();
-                listener = null;
-            }
+            // .NET では Thread.Abort が使えない。受信のスレッドは、接続を閉じると Read が終わるので止まる
+            thread = null;
+            client?.Close();
+            client = null;
+            listener?.Dispose();
+            listener = null;
         }
 
         private void Work()
         {
-            byte[] lastBytes = new byte[0];
+            byte[] lastBytes = [];
+            NetworkStream stream;
+            try
+            {
+                stream = client.GetStream();
+            }
+            catch (Exception ex) when (ex is ObjectDisposedException || ex is InvalidOperationException || ex is NullReferenceException)
+            {
+                return;
+            }
             while (true)
             {
-                var bytes = Read(client.GetStream());
+                var bytes = Read(stream);
                 if (bytes.Length == 0)
                 {
                     break;
                 }
-                bytes = lastBytes.Concat(bytes).ToArray();
+                bytes = [.. lastBytes, .. bytes];
                 while (true)
                 {
                     var lastLength = bytes.Length;
@@ -97,35 +99,35 @@ namespace PPDExpansionCore.Tcp
                     bytes = restBytes;
                 }
             }
-            OnDisconnected();
-            if (!closed)
+            if (closed)
             {
-                WaitConnected();
+                // Close で止められた（以前は Thread.Abort で止めていたので、OnDisconnected は呼ばない）
+                return;
             }
+            OnDisconnected();
+            WaitConnected();
         }
 
         private byte[] WorkImpl(byte[] bytes)
         {
             try
             {
-                using (MemoryStream stream = new MemoryStream(bytes))
-                using (PPDPack.V2.PackReader reader = new PPDPack.V2.PackReader(stream))
+                using MemoryStream stream = new(bytes);
+                using PPDPack.V2.PackReader reader = new(stream);
+                var dataType = (DataType)ParseInt(reader, "DataType");
+                var packable = PackableBase.Create(dataType);
+                if (packable != null)
                 {
-                    var dataType = (DataType)ParseInt(reader, "DataType");
-                    var packable = PackableBase.Create(dataType);
-                    if (packable != null)
-                    {
-                        packable.Read(reader);
-                        OnDataReceived(packable);
-                    }
-
-                    byte[] restBytes = new byte[bytes.Length - reader.FileSize];
-                    if (restBytes.Length > 0)
-                    {
-                        Array.Copy(bytes, reader.FileSize, restBytes, 0, restBytes.Length);
-                    }
-                    return restBytes;
+                    packable.Read(reader);
+                    OnDataReceived(packable);
                 }
+
+                byte[] restBytes = new byte[bytes.Length - reader.FileSize];
+                if (restBytes.Length > 0)
+                {
+                    Array.Copy(bytes, reader.FileSize, restBytes, 0, restBytes.Length);
+                }
+                return restBytes;
             }
             catch
             {
@@ -146,6 +148,27 @@ namespace PPDExpansionCore.Tcp
         private void OnDisconnected()
         {
             Disconnected?.Invoke();
+        }
+
+        /// <summary>
+        /// 接続を閉じます（Close() と同じ）。
+        /// </summary>
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        /// <summary>
+        /// 破棄します。
+        /// </summary>
+        /// <param name="disposing">Dispose から呼ばれたときは true。</param>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                Close();
+            }
         }
     }
 }

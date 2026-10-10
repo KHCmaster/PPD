@@ -9,35 +9,22 @@ namespace FlowScriptEnginePPD.FlowSourceObjects.Song.Result
     {
         public override object GetPropertyValue(string propertyName)
         {
-            switch (propertyName)
+            return propertyName switch
             {
-                case "CoolCount":
-                    return CoolCount;
-                case "Difficulty":
-                    return Difficulty;
-                case "FinishTime":
-                    return FinishTime;
-                case "GoodCount":
-                    return GoodCount;
-                case "ID":
-                    return ID;
-                case "MaxCombo":
-                    return MaxCombo;
-                case "PlayDateTime":
-                    return PlayDateTime;
-                case "ResultType":
-                    return ResultType;
-                case "SadCount":
-                    return SadCount;
-                case "SafeCount":
-                    return SafeCount;
-                case "Score":
-                    return Score;
-                case "WorstCount":
-                    return WorstCount;
-                default:
-                    return null;
-            }
+                "CoolCount" => CoolCount,
+                "Difficulty" => Difficulty,
+                "FinishTime" => FinishTime,
+                "GoodCount" => GoodCount,
+                "ID" => ID,
+                "MaxCombo" => MaxCombo,
+                "PlayDateTime" => PlayDateTime,
+                "ResultType" => ResultType,
+                "SadCount" => SadCount,
+                "SafeCount" => SafeCount,
+                "Score" => Score,
+                "WorstCount" => WorstCount,
+                _ => null,
+            };
         }
 
         protected override void SetPropertyValue(string propertyName, object value)

@@ -66,11 +66,11 @@ namespace BezierCaliculator
         /// <returns></returns>
         public static bool OnBezeier(PointF p1, PointF p2, PointF p3, PointF p4, PointF target, out float outt)
         {
-            PointF lastbezierpoint, bezierpoint;
-            lastbezierpoint = p1;
+            PointF bezierpoint;
             outt = -1;
             float best = float.MaxValue;
-            var count = BezierCaliculate.AboutBezeirCount(ref p1, ref p2, ref p3, ref p4);
+            // 点がすべて 1 ピクセルより近いと 0 になり、0 / 0 で位置が NaN になるので、少なくとも 1 つに分ける
+            var count = Math.Max(BezierCaliculate.AboutBezeirCount(ref p1, ref p2, ref p3, ref p4), 1);
             for (int i = count; i >= 0; i--)
             {
                 float t = (float)i / count;
@@ -81,7 +81,6 @@ namespace BezierCaliculator
                     best = temp;
                     outt = t;
                 }
-                lastbezierpoint = bezierpoint;
             }
             if (best <= 2)
             {
@@ -208,7 +207,8 @@ namespace BezierCaliculator
             pos = p1;
             direction = new PointF(1, 0);
             float sum = 0;
-            var count = BezierCaliculate.AboutBezeirCount(ref p1, ref p2, ref p3, ref p4);
+            // 点がすべて 1 ピクセルより近いと 0 になり、0 / 0 で位置が NaN になるので、少なくとも 1 つに分ける
+            var count = Math.Max(BezierCaliculate.AboutBezeirCount(ref p1, ref p2, ref p3, ref p4), 1);
             for (int i = count; i >= 0; i--)
             {
                 float t = (float)i / count;
@@ -305,7 +305,8 @@ namespace BezierCaliculator
         /// <returns></returns>
         public static IEnumerable<PointF> GetPoints(PointF p1, PointF p2, PointF p3, PointF p4)
         {
-            var count = BezierCaliculate.AboutBezeirCount(ref p1, ref p2, ref p3, ref p4);
+            // 点がすべて 1 ピクセルより近いと 0 になり、0 / 0 で位置が NaN になるので、少なくとも 1 つに分ける
+            var count = Math.Max(BezierCaliculate.AboutBezeirCount(ref p1, ref p2, ref p3, ref p4), 1);
             for (int i = count; i >= 0; i--)
             {
                 float t = (float)i / count;

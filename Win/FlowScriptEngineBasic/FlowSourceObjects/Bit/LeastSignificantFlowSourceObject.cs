@@ -23,7 +23,8 @@ namespace FlowScriptEngineBasic.FlowSourceObjects.Bit
             get
             {
                 SetValue(nameof(Value));
-                return Value & -Value;
+                // 1 になっている一番下のビットの位置（ないときは -1）。以前は位置ではなく、そのビットだけを残した値を返していた
+                return Value == 0 ? -1 : System.Numerics.BitOperations.TrailingZeroCount(Value);
             }
         }
     }

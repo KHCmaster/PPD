@@ -9,19 +9,14 @@ namespace FlowScriptEnginePPD.FlowSourceObjects
     {
         public override object GetPropertyValue(string propertyName)
         {
-            switch (propertyName)
+            return propertyName switch
             {
-                case "Button":
-                    return Button;
-                case "PressCount":
-                    return PressCount;
-                case "Pressed":
-                    return Pressed;
-                case "Released":
-                    return Released;
-                default:
-                    return null;
-            }
+                "Button" => Button,
+                "PressCount" => PressCount,
+                "Pressed" => Pressed,
+                "Released" => Released,
+                _ => null,
+            };
         }
 
         protected override void SetPropertyValue(string propertyName, object value)

@@ -2,19 +2,13 @@
 
 namespace Effect2DEditor.Command
 {
-    class StateParameterChangeCommand : CommandBase
+    class StateParameterChangeCommand(EffectManager manager, string exp, SelectedManager SManager, RatioType type, float value) : CommandBase(manager, exp)
     {
-        SelectedManager SManager;
+        readonly SelectedManager SManager = SManager;
         float previousvalue;
-        RatioType type;
-        float value;
-        public StateParameterChangeCommand(EffectManager manager, string exp, SelectedManager SManager, RatioType type, float value)
-            : base(manager, exp)
-        {
-            this.SManager = SManager;
-            this.type = type;
-            this.value = value;
-        }
+        readonly RatioType type = type;
+        float value = value;
+
         public float Value
         {
             get { return value; }

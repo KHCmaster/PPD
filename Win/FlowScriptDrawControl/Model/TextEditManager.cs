@@ -10,9 +10,9 @@ namespace FlowScriptDrawControl.Model
         private bool isMouseDown;
         private bool isInEdit;
 
-        private UserControl ownerControl;
-        private TextBlock textBlock;
-        private TextBox textBox;
+        private readonly UserControl ownerControl;
+        private readonly TextBlock textBlock;
+        private readonly TextBox textBox;
 
         public event Func<object, bool> EnterEdit;
 
@@ -24,18 +24,18 @@ namespace FlowScriptDrawControl.Model
 
             textBox.IsEnabled = false;
             textBox.Visibility = System.Windows.Visibility.Hidden;
-            textBlock.MouseDown += textBlock_MouseDown;
-            textBox.PreviewKeyDown += textBox_PreviewKeyDown;
-            textBox.LostFocus += textBox_LostFocus;
-            ownerControl.KeyDown += ownerControl_KeyDown;
+            textBlock.MouseDown += TextBlock_MouseDown;
+            textBox.PreviewKeyDown += TextBox_PreviewKeyDown;
+            textBox.LostFocus += TextBox_LostFocus;
+            ownerControl.KeyDown += OwnerControl_KeyDown;
         }
 
-        void textBox_LostFocus(object sender, System.Windows.RoutedEventArgs e)
+        void TextBox_LostFocus(object sender, System.Windows.RoutedEventArgs e)
         {
             EndEdit();
         }
 
-        void textBox_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        void TextBox_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
             {
@@ -54,7 +54,7 @@ namespace FlowScriptDrawControl.Model
             }
         }
 
-        void textBlock_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        void TextBlock_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             if (!Keyboard.Modifiers.HasFlag(ModifierKeys.Control))
             {
@@ -67,16 +67,16 @@ namespace FlowScriptDrawControl.Model
         {
             isMouseDown = true;
             var flowAreaControl = Utility.GetParent<FlowAreaControl>(ownerControl);
-            flowAreaControl.MouseUp += flowAreaControl_MouseUp;
-            flowAreaControl.MouseLeave += flowAreaControl_MouseLeave;
+            flowAreaControl.MouseUp += FlowAreaControl_MouseUp;
+            flowAreaControl.MouseLeave += FlowAreaControl_MouseLeave;
         }
 
         private void DisableEdit()
         {
             isMouseDown = false;
             var flowAreaControl = Utility.GetParent<FlowAreaControl>(ownerControl);
-            flowAreaControl.MouseUp -= flowAreaControl_MouseUp;
-            flowAreaControl.MouseLeave -= flowAreaControl_MouseLeave;
+            flowAreaControl.MouseUp -= FlowAreaControl_MouseUp;
+            flowAreaControl.MouseLeave -= FlowAreaControl_MouseLeave;
         }
 
         public void BeginEdit()
@@ -95,12 +95,12 @@ namespace FlowScriptDrawControl.Model
             textBox.Visibility = System.Windows.Visibility.Hidden;
         }
 
-        void flowAreaControl_MouseLeave(object sender, MouseEventArgs e)
+        void FlowAreaControl_MouseLeave(object sender, MouseEventArgs e)
         {
             DisableEdit();
         }
 
-        void flowAreaControl_MouseUp(object sender, MouseButtonEventArgs e)
+        void FlowAreaControl_MouseUp(object sender, MouseButtonEventArgs e)
         {
             if (isMouseDown && OnEnterEdit())
             {
@@ -109,7 +109,7 @@ namespace FlowScriptDrawControl.Model
             DisableEdit();
         }
 
-        void ownerControl_KeyDown(object sender, KeyEventArgs e)
+        void OwnerControl_KeyDown(object sender, KeyEventArgs e)
         {
             if (!isInEdit && e.Key == Key.Enter)
             {

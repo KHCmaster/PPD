@@ -9,7 +9,7 @@
              MouseWheel="UserControl_MouseWheel" PreviewMouseDown="UserControl_PreviewMouseDown" MouseDown="UserControl_MouseDown" MouseMove="UserControl_MouseMove" MouseUp="UserControl_MouseUp" AllowDrop="True" PreviewKeyDown="UserControl_PreviewKeyDown">
     <DockPanel>
         <Canvas x:Name="mainCanvas" Background="#FF8C8C8C">
-            <Canvas x:Name="backCanvas" SizeChanged="backCanvas_SizeChanged"/>
+            <Canvas x:Name="backCanvas" SizeChanged="BackCanvas_SizeChanged"/>
             <Grid x:Name="drawGrid">
                 <Canvas x:Name="scopeCanvas"/>
                 <Canvas x:Name="arrowCanvas"/>

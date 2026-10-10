@@ -2,14 +2,8 @@
 
 namespace PPDCoreModel
 {
-    public class ProcessMarkBPMManager : TemplateManager<IProcessMarkBPM>
+    public class ProcessMarkBPMManager(Engine engine) : TemplateManager<IProcessMarkBPM>(engine)
     {
-        public ProcessMarkBPMManager(Engine engine)
-            : base(engine)
-        {
-
-        }
-
         public bool Process(IMarkInfo markInfo, out float bpm)
         {
             bpm = 0;

@@ -1,5 +1,8 @@
-﻿using System;
-using System.Windows.Forms;
+﻿using BMSTOPPD.Models;
+using BMSTOPPD.ViewModels;
+using System;
+using System.Text;
+using System.Windows;
 
 namespace BMSTOPPD
 {
@@ -11,9 +14,16 @@ namespace BMSTOPPD
         [STAThread]
         static void Main()
         {
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+            // 譜面は Shift_JIS で読むので、コードページのエンコーディングを使えるようにする
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+            var settings = MarkSettingStore.Load();
+            var settingWindow = new SettingWindow { DataContext = settings };
+            var mainWindow = new MainWindow(settingWindow);
+            mainWindow.DataContext = new MainWindowViewModel(mainWindow, settings);
+            // 設定のウィンドウは閉じても隠れるだけなので、メインのウィンドウを閉じたら終了する
+            var application = new Application { ShutdownMode = ShutdownMode.OnMainWindowClose };
+            application.Run(mainWindow);
+            MarkSettingStore.Save(settings);
         }
     }
 }

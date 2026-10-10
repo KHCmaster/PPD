@@ -1,0 +1,26 @@
+<UserControl x:Class="Effect2DEditor.DockForm.CanvasDock"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:Effect2DEditor.ViewModels"
+             xmlns:bezier="clr-namespace:BezierDrawControl;assembly=BezierDrawControl"
+             mc:Ignorable="d" d:DataContext="{d:DesignInstance Type=vm:MainWindowViewModel}">
+    <ScrollViewer x:Name="scrollViewer" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+        <!-- カンバスが表示領域より小さいときは中央に置く -->
+        <Grid MinWidth="{Binding ViewportWidth, ElementName=scrollViewer}" MinHeight="{Binding ViewportHeight, ElementName=scrollViewer}">
+            <bezier:DXBezierControl x:Name="bezierControl1" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                    ContextMenuOpening="ContextMenu_Opening">
+                <bezier:DXBezierControl.ContextMenu>
+                    <ContextMenu DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
+                        <!-- アンカーの削除と変形は、カンバスのベジエの操作（履歴には残さない） -->
+                        <MenuItem x:Name="deleteAnchorMenuItem" Header="{Binding Texts[DeleteSelectedAnchor]}" Click="DeleteAnchorMenuItem_Click" />
+                        <MenuItem x:Name="startTransformMenuItem" Header="{Binding Texts[StartTransform]}" Click="StartTransformMenuItem_Click" />
+                        <MenuItem x:Name="endTransformMenuItem" Header="{Binding Texts[EndTransform]}" Click="EndTransformMenuItem_Click" />
+                        <MenuItem x:Name="resetMenuItem" Header="{Binding Texts[Reset]}" Command="{Binding ResetPathCommand}" />
+                    </ContextMenu>
+                </bezier:DXBezierControl.ContextMenu>
+            </bezier:DXBezierControl>
+        </Grid>
+    </ScrollViewer>
+</UserControl>

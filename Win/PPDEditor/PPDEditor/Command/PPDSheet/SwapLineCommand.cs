@@ -3,17 +3,11 @@ using System.Collections.Generic;
 
 namespace PPDEditor.Command.PPDSheet
 {
-    class SwapLineCommand : Command
+    class SwapLineCommand(SortedList<float, Mark>[] data, ButtonType first, ButtonType second) : Command
     {
-        private SortedList<float, Mark>[] data;
-        private ButtonType first;
-        private ButtonType second;
-        public SwapLineCommand(SortedList<float, Mark>[] data, ButtonType first, ButtonType second)
-        {
-            this.data = data;
-            this.first = first;
-            this.second = second;
-        }
+        private readonly SortedList<float, Mark>[] data = data;
+        private readonly ButtonType first = first;
+        private readonly ButtonType second = second;
 
         public override void Execute()
         {

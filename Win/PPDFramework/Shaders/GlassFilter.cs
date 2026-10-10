@@ -1,6 +1,7 @@
 ﻿using PPDFramework.Effect;
 using PPDFramework.Texture;
-using SharpDX;
+using System.Numerics;
+using PPDMath;
 
 namespace PPDFramework.Shaders
 {
@@ -42,7 +43,7 @@ namespace PPDFramework.Shaders
         {
             effect.SetTexture(filterTextureHandle, filterTexture);
             effect.SetTexture(lastRenderTargetFilterTextureHandle, lastRenderTargetTexture);
-            var passCount = effect.Begin();
+            _ = effect.Begin();
             effect.BeginPass(0);
             effect.CommitChanges();
             device.VertexDeclaration = effect.VertexDeclaration;
@@ -58,26 +59,16 @@ namespace PPDFramework.Shaders
         /// </summary>
         protected override void DisposeResource()
         {
-            if (effect != null)
-            {
-                effect.Dispose();
-                effect = null;
-            }
-            if (filterTextureHandle != null)
-            {
-                filterTextureHandle.Dispose();
-                filterTextureHandle = null;
-            }
-            if (lastRenderTargetFilterTextureHandle != null)
-            {
-                lastRenderTargetFilterTextureHandle.Dispose();
-                lastRenderTargetFilterTextureHandle = null;
-            }
-            if (projectionHandle != null)
-            {
-                projectionHandle.Dispose();
-                projectionHandle = null;
-            }
+            effect?.Dispose();
+            effect = null;
+            filterTextureHandle?.Dispose();
+            filterTextureHandle = null;
+            lastRenderTargetFilterTextureHandle?.Dispose();
+            lastRenderTargetFilterTextureHandle = null;
+            projectionHandle?.Dispose();
+            projectionHandle = null;
+            widthHeightHandle?.Dispose();
+            widthHeightHandle = null;
         }
     }
 }

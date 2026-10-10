@@ -13,9 +13,9 @@ namespace PPDFramework
         const string fileName = "Preset_{0}.txt";
 
 
-        private static ReviewManager reviewManager = new ReviewManager();
+        private static readonly ReviewManager reviewManager = new();
 
-        private string[] presets;
+        private readonly string[] presets;
 
         /// <summary>
         /// レビューマネージャーのインスタンスです。
@@ -50,7 +50,7 @@ namespace PPDFramework
                 {
                     foreach (string str in File.ReadAllLines(filePath))
                     {
-                        if (str.StartsWith("#") || str.StartsWith(";"))
+                        if (str.StartsWith('#') || str.StartsWith(';'))
                         {
                             continue;
                         }
@@ -64,7 +64,7 @@ namespace PPDFramework
                 }
             }
 
-            presets = list.ToArray();
+            presets = [.. list];
         }
     }
 }

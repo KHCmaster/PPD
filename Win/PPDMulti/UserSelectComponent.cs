@@ -3,7 +3,8 @@ using PPDFrameworkCore;
 using PPDMulti.Data;
 using PPDMulti.Model;
 using PPDShareComponent;
-using SharpDX;
+using System.Numerics;
+using PPDMath;
 using System;
 using System.Linq;
 
@@ -11,11 +12,11 @@ namespace PPDMulti
 {
     class UserSelectComponent : FocusableGameComponent
     {
-        PPDFramework.Resource.ResourceManager resourceManager;
-        ISound sound;
-        PictureObject back;
+        readonly PPDFramework.Resource.ResourceManager resourceManager;
+        readonly ISound sound;
+        readonly PictureObject back;
 
-        SpriteObject userSprite;
+        readonly SpriteObject userSprite;
         int index = -1;
 
         public event EventHandler ChangeLeader;
@@ -74,10 +75,10 @@ namespace PPDMulti
                 userSprite.AddChild(new UserComponent(device, resourceManager, user));
             }
             AdjustPosition();
-            users.ItemChanged += users_ItemChanged;
+            users.ItemChanged += Users_ItemChanged;
         }
 
-        void users_ItemChanged(User[] addedItems, User[] removedItems)
+        void Users_ItemChanged(User[] addedItems, User[] removedItems)
         {
             foreach (var user in addedItems)
             {
@@ -121,9 +122,9 @@ namespace PPDMulti
 
         void ItemSettingComponent_GotFocused(IFocusable sender, FocusEventArgs args)
         {
-            if (!(args.FocusObject is UserMenuDialog))
+            if (args.FocusObject is not UserMenuDialog)
             {
-                back.Position = new SharpDX.Vector2(0, 50);
+                back.Position = new System.Numerics.Vector2(0, 50);
                 Alpha = 0;
             }
         }
@@ -140,7 +141,7 @@ namespace PPDMulti
                 if (CurrentUser != null)
                 {
                     var dialog = new UserMenuDialog(device, resourceManager);
-                    dialog.LostFocused += dialog_LostFocused;
+                    dialog.LostFocused += Dialog_LostFocused;
                     dialog.Position = CurrentUser.ScreenPos + new Vector2(20, 40);
                     if (dialog.Position.Y + dialog.Height >= 450)
                     {
@@ -171,10 +172,7 @@ namespace PPDMulti
 
         private void ChangeSelectedUserIndex(int offset)
         {
-            if (CurrentUser != null)
-            {
-                CurrentUser.IsSelected = false;
-            }
+            CurrentUser?.IsSelected = false;
             index += offset;
             if (index < 0)
             {
@@ -184,14 +182,11 @@ namespace PPDMulti
             {
                 index = 0;
             }
-            if (CurrentUser != null)
-            {
-                CurrentUser.IsSelected = true;
-            }
+            CurrentUser?.IsSelected = true;
             sound.Play(PPDSetting.DefaultSounds[0], -1000);
         }
 
-        void dialog_LostFocused(IFocusable sender, FocusEventArgs args)
+        void Dialog_LostFocused(IFocusable sender, FocusEventArgs args)
         {
             var dialog = sender as UserMenuDialog;
 
@@ -217,12 +212,12 @@ namespace PPDMulti
         {
             if (OverFocused)
             {
-                back.Position = new SharpDX.Vector2(0, AnimationUtility.GetAnimationValue(back.Position.Y, 0));
+                back.Position = new System.Numerics.Vector2(0, AnimationUtility.GetAnimationValue(back.Position.Y, 0));
                 Alpha = AnimationUtility.IncreaseAlpha(Alpha);
             }
             else
             {
-                back.Position = new SharpDX.Vector2(0, AnimationUtility.GetAnimationValue(back.Position.Y, 50));
+                back.Position = new System.Numerics.Vector2(0, AnimationUtility.GetAnimationValue(back.Position.Y, 50));
                 Alpha = AnimationUtility.DecreaseAlpha(Alpha);
             }
         }
@@ -230,11 +225,11 @@ namespace PPDMulti
         class UserComponent : BindableGameComponent
         {
             PictureObject userIcon;
-            TextureString userNameString;
-            RectangleComponent rectangle;
+            readonly TextureString userNameString;
+            readonly RectangleComponent rectangle;
             bool isSelected;
 
-            PPDFramework.Resource.ResourceManager resourceManager;
+            readonly PPDFramework.Resource.ResourceManager resourceManager;
 
             private string currentUserIconPath = Utility.Path.Combine("noimage_icon.png");
 
@@ -325,7 +320,7 @@ namespace PPDMulti
 
             private void ChangeUserIconScale()
             {
-                userIcon.Scale = new SharpDX.Vector2(20 / userIcon.Width, 20 / userIcon.Height);
+                userIcon.Scale = new System.Numerics.Vector2(20 / userIcon.Width, 20 / userIcon.Height);
             }
         }
 
@@ -337,11 +332,11 @@ namespace PPDMulti
                 Kick,
             }
 
-            PPDFramework.Resource.ResourceManager resourceManager;
-            SpriteObject textSprite;
+            readonly PPDFramework.Resource.ResourceManager resourceManager;
+            readonly SpriteObject textSprite;
 
-            RectangleComponent selectRectangle;
-            PictureObject back;
+            readonly RectangleComponent selectRectangle;
+            readonly PictureObject back;
             int index;
 
             public UserMenuDialog(PPDDevice device, PPDFramework.Resource.ResourceManager resourceManager) : base(device)

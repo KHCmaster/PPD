@@ -7,15 +7,16 @@ using System.Threading;
 
 namespace PPDMultiCommon.Tcp
 {
-    public abstract class ConnectionBase
+    public abstract class ConnectionBase(TcpClient client, NetworkStream net)
     {
-        protected TcpClient client;
-        NetworkStream net;
+        private readonly Lock syncRoot = new();
+        protected TcpClient client = client;
+        NetworkStream net = net;
         Thread readThread;
         Thread writeThread;
-        Queue<byte[]> jobs;
+        readonly Queue<byte[]> jobs = new();
 
-        bool disposed;
+        volatile bool disposed;
 
         public bool IsClosed
         {
@@ -27,15 +28,7 @@ namespace PPDMultiCommon.Tcp
         {
             get;
             protected set;
-        }
-
-        protected ConnectionBase(TcpClient client, NetworkStream net)
-        {
-            this.client = client;
-            this.net = net;
-            jobs = new Queue<byte[]>();
-            LastDataReceivedTime = DateTime.Now;
-        }
+        } = DateTime.Now;
 
         ~ConnectionBase()
         {
@@ -57,42 +50,40 @@ namespace PPDMultiCommon.Tcp
             byte[] resBytes = new byte[client.ReceiveBufferSize];
             while (true)
             {
-                using (MemoryStream ms = new MemoryStream())
+                using MemoryStream ms = new();
+                int resSize;
+                try
                 {
-                    int resSize;
-                    try
+                    do
                     {
-                        do
+                        resSize = net.Read(resBytes, 0, resBytes.Length);
+                        if (resSize == 0)
                         {
-                            resSize = net.Read(resBytes, 0, resBytes.Length);
-                            if (resSize == 0)
-                            {
-                                IsClosed = true;
-                                return;
-                            }
-                            ms.Write(resBytes, 0, resSize);
-                        } while (net.DataAvailable);
-                    }
-                    catch (ThreadAbortException)
-                    {
-                        break;
-                    }
-                    catch
-                    {
-                        IsClosed = true;
-                        return;
-                    }
+                            IsClosed = true;
+                            return;
+                        }
+                        ms.Write(resBytes, 0, resSize);
+                    } while (net.DataAvailable);
+                }
+                catch (ThreadAbortException)
+                {
+                    break;
+                }
+                catch
+                {
+                    IsClosed = true;
+                    return;
+                }
 
-                    if (IsClosed)
-                    {
-                        return;
-                    }
+                if (IsClosed)
+                {
+                    return;
+                }
 
-                    if (ms.Length > 0)
-                    {
-                        OnRead(ms.ToArray());
-                        LastDataReceivedTime = DateTime.Now;
-                    }
+                if (ms.Length > 0)
+                {
+                    OnRead(ms.ToArray());
+                    LastDataReceivedTime = DateTime.Now;
                 }
             }
         }
@@ -101,6 +92,11 @@ namespace PPDMultiCommon.Tcp
         {
             while (true)
             {
+                if (disposed)
+                {
+                    // Dispose で止められた（以前は Thread.Abort で止めていたので、OnClose は呼ばない）
+                    return;
+                }
                 if (!IsClosed && jobs.Count > 0)
                 {
                     try
@@ -108,7 +104,7 @@ namespace PPDMultiCommon.Tcp
                         if (net.CanWrite)
                         {
                             byte[] sendData;
-                            lock (this)
+                            lock (syncRoot)
                             {
                                 sendData = jobs.Dequeue();
                             }
@@ -137,12 +133,16 @@ namespace PPDMultiCommon.Tcp
                 }
             }
 
+            if (disposed)
+            {
+                return;
+            }
             OnClose();
         }
 
         public void Write(byte[] data)
         {
-            lock (this)
+            lock (syncRoot)
             {
                 jobs.Enqueue(data);
             }
@@ -164,28 +164,15 @@ namespace PPDMultiCommon.Tcp
             if (!disposed)
             {
                 disposed = true;
-                if (net != null)
-                {
-                    net.Close();
-                    net = null;
-                }
-                if (client != null)
-                {
-                    client.Close();
-                    client = null;
-                }
+                net?.Close();
+                net = null;
+                client?.Close();
+                client = null;
 
-                if (readThread != null)
-                {
-                    readThread.Abort();
-                    readThread = null;
-                }
-
-                if (writeThread != null)
-                {
-                    writeThread.Abort();
-                    writeThread = null;
-                }
+                // .NET では Thread.Abort が使えない。読み込みのスレッドは接続を閉じたことで、
+                // 書き込みのスレッドは disposed を見て終わる
+                readThread = null;
+                writeThread = null;
             }
         }
     }

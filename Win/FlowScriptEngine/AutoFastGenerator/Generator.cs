@@ -145,12 +145,12 @@ namespace FlowScriptEngine.AutoFastGenerator
 
         private static string GetGenericClassName(string name)
         {
-            var backQuoteIndex = name.IndexOf("`");
+            var backQuoteIndex = name.IndexOf('`');
             if (backQuoteIndex < 0)
             {
                 return name;
             }
-            return name.Substring(0, backQuoteIndex);
+            return name[..backQuoteIndex];
         }
 
         private static void WriteData(StringBuilder sb, string value, int level)

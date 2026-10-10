@@ -3,13 +3,15 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Windows.Forms;
+using System.Threading;
 
 namespace FolderDiffChecker
 {
-    class DiffFinder
+    /// <summary>
+    /// 2 つのフォルダーを比べて、追加・変更されたファイルを探します。イベントは作ったスレッドの <see cref="SynchronizationContext"/> で起こします。
+    /// </summary>
+    class DiffFinder(string oldFolderPath, string newFolderPath, Regex[] exceptFilePatterns, Regex[] forceIncludeFilePatterns, SynchronizationContext context)
     {
-        public delegate void VoidDelegate();
         public delegate void DiffEventHandler(DiffModel diffModel);
         public event DiffEventHandler DiffFound;
         public event EventHandler Finished;
@@ -17,78 +19,42 @@ namespace FolderDiffChecker
 
         protected void OnDiffFind(DiffModel diffModel)
         {
-            if (control.InvokeRequired)
-            {
-                control.Invoke(new DiffEventHandler(OnDiffFind), diffModel);
-                return;
-            }
-            if (DiffFound != null)
-            {
-                DiffFound.Invoke(diffModel);
-            }
+            context.Send(_ => DiffFound?.Invoke(diffModel), null);
         }
 
         protected void OnFinished()
         {
-            if (control.InvokeRequired)
-            {
-                control.Invoke(new VoidDelegate(OnFinished));
-                return;
-            }
-            if (Finished != null)
-            {
-                Finished.Invoke(this, EventArgs.Empty);
-            }
+            context.Send(_ => Finished?.Invoke(this, EventArgs.Empty), null);
         }
 
         protected void OnBeforeCompare(string text)
         {
-            if (control.InvokeRequired)
-            {
-                control.Invoke(new Action<string>(OnBeforeCompare), text);
-                return;
-            }
-
-            if (BeforeCompare != null)
-            {
-                BeforeCompare.Invoke(text);
-            }
+            context.Send(_ => BeforeCompare?.Invoke(text), null);
         }
 
         public string OldFolderPath
         {
             get;
             private set;
-        }
+        } = oldFolderPath;
 
         public string NewFolderPath
         {
             get;
             private set;
-        }
+        } = newFolderPath;
 
         public Regex[] ExceptFilePatterns
         {
             get;
             private set;
-        }
+        } = exceptFilePatterns;
 
         public Regex[] ForceIncludeFilePatterns
         {
             get;
             private set;
-        }
-
-        Control control;
-
-        public DiffFinder(string oldFolderPath, string newFolderPath, Regex[] exceptFilePatterns, Regex[] forceIncludeFilePatterns, Control control)
-        {
-            OldFolderPath = oldFolderPath;
-            NewFolderPath = newFolderPath;
-            ExceptFilePatterns = exceptFilePatterns;
-            ForceIncludeFilePatterns = forceIncludeFilePatterns;
-            this.control = control;
-        }
+        } = forceIncludeFilePatterns;
 
         public void Execute()
         {
@@ -96,13 +62,13 @@ namespace FolderDiffChecker
             OnFinished();
         }
 
-        private bool isShouldBeIgnored(string filePath)
+        private bool IsShouldBeIgnored(string filePath)
         {
             var fileName = Path.GetFileName(filePath);
             return ExceptFilePatterns.Any(e => e.IsMatch(fileName));
         }
 
-        private bool isShouldBeAdded(string filePath)
+        private bool IsShouldBeAdded(string filePath)
         {
             var fileName = Path.GetFileName(filePath);
             return ForceIncludeFilePatterns.Any(e => e.IsMatch(fileName));
@@ -124,7 +90,7 @@ namespace FolderDiffChecker
             }
             foreach (string newFile in Directory.GetFiles(newPath))
             {
-                if (isShouldBeIgnored(newFile))
+                if (IsShouldBeIgnored(newFile))
                 {
                     continue;
                 }
@@ -141,7 +107,7 @@ namespace FolderDiffChecker
                     {
                         FileEdited(Path.Combine(newPath, newFile));
                     }*/
-                    if (isShouldBeAdded(newFile) || !CheckSameFileContent(checkPath, newFile))
+                    if (IsShouldBeAdded(newFile) || !CheckSameFileContent(checkPath, newFile))
                     {
                         FileEdited(Path.Combine(newPath, newFile));
                     }
@@ -198,7 +164,7 @@ namespace FolderDiffChecker
 
         const int bufferSize = 1024;
 
-        private bool CheckSameFileContent(string filePath1, string filePath2)
+        private static bool CheckSameFileContent(string filePath1, string filePath2)
         {
             var extension = Path.GetExtension(filePath1).ToLower();
             if (extension == ".exe" || extension == ".dll")
@@ -212,20 +178,19 @@ namespace FolderDiffChecker
                 var fi1 = new FileInfo(filePath1);
                 var fi2 = new FileInfo(filePath2);
                 if (fi1.Length != fi2.Length) return false;
-                using (FileStream fs1 = fi1.Open(FileMode.Open))
-                using (FileStream fs2 = fi2.Open(FileMode.Open))
+                // 比べるだけなので読み取りで開き、ほかが読んでいても開けるようにする（同じファイルどうしを比べるときも）
+                using FileStream fs1 = fi1.Open(FileMode.Open, FileAccess.Read, FileShare.Read);
+                using FileStream fs2 = fi2.Open(FileMode.Open, FileAccess.Read, FileShare.Read);
+                byte[] buffer1 = new byte[bufferSize], buffer2 = new byte[bufferSize];
+                while (fs1.Position < fs1.Length)
                 {
-                    byte[] buffer1 = new byte[bufferSize], buffer2 = new byte[bufferSize];
-                    while (fs1.Position < fs1.Length)
+                    var readSize = fs1.Read(buffer1, 0, buffer1.Length);
+                    fs2.ReadAtLeast(buffer2, buffer2.Length, throwOnEndOfStream: false);
+                    for (int i = 0; i < readSize; i++)
                     {
-                        var readSize = fs1.Read(buffer1, 0, buffer1.Length);
-                        fs2.Read(buffer2, 0, buffer2.Length);
-                        for (int i = 0; i < readSize; i++)
+                        if (buffer1[i] != buffer2[i])
                         {
-                            if (buffer1[i] != buffer2[i])
-                            {
-                                return false;
-                            }
+                            return false;
                         }
                     }
                 }

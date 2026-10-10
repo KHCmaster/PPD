@@ -29,10 +29,7 @@ namespace FlowScriptEnginePPD.FlowSourceObjects.ScoreStorage
         {
             SetValue(nameof(Key));
             SetValue(nameof(Value));
-            if (scoreStorage != null)
-            {
-                scoreStorage[Key] = Value;
-            }
+            scoreStorage?[Key] = Value;
         }
     }
 }

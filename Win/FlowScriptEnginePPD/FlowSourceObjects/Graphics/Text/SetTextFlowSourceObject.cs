@@ -31,10 +31,7 @@ namespace FlowScriptEnginePPD.FlowSourceObjects.Graphics.Text
             SetValue(nameof(Text));
             if (Object != null)
             {
-                if (Text == null)
-                {
-                    Text = "";
-                }
+                Text ??= "";
 
                 Object.Text = Text;
                 OnSuccess();

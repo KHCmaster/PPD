@@ -2,19 +2,12 @@
 
 namespace Effect2DEditor.Command
 {
-    class SetRatioMakerChangeCommand : CommandBase
+    class SetRatioMakerChangeCommand(EffectManager manager, string exp, SelectedManager SManager, RatioType type, IRatioMaker maker) : CommandBase(manager, exp)
     {
-        SelectedManager SManager;
-        RatioType type;
+        readonly SelectedManager SManager = SManager;
+        readonly RatioType type = type;
         IRatioMaker previousmaker;
-        IRatioMaker maker;
-        public SetRatioMakerChangeCommand(EffectManager manager, string exp, SelectedManager SManager, RatioType type, IRatioMaker maker)
-            : base(manager, exp)
-        {
-            this.SManager = SManager;
-            this.maker = maker;
-            this.type = type;
-        }
+        readonly IRatioMaker maker = maker;
 
         public override void Undo()
         {

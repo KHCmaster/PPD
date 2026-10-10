@@ -5,7 +5,13 @@ namespace PPDFramework.Web
     /// <summary>
     /// Web上のMod情報の詳細を表すクラスです。
     /// </summary>
-    public class WebModInfoDetail
+    /// <remarks>
+    /// コンストラクターです。
+    /// </remarks>
+    /// <param name="webModInfo">親のModの情報。</param>
+    /// <param name="hash">ハッシュ。</param>
+    /// <param name="revision">リビジョン。</param>
+    public class WebModInfoDetail(WebModInfo webModInfo, string hash, int revision)
     {
         byte[] hashAsBytes;
 
@@ -16,7 +22,7 @@ namespace PPDFramework.Web
         {
             get;
             private set;
-        }
+        } = webModInfo;
 
         /// <summary>
         /// ハッシュを取得します。
@@ -25,7 +31,7 @@ namespace PPDFramework.Web
         {
             get;
             private set;
-        }
+        } = hash;
 
         /// <summary>
         /// ハッシュを文字列で取得します。
@@ -34,10 +40,7 @@ namespace PPDFramework.Web
         {
             get
             {
-                if (hashAsBytes == null)
-                {
-                    hashAsBytes = CryptographyUtility.Parsex2String(Hash);
-                }
+                hashAsBytes ??= CryptographyUtility.Parsex2String(Hash);
                 return hashAsBytes;
             }
         }
@@ -49,19 +52,6 @@ namespace PPDFramework.Web
         {
             get;
             private set;
-        }
-
-        /// <summary>
-        /// コンストラクターです。
-        /// </summary>
-        /// <param name="webModInfo">親のModの情報。</param>
-        /// <param name="hash">ハッシュ。</param>
-        /// <param name="revision">リビジョン。</param>
-        public WebModInfoDetail(WebModInfo webModInfo, string hash, int revision)
-        {
-            WebModInfo = webModInfo;
-            Hash = hash;
-            Revision = revision;
-        }
+        } = revision;
     }
 }

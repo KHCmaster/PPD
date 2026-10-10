@@ -35,7 +35,7 @@ namespace FlowScriptEngineBasic.FlowSourceObjects.Enumerable
                 SetValue(nameof(Second));
                 if (First == null)
                 {
-                    return System.Linq.Enumerable.Empty<object>();
+                    return [];
                 }
                 else if (Second == null)
                 {

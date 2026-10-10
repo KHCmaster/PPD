@@ -1,5 +1,7 @@
 ﻿using PPDFramework.Effect;
-using SharpDX;
+using System.Numerics;
+using PPDMath;
+using Color = Vortice.Mathematics.Color;
 using System;
 
 namespace PPDFramework.Shaders
@@ -60,34 +62,32 @@ namespace PPDFramework.Shaders
 
         private void Draw(PPDDevice device, WorkspaceTexture filterTexture, Border border, BorderType type, float thickness)
         {
-            using (var workspaceTexture = device.Workspace.Get())
-            {
+            using var workspaceTexture = device.Workspace.Get();
 #if BENCHMARK
                 using (var handler = Benchmark.Instance.Start("Copy"))
                 {
 #endif
-                    device.StretchRectangle(device.GetRenderTarget(), workspaceTexture);
+            device.StretchRectangle(device.GetRenderTarget(), workspaceTexture);
 #if BENCHMARK
                 }
 #endif
-                effect.Technique = String.Format("{0}{1}Border", type, border.Blend);
-                effect.SetTexture(filterTextureHandle, filterTexture.Texture);
-                effect.SetTexture(lastRenderTargetTextureHandle, workspaceTexture.Texture);
-                effect.SetValue(colorHandle, border.Color);
-                var intThickness = (int)Math.Ceiling(thickness * 2 + 1);
-                effect.SetValue(thicknessHandle, (float)intThickness);
-                effect.SetValue(thickness2Handle, (int)Math.Pow(intThickness, 2));
-                effect.SetValue(actualThicknessHandle, thickness);
-                var passCount = effect.Begin();
-                effect.BeginPass(0);
-                effect.CommitChanges();
-                device.VertexDeclaration = effect.VertexDeclaration;
-                var screenVertex = device.GetModule<ShaderCommon>().ScreenVertex;
-                device.SetStreamSource(screenVertex.VertexBucket.VertexBuffer);
-                device.DrawPrimitives(PrimitiveType.TriangleStrip, screenVertex.Offset, 2);
-                effect.EndPass();
-                effect.End();
-            }
+            effect.Technique = String.Format("{0}{1}Border", type, border.Blend);
+            effect.SetTexture(filterTextureHandle, filterTexture.Texture);
+            effect.SetTexture(lastRenderTargetTextureHandle, workspaceTexture.Texture);
+            effect.SetValue(colorHandle, border.Color);
+            var intThickness = (int)Math.Ceiling(thickness * 2 + 1);
+            effect.SetValue(thicknessHandle, (float)intThickness);
+            effect.SetValue(thickness2Handle, (int)Math.Pow(intThickness, 2));
+            effect.SetValue(actualThicknessHandle, thickness);
+            var passCount = effect.Begin();
+            effect.BeginPass(0);
+            effect.CommitChanges();
+            device.VertexDeclaration = effect.VertexDeclaration;
+            var screenVertex = device.GetModule<ShaderCommon>().ScreenVertex;
+            device.SetStreamSource(screenVertex.VertexBucket.VertexBuffer);
+            device.DrawPrimitives(PrimitiveType.TriangleStrip, screenVertex.Offset, 2);
+            effect.EndPass();
+            effect.End();
         }
 
         /// <summary>
@@ -95,41 +95,24 @@ namespace PPDFramework.Shaders
         /// </summary>
         protected override void DisposeResource()
         {
-            if (effect != null)
-            {
-                effect.Dispose();
-                effect = null;
-            }
-            if (filterTextureHandle != null)
-            {
-                filterTextureHandle.Dispose();
-                filterTextureHandle = null;
-            }
-            if (lastRenderTargetTextureHandle != null)
-            {
-                lastRenderTargetTextureHandle.Dispose();
-                lastRenderTargetTextureHandle = null;
-            }
-            if (projectionHandle != null)
-            {
-                projectionHandle.Dispose();
-                projectionHandle = null;
-            }
-            if (thicknessHandle != null)
-            {
-                thicknessHandle.Dispose();
-                thicknessHandle = null;
-            }
-            if (thickness2Handle != null)
-            {
-                thickness2Handle.Dispose();
-                thickness2Handle = null;
-            }
-            if (actualThicknessHandle != null)
-            {
-                actualThicknessHandle.Dispose();
-                actualThicknessHandle = null;
-            }
+            effect?.Dispose();
+            effect = null;
+            filterTextureHandle?.Dispose();
+            filterTextureHandle = null;
+            lastRenderTargetTextureHandle?.Dispose();
+            lastRenderTargetTextureHandle = null;
+            projectionHandle?.Dispose();
+            projectionHandle = null;
+            thicknessHandle?.Dispose();
+            thicknessHandle = null;
+            thickness2Handle?.Dispose();
+            thickness2Handle = null;
+            actualThicknessHandle?.Dispose();
+            actualThicknessHandle = null;
+            widthHeightHandle?.Dispose();
+            widthHeightHandle = null;
+            colorHandle?.Dispose();
+            colorHandle = null;
         }
     }
 }

@@ -15,7 +15,7 @@ namespace PPDFramework.PPDStructure
         /// <returns></returns>
         public static string[] Read(string path)
         {
-            string[] ret = new string[0];
+            string[] ret = [];
             if (File.Exists(path))
             {
                 var sr = new StreamReader(path);
@@ -25,7 +25,7 @@ namespace PPDFramework.PPDStructure
                 ret = s.Split('\n');
                 if (ret.Length == 1 && String.IsNullOrEmpty(ret[0]))
                 {
-                    ret = new string[0];
+                    ret = [];
                 }
             }
             return ret;

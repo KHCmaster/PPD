@@ -1,4 +1,4 @@
-﻿using GalaSoft.MvvmLight;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
@@ -41,7 +41,7 @@ namespace PPDEditorCommon.Dialog.ViewModel
                 }
                 if (changed)
                 {
-                    RaisePropertyChanged("Value");
+                    OnPropertyChanged(nameof(Value));
                 }
             }
         }
@@ -54,7 +54,7 @@ namespace PPDEditorCommon.Dialog.ViewModel
                 if (text != value)
                 {
                     text = value;
-                    RaisePropertyChanged("Text");
+                    OnPropertyChanged(nameof(Text));
                 }
             }
         }
@@ -67,7 +67,7 @@ namespace PPDEditorCommon.Dialog.ViewModel
                 if (isExpanded != value)
                 {
                     isExpanded = value;
-                    RaisePropertyChanged("IsExpanded");
+                    OnPropertyChanged(nameof(IsExpanded));
                 }
             }
         }
@@ -80,7 +80,7 @@ namespace PPDEditorCommon.Dialog.ViewModel
                 if (isSelected != value)
                 {
                     isSelected = value;
-                    RaisePropertyChanged("IsSelected");
+                    OnPropertyChanged(nameof(IsSelected));
                 }
             }
         }
@@ -98,13 +98,13 @@ namespace PPDEditorCommon.Dialog.ViewModel
                 {
                     ret.AddRange(child.Values);
                 }
-                return ret.ToArray();
+                return [.. ret];
             }
         }
 
         public TreeNodeViewModel()
         {
-            Children = new ObservableCollection<TreeNodeViewModel<T>>();
+            Children = [];
         }
     }
 }

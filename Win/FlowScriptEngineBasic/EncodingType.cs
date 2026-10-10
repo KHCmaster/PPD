@@ -16,23 +16,16 @@ namespace FlowScriptEngineBasic
     {
         public static Encoding GetEncoding(EncodingType encodingType)
         {
-            switch (encodingType)
+            return encodingType switch
             {
-                case EncodingType.ASCII:
-                    return Encoding.ASCII;
-                case EncodingType.UTF_8:
-                    return Encoding.UTF8;
-                case EncodingType.UTF_16:
-                    return Encoding.Unicode;
-                case EncodingType.UTF_32:
-                    return Encoding.UTF32;
-                case EncodingType.SHIFT_JIS:
-                    return Encoding.GetEncoding(932);
-                case EncodingType.EUC_JP:
-                    return Encoding.GetEncoding(20932);
-            }
-
-            return Encoding.ASCII;
+                EncodingType.ASCII => Encoding.ASCII,
+                EncodingType.UTF_8 => Encoding.UTF8,
+                EncodingType.UTF_16 => Encoding.Unicode,
+                EncodingType.UTF_32 => Encoding.UTF32,
+                EncodingType.SHIFT_JIS => Encoding.GetEncoding(932),
+                EncodingType.EUC_JP => Encoding.GetEncoding(20932),
+                _ => Encoding.ASCII,
+            };
         }
     }
 }

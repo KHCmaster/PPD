@@ -8,9 +8,9 @@ namespace PPD.Update
         private const string updaterFilePath = "PPDUpdater.ini";
         private const string installFilePath = "install.info";
 
-        private static Settings setting = new Settings();
-        private SettingReader updater;
-        private SettingReader install;
+        private static readonly Settings setting = new();
+        private readonly SettingReader updater;
+        private readonly SettingReader install;
 
         public static Settings Setting
         {

@@ -54,7 +54,7 @@ namespace PPDFramework
         {
             ID = -1;
             SongInformationID = songInformationId;
-            storage = new Dictionary<string, string>();
+            storage = [];
         }
 
         /// <summary>
@@ -67,7 +67,7 @@ namespace PPDFramework
         {
             ID = id;
             SongInformationID = songInformationId;
-            storage = new Dictionary<string, string>();
+            storage = [];
             Load(data);
         }
 
@@ -90,7 +90,7 @@ namespace PPDFramework
             storage = tempStorage.storage;
         }
 
-        private string GetKey(string key)
+        private static string GetKey(string key)
         {
             if (key == null)
             {

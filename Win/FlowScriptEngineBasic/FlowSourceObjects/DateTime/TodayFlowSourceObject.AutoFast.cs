@@ -9,13 +9,11 @@ namespace FlowScriptEngineBasic.FlowSourceObjects.DateTime
     {
         public override object GetPropertyValue(string propertyName)
         {
-            switch (propertyName)
+            return propertyName switch
             {
-                case "Today":
-                    return Today;
-                default:
-                    return null;
-            }
+                "Today" => Today,
+                _ => null,
+            };
         }
 
 

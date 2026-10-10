@@ -1,6 +1,7 @@
 ﻿using PPDFramework;
 using PPDShareComponent;
-using SharpDX;
+using System.Numerics;
+using PPDMath;
 using System;
 using System.Collections;
 
@@ -23,23 +24,23 @@ namespace PPDSingle
         const int ItemsDefaultX = 5;
         const int ItemsDefaultY = 70;
         const int ItemCount = 9;
-        ArrayList pictureobjects;
-        PictureObject mode;
-        TextureString modeStringLeft;
-        TextureString modeStringCenter;
-        TextureString modeStringRight;
+        readonly ArrayList pictureobjects;
+        readonly PictureObject mode;
+        readonly TextureString modeStringLeft;
+        readonly TextureString modeStringCenter;
+        readonly TextureString modeStringRight;
         SelectedSongInfo[] infos;
-        SpriteObject songNameSprite;
-        SongNameComponent[] songNames;
+        readonly SpriteObject songNameSprite;
+        readonly SongNameComponent[] songNames;
 
         private int selectedIndex;
         State state;
-        Menu menu;
+        readonly Menu menu;
         public MenuSelectSong(PPDDevice device, PPDFramework.Resource.ResourceManager resourceManager, Menu menu) : base(device)
         {
             this.menu = menu;
             state = State.NotAppeared;
-            pictureobjects = new ArrayList();
+            pictureobjects = [];
 
             mode = new PictureObject(device, resourceManager, Utility.Path.Combine("modeselect.png"))
             {
@@ -233,13 +234,13 @@ namespace PPDSingle
 
         class SongNameComponent : GameComponent
         {
-            PictureObject back;
-            PictureObject folder;
-            PictureObject ac;
-            PictureObject ft;
-            PictureObject perfect;
-            EffectObject anim;
-            TextureString text;
+            readonly PictureObject back;
+            readonly PictureObject folder;
+            readonly PictureObject ac;
+            readonly PictureObject ft;
+            readonly PictureObject perfect;
+            readonly EffectObject anim;
+            readonly TextureString text;
             public const int ItemHeight = 28;
             public const int ItemWidth = 500;
 
@@ -265,10 +266,7 @@ namespace PPDSingle
                 set
                 {
                     text.Alpha = value;
-                    if (back != null)
-                    {
-                        back.Alpha = value;
-                    }
+                    back?.Alpha = value;
                 }
             }
 

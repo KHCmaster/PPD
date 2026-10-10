@@ -1,0 +1,103 @@
+<UserControl x:Class="PPDEditor.DockForm.Script.ScriptListPanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:PPDEditor.ViewModels.Docks"
+             xmlns:conv="clr-namespace:PPDEditor.Converters"
+             mc:Ignorable="d" d:DataContext="{d:DesignInstance Type=vm:ScriptListViewModel}">
+    <UserControl.Resources>
+        <conv:BindingProxy x:Key="Proxy" Data="{Binding}" />
+        <conv:InverseBooleanConverter x:Key="Inverse" />
+        <BooleanToVisibilityConverter x:Key="BoolToVisibility" />
+        <!-- スクリプトの項目のメニュー -->
+        <ContextMenu x:Key="ScriptMenu" DataContext="{Binding Data, Source={StaticResource Proxy}}">
+            <MenuItem AutomationProperties.AutomationId="ToggleScriptMenuItem" Command="{Binding ToggleDisabledCommand}" IsEnabled="{Binding SelectedNode.IsUnderScripts}">
+                <MenuItem.Style>
+                    <Style TargetType="MenuItem">
+                        <Setter Property="Header" Value="{Binding Texts[MakeInvalid]}" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding SelectedNode.IsDisabled}" Value="True">
+                                <Setter Property="Header" Value="{Binding Texts[MakeValid]}" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </MenuItem.Style>
+            </MenuItem>
+            <MenuItem AutomationProperties.AutomationId="CreateScriptFolderMenuItem" Header="{Binding Texts[CreateNewFolder]}" Command="{Binding CreateFolderCommand}" />
+            <MenuItem AutomationProperties.AutomationId="DeleteScriptMenuItem" Header="{Binding Texts[Delete]}" Command="{Binding DeleteCommand}" />
+            <MenuItem AutomationProperties.AutomationId="RenameScriptMenuItem" Header="{Binding Texts[Rename]}" Command="{Binding BeginRenameCommand}" IsEnabled="{Binding SelectedNode.IsRoot, Converter={StaticResource Inverse}}" />
+        </ContextMenu>
+        <!-- フォルダの項目のメニュー -->
+        <ContextMenu x:Key="FolderMenu" DataContext="{Binding Data, Source={StaticResource Proxy}}">
+            <MenuItem AutomationProperties.AutomationId="CreateScriptMenuItem" Header="{Binding Texts[CreateNewScript]}" Command="{Binding CreateScriptCommand}" />
+            <MenuItem AutomationProperties.AutomationId="CreateScriptFolderMenuItem" Header="{Binding Texts[CreateNewFolder]}" Command="{Binding CreateFolderCommand}" />
+            <MenuItem AutomationProperties.AutomationId="DeleteScriptMenuItem" Header="{Binding Texts[Delete]}" Command="{Binding DeleteCommand}" IsEnabled="{Binding SelectedNode.IsRoot, Converter={StaticResource Inverse}}" />
+            <MenuItem AutomationProperties.AutomationId="RenameScriptMenuItem" Header="{Binding Texts[Rename]}" Command="{Binding BeginRenameCommand}" IsEnabled="{Binding SelectedNode.IsRoot, Converter={StaticResource Inverse}}" />
+        </ContextMenu>
+    </UserControl.Resources>
+    <DockPanel>
+        <ToolBar DockPanel.Dock="Top" ToolBarTray.IsLocked="True">
+            <Button ToolTip="{Binding Texts[Update]}" Command="{Binding ReloadCommand}">
+                <Image Source="/img/update.png" Stretch="None" />
+            </Button>
+            <Button ToolTip="{Binding Texts[CreateNewFolder]}" Command="{Binding CreateFolderCommand}">
+                <Image Source="/img/folder.png" Stretch="None" />
+            </Button>
+        </ToolBar>
+        <TreeView x:Name="scriptTree" ItemsSource="{Binding Roots}" AllowDrop="True" KeyDown="ScriptTree_KeyDown"
+                  PreviewMouseRightButtonDown="ScriptTree_PreviewMouseRightButtonDown"
+                  PreviewMouseLeftButtonDown="ScriptTree_PreviewMouseLeftButtonDown" PreviewMouseMove="ScriptTree_PreviewMouseMove"
+                  MouseDoubleClick="ScriptTree_MouseDoubleClick" DragOver="ScriptTree_DragOver" Drop="ScriptTree_Drop">
+            <TreeView.ItemContainerStyle>
+                <Style TargetType="TreeViewItem">
+                    <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
+                    <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
+                    <Setter Property="ContextMenu" Value="{StaticResource ScriptMenu}" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsFolder}" Value="True">
+                            <Setter Property="ContextMenu" Value="{StaticResource FolderMenu}" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TreeView.ItemContainerStyle>
+            <TreeView.ItemTemplate>
+                <HierarchicalDataTemplate ItemsSource="{Binding Children}">
+                    <StackPanel Orientation="Horizontal">
+                        <!-- 種類のアイコン。無効のときは印を重ねる -->
+                        <Grid Width="16" Height="16" Margin="0,0,3,0">
+                            <Image>
+                                <Image.Style>
+                                    <Style TargetType="Image">
+                                        <Setter Property="Source" Value="/PPDEditor;component/img/document.png" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsFolder}" Value="True">
+                                                <Setter Property="Source" Value="/PPDEditor;component/img/folder.png" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Image.Style>
+                            </Image>
+                            <Image Source="/PPDEditor;component/img/disabled.png" Visibility="{Binding IsDisabled, Converter={StaticResource BoolToVisibility}}" />
+                        </Grid>
+                        <TextBlock Text="{Binding Name}" VerticalAlignment="Center">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsEditing}" Value="True">
+                                            <Setter Property="Visibility" Value="Collapsed" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                        <!-- 名前を変える。Enter で決め、Esc でやめる -->
+                        <TextBox MinWidth="100" Text="{Binding EditingName, UpdateSourceTrigger=PropertyChanged}"
+                                 Visibility="{Binding IsEditing, Converter={StaticResource BoolToVisibility}}"
+                                 IsVisibleChanged="NameEditor_IsVisibleChanged" KeyDown="NameEditor_KeyDown" LostKeyboardFocus="NameEditor_LostKeyboardFocus" />
+                    </StackPanel>
+                </HierarchicalDataTemplate>
+            </TreeView.ItemTemplate>
+        </TreeView>
+    </DockPanel>
+</UserControl>

@@ -1,6 +1,7 @@
 ﻿using PPDFramework;
 using PPDShareComponent;
-using SharpDX;
+using System.Numerics;
+using PPDMath;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,12 +11,12 @@ namespace PPDSingle
     class MultiSelectableText : FocusableGameComponent
     {
         const int FramePerMenu = 60;
-        IGameHost gameHost;
-        PPDFramework.Resource.ResourceManager resourceManager;
-        RectangleComponent rectangle;
-        TextureString startTextString;
-        TextureString[] menuTextStrings;
-        int fontHeight;
+        readonly IGameHost gameHost;
+        readonly PPDFramework.Resource.ResourceManager resourceManager;
+        readonly RectangleComponent rectangle;
+        readonly TextureString startTextString;
+        readonly TextureString[] menuTextStrings;
+        readonly int fontHeight;
         int pressingCount;
 
         private float MaxMenuWidth
@@ -75,7 +76,7 @@ namespace PPDSingle
                 this.AddChild(obj);
                 menus.Add(obj);
             }
-            menuTextStrings = menus.ToArray();
+            menuTextStrings = [.. menus];
             this.AddChild(rectangle = new RectangleComponent(device, resourceManager, PPDColors.Active)
             {
                 Position = new Vector2(0, -fontHeight / 2),

@@ -1,4 +1,5 @@
-﻿using PPDFramework;
+﻿using PPDMath;
+using PPDFramework;
 using PPDShareComponent;
 using System.Collections.Generic;
 
@@ -8,21 +9,17 @@ namespace PPDMulti
     /// <summary>
     /// ロード中用のシーン
     /// </summary>
-    public class LoadingScene : LoadingSceneWithImage
+    public class LoadingScene(PPDDevice device) : LoadingSceneWithImage(device)
     {
         EffectObject anim;
 
-        public LoadingScene(PPDDevice device) : base(device)
-        {
-
-        }
         public override bool Load()
         {
             anim = new EffectObject(device, ResourceManager, Utility.Path.Combine("Loading.etd"))
             {
-                Position = new SharpDX.Vector2(700, 420)
+                Position = new System.Numerics.Vector2(700, 420),
+                PlayType = Effect2D.EffectManager.PlayType.Loop
             };
-            anim.PlayType = Effect2D.EffectManager.PlayType.Loop;
             anim.Play();
             AddChild(anim);
 

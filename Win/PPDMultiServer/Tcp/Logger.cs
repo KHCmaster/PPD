@@ -3,7 +3,7 @@ using System.IO;
 
 namespace PPDMultiServer.Tcp
 {
-    public class Logger
+    public class Logger : IDisposable
     {
         private StreamWriter writer;
 
@@ -27,10 +27,28 @@ namespace PPDMultiServer.Tcp
 
         public void Close()
         {
-            if (writer != null)
+            writer?.Close();
+            writer = null;
+        }
+
+        /// <summary>
+        /// ログファイルを閉じます（Close() と同じ）。
+        /// </summary>
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        /// <summary>
+        /// 破棄します。
+        /// </summary>
+        /// <param name="disposing">Dispose から呼ばれたときは true。</param>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
             {
-                writer.Close();
-                writer = null;
+                Close();
             }
         }
     }

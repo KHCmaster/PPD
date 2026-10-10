@@ -1,5 +1,6 @@
 ﻿using PPDFramework;
-using SharpDX;
+using System.Numerics;
+using PPDMath;
 
 namespace PPDCore
 {

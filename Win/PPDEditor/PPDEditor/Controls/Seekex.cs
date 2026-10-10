@@ -1,43 +1,48 @@
 ﻿using PPDFramework;
-using System.Drawing;
+using System;
 using System.IO;
-using System.Windows.Forms;
+using System.Windows;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace PPDEditor.Controls
 {
-    public partial class Seekex : CustomUserControl
+    /// <summary>
+    /// タイムラインの左の、行の名前（マークの画像）を出すところです。行をドラッグすると、その行のマークをまとめて動かす。
+    /// </summary>
+    public class Seekex : FrameworkElement
     {
         Seekmain sm;
         int num = -1;
         int anchorx;
-
-        //Pens and Brush
-        Brush area = Brushes.LightGray;
-        Pen border = Pens.Gray;
-        Brush text = Brushes.Black;
-        Pen hline = Pens.Gray;
-
-        Image[] images;
+        ImageSource[] images;
 
         public Seekex()
         {
-            InitializeComponent();
-            InitializeBuffer();
+            ClipToBounds = true;
+            RenderOptions.SetEdgeMode(this, EdgeMode.Aliased);
         }
 
-        public void setseekmain(Seekmain sm)
+        public void Setseekmain(Seekmain sm)
         {
             this.sm = sm;
         }
         public void SetSkin()
         {
-            images = new Image[10];
+            images = new ImageSource[10];
             for (int i = 0; i < 10; i++)
             {
                 var path = PPDEditorSkin.Skin.GetSmallMarkColorImagePath((ButtonType)i);
                 if (File.Exists(path))
                 {
-                    images[i] = Image.FromFile(path);
+                    var image = new BitmapImage();
+                    image.BeginInit();
+                    image.CacheOption = BitmapCacheOption.OnLoad;
+                    image.UriSource = new Uri(Path.GetFullPath(path), UriKind.Absolute);
+                    image.EndInit();
+                    image.Freeze();
+                    images[i] = image;
                 }
                 else
                 {
@@ -47,72 +52,84 @@ namespace PPDEditor.Controls
             DrawAndRefresh();
         }
 
-        protected override void DrawToBuffer(Graphics g)
+        public void DrawAndRefresh()
+        {
+            InvalidateVisual();
+        }
+
+        protected override void OnRender(DrawingContext dc)
         {
             if (WindowUtility.TimeLineForm == null || images == null)
             {
                 return;
             }
 
-            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-            area = new SolidBrush(PPDEditorSkin.Skin.TimeLineSeekAreaColor);
-            border = new Pen(PPDEditorSkin.Skin.TimeLineSeekAreaBorderColor);
-            text = new SolidBrush(PPDEditorSkin.Skin.TimeLineTextColor);
-            hline = new Pen(PPDEditorSkin.Skin.TimeLineHorizontalLineColor);
-            if (BackgroundImage != null)
-            {
-                g.DrawImage(BackgroundImage, new Point(0, 0));
-            }
-            else
-            {
-                g.FillRectangle(Brushes.White, new Rectangle(0, 0, this.Width, this.Height));
-            }
-            g.FillRectangle(area, 0, 0, this.Width, PPDEditorSkin.Skin.TimeLineHeight);
-            g.DrawLine(border, 0, PPDEditorSkin.Skin.TimeLineHeight - 1, this.Width, PPDEditorSkin.Skin.TimeLineHeight - 1);
-            var font = new Font("ＭＳ ゴシック", PPDEditorSkin.Skin.TimeLineHeight - 3);
-            g.DrawString("Time Line", font, text, 0, 0);
+            var skin = PPDEditorSkin.Skin;
+            var width = ActualWidth;
+            var area = TimeLineDrawer.ToBrush(skin.TimeLineSeekAreaColor);
+            var border = TimeLineDrawer.ToPen(skin.TimeLineSeekAreaBorderColor);
+            var text = TimeLineDrawer.ToBrush(skin.TimeLineTextColor);
+            var hline = TimeLineDrawer.ToPen(skin.TimeLineHorizontalLineColor);
+            dc.DrawRectangle(WindowUtility.TimeLineForm.TimeLineBackground, null, new Rect(0, 0, width, ActualHeight));
+            dc.DrawRectangle(area, null, new Rect(0, 0, width, skin.TimeLineHeight));
+            TimeLineDrawer.DrawLine(dc, border, 0, skin.TimeLineHeight - 1, width, skin.TimeLineHeight - 1);
+            var typeface = new Typeface(new FontFamily("ＭＳ ゴシック"), FontStyles.Normal, FontWeights.Normal, FontStretches.Normal);
+            // 以前の GDI と同じく、行の高さに合わせたポイントの大きさ
+            dc.DrawText(TimeLineDrawer.CreateText("Time Line", typeface, (skin.TimeLineHeight - 3) * 96.0 / 72, text), new Point(0, 0));
             int iter = 0;
             foreach (var row in WindowUtility.TimeLineForm.RowManager.OrderedVisibleRows)
             {
-                g.FillRectangle(PPDEditorSkin.Skin.TimeLineBackGroundColors[row],
-                    new Rectangle(0, PPDEditorSkin.Skin.TimeLineHeight + PPDEditorSkin.Skin.TimeLineRowHeight * iter + 1,
-                        this.Width, PPDEditorSkin.Skin.TimeLineRowHeight));
-                g.DrawLine(hline, 0, PPDEditorSkin.Skin.TimeLineHeight + PPDEditorSkin.Skin.TimeLineRowHeight * (iter + 1),
-                    this.Width, PPDEditorSkin.Skin.TimeLineHeight + PPDEditorSkin.Skin.TimeLineRowHeight * (iter + 1));
+                dc.DrawRectangle(TimeLineDrawer.GetRowBrush(row), null,
+                    new Rect(0, skin.TimeLineHeight + skin.TimeLineRowHeight * iter + 1, width, skin.TimeLineRowHeight));
+                var y = skin.TimeLineHeight + skin.TimeLineRowHeight * (iter + 1);
+                TimeLineDrawer.DrawLine(dc, hline, 0, y, width, y);
                 if (images[row] != null)
                 {
-                    g.DrawImage(images[row], new Rectangle(0, PPDEditorSkin.Skin.TimeLineHeight + PPDEditorSkin.Skin.TimeLineRowHeight * iter,
-                        PPDEditorSkin.Skin.TimeLineHeight, PPDEditorSkin.Skin.TimeLineHeight),
-                        new Rectangle(0, 0, images[row].Width, images[row].Height), GraphicsUnit.Pixel);
+                    dc.DrawImage(images[row], new Rect(0, skin.TimeLineHeight + skin.TimeLineRowHeight * iter, skin.TimeLineHeight, skin.TimeLineHeight));
                 }
                 iter++;
             }
         }
-        private void Seekex_MouseDown(object sender, MouseEventArgs e)
+
+        protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
         {
-            var p = this.PointToClient(Cursor.Position);
-            anchorx = p.X;
+            base.OnMouseLeftButtonDown(e);
+            var p = e.GetPosition(this);
+            anchorx = (int)p.X;
             if (p.Y >= 0 && p.Y <= PPDEditorSkin.Skin.TimeLineHeight)
             {
                 num = int.MaxValue;
             }
             else
             {
-                num = WindowUtility.TimeLineForm.RowManager.GetRowIndex(p.Y);
+                num = WindowUtility.TimeLineForm.RowManager.GetRowIndex((int)p.Y);
             }
+            CaptureMouse();
+            sm?.Focus();
+            e.Handled = true;
         }
-        private void Seekex_MouseMove(object sender, MouseEventArgs e)
+
+        protected override void OnMouseMove(MouseEventArgs e)
         {
+            base.OnMouseMove(e);
             if ((num >= 0 && num < 10) || num == int.MaxValue)
             {
-                var pos = this.PointToClient(Cursor.Position);
-                sm.MoveLine(num, pos.X - anchorx);
-                anchorx = pos.X;
+                var x = (int)e.GetPosition(this).X;
+                sm.MoveLine(num, x - anchorx);
+                anchorx = x;
             }
         }
 
-        private void Seekex_MouseUp(object sender, MouseEventArgs e)
+        protected override void OnMouseLeftButtonUp(MouseButtonEventArgs e)
         {
+            base.OnMouseLeftButtonUp(e);
+            num = -1;
+            ReleaseMouseCapture();
+        }
+
+        protected override void OnLostMouseCapture(MouseEventArgs e)
+        {
+            base.OnLostMouseCapture(e);
             num = -1;
         }
     }

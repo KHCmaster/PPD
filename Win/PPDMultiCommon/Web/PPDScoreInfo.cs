@@ -53,10 +53,7 @@ namespace PPDMultiCommon.Web
         {
             get
             {
-                if (easy == null)
-                {
-                    easy = ParseString(EasyHash);
-                }
+                easy ??= ParseString(EasyHash);
                 return easy;
             }
         }
@@ -65,10 +62,7 @@ namespace PPDMultiCommon.Web
         {
             get
             {
-                if (normal == null)
-                {
-                    normal = ParseString(NormalHash);
-                }
+                normal ??= ParseString(NormalHash);
                 return normal;
             }
         }
@@ -77,10 +71,7 @@ namespace PPDMultiCommon.Web
         {
             get
             {
-                if (hard == null)
-                {
-                    hard = ParseString(HardHash);
-                }
+                hard ??= ParseString(HardHash);
                 return hard;
             }
         }
@@ -89,19 +80,16 @@ namespace PPDMultiCommon.Web
         {
             get
             {
-                if (extreme == null)
-                {
-                    extreme = ParseString(ExtremeHash);
-                }
+                extreme ??= ParseString(ExtremeHash);
                 return extreme;
             }
         }
 
-        private byte[] ParseString(string str)
+        private static byte[] ParseString(string str)
         {
             if (String.IsNullOrEmpty(str))
             {
-                return new byte[0];
+                return [];
             }
 
             byte[] ret = new byte[32];
@@ -114,19 +102,14 @@ namespace PPDMultiCommon.Web
 
         private byte[] GetHash(Difficulty difficulty)
         {
-            switch (difficulty)
+            return difficulty switch
             {
-                case Difficulty.Easy:
-                    return Easy;
-                case Difficulty.Normal:
-                    return Normal;
-                case Difficulty.Hard:
-                    return Hard;
-                case Difficulty.Extreme:
-                    return Extreme;
-            }
-
-            return null;
+                Difficulty.Easy => Easy,
+                Difficulty.Normal => Normal,
+                Difficulty.Hard => Hard,
+                Difficulty.Extreme => Extreme,
+                _ => null,
+            };
         }
 
         public string CreateUrl()

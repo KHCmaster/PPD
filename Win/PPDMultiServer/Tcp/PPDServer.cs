@@ -4,27 +4,29 @@ using PPDMultiCommon.Tcp;
 using PPDMultiCommon.Web;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace PPDMultiServer.Tcp
 {
-    public class PPDServer : IContextManager
+    public class PPDServer : IContextManager, IDisposable
     {
-        static byte[] PPDPackV2DisconnectBytes = { 80, 80, 68, 80, 65, 67, 75, 86, 50, 51, 0, 0, 0, 23, 0, 0, 0, 7, 0, 0, 0, 0, 0, 10, 0, 77, 101, 116, 104, 111, 100, 84, 121, 112, 101, 2, 0, 0, 0, 6, 0, 82, 101, 97, 115, 111, 110, 4, 0, 0, 0 };
+        private readonly Lock syncRoot = new();
+        static readonly byte[] PPDPackV2DisconnectBytes = [80, 80, 68, 80, 65, 67, 75, 86, 50, 51, 0, 0, 0, 23, 0, 0, 0, 7, 0, 0, 0, 0, 0, 10, 0, 77, 101, 116, 104, 111, 100, 84, 121, 112, 101, 2, 0, 0, 0, 6, 0, 82, 101, 97, 115, 111, 110, 4, 0, 0, 0];
 
         public event EventHandler FailedToCreateRoom;
 
-        List<ServerContextBase> contexts;
-        List<ServerContextBase> afterPushContexts;
-        List<ServerContextBase> afterPopContexts;
-        Dictionary<ServerContextBase, ServerContextBase> contextChains;
+        readonly List<ServerContextBase> contexts;
+        readonly List<ServerContextBase> afterPushContexts;
+        readonly List<ServerContextBase> afterPopContexts;
+        readonly Dictionary<ServerContextBase, ServerContextBase> contextChains;
         ServerContextBase currentContext;
 
-        Queue<NetworkData> hostHandledData;
-        Dictionary<int, DateTime> userLastUpdatedAt;
-        Dictionary<int, DateTime> delayedDisconnects;
-        TcpByteReader byteReader;
+        readonly Queue<NetworkData> hostHandledData;
+        readonly Dictionary<int, DateTime> userLastUpdatedAt;
+        readonly Dictionary<int, DateTime> delayedDisconnects;
+        readonly TcpByteReader byteReader;
         Host host;
-        static readonly Object updateLock = new object();
+        static readonly Lock updateLock = new();
 
         public WebManager WebManager
         {
@@ -64,8 +66,17 @@ namespace PPDMultiServer.Tcp
             private set;
         }
 
+        /// <summary>
+        /// 待ち受けるアドレスです。既定はすべてのアドレス（ほかのコンピューターからつなげる）。Start の前に設定します。
+        /// </summary>
+        public System.Net.IPAddress ListenAddress
+        {
+            get { return host.ListenAddress; }
+            set { host.ListenAddress = value; }
+        }
+
         public PPDServer(int port, WebManager webManager, RoomInfo roomInfo, ITimerManager timerManager)
-            : this(port, webManager, roomInfo, timerManager, "", new string[0])
+            : this(port, webManager, roomInfo, timerManager, "", [])
         {
 
         }
@@ -80,31 +91,28 @@ namespace PPDMultiServer.Tcp
             {
                 Logger = new Logger(logDir, String.Format("{0}.log", port));
             }
-            contexts = new List<ServerContextBase>();
-            afterPushContexts = new List<ServerContextBase>();
-            afterPopContexts = new List<ServerContextBase>();
+            contexts = [];
+            afterPushContexts = [];
+            afterPopContexts = [];
             hostHandledData = new Queue<NetworkData>();
-            contextChains = new Dictionary<ServerContextBase, ServerContextBase>();
-            userLastUpdatedAt = new Dictionary<int, DateTime>();
-            delayedDisconnects = new Dictionary<int, DateTime>();
+            contextChains = [];
+            userLastUpdatedAt = [];
+            delayedDisconnects = [];
             byteReader = new TcpByteReader();
-            byteReader.ByteReaded += byteReader_ByteReaded;
+            byteReader.ByteReaded += ByteReader_ByteReaded;
             host = new Host
             {
                 Port = port
             };
-            host.ReadClient += host_ReadClient;
-            host.Closed += host_Closed;
+            host.ReadClient += Host_ReadClient;
+            host.Closed += Host_Closed;
         }
 
         public void Start()
         {
-            if (Logger != null)
-            {
-                Logger.AddLog("Start");
-            }
+            Logger?.AddLog("Start");
             host.Start();
-            var menuContext = new MenuContext(null, this);
+            var menuContext = new MenuContext(this);
             InitializeServerContext(menuContext);
             contexts.Add(menuContext);
             menuContext.Start();
@@ -120,9 +128,9 @@ namespace PPDMultiServer.Tcp
         {
             if (host != null)
             {
-                host.Stop();
-                host.ReadClient -= host_ReadClient;
-                host.Closed -= host_Closed;
+                host.Dispose();
+                host.ReadClient -= Host_ReadClient;
+                host.Closed -= Host_Closed;
                 host = null;
             }
 
@@ -138,6 +146,8 @@ namespace PPDMultiServer.Tcp
             {
                 Logger.AddLog("End");
                 Logger.Close();
+                // 閉じた後にもう一度 Close（Dispose）しても書かない
+                Logger = null;
             }
         }
 
@@ -154,7 +164,7 @@ namespace PPDMultiServer.Tcp
             while (hostHandledData.Count > 0)
             {
                 NetworkData networkData = null;
-                lock (this)
+                lock (syncRoot)
                 {
                     networkData = hostHandledData.Dequeue();
                 }
@@ -163,11 +173,11 @@ namespace PPDMultiServer.Tcp
                     currentContext = context;
                     context.Process(networkData);
                 }
-                if (networkData is AddUserNetworkData)
+                if (networkData is AddUserNetworkData data)
                 {
                     lock (userLastUpdatedAt)
                     {
-                        userLastUpdatedAt[((AddUserNetworkData)networkData).Id] = DateTime.Now;
+                        userLastUpdatedAt[data.Id] = DateTime.Now;
                     }
                 }
                 else if (networkData is OldProtocolNetworkData)
@@ -191,9 +201,8 @@ namespace PPDMultiServer.Tcp
             foreach (ServerContextBase context in afterPopContexts)
             {
                 contexts.Remove(context);
-                if (contextChains.ContainsKey(context))
+                if (contextChains.TryGetValue(context, out ServerContextBase parent))
                 {
-                    ServerContextBase parent = contextChains[context];
                     parent.OnChildPoped();
                     contextChains.Remove(context);
                 }
@@ -268,14 +277,14 @@ namespace PPDMultiServer.Tcp
             }
         }
 
-        void host_Closed(int id)
+        void Host_Closed(int id)
         {
             var networkData = new DeleteUserNetworkData
             {
                 Id = id
             };
 
-            lock (this)
+            lock (syncRoot)
             {
                 hostHandledData.Enqueue(networkData);
             }
@@ -285,15 +294,20 @@ namespace PPDMultiServer.Tcp
             }
         }
 
-        void host_ReadClient(byte[] data, int id)
+        void Host_ReadClient(byte[] data, int id)
         {
             byteReader.Read(data, id);
         }
 
-        void byteReader_ByteReaded(ReadInfo readInfo, int id)
+        void ByteReader_ByteReaded(ReadInfo readInfo, int id)
         {
             var userInput = readInfo.NetworkData is PingNetworkData;
             readInfo.NetworkData.Id = id;
+            if (readInfo.NetworkData is AddUserNetworkData addUser)
+            {
+                // キックした人を覚えるのに使う。送ってきた値ではなく、接続のアドレスにする
+                addUser.Ip = host?.GetIp(id);
+            }
             Enqueue(readInfo.NetworkData);
             if (userInput)
             {
@@ -306,7 +320,7 @@ namespace PPDMultiServer.Tcp
 
         public void Enqueue(NetworkData networkData)
         {
-            lock (this)
+            lock (syncRoot)
             {
                 hostHandledData.Enqueue(networkData);
             }
@@ -339,6 +353,27 @@ namespace PPDMultiServer.Tcp
         public void OnFailedToCreateRoom()
         {
             FailedToCreateRoom?.Invoke(this, EventArgs.Empty);
+        }
+
+        /// <summary>
+        /// サーバーを終了します（Close と同じ）。
+        /// </summary>
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        /// <summary>
+        /// 破棄します。
+        /// </summary>
+        /// <param name="disposing">Dispose から呼ばれたときは true。</param>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                Close();
+            }
         }
     }
 }

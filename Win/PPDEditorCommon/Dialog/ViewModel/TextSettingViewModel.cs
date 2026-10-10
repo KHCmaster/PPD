@@ -1,9 +1,9 @@
-﻿using GalaSoft.MvvmLight.Command;
+﻿using CommunityToolkit.Mvvm.Input;
 using System.Windows.Input;
 
 namespace PPDEditorCommon.Dialog.ViewModel
 {
-    abstract class TextSettingViewModel : SettingViewModelBase
+    abstract class TextSettingViewModel(SettingBase setting) : SettingViewModelBase(setting)
     {
         private string text;
         private ICommand changedCommand;
@@ -16,7 +16,7 @@ namespace PPDEditorCommon.Dialog.ViewModel
                 if (this.text != value)
                 {
                     this.text = value;
-                    RaisePropertyChanged("Text");
+                    OnPropertyChanged(nameof(Text));
                 }
             }
         }
@@ -25,14 +25,9 @@ namespace PPDEditorCommon.Dialog.ViewModel
         {
             get
             {
-                return changedCommand ?? (changedCommand = new RelayCommand(
-                    ChangedCommand_Execute));
+                return changedCommand ??= new RelayCommand(
+                    ChangedCommand_Execute);
             }
-        }
-
-        protected TextSettingViewModel(SettingBase setting)
-            : base(setting)
-        {
         }
 
         protected abstract void Validate();

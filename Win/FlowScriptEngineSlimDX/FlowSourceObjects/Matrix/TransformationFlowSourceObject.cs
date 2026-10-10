@@ -1,4 +1,5 @@
-﻿using FlowScriptEngine;
+﻿using PPDMath;
+using FlowScriptEngine;
 
 namespace FlowScriptEngineSlimDX.FlowSourceObjects.Matrix
 {
@@ -11,49 +12,49 @@ namespace FlowScriptEngineSlimDX.FlowSourceObjects.Matrix
         }
 
         [ToolTipText("Matrix_Transformation_ScalingCenter_Summary")]
-        public SharpDX.Vector3 ScalingCenter
+        public System.Numerics.Vector3 ScalingCenter
         {
             private get;
             set;
         }
 
         [ToolTipText("Matrix_Transformation_ScalingRotation_Summary")]
-        public SharpDX.Quaternion ScalingRotation
+        public System.Numerics.Quaternion ScalingRotation
         {
             private get;
             set;
         }
 
         [ToolTipText("Matrix_Transformation_Scaling_Summary")]
-        public SharpDX.Vector3 Scaling
+        public System.Numerics.Vector3 Scaling
         {
             private get;
             set;
         }
 
         [ToolTipText("Matrix_Transformation_RotationCenter_Summary")]
-        public SharpDX.Vector3 RotationCenter
+        public System.Numerics.Vector3 RotationCenter
         {
             private get;
             set;
         }
 
         [ToolTipText("Matrix_Transformation_Rotation_Summary")]
-        public SharpDX.Quaternion Rotation
+        public System.Numerics.Quaternion Rotation
         {
             private get;
             set;
         }
 
         [ToolTipText("Matrix_Transformation_Translation_Summary")]
-        public SharpDX.Vector3 Translation
+        public System.Numerics.Vector3 Translation
         {
             private get;
             set;
         }
 
         [ToolTipText("Matrix_Transformation_Value_Summary")]
-        public SharpDX.Matrix Value
+        public System.Numerics.Matrix4x4 Value
         {
             get
             {
@@ -63,7 +64,7 @@ namespace FlowScriptEngineSlimDX.FlowSourceObjects.Matrix
                 SetValue(nameof(RotationCenter));
                 SetValue(nameof(Rotation));
                 SetValue(nameof(Translation));
-                return SharpDX.Matrix.Transformation(ScalingCenter, ScalingRotation, Scaling, RotationCenter, Rotation, Translation);
+                return System.Numerics.Matrix4x4.Transformation(ScalingCenter, ScalingRotation, Scaling, RotationCenter, Rotation, Translation);
             }
         }
     }

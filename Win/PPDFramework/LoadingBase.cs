@@ -7,16 +7,12 @@ namespace PPDFramework
     /// ローディング時のシーンです
     /// 必ずpublic実装する必要があります
     /// </summary>
-    public abstract class LoadingBase : SceneBase
+    /// <remarks>
+    /// コンストラクタです。
+    /// </remarks>
+    /// <param name="device"></param>
+    public abstract class LoadingBase(PPDDevice device) : SceneBase(device)
     {
-        /// <summary>
-        /// コンストラクタです。
-        /// </summary>
-        /// <param name="device"></param>
-        protected LoadingBase(PPDDevice device) : base(device)
-        {
-
-        }
 
         /// <summary>
         /// ローディング開始時に呼ばれます。

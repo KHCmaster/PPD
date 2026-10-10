@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PPDExpansion.WeakEventing;
+using System;
 using System.Collections;
 using System.Collections.Specialized;
 using System.Windows;
@@ -9,13 +10,13 @@ namespace PPDExpansion.Control
 {
     public class MultiChart : Chart
     {
-        private CollectionChangedWeakEventSource _sourceChanged;
+        private readonly CollectionChangedWeakEventSource _sourceChanged;
 
         public MultiChart()
         {
             // setup wrapper for CollectionChanged
             _sourceChanged = new CollectionChangedWeakEventSource();
-            _sourceChanged.CollectionChanged += sourceCollectionChanged_CollectionChanged;
+            _sourceChanged.CollectionChanged += SourceCollectionChanged_CollectionChanged;
         }
 
         #region SeriesSource (DependencyProperty)
@@ -117,7 +118,7 @@ namespace PPDExpansion.Control
             }
         }
 
-        void sourceCollectionChanged_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        void SourceCollectionChanged_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
 
             switch (e.Action)

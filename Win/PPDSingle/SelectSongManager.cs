@@ -15,7 +15,7 @@ namespace PPDSingle
         {
             public int Index;
 
-            private static SelectInfo zero = new SelectInfo();
+            private static readonly SelectInfo zero = new();
             public static SelectInfo Zero
             {
                 get
@@ -61,9 +61,9 @@ namespace PPDSingle
         LogicFolderInfomation currentLogicRoot;
         ListInfo currentList;
 
-        ContestInfo contestInfo;
-        WebSongInformation[] activeScores;
-        ListInfo[] listInfos;
+        readonly ContestInfo contestInfo;
+        readonly WebSongInformation[] activeScores;
+        readonly ListInfo[] listInfos;
 
         bool updateFlag;
 
@@ -204,37 +204,29 @@ namespace PPDSingle
         {
             get
             {
-                switch (mode)
+                return mode switch
                 {
-                    case Mode.SongInfo:
-                        return songSelect;
-                    case Mode.LogicFolder:
-                        return logicSelect;
-                    case Mode.Contest:
-                        return contestSelect;
-                    case Mode.ActiveScore:
-                        return activeScoreSelect;
-                    case Mode.List:
-                        return listInfoSelect;
-                }
-                return SelectInfo.Zero;
+                    Mode.SongInfo => songSelect,
+                    Mode.LogicFolder => logicSelect,
+                    Mode.Contest => contestSelect,
+                    Mode.ActiveScore => activeScoreSelect,
+                    Mode.List => listInfoSelect,
+                    _ => SelectInfo.Zero,
+                };
             }
         }
 
         private void OnSongChanged(SongChangeMode songChangeMode)
         {
-            if (SongChanged != null)
-            {
-                SongChanged.Invoke(songChangeMode);
-            }
+            SongChanged?.Invoke(songChangeMode);
         }
         private void OnDirectoryChanged()
         {
-            if (DirectoryChanged != null) DirectoryChanged.Invoke(this, EventArgs.Empty);
+            DirectoryChanged?.Invoke(this, EventArgs.Empty);
         }
         private void OnModeChanged()
         {
-            if (ModeChanged != null) ModeChanged.Invoke(this, EventArgs.Empty);
+            ModeChanged?.Invoke(this, EventArgs.Empty);
         }
 
         public SongInformation CurrentRoot
@@ -317,20 +309,15 @@ namespace PPDSingle
         {
             get
             {
-                switch (mode)
+                return mode switch
                 {
-                    case Mode.SongInfo:
-                        return songSelects;
-                    case Mode.LogicFolder:
-                        return logicSelects;
-                    case Mode.Contest:
-                        return contestSelects;
-                    case Mode.ActiveScore:
-                        return activeScoreSelects;
-                    case Mode.List:
-                        return listInfoSelects;
-                }
-                return null;
+                    Mode.SongInfo => songSelects,
+                    Mode.LogicFolder => logicSelects,
+                    Mode.Contest => contestSelects,
+                    Mode.ActiveScore => activeScoreSelects,
+                    Mode.List => listInfoSelects,
+                    _ => null,
+                };
             }
         }
 
@@ -344,20 +331,15 @@ namespace PPDSingle
         {
             get
             {
-                switch (mode)
+                return mode switch
                 {
-                    case Mode.SongInfo:
-                        return songSelects.Length;
-                    case Mode.LogicFolder:
-                        return logicSelects.Length;
-                    case Mode.Contest:
-                        return contestSelects.Length;
-                    case Mode.ActiveScore:
-                        return activeScoreSelects.Length;
-                    case Mode.List:
-                        return listInfoSelects.Length;
-                }
-                return 0;
+                    Mode.SongInfo => songSelects.Length,
+                    Mode.LogicFolder => logicSelects.Length,
+                    Mode.Contest => contestSelects.Length,
+                    Mode.ActiveScore => activeScoreSelects.Length,
+                    Mode.List => listInfoSelects.Length,
+                    _ => 0,
+                };
             }
         }
 
@@ -445,7 +427,7 @@ namespace PPDSingle
 
         public void GenerateSelectSongs()
         {
-            songSelects = Filter.GetFiltered(CurrentRoot.Children).Select(info => new SelectedSongInfo(info)).ToArray();
+            songSelects = [.. Filter.GetFiltered(CurrentRoot.Children).Select(info => new SelectedSongInfo(info))];
         }
 
         public void GenerateSelectLogics()
@@ -468,7 +450,7 @@ namespace PPDSingle
             }
             else
             {
-                contestSelects = new ContestSelectedSongInfo[0];
+                contestSelects = [];
             }
         }
 
@@ -476,11 +458,11 @@ namespace PPDSingle
         {
             if (activeScores != null)
             {
-                activeScoreSelects = activeScores.Select(a => new ActiveScoreSelectedSongInfo(a)).ToArray();
+                activeScoreSelects = [.. activeScores.Select(a => new ActiveScoreSelectedSongInfo(a))];
             }
             else
             {
-                activeScoreSelects = new ActiveScoreSelectedSongInfo[0];
+                activeScoreSelects = [];
             }
         }
 
@@ -488,11 +470,11 @@ namespace PPDSingle
         {
             if (CurrentList != null)
             {
-                listInfoSelects = CurrentList.Scores.Select(s => new ListInfoSelectedSongInfo(s)).ToArray();
+                listInfoSelects = [.. CurrentList.Scores.Select(s => new ListInfoSelectedSongInfo(s))];
             }
             else
             {
-                listInfoSelects = listInfos.Select(l => new ListInfoSelectedSongInfo(l)).ToArray();
+                listInfoSelects = [.. listInfos.Select(l => new ListInfoSelectedSongInfo(l))];
             }
             listInfoSelects = new SelectedSongInfoFilter(Filter).GetFiltered<ListInfoSelectedSongInfo>(listInfoSelects);
         }
@@ -649,7 +631,7 @@ namespace PPDSingle
         {
             if (CurrentMode == Mode.SongInfo)
             {
-                var songs = randomSelectType == RandomSelectType.InAll ? SongInformation.All : CurrentRoot.Children.Where(s => s.IsPPDSong).ToArray();
+                var songs = randomSelectType == RandomSelectType.InAll ? SongInformation.All : [.. CurrentRoot.Children.Where(s => s.IsPPDSong)];
                 var linkAll = Filter.GetFiltered(songs).Select(info => new SelectedSongInfo(info)).ToArray();
                 if (linkAll.Length == 0)
                 {
@@ -666,7 +648,7 @@ namespace PPDSingle
             }
             else if (CurrentMode == Mode.LogicFolder)
             {
-                var links = randomSelectType == RandomSelectType.InAll ? LogicFolderInfomation.All : CurrentLogicRoot.Children.Where(l => !l.IsFolder).ToArray();
+                var links = randomSelectType == RandomSelectType.InAll ? LogicFolderInfomation.All : [.. CurrentLogicRoot.Children.Where(l => !l.IsFolder)];
                 var linkAll = links.Select(info => new LogicSelectedSongInfo(info)).ToArray();
                 if (linkAll.Length == 0)
                 {
@@ -759,19 +741,14 @@ namespace PPDSingle
         {
             get
             {
-                switch (mode)
+                return mode switch
                 {
-                    case Mode.SongInfo:
-                        return CurrentRoot.Parent != null;
-                    case Mode.LogicFolder:
-                        return CurrentLogicRoot.Parent != null;
-                    case Mode.Contest:
-                    case Mode.ActiveScore:
-                        return false;
-                    case Mode.List:
-                        return CurrentList != null;
-                }
-                return false;
+                    Mode.SongInfo => CurrentRoot.Parent != null,
+                    Mode.LogicFolder => CurrentLogicRoot.Parent != null,
+                    Mode.Contest or Mode.ActiveScore => false,
+                    Mode.List => CurrentList != null,
+                    _ => false,
+                };
             }
         }
     }

@@ -37,11 +37,7 @@ namespace FlowScriptDrawControl.Control
                 {
                     try
                     {
-                        var source = SelectionSerializer.DeserializeSource(node, OnGetSource);
-                        if (source == null)
-                        {
-                            throw new Exception(String.Format("Invalid FullName. FullName:{0}", node.Attributes["FullName"].Value));
-                        }
+                        var source = SelectionSerializer.DeserializeSource(node, OnGetSource) ?? throw new Exception(String.Format("Invalid FullName. FullName:{0}", node.Attributes["FullName"].Value));
                         var temp = CreateSource(source);
                         var control = AddSourceAtImpl(temp);
                         sourceDicts.Add(source.Id, control);
@@ -125,7 +121,7 @@ namespace FlowScriptDrawControl.Control
                         parentScopeIdList.Add(scopeControl, scope.ParentScopeId);
                     }
                 }
-                SolveScopeDependencyAndAdd(parentScopeIdList, addedScopes.ToArray());
+                SolveScopeDependencyAndAdd(parentScopeIdList, [.. addedScopes]);
                 foreach (SourceControl source in GetAllSourceControls())
                 {
                     try
@@ -134,12 +130,8 @@ namespace FlowScriptDrawControl.Control
                         {
                             continue;
                         }
-                        var scope = GetScopeById(source.CurrentSource.ScopeId);
-                        if (scope == null)
-                        {
-                            throw new Exception(String.Format("Scope Not Found:Scope ID:{0}, SourceID:{1}",
+                        var scope = GetScopeById(source.CurrentSource.ScopeId) ?? throw new Exception(String.Format("Scope Not Found:Scope ID:{0}, SourceID:{1}",
                                 source.CurrentSource.ScopeId, source.CurrentSource.Id));
-                        }
                         var command = new AddSelectableToScopeCommand(this, scope, source);
                         commandManager.AddCommand(command);
                     }
@@ -156,11 +148,7 @@ namespace FlowScriptDrawControl.Control
                         {
                             continue;
                         }
-                        var scope = GetScopeById(comment.CurrentComment.ScopeId);
-                        if (scope == null)
-                        {
-                            throw new Exception(String.Format("Scope Not Found:Scope ID:{0}", comment.CurrentComment.ScopeId));
-                        }
+                        var scope = GetScopeById(comment.CurrentComment.ScopeId) ?? throw new Exception(String.Format("Scope Not Found:Scope ID:{0}", comment.CurrentComment.ScopeId));
                         var command = new AddSelectableToScopeCommand(this, scope, comment);
                         commandManager.AddCommand(command);
                     }
@@ -174,14 +162,14 @@ namespace FlowScriptDrawControl.Control
             {
                 commandManager.Clear();
                 UpdateMaxId();
-                errorList = errors.ToArray();
+                errorList = [.. errors];
                 Utility.IsLoading = false;
             }
         }
 
         class ScopeNode
         {
-            private List<ScopeNode> nexts;
+            private readonly List<ScopeNode> nexts;
 
             public ScopeControl ScopeControl
             {
@@ -191,7 +179,7 @@ namespace FlowScriptDrawControl.Control
 
             public ScopeNode()
             {
-                nexts = new List<ScopeNode>();
+                nexts = [];
             }
 
             public void AddNext(ScopeNode scopeNode)
@@ -227,10 +215,7 @@ namespace FlowScriptDrawControl.Control
             foreach (KeyValuePair<ScopeControl, int> kvp in parentScopeIdList)
             {
                 var scopeNode = new ScopeNode { ScopeControl = kvp.Key };
-                if (!nodes.ContainsKey(kvp.Key.CurrentScope.Id))
-                {
-                    nodes.Add(kvp.Key.CurrentScope.Id, scopeNode);
-                }
+                nodes.TryAdd(kvp.Key.CurrentScope.Id, scopeNode);
             }
             foreach (KeyValuePair<ScopeControl, int> kvp in parentScopeIdList)
             {
@@ -243,7 +228,7 @@ namespace FlowScriptDrawControl.Control
             }
         }
 
-        private XmlNodeList SelectSingleNodeChildren(XmlDocument document, string xPath)
+        private static XmlNodeList SelectSingleNodeChildren(XmlDocument document, string xPath)
         {
             var node = document.DocumentElement.SelectSingleNode(xPath);
             return node == null ? document.DocumentElement.SelectNodes("//ablawuasdsdgkhasfodjjdfk") : node.ChildNodes;

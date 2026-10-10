@@ -1,7 +1,13 @@
-﻿using PPDEditor.Controls;
+﻿using PPDEditor.ViewModels.Docks;
+using PPDEditor.Controls;
+using PPDEditor.Forms;
 using PPDFramework;
 using System;
-using System.Drawing;
+using System.Globalization;
+using System.Windows;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using Color = System.Drawing.Color;
 
 namespace PPDEditor
 {
@@ -9,60 +15,57 @@ namespace PPDEditor
     {
         public const int CircleWidth = 10;
 
-        //Pens and Brush
-        Brush area = Brushes.LightGray;
-        Pen border = Pens.Gray;
-        Brush text = Brushes.Black;
-        Pen hline = Pens.Gray;
-        Pen time = Pens.Red;
-        Pen vline1 = Pens.DarkSlateGray;
-        Pen vline2 = Pens.Silver;
-        Pen vline3 = new Pen(Color.FromArgb(204, 204, 204));
-        Pen vline4 = Pens.Green;
-        Pen vline5 = Pens.LightGreen;
-        Brush selection = Brushes.SkyBlue;
-        Brush mark = Brushes.Black;
-        Brush selectedmark = Brushes.Blue;
-        Brush diffmark = new SolidBrush(Color.FromArgb(128, 0, 0, 0));
-        Brush holdExtent = new SolidBrush(Color.Orange);
+        /// <summary>
+        /// イベント、サウンド、歌詞の変化の印です。
+        /// </summary>
+        public static readonly ImageSource EventMark = LoadImage("eventmark");
+        public static readonly ImageSource SoundMark = LoadImage("soundmark");
+        public static readonly ImageSource LylicsMark = LoadImage("lylicsmark");
 
-        public void Draw(TimeLineDrawParameter parameter)
+        static readonly Typeface numberTypeface = new(new FontFamily("ＭＳ ゴシック"), FontStyles.Normal, FontWeights.Normal, FontStretches.Normal);
+
+        private static ImageSource LoadImage(string name)
+        {
+            var image = new BitmapImage(new Uri(String.Format("pack://application:,,,/PPDEditor;component/img/{0}.png", name)));
+            image.Freeze();
+            return image;
+        }
+
+        public static void Draw(TimeLineDrawParameter parameter)
         {
             if (parameter == null)
             {
                 return;
             }
 
-            area = new SolidBrush(PPDEditorSkin.Skin.TimeLineSeekAreaColor);
-            border = new Pen(PPDEditorSkin.Skin.TimeLineSeekAreaBorderColor);
-            text = new SolidBrush(PPDEditorSkin.Skin.TimeLineTextColor);
-            hline = new Pen(PPDEditorSkin.Skin.TimeLineHorizontalLineColor);
-            time = new Pen(PPDEditorSkin.Skin.TimeLineCurrentTimeColor);
-            vline1 = new Pen(PPDEditorSkin.Skin.TimeLineVerticalLineColor1);
-            vline2 = new Pen(PPDEditorSkin.Skin.TimeLineVerticalLineColor2);
-            vline3 = new Pen(PPDEditorSkin.Skin.TimeLineVerticalLineColor3);
-            vline4 = new Pen(PPDEditorSkin.Skin.TimeLineVerticalLineColor4);
-            vline5 = new Pen(PPDEditorSkin.Skin.TimeLineVerticalLineColor5);
-            selection = new SolidBrush(PPDEditorSkin.Skin.TimeLineSelectionAreaColor);
-            selectedmark = new SolidBrush(PPDEditorSkin.Skin.TimeLineSelectedMarkColor);
-            holdExtent = new SolidBrush(PPDEditorSkin.Skin.TimeLineHoldExtentColor);
+            var dc = parameter.DrawingContext;
+            var skin = PPDEditorSkin.Skin;
+            var area = ToBrush(skin.TimeLineSeekAreaColor);
+            var border = ToPen(skin.TimeLineSeekAreaBorderColor);
+            var text = ToBrush(skin.TimeLineTextColor);
+            var hline = ToPen(skin.TimeLineHorizontalLineColor);
+            var time = ToPen(skin.TimeLineCurrentTimeColor);
+            var vline1 = ToPen(skin.TimeLineVerticalLineColor1);
+            var vline2 = ToPen(skin.TimeLineVerticalLineColor2);
+            var vline3 = ToPen(skin.TimeLineVerticalLineColor3);
+            var vline4 = ToPen(skin.TimeLineVerticalLineColor4);
+            var vline5 = ToPen(skin.TimeLineVerticalLineColor5);
+            var selection = ToBrush(skin.TimeLineSelectionAreaColor);
+            var selectedmark = ToBrush(skin.TimeLineSelectedMarkColor);
+            var holdExtent = ToBrush(skin.TimeLineHoldExtentColor);
+            var black = ToPen(Color.Black);
 
-            parameter.Graphics.FillRectangle(Brushes.White, new Rectangle(0, 0, parameter.Width, parameter.Height));
-            if (parameter.BackGroundImage != null && parameter.Width > 0 && parameter.Height > 0)
-            {
-                parameter.Graphics.DrawImage(parameter.BackGroundImage, 0, 0);
-            }
-            parameter.Graphics.FillRectangle(area, 0, 0, parameter.Width, PPDEditorSkin.Skin.TimeLineHeight);
-            parameter.Graphics.DrawLine(border, 0, PPDEditorSkin.Skin.TimeLineHeight - 1, parameter.Width, PPDEditorSkin.Skin.TimeLineHeight - 1);
+            dc.DrawRectangle(parameter.Background, null, new Rect(0, 0, parameter.Width, parameter.Height));
+            dc.DrawRectangle(area, null, new Rect(0, 0, parameter.Width, skin.TimeLineHeight));
+            DrawLine(dc, border, 0, skin.TimeLineHeight - 1, parameter.Width, skin.TimeLineHeight - 1);
             var rows = WindowUtility.TimeLineForm.RowManager.OrderedVisibleRows;
             var visibles = WindowUtility.TimeLineForm.RowManager.Visibilities;
             //hline
             int iter = 0;
             foreach (var row in rows)
             {
-                parameter.Graphics.FillRectangle(PPDEditorSkin.Skin.TimeLineBackGroundColors[row],
-                       new Rectangle(0, PPDEditorSkin.Skin.TimeLineHeight + PPDEditorSkin.Skin.TimeLineRowHeight * iter + 1,
-                           parameter.Width, PPDEditorSkin.Skin.TimeLineRowHeight));
+                dc.DrawRectangle(GetRowBrush(row), null,
+                    new Rect(0, skin.TimeLineHeight + skin.TimeLineRowHeight * iter + 1, parameter.Width, skin.TimeLineRowHeight));
                 iter++;
             }
             if (parameter.Sheet != null)
@@ -74,24 +77,28 @@ namespace PPDEditor
                     float width = Math.Abs(parameter.Sheet.RecStart.X - parameter.Sheet.RecEnd.X) * parameter.BPM / 60 * parameter.Interval;
                     int starty = (parameter.Sheet.RecStart.Y <= parameter.Sheet.RecEnd.Y ? parameter.Sheet.RecStart.Y : parameter.Sheet.RecEnd.Y);
                     var height = Math.Min(rows.Length, Math.Abs(parameter.Sheet.RecStart.Y - parameter.Sheet.RecEnd.Y) + 1);
-                    parameter.Graphics.FillRectangle(selection, startx - parameter.LeftOffset,
-                          starty * (PPDEditorSkin.Skin.TimeLineRowHeight) + PPDEditorSkin.Skin.TimeLineHeight,
-                          width, height * (PPDEditorSkin.Skin.TimeLineRowHeight) + 1);
+                    dc.DrawRectangle(selection, null, new Rect(startx - parameter.LeftOffset,
+                        starty * skin.TimeLineRowHeight + skin.TimeLineHeight,
+                        width, height * skin.TimeLineRowHeight + 1));
                 }
             }
             iter = 0;
             foreach (var row in rows)
             {
-                parameter.Graphics.DrawLine(hline, 0,
-                    PPDEditorSkin.Skin.TimeLineHeight + PPDEditorSkin.Skin.TimeLineRowHeight * (iter + 1),
-                    parameter.Width, PPDEditorSkin.Skin.TimeLineHeight + PPDEditorSkin.Skin.TimeLineRowHeight * (iter + 1));
+                var y = skin.TimeLineHeight + skin.TimeLineRowHeight * (iter + 1);
+                DrawLine(dc, hline, 0, y, parameter.Width, y);
                 iter++;
             }
             int offset = -(int)(parameter.BPMStart * parameter.Interval / parameter.BPM);
             int startpos = offset + parameter.LeftOffset;
             int startcount = startpos / parameter.Interval;
             int startdrawpos = startcount * parameter.Interval - startpos;
-            var font = new System.Drawing.Font("ＭＳ ゴシック", 10);
+            // 以前の GDI の 10 ポイント
+            const double fontSize = 10 * 96.0 / 72;
+            void VLine(Pen pen, int x, int top)
+            {
+                DrawLine(dc, pen, x, top, x, parameter.Height);
+            }
             for (int i = 0; i * parameter.Interval + startdrawpos < parameter.Width; i++)
             {
                 if (parameter.DisplayMode <= DisplayLineMode.SixtyFourth)
@@ -100,24 +107,24 @@ namespace PPDEditor
                     {
                         if (parameter.DisplayMode >= DisplayLineMode.Fourth && j == 0)
                         {
-                            parameter.Graphics.DrawLine(vline1, startdrawpos + parameter.Interval * (4 * i + j) / 4, 0, startdrawpos + parameter.Interval * (4 * i + j) / 4, parameter.Height);
+                            VLine(vline1, startdrawpos + parameter.Interval * (4 * i + j) / 4, 0);
                         }
                         if (parameter.DisplayMode >= DisplayLineMode.Eigth && j == 2)
                         {
-                            parameter.Graphics.DrawLine(vline2, startdrawpos + parameter.Interval * (4 * i + j) / 4, 0, startdrawpos + parameter.Interval * (4 * i + j) / 4, parameter.Height);
+                            VLine(vline2, startdrawpos + parameter.Interval * (4 * i + j) / 4, 0);
                         }
                         if (parameter.DisplayMode >= DisplayLineMode.Sixteenth && (j == 1 || j == 3))
                         {
-                            parameter.Graphics.DrawLine(vline3, startdrawpos + parameter.Interval * (4 * i + j) / 4, 0, startdrawpos + parameter.Interval * (4 * i + j) / 4, parameter.Height);
+                            VLine(vline3, startdrawpos + parameter.Interval * (4 * i + j) / 4, 0);
                         }
                         if (parameter.DisplayMode >= DisplayLineMode.ThirtySecond)
                         {
-                            parameter.Graphics.DrawLine(vline4, startdrawpos + parameter.Interval * (8 * i + j * 2 + 1) / 8, 10, startdrawpos + parameter.Interval * (8 * i + j * 2 + 1) / 8, parameter.Height);
+                            VLine(vline4, startdrawpos + parameter.Interval * (8 * i + j * 2 + 1) / 8, 10);
                         }
                         if (parameter.DisplayMode >= DisplayLineMode.SixtyFourth)
                         {
-                            parameter.Graphics.DrawLine(vline5, startdrawpos + parameter.Interval * (16 * i + j * 4 + 1) / 16, 10, startdrawpos + parameter.Interval * (16 * i + j * 4 + 1) / 16, parameter.Height);
-                            parameter.Graphics.DrawLine(vline5, startdrawpos + parameter.Interval * (16 * i + j * 4 + 3) / 16, 10, startdrawpos + parameter.Interval * (16 * i + j * 4 + 3) / 16, parameter.Height);
+                            VLine(vline5, startdrawpos + parameter.Interval * (16 * i + j * 4 + 1) / 16, 10);
+                            VLine(vline5, startdrawpos + parameter.Interval * (16 * i + j * 4 + 3) / 16, 10);
                         }
                     }
                 }
@@ -127,40 +134,40 @@ namespace PPDEditor
                     {
                         if (j == 0)
                         {
-                            parameter.Graphics.DrawLine(vline1, startdrawpos + parameter.Interval * (4 * i + j) / 4, 0, startdrawpos + parameter.Interval * (4 * i + j) / 4, parameter.Height);
+                            VLine(vline1, startdrawpos + parameter.Interval * (4 * i + j) / 4, 0);
                         }
                         if (parameter.DisplayMode >= DisplayLineMode.Twelfth && (j == 1 || j == 2))
                         {
-                            parameter.Graphics.DrawLine(vline2, startdrawpos + parameter.Interval * (3 * i + j) / 3, 0, startdrawpos + parameter.Interval * (3 * i + j) / 3, parameter.Height);
+                            VLine(vline2, startdrawpos + parameter.Interval * (3 * i + j) / 3, 0);
                         }
                         if (parameter.DisplayMode >= DisplayLineMode.TwentyFourth)
                         {
-                            parameter.Graphics.DrawLine(vline3, startdrawpos + parameter.Interval * (6 * i + j * 2 + 1) / 6, 0, startdrawpos + parameter.Interval * (6 * i + j * 2 + 1) / 6, parameter.Height);
+                            VLine(vline3, startdrawpos + parameter.Interval * (6 * i + j * 2 + 1) / 6, 0);
                         }
                         if (parameter.DisplayMode >= DisplayLineMode.FourthEighth)
                         {
-                            parameter.Graphics.DrawLine(vline4, startdrawpos + parameter.Interval * (12 * i + j * 4 + 1) / 12, 10, startdrawpos + parameter.Interval * (12 * i + j * 4 + 1) / 12, parameter.Height);
-                            parameter.Graphics.DrawLine(vline4, startdrawpos + parameter.Interval * (12 * i + j * 4 + 3) / 12, 10, startdrawpos + parameter.Interval * (12 * i + j * 4 + 3) / 12, parameter.Height);
+                            VLine(vline4, startdrawpos + parameter.Interval * (12 * i + j * 4 + 1) / 12, 10);
+                            VLine(vline4, startdrawpos + parameter.Interval * (12 * i + j * 4 + 3) / 12, 10);
                         }
                     }
                 }
                 int count = (startcount + i).ToString().Length;
                 if ((startcount + i) % parameter.BeatSplitCount == 0)
                 {
-                    parameter.Graphics.DrawString(((startcount + i) / parameter.BeatSplitCount).ToString(), font, text, new PointF(i * parameter.Interval + startdrawpos - font.GetHeight() / 2 * count / 2, 0));
+                    var formatted = CreateText(((startcount + i) / parameter.BeatSplitCount).ToString(), numberTypeface, fontSize, text);
+                    dc.DrawText(formatted, new Point(i * parameter.Interval + startdrawpos - formatted.Height / 2 * count / 2, 0));
                 }
             }
-            font.Dispose();
             float drawstarttime = (float)(parameter.LeftOffset - 10) / parameter.Interval / parameter.BPM * 60;
             float drawendtime = (float)(parameter.LeftOffset + parameter.Width + 10) / parameter.Interval / parameter.BPM * 60;
-            LayerDisplay[] layers = WindowUtility.LayerManager.AllLayerDisplay;
+            LayerViewModel[] layers = WindowUtility.LayerManager.AllLayerDisplay;
             if (layers != null)
             {
                 foreach (var layer in layers)
                 {
                     var sheet = layer.PPDData;
-                    mark = new SolidBrush(layer.MarkColor);
-                    diffmark = new SolidBrush(Color.FromArgb(64 * layer.MarkColor.A / 255, layer.MarkColor));
+                    var mark = ToBrush(layer.MarkColor);
+                    var diffmark = ToBrush(Color.FromArgb(64 * layer.MarkColor.A / 255, layer.MarkColor));
                     bool isSelectedLayer = sheet == WindowUtility.LayerManager.SelectedPpdSheet;
                     iter = 0;
                     foreach (var row in rows)
@@ -174,22 +181,15 @@ namespace PPDEditor
                             {
                                 continue;
                             }
-                            var exmk = mk as ExMark;
-                            if (exmk == null)
+                            var isFocused = isSelectedLayer && sheet.FocusedMark[0] == row && sheet.FocusedMark[1] == sheet.Data[row].IndexOfKey(f);
+                            var rowCenter = skin.TimeLineHeight + skin.TimeLineRowHeight * (iter + 0.5f);
+                            if (mk is not ExMark exmk)
                             {
                                 if (f >= drawstarttime && f <= drawendtime)
                                 {
-                                    if (isSelectedLayer && sheet.FocusedMark[0] == row && sheet.FocusedMark[1] == sheet.Data[row].IndexOfKey(f))
-                                    {
-                                        parameter.Graphics.FillEllipse(selectedmark, (f * parameter.BPM / 60 * parameter.Interval - parameter.LeftOffset) - CircleWidth / 2,
-                                            PPDEditorSkin.Skin.TimeLineHeight + PPDEditorSkin.Skin.TimeLineRowHeight * (iter + 0.5f) - CircleWidth / 2, CircleWidth, CircleWidth);
-                                    }
-                                    else
-                                    {
-                                        parameter.Graphics.FillEllipse(isSelectedLayer ? mark : diffmark, (f * parameter.BPM / 60 * parameter.Interval - parameter.LeftOffset) - CircleWidth / 2,
-                                            PPDEditorSkin.Skin.TimeLineHeight + PPDEditorSkin.Skin.TimeLineRowHeight * (iter + 0.5f) - CircleWidth / 2,
-                                            CircleWidth, CircleWidth);
-                                    }
+                                    var x = f * parameter.BPM / 60 * parameter.Interval - parameter.LeftOffset;
+                                    dc.DrawEllipse(isFocused ? selectedmark : (isSelectedLayer ? mark : diffmark), null,
+                                        new Point(x, rowCenter), CircleWidth / 2.0, CircleWidth / 2.0);
                                 }
                             }
                             else
@@ -198,14 +198,14 @@ namespace PPDEditor
                                 var holdExtentTime = f + 5 + PPDSetting.Setting.GoodArea;
                                 var drawHoldExtent = holdExtentTime >= drawstarttime && holdExtentTime <= drawendtime;
 
-                                if (WindowUtility.MainForm.ShowHoldExtent && (drawLongNote || drawHoldExtent))
+                                if (WindowUtility.Editor.ShowHoldExtent && (drawLongNote || drawHoldExtent))
                                 {
                                     if (!exmk.IsScratch && (exmk.NoteType == PPDFramework.NoteType.AC || exmk.NoteType == PPDFramework.NoteType.ACFT))
                                     {
                                         var hasNextTime = i + 1 < times.Count;
-                                        var height = PPDEditorSkin.Skin.TimeLineRowHeight - 3;
+                                        var height = skin.TimeLineRowHeight - 3;
                                         var rectX = f * parameter.BPM / 60 * parameter.Interval - parameter.LeftOffset;
-                                        var rectY = PPDEditorSkin.Skin.TimeLineHeight + PPDEditorSkin.Skin.TimeLineRowHeight * (iter + 0.5f) - height / 2;
+                                        var rectY = rowCenter - height / 2;
                                         var width = (5 + PPDSetting.Setting.GoodArea) * parameter.BPM / 60 * parameter.Interval;
                                         var nextX = float.MaxValue;
                                         if (hasNextTime)
@@ -216,49 +216,30 @@ namespace PPDEditor
                                                 width = nextX - rectX;
                                             }
                                         }
-                                        var rect = new Rectangle((int)rectX, (int)rectY, (int)width, height);
-                                        parameter.Graphics.FillRectangle(holdExtent, rect);
-                                        var x = (int)((f + 5 + PPDSetting.Setting.GoodArea) * parameter.BPM / 60 * parameter.Interval - parameter.LeftOffset);
-                                        if (nextX > x)
+                                        int top = (int)rectY, bottom = (int)rectY + height;
+                                        dc.DrawRectangle(holdExtent, null, new Rect((int)rectX, top, Math.Max(0, (int)width), height));
+                                        void HoldLine(float lineTime, int inset)
                                         {
-                                            parameter.Graphics.DrawLine(Pens.Black, x, rect.Top + 8, x, rect.Bottom - 8);
+                                            var x = (int)(lineTime * parameter.BPM / 60 * parameter.Interval - parameter.LeftOffset);
+                                            if (nextX > x)
+                                            {
+                                                DrawLine(dc, black, x, top + inset, x, bottom - inset);
+                                            }
                                         }
-                                        x = (int)((f + 5 + PPDSetting.Setting.CoolArea) * parameter.BPM / 60 * parameter.Interval - parameter.LeftOffset);
-                                        if (nextX > x)
-                                        {
-                                            parameter.Graphics.DrawLine(Pens.Black, x, rect.Top + 4, x, rect.Bottom - 4);
-                                        }
-                                        x = (int)((f + 5) * parameter.BPM / 60 * parameter.Interval - parameter.LeftOffset);
-                                        if (nextX > x)
-                                        {
-                                            parameter.Graphics.DrawLine(Pens.Black, x, rect.Top, x, rect.Bottom);
-                                        }
-                                        x = (int)((f + 5 - PPDSetting.Setting.CoolArea) * parameter.BPM / 60 * parameter.Interval - parameter.LeftOffset);
-                                        if (nextX > x)
-                                        {
-                                            parameter.Graphics.DrawLine(Pens.Black, x, rect.Top + 4, x, rect.Bottom - 4);
-                                        }
-                                        x = (int)((f + 5 - PPDSetting.Setting.GoodArea) * parameter.BPM / 60 * parameter.Interval - parameter.LeftOffset);
-                                        if (nextX > x)
-                                        {
-                                            parameter.Graphics.DrawLine(Pens.Black, x, rect.Top + 8, x, rect.Bottom - 8);
-                                        }
+                                        HoldLine(f + 5 + PPDSetting.Setting.GoodArea, 8);
+                                        HoldLine(f + 5 + PPDSetting.Setting.CoolArea, 4);
+                                        HoldLine(f + 5, 0);
+                                        HoldLine(f + 5 - PPDSetting.Setting.CoolArea, 4);
+                                        HoldLine(f + 5 - PPDSetting.Setting.GoodArea, 8);
                                     }
                                 }
 
                                 if (drawLongNote)
                                 {
-                                    var rect = new Rectangle((int)(f * parameter.BPM / 60 * parameter.Interval - parameter.LeftOffset),
-                                            (int)(PPDEditorSkin.Skin.TimeLineHeight + PPDEditorSkin.Skin.TimeLineRowHeight * (iter + 0.5f) - CircleWidth / 2),
-                                            (int)((exmk.EndTime - f) * parameter.BPM / 60 * parameter.Interval), CircleWidth);
-                                    if (isSelectedLayer && sheet.FocusedMark[0] == row && sheet.FocusedMark[1] == sheet.Data[row].IndexOfKey(f))
-                                    {
-                                        parameter.Graphics.FillRectangle(selectedmark, rect);
-                                    }
-                                    else
-                                    {
-                                        parameter.Graphics.FillRectangle(isSelectedLayer ? mark : diffmark, rect);
-                                    }
+                                    var rect = new Rect((int)(f * parameter.BPM / 60 * parameter.Interval - parameter.LeftOffset),
+                                        (int)(rowCenter - CircleWidth / 2),
+                                        Math.Max(0, (int)((exmk.EndTime - f) * parameter.BPM / 60 * parameter.Interval)), CircleWidth);
+                                    dc.DrawRectangle(isFocused ? selectedmark : (isSelectedLayer ? mark : diffmark), null, rect);
                                 }
                             }
                         }
@@ -269,30 +250,74 @@ namespace PPDEditor
             var events = WindowUtility.EventManager.GetEventsWithinTime(drawstarttime, drawendtime);
             foreach (float eventtime in events)
             {
-                DrawChange(parameter, eventtime, 0, rows.Length, PPDEditor.Properties.Resources.eventmark);
+                DrawChange(parameter, eventtime, 0, rows.Length, EventMark);
             }
             events = WindowUtility.SoundManager.GetSoundChangeWithinTime(drawstarttime, drawendtime);
             foreach (float eventtime in events)
             {
-                DrawChange(parameter, eventtime, 14, rows.Length, PPDEditor.Properties.Resources.soundmark);
+                DrawChange(parameter, eventtime, 14, rows.Length, SoundMark);
             }
             events = WindowUtility.KasiEditor.GetKasiChangeWithinTime(drawstarttime, drawendtime);
             foreach (float eventtime in events)
             {
-                DrawChange(parameter, eventtime, 28, rows.Length, PPDEditor.Properties.Resources.lylicsmark);
+                DrawChange(parameter, eventtime, 28, rows.Length, LylicsMark);
             }
             var pos = (float)(parameter.CurrentTime * parameter.BPM / 60 * parameter.Interval);
             if (pos - parameter.LeftOffset >= -5 && pos - parameter.LeftOffset <= parameter.Width + 5)
             {
-                parameter.Graphics.DrawLine(time, new PointF(pos - parameter.LeftOffset, PPDEditorSkin.Skin.TimeLineHeight), new PointF(pos - parameter.LeftOffset, parameter.Height));
-                parameter.Graphics.DrawRectangle(time, pos - 5 - parameter.LeftOffset, 0, 10, PPDEditorSkin.Skin.TimeLineHeight - 1);
+                var x = pos - parameter.LeftOffset;
+                dc.DrawLine(time, new Point(x + 0.5, skin.TimeLineHeight), new Point(x + 0.5, parameter.Height));
+                dc.DrawRectangle(null, time, new Rect(x - 5 + 0.5, 0.5, 10, skin.TimeLineHeight - 1));
             }
         }
 
-        private void DrawChange(TimeLineDrawParameter parameter, float time, int offset, int rowCount, Image image)
+        private static void DrawChange(TimeLineDrawParameter parameter, float time, int offset, int rowCount, ImageSource image)
         {
-            parameter.Graphics.DrawImage(image, new Point((int)((time * parameter.BPM / 60 * parameter.Interval - parameter.LeftOffset) - 8),
-                PPDEditorSkin.Skin.TimeLineHeight + PPDEditorSkin.Skin.TimeLineRowHeight * rowCount + offset));
+            DrawIcon(parameter.DrawingContext, image, (int)((time * parameter.BPM / 60 * parameter.Interval - parameter.LeftOffset) - 8),
+                PPDEditorSkin.Skin.TimeLineHeight + PPDEditorSkin.Skin.TimeLineRowHeight * rowCount + offset);
+        }
+
+        /// <summary>
+        /// 印の画像を、画素の数どおりの大きさで書く。
+        /// </summary>
+        public static void DrawIcon(DrawingContext dc, ImageSource image, double x, double y)
+        {
+            var bitmap = (BitmapSource)image;
+            dc.DrawImage(image, new Rect(x, y, bitmap.PixelWidth, bitmap.PixelHeight));
+        }
+
+        /// <summary>
+        /// 1 ピクセルの線を、画素からはみ出さないように書く。
+        /// </summary>
+        public static void DrawLine(DrawingContext dc, Pen pen, double x1, double y1, double x2, double y2)
+        {
+            dc.DrawLine(pen, new Point(x1 + 0.5, y1 + 0.5), new Point(x2 + 0.5, y2 + 0.5));
+        }
+
+        /// <summary>
+        /// スキンで決めた行の背景のブラシです。
+        /// </summary>
+        public static Brush GetRowBrush(int row)
+        {
+            var brush = PPDEditorSkin.Skin.TimeLineBackGroundColors[row] as System.Drawing.SolidBrush;
+            return ToBrush(brush?.Color ?? Color.White);
+        }
+
+        public static FormattedText CreateText(string value, Typeface typeface, double size, Brush brush)
+        {
+            return new FormattedText(value, CultureInfo.CurrentUICulture, FlowDirection.LeftToRight, typeface, size, brush, 1);
+        }
+
+        public static Brush ToBrush(Color color)
+        {
+            return WpfSkin.ToBrush(color);
+        }
+
+        public static Pen ToPen(Color color)
+        {
+            var pen = new Pen(ToBrush(color), 1);
+            pen.Freeze();
+            return pen;
         }
     }
 }

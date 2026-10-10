@@ -10,9 +10,8 @@ namespace PPDModSettingUI
 
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            var param = parameter as string;
-            bool val = value is bool ? (bool)value : value != null;
-            if (param != null && param == "Invert")
+            bool val = value is bool v ? v : value != null;
+            if (parameter is string param && param == "Invert")
             {
                 val = !val;
             }

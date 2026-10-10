@@ -6,22 +6,16 @@ namespace PPDFramework.Sprites
     /// <summary>
     /// PPDPackのスプライトマネージャークラスです。
     /// </summary>
-    public abstract class PPDPackSpriteManagerBase : SpriteManagerBase
+    /// <remarks>
+    /// コンストラクタです。
+    /// </remarks>
+    /// <param name="packReader"></param>
+    /// <param name="imageNames"></param>
+    /// <param name="spriteDirName"></param>
+    public abstract class PPDPackSpriteManagerBase(PackReader packReader, string[] imageNames, string spriteDirName) : SpriteManagerBase(spriteDirName)
     {
-        string[] imageNames;
-        PackReader packReader;
-
-        /// <summary>
-        /// コンストラクタです。
-        /// </summary>
-        /// <param name="packReader"></param>
-        /// <param name="imageNames"></param>
-        /// <param name="spriteDirName"></param>
-        protected PPDPackSpriteManagerBase(PackReader packReader, string[] imageNames, string spriteDirName) : base(spriteDirName)
-        {
-            this.packReader = packReader;
-            this.imageNames = imageNames;
-        }
+        readonly string[] imageNames = imageNames;
+        readonly PackReader packReader = packReader;
 
         /// <summary>
         /// 画像の情報の一覧を取得します。
@@ -34,7 +28,7 @@ namespace PPDFramework.Sprites
             {
                 ret.Add(new ImageInfo(imageName, () => packReader.Read(imageName)));
             }
-            return ret.ToArray();
+            return [.. ret];
         }
     }
 }

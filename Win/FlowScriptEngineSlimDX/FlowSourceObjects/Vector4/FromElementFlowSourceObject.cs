@@ -1,4 +1,5 @@
-﻿using FlowScriptEngine;
+﻿using PPDMath;
+using FlowScriptEngine;
 
 namespace FlowScriptEngineSlimDX.FlowSourceObjects.Vector4
 {
@@ -39,7 +40,7 @@ namespace FlowScriptEngineSlimDX.FlowSourceObjects.Vector4
         }
 
         [ToolTipText("Vector_FromElement_Value_Summary")]
-        public SharpDX.Vector4 Value
+        public System.Numerics.Vector4 Value
         {
             get
             {
@@ -47,7 +48,7 @@ namespace FlowScriptEngineSlimDX.FlowSourceObjects.Vector4
                 SetValue(nameof(Y));
                 SetValue(nameof(Z));
                 SetValue(nameof(W));
-                return new SharpDX.Vector4(X, Y, Z, W);
+                return new System.Numerics.Vector4(X, Y, Z, W);
             }
         }
     }

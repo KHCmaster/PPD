@@ -1,0 +1,24 @@
+<UserControl x:Class="PPDEditor.DockForm.Script.FlowLogPanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:PPDEditor.ViewModels.Docks"
+             xmlns:conv="clr-namespace:PPDEditor.Converters"
+             mc:Ignorable="d" d:DataContext="{d:DesignInstance Type=vm:FlowLogViewModel}">
+    <UserControl.Resources>
+        <conv:BindingProxy x:Key="Proxy" Data="{Binding}" />
+    </UserControl.Resources>
+    <DockPanel>
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="{Binding Texts[Clear]}" Command="{Binding ClearCommand}" />
+        </Menu>
+        <DataGrid x:Name="logGrid" ItemsSource="{Binding Logs}" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column"
+                  CanUserSortColumns="False" CanUserAddRows="False">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="{Binding Data.Texts[LogType], Source={StaticResource Proxy}}" Binding="{Binding Key}" Width="*" />
+                <DataGridTextColumn Header="{Binding Data.Texts[Message], Source={StaticResource Proxy}}" Binding="{Binding Value}" Width="3*" />
+            </DataGrid.Columns>
+        </DataGrid>
+    </DockPanel>
+</UserControl>

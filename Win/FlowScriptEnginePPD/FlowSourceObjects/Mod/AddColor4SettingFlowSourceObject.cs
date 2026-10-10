@@ -1,4 +1,6 @@
-﻿using SharpDX;
+﻿using System.Numerics;
+using PPDMath;
+using Color4 = Vortice.Mathematics.Color4;
 
 namespace FlowScriptEnginePPD.FlowSourceObjects.Mod
 {
@@ -21,10 +23,7 @@ namespace FlowScriptEnginePPD.FlowSourceObjects.Mod
         {
             base.In(e);
             SetValue(nameof(Default));
-            if (modSettingManager != null)
-            {
-                modSettingManager.AddColor4Setting(Key, DisplayName, Description, Default);
-            }
+            modSettingManager?.AddColor4Setting(Key, DisplayName, Description, Default);
         }
     }
 }

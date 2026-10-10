@@ -28,10 +28,10 @@ namespace FlowScriptDrawControl.Control
         void CommentControl_Loaded(object sender, RoutedEventArgs e)
         {
             textEditManager = new TextEditManager(this, textBlock, textBox);
-            textEditManager.EnterEdit += textEditManager_EnterEdit;
+            textEditManager.EnterEdit += TextEditManager_EnterEdit;
         }
 
-        bool textEditManager_EnterEdit(object arg)
+        bool TextEditManager_EnterEdit(object arg)
         {
             return !IsMoved;
         }

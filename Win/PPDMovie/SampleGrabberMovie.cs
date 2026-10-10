@@ -135,15 +135,15 @@ namespace PPDMovie
 
                 videoWindow = (IVideoWindow)graphBuilder2;
 
-                hr = videoWindow.put_Visible((int)OABool.False);
+                hr = videoWindow.Put_Visible((int)OABool.False);
                 DsError.ThrowExceptionForHR(hr);
-                hr = videoWindow.put_WindowState((int)WindowState.Hide);
+                hr = videoWindow.Put_WindowState((int)WindowState.Hide);
                 DsError.ThrowExceptionForHR(hr);
                 hr = videoWindow.SetWindowPosition(-1000, -1000, 10, 10);
                 DsError.ThrowExceptionForHR(hr);
-                videoWindow.put_AutoShow((int)OABool.False);
+                videoWindow.Put_AutoShow((int)OABool.False);
                 DsError.ThrowExceptionForHR(hr);
-                hr = hr = videoWindow.put_Owner(MovieUtility.Window);
+                hr = hr = videoWindow.Put_Owner(MovieUtility.Window);
                 DsError.ThrowExceptionForHR(hr);
             }
             catch (Exception e)
@@ -153,7 +153,7 @@ namespace PPDMovie
             return 0;
         }
 
-        private IPin GetPin(IBaseFilter filter, string name)
+        private static IPin GetPin(IBaseFilter filter, string name)
         {
             filter.EnumPins(out IEnumPins enumPins);
             IntPtr ptr = IntPtr.Zero;
@@ -161,8 +161,7 @@ namespace PPDMovie
             while (true)
             {
                 enumPins.Next(1, pin, ptr);
-                var pinInfo = new PinInfo();
-                pin[0].QueryPinInfo(out pinInfo);
+                pin[0].QueryPinInfo(out PinInfo pinInfo);
                 if (pinInfo.name == name)
                 {
                     return pin[0];
@@ -170,7 +169,7 @@ namespace PPDMovie
             }
         }
 
-        public override void releaseCOM()
+        public override void ReleaseCOM()
         {
             if (Initialized)
             {
@@ -184,10 +183,7 @@ namespace PPDMovie
                     {
                         foreach (var texture in _textures)
                         {
-                            if (texture != null)
-                            {
-                                texture.Dispose();
-                            }
+                            texture?.Dispose();
                         }
                     }
                 })
@@ -227,7 +223,7 @@ namespace PPDMovie
                     Marshal.ReleaseComObject(videoRenderer); videoRenderer = null;
                 }
 
-                base.releaseCOM();
+                base.ReleaseCOM();
             }
         }
 

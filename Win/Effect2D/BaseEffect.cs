@@ -16,8 +16,8 @@ namespace Effect2D
         /// </summary>
         public BaseEffect()
         {
-            Effects = new List<IEffect>();
-            Sets = new SortedList<int, EffectStateRatioSet>();
+            Effects = [];
+            Sets = [];
         }
 
         /// <summary>
@@ -95,11 +95,15 @@ namespace Effect2D
                 return false;
             }
             EffectStateRatioSet set = Sets.Values[BinaryFinder.FindNearest(Sets.Keys, ref parentframe)];
-            CurrentState = set.StartState.GetMixedState(set.GetRatios(parentframe), set.EndState);
+            // 毎フレームの確保を避けるため、比は stackalloc で、状態は前のフレームのインスタンスに書き込む
+            Span<float> ratios = stackalloc float[Utility.RatioTypeArray.Length];
+            set.GetRatios(parentframe, ratios);
+            CurrentState ??= new EffectStateStructure();
+            CurrentState.SetMixedState(set.StartState, ratios, set.EndState);
             if (set.IsBezierPosition)
             {
                 var bratio = set.GetRatio(RatioType.BezierPosition, parentframe);
-                set.BAnalyzer.GetPoint(BezierCaliculator.BezierAnalyzer.MaxRatio * (1 - bratio), out PointF outp, out PointF outdir);
+                set.BAnalyzer.GetPoint(BezierCaliculator.BezierAnalyzer.MaxRatio * (1 - bratio), out PointF outp, out _);
                 CurrentState.X = outp.X;
                 CurrentState.Y = outp.Y;
             }

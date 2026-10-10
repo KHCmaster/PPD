@@ -1,80 +1,136 @@
-﻿using SharpDX;
-using SharpDX.Direct2D1;
-using SharpDX.DirectWrite;
-using SharpDX.DXGI;
-using SharpDX.WIC;
+﻿using System.Numerics;
+using Color4 = Vortice.Mathematics.Color4;
+using Vortice.DCommon;
+using Vortice.Direct2D1;
+using Vortice.DirectWrite;
+using Vortice.DXGI;
+using Vortice.WIC;
 using System;
 using System.IO;
 
 namespace PPDFramework.Chars
 {
-    class Direct2DImageEncoder
+    class Direct2DImageEncoder(int imageWidth, int imageHeight, int imageDpi) : IDisposable
     {
-        private readonly Direct2DFactoryManager factoryManager;
+        private readonly Direct2DFactoryManager factoryManager = new();
 
-        private readonly int imageWidth, imageHeight, imageDpi;
+        private readonly int imageWidth = imageWidth, imageHeight = imageHeight, imageDpi = imageDpi;
 
-        public Direct2DImageEncoder(int imageWidth, int imageHeight, int imageDpi)
+        // Direct2D のファクトリーはシングルスレッド用なので、描く処理は 1 つずつ行う（読み込みのスレッドと、文字を作るスレッドから呼ばれる）
+        private readonly System.Threading.Lock renderLock = new();
+        private bool disposed;
+
+        public void Dispose()
         {
-            this.imageWidth = imageWidth;
-            this.imageHeight = imageHeight;
-            this.imageDpi = imageDpi;
+            lock (renderLock)
+            {
+                disposed = true;
+                factoryManager.Dispose();
+            }
+        }
 
-            factoryManager = new Direct2DFactoryManager();
+        /// <summary>
+        /// 文字列を描いたときの大きさだけを求めます（描かないので軽い。DirectWrite のファクトリーはスレッドセーフ）。
+        /// </summary>
+        public void Measure(string text, string faceName, float fontSize, out int width, out int height)
+        {
+            using var textFormat = factoryManager.DwFactory.CreateTextFormat(faceName, fontSize * 1.3f);
+            using var layout = factoryManager.DwFactory.CreateTextLayout(text, textFormat, 4000, 4000);
+            GetSize(layout, out width, out height);
+        }
+
+        private static void GetSize(IDWriteTextLayout layout, out int width, out int height)
+        {
+            var metrics = layout.Metrics;
+            width = (int)Math.Ceiling(metrics.WidthIncludingTrailingWhitespace);
+            height = (int)Math.Ceiling(metrics.Height);
         }
 
         public void Save(Stream systemStream, Direct2DImageFormat format, string text, string faceName, float fontSize, out int width, out int height)
         {
 #if BENCHMARK
-            using (var handler = Benchmark.Instance.Start("DirectWrite", "Save"))
+            using var handler = Benchmark.Instance.Start("DirectWrite", "Save");
 #endif
-            using (var layout = new TextLayout(factoryManager.DwFactory, text, new TextFormat(factoryManager.DwFactory, faceName, fontSize * 1.3f), 4000, 4000))
+            using var renderScope = renderLock.EnterScope();
+            ObjectDisposedException.ThrowIf(disposed, this);
+            using var wicBitmap = Render(text, faceName, fontSize, out width, out height);
+            using var encoder = factoryManager.WicFactory.CreateEncoder(Direct2DConverter.ConvertImageFormat(format));
+            using var stream = factoryManager.WicFactory.CreateStream(systemStream);
+            encoder.Initialize(stream, BitmapEncoderCacheOption.NoCache);
+            using (var bitmapFrameEncode = encoder.CreateNewFrame(out var encoderOptions))
             {
-                width = (int)Math.Ceiling(layout.Metrics.WidthIncludingTrailingWhitespace);
-                height = (int)Math.Ceiling(layout.Metrics.Height);
-                using (var wicBitmap = new SharpDX.WIC.Bitmap(factoryManager.WicFactory, width, height, SharpDX.WIC.PixelFormat.Format32bppPRGBA, BitmapCreateCacheOption.CacheOnLoad))
-                {
-                    var renderTargetProperties = new RenderTargetProperties(RenderTargetType.Default,
-                        new SharpDX.Direct2D1.PixelFormat(Format.R8G8B8A8_UNorm, SharpDX.Direct2D1.AlphaMode.Unknown), imageDpi, imageDpi, RenderTargetUsage.None, FeatureLevel.Level_DEFAULT);
-                    using (var renderTarget = new WicRenderTarget(factoryManager.D2DFactory, wicBitmap, renderTargetProperties))
-                    using (var brush = new SolidColorBrush(renderTarget, SharpDX.Color.White))
-                    using (var encoder = new BitmapEncoder(factoryManager.WicFactory, Direct2DConverter.ConvertImageFormat(format)))
-                    {
-                        renderTarget.BeginDraw();
-                        renderTarget.Clear(new Color4(1, 1, 1, 0));
-                        renderTarget.DrawTextLayout(Vector2.Zero, layout, brush);
-                        renderTarget.EndDraw();
-                        var stream = new WICStream(factoryManager.WicFactory, systemStream);
-                        encoder.Initialize(stream);
-                        using (var bitmapFrameEncode = new BitmapFrameEncode(encoder))
-                        {
-                            bitmapFrameEncode.Initialize();
-                            bitmapFrameEncode.SetSize(width, height);
-                            bitmapFrameEncode.WriteSource(wicBitmap);
-                            bitmapFrameEncode.Commit();
-                        }
-                        encoder.Commit();
-                    }
-                }
+                encoderOptions?.Dispose();
+                bitmapFrameEncode.Initialize().CheckError();
+                bitmapFrameEncode.SetSize((uint)width, (uint)height).CheckError();
+                bitmapFrameEncode.WriteSource(wicBitmap).CheckError();
+                bitmapFrameEncode.Commit();
+            }
+            encoder.Commit();
+        }
+
+        /// <summary>
+        /// 文字列を描き、ストレートアルファの BGRA の画素（幅 × 4 バイトの行）を返します。
+        /// </summary>
+        /// <remarks>
+        /// PNG に保存して System.Drawing で読み直したときと同じ画素になるように、PNG のエンコーダーと同じく
+        /// WIC の形式の変換（乗算済み RGBA → ストレートの BGRA）を使う。
+        /// </remarks>
+        public byte[] RenderBgra(string text, string faceName, float fontSize, out int width, out int height)
+        {
+#if BENCHMARK
+            using var handler = Benchmark.Instance.Start("DirectWrite", "Render");
+#endif
+            using var renderScope = renderLock.EnterScope();
+            ObjectDisposedException.ThrowIf(disposed, this);
+            using var wicBitmap = Render(text, faceName, fontSize, out width, out height);
+            using var converter = factoryManager.WicFactory.CreateFormatConverter();
+            converter.Initialize(wicBitmap, Vortice.WIC.PixelFormat.Format32bppBGRA, BitmapDitherType.None, null, 0, BitmapPaletteType.Custom);
+            var pixels = new byte[width * height * 4];
+            converter.CopyPixels((uint)(width * 4), pixels);
+            return pixels;
+        }
+
+        private IWICBitmap Render(string text, string faceName, float fontSize, out int width, out int height)
+        {
+            using var textFormat = factoryManager.DwFactory.CreateTextFormat(faceName, fontSize * 1.3f);
+            using var layout = factoryManager.DwFactory.CreateTextLayout(text, textFormat, 4000, 4000);
+            GetSize(layout, out width, out height);
+            var wicBitmap = factoryManager.WicFactory.CreateBitmap((uint)width, (uint)height, Vortice.WIC.PixelFormat.Format32bppPRGBA, BitmapCreateCacheOption.CacheOnLoad);
+            try
+            {
+                var renderTargetProperties = new RenderTargetProperties(RenderTargetType.Default,
+                    new Vortice.DCommon.PixelFormat(Format.R8G8B8A8_UNorm, Vortice.DCommon.AlphaMode.Unknown), imageDpi, imageDpi, RenderTargetUsage.None, Vortice.Direct2D1.FeatureLevel.Default);
+                using var renderTarget = factoryManager.D2DFactory.CreateWicBitmapRenderTarget(wicBitmap, renderTargetProperties);
+                using var brush = renderTarget.CreateSolidColorBrush(new Color4(1f, 1f, 1f, 1f), null);
+                renderTarget.BeginDraw();
+                renderTarget.Clear(new Color4(1, 1, 1, 0));
+                renderTarget.DrawTextLayout(new Vector2(0, 0), layout, brush);
+                renderTarget.EndDraw().CheckError();
+                return wicBitmap;
+            }
+            catch
+            {
+                wicBitmap.Dispose();
+                throw;
             }
         }
     }
 }
 
-class Direct2DFactoryManager
+class Direct2DFactoryManager : IDisposable
 {
-    private readonly SharpDX.WIC.ImagingFactory wicFactory;
-    private readonly SharpDX.Direct2D1.Factory d2DFactory;
-    private readonly SharpDX.DirectWrite.Factory dwFactory;
+    private readonly IWICImagingFactory wicFactory;
+    private readonly ID2D1Factory d2DFactory;
+    private readonly IDWriteFactory dwFactory;
 
     public Direct2DFactoryManager()
     {
-        wicFactory = new SharpDX.WIC.ImagingFactory();
-        d2DFactory = new SharpDX.Direct2D1.Factory();
-        dwFactory = new SharpDX.DirectWrite.Factory();
+        wicFactory = new IWICImagingFactory();
+        d2DFactory = D2D1.D2D1CreateFactory<ID2D1Factory>(Vortice.Direct2D1.FactoryType.SingleThreaded, DebugLevel.None);
+        dwFactory = DWrite.DWriteCreateFactory<IDWriteFactory>(Vortice.DirectWrite.FactoryType.Shared);
     }
 
-    public SharpDX.WIC.ImagingFactory WicFactory
+    public IWICImagingFactory WicFactory
     {
         get
         {
@@ -82,7 +138,7 @@ class Direct2DFactoryManager
         }
     }
 
-    public SharpDX.Direct2D1.Factory D2DFactory
+    public ID2D1Factory D2DFactory
     {
         get
         {
@@ -90,12 +146,19 @@ class Direct2DFactoryManager
         }
     }
 
-    public SharpDX.DirectWrite.Factory DwFactory
+    public IDWriteFactory DwFactory
     {
         get
         {
             return dwFactory;
         }
+    }
+
+    public void Dispose()
+    {
+        dwFactory.Dispose();
+        d2DFactory.Dispose();
+        wicFactory.Dispose();
     }
 }
 
@@ -108,23 +171,16 @@ class Direct2DConverter
 {
     public static Guid ConvertImageFormat(Direct2DImageFormat format)
     {
-        switch (format)
+        return format switch
         {
-            case Direct2DImageFormat.Bmp:
-                return ContainerFormatGuids.Bmp;
-            case Direct2DImageFormat.Ico:
-                return ContainerFormatGuids.Ico;
-            case Direct2DImageFormat.Gif:
-                return ContainerFormatGuids.Gif;
-            case Direct2DImageFormat.Jpeg:
-                return ContainerFormatGuids.Jpeg;
-            case Direct2DImageFormat.Png:
-                return ContainerFormatGuids.Png;
-            case Direct2DImageFormat.Tiff:
-                return ContainerFormatGuids.Tiff;
-            case Direct2DImageFormat.Wmp:
-                return ContainerFormatGuids.Wmp;
-        }
-        throw new NotSupportedException();
+            Direct2DImageFormat.Bmp => ContainerFormatGuids.Bmp,
+            Direct2DImageFormat.Ico => ContainerFormatGuids.Ico,
+            Direct2DImageFormat.Gif => ContainerFormatGuids.Gif,
+            Direct2DImageFormat.Jpeg => ContainerFormatGuids.Jpeg,
+            Direct2DImageFormat.Png => ContainerFormatGuids.Png,
+            Direct2DImageFormat.Tiff => ContainerFormatGuids.Tiff,
+            Direct2DImageFormat.Wmp => ContainerFormatGuids.Wmp,
+            _ => throw new NotSupportedException(),
+        };
     }
 }

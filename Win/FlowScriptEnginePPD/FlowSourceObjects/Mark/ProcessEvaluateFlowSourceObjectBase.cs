@@ -1,6 +1,7 @@
 ﻿using FlowScriptEngine;
 using PPDCoreModel;
-using SharpDX;
+using System.Numerics;
+using PPDMath;
 using System.Collections.Generic;
 
 namespace FlowScriptEnginePPD.FlowSourceObjects.Mark
@@ -36,7 +37,7 @@ namespace FlowScriptEnginePPD.FlowSourceObjects.Mark
         public abstract int Priority { get; }
 
         [ToolTipText("Mark_ProcessEvalute_Position")]
-        public SharpDX.Vector2 Position
+        public System.Numerics.Vector2 Position
         {
             get;
             private set;

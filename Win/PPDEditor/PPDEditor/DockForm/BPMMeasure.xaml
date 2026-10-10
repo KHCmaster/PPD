@@ -1,0 +1,34 @@
+<forms:DockView x:Class="PPDEditor.BPMMeasure"
+                xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                xmlns:forms="clr-namespace:PPDEditor.Forms"
+                xmlns:vm="clr-namespace:PPDEditor.ViewModels.Docks"
+                mc:Ignorable="d" d:DataContext="{d:DesignInstance Type=vm:BPMMeasureViewModel}"
+                PreviewKeyDown="BPMMeasure_KeyDown" PreviewKeyUp="BPMMeasure_KeyUp">
+    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+        <!-- 文字の色はスキンに合わせる（SetSkin で Foreground を変え、TextBlock が受け継ぐ） -->
+        <Grid x:Name="contentGrid" Margin="14,14,0,0" HorizontalAlignment="Left" VerticalAlignment="Top">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" MinWidth="130" />
+                <ColumnDefinition Width="Auto" MinWidth="60" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="22" />
+                <RowDefinition Height="22" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <TextBlock Text="{Binding Texts[BMLabel1]}" VerticalAlignment="Center" />
+            <TextBlock Grid.Column="1" Text="{Binding Interval}" VerticalAlignment="Center" />
+            <TextBlock Grid.Row="1" Text="{Binding Texts[BMLabel2]}" VerticalAlignment="Center" />
+            <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding Bpm}" VerticalAlignment="Center" />
+            <StackPanel Grid.Row="2" Grid.ColumnSpan="2" Orientation="Horizontal" Margin="2,8,0,0">
+                <!-- 押したときに数える（以前と同じく、離したときではない） -->
+                <Button Content="{Binding Texts[BMButton1]}" MinWidth="75" Height="23" PreviewMouseLeftButtonDown="TapButton_MouseDown" />
+                <!-- フォーカスを取らないので、キーはビートを打つボタンに行く -->
+                <Button Content="{Binding Texts[BMButton2]}" MinWidth="75" Height="23" Margin="54,0,0,0" Focusable="False" Command="{Binding ClearCommand}" />
+            </StackPanel>
+        </Grid>
+    </ScrollViewer>
+</forms:DockView>

@@ -1,18 +1,17 @@
-float2 WidthHeight;
-float Weights[32];
-float4x4 Projection;
+#include "Common.fx"
 
-Texture2D Texture;
-SamplerState LinearSampler
+cbuffer Parameters : register(b0)
 {
-    Filter = MIN_MAG_MIP_LINEAR;
-	AddressU = Clamp;
-	AddressV = Clamp;
+    float2 WidthHeight;
+    float Weights[32];
+    float4x4 Projection;
 };
+
+Texture2D Texture : register(t0);
 
 struct VertexShaderInput
 {
-	float3 Position : POSITION;
+	float4 Position : POSITION;
 	float4 Color    : COLOR;
 	float2 TexCoord : TEXCOORD;
 };
@@ -20,15 +19,14 @@ struct VertexShaderInput
 struct VertexShaderOutput
 {
 	float4 Position : SV_POSITION;
-	float4 Color    : COLOR;
-	float2 TexCoord : TEXCOORD;
+	float4 Color    : COLOR0;
+	float2 TexCoord : TEXCOORD0;
 };
-
 
 VertexShaderOutput VertexShaderFunctionPass1(VertexShaderInput input)
 {
 	VertexShaderOutput output = (VertexShaderOutput)0;
-	output.Position = mul(float4(input.Position, 1.0), Projection);
+	output.Position = mul(input.Position, Projection);
 	output.TexCoord = input.TexCoord;
 	output.Color = input.Color;
 	return output;
@@ -37,13 +35,13 @@ VertexShaderOutput VertexShaderFunctionPass1(VertexShaderInput input)
 VertexShaderOutput VertexShaderFunctionPass2(VertexShaderInput input)
 {
 	VertexShaderOutput output = (VertexShaderOutput)0;
-	output.Position = mul(float4(input.Position, 1), Projection);
+	output.Position = mul(input.Position, Projection);
 	output.TexCoord = input.TexCoord;
 	output.Color = input.Color;
 	return output;
 }
 
-float4 PixelShaderFunctionPass1(VertexShaderOutput input) : SV_Target
+float4 PixelShaderFunctionPass1(VertexShaderOutput input) : SV_TARGET
 {
 	float4 result = Weights[0] * Texture.SampleLevel(LinearSampler, input.TexCoord, 0);
 	float onePixelWidth = 1 / WidthHeight.x;
@@ -55,7 +53,7 @@ float4 PixelShaderFunctionPass1(VertexShaderOutput input) : SV_Target
 	return result * input.Color;
 }
 
-float4 PixelShaderFunctionPass2(VertexShaderOutput input) : SV_Target
+float4 PixelShaderFunctionPass2(VertexShaderOutput input) : SV_TARGET
 {
 	float4 result = Weights[0] * Texture.SampleLevel(LinearSampler, input.TexCoord, 0);
 	float onePixelHeight = 1 / WidthHeight.y;
@@ -71,14 +69,16 @@ technique11 Gaussian
 {
 	pass Pass1
 	{
-		SetGeometryShader( 0 );
-		SetVertexShader(CompileShader(vs_5_0, VertexShaderFunctionPass1()));
-		SetPixelShader(CompileShader(ps_5_0, PixelShaderFunctionPass1()));
+		SetBlendState(NoBlend, float4(0, 0, 0, 0), 0xFFFFFFFF);
+		SetGeometryShader(NULL);
+		SetVertexShader(CompileShader(vs_4_0, VertexShaderFunctionPass1()));
+		SetPixelShader(CompileShader(ps_4_0, PixelShaderFunctionPass1()));
 	}
 	pass Pass2
 	{
-		SetGeometryShader( 0 );
-		SetVertexShader(CompileShader(vs_5_0, VertexShaderFunctionPass2()));
-		SetPixelShader(CompileShader(ps_5_0, PixelShaderFunctionPass2()));
+		SetBlendState(NoBlend, float4(0, 0, 0, 0), 0xFFFFFFFF);
+		SetGeometryShader(NULL);
+		SetVertexShader(CompileShader(vs_4_0, VertexShaderFunctionPass2()));
+		SetPixelShader(CompileShader(ps_4_0, PixelShaderFunctionPass2()));
 	}
 }

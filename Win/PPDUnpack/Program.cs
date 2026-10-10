@@ -21,21 +21,19 @@ namespace PPDUnpack
             }
 
             var baseDir = Path.GetFileNameWithoutExtension(args[0]);
-            using (PackReader reader = new PackReader(args[0]))
+            using PackReader reader = new(args[0]);
+            foreach (var name in reader.FileList)
             {
-                foreach (var name in reader.FileList)
+                var r = reader.Read(name);
+                byte[] b = new byte[r.Length];
+                r.ReadAtLeast(b, b.Length, throwOnEndOfStream: false);
+                var fileName = Path.Combine(baseDir, name);
+                var dirName = Path.GetDirectoryName(fileName);
+                if (!String.IsNullOrEmpty(dirName))
                 {
-                    var r = reader.Read(name);
-                    byte[] b = new byte[r.Length];
-                    r.Read(b, 0, b.Length);
-                    var fileName = Path.Combine(baseDir, name);
-                    var dirName = Path.GetDirectoryName(fileName);
-                    if (!String.IsNullOrEmpty(dirName))
-                    {
-                        Directory.CreateDirectory(dirName);
-                    }
-                    File.WriteAllBytes(fileName, b);
+                    Directory.CreateDirectory(dirName);
                 }
+                File.WriteAllBytes(fileName, b);
             }
         }
     }

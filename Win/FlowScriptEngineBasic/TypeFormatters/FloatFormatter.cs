@@ -15,7 +15,7 @@ namespace FlowScriptEngineBasic.TypeFormatters
         public override bool Format(string str, out object value)
         {
             value = null;
-            if (float.TryParse(str, NumberStyles.Float, CultureInfo.InvariantCulture, out float val))
+            if (LegacyNumberFormat.TryParse(str, NumberStyles.Float, CultureInfo.InvariantCulture, out float val))
             {
                 value = val;
                 return true;

@@ -1,28 +1,23 @@
 ﻿using PPDConfiguration;
 using System;
-using System.ComponentModel;
 using System.IO;
-using System.Windows.Forms;
+using System.Threading;
 
 namespace PPDInstaller.Executor
 {
-    class InstallListExecutor : CExecutor
+    class InstallListExecutor(SynchronizationContext context) : CExecutor(context)
     {
-        public static Uri directshowliburi = new Uri("http://projectdxxx.me/installer/InstallURL.txt");
-        System.Net.WebClient downloadClient = new System.Net.WebClient();
-        string filePath = "./InstallURL.txt";
-        public InstallListExecutor(Control control)
-            : base(control)
-        {
-        }
+        public static Uri directshowliburi = new("http://projectdxxx.me/installer/InstallURL.txt");
+        readonly FileDownloader downloadClient = new();
+        readonly string filePath = "./InstallURL.txt";
 
         public override void Execute()
         {
             base.Execute();
             try
             {
-                downloadClient.DownloadProgressChanged += InstallListDownloadProgressChanged;
-                downloadClient.DownloadFileCompleted += InstallListDownloadFileCompleted;
+                downloadClient.ProgressChanged += InstallListDownloadProgressChanged;
+                downloadClient.Completed += InstallListDownloadFileCompleted;
                 downloadClient.DownloadFileAsync(directshowliburi, filePath);
             }
             catch (Exception e)
@@ -31,18 +26,18 @@ namespace PPDInstaller.Executor
                 OnFinish();
             }
         }
-        void InstallListDownloadProgressChanged(object sender, System.Net.DownloadProgressChangedEventArgs e)
+        void InstallListDownloadProgressChanged(int progressPercentage)
         {
-            Progress = e.ProgressPercentage.ToString();
+            Progress = progressPercentage.ToString();
             OnProgress();
         }
-        void InstallListDownloadFileCompleted(object sender, AsyncCompletedEventArgs e)
+        void InstallListDownloadFileCompleted(Exception error)
         {
             try
             {
-                downloadClient.DownloadProgressChanged -= InstallListDownloadProgressChanged;
-                downloadClient.DownloadFileCompleted -= InstallListDownloadFileCompleted;
-                using (StreamReader sr = new StreamReader(filePath))
+                downloadClient.ProgressChanged -= InstallListDownloadProgressChanged;
+                downloadClient.Completed -= InstallListDownloadFileCompleted;
+                using (StreamReader sr = new(filePath))
                 {
                     var setting = new SettingReader(sr.ReadToEnd());
                     IPAFontInstallExecutor.ipafonturi = new Uri(setting["IPAFont"]);

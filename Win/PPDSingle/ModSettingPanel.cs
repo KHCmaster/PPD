@@ -1,7 +1,8 @@
 ﻿using PPDFramework;
 using PPDFramework.Mod;
 using PPDShareComponent;
-using SharpDX;
+using System.Numerics;
+using PPDMath;
 using System;
 using System.Windows.Interop;
 
@@ -13,18 +14,18 @@ namespace PPDSingle
         const int ClipHeight = 330;
         const int SpriteY = 80;
 
-        IGameHost gameHost;
-        ISound sound;
-        PPDFramework.Resource.ResourceManager resourceManager;
+        readonly IGameHost gameHost;
+        readonly ISound sound;
+        readonly PPDFramework.Resource.ResourceManager resourceManager;
 
         int currentIndex;
-        ModInfo modInfo;
+        readonly ModInfo modInfo;
 
-        RectangleComponent black;
-        PictureObject back;
-        SpriteObject settingSprite;
-        SpriteObject settingListSprite;
-        LineRectangleComponent rectangle;
+        readonly RectangleComponent black;
+        readonly PictureObject back;
+        readonly SpriteObject settingSprite;
+        readonly SpriteObject settingListSprite;
+        readonly LineRectangleComponent rectangle;
 
         private ModSettingComponent CurrentComponent
         {
@@ -85,7 +86,7 @@ namespace PPDSingle
             float height = 0;
             foreach (ModSetting modSetting in modInfo.Settings)
             {
-                var component = new ModSettingComponent(device, resourceManager, modSetting,
+                var component = new ModSettingComponent(device, modSetting,
                     modSetting.GetStringValue(modInfo.ModSettingManager[modSetting.Key]))
                 {
                     Position = new Vector2(0, height)
@@ -121,7 +122,7 @@ namespace PPDSingle
             else if (args.InputInfo.IsPressed(ButtonType.Circle))
             {
                 var window = new PPDModSettingUI.ModSettingWindow();
-                var helper = new WindowInteropHelper(window)
+                _ = new WindowInteropHelper(window)
                 {
                     Owner = gameHost.WindowHandle
                 };
@@ -216,10 +217,10 @@ namespace PPDSingle
         class ModSettingComponent : GameComponent
         {
             bool isSelected;
-            TextureString nameText;
-            TextureString descriptionText;
-            TextureString valueText;
-            TextureString infoText;
+            readonly TextureString nameText;
+            readonly TextureString descriptionText;
+            readonly TextureString valueText;
+            readonly TextureString infoText;
 
             public string CurrentValue
             {
@@ -239,7 +240,7 @@ namespace PPDSingle
                 }
             }
 
-            public ModSettingComponent(PPDDevice device, PPDFramework.Resource.ResourceManager resourceManager,
+            public ModSettingComponent(PPDDevice device,
                 ModSetting modSetting, string currentValue) : base(device)
             {
                 this.AddChild(nameText = new TextureString(device, modSetting.Name, 24, 500, PPDColors.White)
@@ -262,7 +263,7 @@ namespace PPDSingle
                 });
             }
 
-            private String GetInfoText(ModSetting modSetting)
+            private static String GetInfoText(ModSetting modSetting)
             {
                 return String.Format("{0}:{1}", Utility.Language["DefaultValue"], modSetting.GetStringValue(modSetting.Default));
             }

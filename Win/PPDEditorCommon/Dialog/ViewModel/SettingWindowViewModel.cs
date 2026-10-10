@@ -1,13 +1,13 @@
-﻿using GalaSoft.MvvmLight;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace PPDEditorCommon.Dialog.ViewModel
 {
-    public class SettingWindowViewModel : ViewModelBase
+    public class SettingWindowViewModel(string title) : ObservableObject
     {
         private bool isOkEnabled;
-        private List<SettingViewModelBase> settings;
+        private readonly List<SettingViewModelBase> settings = [];
 
         public object this[string key]
         {
@@ -21,7 +21,7 @@ namespace PPDEditorCommon.Dialog.ViewModel
         {
             get
             {
-                return settings.Select(s => new KeyValuePair<object, object>(s.Name, s.ValidatedValue)).ToArray();
+                return [.. settings.Select(s => new KeyValuePair<object, object>(s.Name, s.ValidatedValue))];
 
             }
         }
@@ -36,7 +36,7 @@ namespace PPDEditorCommon.Dialog.ViewModel
         {
             get;
             private set;
-        }
+        } = title;
 
         public bool IsOkEnabled
         {
@@ -46,23 +46,17 @@ namespace PPDEditorCommon.Dialog.ViewModel
                 if (isOkEnabled != value)
                 {
                     isOkEnabled = value;
-                    RaisePropertyChanged("IsOkEnabled");
+                    OnPropertyChanged(nameof(IsOkEnabled));
                 }
             }
         }
 
-        public SettingWindowViewModel(string title)
-        {
-            Title = title;
-            settings = new List<SettingViewModelBase>();
-        }
-
         public void Initialize()
         {
-            Settings = settings.ToArray();
+            Settings = [.. settings];
             foreach (var setting in settings)
             {
-                setting.PropertyChanged += setting_PropertyChanged;
+                setting.PropertyChanged += Setting_PropertyChanged;
             }
             IsOkEnabled = true;
         }
@@ -75,29 +69,29 @@ namespace PPDEditorCommon.Dialog.ViewModel
             }
 
             SettingViewModelBase settingViewModel = null;
-            if (setting is BoolSetting)
+            if (setting is BoolSetting setting1)
             {
-                settingViewModel = new BoolSettingViewModel((BoolSetting)setting);
+                settingViewModel = new BoolSettingViewModel(setting1);
             }
-            else if (setting is DoubleSetting)
+            else if (setting is DoubleSetting setting2)
             {
-                settingViewModel = new DoubleSettingViewModel((DoubleSetting)setting);
+                settingViewModel = new DoubleSettingViewModel(setting2);
             }
-            else if (setting is EnumerableSetting)
+            else if (setting is EnumerableSetting setting3)
             {
-                settingViewModel = new EnumerableSettingViewModel((EnumerableSetting)setting);
+                settingViewModel = new EnumerableSettingViewModel(setting3);
             }
-            else if (setting is FloatSetting)
+            else if (setting is FloatSetting setting4)
             {
-                settingViewModel = new FloatSettingViewModel((FloatSetting)setting);
+                settingViewModel = new FloatSettingViewModel(setting4);
             }
-            else if (setting is IntSetting)
+            else if (setting is IntSetting setting5)
             {
-                settingViewModel = new IntSettingViewModel((IntSetting)setting);
+                settingViewModel = new IntSettingViewModel(setting5);
             }
-            else if (setting is StringSetting)
+            else if (setting is StringSetting setting6)
             {
-                settingViewModel = new StringSettingViewModel((StringSetting)setting);
+                settingViewModel = new StringSettingViewModel(setting6);
             }
             if (settingViewModel == null)
             {
@@ -107,7 +101,7 @@ namespace PPDEditorCommon.Dialog.ViewModel
             settings.Add(settingViewModel);
         }
 
-        void setting_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        void Setting_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             if (e.PropertyName == "IsValidated")
             {

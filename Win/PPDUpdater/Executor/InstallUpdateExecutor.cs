@@ -3,11 +3,11 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Windows.Forms;
+using System.Threading;
 
 namespace PPDUpdater.Executor
 {
-    class InstallUpdateExecutor : CExecutor
+    class InstallUpdateExecutor(string filePath, VersionInfo installversion, InstallInfo installInfo, int index, SynchronizationContext context) : CExecutor(context)
     {
         const int bufferSize = 1024;
 
@@ -15,34 +15,25 @@ namespace PPDUpdater.Executor
         {
             get;
             private set;
-        }
+        } = filePath;
 
         public InstallInfo InstallInfo
         {
             get;
             private set;
-        }
+        } = installInfo;
 
         public int Index
         {
             get;
             private set;
-        }
+        } = index;
 
         public VersionInfo InstallVersion
         {
             get;
             private set;
-        }
-
-        public InstallUpdateExecutor(string filePath, VersionInfo installversion, InstallInfo installInfo, int index, Control control)
-            : base(control)
-        {
-            FilePath = filePath;
-            InstallInfo = installInfo;
-            Index = index;
-            InstallVersion = installversion;
-        }
+        } = installversion;
 
         public override void Execute()
         {
@@ -104,7 +95,7 @@ namespace PPDUpdater.Executor
                     {
                         Directory.CreateDirectory(copydir);
                     }
-                    CopyList.Add(new string[] { Path.Combine(Utility.KHCDir, localfn), filename });
+                    CopyList.Add([Path.Combine(Utility.KHCDir, localfn), filename]);
                 }
             }
             int count = 0;
@@ -135,7 +126,7 @@ namespace PPDUpdater.Executor
             }
         }
 
-        private void CopyFile(string src, string dest)
+        private static void CopyFile(string src, string dest)
         {
             var parentDir = Path.GetDirectoryName(dest);
             if (!Directory.Exists(parentDir))
@@ -150,7 +141,7 @@ namespace PPDUpdater.Executor
             }
         }
 
-        private bool CheckSame(string src, string dest)
+        private static bool CheckSame(string src, string dest)
         {
             if (!File.Exists(src) || !File.Exists(dest))
             {
@@ -160,32 +151,30 @@ namespace PPDUpdater.Executor
             var fi1 = new FileInfo(src);
             var fi2 = new FileInfo(dest);
             if (fi1.Length != fi2.Length) return false;
-            using (FileStream fs1 = fi1.Open(FileMode.Open))
-            using (FileStream fs2 = fi2.Open(FileMode.Open))
+            using FileStream fs1 = fi1.Open(FileMode.Open);
+            using FileStream fs2 = fi2.Open(FileMode.Open);
+            byte[] buffer1 = new byte[bufferSize], buffer2 = new byte[bufferSize];
+            while (fs1.Position < fs1.Length)
             {
-                byte[] buffer1 = new byte[bufferSize], buffer2 = new byte[bufferSize];
-                while (fs1.Position < fs1.Length)
+                var readSize = fs1.Read(buffer1, 0, buffer1.Length);
+                fs2.ReadAtLeast(buffer2, buffer2.Length, throwOnEndOfStream: false);
+                for (int i = 0; i < readSize; i++)
                 {
-                    var readSize = fs1.Read(buffer1, 0, buffer1.Length);
-                    fs2.Read(buffer2, 0, buffer2.Length);
-                    for (int i = 0; i < readSize; i++)
+                    if (buffer1[i] != buffer2[i])
                     {
-                        if (buffer1[i] != buffer2[i])
-                        {
-                            return false;
-                        }
+                        return false;
                     }
                 }
             }
             return true;
         }
 
-        private void Unzip(string path, string unzipDir)
+        private static void Unzip(string path, string unzipDir)
         {
             Utility.FastZip.ExtractZip(path, unzipDir, Utility.ZipFilter);
         }
 
-        private VersionInfo GetVersionInfo(string path)
+        private static VersionInfo GetVersionInfo(string path)
         {
             try
             {

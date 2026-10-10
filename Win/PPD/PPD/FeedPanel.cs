@@ -1,4 +1,5 @@
-﻿using PPDFramework;
+﻿using PPDMath;
+using PPDFramework;
 using PPDFrameworkCore;
 using PPDShareComponent;
 using System;
@@ -9,11 +10,11 @@ using System.Xml;
 
 namespace PPD
 {
-    class FeedPanel : HomePanelBase
+    class FeedPanel(PPDDevice device, IGameHost gameHost, PPDFramework.Resource.ResourceManager resourceManager, ISound sound) : HomePanelBase(device)
     {
-        IGameHost gameHost;
-        PPDFramework.Resource.ResourceManager resourceManager;
-        ISound sound;
+        readonly IGameHost gameHost = gameHost;
+        readonly PPDFramework.Resource.ResourceManager resourceManager = resourceManager;
+        readonly ISound sound = sound;
 
         PictureObject left;
         PictureObject leftSelection;
@@ -24,13 +25,6 @@ namespace PPD
         private bool initialized;
         int currentIndex;
 
-        public FeedPanel(PPDDevice device, IGameHost gameHost, PPDFramework.Resource.ResourceManager resourceManager, ISound sound) : base(device)
-        {
-            this.gameHost = gameHost;
-            this.resourceManager = resourceManager;
-            this.sound = sound;
-        }
-
         public override void Load()
         {
             OnLoadProgressed(0);
@@ -38,19 +32,19 @@ namespace PPD
             OnLoadProgressed(20);
             left.AddChild((leftSelection = new PictureObject(device, resourceManager, Utility.Path.Combine("right.png"), true)
             {
-                Position = new SharpDX.Vector2(30, 0),
-                Scale = new SharpDX.Vector2(0.5f, 0.5f)
+                Position = new System.Numerics.Vector2(30, 0),
+                Scale = new System.Numerics.Vector2(0.5f, 0.5f)
             }));
             OnLoadProgressed(40);
             this.AddChild((errorString = new TextureString(device, Utility.Language["ErrorInFeedLoading"], 20, true, PPDColors.White)
             {
-                Position = new SharpDX.Vector2(400, 220),
+                Position = new System.Numerics.Vector2(400, 220),
                 Alpha = 0
             }));
             OnLoadProgressed(60);
             this.AddChild((feedSprite = new SpriteObject(device)
             {
-                Position = new SharpDX.Vector2(200, 0),
+                Position = new System.Numerics.Vector2(200, 0),
                 Clip = new ClipInfo(gameHost)
                 {
                     PositionX = 200,
@@ -90,7 +84,7 @@ namespace PPD
                         {
                             if (feedSprite.ChildrenCount > 0 && (feedSprite[feedSprite.ChildrenCount - 1] as FeedComponent).Finished && currentIndex < loader.List.Length)
                             {
-                                feedSprite.AddChild(new FeedComponent(device, resourceManager, loader.List[currentIndex]) { Position = new SharpDX.Vector2(0, 450 * currentIndex) });
+                                feedSprite.AddChild(new FeedComponent(device, resourceManager, loader.List[currentIndex]) { Position = new System.Numerics.Vector2(0, 450 * currentIndex) });
                                 sound.Play(PPDSetting.DefaultSounds[0], -1000);
                             }
                             else
@@ -133,7 +127,7 @@ namespace PPD
                         {
                             left.AddChild(new TextureString(device, feed.Date.ToShortDateString(), 14, PPDColors.White)
                             {
-                                Position = new SharpDX.Vector2(40, 10 + 20 * iter)
+                                Position = new System.Numerics.Vector2(40, 10 + 20 * iter)
                             });
                             iter++;
                         }
@@ -141,18 +135,18 @@ namespace PPD
                     }
                 }
 
-                feedSprite.Position = new SharpDX.Vector2(feedSprite.Position.X, AnimationUtility.GetAnimationValue(feedSprite.Position.Y, -currentIndex * 450));
-                leftSelection.Position = new SharpDX.Vector2(leftSelection.Position.X, AnimationUtility.GetAnimationValue(leftSelection.Position.Y, currentIndex * 20 + 17));
+                feedSprite.Position = new System.Numerics.Vector2(feedSprite.Position.X, AnimationUtility.GetAnimationValue(feedSprite.Position.Y, -currentIndex * 450));
+                leftSelection.Position = new System.Numerics.Vector2(leftSelection.Position.X, AnimationUtility.GetAnimationValue(leftSelection.Position.Y, currentIndex * 20 + 17));
                 errorString.Alpha = loader.Error ? AnimationUtility.IncreaseAlpha(errorString.Alpha) : AnimationUtility.DecreaseAlpha(errorString.Alpha);
             }
         }
 
         class FeedComponent : GameComponent
         {
-            PPDFramework.Resource.ResourceManager resourceManager;
-            Feed feed;
+            readonly PPDFramework.Resource.ResourceManager resourceManager;
+            readonly Feed feed;
 
-            EffectObject loading;
+            readonly EffectObject loading;
 
             private bool error;
             private bool generated;
@@ -172,7 +166,7 @@ namespace PPD
                 thread.Start();
                 loading = new EffectObject(device, resourceManager, Utility.Path.Combine("loading.etd"))
                 {
-                    Position = new SharpDX.Vector2(300, 225),
+                    Position = new System.Numerics.Vector2(300, 225),
                     PlayType = Effect2D.EffectManager.PlayType.Loop
                 };
                 loading.Play();
@@ -186,18 +180,12 @@ namespace PPD
                 try
                 {
                     string targetLanguage = "";
-                    switch (PPDSetting.Setting.LangISO)
+                    targetLanguage = PPDSetting.Setting.LangISO switch
                     {
-                        case "jp":
-                            targetLanguage = "ja";
-                            break;
-                        default:
-                            targetLanguage = "en";
-                            break;
-                    }
-
-                    var webReq = (HttpWebRequest)HttpWebRequest.Create(String.Format(@"http://projectdxxx.me/feed/{0}", feed.Path));
-                    var res = (HttpWebResponse)webReq.GetResponse();
+                        "jp" => "ja",
+                        _ => "en",
+                    };
+                    var res = SyncHttpClient.Get(String.Format(@"http://projectdxxx.me/feed/{0}", feed.Path));
 
                     var sb = new StringBuilder();
                     bool shouldRead = false;
@@ -218,7 +206,7 @@ namespace PPD
                                             reader.MoveToElement();
                                             if (reader.LocalName == "br")
                                             {
-                                                sb.Append("\n");
+                                                sb.Append('\n');
                                             }
                                             shouldRead = true;
                                         }
@@ -237,14 +225,14 @@ namespace PPD
                                     reader.MoveToElement();
                                     if (reader.LocalName == "br")
                                     {
-                                        sb.Append("\n");
+                                        sb.Append('\n');
                                     }
                                 }
                             }
                         }
                     }
 
-                    res.Close();
+                    res.Dispose();
                     feed.Text = sb.ToString();
                     Generate();
                 }
@@ -259,24 +247,24 @@ namespace PPD
             {
                 this.AddChild(new TextureString(device, feed.Title, 20, PPDColors.White)
                 {
-                    Position = new SharpDX.Vector2(10, 10)
+                    Position = new System.Numerics.Vector2(10, 10)
                 });
                 this.AddChild(new TextureString(device, feed.Date.ToShortDateString(), 12, PPDColors.White)
                 {
-                    Position = new SharpDX.Vector2(10, 40)
+                    Position = new System.Numerics.Vector2(10, 40)
                 });
                 this.AddChild(new TextureString(device, feed.Author, 12, PPDColors.White)
                 {
-                    Position = new SharpDX.Vector2(100, 40)
+                    Position = new System.Numerics.Vector2(100, 40)
                 });
-                this.AddChild(new RectangleComponent(device, resourceManager, PPDColors.White) { Position = new SharpDX.Vector2(10, 35), RectangleWidth = 600, RectangleHeight = 1 });
+                this.AddChild(new RectangleComponent(device, resourceManager, PPDColors.White) { Position = new System.Numerics.Vector2(10, 35), RectangleWidth = 600, RectangleHeight = 1 });
 
                 float y = 70;
                 foreach (string str in feed.Text.Split('\n'))
                 {
                     var textureString = new TextureString(device, str, 14, 500, 800, true, PPDColors.White)
                     {
-                        Position = new SharpDX.Vector2(30, y)
+                        Position = new System.Numerics.Vector2(30, y)
                     };
                     textureString.Update();
                     this.AddChild(textureString);
@@ -304,13 +292,13 @@ namespace PPD
 
         class FeedListLoader
         {
-            List<Feed> feedList;
+            readonly List<Feed> feedList;
 
             public Feed[] List
             {
                 get
                 {
-                    return feedList.ToArray();
+                    return [.. feedList];
                 }
             }
 
@@ -334,7 +322,7 @@ namespace PPD
 
             public FeedListLoader()
             {
-                feedList = new List<Feed>();
+                feedList = [];
             }
 
             public void GetList()
@@ -348,8 +336,7 @@ namespace PPD
             {
                 try
                 {
-                    var webReq = (HttpWebRequest)HttpWebRequest.Create(@"http://projectdxxx.me/feed/FeedList.xml");
-                    var res = (HttpWebResponse)webReq.GetResponse();
+                    var res = SyncHttpClient.Get(@"http://projectdxxx.me/feed/FeedList.xml");
 
                     using (XmlReader reader = XmlReader.Create(res.GetResponseStream(), new XmlReaderSettings()))
                     {
@@ -367,7 +354,7 @@ namespace PPD
                         }
                     }
 
-                    res.Close();
+                    res.Dispose();
                     feedList.Sort(Compare);
                     while (feedList.Count > 10)
                     {

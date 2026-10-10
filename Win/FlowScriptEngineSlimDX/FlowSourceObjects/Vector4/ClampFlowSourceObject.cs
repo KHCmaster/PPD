@@ -1,4 +1,5 @@
-﻿using FlowScriptEngine;
+﻿using PPDMath;
+using FlowScriptEngine;
 
 namespace FlowScriptEngineSlimDX.FlowSourceObjects.Vector4
 {
@@ -11,35 +12,35 @@ namespace FlowScriptEngineSlimDX.FlowSourceObjects.Vector4
         }
 
         [ToolTipText("Vector_Clamp_Min_Summary")]
-        public SharpDX.Vector4 Min
+        public System.Numerics.Vector4 Min
         {
             private get;
             set;
         }
 
         [ToolTipText("Vector_Clamp_Max_Summary")]
-        public SharpDX.Vector4 Max
+        public System.Numerics.Vector4 Max
         {
             private get;
             set;
         }
 
         [ToolTipText("Vector_Clamp_Vector_Summary")]
-        public SharpDX.Vector4 Vector
+        public System.Numerics.Vector4 Vector
         {
             private get;
             set;
         }
 
         [ToolTipText("Vector_Clamp_Value_Summary")]
-        public SharpDX.Vector4 Value
+        public System.Numerics.Vector4 Value
         {
             get
             {
                 SetValue(nameof(Min));
                 SetValue(nameof(Max));
                 SetValue(nameof(Vector));
-                return SharpDX.Vector4.Clamp(Vector, Min, Max);
+                return MathCompat.ClampSharpDX(Vector, Min, Max);
             }
         }
     }

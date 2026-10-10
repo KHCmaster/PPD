@@ -2,13 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
-using System.Security.Permissions;
 using System.Windows.Forms;
 
 namespace DirectShow
 {
-    [SecurityPermission(SecurityAction.InheritanceDemand, UnmanagedCode = true)]
-    [SecurityPermission(SecurityAction.Demand, UnmanagedCode = true)]
     public class DSFilterGraphBase : COMHelper, IDisposable
     {
         #region Constants
@@ -51,6 +48,7 @@ namespace DirectShow
 
         #region Variables
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2213:Disposable fields should be disposed", Justification = "外部から設定されるコントロールで、このクラスは所有しない")]
         protected Control m_VideoControl = null;
         protected Control m_EventControl = new HelperForm();
         protected IGraphBuilder m_GraphBuilder = null;
@@ -68,11 +66,11 @@ namespace DirectShow
         protected double m_dRate = 1.0;
         protected bool m_bShouldPreview = true;
 
-        protected List<DSFilter> m_Filters = new List<DSFilter>();
+        protected List<DSFilter> m_Filters = [];
 
         ~DSFilterGraphBase()
         {
-            Dispose();
+            Dispose(false);
         }
 
         #endregion
@@ -91,7 +89,7 @@ namespace DirectShow
         {
             get
             {
-                m_BasicVideo.get_VideoWidth(out int width);
+                m_BasicVideo.Get_VideoWidth(out int width);
                 return width;
             }
         }
@@ -100,7 +98,7 @@ namespace DirectShow
         {
             get
             {
-                m_BasicVideo.get_VideoHeight(out int height);
+                m_BasicVideo.Get_VideoHeight(out int height);
                 return height;
             }
         }
@@ -112,7 +110,7 @@ namespace DirectShow
                 if (m_MediaControl != null)
                 {
                     FilterState _state;
-                    int hr = 0;
+                    int hr;
                     do
                     {
                         hr = m_MediaControl.GetState(200, out _state);
@@ -134,7 +132,7 @@ namespace DirectShow
                 if (m_MediaControl != null)
                 {
                     FilterState _state;
-                    int hr = 0;
+                    int hr;
                     do
                     {
                         hr = m_MediaControl.GetState(200, out _state);
@@ -156,7 +154,7 @@ namespace DirectShow
                 if (m_MediaControl != null)
                 {
                     FilterState _state;
-                    int hr = 0;
+                    int hr;
                     do
                     {
                         hr = m_MediaControl.GetState(200, out _state);
@@ -177,7 +175,7 @@ namespace DirectShow
             {
                 if (m_MediaPosition != null)
                 {
-                    int hr = m_MediaPosition.get_CurrentPosition(out double _time);
+                    int hr = m_MediaPosition.Get_CurrentPosition(out double _time);
                     Debug.Assert(hr == 0);
                     if (hr == 0) return _time;
                 }
@@ -187,7 +185,7 @@ namespace DirectShow
             {
                 if (m_MediaSeeking != null)
                 {
-                    int hr = m_MediaPosition.put_CurrentPosition(value);
+                    int hr = m_MediaPosition.Put_CurrentPosition(value);
                     Debug.Assert(hr >= 0);
                     OnPositionChange?.Invoke(this, EventArgs.Empty);
                 }
@@ -200,7 +198,7 @@ namespace DirectShow
             {
                 if (m_MediaPosition != null)
                 {
-                    int hr = m_MediaPosition.get_Duration(out double _time);
+                    int hr = m_MediaPosition.Get_Duration(out double _time);
                     Debug.Assert(hr == 0);
                     if (hr == 0) return _time;
                 }
@@ -278,7 +276,7 @@ namespace DirectShow
         {
             get
             {
-                bool bVisible = ((m_VideoControl != null) ? m_VideoControl.Visible : false);
+                bool bVisible = ((m_VideoControl != null) && m_VideoControl.Visible);
                 return m_bShouldPreview || bVisible;
             }
             set
@@ -288,8 +286,8 @@ namespace DirectShow
                     m_bShouldPreview = value;
                     if (m_VideoWindow != null)
                     {
-                        m_VideoWindow.put_AutoShow(m_bShouldPreview ? -1 : 0);
-                        m_VideoWindow.put_Visible(m_bShouldPreview ? -1 : 0);
+                        m_VideoWindow.Put_AutoShow(m_bShouldPreview ? -1 : 0);
+                        m_VideoWindow.Put_Visible(m_bShouldPreview ? -1 : 0);
                     }
                 }
             }
@@ -436,7 +434,7 @@ namespace DirectShow
 
         public virtual HRESULT Pause()
         {
-            int hr = 0;
+            int hr;
             if (m_MediaControl == null)
             {
                 hr = Load();
@@ -476,7 +474,7 @@ namespace DirectShow
                 int hr = m_FrameStep.Step(1, null);
                 if (hr < 0)
                 {
-                    hr = m_MediaSeeking.GetCurrentPosition(out long _time);
+                    _ = m_MediaSeeking.GetCurrentPosition(out long _time);
                     DsLong _stop = (long)0;
                     var _ts = new TimeSpan(0, 0, 1);
                     _time += _ts.Ticks / 20;
@@ -496,13 +494,14 @@ namespace DirectShow
                 {
                     Pause();
                 }
-                int hr = m_MediaSeeking.GetCurrentPosition(out long _time);
+
+                _ = m_MediaSeeking.GetCurrentPosition(out long _time);
                 DsLong _stop = (long)0;
                 var _ts = new TimeSpan(0, 0, 1);
                 _time -= _ts.Ticks / 20;
                 if (_time < 0) _time = 0;
                 DsLong _current = _time;
-                hr = m_MediaSeeking.SetPositions(_current, AMSeekingSeekingFlags.AbsolutePositioning, _stop, AMSeekingSeekingFlags.NoPositioning);
+                int hr = m_MediaSeeking.SetPositions(_current, AMSeekingSeekingFlags.AbsolutePositioning, _stop, AMSeekingSeekingFlags.NoPositioning);
                 return (HRESULT)hr;
             }
             return (HRESULT)E_POINTER;
@@ -525,7 +524,7 @@ namespace DirectShow
                     m_BasicAudio = (IBasicAudio)m_GraphBuilder;
                 }
             }
-            m_BasicAudio.put_Volume(_volume);
+            m_BasicAudio.Put_Volume(_volume);
         }
 
         private HRESULT InitInterfaces()
@@ -541,9 +540,9 @@ namespace DirectShow
             }
             catch (Exception _exception)
             {
-                if (_exception is COMException)
+                if (_exception is COMException exception)
                 {
-                    hr = (HRESULT)((COMException)_exception).ErrorCode;
+                    hr = (HRESULT)exception.ErrorCode;
                 }
                 else
                 {
@@ -580,15 +579,12 @@ namespace DirectShow
             try
             {
                 OnCloseInterfaces();
-                if (m_MediaEventEx != null)
-                {
-                    m_MediaEventEx.SetNotifyWindow(IntPtr.Zero, 0, IntPtr.Zero);
-                    m_MediaEventEx = null;
-                }
+                m_MediaEventEx?.SetNotifyWindow(IntPtr.Zero, 0, IntPtr.Zero);
+                m_MediaEventEx = null;
                 if (m_VideoWindow != null)
                 {
-                    m_VideoWindow.put_Visible(0);
-                    m_VideoWindow.put_Owner(IntPtr.Zero);
+                    m_VideoWindow.Put_Visible(0);
+                    m_VideoWindow.Put_Owner(IntPtr.Zero);
                     m_VideoWindow = null;
                 }
                 m_MediaSeeking = null;
@@ -651,13 +647,13 @@ namespace DirectShow
             {
                 if (m_VideoControl != null)
                 {
-                    m_VideoWindow.put_Owner(m_VideoControl.Handle);
-                    m_VideoWindow.put_MessageDrain(m_VideoControl.Handle);
-                    m_VideoWindow.put_WindowStyle(0x40000000 | 0x04000000);
+                    m_VideoWindow.Put_Owner(m_VideoControl.Handle);
+                    m_VideoWindow.Put_MessageDrain(m_VideoControl.Handle);
+                    m_VideoWindow.Put_WindowStyle(0x40000000 | 0x04000000);
                     ResizeVideoWindow();
                 }
-                m_VideoWindow.put_AutoShow(Visible ? -1 : 0);
-                m_VideoWindow.put_Visible(Visible ? -1 : 0);
+                m_VideoWindow.Put_AutoShow(Visible ? -1 : 0);
+                m_VideoWindow.Put_Visible(Visible ? -1 : 0);
             }
         }
 
@@ -725,8 +721,8 @@ namespace DirectShow
         {
             if (m_VideoWindow != null && m_VideoControl != null && m_bShouldPreview)
             {
-                m_VideoWindow.put_AutoShow(m_VideoControl.Visible ? -1 : 0);
-                m_VideoWindow.put_Visible(m_VideoControl.Visible ? -1 : 0);
+                m_VideoWindow.Put_AutoShow(m_VideoControl.Visible ? -1 : 0);
+                m_VideoWindow.Put_Visible(m_VideoControl.Visible ? -1 : 0);
             }
         }
 
@@ -739,9 +735,19 @@ namespace DirectShow
 
         #region IDisposable Members
 
-        public virtual void Dispose()
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
         {
             CloseInterfaces();
+            if (disposing)
+            {
+                m_EventControl.Dispose();
+            }
         }
 
         #endregion

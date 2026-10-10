@@ -2,14 +2,8 @@
 
 namespace Effect2DEditor.Command
 {
-    class ReverseEffectsCommand : CommandBase
+    class ReverseEffectsCommand(EffectManager manager, string exp) : CommandBase(manager, exp)
     {
-        public ReverseEffectsCommand(EffectManager manager, string exp)
-            : base(manager, exp)
-        {
-
-        }
-
         public override void Undo()
         {
             manager.Effects.Reverse();

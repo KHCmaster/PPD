@@ -2,14 +2,8 @@
 
 namespace PPDSingle
 {
-    class ActiveScoreSelectedSongInfo : SelectedSongInfo
+    class ActiveScoreSelectedSongInfo(WebSongInformation activeScore) : SelectedSongInfo(activeScore.GetSongInformation())
     {
-        public ActiveScoreSelectedSongInfo(WebSongInformation activeScore)
-            : base(activeScore.GetSongInformation())
-        {
-            ActiveScore = activeScore;
-        }
-
         public void UpdateSongInfo()
         {
             SongInfo = ActiveScore.GetSongInformation();
@@ -43,6 +37,6 @@ namespace PPDSingle
         {
             get;
             private set;
-        }
+        } = activeScore;
     }
 }

@@ -1,16 +1,9 @@
 ﻿namespace PPDMultiCommon.Web
 {
-    public class UpdateRoomInfoExecutor : HostExecutorBase
+    public class UpdateRoomInfoExecutor(WebManager webManager, int playerCount, string currentScoreHash) : HostExecutorBase(webManager)
     {
-        private int playerCount;
-        private string currentScoreHash;
-
-        public UpdateRoomInfoExecutor(WebManager webManager, int playerCount, string currentScoreHash)
-            : base(webManager)
-        {
-            this.playerCount = playerCount;
-            this.currentScoreHash = currentScoreHash;
-        }
+        private readonly int playerCount = playerCount;
+        private readonly string currentScoreHash = currentScoreHash;
 
         protected override void InnerStart()
         {

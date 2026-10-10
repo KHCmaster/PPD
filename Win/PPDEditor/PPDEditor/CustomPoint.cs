@@ -1,17 +1,13 @@
 ﻿namespace PPDEditor
 {
-    public struct CustomPoint
+    public struct CustomPoint(float x, int y)
     {
-        float x;
-        int y;
-        public CustomPoint(float x, int y)
-        {
-            this.x = x;
-            this.y = y;
-        }
+        float x = x;
+        int y = y;
+
         public float X
         {
-            get
+            readonly get
             {
                 return x;
             }
@@ -22,7 +18,7 @@
         }
         public int Y
         {
-            get
+            readonly get
             {
                 return y;
             }

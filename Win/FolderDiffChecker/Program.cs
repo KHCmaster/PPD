@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Windows.Forms;
+using System.Windows;
 
 namespace FolderDiffChecker
 {
@@ -11,9 +11,8 @@ namespace FolderDiffChecker
         [STAThread]
         static void Main()
         {
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new MainForm());
+            var application = new Application();
+            application.Run(new MainWindow());
         }
     }
 }

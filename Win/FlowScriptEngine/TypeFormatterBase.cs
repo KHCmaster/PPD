@@ -6,7 +6,7 @@ namespace FlowScriptEngine
     {
         public abstract Type Type { get; }
         public abstract bool Format(string str, out object value);
-        public virtual string[] AllowedPropertyString { get { return new string[0]; } }
+        public virtual string[] AllowedPropertyString { get { return []; } }
         public virtual string CorrentFormat { get { return ""; } }
     }
 }

@@ -6,14 +6,9 @@ using System.IO;
 
 namespace PPDMovie
 {
-    public class MusicPlayer : MusicPlayerBase
+    public class MusicPlayer(PPDDevice device, string filename) : MusicPlayerBase(device, filename)
     {
         private ImageResourceBase resource;
-
-        public MusicPlayer(PPDDevice device, string filename)
-            : base(device, filename)
-        {
-        }
 
         public override int Initialize()
         {
@@ -44,19 +39,16 @@ namespace PPDMovie
             }
         }
 
-        public override void releaseCOM()
+        public override void ReleaseCOM()
         {
             if (!initialized)
             {
                 return;
             }
 
-            if (resource != null)
-            {
-                resource.Dispose();
-                resource = null;
-            }
-            base.releaseCOM();
+            resource?.Dispose();
+            resource = null;
+            base.ReleaseCOM();
         }
 
         public override TextureBase Texture

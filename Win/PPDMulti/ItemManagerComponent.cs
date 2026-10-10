@@ -2,7 +2,8 @@
 using PPDMultiCommon.Data;
 using PPDMultiCommon.Model;
 using PPDShareComponent;
-using SharpDX;
+using System.Numerics;
+using PPDMath;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -15,15 +16,15 @@ namespace PPDMulti
         public event Action<ItemEffect> EffectAdded;
         public event Action<ItemEffect> EffectRemoved;
 
-        PPDFramework.Resource.ResourceManager resourceManager;
+        readonly PPDFramework.Resource.ResourceManager resourceManager;
 
-        List<ItemType> queue;
-        List<ItemEffect> effects;
-        int[] itemWeight;
+        readonly List<ItemType> queue;
+        readonly List<ItemEffect> effects;
+        readonly int[] itemWeight;
 
-        SpriteObject itemSprite;
+        readonly SpriteObject itemSprite;
 
-        Stopwatch stopwatch;
+        readonly Stopwatch stopwatch;
 
         private int maxItemCount;
         public int MaxItemCount
@@ -42,7 +43,7 @@ namespace PPDMulti
             }
         }
 
-        PictureObject[] lockPicture;
+        readonly PictureObject[] lockPicture;
 
         public ItemManagerComponent(PPDDevice device, PPDFramework.Resource.ResourceManager resourceManager, GameRule gameRule) : base(device)
         {
@@ -50,10 +51,10 @@ namespace PPDMulti
             stopwatch = new Stopwatch();
             stopwatch.Start();
 
-            queue = new List<ItemType>();
-            effects = new List<ItemEffect>();
+            queue = [];
+            effects = [];
 
-            var itemTypeArray = (ItemType[])Enum.GetValues(typeof(ItemType));
+            var itemTypeArray = Enum.GetValues<ItemType>();
 
             itemWeight = new int[itemTypeArray.Length - 1];
             int sum = 0;
@@ -159,7 +160,7 @@ namespace PPDMulti
             if (queue.Count < MaxItemCount)
             {
                 var r = new Random();
-                var rand = r.Next(0, itemWeight[itemWeight.Length - 1] + 1);
+                var rand = r.Next(0, itemWeight[^1] + 1);
 
                 int index = -1;
                 for (int i = 0; i < itemWeight.Length; i++)
@@ -234,10 +235,7 @@ namespace PPDMulti
         {
             effects.Add(effect);
             effect.StartTime = stopwatch.ElapsedMilliseconds;
-            if (EffectAdded != null)
-            {
-                EffectAdded.Invoke(effect);
-            }
+            EffectAdded?.Invoke(effect);
         }
 
         public void AddOthersEffect(ItemEffect effect)
@@ -256,17 +254,14 @@ namespace PPDMulti
                     ItemEffect effect = effects[i];
                     effects[i].RemoveEffect();
                     effects.RemoveAt(i);
-                    if (EffectRemoved != null)
-                    {
-                        EffectRemoved.Invoke(effect);
-                    }
+                    EffectRemoved?.Invoke(effect);
                 }
             }
 
             for (int i = 0; i < itemSprite.ChildrenCount; i++)
             {
                 var pic = itemSprite[i] as PictureObject;
-                itemSprite[i].Position = new SharpDX.Vector2(AnimationUtility.GetAnimationValue(itemSprite[i].Position.X, 11 + i * 19), itemSprite[i].Position.Y);
+                itemSprite[i].Position = new System.Numerics.Vector2(AnimationUtility.GetAnimationValue(itemSprite[i].Position.X, 11 + i * 19), itemSprite[i].Position.Y);
                 itemSprite[i].Alpha = AnimationUtility.IncreaseAlpha(itemSprite[i].Alpha);
                 pic.Scale = new Vector2(AnimationUtility.IncreaseAlpha(pic.Scale.X));
             }
@@ -293,18 +288,13 @@ namespace PPDMulti
         }
     }
 
-    abstract class ItemEffect
+    abstract class ItemEffect(ItemType itemType)
     {
         public const int DefaultEffectTime = 15000;
         private long startTime;
         private int addedEffectTime;
 
         public event EventHandler Removed;
-
-        protected ItemEffect(ItemType itemType)
-        {
-            ItemType = itemType;
-        }
 
         public virtual void RemoveEffect()
         {
@@ -342,7 +332,7 @@ namespace PPDMulti
         {
             get;
             private set;
-        }
+        } = itemType;
 
         protected virtual int EffectTime
         {
@@ -483,7 +473,7 @@ namespace PPDMulti
     {
         public const int MaxEffectLevel = 2;
 
-        private StripeEffectComponent component;
+        private readonly StripeEffectComponent component;
 
         public int EffectLevel
         {
@@ -523,7 +513,7 @@ namespace PPDMulti
     {
         public const int MaxEffectLevel = 2;
 
-        private FogEffectComponent component;
+        private readonly FogEffectComponent component;
 
         public int EffectLevel
         {
@@ -561,7 +551,7 @@ namespace PPDMulti
 
     class PingPongEffect : ItemEffect
     {
-        private PingPongEffectComponent component;
+        private readonly PingPongEffectComponent component;
 
         public PingPongEffect(PingPongEffectComponent component) :
             base(ItemType.PingPong)
@@ -591,18 +581,13 @@ namespace PPDMulti
         }
     }
 
-    class ItemUseEventArgs
+    class ItemUseEventArgs(ItemType itemType)
     {
-        public ItemUseEventArgs(ItemType itemType)
-        {
-            ItemType = itemType;
-        }
-
         public ItemType ItemType
         {
             get;
             private set;
-        }
+        } = itemType;
 
         public bool Use
         {

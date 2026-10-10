@@ -1,7 +1,10 @@
 ﻿using PPDFramework.Chars;
 using PPDFramework.Shaders;
 using PPDFramework.Vertex;
-using SharpDX;
+using System.Numerics;
+using PPDMath;
+using Color4 = Vortice.Mathematics.Color4;
+using Color = Vortice.Mathematics.Color;
 
 namespace PPDFramework
 {
@@ -14,14 +17,15 @@ namespace PPDFramework
         CharCacheInfo cci;
         char c;
 
-        PPDDevice device;
-        string facename;
-        bool isSpace;
+        readonly PPDDevice device;
+        readonly string facename;
+        readonly bool isSpace;
         float widthScale = 1;
         VertexInfo vertices;
         float prevStartX;
         float prevEndX;
         Vector2 prevPosition;
+        bool verticesWritten;
 
         /// <summary>
         /// コンストラクタ
@@ -125,21 +129,27 @@ namespace PPDFramework
             {
                 return;
             }
-
-            if (prevPosition != Position || prevStartX != startX || prevEndX != endX)
+            // 文字のテクスチャを別のスレッドで作っている間は描かない（大きさは決まっているので、配置は変わらない）
+            if (!cci.Ready)
             {
+                return;
+            }
+
+            if (!verticesWritten || prevPosition != Position || prevStartX != startX || prevEndX != endX)
+            {
+                verticesWritten = true;
                 prevPosition = Position;
                 prevStartX = startX;
                 prevEndX = endX;
                 float posX0 = Position.X + startX, posX1 = Position.X + endX,
                     posY0 = Position.Y, posY1 = Position.Y + cci.Height;
                 var rect = cci.GetActualUVRectangle(startX / (float)cci.Width, 0, endX / (float)cci.Width, 1);
-                vertices.Write(new[] {
+                vertices.Write([
                     new ColoredTexturedVertex(new Vector3(posX0, posY0, 0.5f), rect.TopLeft),
                     new ColoredTexturedVertex(new Vector3(posX1, posY0, 0.5f), rect.TopRight),
                     new ColoredTexturedVertex(new Vector3(posX0, posY1, 0.5f), rect.BottomLeft),
                     new ColoredTexturedVertex(new Vector3(posX1, posY1, 0.5f), rect.BottomRight)
-                });
+                ]);
             }
             alphaBlendContext.Texture = cci.Texture;
             alphaBlendContext.Vertex = vertices;
@@ -151,16 +161,10 @@ namespace PPDFramework
         /// </summary>
         protected override void DisposeResource()
         {
-            if (cci != null)
-            {
-                cci.Decrement();
-                cci = null;
-            }
-            if (vertices != null)
-            {
-                vertices.Dispose();
-                vertices = null;
-            }
+            cci?.Decrement();
+            cci = null;
+            vertices?.Dispose();
+            vertices = null;
         }
 
         /// <summary>
@@ -174,7 +178,7 @@ namespace PPDFramework
             }
             set
             {
-                color.Alpha = value;
+                color = new Color4(color.R, color.G, color.B, value);
             }
         }
 

@@ -19,7 +19,7 @@ namespace PPDMultiCommon.Model
                 if (user != value)
                 {
                     user = value;
-                    OnPropertyChanged("User");
+                    OnPropertyChanged(nameof(User));
                 }
             }
         }
@@ -35,7 +35,7 @@ namespace PPDMultiCommon.Model
                 if (text != value)
                 {
                     text = value;
-                    OnPropertyChanged("Text");
+                    OnPropertyChanged(nameof(Text));
                 }
             }
         }
@@ -51,17 +51,14 @@ namespace PPDMultiCommon.Model
                 if (isPrivate != value)
                 {
                     isPrivate = value;
-                    OnPropertyChanged("IsPrivate");
+                    OnPropertyChanged(nameof(IsPrivate));
                 }
             }
         }
 
         protected void OnPropertyChanged(string propertyName)
         {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged.Invoke(propertyName);
-            }
+            PropertyChanged?.Invoke(propertyName);
         }
 
         #region IPropertyChanged メンバ

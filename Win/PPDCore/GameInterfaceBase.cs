@@ -1,5 +1,6 @@
 ﻿using PPDFramework;
-using SharpDX;
+using System.Numerics;
+using PPDMath;
 
 namespace PPDCore
 {
@@ -7,16 +8,12 @@ namespace PPDCore
     /// ゲームのインタフェースクラスです
     /// 必ずpublic実装する必要があります
     /// </summary>
-    public abstract class GameInterfaceBase : GameComponent
+    /// <remarks>
+    /// コンストラクタです。
+    /// </remarks>
+    /// <param name="device"></param>
+    public abstract class GameInterfaceBase(PPDDevice device) : GameComponent(device)
     {
-        /// <summary>
-        /// コンストラクタです。
-        /// </summary>
-        /// <param name="device"></param>
-        protected GameInterfaceBase(PPDDevice device) : base(device)
-        {
-
-        }
 
         /// <summary>
         /// 最小動画位置
@@ -53,6 +50,14 @@ namespace PPDCore
         /// </summary>
         /// <param name="kasi"></param>
         public abstract void ChangeKasi(string kasi);
+
+        /// <summary>
+        /// 歌詞で使われる文字を、先に用意します（歌詞が切り替わったフレームが重くならないように、読み込みのときに呼ばれます）。
+        /// </summary>
+        /// <param name="characters">歌詞で使われる文字。</param>
+        public virtual void PrefetchKasi(string characters)
+        {
+        }
 
         /// <summary>
         /// コンボが変更された

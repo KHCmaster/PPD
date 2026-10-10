@@ -3,23 +3,15 @@ using System.Collections.Generic;
 
 namespace PPDEditor.Command.PPDSheet
 {
-    class DeFusionMarkCommand : Command
+    class DeFusionMarkCommand(SortedList<float, Mark>[] data, Mark mk1, Mark mk2, ExMark exmk) : Command
     {
-        private SortedList<float, Mark>[] data;
-        private Mark mk1;
-        private Mark mk2;
-        private ExMark exmk;
+        private readonly SortedList<float, Mark>[] data = data;
+        private readonly Mark mk1 = mk1;
+        private readonly Mark mk2 = mk2;
+        private readonly ExMark exmk = exmk;
 
-        ButtonType typeIndex;
-        public DeFusionMarkCommand(SortedList<float, Mark>[] data, Mark mk1, Mark mk2, ExMark exmk)
-        {
-            this.data = data;
-            this.mk1 = mk1;
-            this.mk2 = mk2;
-            this.exmk = exmk;
+        readonly ButtonType typeIndex = mk1.Type;
 
-            typeIndex = mk1.Type;
-        }
         public override void Execute()
         {
             SafeRemoveMark(exmk.Time, data[(int)typeIndex]);
@@ -34,7 +26,7 @@ namespace PPDEditor.Command.PPDSheet
             SafeAddMark(exmk, data[(int)typeIndex]);
         }
 
-        private void SafeAddMark(Mark mk, SortedList<float, Mark> data)
+        private static void SafeAddMark(Mark mk, SortedList<float, Mark> data)
         {
             if (!data.ContainsKey(mk.Time))
             {
@@ -42,12 +34,9 @@ namespace PPDEditor.Command.PPDSheet
             }
         }
 
-        private void SafeRemoveMark(float time, SortedList<float, Mark> data)
+        private static void SafeRemoveMark(float time, SortedList<float, Mark> data)
         {
-            if (data.ContainsKey(time))
-            {
-                data.Remove(time);
-            }
+            data.Remove(time);
         }
 
         public override CommandType CommandType

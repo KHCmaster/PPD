@@ -1,7 +1,9 @@
 ﻿using PPDFramework;
 using PPDFrameworkCore;
 using PPDShareComponent;
-using SharpDX;
+using System.Numerics;
+using PPDMath;
+using Color4 = Vortice.Mathematics.Color4;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,13 +27,13 @@ namespace PPDMulti
         const int ScrollBarY = 80;
 
 
-        PPDFramework.Resource.ResourceManager resourceManager;
-        ISound sound;
+        readonly PPDFramework.Resource.ResourceManager resourceManager;
+        readonly ISound sound;
 
-        PictureObject back;
-        SpriteObject songInfoSprite;
-        RectangleComponent scrollBar;
-        TextureString modeString;
+        readonly PictureObject back;
+        readonly SpriteObject songInfoSprite;
+        readonly RectangleComponent scrollBar;
+        readonly TextureString modeString;
 
         SongInformation currentSong;
         LogicFolderInfomation currentLogic;
@@ -45,20 +47,20 @@ namespace PPDMulti
             public int scrollIndex;
         }
 
-        Stack<SelectStructure> songStack;
-        Stack<SelectStructure> logicStack;
-        Stack<SelectStructure> commonSongStack;
+        readonly Stack<SelectStructure> songStack;
+        readonly Stack<SelectStructure> logicStack;
+        readonly Stack<SelectStructure> commonSongStack;
 
         Mode mode = Mode.SongInformation;
 
-        private LeftMenu leftMenu;
-        private MovieManager movieManager;
+        private readonly LeftMenu leftMenu;
+        private readonly MovieManager movieManager;
 
         private MovieComponent movie;
         private bool isWaitingMovieChange;
         private int waitingMovieChangeCount;
 
-        SongDetailComponent songDetail;
+        readonly SongDetailComponent songDetail;
 
         private SongInformationComponent CurrentComponent
         {
@@ -84,16 +86,13 @@ namespace PPDMulti
         {
             get
             {
-                switch (mode)
+                return mode switch
                 {
-                    case Mode.CommonSongInfo:
-                        return commonSongStack;
-                    case Mode.LogicInformation:
-                        return logicStack;
-                    case Mode.SongInformation:
-                        return songStack;
-                }
-                return null;
+                    Mode.CommonSongInfo => commonSongStack,
+                    Mode.LogicInformation => logicStack,
+                    Mode.SongInformation => songStack,
+                    _ => null,
+                };
             }
         }
 
@@ -140,7 +139,7 @@ namespace PPDMulti
             back.AddChild(new LineRectangleComponent(device, resourceManager, PPDColors.White) { RectangleWidth = 1, RectangleHeight = MaxScrollBarHeight, Position = new Vector2(510, ScrollBarY) });
             back.AddChild(scrollBar = new RectangleComponent(device, resourceManager, PPDColors.White)
             {
-                Position = new SharpDX.Vector2(500, ScrollBarY),
+                Position = new System.Numerics.Vector2(500, ScrollBarY),
                 RectangleWidth = 5,
                 RectangleHeight = MaxScrollBarHeight
             });
@@ -153,7 +152,7 @@ namespace PPDMulti
 
             Inputed += SongSelectComponent_Inputed;
             SongInformation.Updated += SongInformation_Updated;
-            movieManager.MovieChanged += movieManager_MovieChanged;
+            movieManager.MovieChanged += MovieManager_MovieChanged;
         }
 
         private void InitializeSelection()
@@ -187,7 +186,7 @@ namespace PPDMulti
                     {
                         songInfoSprite.AddChild(new SongInformationComponent(device, resourceManager, songInfo, null)
                         {
-                            Position = new SharpDX.Vector2(45, 20 * iter + 77),
+                            Position = new System.Numerics.Vector2(45, 20 * iter + 77),
                             Hidden = iter >= MaxDisplayCount
                         });
                         iter++;
@@ -198,7 +197,7 @@ namespace PPDMulti
                     {
                         songInfoSprite.AddChild(new SongInformationComponent(device, resourceManager, null, logicInfo)
                         {
-                            Position = new SharpDX.Vector2(45, 20 * iter + 77),
+                            Position = new System.Numerics.Vector2(45, 20 * iter + 77),
                             Hidden = iter >= MaxDisplayCount
                         });
                         iter++;
@@ -243,7 +242,7 @@ namespace PPDMulti
                             }
                             songInfoSprite.AddChild(new SongInformationComponent(device, resourceManager, songInfo, null)
                             {
-                                Position = new SharpDX.Vector2(45, 20 * iter + 77),
+                                Position = new System.Numerics.Vector2(45, 20 * iter + 77),
                                 Hidden = iter >= MaxDisplayCount
                             });
                             iter++;
@@ -258,10 +257,7 @@ namespace PPDMulti
                 scrollIndex = 0;
             }
 
-            if (CurrentComponent != null)
-            {
-                CurrentComponent.Selected = true;
-            }
+            CurrentComponent?.Selected = true;
             AdjustScrollBar();
             UpdateMovieWaitingCount();
             UpdateSongDetail();
@@ -287,12 +283,12 @@ namespace PPDMulti
             if (songInfoSprite.ChildrenCount > MaxDisplayCount)
             {
                 scrollBar.RectangleHeight = MaxScrollBarHeight * MaxDisplayCount / (float)songInfoSprite.ChildrenCount;
-                scrollBar.Position = new SharpDX.Vector2(scrollBar.Position.X, ScrollBarY + (MaxScrollBarHeight - scrollBar.RectangleHeight) * scrollIndex / (songInfoSprite.ChildrenCount - MaxDisplayCount));
+                scrollBar.Position = new System.Numerics.Vector2(scrollBar.Position.X, ScrollBarY + (MaxScrollBarHeight - scrollBar.RectangleHeight) * scrollIndex / (songInfoSprite.ChildrenCount - MaxDisplayCount));
             }
             else
             {
                 scrollBar.RectangleHeight = MaxScrollBarHeight;
-                scrollBar.Position = new SharpDX.Vector2(scrollBar.Position.X, ScrollBarY);
+                scrollBar.Position = new System.Numerics.Vector2(scrollBar.Position.X, ScrollBarY);
             }
         }
 
@@ -331,7 +327,7 @@ namespace PPDMulti
                     if (CurrentComponent.SongInformation != null && CurrentComponent.SongInformation.IsPPDSong)
                     {
                         var dialog = new DifficultyDialog(device, resourceManager, sound, CurrentComponent.SongInformation);
-                        dialog.LostFocused += dialog_LostFocused;
+                        dialog.LostFocused += Dialog_LostFocused;
                         dialog.Position = CurrentComponent.ScreenPos + new Vector2(20, 20);
                         if (dialog.Position.Y + dialog.Height >= 450)
                         {
@@ -593,16 +589,13 @@ namespace PPDMulti
         {
             if (movie != null && !isWaitingMovieChange)
             {
-                if (movie.Movie != null)
-                {
-                    movie.Movie.FadeOut();
-                }
+                movie.Movie?.FadeOut();
             }
             isWaitingMovieChange = true;
             waitingMovieChangeCount = 0;
         }
 
-        void movieManager_MovieChanged(object sender, EventArgs e)
+        void MovieManager_MovieChanged(object sender, EventArgs e)
         {
             if (movie != null)
             {
@@ -641,7 +634,7 @@ namespace PPDMulti
             modeString.Text = text;
         }
 
-        private SongInformation GetRandomSongInfo()
+        private static SongInformation GetRandomSongInfo()
         {
             var list = new List<SongInformation>();
             var folders = new Queue<SongInformation>();
@@ -673,7 +666,7 @@ namespace PPDMulti
             }
         }
 
-        private LogicFolderInfomation GetRandomLogicInfo()
+        private static LogicFolderInfomation GetRandomLogicInfo()
         {
             var list = new List<LogicFolderInfomation>();
             var folders = new Queue<LogicFolderInfomation>();
@@ -705,7 +698,7 @@ namespace PPDMulti
             }
         }
 
-        void dialog_LostFocused(IFocusable sender, FocusEventArgs args)
+        void Dialog_LostFocused(IFocusable sender, FocusEventArgs args)
         {
             var dialog = sender as DifficultyDialog;
 
@@ -714,10 +707,7 @@ namespace PPDMulti
                 sound.Play(PPDSetting.DefaultSounds[1], -1000);
                 SongInformation = dialog.SongInformation;
                 Difficulty = dialog.Difficulty;
-                if (SongSelected != null)
-                {
-                    SongSelected.Invoke(this, EventArgs.Empty);
-                }
+                SongSelected?.Invoke(this, EventArgs.Empty);
             }
 
             this.RemoveChild(dialog);
@@ -725,9 +715,9 @@ namespace PPDMulti
 
         void SongSelectComponent_GotFocused(IFocusable sender, FocusEventArgs args)
         {
-            if (!(args.FocusObject is DifficultyDialog))
+            if (args.FocusObject is not DifficultyDialog)
             {
-                back.Position = new SharpDX.Vector2(0, 50);
+                back.Position = new System.Numerics.Vector2(0, 50);
                 Alpha = 0;
             }
         }
@@ -736,12 +726,12 @@ namespace PPDMulti
         {
             if (OverFocused)
             {
-                back.Position = new SharpDX.Vector2(0, AnimationUtility.GetAnimationValue(back.Position.Y, 0));
+                back.Position = new System.Numerics.Vector2(0, AnimationUtility.GetAnimationValue(back.Position.Y, 0));
                 Alpha = AnimationUtility.IncreaseAlpha(Alpha);
             }
             else
             {
-                back.Position = new SharpDX.Vector2(0, AnimationUtility.GetAnimationValue(back.Position.Y, 50));
+                back.Position = new System.Numerics.Vector2(0, AnimationUtility.GetAnimationValue(back.Position.Y, 50));
                 Alpha = AnimationUtility.DecreaseAlpha(Alpha);
             }
 
@@ -758,11 +748,11 @@ namespace PPDMulti
 
         class SongInformationComponent : GameComponent
         {
-            PPDFramework.Resource.ResourceManager resourceManager;
+            readonly PPDFramework.Resource.ResourceManager resourceManager;
             bool selected;
 
-            TextureString songName;
-            RectangleComponent rectangle;
+            readonly TextureString songName;
+            readonly RectangleComponent rectangle;
 
             public SongInformationComponent(PPDDevice device, PPDFramework.Resource.ResourceManager resourceManager, SongInformation songInformation, LogicFolderInfomation logicFolderInformation) : base(device)
             {
@@ -770,16 +760,13 @@ namespace PPDMulti
                 SongInformation = songInformation;
                 LogicFolderInformation = logicFolderInformation;
 
-                if (SongInformation == null)
-                {
-                    SongInformation = SongInformation.FindSongInformationByID(logicFolderInformation.ScoreID);
-                }
+                SongInformation ??= SongInformation.FindSongInformationByID(logicFolderInformation.ScoreID);
 
                 if (SongInformation != null && SongInformation.IsPPDSong)
                 {
                     this.AddChild(new PictureObject(device, resourceManager, Utility.Path.Combine("scoremanager", "score.png"))
                     {
-                        Scale = new SharpDX.Vector2(0.8f)
+                        Scale = new System.Numerics.Vector2(0.8f)
                     });
                 }
                 else
@@ -787,7 +774,7 @@ namespace PPDMulti
                     this.AddChild(new PictureObject(device, resourceManager, Utility.Path.Combine("folder.png"))
                     {
                         Position = new Vector2(0, 2),
-                        Scale = new SharpDX.Vector2(0.5f)
+                        Scale = new System.Numerics.Vector2(0.5f)
                     });
                 }
                 this.AddChild(songName = new TextureString(device, DisplayName, 14, 420, PPDColors.White)
@@ -845,25 +832,25 @@ namespace PPDMulti
 
         class SongDetailComponent : FocusableGameComponent
         {
-            PPDFramework.Resource.ResourceManager resourceManager;
-            TextureString authorText;
-            TextureString authorNameText;
-            TextureString easyText;
-            TextureString normalText;
-            TextureString hardText;
-            TextureString extremeText;
-            TextureString easyDifficultyText;
-            TextureString normalDifficultyText;
-            TextureString hardDifficultyText;
-            TextureString extremeDifficultyText;
-            TextureString easyPtText;
-            TextureString normalPtText;
-            TextureString hardPtText;
-            TextureString extremePtText;
-            TextureString[] easyTexts;
-            TextureString[] normalTexts;
-            TextureString[] hardTexts;
-            TextureString[] extremeTexts;
+            readonly PPDFramework.Resource.ResourceManager resourceManager;
+            readonly TextureString authorText;
+            readonly TextureString authorNameText;
+            readonly TextureString easyText;
+            readonly TextureString normalText;
+            readonly TextureString hardText;
+            readonly TextureString extremeText;
+            readonly TextureString easyDifficultyText;
+            readonly TextureString normalDifficultyText;
+            readonly TextureString hardDifficultyText;
+            readonly TextureString extremeDifficultyText;
+            readonly TextureString easyPtText;
+            readonly TextureString normalPtText;
+            readonly TextureString hardPtText;
+            readonly TextureString extremePtText;
+            readonly TextureString[] easyTexts;
+            readonly TextureString[] normalTexts;
+            readonly TextureString[] hardTexts;
+            readonly TextureString[] extremeTexts;
 
             DifficultyMeasureWorker worker;
 
@@ -946,13 +933,13 @@ namespace PPDMulti
                         IsHorizontal = true
                     }
                 ));
-                easyTexts = new TextureString[] { easyText, easyPtText, easyDifficultyText };
-                normalTexts = new TextureString[] { normalText, normalPtText, normalDifficultyText };
-                hardTexts = new TextureString[] { hardText, hardPtText, hardDifficultyText };
-                extremeTexts = new TextureString[] { extremeText, extremePtText, extremeDifficultyText };
+                easyTexts = [easyText, easyPtText, easyDifficultyText];
+                normalTexts = [normalText, normalPtText, normalDifficultyText];
+                hardTexts = [hardText, hardPtText, hardDifficultyText];
+                extremeTexts = [extremeText, extremePtText, extremeDifficultyText];
             }
 
-            private void UpdateColor(TextureString[] texts, Color4 color)
+            private static void UpdateColor(TextureString[] texts, Color4 color)
             {
                 foreach (var text in texts)
                 {
@@ -962,11 +949,8 @@ namespace PPDMulti
 
             public void SetInfo(SongInformation songInfo)
             {
-                if (worker != null)
-                {
-                    worker.Stop();
-                    worker = null;
-                }
+                worker?.Stop();
+                worker = null;
 
                 if (songInfo == null)
                 {
@@ -1023,7 +1007,7 @@ namespace PPDMulti
                 }
             }
 
-            class DifficultyMeasureWorker
+            class DifficultyMeasureWorker(SongInformation songInfo)
             {
                 private Thread thread;
 
@@ -1031,7 +1015,7 @@ namespace PPDMulti
                 {
                     get;
                     private set;
-                }
+                } = songInfo;
 
                 public bool IsWorking
                 {
@@ -1061,11 +1045,6 @@ namespace PPDMulti
                 {
                     get;
                     private set;
-                }
-
-                public DifficultyMeasureWorker(SongInformation songInfo)
-                {
-                    SongInformation = songInfo;
                 }
 
                 public void Start()
@@ -1098,7 +1077,8 @@ namespace PPDMulti
                 {
                     if (thread != null && thread.IsAlive)
                     {
-                        thread.Abort();
+                        // .NET では Thread.Abort が使えない。計算はこのオブジェクトに結果を入れるだけなので、
+                        // 終わるまでバックグラウンドで続けさせて、結果は使わない
                         thread = null;
                     }
                 }
@@ -1107,14 +1087,14 @@ namespace PPDMulti
 
         class DifficultyDialog : FocusableGameComponent
         {
-            PPDFramework.Resource.ResourceManager resourceManager;
-            ISound sound;
-            SongInformation songInfo;
-            SpriteObject textSprite;
+            readonly PPDFramework.Resource.ResourceManager resourceManager;
+            readonly ISound sound;
+            readonly SongInformation songInfo;
+            readonly SpriteObject textSprite;
 
-            RectangleComponent selectRectangle;
+            readonly RectangleComponent selectRectangle;
 
-            PictureObject back;
+            readonly PictureObject back;
 
             int index;
 
@@ -1226,18 +1206,14 @@ namespace PPDMulti
 
             private bool DifficultyAvailable()
             {
-                switch (index)
+                return index switch
                 {
-                    case 0:
-                        return (songInfo.Difficulty & SongInformation.AvailableDifficulty.Easy) == SongInformation.AvailableDifficulty.Easy;
-                    case 1:
-                        return (songInfo.Difficulty & SongInformation.AvailableDifficulty.Normal) == SongInformation.AvailableDifficulty.Normal;
-                    case 2:
-                        return (songInfo.Difficulty & SongInformation.AvailableDifficulty.Hard) == SongInformation.AvailableDifficulty.Hard;
-                    case 3:
-                        return (songInfo.Difficulty & SongInformation.AvailableDifficulty.Extreme) == SongInformation.AvailableDifficulty.Extreme;
-                }
-                return false;
+                    0 => (songInfo.Difficulty & SongInformation.AvailableDifficulty.Easy) == SongInformation.AvailableDifficulty.Easy,
+                    1 => (songInfo.Difficulty & SongInformation.AvailableDifficulty.Normal) == SongInformation.AvailableDifficulty.Normal,
+                    2 => (songInfo.Difficulty & SongInformation.AvailableDifficulty.Hard) == SongInformation.AvailableDifficulty.Hard,
+                    3 => (songInfo.Difficulty & SongInformation.AvailableDifficulty.Extreme) == SongInformation.AvailableDifficulty.Extreme,
+                    _ => false,
+                };
             }
 
             void DifficultyDialog_Inputed(IFocusable sender, InputEventArgs args)

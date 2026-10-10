@@ -21,31 +21,31 @@ namespace FlowScriptDrawControl.Control
             }
         }
 
-        private List<ScopeControl> childScopes;
-        private List<PositionableControl> controls;
+        private readonly List<ScopeControl> childScopes;
+        private readonly List<PositionableControl> controls;
 
         public ScopeControl[] ChildScopes
         {
             get
             {
-                return childScopes.ToArray();
+                return [.. childScopes];
             }
         }
 
-        void parentScope_TransformChanged(object sender, EventArgs e)
+        void ParentScope_TransformChanged(object sender, EventArgs e)
         {
             UpdateSize();
         }
 
-        void parentScope_SizeChanged(object sender, SizeChangedEventArgs e)
+        void ParentScope_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             UpdateSize();
         }
 
         public ScopeControl()
         {
-            childScopes = new List<ScopeControl>();
-            controls = new List<PositionableControl>();
+            childScopes = [];
+            controls = [];
 
             InitializeComponent();
 

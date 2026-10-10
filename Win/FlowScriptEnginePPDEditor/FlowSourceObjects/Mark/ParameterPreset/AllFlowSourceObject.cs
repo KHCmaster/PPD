@@ -15,9 +15,9 @@ namespace FlowScriptEnginePPDEditor.FlowSourceObjects.Mark.ParameterPreset
 
         protected override void OnInitialize()
         {
-            if (Manager.Items.ContainsKey("ParameterPresets"))
+            if (Manager.Items.TryGetValue("ParameterPresets", out object value))
             {
-                all = (PPDEditorCommon.ParameterPreset[])Manager.Items["ParameterPresets"];
+                all = (PPDEditorCommon.ParameterPreset[])value;
             }
         }
 

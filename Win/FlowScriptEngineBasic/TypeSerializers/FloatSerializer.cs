@@ -13,7 +13,7 @@ namespace FlowScriptEngineBasic.TypeSerializers
 
         public override void Serialize(Serializer serializer, XElement element, object value)
         {
-            SetValue(element, value.ToString());
+            SetValue(element, LegacyNumberFormat.ToString(value));
         }
     }
 }

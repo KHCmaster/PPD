@@ -8,11 +8,11 @@ namespace PPDMultiCommon.Tcp
 {
     public delegate void ReadClientEventHandler(byte[] data, int id);
     public delegate void ClosedEventHandler(int id);
-    public class Host
+    public class Host : IDisposable
     {
         public event ReadClientEventHandler ReadClient;
         public event ClosedEventHandler Closed;
-        private ConnectionManager manager;
+        private readonly ConnectionManager manager;
         private TcpListener _listener;
 
         public int ConnectionCount
@@ -42,9 +42,18 @@ namespace PPDMultiCommon.Tcp
             set;
         }
 
+        /// <summary>
+        /// 待ち受けるアドレスです。既定はすべてのアドレス（ほかのコンピューターからつなげる）。
+        /// </summary>
+        public IPAddress ListenAddress
+        {
+            get;
+            set;
+        } = IPAddress.Any;
+
         public void Start()
         {
-            _listener = new TcpListener(IPAddress.Any, Port);
+            _listener = new TcpListener(ListenAddress, Port);
             _listener.Start();
             Console.WriteLine("Port{0}のListenを開始しました。", Port);
 
@@ -53,15 +62,9 @@ namespace PPDMultiCommon.Tcp
 
         public void Stop()
         {
-            if (_listener != null)
-            {
-                _listener.Stop();
-            }
+            _listener?.Dispose();
 
-            if (manager != null)
-            {
-                manager.Close();
-            }
+            manager?.Close();
         }
 
         private void DoAcceptTcpClient(IAsyncResult result)
@@ -77,8 +80,8 @@ namespace PPDMultiCommon.Tcp
                 var ns = client.GetStream();
 
                 var connection = new Connection(client, ns);
-                connection.ReadClient += connection_ReadClient;
-                connection.Closed += connection_Closed;
+                connection.ReadClient += Connection_ReadClient;
+                connection.Closed += Connection_Closed;
                 manager.Add(connection);
                 connection.Start();
 
@@ -89,20 +92,14 @@ namespace PPDMultiCommon.Tcp
             }
         }
 
-        void connection_Closed(int id)
+        void Connection_Closed(int id)
         {
-            if (Closed != null)
-            {
-                Closed.Invoke(id);
-            }
+            Closed?.Invoke(id);
         }
 
-        void connection_ReadClient(byte[] data, int id)
+        void Connection_ReadClient(byte[] data, int id)
         {
-            if (ReadClient != null)
-            {
-                ReadClient.Invoke(data, id);
-            }
+            ReadClient?.Invoke(data, id);
         }
 
         public void Write(byte[] data)
@@ -137,7 +134,7 @@ namespace PPDMultiCommon.Tcp
 
         class ConnectionManager
         {
-            SortedList<int, Connection> connections;
+            readonly SortedList<int, Connection> connections;
 
             public int ConnectionCount
             {
@@ -156,14 +153,14 @@ namespace PPDMultiCommon.Tcp
                 {
                     lock (connections)
                     {
-                        return connections.Values.ToArray();
+                        return [.. connections.Values];
                     }
                 }
             }
 
             public ConnectionManager()
             {
-                connections = new SortedList<int, Connection>();
+                connections = [];
             }
 
             public void Add(Connection connection)
@@ -172,10 +169,10 @@ namespace PPDMultiCommon.Tcp
                 {
                     connections.Add(connection.ID, connection);
                 }
-                connection.Closed += connection_Closed;
+                connection.Closed += Connection_Closed;
             }
 
-            void connection_Closed(int id)
+            void Connection_Closed(int id)
             {
                 lock (connections)
                 {
@@ -206,9 +203,9 @@ namespace PPDMultiCommon.Tcp
             {
                 lock (connections)
                 {
-                    if (connections.ContainsKey(id))
+                    if (connections.TryGetValue(id, out Connection value))
                     {
-                        connections[id].Write(data);
+                        value.Write(data);
                     }
                 }
             }
@@ -232,9 +229,9 @@ namespace PPDMultiCommon.Tcp
             {
                 lock (connections)
                 {
-                    if (connections.ContainsKey(id))
+                    if (connections.TryGetValue(id, out Connection value))
                     {
-                        return connections[id].Ip;
+                        return value.Ip;
                     }
                 }
                 return null;
@@ -244,9 +241,9 @@ namespace PPDMultiCommon.Tcp
             {
                 lock (connections)
                 {
-                    if (connections.ContainsKey(id))
+                    if (connections.TryGetValue(id, out Connection value))
                     {
-                        return connections[id];
+                        return value;
                     }
                 }
                 return null;
@@ -271,8 +268,7 @@ namespace PPDMultiCommon.Tcp
                 {
                     try
                     {
-                        var c = connection as Connection;
-                        if (c == null)
+                        if (connection is not Connection c)
                         {
                             return;
                         }
@@ -291,12 +287,12 @@ namespace PPDMultiCommon.Tcp
         }
 
 
-        class Connection : ConnectionBase
+        class Connection(TcpClient client, NetworkStream net) : ConnectionBase(client, net)
         {
             public static int _id;
             public event ReadClientEventHandler ReadClient;
             public event ClosedEventHandler Closed;
-            private int id;
+            private readonly int id = ++_id;
 
             public int ID
             {
@@ -311,12 +307,6 @@ namespace PPDMultiCommon.Tcp
                 }
             }
 
-            public Connection(TcpClient client, NetworkStream net)
-                : base(client, net)
-            {
-                id = ++_id;
-            }
-
             protected override void OnRead(byte[] bytes)
             {
                 if (bytes != null && ReadClient != null)
@@ -327,10 +317,28 @@ namespace PPDMultiCommon.Tcp
 
             protected override void OnClose()
             {
-                if (Closed != null)
-                {
-                    Closed.Invoke(id);
-                }
+                Closed?.Invoke(id);
+            }
+        }
+
+        /// <summary>
+        /// 待ち受けと接続を終了します（Stop() と同じ）。
+        /// </summary>
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        /// <summary>
+        /// 破棄します。
+        /// </summary>
+        /// <param name="disposing">Dispose から呼ばれたときは true。</param>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                Stop();
             }
         }
     }

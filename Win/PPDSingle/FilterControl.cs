@@ -1,6 +1,7 @@
 ﻿using PPDFramework;
 using PPDShareComponent;
-using SharpDX;
+using System.Numerics;
+using PPDMath;
 using System;
 
 namespace PPDSingle
@@ -8,31 +9,31 @@ namespace PPDSingle
     class FilterControl : FocusableGameComponent
     {
         private const int Margin = 20;
-        ISound sound;
-        SongSelectFilter filter;
+        readonly ISound sound;
+        readonly SongSelectFilter filter;
 
-        RadioBoxComponent nameRadio;
-        RadioBoxComponent timeRadio;
-        RadioBoxComponent updateDateRadio;
-        RadioBoxComponent bpmRadio;
-        RadioBoxComponent authorRadio;
+        readonly RadioBoxComponent nameRadio;
+        readonly RadioBoxComponent timeRadio;
+        readonly RadioBoxComponent updateDateRadio;
+        readonly RadioBoxComponent bpmRadio;
+        readonly RadioBoxComponent authorRadio;
 
-        RadioBoxComponent ascRadio;
-        RadioBoxComponent descRadio;
+        readonly RadioBoxComponent ascRadio;
+        readonly RadioBoxComponent descRadio;
 
-        CheckBoxComponent easyCheck;
-        CheckBoxComponent normalCheck;
-        CheckBoxComponent hardCheck;
-        CheckBoxComponent extremeCheck;
-        CheckBoxComponent normalScoreCheck;
-        CheckBoxComponent acScoreCheck;
-        CheckBoxComponent acftScoreCheck;
+        readonly CheckBoxComponent easyCheck;
+        readonly CheckBoxComponent normalCheck;
+        readonly CheckBoxComponent hardCheck;
+        readonly CheckBoxComponent extremeCheck;
+        readonly CheckBoxComponent normalScoreCheck;
+        readonly CheckBoxComponent acScoreCheck;
+        readonly CheckBoxComponent acftScoreCheck;
 
-        ButtonComponent setDefaultButton;
+        readonly ButtonComponent setDefaultButton;
 
-        GridSelection selection;
+        readonly GridSelection selection;
 
-        SelectableComponent[] selectList;
+        readonly SelectableComponent[] selectList;
 
         bool initialized;
 
@@ -271,7 +272,7 @@ namespace PPDSingle
                 Position = new Vector2(300, 370)
             });
 
-            selectList = new SelectableComponent[]{
+            selectList = [
                 nameRadio,
                 timeRadio,
                 updateDateRadio,
@@ -287,7 +288,7 @@ namespace PPDSingle
                 acScoreCheck,
                 acftScoreCheck,
                 setDefaultButton
-            };
+            ];
             foreach (SelectableComponent comp in selectList)
             {
                 selection.Add(comp.Position);

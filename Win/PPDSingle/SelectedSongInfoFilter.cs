@@ -3,14 +3,9 @@ using System.Linq;
 
 namespace PPDSingle
 {
-    class SelectedSongInfoFilter
+    class SelectedSongInfoFilter(SongSelectFilter filter)
     {
-        private SongSelectFilter filter;
-
-        public SelectedSongInfoFilter(SongSelectFilter filter)
-        {
-            this.filter = filter;
-        }
+        private readonly SongSelectFilter filter = filter;
 
         public int Compare(SelectedSongInfo info1, SelectedSongInfo info2)
         {
@@ -41,7 +36,7 @@ namespace PPDSingle
 
         public T[] GetFiltered<T>(T[] infos) where T : SelectedSongInfo
         {
-            infos = infos.Where(i => i.SongInfo == null || filter.Filter(i.SongInfo)).ToArray();
+            infos = [.. infos.Where(i => i.SongInfo == null || filter.Filter(i.SongInfo))];
             Array.Sort(infos, Compare);
             return infos;
 

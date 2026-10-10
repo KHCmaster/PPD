@@ -1,0 +1,11 @@
+<Window x:Class="PPDInstaller.LangSelectWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Language" SizeToContent="WidthAndHeight" ResizeMode="NoResize" ShowInTaskbar="False"
+        WindowStartupLocation="CenterScreen" SourceInitialized="Window_SourceInitialized">
+    <!-- DataContext はウィンドウ自身（言語を 1 つ選ぶだけなので、ViewModel を分けない） -->
+    <StackPanel Margin="12">
+        <ComboBox AutomationProperties.AutomationId="LanguageCombo" Width="121" ItemsSource="{Binding Languages}" SelectedIndex="{Binding SelectedIndex}" />
+        <Button AutomationProperties.AutomationId="OkButton" Content="OK" Width="75" Height="23" Margin="0,6,0,0" IsDefault="True" Click="OkButton_Click" />
+    </StackPanel>
+</Window>

@@ -1,5 +1,5 @@
 ﻿using PPDFramework;
-using SharpDX.DirectInput;
+using Vortice.DirectInput;
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
@@ -9,12 +9,20 @@ namespace PPDInput
     public class Input : InputBase
     {
         int[] keyCount;
-        List<int[]> buttonCount;
+        readonly List<int[]> buttonCount = [];
 
-        public Input(Form window)
-            : base(window)
+        /// <summary>
+        /// WinForms のウィンドウで入力を受け取ります。
+        /// </summary>
+        public Input(Form window) : base(window)
         {
-            buttonCount = new List<int[]>();
+        }
+
+        /// <summary>
+        /// ウィンドウのハンドルで入力を受け取ります（WPF のウィンドウなど）。
+        /// </summary>
+        public Input(IntPtr windowHandle) : base(windowHandle)
+        {
         }
 
         public override void Load()
@@ -34,10 +42,7 @@ namespace PPDInput
                 {
                     Array.Clear(keyCount, 0, keyCount.Length);
                 }
-                if (buttonCount != null)
-                {
-                    buttonCount.Clear();
-                }
+                buttonCount?.Clear();
             }
             base.ReleaseObjects();
         }
@@ -59,14 +64,11 @@ namespace PPDInput
             released = new bool[keys.Length];
             try
             {
-                if (keyCount == null)
-                {
-                    keyCount = new int[keys.Length];
-                }
+                keyCount ??= new int[keys.Length];
                 if (keyboard == null || AssignMode) return false;
-                this.keyboard.Acquire();
-                this.keyboard.Poll();
-                IEnumerable<KeyboardUpdate> bufferedData = keyboard.GetBufferedData();
+                this.keyboard.Acquire().CheckError();
+                this.keyboard.Poll().CheckError();
+                IEnumerable<KeyboardUpdate> bufferedData = keyboard.GetBufferedKeyboardData();
 
                 bool gotbuffer = false;
                 bool[] gotbuffers = new bool[keys.Length];
@@ -140,10 +142,10 @@ namespace PPDInput
                 {
                     return false;
                 }
-                joystick.Acquire();
-                joystick.Poll();
+                joystick.Acquire().CheckError();
+                joystick.Poll().CheckError();
 
-                var js = joystick.GetCurrentState();
+                var js = joystick.GetCurrentJoystickState();
                 int[] povdata = js.PointOfViewControllers;
                 bool[] povcome = new bool[4];
                 bool[] axiscome = new bool[4];
@@ -397,9 +399,9 @@ namespace PPDInput
             {
                 key = Key.Unknown;
                 if (keyboard == null) return false;
-                this.keyboard.Acquire();
-                this.keyboard.Poll();
-                IEnumerable<KeyboardUpdate> bufferedData = keyboard.GetBufferedData();
+                this.keyboard.Acquire().CheckError();
+                this.keyboard.Poll().CheckError();
+                IEnumerable<KeyboardUpdate> bufferedData = keyboard.GetBufferedKeyboardData();
                 foreach (KeyboardUpdate keyboardUpdate in bufferedData)
                 {
                     if (keyboardUpdate.IsPressed)
@@ -421,11 +423,11 @@ namespace PPDInput
             try
             {
                 button = -1;
-                Joystick joystick = CurrentJoyStick;
+                IDirectInputDevice8 joystick = CurrentJoyStick;
                 if (joystick == null) return false;
-                joystick.Acquire();
-                joystick.Poll();
-                var state = joystick.GetCurrentState();
+                joystick.Acquire().CheckError();
+                joystick.Poll().CheckError();
+                var state = joystick.GetCurrentJoystickState();
                 int[] povdata = state.PointOfViewControllers;
                 for (int i = 0; i < povdata.Length; i++)
                 {

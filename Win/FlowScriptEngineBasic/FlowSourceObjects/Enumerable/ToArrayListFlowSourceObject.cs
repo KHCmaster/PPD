@@ -27,9 +27,9 @@ namespace FlowScriptEngineBasic.FlowSourceObjects.Enumerable
                 SetValue(nameof(Enumerable));
                 if (Enumerable == null)
                 {
-                    return new List<object>();
+                    return [];
                 }
-                return Enumerable.ToList();
+                return [.. Enumerable];
             }
         }
     }

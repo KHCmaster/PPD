@@ -53,11 +53,11 @@ namespace PPDFrameworkCore
             }
         }
 
-        private Object GetObjectFromString(string exp, object first, out string last)
+        private static Object GetObjectFromString(string exp, object first, out string last)
         {
             Object lastObj = first;
             var srcSplit = exp.Split('.');
-            last = srcSplit[srcSplit.Length - 1];
+            last = srcSplit[^1];
             for (int i = 0; i < srcSplit.Length - 1; i++)
             {
                 var propertyInfo = FindPropertyInfo(lastObj, srcSplit[i]);
@@ -80,8 +80,7 @@ namespace PPDFrameworkCore
         {
             if (srcPropertyInfo != null && destPropertyInfo != null && propertyName == srcPropertyLast)
             {
-                object srcValue = null;
-                srcValue = srcPropertyInfo.GetValue(srcObject, null);
+                object srcValue = srcPropertyInfo.GetValue(srcObject, null);
 
                 if (srcValue != null)
                 {
@@ -90,7 +89,7 @@ namespace PPDFrameworkCore
             }
         }
 
-        private PropertyInfo FindPropertyInfo(object obj, string propertyName)
+        private static PropertyInfo FindPropertyInfo(object obj, string propertyName)
         {
             foreach (PropertyInfo propertyInfo in obj.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static))
             {
@@ -106,8 +105,7 @@ namespace PPDFrameworkCore
         {
             if (srcPropertyInfo != null && destPropertyInfo != null)
             {
-                object srcValue = null;
-                srcValue = srcPropertyInfo.GetValue(srcObject, null);
+                object srcValue = srcPropertyInfo.GetValue(srcObject, null);
 
                 if (srcValue != null)
                 {
@@ -118,10 +116,7 @@ namespace PPDFrameworkCore
 
         public void Release()
         {
-            if (srcObject != null)
-            {
-                srcObject.PropertyChanged -= Binding_PropertyChanged;
-            }
+            srcObject?.PropertyChanged -= Binding_PropertyChanged;
         }
     }
 

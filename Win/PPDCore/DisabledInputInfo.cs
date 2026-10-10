@@ -4,19 +4,12 @@ using PPDFramework;
 
 namespace PPDCore
 {
-    class DisabledInputInfo : InputInfoBase
+    class DisabledInputInfo(InputInfoBase inputInfo, InputManager inputManager) : InputInfoBase(inputInfo.Accurate)
     {
-        private InputInfoBase inputInfo;
-        private InputManager inputManager;
+        private readonly InputInfoBase inputInfo = inputInfo;
+        private readonly InputManager inputManager = inputManager;
 
-        public DisabledInputInfo(InputInfoBase inputInfo, InputManager inputManager)
-            : base(inputInfo.Accurate)
-        {
-            this.inputInfo = inputInfo;
-            this.inputManager = inputManager;
-        }
-
-        private bool IsNormalButton(ButtonType buttonType)
+        private static bool IsNormalButton(ButtonType buttonType)
         {
             return buttonType >= ButtonType.Square && buttonType <= ButtonType.L;
         }

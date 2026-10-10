@@ -1,6 +1,6 @@
-﻿using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Command;
-using GalaSoft.MvvmLight.Messaging;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using PPDConfiguration;
 using PPDEditorCommon.Dialog.Message;
 using PPDEditorCommon.Dialog.Model;
@@ -14,7 +14,7 @@ using System.Windows.Input;
 
 namespace PPDEditorCommon.Dialog.ViewModel
 {
-    public class NewProjectWindowViewModel : ViewModelBase
+    public class NewProjectWindowViewModel : ObservableObject
     {
         const string ProjectTemplatesPath = "ProjectTemplates";
 
@@ -51,7 +51,7 @@ namespace PPDEditorCommon.Dialog.ViewModel
                 if (selectedItem != value)
                 {
                     selectedItem = value;
-                    RaisePropertyChanged("SelectedItem");
+                    OnPropertyChanged(nameof(SelectedItem));
                 }
             }
         }
@@ -64,7 +64,7 @@ namespace PPDEditorCommon.Dialog.ViewModel
                 if (name != value)
                 {
                     name = value;
-                    RaisePropertyChanged("Name");
+                    OnPropertyChanged(nameof(Name));
                     Validate();
                 }
             }
@@ -78,7 +78,7 @@ namespace PPDEditorCommon.Dialog.ViewModel
                 if (folderPath != value)
                 {
                     folderPath = value;
-                    RaisePropertyChanged("FolderPath");
+                    OnPropertyChanged(nameof(FolderPath));
                     Validate();
                 }
             }
@@ -92,7 +92,7 @@ namespace PPDEditorCommon.Dialog.ViewModel
                 if (moviePath != value)
                 {
                     moviePath = value;
-                    RaisePropertyChanged("MoviePath");
+                    OnPropertyChanged(nameof(MoviePath));
                     Validate();
                 }
             }
@@ -106,7 +106,7 @@ namespace PPDEditorCommon.Dialog.ViewModel
                 if (isOkEnabled != value)
                 {
                     isOkEnabled = value;
-                    RaisePropertyChanged("IsOkEnabled");
+                    OnPropertyChanged(nameof(IsOkEnabled));
                 }
             }
         }
@@ -119,7 +119,7 @@ namespace PPDEditorCommon.Dialog.ViewModel
                 if (validateResultMessage != value)
                 {
                     validateResultMessage = value;
-                    RaisePropertyChanged("ValidateResultMessage");
+                    OnPropertyChanged(nameof(ValidateResultMessage));
                 }
             }
         }
@@ -128,7 +128,7 @@ namespace PPDEditorCommon.Dialog.ViewModel
         {
             get
             {
-                return loadedCommand ?? (loadedCommand = new RelayCommand(LoadedCommand_Execute));
+                return loadedCommand ??= new RelayCommand(LoadedCommand_Execute);
             }
         }
 
@@ -136,7 +136,7 @@ namespace PPDEditorCommon.Dialog.ViewModel
         {
             get
             {
-                return okCommand ?? (okCommand = new RelayCommand(OkCommand_Execute));
+                return okCommand ??= new RelayCommand(OkCommand_Execute);
             }
         }
 
@@ -144,7 +144,7 @@ namespace PPDEditorCommon.Dialog.ViewModel
         {
             get
             {
-                return cancelCommand ?? (cancelCommand = new RelayCommand(CancelCommand_Execute));
+                return cancelCommand ??= new RelayCommand(CancelCommand_Execute);
             }
         }
 
@@ -152,8 +152,8 @@ namespace PPDEditorCommon.Dialog.ViewModel
         {
             get
             {
-                return selectedItemChangedCommand ?? (selectedItemChangedCommand = new RelayCommand<RoutedPropertyChangedEventArgs<object>>(
-                    SelectedItemChangedCommand_Execute));
+                return selectedItemChangedCommand ??= new RelayCommand<RoutedPropertyChangedEventArgs<object>>(
+                    SelectedItemChangedCommand_Execute);
             }
         }
 
@@ -161,7 +161,7 @@ namespace PPDEditorCommon.Dialog.ViewModel
         {
             get
             {
-                return referLocationCommand ?? (referLocationCommand = new RelayCommand(ReferLocationCommand_Execute));
+                return referLocationCommand ??= new RelayCommand(ReferLocationCommand_Execute);
             }
         }
 
@@ -169,14 +169,14 @@ namespace PPDEditorCommon.Dialog.ViewModel
         {
             get
             {
-                return referMovieCommand ?? (referMovieCommand = new RelayCommand(ReferMovieCommand_Execute));
+                return referMovieCommand ??= new RelayCommand(ReferMovieCommand_Execute);
             }
         }
 
         public NewProjectWindowViewModel(LanguageReader languageReader)
         {
             TranslateExtension.Language = languageReader;
-            Templates = new ObservableCollection<ListViewModel<TemplateInfo>>();
+            Templates = [];
             Root = new TreeNodeViewModel<TemplateInfo>();
         }
 
@@ -198,8 +198,8 @@ namespace PPDEditorCommon.Dialog.ViewModel
                 }
                 catch (Exception ex)
                 {
-                    Messenger.Default.Send(new ShowMessageBoxMessage(this, String.Format("Error in Loading {0}", path)));
-                    Messenger.Default.Send(new ShowMessageBoxMessage(this, ex.Message));
+                    WeakReferenceMessenger.Default.Send(new ShowMessageBoxMessage(this, String.Format("Error in Loading {0}", path)));
+                    WeakReferenceMessenger.Default.Send(new ShowMessageBoxMessage(this, ex.Message));
                 }
             }
 
@@ -340,23 +340,22 @@ namespace PPDEditorCommon.Dialog.ViewModel
             InitializeTemplates();
             SetDefaultName();
             Validate();
-            Messenger.Default.Send(new SelectMessage(this, "nameTextBox"));
+            WeakReferenceMessenger.Default.Send(new SelectMessage(this, "nameTextBox"));
         }
 
         private void OkCommand_Execute()
         {
-            Messenger.Default.Send(new CloseWindowMessage(this, true));
+            WeakReferenceMessenger.Default.Send(new CloseWindowMessage(this, true));
         }
 
         private void CancelCommand_Execute()
         {
-            Messenger.Default.Send(new CloseWindowMessage(this, false));
+            WeakReferenceMessenger.Default.Send(new CloseWindowMessage(this, false));
         }
 
         private void SelectedItemChangedCommand_Execute(RoutedPropertyChangedEventArgs<object> e)
         {
-            var node = e.NewValue as TreeNodeViewModel<TemplateInfo>;
-            if (node == null)
+            if (e.NewValue is not TreeNodeViewModel<TemplateInfo> node)
             {
                 return;
             }
@@ -369,7 +368,7 @@ namespace PPDEditorCommon.Dialog.ViewModel
             {
                 SelectedPath = FolderPath
             };
-            Messenger.Default.Send(message);
+            WeakReferenceMessenger.Default.Send(message);
             if (message.Result)
             {
                 FolderPath = message.SelectedPath;
@@ -382,7 +381,7 @@ namespace PPDEditorCommon.Dialog.ViewModel
             {
                 FileName = MoviePath
             };
-            Messenger.Default.Send(message);
+            WeakReferenceMessenger.Default.Send(message);
             if (message.Result)
             {
                 MoviePath = message.FileName;

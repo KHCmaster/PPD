@@ -28,7 +28,7 @@ namespace PPD
             };
         }
 
-        private void Login()
+        private static void Login()
         {
             ErrorReason errorReason = ErrorReason.OK;
             if (!String.IsNullOrEmpty(PPDGeneralSetting.Setting.Username))
@@ -43,12 +43,12 @@ namespace PPD
             ShowLoginFormImpl(errorReason);
         }
 
-        public void ShowLoginForm()
+        public static void ShowLoginForm()
         {
             ShowLoginFormImpl(ErrorReason.OK);
         }
 
-        private void ShowLoginFormImpl(ErrorReason errorReason)
+        private static void ShowLoginFormImpl(ErrorReason errorReason)
         {
             var loginForm = new LoginForm
             {
@@ -73,12 +73,18 @@ namespace PPD
 
         protected override void OnFailedInitializeDirectX()
         {
-            MessageBox.Show(Utility.Language["DirectXInitializeFailed"]);
+            var message = Utility.Language["DirectXInitializeFailed"];
+            if (InitializeDirectXException != null)
+            {
+                message += Environment.NewLine + Environment.NewLine + InitializeDirectXException.Message;
+            }
+            MessageBox.Show(message);
         }
 
         protected override void OnSuccessInitializeDirectX()
         {
             MovieUtility.Window = Form.RenderForm.Handle;
+            Form.MainForm.Text = String.Format("PPD [{0}]", device.DirectXVersion);
         }
     }
 }

@@ -6,9 +6,9 @@ namespace PPDMulti
 {
     class ItemUseManager
     {
-        private List<ItemType> autoUseItemTypes;
+        private readonly List<ItemType> autoUseItemTypes;
 
-        private static ItemUseManager manager;
+        private static readonly ItemUseManager manager;
 
         public static ItemUseManager Manager
         {
@@ -25,8 +25,8 @@ namespace PPDMulti
 
         private ItemUseManager()
         {
-            autoUseItemTypes = new List<ItemType>();
-            foreach (string split in SkinSetting.Setting.AutoUseItemTypes.Split(','))
+            autoUseItemTypes = [];
+            foreach (string split in SkinSetting.AutoUseItemTypes.Split(','))
             {
                 if (int.TryParse(split, out int result))
                 {
@@ -43,22 +43,21 @@ namespace PPDMulti
                 array[i] = ((int)autoUseItemTypes[i]).ToString();
             }
 
-            SkinSetting.Setting.AutoUseItemTypes = String.Join(",", array);
+            SkinSetting.AutoUseItemTypes = String.Join(",", array);
         }
 
         public ItemType[] AutoUseItemTypes
         {
             get
             {
-                return autoUseItemTypes.ToArray();
+                return [.. autoUseItemTypes];
             }
         }
 
         public void ToggleAutoUse(ItemType itemType)
         {
-            if (autoUseItemTypes.Contains(itemType))
+            if (autoUseItemTypes.Remove(itemType))
             {
-                autoUseItemTypes.Remove(itemType);
                 Save();
             }
             else

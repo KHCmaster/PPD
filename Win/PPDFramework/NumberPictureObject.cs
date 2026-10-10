@@ -1,7 +1,9 @@
 ﻿using PPDFramework.Resource;
 using PPDFramework.Shaders;
 using PPDFramework.Vertex;
-using SharpDX;
+using System.Numerics;
+using PPDMath;
+using Size2F = Vortice.Mathematics.Size;
 using System.Text;
 
 namespace PPDFramework
@@ -12,7 +14,7 @@ namespace PPDFramework
     /// </summary>
     public class NumberPictureObject : GameComponent
     {
-        ImageResourceBase imageResource;
+        readonly ImageResourceBase imageResource;
         Alignment alignment;
         int maxDigit;
         uint numValue;
@@ -92,10 +94,7 @@ namespace PPDFramework
         public NumberPictureObject(PPDDevice device, Resource.ResourceManager resourceManager, PathObject filename) : base(device)
         {
             imageResource = resourceManager.GetResource<ImageResourceBase>(filename);
-            if (imageResource == null)
-            {
-                imageResource = (ImageResourceBase)resourceManager.Add(filename, ImageResourceFactoryManager.Factory.Create(device, filename, false));
-            }
+            imageResource ??= (ImageResourceBase)resourceManager.Add(filename, ImageResourceFactoryManager.Factory.Create(device, filename, false));
             UpdateResource();
         }
 
@@ -127,16 +126,13 @@ namespace PPDFramework
 
         private float GetLeft(int length)
         {
-            switch (Alignment)
+            return Alignment switch
             {
-                case Alignment.Left:
-                    return 0;
-                case Alignment.Right:
-                    return -DigitWidth * length;
-                case Alignment.Center:
-                    return -DigitWidth * length / 2;
-            }
-            return 0;
+                Alignment.Left => 0,
+                Alignment.Right => -DigitWidth * length,
+                Alignment.Center => -DigitWidth * length / 2,
+                _ => 0,
+            };
         }
 
         private void UpdateResource()
@@ -157,7 +153,7 @@ namespace PPDFramework
             }
             else if (valueString.Length >= maxDigit)
             {
-                valueString = valueString.Substring(valueString.Length - maxDigit);
+                valueString = valueString[^maxDigit..];
                 verticesCount = valueString.Length;
             }
             if (numberVertices == null || numberVertices.Length != verticesCount)
@@ -166,10 +162,7 @@ namespace PPDFramework
                 {
                     foreach (var vertices in numberVertices)
                     {
-                        if (vertices != null)
-                        {
-                            vertices.Dispose();
-                        }
+                        vertices?.Dispose();
                     }
                 }
                 numberVertices = new VertexInfo[verticesCount];
@@ -190,12 +183,12 @@ namespace PPDFramework
                     imageResource.Height / textureSize.Height);
                 var pos1X = i * DigitWidth + left;
                 var pos2X = pos1X + DigitWidth;
-                numberVertices[i].Write(new[] {
+                numberVertices[i].Write([
                     new ColoredTexturedVertex(new Vector3(pos1X, 0, 0.5f), rect.TopLeft),
                     new ColoredTexturedVertex(new Vector3(pos2X, 0, 0.5f), rect.TopRight),
                     new ColoredTexturedVertex(new Vector3(pos1X, imageResource.Height, 0.5f), rect.BottomLeft),
                     new ColoredTexturedVertex(new Vector3(pos2X, imageResource.Height, 0.5f), rect.BottomRight)
-                });
+                ]);
             }
         }
 
@@ -210,10 +203,7 @@ namespace PPDFramework
             {
                 foreach (var vertices in numberVertices)
                 {
-                    if (vertices != null)
-                    {
-                        vertices.Dispose();
-                    }
+                    vertices?.Dispose();
                 }
                 numberVertices = null;
             }

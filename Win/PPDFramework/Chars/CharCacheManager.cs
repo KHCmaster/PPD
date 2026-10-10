@@ -7,23 +7,25 @@ namespace PPDFramework.Chars
     /// <summary>
     /// 文字画像をキャッシュするマネージャーです。
     /// </summary>
-    public class CharCacheManager : DisposableComponent
+    /// <remarks>
+    /// コンストラクタです。
+    /// </remarks>
+    /// <param name="device"></param>
+    public class CharCacheManager(PPDDevice device) : DisposableComponent
     {
-        Dictionary<char, Dictionary<float, Dictionary<string, CharCacheInfo>>> cache;
-        Dictionary<float, Dictionary<string, SizeTextureManager>> sizeTextures;
-        PPDDevice device;
-        Direct2DImageEncoder encoder;
+        readonly Dictionary<char, Dictionary<float, Dictionary<string, CharCacheInfo>>> cache = [];
+        readonly Dictionary<float, Dictionary<string, SizeTextureManager>> sizeTextures = [];
+        readonly PPDDevice device = device;
+        Direct2DImageEncoder encoder = new(2048, 2048, 96);
+        CharTextureWorker worker;
 
         /// <summary>
-        /// コンストラクタです。
+        /// 描画のループを回しているスレッドです。このスレッドで必要になった文字は、別のスレッドで作ります（0 のときは、常にその場で作る）。
         /// </summary>
-        /// <param name="device"></param>
-        public CharCacheManager(PPDDevice device)
+        internal static int RenderThreadId
         {
-            this.device = device;
-            cache = new Dictionary<char, Dictionary<float, Dictionary<string, CharCacheInfo>>>();
-            sizeTextures = new Dictionary<float, Dictionary<string, SizeTextureManager>>();
-            encoder = new Direct2DImageEncoder(2048, 2048, 96);
+            get;
+            set;
         }
 
         internal CharCacheInfo Get(float fontsize, string facename, char c)
@@ -42,7 +44,7 @@ namespace PPDFramework.Chars
             {
                 if (!cache.TryGetValue(c, out sizeCache))
                 {
-                    sizeCache = new Dictionary<float, Dictionary<string, CharCacheInfo>>();
+                    sizeCache = [];
                     cache[c] = sizeCache;
                 }
             }
@@ -50,7 +52,7 @@ namespace PPDFramework.Chars
             {
                 if (!sizeCache.TryGetValue(fontSize, out faceCache))
                 {
-                    faceCache = new Dictionary<string, CharCacheInfo>();
+                    faceCache = [];
                     sizeCache[fontSize] = faceCache;
                 }
             }
@@ -64,11 +66,24 @@ namespace PPDFramework.Chars
                     {
                         sizeTextureManager = GetSizeTextureManager(fontSize, faceName);
                     }
-                    info.CreateTexture(device, encoder, sizeTextureManager);
+                    info.CreateTexture(device, encoder, sizeTextureManager, GetWorker());
+                    FrameProfiler.Note(String.Format("char[{0} {1} {2}]", c, fontSize, faceName));
                     faceCache[faceName] = info;
                 }
             }
             return info;
+        }
+
+        /// <summary>
+        /// 描画のスレッドから呼ばれたときだけ、文字を作るスレッドを返します（読み込みのスレッドなどでは、その場で作る）。
+        /// </summary>
+        private CharTextureWorker GetWorker()
+        {
+            if (RenderThreadId == 0 || Environment.CurrentManagedThreadId != RenderThreadId || Disposed)
+            {
+                return null;
+            }
+            return worker ??= new CharTextureWorker();
         }
 
         private SizeTextureManager GetSizeTextureManager(float fontSize, string faceName)
@@ -79,7 +94,7 @@ namespace PPDFramework.Chars
             {
                 if (!sizeTextures.TryGetValue(fontSize, out faceTextures))
                 {
-                    faceTextures = new Dictionary<string, SizeTextureManager>();
+                    faceTextures = [];
                     sizeTextures[fontSize] = faceTextures;
                 }
             }
@@ -127,7 +142,7 @@ namespace PPDFramework.Chars
             }
         }
 
-        internal void FinalizeInternal()
+        internal static void FinalizeInternal()
         {
         }
 
@@ -137,6 +152,9 @@ namespace PPDFramework.Chars
         protected override void DisposeResource()
         {
             base.DisposeResource();
+            // 文字を作るスレッドを先に止める（破棄したテクスチャやエンコーダーを使わないように）
+            worker?.Dispose();
+            worker = null;
             lock (cache)
             {
                 foreach (CharCacheInfo info in cache.SelectMany(c => c.Value.SelectMany(sc => sc.Value).Select(fc => fc.Value)))
@@ -160,6 +178,9 @@ namespace PPDFramework.Chars
                 }
                 sizeTextures.Clear();
             }
+
+            encoder?.Dispose();
+            encoder = null;
         }
     }
 }

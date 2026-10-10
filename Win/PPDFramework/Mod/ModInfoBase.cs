@@ -5,9 +5,12 @@ namespace PPDFramework.Mod
     /// <summary>
     /// Modの情報の基底クラスです。
     /// </summary>
-    public abstract class ModInfoBase
+    /// <remarks>
+    /// コンストラクタです。
+    /// </remarks>
+    public abstract class ModInfoBase(string path, bool isDir)
     {
-        private List<ModInfoBase> childModInfos;
+        private readonly List<ModInfoBase> childModInfos = [];
 
         /// <summary>
         /// 親を取得します。
@@ -23,7 +26,7 @@ namespace PPDFramework.Mod
         /// </summary>
         public ModInfoBase[] Children
         {
-            get { return childModInfos.ToArray(); }
+            get { return [.. childModInfos]; }
         }
 
         /// <summary>
@@ -33,7 +36,7 @@ namespace PPDFramework.Mod
         {
             get;
             private set;
-        }
+        } = isDir;
 
         /// <summary>
         /// パスを取得します。
@@ -42,17 +45,7 @@ namespace PPDFramework.Mod
         {
             get;
             private set;
-        }
-
-        /// <summary>
-        /// コンストラクタです。
-        /// </summary>
-        protected ModInfoBase(string path, bool isDir)
-        {
-            childModInfos = new List<ModInfoBase>();
-            IsDir = isDir;
-            ModPath = path;
-        }
+        } = path;
 
         /// <summary>
         /// 子を追加します。

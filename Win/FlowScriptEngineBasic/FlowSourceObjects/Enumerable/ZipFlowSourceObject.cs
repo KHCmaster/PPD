@@ -36,18 +36,12 @@ namespace FlowScriptEngineBasic.FlowSourceObjects.Enumerable
             {
                 SetValue(nameof(First));
                 SetValue(nameof(Second));
-                if (First == null || Second == null)
+                // 片方しかなければ、そのまま返す（元は First だけのときに空になっていた）
+                if (First == null)
                 {
-                    if (Second == null)
-                    {
-                        return System.Linq.Enumerable.Empty<object>();
-                    }
-                    else
-                    {
-                        return Second;
-                    }
+                    return Second ?? [];
                 }
-                else if (Second == null)
+                if (Second == null)
                 {
                     return First;
                 }

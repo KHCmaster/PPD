@@ -79,7 +79,7 @@ namespace PPDSingle
                 return false;
             }
 
-            return ok |= (Difficulty.HasFlag(PPDFramework.SongInformation.AvailableDifficulty.Easy) && info.Difficulty.HasFlag(PPDFramework.SongInformation.AvailableDifficulty.Easy)) ||
+            return ok | (Difficulty.HasFlag(PPDFramework.SongInformation.AvailableDifficulty.Easy) && info.Difficulty.HasFlag(PPDFramework.SongInformation.AvailableDifficulty.Easy)) ||
                 (Difficulty.HasFlag(PPDFramework.SongInformation.AvailableDifficulty.Normal) && info.Difficulty.HasFlag(PPDFramework.SongInformation.AvailableDifficulty.Normal)) ||
                 (Difficulty.HasFlag(PPDFramework.SongInformation.AvailableDifficulty.Hard) && info.Difficulty.HasFlag(PPDFramework.SongInformation.AvailableDifficulty.Hard)) ||
                 (Difficulty.HasFlag(PPDFramework.SongInformation.AvailableDifficulty.Extreme) && info.Difficulty.HasFlag(PPDFramework.SongInformation.AvailableDifficulty.Extreme));
@@ -135,7 +135,7 @@ namespace PPDSingle
 
         public SongInformation[] GetFiltered(SongInformation[] infos)
         {
-            infos = infos.Where(Filter).ToArray();
+            infos = [.. infos.Where(Filter)];
             Array.Sort(infos, Compare);
             return infos;
         }

@@ -4,19 +4,19 @@ namespace PPDEditorCommon.Dialog.Model
 {
     public class ScriptManagerInfo
     {
-        List<ScriptInfo> scripts;
+        readonly List<ScriptInfo> scripts;
 
         public ScriptInfo[] Scripts
         {
             get
             {
-                return scripts.ToArray();
+                return [.. scripts];
             }
         }
 
         public ScriptManagerInfo()
         {
-            scripts = new List<ScriptInfo>();
+            scripts = [];
         }
 
         public void Add(ScriptInfo scriptInfo)
@@ -25,24 +25,18 @@ namespace PPDEditorCommon.Dialog.Model
         }
     }
 
-    public class ScriptInfo
+    public class ScriptInfo(string src, string dest)
     {
         public string Src
         {
             get;
             private set;
-        }
+        } = src;
 
         public string Dest
         {
             get;
             private set;
-        }
-
-        public ScriptInfo(string src, string dest)
-        {
-            Src = src;
-            Dest = dest;
-        }
+        } = dest;
     }
 }

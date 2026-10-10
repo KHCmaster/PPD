@@ -5,7 +5,7 @@ namespace FlowScriptDrawControl.Command
 {
     class CommandSet : CommandBase
     {
-        private List<CommandBase> list;
+        private readonly List<CommandBase> list;
 
         public int CommandCount
         {
@@ -17,7 +17,7 @@ namespace FlowScriptDrawControl.Command
 
         public CommandSet()
         {
-            list = new List<CommandBase>();
+            list = [];
         }
 
         public void AddCommand(CommandBase command)

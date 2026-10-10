@@ -2,7 +2,7 @@
 
 namespace PPDTest
 {
-    class NumberImageScene : TestSceneBase
+    class NumberImageScene(TestSceneManager testSceneManager, PPDDevice device) : TestSceneBase(testSceneManager, device)
     {
         protected override string Title
         {
@@ -10,11 +10,6 @@ namespace PPDTest
             {
                 return "数字画像表示テスト";
             }
-        }
-
-        public NumberImageScene(TestSceneManager testSceneManager, PPDDevice device) : base(testSceneManager, device)
-        {
-
         }
 
         protected override void OnInitialize()

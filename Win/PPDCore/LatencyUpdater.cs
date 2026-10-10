@@ -1,14 +1,14 @@
 ﻿namespace PPDCore
 {
-    abstract class LatencyUpdaterBase
+    abstract class LatencyUpdaterBase(float baseLatency)
     {
-        private float baseLatency;
+        private readonly float baseLatency = baseLatency;
 
         public int BaseLantencyCount
         {
             get;
             private set;
-        }
+        } = (int)(baseLatency * 1000);
 
         public int LatencyCount
         {
@@ -22,12 +22,6 @@
             {
                 return baseLatency + 0.001f * LatencyCount;
             }
-        }
-
-        protected LatencyUpdaterBase(float baseLatency)
-        {
-            this.baseLatency = baseLatency;
-            BaseLantencyCount = (int)(baseLatency * 1000);
         }
 
         public abstract void SaveLatency();

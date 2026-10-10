@@ -3,7 +3,7 @@ using System;
 
 namespace PPD
 {
-    abstract class HomePanelBase : FocusableGameComponent
+    abstract class HomePanelBase(PPDDevice device) : FocusableGameComponent(device)
     {
         public event Action<int> LoadProgressed;
         public abstract void Load();
@@ -12,11 +12,6 @@ namespace PPD
         {
             get;
             protected set;
-        }
-
-        protected HomePanelBase(PPDDevice device) : base(device)
-        {
-
         }
 
         protected void OnLoadProgressed(int val)

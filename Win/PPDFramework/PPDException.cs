@@ -81,7 +81,7 @@ namespace PPDFramework
             : base(detail, exception)
         {
             ExceptionType = type;
-            if (detail == null) detail = "";
+            detail ??= "";
             Detail = detail;
         }
     }

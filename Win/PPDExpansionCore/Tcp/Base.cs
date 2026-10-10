@@ -13,13 +13,11 @@ namespace PPDExpansionCore.Tcp
         {
             if (reader.Files.Any(f => f == keyName))
             {
-                using (PPDPackStreamReader packStreamReader = reader.Read(keyName))
-                {
-                    byte[] data = new byte[sizeof(int)];
-                    packStreamReader.Read(data, 0, data.Length);
-                    var ret = BitConverter.ToInt32(data, 0);
-                    return ret;
-                }
+                using PPDPackStreamReader packStreamReader = reader.Read(keyName);
+                byte[] data = new byte[sizeof(int)];
+                packStreamReader.ReadAtLeast(data, data.Length, throwOnEndOfStream: false);
+                var ret = BitConverter.ToInt32(data, 0);
+                return ret;
             }
 
             return 0;
@@ -27,28 +25,26 @@ namespace PPDExpansionCore.Tcp
 
         protected byte[] Read(NetworkStream stream)
         {
-            using (MemoryStream ms = new MemoryStream())
+            using MemoryStream ms = new();
+            byte[] buffer = new byte[1024 * 1024];
+            try
             {
-                byte[] buffer = new byte[1024 * 1024];
-                try
+                do
                 {
-                    do
+                    var readSize = stream.Read(buffer, 0, buffer.Length);
+                    if (readSize == 0)
                     {
-                        var readSize = stream.Read(buffer, 0, buffer.Length);
-                        if (readSize == 0)
-                        {
-                            OnClosed();
-                            return new byte[0];
-                        }
-                        ms.Write(buffer, 0, readSize);
-                    } while (stream.DataAvailable);
-                    return ms.ToArray();
-                }
-                catch
-                {
-                    OnClosed();
-                    return new byte[0];
-                }
+                        OnClosed();
+                        return [];
+                    }
+                    ms.Write(buffer, 0, readSize);
+                } while (stream.DataAvailable);
+                return ms.ToArray();
+            }
+            catch
+            {
+                OnClosed();
+                return [];
             }
         }
 

@@ -1,21 +1,22 @@
 ﻿using PPDFramework;
 using PPDShareComponent;
-using SharpDX;
+using System.Numerics;
+using PPDMath;
 using System;
 
 namespace PPDSingle
 {
     class ScoreSearcher : FocusableGameComponent
     {
-        DxTextBox textBox;
-        PictureObject back;
-        LineRectangleComponent border;
-        SongSelectFilter filter;
+        readonly DxTextBox textBox;
+        readonly PictureObject back;
+        readonly LineRectangleComponent border;
+        readonly SongSelectFilter filter;
 
-        SongInfoFinder sif;
+        readonly SongInfoFinder sif;
         bool mustcheck;
 
-        TextureString[] results;
+        readonly TextureString[] results;
 
         int selection = -1;
 
@@ -75,7 +76,7 @@ namespace PPDSingle
             }
             else if (type == typeof(DxTextBox))
             {
-                textBox.TextChanged -= textBox_TextChanged;
+                textBox.TextChanged -= TextBox_TextChanged;
                 textBox.DrawMode = DxTextBox.DrawingMode.None;
                 if (sif.Finished && sif.Result.Count > 0)
                 {
@@ -96,11 +97,11 @@ namespace PPDSingle
             textBox.Position = new Vector2(240, 65);
             textBox.TextBoxWidth = 300;
             textBox.TextBoxHeight = 20;
-            textBox.TextChanged += textBox_TextChanged;
+            textBox.TextChanged += TextBox_TextChanged;
             FocusManager.Focus(textBox);
         }
 
-        void textBox_TextChanged(object sender, EventArgs e)
+        void TextBox_TextChanged(object sender, EventArgs e)
         {
             mustcheck = true;
         }

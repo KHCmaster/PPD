@@ -1,0 +1,38 @@
+﻿<Window x:Class="BMSTOPPD.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:BMSTOPPD.ViewModels"
+        mc:Ignorable="d" d:DataContext="{d:DesignInstance Type=vm:MainWindowViewModel}"
+        Title="BMSTOPPD" SizeToContent="WidthAndHeight" ResizeMode="CanMinimize"
+        Icon="bmstoppd.ico">
+    <!-- AutomationId は UI の自動テスト（UITests）で使う -->
+    <Grid Margin="12,8,12,12">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="191" />
+            <ColumnDefinition Width="6" />
+            <ColumnDefinition Width="75" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Row="0" Text="filename" />
+        <TextBox AutomationProperties.AutomationId="FileNameBox" Grid.Row="1" Grid.Column="0" Margin="0,2,0,0" VerticalContentAlignment="Center"
+                 Text="{Binding FileName, UpdateSourceTrigger=PropertyChanged}" />
+        <Button AutomationProperties.AutomationId="OpenButton" Grid.Row="1" Grid.Column="2" Content="open" Margin="0,2,0,0" Command="{Binding OpenCommand}" />
+        <TextBlock Grid.Row="2" Text="timeoffset" Margin="0,10,0,0" />
+        <StackPanel Grid.Row="3" Grid.Column="0" Orientation="Horizontal" Margin="0,2,0,0">
+            <TextBox AutomationProperties.AutomationId="TimeOffsetBox" Width="100" VerticalContentAlignment="Center" Text="{Binding TimeOffset, UpdateSourceTrigger=PropertyChanged}" />
+        </StackPanel>
+        <Button AutomationProperties.AutomationId="ConvertButton" Grid.Row="3" Grid.Column="2" Content="convert" Margin="0,2,0,0" Command="{Binding ConvertCommand}" />
+        <StackPanel Grid.Row="4" Grid.ColumnSpan="3" Orientation="Horizontal" Margin="0,10,0,0">
+            <Button AutomationProperties.AutomationId="SettingButton" Content="setting" Width="75" Command="{Binding ShowSettingCommand}" />
+            <CheckBox AutomationProperties.AutomationId="DtxCheckBox" Content="DTXformat?" Margin="52,0,0,0" VerticalAlignment="Center" IsChecked="{Binding IsDtx}" />
+        </StackPanel>
+    </Grid>
+</Window>

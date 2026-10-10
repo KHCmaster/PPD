@@ -1,31 +1,24 @@
 ﻿using System;
-using System.ComponentModel;
 using System.IO;
 using System.Text;
-using System.Windows.Forms;
+using System.Threading;
 
 namespace PPDInstaller.Executor
 {
-    class IPAFontInstallExecutor : CExecutor
+    class IPAFontInstallExecutor(string filePath, string unzipPath, SynchronizationContext context) : CExecutor(context)
     {
-        public static Uri ipafonturi = new Uri("http://ossipedia.ipa.go.jp/ipafont/ipag00303.php");
-        System.Net.WebClient downloadClient = new System.Net.WebClient();
-        string filePath;
-        string unzipPath;
-        public IPAFontInstallExecutor(string filePath, string unzipPath, Control control)
-            : base(control)
-        {
-            this.filePath = filePath;
-            this.unzipPath = unzipPath;
-        }
+        public static Uri ipafonturi = new("http://ossipedia.ipa.go.jp/ipafont/ipag00303.php");
+        readonly FileDownloader downloadClient = new();
+        readonly string filePath = filePath;
+        readonly string unzipPath = unzipPath;
 
         public override void Execute()
         {
             base.Execute();
             try
             {
-                downloadClient.DownloadProgressChanged += IPAFontDownloadProgressChanged;
-                downloadClient.DownloadFileCompleted += IPAFontDownloadFileCompleted;
+                downloadClient.ProgressChanged += IPAFontDownloadProgressChanged;
+                downloadClient.Completed += IPAFontDownloadFileCompleted;
                 downloadClient.DownloadFileAsync(ipafonturi, filePath);
                 System.Threading.Thread.Sleep(1000);
             }
@@ -36,17 +29,17 @@ namespace PPDInstaller.Executor
             }
         }
 
-        void IPAFontDownloadProgressChanged(object sender, System.Net.DownloadProgressChangedEventArgs e)
+        void IPAFontDownloadProgressChanged(int progressPercentage)
         {
-            Progress = e.ProgressPercentage.ToString();
+            Progress = progressPercentage.ToString();
             OnProgress();
         }
-        void IPAFontDownloadFileCompleted(object sender, AsyncCompletedEventArgs e)
+        void IPAFontDownloadFileCompleted(Exception error)
         {
             try
             {
-                downloadClient.DownloadProgressChanged -= IPAFontDownloadProgressChanged;
-                downloadClient.DownloadFileCompleted -= IPAFontDownloadFileCompleted;
+                downloadClient.ProgressChanged -= IPAFontDownloadProgressChanged;
+                downloadClient.Completed -= IPAFontDownloadFileCompleted;
                 Utility.Unzip(filePath, unzipPath);
                 var cachefolder = Path.GetDirectoryName(unzipPath);
                 var dir = Path.Combine(cachefolder, "ipag00302\\ipag00303");
@@ -57,14 +50,16 @@ namespace PPDInstaller.Executor
                 }
                 //copy ipag00302\ipag00302\ipag.ttf %systemroot%\fonts
                 //regedit /s font.reg
-                var sw = new StreamWriter(Path.Combine(dir, "temp.bat"), false, Encoding.Default);
+                // バッチファイルと REGEDIT4 形式の .reg はシステムの ANSI コードページで書く（.NET では Encoding.Default が UTF-8 になるため明示する）
+                var ansi = Encoding.GetEncoding(NativeMethods.GetACP());
+                var sw = new StreamWriter(Path.Combine(dir, "temp.bat"), false, ansi);
                 sw.Write("@echo off");
                 sw.WriteLine();
                 sw.Write("copy ipag.ttf %systemroot%\\fonts");
                 sw.WriteLine();
                 sw.Write("regedit /s font.reg");
                 sw.Close();
-                sw = new StreamWriter(Path.Combine(dir, "font.reg"), false, Encoding.Default);
+                sw = new StreamWriter(Path.Combine(dir, "font.reg"), false, ansi);
                 sw.WriteLine("REGEDIT4");
                 sw.WriteLine();
                 sw.WriteLine("[HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Fonts]");

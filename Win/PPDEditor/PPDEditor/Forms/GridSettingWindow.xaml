@@ -1,0 +1,57 @@
+<Window x:Class="PPDEditor.Forms.GridSettingWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:PPDEditor.ViewModels.Dialogs"
+        xmlns:conv="clr-namespace:PPDEditor.Converters"
+        mc:Ignorable="d" d:DataContext="{d:DesignInstance Type=vm:GridSettingViewModel}"
+        Title="" SizeToContent="WidthAndHeight" ResizeMode="NoResize" ShowInTaskbar="False"
+        WindowStartupLocation="CenterScreen">
+    <StackPanel Margin="12">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" MinWidth="100" />
+                <ColumnDefinition Width="140" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="24" />
+                <RowDefinition Height="24" />
+                <RowDefinition Height="24" />
+                <RowDefinition Height="24" />
+                <RowDefinition Height="24" />
+            </Grid.RowDefinitions>
+            <TextBlock Text="{Binding Texts[GSFText1]}" VerticalAlignment="Center" />
+            <TextBox Text="{Binding Width, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Height="20" VerticalContentAlignment="Center" />
+            <TextBlock Grid.Row="1" Text="{Binding Texts[GSFText2]}" VerticalAlignment="Center" />
+            <TextBox Text="{Binding Height, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" Grid.Column="1" Height="20" VerticalContentAlignment="Center" />
+            <TextBlock Grid.Row="2" Text="{Binding Texts[GSFText3]}" VerticalAlignment="Center" />
+            <TextBox Text="{Binding OffsetX, UpdateSourceTrigger=PropertyChanged}" Grid.Row="2" Grid.Column="1" Height="20" VerticalContentAlignment="Center" />
+            <TextBlock Grid.Row="3" Text="{Binding Texts[GSFText4]}" VerticalAlignment="Center" />
+            <TextBox Text="{Binding OffsetY, UpdateSourceTrigger=PropertyChanged}" Grid.Row="3" Grid.Column="1" Height="20" VerticalContentAlignment="Center" />
+            <TextBlock Grid.Row="4" Text="{Binding Texts[GSFText5]}" VerticalAlignment="Center" />
+            <DockPanel Grid.Row="4" Grid.Column="1" VerticalAlignment="Center">
+                <Button DockPanel.Dock="Right" Content="..." Width="24" Height="20" Margin="4,0,0,0" Command="{Binding ChooseColorCommand}" />
+                <Border Height="18" BorderBrush="Gray" BorderThickness="1" Background="{Binding ColorText}">
+                    <TextBlock Text="{Binding ColorText}" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBlock.Style>
+                            <!-- 背景の色に合わせて、読める色にする -->
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Foreground" Value="Black" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsDarkColor}" Value="True">
+                                        <Setter Property="Foreground" Value="White" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                </Border>
+            </DockPanel>
+        </Grid>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,8,0,0">
+            <Button Content="OK" Width="75" Height="23" IsDefault="True" Command="{Binding OkCommand}" />
+            <Button Content="Cancel" Width="75" Height="23" Margin="43,0,0,0" IsCancel="True" />
+        </StackPanel>
+    </StackPanel>
+</Window>

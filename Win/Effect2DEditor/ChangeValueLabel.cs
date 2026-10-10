@@ -1,54 +1,61 @@
 ﻿using System;
-using System.Drawing;
-using System.Windows.Forms;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace Effect2DEditor
 {
-    public class ChangeValueLabel : Label
+    /// <summary>
+    /// 左右にドラッグすると、動かした量を通知するラベルです。
+    /// </summary>
+    public class ChangeValueLabel : TextBlock
     {
         public event ValueChangeEventHandler ValueChange;
-        Timer timer;
-        Point lastpos;
+        double lastx;
+        double remainder;
+
         public ChangeValueLabel()
         {
-            timer = new Timer
-            {
-                Interval = 20
-            };
-            timer.Tick += timer_Tick;
-            this.Cursor = System.Windows.Forms.Cursors.SizeWE;
-            this.MouseDown += ChangeValueLabel_MouseDown;
-            this.MouseUp += ChangeValueLabel_MouseUp;
+            Cursor = Cursors.SizeWE;
+            // 文字のないところでもドラッグできるように、背景を透明で塗る
+            Background = System.Windows.Media.Brushes.Transparent;
         }
 
-        void timer_Tick(object sender, EventArgs e)
+        protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
         {
-            Point currentpos = Cursor.Position;
-            if (lastpos.X != currentpos.X)
+            base.OnMouseLeftButtonDown(e);
+            lastx = e.GetPosition(this).X;
+            remainder = 0;
+            CaptureMouse();
+            e.Handled = true;
+        }
+
+        protected override void OnMouseMove(MouseEventArgs e)
+        {
+            base.OnMouseMove(e);
+            if (!IsMouseCaptured)
             {
-                if (ValueChange != null)
+                return;
+            }
+            var x = e.GetPosition(this).X;
+            remainder += x - lastx;
+            lastx = x;
+            var changed = (int)remainder;
+            if (changed != 0)
+            {
+                remainder -= changed;
+                ValueChange?.Invoke(this, new ValueChangeEventArgs
                 {
-                    var ee = new ValueChangeEventArgs
-                    {
-                        ChangedValue = currentpos.X - lastpos.X
-                    };
-                    ValueChange.Invoke(this, ee);
-                }
-                lastpos = currentpos;
+                    ChangedValue = changed
+                });
             }
         }
 
-        void ChangeValueLabel_MouseUp(object sender, MouseEventArgs e)
+        protected override void OnMouseLeftButtonUp(MouseButtonEventArgs e)
         {
-            timer.Stop();
+            base.OnMouseLeftButtonUp(e);
+            ReleaseMouseCapture();
         }
-
-        void ChangeValueLabel_MouseDown(object sender, MouseEventArgs e)
-        {
-            lastpos = Cursor.Position;
-            timer.Start();
-        }
-
     }
     public class ValueChangeEventArgs : EventArgs
     {

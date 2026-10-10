@@ -1,6 +1,7 @@
-﻿using PPDFramework;
+﻿using KeyConfiger.ViewModels;
+using PPDFramework;
 using System;
-using System.Windows.Forms;
+using System.Windows;
 
 namespace KeyConfiger
 {
@@ -14,19 +15,16 @@ namespace KeyConfiger
         {
             var errorHandler = new ErrorHandlerPPD();
             errorHandler.Initialize();
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            using (MyGame game = new MyGame(new PPDExecuteArg(new string[] { })))
+            var application = new Application();
+            try
             {
-                try
-                {
-                    game.Run();
-                }
-                catch (Exception e)
-                {
-                    errorHandler.ProcessError(e);
-                    game.Form.MainForm.Close();
-                }
+                var mainWindow = new MainWindow();
+                mainWindow.DataContext = new MainWindowViewModel(mainWindow, "keyconfig.ini", "KeyConfiger.ini");
+                application.Run(mainWindow);
+            }
+            catch (Exception e)
+            {
+                errorHandler.ProcessError(e);
             }
         }
     }

@@ -1,4 +1,5 @@
-﻿using MessagePack;
+﻿using PPDMath;
+using MessagePack;
 using PPDCore;
 using PPDFramework;
 using PPDFrameworkCore;
@@ -22,6 +23,7 @@ namespace PPDMulti
 {
     public class Menu : NetworkSceneBase
     {
+        private readonly Lock syncRoot = new();
         enum LastPlayState
         {
             TryToPlayGame = 0,
@@ -69,7 +71,7 @@ namespace PPDMulti
         bool removeFocusToChatComponent;
         bool canPlayMovie;
 
-        GameRule currentRule = new GameRule();
+        GameRule currentRule = new();
 
         Logger logger;
 
@@ -105,14 +107,11 @@ namespace PPDMulti
             AddProcessor<ChangeUserStateNetworkData>(networkData =>
             {
                 var user = FindUser(networkData.Id);
-                if (user != null)
-                {
-                    user.CurrentState = networkData.State;
-                }
+                user?.CurrentState = networkData.State;
             });
             AddProcessor<GoToPlayNetworkData>(networkData =>
             {
-                lock (this)
+                lock (syncRoot)
                 {
                     clientHandledData.Clear();
                 }
@@ -167,10 +166,7 @@ namespace PPDMulti
             AddProcessor<HasSongNetworkData>(networkData =>
             {
                 var user = FindUser(networkData.Id);
-                if (user != null)
-                {
-                    user.HasSong = true;
-                }
+                user?.HasSong = true;
             });
             AddProcessor<ChangeLeaderNetworkData>(networkData =>
             {
@@ -194,10 +190,7 @@ namespace PPDMulti
             AddProcessor<PingUserNetworkData>(networkData =>
             {
                 var user = FindUser(networkData.Id);
-                if (user != null)
-                {
-                    user.Ping = networkData.Ping;
-                }
+                user?.Ping = networkData.Ping;
             });
             AddProcessor<GoToPlayPrepareNetworkData>(networkData =>
             {
@@ -236,9 +229,9 @@ namespace PPDMulti
                     }
                     gameResultComponent.ClearResult();
 
-                    if (param != null && param.ContainsKey("Result") && param["Result"] != null)
+                    if (param != null && param.TryGetValue("Result", out object value) && value != null)
                     {
-                        var results = (param["Result"] as Tuple<int, Result>[])
+                        var results = (value as Tuple<int, Result>[])
                             .Select(t => new UserResult { User = FindUser(t.Item1), Result = t.Item2 })
                             .Where(r => r.User != null).ToArray();
                         focusManager.Focus(gameResultComponent);
@@ -329,10 +322,10 @@ namespace PPDMulti
         public override bool Load()
         {
             PPDFramework.Web.WebModInfo[] webMods = null;
-            Action[] actions = {
+            Action[] actions = [
                 () => { webMods = PPDFramework.Web.WebManager.Instance.GetMods(); },
                 PPDScoreManager.Manager.Initialize,
-            };
+            ];
             Parallel.ForEach(actions, (action) => action());
             allowedModList = new AllowedModList
             {
@@ -344,8 +337,8 @@ namespace PPDMulti
 
             version = FileVersionInfo.GetVersionInfo(Assembly.GetAssembly(this.GetType()).Location).FileVersion;
 
-            userList = new ChangableList<User>();
-            userList.ItemChanged += userList_ItemChanged;
+            userList = [];
+            userList.ItemChanged += UserList_ItemChanged;
 
             movieManager = new MovieManager(device, GameHost);
             movieManager.MovieChanged += MovieManager_MovieChanged;
@@ -365,41 +358,41 @@ namespace PPDMulti
 
             this.AddChild(gameResultComponent = new GameResultComponent(device, GameHost, ResourceManager, Sound));
             this.AddChild(leftMenu = new LeftMenu(device, GameHost, ResourceManager, Sound, movieManager, selfUser, userList, allowedModList));
-            leftMenu.SongSelected += leftMenu_SongSelected;
-            leftMenu.ShowResult += leftMenu_ShowResult;
-            leftMenu.UpdateScoreDB += leftMenu_UpdateScoreDB;
-            leftMenu.RuleChanged += leftMenu_RuleChanged;
-            leftMenu.TryToPlayGame += leftMenu_TryToPlayGame;
-            leftMenu.ChangeLeader += leftMenu_ChangeLeader;
-            leftMenu.KickUser += leftMenu_KickUser;
+            leftMenu.SongSelected += LeftMenu_SongSelected;
+            leftMenu.ShowResult += LeftMenu_ShowResult;
+            leftMenu.UpdateScoreDB += LeftMenu_UpdateScoreDB;
+            leftMenu.RuleChanged += LeftMenu_RuleChanged;
+            leftMenu.TryToPlayGame += LeftMenu_TryToPlayGame;
+            leftMenu.ChangeLeader += LeftMenu_ChangeLeader;
+            leftMenu.KickUser += LeftMenu_KickUser;
             this.AddChild(textBox = new DxTextBox(device, GameHost, ResourceManager));
 
-            this.AddChild((chatComponent = new ChatComponent(device, ResourceManager, GameHost) { Position = new SharpDX.Vector2(430, 0) }));
+            this.AddChild((chatComponent = new ChatComponent(device, ResourceManager, GameHost) { Position = new System.Numerics.Vector2(430, 0) }));
             this.AddChild(userListComponent = new UserListComponent(device, ResourceManager)
             {
-                Position = new SharpDX.Vector2(10, 10)
+                Position = new System.Numerics.Vector2(10, 10)
             });
 
             PictureObject bottom;
             this.AddChild(bottom = new PictureObject(device, ResourceManager, Utility.Path.Combine("menu_bottom.png"))
             {
-                Position = new SharpDX.Vector2(0, 421)
+                Position = new System.Numerics.Vector2(0, 421)
             });
             bottom.AddChild(new PictureObject(device, ResourceManager, Utility.Path.Combine("bottom_triangle.png"))
             {
-                Position = new SharpDX.Vector2(7, 7)
+                Position = new System.Numerics.Vector2(7, 7)
             });
             bottom.AddChild(new TextureString(device, Utility.Language["Menu"], 16, PPDColors.White)
             {
-                Position = new SharpDX.Vector2(30, 5)
+                Position = new System.Numerics.Vector2(30, 5)
             });
             bottom.AddChild(new PictureObject(device, ResourceManager, Utility.Path.Combine("bottom_circle.png"))
             {
-                Position = new SharpDX.Vector2(157, 7)
+                Position = new System.Numerics.Vector2(157, 7)
             });
             bottom.AddChild(stateString = new TextureString(device, Utility.Language["ChangeReadyState"], 16, PPDColors.White)
             {
-                Position = new SharpDX.Vector2(180, 5)
+                Position = new System.Numerics.Vector2(180, 5)
             });
 
             this.AddChild((bgd = new BackGroundDisplay(device, ResourceManager, "skins\\PPDMulti_BackGround.xml", "Menu")));
@@ -409,25 +402,25 @@ namespace PPDMulti
 
             userList.Add(selfUser);
 
-            chatComponent.Inputed += chatComponent_Inputed;
-            textBox.LostFocused += textBox_LostFocused;
-            leftMenu.Closed += leftMenu_Closed;
+            chatComponent.Inputed += ChatComponent_Inputed;
+            textBox.LostFocused += TextBox_LostFocused;
+            leftMenu.Closed += LeftMenu_Closed;
 
             if (selfUser.IsHost)
             {
                 WebManager webManager = null;
-                if (this.Param.ContainsKey("WebManager"))
+                if (this.Param.TryGetValue("WebManager", out object webManagerValue))
                 {
-                    webManager = this.Param["WebManager"] as WebManager;
+                    webManager = webManagerValue as WebManager;
                 }
                 RoomInfo roomInfo = null;
-                if (this.Param.ContainsKey("RoomInfo"))
+                if (this.Param.TryGetValue("RoomInfo", out object roomInfoValue))
                 {
-                    roomInfo = this.Param["RoomInfo"] as RoomInfo;
+                    roomInfo = roomInfoValue as RoomInfo;
 
                 }
                 server = new PPDServer((int)Param["Port"], webManager, roomInfo, GameHost);
-                server.FailedToCreateRoom += server_FailedToCreateRoom;
+                server.FailedToCreateRoom += Server_FailedToCreateRoom;
                 client = new Client
                 {
                     Address = "127.0.0.1",
@@ -447,15 +440,12 @@ namespace PPDMulti
                 };
             }
 
-            client.Closed += client_Closed;
-            client.Read += client_Read;
+            client.Closed += Client_Closed;
+            client.Read += Client_Read;
             byteReader = new TcpByteReader();
             byteReader.ByteReaded += TcpByteReader_ByteReaded;
 
-            if (server != null)
-            {
-                server.Start();
-            }
+            server?.Start();
             client.Start();
 
             if (client.HasConnection)
@@ -475,7 +465,7 @@ namespace PPDMulti
             }
 
             // load
-            SongInformation.All.ToArray();
+            _ = SongInformation.All;
             return true;
         }
 
@@ -492,7 +482,7 @@ namespace PPDMulti
             chatComponent.AddSystemMessage(Utility.Language["CannotPlayMovie"]);
         }
 
-        void leftMenu_KickUser(User obj)
+        void LeftMenu_KickUser(User obj)
         {
             removeFocusToChatComponent = true;
             if (obj == null)
@@ -506,7 +496,7 @@ namespace PPDMulti
             }
         }
 
-        void leftMenu_ChangeLeader(User obj)
+        void LeftMenu_ChangeLeader(User obj)
         {
             removeFocusToChatComponent = true;
             if (obj == null)
@@ -520,12 +510,12 @@ namespace PPDMulti
             }
         }
 
-        void server_FailedToCreateRoom(object sender, EventArgs e)
+        void Server_FailedToCreateRoom(object sender, EventArgs e)
         {
             chatComponent.AddSystemMessage(Utility.Language["FailedToCreateRoom"]);
         }
 
-        void leftMenu_RuleChanged(GameRule obj)
+        void LeftMenu_RuleChanged(GameRule obj)
         {
             removeFocusToChatComponent = true;
             client.Write(MessagePackSerializer.Serialize(new ChangeGameRuleNetworkData { GameRule = obj }));
@@ -561,13 +551,13 @@ namespace PPDMulti
                 var pingNetworkData = readInfo.NetworkData as PingNetworkData;
                 client.Write(MessagePackSerializer.Serialize(new PingNetworkData { Time = pingNetworkData.Time }));
             }
-            lock (this)
+            lock (syncRoot)
             {
                 clientHandledData.Enqueue(readInfo.NetworkData);
             }
         }
 
-        void leftMenu_TryToPlayGame(object sender, EventArgs e)
+        void LeftMenu_TryToPlayGame(object sender, EventArgs e)
         {
             if (currentSelectSong == null || currentSelectSong.SongInformation == null)
             {
@@ -582,7 +572,7 @@ namespace PPDMulti
             PlayGame();
         }
 
-        void leftMenu_UpdateScoreDB(object sender, EventArgs e)
+        void LeftMenu_UpdateScoreDB(object sender, EventArgs e)
         {
             focusManager.RemoveFocus();
             SongInformation.Update();
@@ -595,13 +585,13 @@ namespace PPDMulti
             SendScoreList();
         }
 
-        void leftMenu_ShowResult(object sender, EventArgs e)
+        void LeftMenu_ShowResult(object sender, EventArgs e)
         {
             focusManager.RemoveFocus();
             focusManager.Focus(gameResultComponent);
         }
 
-        void leftMenu_SongSelected(object sender, EventArgs e)
+        void LeftMenu_SongSelected(object sender, EventArgs e)
         {
             removeFocusToChatComponent = true;
             client.Write(MessagePackSerializer.Serialize(new ChangeSongNetworkData
@@ -611,12 +601,12 @@ namespace PPDMulti
             }));
         }
 
-        void leftMenu_Closed(object sender, EventArgs e)
+        void LeftMenu_Closed(object sender, EventArgs e)
         {
             SceneManager.PrepareNextScene(this, new IPSelectScene(device), null, null);
         }
 
-        void userList_ItemChanged(User[] addedItems, User[] removedItems)
+        void UserList_ItemChanged(User[] addedItems, User[] removedItems)
         {
             foreach (User user in addedItems)
             {
@@ -639,16 +629,16 @@ namespace PPDMulti
             }
         }
 
-        void client_Read(byte[] data)
+        void Client_Read(byte[] data)
         {
             byteReader.Read(data, 0);
         }
 
-        void client_Closed()
+        void Client_Closed()
         {
             var networkData = new CloseConnectNetworkData { Reason = CloseConnectReason.HostCloseTcp };
 
-            lock (this)
+            lock (syncRoot)
             {
                 clientHandledData.Enqueue(networkData);
             }
@@ -660,7 +650,7 @@ namespace PPDMulti
             return user;
         }
 
-        void textBox_LostFocused(IFocusable sender, FocusEventArgs args)
+        void TextBox_LostFocused(IFocusable sender, FocusEventArgs args)
         {
             if (GameHost.TextBoxEnterClosed && textBox.Text != "")
             {
@@ -673,8 +663,8 @@ namespace PPDMulti
 
         private void ProcessCommand(string text)
         {
-            var splits = text.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries);
-            var command = splits[0].Substring(1);
+            var splits = text.Split([" "], StringSplitOptions.RemoveEmptyEntries);
+            var command = splits[0][1..];
             string[] args = new string[splits.Length - 1];
             Array.Copy(splits, 1, args, 0, args.Length);
             switch (command)
@@ -693,7 +683,7 @@ namespace PPDMulti
                             {
                                 ThreadManager.Instance.GetThread(() =>
                                 {
-                                    System.Diagnostics.Process.Start(ppdScoreInfo.CreateUrl());
+                                    System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(ppdScoreInfo.CreateUrl()) { UseShellExecute = true });
                                 }).Start();
                             }
                             catch
@@ -765,8 +755,8 @@ namespace PPDMulti
 
         private void ProcessPrivateMessage(string text)
         {
-            var split = text.Split(new string[] { " " }, StringSplitOptions.None);
-            var target = split[0].Substring(1);
+            var split = text.Split([" "], StringSplitOptions.None);
+            var target = split[0][1..];
             var message = string.Join(" ", split, 1, split.Length - 1);
             var user = userList.Find(u => u.AccountId == target);
             if (user != null)
@@ -783,11 +773,11 @@ namespace PPDMulti
 
         private void AddMessage(string text)
         {
-            if (text.StartsWith(":", StringComparison.Ordinal))
+            if (text.StartsWith(':'))
             {
                 ProcessCommand(text);
             }
-            else if (text.StartsWith("@", StringComparison.Ordinal))
+            else if (text.StartsWith('@'))
             {
                 ProcessPrivateMessage(text);
             }
@@ -798,7 +788,7 @@ namespace PPDMulti
             }
         }
 
-        void chatComponent_Inputed(IFocusable sender, InputEventArgs args)
+        void ChatComponent_Inputed(IFocusable sender, InputEventArgs args)
         {
             if (args.InputInfo.IsPressed(ButtonType.Start))
             {
@@ -808,7 +798,7 @@ namespace PPDMulti
                     textBox.TextBoxHeight = 12;
                     textBox.MaxWidth = textBox.TextBoxWidth = 340;
                     textBox.DrawMode = DxTextBox.DrawingMode.DrawCaret | DxTextBox.DrawingMode.DrawSelection;
-                    textBox.Position = new SharpDX.Vector2(445, 390);
+                    textBox.Position = new System.Numerics.Vector2(445, 390);
                     textBox.Text = "";
                     focusManager.Focus(textBox);
                 }
@@ -865,10 +855,7 @@ namespace PPDMulti
 
             ProcessNetworkData();
             focusManager.ProcessInput(inputInfo);
-            if (movieManager.Movie != null)
-            {
-                movieManager.Movie.Update();
-            }
+            movieManager.Movie?.Update();
             if (waitingGoToPlay && !fadeOutCalled && DateTime.Now - goToPlayPrepareTime >= TimeSpan.FromSeconds(4.8))
             {
                 movieManager.FadeOut(0.5f);
@@ -944,7 +931,7 @@ namespace PPDMulti
         {
             client.Write(MessagePackSerializer.Serialize(new SendScoreListNetworkData
             {
-                SongInfos = SongInformation.All.SelectMany(s =>
+                SongInfos = [.. SongInformation.All.SelectMany(s =>
                 {
                     var ret = new List<SongInfo>();
                     if (s.Difficulty.HasFlag(PPDFramework.SongInformation.AvailableDifficulty.Easy))
@@ -964,7 +951,7 @@ namespace PPDMulti
                         ret.Add(new SongInfo { Hash = s.ExtremeHash, Difficulty = Difficulty.Extreme });
                     }
                     return ret;
-                }).ToArray()
+                })]
             }));
         }
 
@@ -973,7 +960,7 @@ namespace PPDMulti
             while (clientHandledData.Count > 0)
             {
                 NetworkData networkData = null;
-                lock (this)
+                lock (syncRoot)
                 {
                     networkData = clientHandledData.Dequeue();
                 }
@@ -1050,20 +1037,14 @@ namespace PPDMulti
         protected override void DisposeResource()
         {
             Sound.DeleteSound(notifySoundPath);
-            if (timer != null)
-            {
-                timer.Dispose();
-                timer = null;
-            }
-            if (server != null)
-            {
-                server.Close();
-                server = null;
-            }
+            timer?.Dispose();
+            timer = null;
+            server?.Close();
+            server = null;
             client.Close();
-            client.Closed -= client_Closed;
-            client.Read -= client_Read;
-            movieManager.Stop();
+            client.Closed -= Client_Closed;
+            client.Read -= Client_Read;
+            movieManager.Dispose();
             base.DisposeResource();
         }
     }

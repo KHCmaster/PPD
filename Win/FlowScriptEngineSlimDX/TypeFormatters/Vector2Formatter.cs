@@ -1,17 +1,18 @@
-﻿using FlowScriptEngine;
+﻿using PPDMath;
+using FlowScriptEngine;
 using System;
 using System.Globalization;
 using System.Text.RegularExpressions;
 
 namespace FlowScriptEngineSlimDX.TypeFormatters
 {
-    public class Vector2Formatter : TypeFormatterBase
+    public partial class Vector2Formatter : TypeFormatterBase
     {
-        static Regex regex = new Regex("^X:(?<X>[0-9.-]+) +Y:(?<Y>[0-9.-]+)$");
+        static readonly Regex regex = VectorRegex();
 
         public override Type Type
         {
-            get { return typeof(SharpDX.Vector2); }
+            get { return typeof(System.Numerics.Vector2); }
         }
 
         public override bool Format(string str, out object value)
@@ -20,9 +21,9 @@ namespace FlowScriptEngineSlimDX.TypeFormatters
             var m = regex.Match(str);
             if (m.Success)
             {
-                if (float.TryParse(m.Groups["X"].Value, NumberStyles.Float, CultureInfo.InvariantCulture, out float x) && float.TryParse(m.Groups["Y"].Value, NumberStyles.Float, CultureInfo.InvariantCulture, out float y))
+                if (LegacyNumberFormat.TryParse(m.Groups["X"].Value, NumberStyles.Float, CultureInfo.InvariantCulture, out float x) && LegacyNumberFormat.TryParse(m.Groups["Y"].Value, NumberStyles.Float, CultureInfo.InvariantCulture, out float y))
                 {
-                    value = new SharpDX.Vector2(x, y);
+                    value = new System.Numerics.Vector2(x, y);
                     return true;
                 }
             }
@@ -34,5 +35,8 @@ namespace FlowScriptEngineSlimDX.TypeFormatters
         {
             get { return "X:2.5 Y:2.2"; }
         }
+
+        [GeneratedRegex("^X:(?<X>[0-9.-]+) +Y:(?<Y>[0-9.-]+)$")]
+        private static partial Regex VectorRegex();
     }
 }

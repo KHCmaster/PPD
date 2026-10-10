@@ -5,6 +5,7 @@ namespace PPDFramework
     /// <summary>
     /// 処分可能なコンポーネントです。
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1063:Implement IDisposable Correctly", Justification = "派生クラスは DisposeResource をオーバーライドして破棄する設計")]
     public abstract class DisposableComponent : IDisposable
     {
         bool disposed;

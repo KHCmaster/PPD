@@ -1,5 +1,4 @@
-﻿using SharpDX;
-
+﻿
 namespace PPDFramework.Texture
 {
     /// <summary>

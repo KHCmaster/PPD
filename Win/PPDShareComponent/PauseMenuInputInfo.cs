@@ -3,15 +3,9 @@ using System;
 
 namespace PPDShareComponent
 {
-    class PauseMenuInputInfo : InputInfoBase
+    class PauseMenuInputInfo(InputInfoBase inputInfo) : InputInfoBase(inputInfo.Accurate)
     {
-        private InputInfoBase baseInputInfo;
-
-        public PauseMenuInputInfo(InputInfoBase inputInfo) :
-            base(inputInfo.Accurate)
-        {
-            baseInputInfo = inputInfo;
-        }
+        private readonly InputInfoBase baseInputInfo = inputInfo;
 
         /// <summary>
         /// 押されているフレーム数を取得します。

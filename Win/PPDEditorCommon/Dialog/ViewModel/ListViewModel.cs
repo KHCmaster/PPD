@@ -1,4 +1,4 @@
-﻿using GalaSoft.MvvmLight;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace PPDEditorCommon.Dialog.ViewModel
 {
@@ -32,7 +32,7 @@ namespace PPDEditorCommon.Dialog.ViewModel
                 }
                 if (changed)
                 {
-                    RaisePropertyChanged("Value");
+                    OnPropertyChanged(nameof(Value));
                 }
             }
         }
@@ -45,7 +45,7 @@ namespace PPDEditorCommon.Dialog.ViewModel
                 if (text != value)
                 {
                     text = value;
-                    RaisePropertyChanged("Text");
+                    OnPropertyChanged(nameof(Text));
                 }
             }
         }
@@ -58,7 +58,7 @@ namespace PPDEditorCommon.Dialog.ViewModel
                 if (isSelected != value)
                 {
                     isSelected = value;
-                    RaisePropertyChanged("IsSelected");
+                    OnPropertyChanged(nameof(IsSelected));
                 }
             }
         }

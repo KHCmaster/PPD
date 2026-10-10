@@ -22,7 +22,7 @@ namespace PPDFramework.ScreenFilters
         /// </summary>
         public ColorScreenFilter()
         {
-            Filters = new List<ColorFilterBase>();
+            Filters = [];
         }
 
         /// <summary>

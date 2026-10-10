@@ -9,19 +9,14 @@ namespace FlowScriptEnginePPDEditor.FlowSourceObjects.Layer
     {
         public override object GetPropertyValue(string propertyName)
         {
-            switch (propertyName)
+            return propertyName switch
             {
-                case "IsSelected":
-                    return IsSelected;
-                case "Marks":
-                    return Marks;
-                case "SelectedMark":
-                    return SelectedMark;
-                case "SelectedMarks":
-                    return SelectedMarks;
-                default:
-                    return null;
-            }
+                "IsSelected" => IsSelected,
+                "Marks" => Marks,
+                "SelectedMark" => SelectedMark,
+                "SelectedMarks" => SelectedMarks,
+                _ => null,
+            };
         }
 
         protected override void SetPropertyValue(string propertyName, object value)

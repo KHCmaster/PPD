@@ -1,7 +1,9 @@
 ﻿using Effect2D;
 using PPDFramework.Resource;
 using PPDFramework.Shaders;
-using SharpDX;
+using System.Numerics;
+using PPDMath;
+using Matrix = System.Numerics.Matrix4x4;
 using System;
 using System.Windows.Forms;
 
@@ -47,7 +49,7 @@ namespace PPDFramework
         /// </summary>
         public event EventHandler Finish;
 
-        Resource.ResourceManager resourceManager;
+        readonly Resource.ResourceManager resourceManager;
         EffectManager manager;
 
         /// <summary>
@@ -94,7 +96,7 @@ namespace PPDFramework
                 MessageBox.Show("Failed to load effect:" + filename);
                 return;
             }
-            manager.Finish += manager_Finish;
+            manager.Finish += Manager_Finish;
             Alignment = EffectAlignment.Center;
             PlayType = EffectManager.PlayType.Once;
         }
@@ -109,7 +111,7 @@ namespace PPDFramework
         {
             this.resourceManager = resourceManager;
             this.manager = manager;
-            manager.Finish += manager_Finish;
+            manager.Finish += Manager_Finish;
             Alignment = EffectAlignment.Center;
             PlayType = EffectManager.PlayType.Once;
         }
@@ -123,9 +125,9 @@ namespace PPDFramework
             }
         }
 
-        void manager_Finish(object sender, EventArgs e)
+        void Manager_Finish(object sender, EventArgs e)
         {
-            if (Finish != null) Finish.Invoke(this, EventArgs.Empty);
+            Finish?.Invoke(this, EventArgs.Empty);
         }
 
         /// <summary>
@@ -165,6 +167,7 @@ namespace PPDFramework
         /// </summary>
         protected override void UpdateImpl()
         {
+            using var profile = FrameProfiler.Measure(FrameSection.Effect2D);
             manager.Update();
         }
 
@@ -198,7 +201,7 @@ namespace PPDFramework
                     {
                         pos = Vector2.Zero;
                     }
-                    alphaBlendContext.SetSRT(Matrix.Translation(new Vector3(pos, 0)), alphaBlendContext.SRTDepth);
+                    alphaBlendContext.SetSRT(MathCompat.Translation(new Vector3(pos, 0)), alphaBlendContext.SRTDepth);
                     device.GetModule<AlphaBlend>().Draw(device, alphaBlendContext);
                 }
             });
@@ -210,11 +213,8 @@ namespace PPDFramework
         protected override void DisposeResource()
         {
             base.DisposeResource();
-            if (manager != null)
-            {
-                manager.Finish -= manager_Finish;
-                manager = null;
-            }
+            manager?.Finish -= Manager_Finish;
+            manager = null;
         }
     }
 }

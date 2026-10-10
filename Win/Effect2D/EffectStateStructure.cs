@@ -1,4 +1,6 @@
-﻿using SharpDX;
+﻿using System.Numerics;
+using PPDMath;
+using Matrix = System.Numerics.Matrix4x4;
 using System;
 using System.Text;
 
@@ -72,7 +74,7 @@ namespace Effect2D
             set { data[(int)RatioType.ScaleY] = value; }
         }
 
-        float[] data = new float[Utility.RatioTypeArray.Length];
+        readonly float[] data = new float[Utility.RatioTypeArray.Length];
 
         /// <summary>
         /// 合成されたアルファを取得します。
@@ -168,6 +170,21 @@ namespace Effect2D
         }
 
         /// <summary>
+        /// 途中の状態を、このインスタンスに書き込みます（毎フレームの更新で新しいインスタンスを作らないため）。
+        /// </summary>
+        /// <param name="start">開始の状態（ブレンドモードもこちらを使う）</param>
+        /// <param name="ratios">比（RatioType の値の順）</param>
+        /// <param name="end">終了の状態</param>
+        internal void SetMixedState(EffectStateStructure start, ReadOnlySpan<float> ratios, EffectStateStructure end)
+        {
+            BlendMode = start.BlendMode;
+            for (var i = 0; i < data.Length; i++)
+            {
+                data[i] = GetDivision(start.data[i], end.data[i], ratios[i]);
+            }
+        }
+
+        /// <summary>
         /// 合成します。
         /// </summary>
         /// <param name="parent"></param>
@@ -175,17 +192,18 @@ namespace Effect2D
         public void Compose(EffectStateStructure parent)
         {
             var matrix = GetMatrix();
-            if (parent.ComposedMatrices != null)
+            var parentLength = parent.ComposedMatrices?.Length ?? 0;
+            // 前のフレームの配列の長さが同じなら使い回す（要素はすべて書き直す）
+            if (ComposedMatrices == null || ComposedMatrices.Length != parentLength + 1)
             {
-                ComposedMatrices = new Matrix[parent.ComposedMatrices.Length + 1];
-                Array.Copy(parent.ComposedMatrices, ComposedMatrices, parent.ComposedMatrices.Length);
+                ComposedMatrices = new Matrix[parentLength + 1];
             }
-            else
+            if (parentLength > 0)
             {
-                ComposedMatrices = new Matrix[1];
+                Array.Copy(parent.ComposedMatrices, ComposedMatrices, parentLength);
             }
-            ComposedMatrices[ComposedMatrices.Length - 1] = matrix;
-            ComposedAlpha = Alpha = Alpha * parent.Alpha;
+            ComposedMatrices[^1] = matrix;
+            ComposedAlpha = Alpha *= parent.Alpha;
             ComposedBlendMode = parent.BlendMode;
             if (BlendMode != BlendMode.None)
             {
@@ -198,7 +216,7 @@ namespace Effect2D
             return Matrix.Transformation2D(Vector2.Zero, 0, new Vector2(ScaleX, ScaleY), Vector2.Zero, (float)(Rotation / 180 * Math.PI), new Vector2(X, Y));
         }
 
-        private float GetDivision(float a, float b, float ratio)
+        private static float GetDivision(float a, float b, float ratio)
         {
             return a * ratio + b * (1 - ratio);
         }
@@ -227,25 +245,25 @@ namespace Effect2D
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append("{");
+            sb.Append('{');
             sb.Append("X:");
             sb.Append(X);
-            sb.Append(" ");
+            sb.Append(' ');
             sb.Append("Y:");
             sb.Append(Y);
-            sb.Append(" ");
+            sb.Append(' ');
             sb.Append("Alpha:");
             sb.Append(Alpha);
-            sb.Append(" ");
+            sb.Append(' ');
             sb.Append("Rotation:");
             sb.Append(Rotation);
-            sb.Append(" ");
+            sb.Append(' ');
             sb.Append("ScaleX:");
             sb.Append(ScaleX);
-            sb.Append(" ");
+            sb.Append(' ');
             sb.Append("ScaleY:");
             sb.Append(ScaleY);
-            sb.Append("}");
+            sb.Append('}');
             return sb.ToString();
         }
 

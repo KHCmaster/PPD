@@ -1,5 +1,6 @@
 ﻿using PPDFramework;
-using SharpDX;
+using System.Numerics;
+using PPDMath;
 using System;
 using System.IO;
 using System.Linq;
@@ -8,15 +9,15 @@ namespace PPDShareComponent
 {
     public abstract class LoadingSceneWithImage : LoadingBase
     {
-        string[] imageFiles;
-        string[] allowedImageExtensions = { ".png", ".gif", ".jpg", ".jpeg" };
+        readonly string[] imageFiles;
+        readonly string[] allowedImageExtensions = [".png", ".gif", ".jpg", ".jpeg"];
         PictureObject currentImage;
 
         protected LoadingSceneWithImage(PPDDevice device) : base(device)
         {
             if (Directory.Exists("img\\loading"))
             {
-                imageFiles = Directory.GetFiles("img\\loading").Where(f => Array.IndexOf(allowedImageExtensions, Path.GetExtension(f)) >= 0).ToArray();
+                imageFiles = [.. Directory.GetFiles("img\\loading").Where(f => Array.IndexOf(allowedImageExtensions, Path.GetExtension(f)) >= 0)];
             }
         }
 

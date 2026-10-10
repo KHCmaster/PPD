@@ -5,7 +5,7 @@ namespace PPDFrameworkCore
 {
     public class ThreadManager
     {
-        private static ThreadManager instance = new ThreadManager();
+        private static readonly ThreadManager instance = new();
         public static ThreadManager Instance
         {
             get
@@ -14,11 +14,11 @@ namespace PPDFrameworkCore
             }
         }
 
-        List<Thread> threads;
+        readonly List<Thread> threads;
 
         private ThreadManager()
         {
-            threads = new List<Thread>();
+            threads = [];
         }
 
         public void Update()
@@ -35,21 +35,16 @@ namespace PPDFrameworkCore
             }
         }
 
+        /// <summary>
+        /// アプリケーションの終了時に呼びます。
+        /// スレッドはすべてバックグラウンドスレッドなので、プロセスの終了とともに止まります
+        /// （.NET では Thread.Abort が使えないため、以前のように強制終了はしません）。
+        /// </summary>
         public void Dispose()
         {
             lock (threads)
             {
-                foreach (var thread in threads)
-                {
-                    while (thread.IsAlive)
-                    {
-                        thread.Abort();
-                        if (thread.Join(10))
-                        {
-                            break;
-                        }
-                    }
-                }
+                threads.Clear();
             }
         }
 
@@ -57,7 +52,7 @@ namespace PPDFrameworkCore
         {
             lock (threads)
             {
-                var thread = new Thread(threadStart);
+                var thread = new Thread(threadStart) { IsBackground = true };
                 threads.Add(thread);
                 return thread;
             }
@@ -67,7 +62,7 @@ namespace PPDFrameworkCore
         {
             lock (threads)
             {
-                var thread = new Thread(threadStart);
+                var thread = new Thread(threadStart) { IsBackground = true };
                 threads.Add(thread);
                 return thread;
             }

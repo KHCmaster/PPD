@@ -9,13 +9,11 @@ namespace FlowScriptEngineData.FlowSourceObjects.Yaml
     {
         public override object GetPropertyValue(string propertyName)
         {
-            switch (propertyName)
+            return propertyName switch
             {
-                case "Yaml":
-                    return Yaml;
-                default:
-                    return null;
-            }
+                "Yaml" => Yaml,
+                _ => null,
+            };
         }
 
         protected override void SetPropertyValue(string propertyName, object value)

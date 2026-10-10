@@ -19,10 +19,7 @@
         {
             base.In(e);
             SetValue(nameof(Default));
-            if (modSettingManager != null)
-            {
-                modSettingManager.AddDoubleSetting(Key, DisplayName, Description, Default);
-            }
+            modSettingManager?.AddDoubleSetting(Key, DisplayName, Description, Default);
         }
     }
 }

@@ -25,14 +25,14 @@ namespace PPDFramework
             }
         }
 
-        void ProcessPPDError(PPDFramework.PPDException ppde)
+        static void ProcessPPDError(PPDFramework.PPDException ppde)
         {
             var message = PPDFramework.PPDExceptionContentProvider.Provider.GetContent(ppde.ExceptionType);
             string content = ppde.Detail;
             MessageBox.Show(message + "\n" + content);
         }
 
-        void ProcessFatalError(Exception e)
+        static void ProcessFatalError(Exception e)
         {
             var message = PPDFramework.PPDExceptionContentProvider.Provider.GetContent(PPDFramework.PPDExceptionType.FatalError);
             MessageBox.Show(message);

@@ -4,7 +4,8 @@ using PPDFramework.Scene;
 using PPDFramework.Web;
 using PPDFrameworkCore;
 using PPDShareComponent;
-using SharpDX;
+using System.Numerics;
+using PPDMath;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -12,7 +13,7 @@ using System.Windows.Forms;
 
 namespace PPDSingle
 {
-    public class Menu : SceneBase
+    public class Menu(PPDDevice device) : SceneBase(device)
     {
         enum LastPlayState
         {
@@ -42,10 +43,6 @@ namespace PPDSingle
         bool allowcommand = true;
         bool goToPlay;
 
-        public Menu(PPDDevice device) : base(device)
-        {
-        }
-
         public override bool Load()
         {
             WebManager.Instance.UpdateAccountInfo();
@@ -56,12 +53,12 @@ namespace PPDSingle
             ContestInfo contestInfo = null;
             WebSongInformation[] activeScores = null;
             ListInfo[] lists = null;
-            Action[] actions = {
+            Action[] actions = [
                 () => { contestInfo = WebManager.Instance.GetContestInfo(); },
                 () => { activeScores = WebManager.Instance.GetScores(true); },
                 () => { lists = WebManager.Instance.GetListInfos(); },
                 PerfectTrialCache.Instance.Update
-            };
+            ];
             Parallel.ForEach(actions, (action) => action());
             // 前のメニューからのパラメーターを調べる
             if (PreviousParam.TryGetValue("PPDGameUtility", out object temp))
@@ -70,25 +67,25 @@ namespace PPDSingle
                 initialdirectory = gameutility.SongInformation.ParentDirectory;
             }
             ssm = new SelectSongManager(contestInfo, activeScores, lists);
-            ssm.SongChanged += ssm_SongChanged;
-            ssm.DirectoryChanged += ssm_DirectoryChanged;
-            ssm.ModeChanged += ssm_ModeChanged;
+            ssm.SongChanged += Ssm_SongChanged;
+            ssm.DirectoryChanged += Ssm_DirectoryChanged;
+            ssm.ModeChanged += Ssm_ModeChanged;
             ssm.Filter.Desc = SkinSetting.Setting.Desc;
             ssm.Filter.Difficulty = SkinSetting.Setting.Difficulty;
             ssm.Filter.Field = SkinSetting.Setting.SortField;
             ssm.Filter.Type = SkinSetting.Setting.ScoreType;
             textBox = new DxTextBox(device, GameHost, ResourceManager);
             mss = new MenuSelectSong(device, ResourceManager, this);
-            mss.Inputed += mss_Inputed;
-            mss.GotFocused += mss_GotFocused;
+            mss.Inputed += Mss_Inputed;
+            mss.GotFocused += Mss_GotFocused;
             sic = new SongInfoControl(device, ResourceManager);
-            sic.Inputed += sic_Inputed;
+            sic.Inputed += Sic_Inputed;
             cc = new ConfirmControl(device, ResourceManager);
-            cc.Inputed += cc_Inputed;
+            cc.Inputed += Cc_Inputed;
             oc = new OptionControl(device, ResourceManager, Sound);
             lm = new LeftMenu(device, GameHost, ResourceManager, textBox, ssm, Sound);
-            lm.RandomSelected += lm_RandomSelected;
-            lm.FilterChanged += lm_FilterChanged;
+            lm.RandomSelected += Lm_RandomSelected;
+            lm.FilterChanged += Lm_FilterChanged;
             ss = new ScoreSearcher(device, ResourceManager, textBox, ssm.Filter);
             obd = new OpenBrowserDialog(device, ResourceManager, Sound);
             fm = new FocusManager(this);
@@ -173,7 +170,7 @@ namespace PPDSingle
             return true;
         }
 
-        void lm_FilterChanged()
+        void Lm_FilterChanged()
         {
             ssm.Regenerate();
             SkinSetting.Setting.ScoreType = ssm.Filter.Type;
@@ -182,12 +179,12 @@ namespace PPDSingle
             SkinSetting.Setting.SortField = ssm.Filter.Field;
         }
 
-        void lm_RandomSelected(RandomSelectType randomSelectType)
+        void Lm_RandomSelected(RandomSelectType randomSelectType)
         {
             ssm.RandomSelect(randomSelectType);
         }
 
-        void mss_GotFocused(IFocusable sender, FocusEventArgs args)
+        void Mss_GotFocused(IFocusable sender, FocusEventArgs args)
         {
             if (args.FocusObject != null)
             {
@@ -212,7 +209,7 @@ namespace PPDSingle
             mss.Start();
         }
 
-        void cc_Inputed(IFocusable sender, InputEventArgs args)
+        void Cc_Inputed(IFocusable sender, InputEventArgs args)
         {
             if (args.InputInfo.IsPressed(ButtonType.Circle))
             {
@@ -246,7 +243,7 @@ namespace PPDSingle
             }
         }
 
-        void sic_Inputed(IFocusable sender, InputEventArgs args)
+        void Sic_Inputed(IFocusable sender, InputEventArgs args)
         {
             if (args.InputInfo.IsPressed(ButtonType.Circle))
             {
@@ -279,7 +276,7 @@ namespace PPDSingle
             }
         }
 
-        void mss_Inputed(IFocusable sender, InputEventArgs args)
+        void Mss_Inputed(IFocusable sender, InputEventArgs args)
         {
             if (args.InputInfo.IsPressed(ButtonType.Circle))
             {
@@ -369,12 +366,12 @@ namespace PPDSingle
             }
         }
 
-        void ssm_DirectoryChanged(object sender, EventArgs e)
+        void Ssm_DirectoryChanged(object sender, EventArgs e)
         {
             mss.SongInformations = ssm.SongInformations;
         }
 
-        void ssm_SongChanged(SelectSongManager.SongChangeMode obj)
+        void Ssm_SongChanged(SelectSongManager.SongChangeMode obj)
         {
             mss.ChangeIndex(ssm.SelectedIndex, obj);
             if (ssm.SelectedSongInformation == null)
@@ -394,11 +391,10 @@ namespace PPDSingle
                 menuMovie.CheckLoopAvailable = true;
                 count = 0;
                 moviechanged = true;
-                SongInformation current = ssm.SelectedSongInformation.SongInfo;
                 sic.ChangeSongInfo(ssm.SelectedSongInformation);
             }
         }
-        void ssm_ModeChanged(object sender, EventArgs e)
+        void Ssm_ModeChanged(object sender, EventArgs e)
         {
             mss.ChangeMode(ssm.CurrentMode);
         }
@@ -584,9 +580,9 @@ namespace PPDSingle
             dic.Add("CurrentMode", ssm.CurrentMode);
             dic.Add("SelectedIndex", ssm.SelectedIndex);
             var mainGame = new MainGame(device);
-            mainGame.CannotStartPerfectTrial += mainGame_CannotStartPerfectTrial;
-            mainGame.PerfectTrialError += mainGame_PerfectTrialError;
-            mainGame.PerfectTrialStart += mainGame_PerfectTrialStart;
+            mainGame.CannotStartPerfectTrial += MainGame_CannotStartPerfectTrial;
+            mainGame.PerfectTrialError += MainGame_PerfectTrialError;
+            mainGame.PerfectTrialStart += MainGame_PerfectTrialStart;
             SceneManager.PrepareNextScene(this, mainGame, dic, dic, useStack);
 
             if (useStack)
@@ -595,13 +591,13 @@ namespace PPDSingle
             }
         }
 
-        void mainGame_PerfectTrialStart(int arg1, int arg2)
+        void MainGame_PerfectTrialStart(int arg1, int arg2)
         {
             GameHost.AddNotify(String.Format(Utility.Language["PerfectTrialStart"]));
             GameHost.AddNotify(String.Format(Utility.Language["MoneyChange"], arg1, arg2));
         }
 
-        void mainGame_PerfectTrialError(ErrorReason obj)
+        void MainGame_PerfectTrialError(ErrorReason obj)
         {
             GameHost.AddNotify(Utility.Language["PerfectTrialStartFailed"]);
             switch (obj)
@@ -628,7 +624,7 @@ namespace PPDSingle
             }
         }
 
-        void mainGame_CannotStartPerfectTrial()
+        void MainGame_CannotStartPerfectTrial()
         {
             GameHost.AddNotify(String.Format(Utility.Language["CannotStartPerfectTrial"]));
         }
@@ -638,7 +634,7 @@ namespace PPDSingle
             switch (lastPlayState)
             {
                 case LastPlayState.Play:
-                    if (param.ContainsKey("PerfectTrialSucceess") && (bool)param["PerfectTrialSucceess"])
+                    if (param.TryGetValue("PerfectTrialSucceess", out object value) && (bool)value)
                     {
                         var gameUtility = (PPDGameUtility)param["GameUtility"];
                         PerfectTrialCache.Instance.AddPerfectTrial(CryptographyUtility.Getx2Encoding(

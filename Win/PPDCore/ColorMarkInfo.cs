@@ -1,7 +1,8 @@
 ﻿using PPDFramework;
 using PPDFramework.Shaders;
 using PPDFramework.Vertex;
-using SharpDX;
+using System.Numerics;
+using PPDMath;
 
 namespace PPDCore
 {
@@ -9,9 +10,11 @@ namespace PPDCore
     {
         VertexInfo vertices1;
         VertexInfo vertices2;
-        PictureObject trace;
+        readonly PictureObject trace;
         int drawVerticesCount1;
         int drawVerticesCount2;
+        // 頂点の作業用の配列。毎フレームの確保を避けるため使い回す（書き込む要素はすべてのフィールドを設定する）
+        readonly ColoredTexturedVertex[] dataVertices = new ColoredTexturedVertex[80];
 
         public int VerticesCount
         {
@@ -72,7 +75,6 @@ namespace PPDCore
 
         private int UpdateVerticesImpl(VertexInfo vertices, int verticesCount, Vector2[] pos)
         {
-            ColoredTexturedVertex[] dataVertices = new ColoredTexturedVertex[verticesCount * 2];
             if (verticesCount < 2)
             {
                 return 0;
@@ -95,7 +97,7 @@ namespace PPDCore
                         continue;
                     }
 
-                    vD = Vector2.Normalize(v);
+                    vD = MathCompat.NormalizeSharpDX(v);
                     vD *= width;
                     vN1.X = -vD.Y;
                     vN1.Y = vD.X;
@@ -103,7 +105,7 @@ namespace PPDCore
                     vN2.Y = -vD.X;
                 }
 
-                var color = PPDColors.White.ToBgra();
+                var color = PPDColors.White.ToBgraInt();
                 dataVertices[drawVerticesCount].Position = new Vector3(pos[i].X + vN1.X, pos[i].Y + vN1.Y, 0.5f);
                 dataVertices[drawVerticesCount].TextureCoordinates = trace.ImageResource.GetActualUV(new Vector2(alpha, 0)) + trace.ImageResource.HalfPixel;
                 dataVertices[drawVerticesCount].Color = color;
@@ -140,16 +142,10 @@ namespace PPDCore
 
         protected override void DisposeResource()
         {
-            if (vertices1 != null)
-            {
-                vertices1.Dispose();
-                vertices1 = null;
-            }
-            if (vertices2 != null)
-            {
-                vertices2.Dispose();
-                vertices2 = null;
-            }
+            vertices1?.Dispose();
+            vertices1 = null;
+            vertices2?.Dispose();
+            vertices2 = null;
         }
     }
 }

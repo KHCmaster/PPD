@@ -42,7 +42,7 @@ namespace FlowScriptEnginePPD.FlowSourceObjects.Graphics.VertexBuffer
             if (Object != null && Vertices != null)
             {
                 SetValue(nameof(Offset));
-                Object.Write(Vertices.OfType<ColoredTexturedVertex>().ToArray(), Offset);
+                Object.Write([.. Vertices.OfType<ColoredTexturedVertex>()], Offset);
                 OnSuccess();
             }
             else

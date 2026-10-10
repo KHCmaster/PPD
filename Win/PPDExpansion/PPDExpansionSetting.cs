@@ -9,7 +9,7 @@ namespace PPDExpansion
         const int defaultHeight = 450;
         const int defaultChartHeight = 300;
 
-        private static PPDExpansionSetting setting = new PPDExpansionSetting();
+        private static readonly PPDExpansionSetting setting = new();
         public override string Name
         {
             get { return "PPDExpansion.setting"; }

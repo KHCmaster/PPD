@@ -2,7 +2,8 @@
 using PPDFramework.Web;
 using PPDFrameworkCore;
 using PPDShareComponent;
-using SharpDX;
+using System.Numerics;
+using PPDMath;
 using System;
 using System.Linq;
 
@@ -15,14 +16,14 @@ namespace PPDSingle
         const int SpriteY = 90;
         const int ItemHeight = 50;
 
-        IGameHost gameHost;
-        PPDFramework.Resource.ResourceManager resourceManager;
-        ISound sound;
+        readonly IGameHost gameHost;
+        readonly PPDFramework.Resource.ResourceManager resourceManager;
+        readonly ISound sound;
         ReplayInfo[] replays;
-        LineRectangleComponent rectangle;
+        readonly LineRectangleComponent rectangle;
 
-        SpriteObject mainSprite;
-        SpriteObject waitSprite;
+        readonly SpriteObject mainSprite;
+        readonly SpriteObject waitSprite;
         bool loading;
         int selection;
 
@@ -122,14 +123,14 @@ namespace PPDSingle
                         {
                             ScoreLibraryId = SelectedComponent.WebSongInfo.Hash
                         };
-                        obd.LostFocused += obd_LostFocused;
+                        obd.LostFocused += Obd_LostFocused;
                         this.InsertChild(obd, 0);
                         FocusManager.Focus(obd);
                     }
                     else
                     {
                         var gd = new GeneralDialog(device, resourceManager, sound, Utility.Language["ReplayConfirm"], GeneralDialog.ButtonTypes.OkCancel);
-                        gd.LostFocused += gd_LostFocused;
+                        gd.LostFocused += Gd_LostFocused;
                         this.InsertChild(gd, 0);
                         FocusManager.Focus(gd);
                     }
@@ -161,7 +162,7 @@ namespace PPDSingle
             }
         }
 
-        void gd_LostFocused(IFocusable sender, FocusEventArgs args)
+        void Gd_LostFocused(IFocusable sender, FocusEventArgs args)
         {
             var gd = sender as GeneralDialog;
             if (gd.Result == 0)
@@ -175,7 +176,7 @@ namespace PPDSingle
             this.RemoveChild(gd);
         }
 
-        void obd_LostFocused(IFocusable sender, FocusEventArgs args)
+        void Obd_LostFocused(IFocusable sender, FocusEventArgs args)
         {
             var obd = sender as OpenBrowserDialog;
             this.RemoveChild(obd);
@@ -285,7 +286,7 @@ namespace PPDSingle
 
         class ReplayComponent : GameComponent
         {
-            private PPDFramework.Resource.ResourceManager resourceManager;
+            private readonly PPDFramework.Resource.ResourceManager resourceManager;
 
             public ReplayInfo Replay
             {

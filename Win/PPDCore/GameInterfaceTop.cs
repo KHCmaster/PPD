@@ -1,5 +1,6 @@
 ﻿using PPDFramework;
-using SharpDX;
+using System.Numerics;
+using PPDMath;
 using System;
 
 namespace PPDCore
@@ -9,12 +10,12 @@ namespace PPDCore
     /// </summary>
     class GameInterfaceTop : GameComponent
     {
-        PictureObject top;
-        PictureObject topdanger;
-        PictureObject onpu;
-        Score sco;
-        TextureString songname;
-        TextureString difficulty;
+        readonly PictureObject top;
+        readonly PictureObject topdanger;
+        readonly PictureObject onpu;
+        readonly Score sco;
+        readonly TextureString songname;
+        readonly TextureString difficulty;
 
         public bool Danger
         {

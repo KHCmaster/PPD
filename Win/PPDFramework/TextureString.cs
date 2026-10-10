@@ -1,13 +1,20 @@
 ﻿using PPDFramework.RenderMask;
 using PPDFramework.Shaders;
-using SharpDX;
+using System.Numerics;
+using PPDMath;
+using Color4 = Vortice.Mathematics.Color4;
+using Color = Vortice.Mathematics.Color;
+using Size2F = Vortice.Mathematics.Size;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace PPDFramework
 {
     /// <summary>
     /// Sprite非使用の文字列描画クラス
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1063:Implement IDisposable Correctly", Justification = "Dispose されなかった文字列も、ファイナライザーで文字のキャッシュへの参照を返すため")]
     public class TextureString : GameComponent
     {
         const int ScrollSpeed = 3;
@@ -15,18 +22,19 @@ namespace PPDFramework
         string text = "";
         int characterHeight;
         Size2F size;
-        string facename;
+        readonly string facename;
         bool multiline;
         Color4 color;
-        TextureChar[] chars = new TextureChar[0];
+        TextureChar[] chars = [];
 
         TextureChar sparechar;
+        readonly List<TextureChar> prefetchedChars = [];
 
         float justwidth;
-        float maxwidth;
+        readonly float maxwidth;
         float width;
         bool allowScroll;
-        bool scrollable;
+        readonly bool scrollable;
         int scrollCount;
         int wait;
 
@@ -139,7 +147,7 @@ namespace PPDFramework
         }
 
         /// <summary>
-        /// デストラクタ
+        /// デストラクタ。Dispose されずに回収されたときも、文字のキャッシュへの参照を返します。
         /// </summary>
         ~TextureString()
         {
@@ -181,8 +189,33 @@ namespace PPDFramework
             colorChanged = textChanged = allowScrollChanged = false;
         }
 
+        /// <summary>
+        /// 後で表示する文字のテクスチャを、先に作っておきます（このオブジェクトが破棄されるまで保持します）。
+        /// </summary>
+        /// <remarks>
+        /// 表示する文字列を切り替えた瞬間に、まだ作っていない文字のテクスチャを作ると、そのフレームが重くなる。
+        /// 読み込みのときなど、止まってよいときに呼びます。フォントと大きさは、今のこのオブジェクトの設定を使います。
+        /// </remarks>
+        /// <param name="characters">文字。</param>
+        public void PrefetchCharacters(string characters)
+        {
+            if (string.IsNullOrEmpty(characters))
+            {
+                return;
+            }
+            foreach (var c in characters.Distinct())
+            {
+                if (char.IsWhiteSpace(c))
+                {
+                    continue;
+                }
+                prefetchedChars.Add(new TextureChar(device, c, 0, 0, characterHeight * Math.Max(Scale.X, Scale.Y), facename, color));
+            }
+        }
+
         private void CreateText()
         {
+            using var profile = FrameProfiler.Measure(FrameSection.Text);
             foreach (TextureChar c in chars)
             {
                 c.Dispose();
@@ -241,7 +274,6 @@ namespace PPDFramework
                     {
                         chars[i].Position = new Vector2((size.Width - tempx) / 2 + chars[i].Position.X, chars[i].Position.Y);
                     }
-                    startIndex = iter + 1;
                 }
 
                 MultiLineHeight = tempy + (int)(characterHeight * 1.3f);
@@ -408,19 +440,18 @@ namespace PPDFramework
             {
                 foreach (TextureChar c in chars)
                 {
-                    if (c != null)
-                    {
-                        c.Dispose();
-                    }
+                    c?.Dispose();
                 }
                 chars = null;
             }
 
-            if (sparechar != null)
+            sparechar?.Dispose();
+            sparechar = null;
+            foreach (var c in prefetchedChars)
             {
-                sparechar.Dispose();
-                sparechar = null;
+                c.Dispose();
             }
+            prefetchedChars.Clear();
         }
 
         /// <summary>
@@ -446,7 +477,7 @@ namespace PPDFramework
                 if (color.Alpha != value)
                 {
                     colorChanged = true;
-                    color.Alpha = value;
+                    color = new Color4(color.R, color.G, color.B, value);
                 }
             }
         }
@@ -486,10 +517,7 @@ namespace PPDFramework
                 {
                     c.Hidden = value;
                 }
-                if (sparechar != null)
-                {
-                    sparechar.Hidden = value;
-                }
+                sparechar?.Hidden = value;
             }
         }
 

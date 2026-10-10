@@ -1,0 +1,13 @@
+<Root>
+  <Sources>
+    <Source Name="FlowScriptEngineBasic.FlowSourceObjects.Misc.EntryPointFlowSourceObject" FullName="FlowScriptEngineBasic.FlowSourceObjects.Misc.EntryPointFlowSourceObject" ID="1" ShowAll="True" X="-300" Y="0" />
+    <Source Name="FlowScriptEngineConsole.FlowSourceObjects.Console.WriteLineFlowSourceObject" FullName="FlowScriptEngineConsole.FlowSourceObjects.Console.WriteLineFlowSourceObject" ID="2" ShowAll="True" X="0" Y="0">
+      <Value Name="Text" Value="Hello MVVM" />
+    </Source>
+  </Sources>
+  <Flows>
+    <Flow SrcID="1" SrcName="Start" DestID="2" DestName="In" />
+  </Flows>
+  <Comments />
+  <Scopes />
+</Root>

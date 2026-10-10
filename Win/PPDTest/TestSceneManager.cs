@@ -5,19 +5,12 @@ using System.Collections.Generic;
 
 namespace PPDTest
 {
-    class TestSceneManager
+    class TestSceneManager(SceneManager sceneManager, PPDDevice device)
     {
-        List<Type> sceneTypes;
+        readonly List<Type> sceneTypes = [];
         int currentSceneIndex;
-        PPDDevice device;
-        SceneManager sceneManager;
-
-        public TestSceneManager(SceneManager sceneManager, PPDDevice device)
-        {
-            this.device = device;
-            this.sceneManager = sceneManager;
-            sceneTypes = new List<Type>();
-        }
+        readonly PPDDevice device = device;
+        readonly SceneManager sceneManager = sceneManager;
 
         public void Add(Type type)
         {
@@ -47,6 +40,44 @@ namespace PPDTest
         public TestSceneBase Initialize()
         {
             return CreateScene();
+        }
+
+        /// <summary>
+        /// 最初に表示するシーンを指定します。
+        /// </summary>
+        /// <param name="scene">シーンの番号（0 から）、またはクラス名（大文字と小文字は区別しない。末尾の Scene は省略できる）</param>
+        /// <returns>見つかったかどうか。</returns>
+        public bool SetInitialScene(string scene)
+        {
+            if (int.TryParse(scene, out var index))
+            {
+                if (index < 0 || index >= sceneTypes.Count)
+                {
+                    return false;
+                }
+                currentSceneIndex = index;
+                return true;
+            }
+            index = sceneTypes.FindIndex(t =>
+                string.Equals(t.Name, scene, StringComparison.OrdinalIgnoreCase) ||
+                string.Equals(t.Name, scene + "Scene", StringComparison.OrdinalIgnoreCase));
+            if (index < 0)
+            {
+                return false;
+            }
+            currentSceneIndex = index;
+            return true;
+        }
+
+        /// <summary>
+        /// シーンの一覧を「番号: クラス名」の形で取得します。
+        /// </summary>
+        public IEnumerable<string> GetSceneNames()
+        {
+            for (var i = 0; i < sceneTypes.Count; i++)
+            {
+                yield return string.Format("{0}: {1}", i, sceneTypes[i].Name);
+            }
         }
 
         private void ChangeScene(ISceneBase caller)

@@ -1,4 +1,5 @@
-﻿using FlowScriptEngine;
+﻿using PPDMath;
+using FlowScriptEngine;
 
 namespace FlowScriptEngineSlimDX.FlowSourceObjects.Vector4
 {
@@ -11,11 +12,11 @@ namespace FlowScriptEngineSlimDX.FlowSourceObjects.Vector4
         }
 
         [ToolTipText("Vector_UnitX_Value_Summary")]
-        public SharpDX.Vector4 Value
+        public System.Numerics.Vector4 Value
         {
             get
             {
-                return SharpDX.Vector4.UnitX;
+                return System.Numerics.Vector4.UnitX;
             }
         }
     }

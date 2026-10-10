@@ -6,7 +6,7 @@ namespace PPDCore
 {
     class MarkResults
     {
-        HashSet<EffectType> results;
+        readonly HashSet<EffectType> results;
 
         public bool this[EffectType result]
         {
@@ -26,7 +26,7 @@ namespace PPDCore
 
         public MarkResults()
         {
-            results = new HashSet<EffectType>();
+            results = [];
         }
 
         public void Add(EffectType result)

@@ -19,7 +19,10 @@
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 * THE SOFTWARE.
 */
-using SharpDX;
+using System.Numerics;
+using PPDMath;
+using Color4 = Vortice.Mathematics.Color4;
+using Color = Vortice.Mathematics.Color;
 using System;
 using System.Runtime.InteropServices;
 
@@ -34,7 +37,7 @@ namespace PPDFramework
         /// <summary>
         /// サイズ
         /// </summary>
-        public static int Size = Marshal.SizeOf(typeof(ColoredTexturedVertex));
+        public static readonly int Size = Marshal.SizeOf<ColoredTexturedVertex>();
 
         /// <summary>
         /// Gets or sets the position of the vertex.
@@ -80,7 +83,7 @@ namespace PPDFramework
             : this()
         {
             Position = position;
-            Color = color.ToBgra();
+            Color = color.ToBgraInt();
             TextureCoordinates = textureCoordinates;
         }
 
@@ -112,7 +115,7 @@ namespace PPDFramework
         /// <returns>
         /// A 32-bit signed integer that is the hash code for this instance.
         /// </returns>
-        public override int GetHashCode()
+        public override readonly int GetHashCode()
         {
             return Position.GetHashCode() + TextureCoordinates.GetHashCode();
         }
@@ -124,7 +127,7 @@ namespace PPDFramework
         /// <returns>
         /// true if <paramref name="obj"/> and this instance are the same type and represent the same value; otherwise, false.
         /// </returns>
-        public override bool Equals(object obj)
+        public override readonly bool Equals(object obj)
         {
             if (obj == null)
                 return false;
@@ -142,7 +145,7 @@ namespace PPDFramework
         /// <returns>
         /// true if the current object is equal to the <paramref name="other"/> parameter; otherwise, false.
         /// </returns>
-        public bool Equals(ColoredTexturedVertex other)
+        public readonly bool Equals(ColoredTexturedVertex other)
         {
             return (Position == other.Position && TextureCoordinates == other.TextureCoordinates);
         }

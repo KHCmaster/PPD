@@ -10,7 +10,7 @@ namespace PPDMulti
     class Logger
     {
         private const string folderPath = "multi_log";
-        private string filePath;
+        private readonly string filePath;
 
         public Logger()
             : this("multi_log.txt")

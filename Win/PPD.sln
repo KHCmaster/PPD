@@ -109,8 +109,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ErrorHandle", "ErrorHandler
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PPDModSettingUI", "PPDModSettingUI\PPDModSettingUI.csproj", "{953D844F-3208-4ED4-9D65-C47E8B1CA82B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinFormsUI", "WinFormsUI\WinFormsUI.csproj", "{C75532C4-765B-418E-B09B-46D36B2ABDB1}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PPDMovie", "PPDMovie\PPDMovie.csproj", "{C932445B-9FE4-4DA0-B4F7-178C1A9BFC1C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PPDMultiServerService", "PPDMultiServerService\PPDMultiServerService.csproj", "{AE6B8D3A-0174-484A-9AE1-838F708D66BB}"
@@ -140,6 +138,12 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlueSky", "BlueSky\BlueSky.csproj", "{A195631E-98EC-4F51-A3F6-C591F054117A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlueSkyTest", "BlueSkyTest\BlueSkyTest.csproj", "{335F1AA2-8BFA-4725-B0D1-C196A99CADE1}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PPDMath", "PPDMath\PPDMath.csproj", "{7C2E9B41-5D3A-4F86-B0E2-3A9C1D7F5E24}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UITests", "UITests\UITests.csproj", "{640C054E-A7F4-4508-B72F-24DBA4F305AA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.csproj", "{E137B3CA-CE60-4AF5-8245-ABA2A7C1364C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -299,10 +303,6 @@ Global
 		{953D844F-3208-4ED4-9D65-C47E8B1CA82B}.Debug|x64.Build.0 = Debug|x64
 		{953D844F-3208-4ED4-9D65-C47E8B1CA82B}.Release|x64.ActiveCfg = Release|x64
 		{953D844F-3208-4ED4-9D65-C47E8B1CA82B}.Release|x64.Build.0 = Release|x64
-		{C75532C4-765B-418E-B09B-46D36B2ABDB1}.Debug|x64.ActiveCfg = Debug|x64
-		{C75532C4-765B-418E-B09B-46D36B2ABDB1}.Debug|x64.Build.0 = Debug|x64
-		{C75532C4-765B-418E-B09B-46D36B2ABDB1}.Release|x64.ActiveCfg = Release|x64
-		{C75532C4-765B-418E-B09B-46D36B2ABDB1}.Release|x64.Build.0 = Release|x64
 		{C932445B-9FE4-4DA0-B4F7-178C1A9BFC1C}.Debug|x64.ActiveCfg = Debug|x64
 		{C932445B-9FE4-4DA0-B4F7-178C1A9BFC1C}.Debug|x64.Build.0 = Debug|x64
 		{C932445B-9FE4-4DA0-B4F7-178C1A9BFC1C}.Release|x64.ActiveCfg = Release|x64
@@ -363,6 +363,16 @@ Global
 		{335F1AA2-8BFA-4725-B0D1-C196A99CADE1}.Debug|x64.Build.0 = Debug|x64
 		{335F1AA2-8BFA-4725-B0D1-C196A99CADE1}.Release|x64.ActiveCfg = Release|x64
 		{335F1AA2-8BFA-4725-B0D1-C196A99CADE1}.Release|x64.Build.0 = Release|x64
+		{7C2E9B41-5D3A-4F86-B0E2-3A9C1D7F5E24}.Debug|x64.ActiveCfg = Debug|x64
+		{7C2E9B41-5D3A-4F86-B0E2-3A9C1D7F5E24}.Debug|x64.Build.0 = Debug|x64
+		{7C2E9B41-5D3A-4F86-B0E2-3A9C1D7F5E24}.Release|x64.ActiveCfg = Release|x64
+		{7C2E9B41-5D3A-4F86-B0E2-3A9C1D7F5E24}.Release|x64.Build.0 = Release|x64
+		{640C054E-A7F4-4508-B72F-24DBA4F305AA}.Debug|x64.ActiveCfg = Debug|x64
+		{640C054E-A7F4-4508-B72F-24DBA4F305AA}.Debug|x64.Build.0 = Debug|x64
+		{640C054E-A7F4-4508-B72F-24DBA4F305AA}.Release|x64.ActiveCfg = Release|x64
+		{E137B3CA-CE60-4AF5-8245-ABA2A7C1364C}.Debug|x64.ActiveCfg = Debug|x64
+		{E137B3CA-CE60-4AF5-8245-ABA2A7C1364C}.Debug|x64.Build.0 = Debug|x64
+		{E137B3CA-CE60-4AF5-8245-ABA2A7C1364C}.Release|x64.ActiveCfg = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -9,7 +9,7 @@ namespace FlowScriptDrawControl.Model
     class ItemPositionManager
     {
         private Point mouseScreenPos;
-        private SourceControl[] sources;
+        private readonly SourceControl[] sources;
         private PositionInfo[] poses;
         private int current = -1;
 
@@ -54,7 +54,7 @@ namespace FlowScriptDrawControl.Model
                 });
             }
             temp.Sort((Comparison<PositionInfo>)((p1, p2) => (int)((p1.Point - mouseScreenPos).Length - (p2.Point - mouseScreenPos).Length)));
-            poses = temp.ToArray();
+            poses = [.. temp];
             CurrentShiftX = currentShiftX;
             CurrentShiftY = currentShiftY;
         }
@@ -90,7 +90,7 @@ namespace FlowScriptDrawControl.Model
                 }
             }
             points.Sort((Comparison<PositionInfo>)((p1, p2) => (int)((p1.Point - mouseScreenPos).Length - (p2.Point - mouseScreenPos).Length)));
-            poses = points.ToArray();
+            poses = [.. points];
         }
 
         public Point Next(bool skipConnected)

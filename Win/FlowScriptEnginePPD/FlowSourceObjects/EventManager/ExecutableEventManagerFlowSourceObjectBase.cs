@@ -9,9 +9,9 @@ namespace FlowScriptEnginePPD.FlowSourceObjects.EventManager
         protected override void OnInitialize()
         {
             base.OnInitialize();
-            if (Manager.Items.ContainsKey("EventManager"))
+            if (Manager.Items.TryGetValue("EventManager", out object value))
             {
-                eventManager = (IEventManager)Manager.Items["EventManager"];
+                eventManager = (IEventManager)value;
             }
         }
     }

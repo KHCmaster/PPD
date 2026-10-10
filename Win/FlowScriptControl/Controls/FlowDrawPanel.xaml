@@ -1,0 +1,52 @@
+﻿<UserControl x:Class="FlowScriptControl.Controls.FlowDrawPanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibility" />
+        <!-- ノードの追加のメニュー。項目は FlowNodeEntry から作る（サブメニューを開いたときに作られる） -->
+        <Style x:Key="NodeMenuItemStyle" TargetType="MenuItem">
+            <Setter Property="Header" Value="{Binding Text}" />
+            <!-- ノード名の「_」がアクセスキーとして扱われないように、TextBlock で表示する -->
+            <Setter Property="HeaderTemplate">
+                <Setter.Value>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding}" />
+                    </DataTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="ItemsSource" Value="{Binding Children}" />
+            <Setter Property="Visibility" Value="{Binding IsVisible, Converter={StaticResource BooleanToVisibility}}" />
+            <Setter Property="ToolTip" Value="{Binding ToolTipText}" />
+            <Setter Property="ToolTipService.InitialShowDelay" Value="1000" />
+            <Setter Property="ToolTipService.ShowOnDisabled" Value="True" />
+            <Setter Property="ItemContainerStyle" Value="{DynamicResource NodeMenuItemStyle}" />
+        </Style>
+    </UserControl.Resources>
+    <UserControl.ContextMenu>
+        <ContextMenu x:Name="contextMenu" Opened="ContextMenu_Opened">
+            <MenuItem x:Name="addNodeMenuItem" Header="Add Node" ItemContainerStyle="{StaticResource NodeMenuItemStyle}" Click="AddNodeMenuItem_Click" />
+            <MenuItem x:Name="addScopeMenuItem" Header="Add Scope" Click="AddScopeMenuItem_Click" />
+            <MenuItem x:Name="removeScopeMenuItem" Header="Remove Scope" Click="RemoveScopeMenuItem_Click" />
+            <MenuItem x:Name="addCommentMenuItem" Header="Add Comment" Click="AddCommentMenuItem_Click" />
+            <MenuItem x:Name="addBoundCommentMenuItem" Header="Add Bound Comment" Click="AddBoundCommentMenuItem_Click" />
+            <MenuItem x:Name="removeBoundCommentMenuItem" Header="Remove Bound Comment" Click="RemoveBoundCommentMenuItem_Click" />
+            <MenuItem x:Name="selectInScopeMenuItem" Header="Select In Scope" Click="SelectInScopeMenuItem_Click" />
+            <MenuItem x:Name="selectAllInScopeMenuItem" Header="Select All In Scope" Click="SelectAllInScopeMenuItem_Click" />
+            <MenuItem x:Name="addBreakPointMenuItem" Header="Add Break Point" Click="AddBreakPointMenuItem_Click" />
+            <MenuItem x:Name="removeBreakPointMenuItem" Header="Remove Break Point" Click="RemoveBreakPointMenuItem_Click" />
+            <MenuItem x:Name="findLinkedNodeMenuItem" Header="Find Linked Node" Click="FindLinkedNodeMenuItem_Click" />
+            <Separator />
+            <MenuItem x:Name="cutMenuItem" Header="Cut" Click="CutMenuItem_Click" />
+            <MenuItem x:Name="copyMenuItem" Header="Copy" Click="CopyMenuItem_Click" />
+            <MenuItem x:Name="pasteMenuItem" Header="Paste" Click="PasteMenuItem_Click" />
+            <MenuItem x:Name="pasteWithLinksMenuItem" Header="Paste With Links" Click="PasteWithLinksMenuItem_Click" />
+            <MenuItem x:Name="deleteMenuItem" Header="Delete" Click="DeleteMenuItem_Click" />
+            <Separator />
+            <MenuItem x:Name="copyNodeNameMenuItem" Header="Copy Node Name" Click="CopyNodeNameMenuItem_Click" />
+            <MenuItem x:Name="copyPropertyNameMenuItem" Header="Copy Property Name" Click="CopyPropertyNameMenuItem_Click" />
+            <Separator x:Name="copyNameSeparator" />
+            <MenuItem x:Name="fitViewMenuItem" Header="Fit View" Click="FitViewMenuItem_Click" />
+        </ContextMenu>
+    </UserControl.ContextMenu>
+    <Grid x:Name="rootGrid" />
+</UserControl>

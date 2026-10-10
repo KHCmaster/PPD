@@ -1,4 +1,4 @@
-﻿using GalaSoft.MvvmLight;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using System.ComponentModel;
 using System.Windows.Media;
 
@@ -19,7 +19,7 @@ namespace FlowScriptDrawControl.Model
                 if (geometry != value)
                 {
                     geometry = value;
-                    RaisePropertyChanged("Geometry");
+                    OnPropertyChanged(nameof(Geometry));
                 }
             }
         }
@@ -32,7 +32,7 @@ namespace FlowScriptDrawControl.Model
                 if (stroke != value)
                 {
                     stroke = value;
-                    RaisePropertyChanged("Stroke");
+                    OnPropertyChanged(nameof(Stroke));
                 }
             }
         }
@@ -44,16 +44,10 @@ namespace FlowScriptDrawControl.Model
             {
                 if (srcItem != value)
                 {
-                    if (srcItem != null)
-                    {
-                        srcItem.PropertyChanged -= srcItem_PropertyChanged;
-                    }
+                    srcItem?.PropertyChanged -= SrcItem_PropertyChanged;
                     srcItem = value;
-                    if (srcItem != null)
-                    {
-                        srcItem.PropertyChanged += srcItem_PropertyChanged;
-                    }
-                    RaisePropertyChanged("SrcItem");
+                    srcItem?.PropertyChanged += SrcItem_PropertyChanged;
+                    OnPropertyChanged(nameof(SrcItem));
                     UpdateStroke();
                 }
             }
@@ -66,16 +60,10 @@ namespace FlowScriptDrawControl.Model
             {
                 if (destItem != value)
                 {
-                    if (destItem != null)
-                    {
-                        destItem.PropertyChanged -= destItem_PropertyChanged;
-                    }
+                    destItem?.PropertyChanged -= DestItem_PropertyChanged;
                     destItem = value;
-                    if (destItem != null)
-                    {
-                        destItem.PropertyChanged += destItem_PropertyChanged;
-                    }
-                    RaisePropertyChanged("DestItem");
+                    destItem?.PropertyChanged += DestItem_PropertyChanged;
+                    OnPropertyChanged(nameof(DestItem));
                 }
             }
         }
@@ -96,7 +84,7 @@ namespace FlowScriptDrawControl.Model
             Stroke = new SolidColorBrush(color);
         }
 
-        void srcItem_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        void SrcItem_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == "IsMouseOver")
             {
@@ -104,7 +92,7 @@ namespace FlowScriptDrawControl.Model
             }
         }
 
-        void destItem_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        void DestItem_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == "IsMouseOver")
             {

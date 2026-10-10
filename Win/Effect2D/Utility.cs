@@ -10,6 +10,6 @@ namespace Effect2D
         /// <summary>
         /// タイプの配列
         /// </summary>
-        public static RatioType[] RatioTypeArray = (RatioType[])Enum.GetValues(typeof(RatioType));
+        public static readonly RatioType[] RatioTypeArray = Enum.GetValues<RatioType>();
     }
 }

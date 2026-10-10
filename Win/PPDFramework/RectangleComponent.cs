@@ -1,7 +1,10 @@
 ﻿using PPDFramework.Resource;
 using PPDFramework.Shaders;
 using PPDFramework.Vertex;
-using SharpDX;
+using System.Numerics;
+using PPDMath;
+using Color4 = Vortice.Mathematics.Color4;
+using Color = Vortice.Mathematics.Color;
 using System;
 
 namespace PPDFramework
@@ -11,7 +14,7 @@ namespace PPDFramework
     /// </summary>
     public class RectangleComponent : GameComponent
     {
-        PPDFramework.Resource.ResourceManager resourceManager;
+        readonly PPDFramework.Resource.ResourceManager resourceManager;
         ColorTextureResource resource;
         float rectangleWidth;
         float rectangleHeight;
@@ -116,12 +119,12 @@ namespace PPDFramework
             if (rectangleChanged)
             {
                 rectangleChanged = false;
-                vertices.Write(new[] {
+                vertices.Write([
                     new ColoredTexturedVertex(new Vector3(0, 0, 0.5f)),
                     new ColoredTexturedVertex(new Vector3(rectangleWidth, 0, 0.5f)),
                     new ColoredTexturedVertex(new Vector3(0, rectangleHeight, 0.5f)),
                     new ColoredTexturedVertex(new Vector3(rectangleWidth, rectangleHeight, 0.5f))
-                });
+                ]);
             }
 
             base.Update();
@@ -159,11 +162,8 @@ namespace PPDFramework
         protected override void DisposeResource()
         {
             base.DisposeResource();
-            if (vertices != null)
-            {
-                vertices.Dispose();
-                vertices = null;
-            }
+            vertices?.Dispose();
+            vertices = null;
         }
     }
 }

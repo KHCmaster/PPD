@@ -1,15 +1,10 @@
 ﻿using Effect2D;
 namespace Effect2DEditor.Command
 {
-    class ResetPathCommand : CommandBase
+    class ResetPathCommand(EffectManager manager, string exp, SelectedManager SManager) : CommandBase(manager, exp)
     {
         BezierCaliculator.BezierAnalyzer lastba;
-        SelectedManager SManager;
-        public ResetPathCommand(EffectManager manager, string exp, SelectedManager SManager)
-            : base(manager, exp)
-        {
-            this.SManager = SManager;
-        }
+        readonly SelectedManager SManager = SManager;
 
         public override void Undo()
         {

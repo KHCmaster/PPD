@@ -1,6 +1,7 @@
 ﻿using PPDCore;
 using PPDFramework;
-using SharpDX;
+using System.Numerics;
+using PPDMath;
 using System;
 
 namespace PPDShareComponent
@@ -8,7 +9,7 @@ namespace PPDShareComponent
     /// <summary>
     /// 停止中の画面UI
     /// </summary>
-    public class PauseMenu : PauseMenuBase
+    public class PauseMenu(PPDDevice device, PathManager pathManager) : PauseMenuBase(device)
     {
         enum PauseType
         {
@@ -25,12 +26,7 @@ namespace PPDShareComponent
         Button[] buttons;
         TextureString latencyString;
         PauseType pauseType = PauseType.Resume;
-        PathManager pathManager;
-
-        public PauseMenu(PPDDevice device, PathManager pathManager) : base(device)
-        {
-            this.pathManager = pathManager;
-        }
+        readonly PathManager pathManager = pathManager;
 
         public override void Load()
         {
@@ -40,9 +36,9 @@ namespace PPDShareComponent
             {
                 buttons[i] = new Button(device, ResourceManager, pathManager, names[i])
                 {
-                    Position = new Vector2(400, 160 + 40 * i + 5)
+                    Position = new Vector2(400, 160 + 40 * i + 5),
+                    Selected = false
                 };
-                buttons[i].Selected = false;
                 this.AddChild(buttons[i]);
             }
             buttons[0].Selected = true;
@@ -65,7 +61,7 @@ namespace PPDShareComponent
             Hidden = false;
         }
 
-        private string GetLatencyString(float latency)
+        private static string GetLatencyString(float latency)
         {
             return String.Format("<L:-> Latency:{1}{0:F3} <+:R>", latency, latency >= 0 ? "+" : "");
         }

@@ -6,7 +6,7 @@ namespace FlowScriptEngine
 {
     public class Serializer
     {
-        XDocument document;
+        readonly XDocument document;
 
 
         public Serializer()
@@ -71,7 +71,7 @@ namespace FlowScriptEngine
         public void Serialize(XElement element, object value)
         {
             Type type = null;
-            string typeText = "";
+            string typeText;
             if (value == null)
             {
                 typeText = "(null)";
@@ -83,9 +83,9 @@ namespace FlowScriptEngine
             }
             var valueElem = new XElement("Value", new XAttribute("Type", typeText));
             element.Add(valueElem);
-            if (type.IsArray && value != null)
+            // null のときは型がないので、先に調べる（以前は型を先に見て例外になり、null の値が出なかった）
+            if (value != null && type.IsArray)
             {
-                var elemType = type = type.GetElementType();
                 var array = (Array)value;
                 for (var i = 0; i < array.Length; i++)
                 {

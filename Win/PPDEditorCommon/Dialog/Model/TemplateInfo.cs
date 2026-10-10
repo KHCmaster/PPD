@@ -9,7 +9,7 @@ using System.Xml.Linq;
 
 namespace PPDEditorCommon.Dialog.Model
 {
-    public class TemplateInfo
+    public partial class TemplateInfo
     {
         public string Type
         {
@@ -260,20 +260,24 @@ namespace PPDEditorCommon.Dialog.Model
         public string ReadAttribute(XElement elem, string name)
         {
             var attr = elem.Attribute(name);
-            if (name == null)
+            // ない属性は空にする（元は name を調べていて、属性がないテンプレートは読めなかった）
+            if (attr == null)
             {
-                return null;
+                return "";
             }
             return attr.Value;
         }
 
-        private string ReplaceLanguage(string str)
+        private static string ReplaceLanguage(string str)
         {
-            var regex = new Regex("{lang:(\\w+)}");
+            var regex = LangPlaceholderRegex();
             return regex.Replace(str, m =>
             {
                 return TranslateExtension.Language[m.Groups[1].Value];
             });
         }
+
+        [GeneratedRegex("{lang:(\\w+)}")]
+        private static partial Regex LangPlaceholderRegex();
     }
 }

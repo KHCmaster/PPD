@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
-namespace PPDExpansion
+namespace PPDExpansion.WeakEventing
 {
 
     /// <summary>
@@ -60,10 +60,7 @@ namespace PPDExpansion
 
             if (eventSource is TSource eventObject)
             {
-                var weakListener = CreateWeakEventListenerInternal(eventObject);
-
-                if (weakListener == null)
-                    throw new InvalidOperationException("The method CreateWeakEventListener must return a value.");
+                var weakListener = CreateWeakEventListenerInternal(eventObject) ?? throw new InvalidOperationException("The method CreateWeakEventListener must return a value.");
 
                 // store the weak-listener as weak reference (for Detach method only)
                 _weakListener = new WeakReference(weakListener);
@@ -95,7 +92,7 @@ namespace PPDExpansion
 
                     // get fields expect fields marked with CompilerGeneratedAttribute or derived from Delegate (events are delegate fields)
                     var queryFields = from f in type.GetFields(bindingFlags)
-                                      where f.GetCustomAttributes(typeof(CompilerGeneratedAttribute), true).Count() == 0 &&
+                                      where f.GetCustomAttributes(typeof(CompilerGeneratedAttribute), true).Length == 0 &&
                                             !f.FieldType.IsSubclassOf(typeof(Delegate))
                                       select f.Name;
 
@@ -109,7 +106,7 @@ namespace PPDExpansion
                     // members to this class, because of the possibilty to store the WeakEventListener reference to a member.
                     // Is this the case the memory leak can still occur. 
                     // Therefore, if any field or property is implemented, throw an exception as warning.
-                    if (query.Count() > 0)
+                    if (query.Any())
                     {
                         // note: MessageBox.Show blocks unit tests
                         throw new InvalidOperationException(string.Format("You should not add any other implementation than overriding methods in the class {0}, because of possible memory you can get within your application.", type.Name));

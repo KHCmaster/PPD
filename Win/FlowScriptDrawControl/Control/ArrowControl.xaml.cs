@@ -12,7 +12,7 @@ namespace FlowScriptDrawControl.Control
     /// </summary>
     public partial class ArrowControl : UserControl
     {
-        private Arrow arrow;
+        private readonly Arrow arrow;
 
         private const int ControlDiff = 30;
         private const int spaceY = 5;
@@ -80,10 +80,19 @@ namespace FlowScriptDrawControl.Control
         {
             var mid = new Point((from.X + to.X) / 2, (from.Y + to.Y) / 2);
             var diff = Math.Min(100, Math.Max(1, Math.Abs(from.X - to.X) * ControlDiff / 100f));
-            var geo = new PathGeometry(new PathFigure[]{
-                new PathFigure(from, new QuadraticBezierSegment[]{
-                    new QuadraticBezierSegment(new Point(from.X + diff,from.Y), mid, true),                    new QuadraticBezierSegment(new Point(to.X-diff,to.Y),new Point(to.X-thickness,to.Y),true)                },false),                new PathFigure(new Point(to.X-spaceY-thickness,to.Y-spaceY), new LineSegment[]{
-                    new LineSegment(new Point(to.X-thickness,to.Y),true),                    new LineSegment(new Point(to.X-spaceY-thickness,to.Y+spaceY),true)                },false)            });
+            var geo = new PathGeometry(
+            [
+                new PathFigure(from,
+                [
+                    new QuadraticBezierSegment(new Point(from.X + diff, from.Y), mid, true),
+                    new QuadraticBezierSegment(new Point(to.X - diff, to.Y), new Point(to.X - thickness, to.Y), true)
+                ], false),
+                new PathFigure(new Point(to.X - spaceY - thickness, to.Y - spaceY),
+                [
+                    new LineSegment(new Point(to.X - thickness, to.Y), true),
+                    new LineSegment(new Point(to.X - spaceY - thickness, to.Y + spaceY), true)
+                ], false)
+            ]);
             arrow.Geometry = geo;
         }
 

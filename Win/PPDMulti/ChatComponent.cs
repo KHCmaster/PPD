@@ -3,22 +3,25 @@ using PPDFrameworkCore;
 using PPDMulti.Model;
 using PPDMultiCommon.Model;
 using PPDShareComponent;
-using SharpDX;
+using System.Numerics;
+using PPDMath;
+using Color4 = Vortice.Mathematics.Color4;
+using Color = Vortice.Mathematics.Color;
 using System;
 
 namespace PPDMulti
 {
     class ChatComponent : FocusableGameComponent
     {
-        SpriteObject messageSprite;
-        PictureObject back;
-        PictureObject scrollBar;
+        readonly SpriteObject messageSprite;
+        readonly PictureObject back;
+        readonly PictureObject scrollBar;
 
         int scrollIndex;
         const int scrollBarHeight = 361;
 
-        PPDFramework.Resource.ResourceManager resourceManager;
-        IGameHost gameHost;
+        readonly PPDFramework.Resource.ResourceManager resourceManager;
+        readonly IGameHost gameHost;
 
         public ChatComponent(PPDDevice device, PPDFramework.Resource.ResourceManager resourceManager, IGameHost gameHost) : base(device)
         {
@@ -78,7 +81,7 @@ namespace PPDMulti
                 IsPrivate = isPrivate
             };
 
-            messageSprite.AddChild(new MessageComponent(device, resourceManager, message) { Position = new SharpDX.Vector2(20, messageSprite.ChildrenCount * 41) });
+            messageSprite.AddChild(new MessageComponent(device, resourceManager, message) { Position = new System.Numerics.Vector2(20, messageSprite.ChildrenCount * 41) });
 
             if (scrollIndex + 1 == messageSprite.ChildrenCount - 9)
             {
@@ -94,7 +97,7 @@ namespace PPDMulti
                 User = User.SystemUser
             };
 
-            messageSprite.AddChild(new SystemMessageComponent(device, resourceManager, message) { Position = new SharpDX.Vector2(20, messageSprite.ChildrenCount * 41) });
+            messageSprite.AddChild(new SystemMessageComponent(device, resourceManager, message) { Position = new System.Numerics.Vector2(20, messageSprite.ChildrenCount * 41) });
 
             if (scrollIndex + 1 == messageSprite.ChildrenCount - 9)
             {
@@ -112,17 +115,14 @@ namespace PPDMulti
 
         class SystemMessageComponent : BindableGameComponent
         {
-            PPDFramework.Resource.ResourceManager resourceManager;
+            readonly PPDFramework.Resource.ResourceManager resourceManager;
 
-            TextureString messageString;
-            PictureObject back;
+            readonly TextureString messageString;
+            readonly PictureObject back;
 
             public SystemMessageComponent(PPDDevice device, PPDFramework.Resource.ResourceManager resourceManager, Message message) : base(device)
             {
                 this.resourceManager = resourceManager;
-
-                Color4 color = PPDColors.White;
-
                 this.AddChild((messageString = new TextureString(device, "", 10, 300, 40, true, PPDColors.Black)
                 {
                     Position = new Vector2(10, 1)
@@ -155,13 +155,13 @@ namespace PPDMulti
 
         class MessageComponent : BindableGameComponent
         {
-            PPDFramework.Resource.ResourceManager resourceManager;
+            readonly PPDFramework.Resource.ResourceManager resourceManager;
 
-            TextureString userName;
+            readonly TextureString userName;
             PictureObject userIcon;
-            TextureString messageString;
-            PictureObject back;
-            Message message;
+            readonly TextureString messageString;
+            readonly PictureObject back;
+            readonly Message message;
 
             private string currentUserIconPath = Utility.Path.Combine("noimage_icon.png");
 
@@ -189,7 +189,7 @@ namespace PPDMulti
                     this.AddChild((back = new PictureObject(device, resourceManager, Utility.Path.Combine("message_back.png"))
                     {
                         Position = new Vector2(32, 0),
-                        EdgeColors = new[] { color, color, color, color }
+                        EdgeColors = [color, color, color, color]
                     }));
                 }
                 else
@@ -209,7 +209,7 @@ namespace PPDMulti
                     this.AddChild((back = new PictureObject(device, resourceManager, Utility.Path.Combine("message_back.png"))
                     {
                         Scale = new Vector2(-1, 1),
-                        EdgeColors = new[] { color, color, color, color }
+                        EdgeColors = [color, color, color, color]
                     }));
                     back.ScaleCenter = new Vector2(back.Width / 2, back.Height / 2);
                 }
@@ -266,7 +266,7 @@ namespace PPDMulti
                 {
                     if (back.EdgeColors[0] != value)
                     {
-                        back.EdgeColors = new[] { value, value, value, value };
+                        back.EdgeColors = [value, value, value, value];
                     }
                 }
             }
@@ -305,7 +305,7 @@ namespace PPDMulti
 
             private void ChangeUserIconScale()
             {
-                userIcon.Scale = new SharpDX.Vector2(32 / userIcon.Width, 32 / userIcon.Height);
+                userIcon.Scale = new System.Numerics.Vector2(32 / userIcon.Width, 32 / userIcon.Height);
             }
 
             protected override void UpdateImpl()

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- dotnet-coverage で測るときの設定です（coverage.ps1 から使う）。テストとほかの人のライブラリは数えない -->
+<Configuration>
+  <CodeCoverage>
+    <ModulePaths>
+      <Exclude>
+        <ModulePath>.*[\\/]UnitTests\.dll$</ModulePath>
+        <ModulePath>.*[\\/]UITests\.dll$</ModulePath>
+        <ModulePath>.*[\\/]xunit\..*</ModulePath>
+        <ModulePath>.*[\\/]CommunityToolkit\..*</ModulePath>
+        <ModulePath>.*[\\/]FlaUI\..*</ModulePath>
+        <ModulePath>.*[\\/]MessagePack.*</ModulePath>
+        <ModulePath>.*[\\/]AvalonDock.*</ModulePath>
+        <ModulePath>.*[\\/]Vortice\..*</ModulePath>
+        <ModulePath>.*[\\/]SharpGen\..*</ModulePath>
+        <ModulePath>.*[\\/]Microsoft\..*</ModulePath>
+        <ModulePath>.*[\\/]System\..*</ModulePath>
+      </Exclude>
+    </ModulePaths>
+    <Attributes>
+      <Exclude>
+        <Attribute>^System\.CodeDom\.Compiler\.GeneratedCodeAttribute$</Attribute>
+        <Attribute>^System\.Runtime\.CompilerServices\.CompilerGeneratedAttribute$</Attribute>
+      </Exclude>
+    </Attributes>
+  </CodeCoverage>
+</Configuration>

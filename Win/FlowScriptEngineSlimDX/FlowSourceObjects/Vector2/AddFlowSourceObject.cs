@@ -1,4 +1,5 @@
-﻿using FlowScriptEngine;
+﻿using PPDMath;
+using FlowScriptEngine;
 
 namespace FlowScriptEngineSlimDX.FlowSourceObjects.Vector2
 {
@@ -11,21 +12,21 @@ namespace FlowScriptEngineSlimDX.FlowSourceObjects.Vector2
         }
 
         [ToolTipText("FirstArgument")]
-        public SharpDX.Vector2 A
+        public System.Numerics.Vector2 A
         {
             private get;
             set;
         }
 
         [ToolTipText("SecondArgument")]
-        public SharpDX.Vector2 B
+        public System.Numerics.Vector2 B
         {
             private get;
             set;
         }
 
         [ToolTipText("Add_Value")]
-        public SharpDX.Vector2 Value
+        public System.Numerics.Vector2 Value
         {
             get
             {

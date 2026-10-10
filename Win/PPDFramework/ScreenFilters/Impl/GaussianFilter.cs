@@ -1,5 +1,6 @@
 ﻿using PPDFramework.Effect;
-using SharpDX;
+using System.Numerics;
+using PPDMath;
 
 namespace PPDFramework.ScreenFilters.Impl
 {
@@ -38,29 +39,23 @@ namespace PPDFramework.ScreenFilters.Impl
         /// <param name="weights"></param>
         public void Draw(PPDDevice device, float[] weights)
         {
-            if (PPDSetting.Setting.ShaderDisabled)
-            {
-                return;
-            }
-            using (var tempWorkSpace = device.Workspace.Get())
-            {
-                effect.SetValue(weightsHandle, weights);
-                effect.SetTexture(textureHandle, device.GetRenderTarget().Texture);
-                var renderTarget = device.GetRenderTarget();
-                device.SetRenderTarget(tempWorkSpace);
-                device.Clear();
-                var passCount = effect.Begin();
-                effect.BeginPass(0);
-                DrawQuad(device);
-                effect.EndPass();
-                device.SetRenderTarget(renderTarget);
-                device.Clear();
-                effect.SetTexture(textureHandle, tempWorkSpace.Texture);
-                effect.BeginPass(1);
-                DrawQuad(device);
-                effect.EndPass();
-                effect.End();
-            }
+            using var tempWorkSpace = device.Workspace.Get();
+            effect.SetValue(weightsHandle, weights);
+            effect.SetTexture(textureHandle, device.GetRenderTarget().Texture);
+            var renderTarget = device.GetRenderTarget();
+            device.SetRenderTarget(tempWorkSpace);
+            device.Clear();
+            var passCount = effect.Begin();
+            effect.BeginPass(0);
+            DrawQuad(device);
+            effect.EndPass();
+            device.SetRenderTarget(renderTarget);
+            device.Clear();
+            effect.SetTexture(textureHandle, tempWorkSpace.Texture);
+            effect.BeginPass(1);
+            DrawQuad(device);
+            effect.EndPass();
+            effect.End();
         }
 
         private void DrawQuad(PPDDevice device)
@@ -77,31 +72,16 @@ namespace PPDFramework.ScreenFilters.Impl
         /// </summary>
         protected override void DisposeResource()
         {
-            if (effect != null)
-            {
-                effect.Dispose();
-                effect = null;
-            }
-            if (widthHeightHandle != null)
-            {
-                widthHeightHandle.Dispose();
-                widthHeightHandle = null;
-            }
-            if (projectionHandle != null)
-            {
-                projectionHandle.Dispose();
-                projectionHandle = null;
-            }
-            if (weightsHandle != null)
-            {
-                weightsHandle.Dispose();
-                weightsHandle = null;
-            }
-            if (textureHandle != null)
-            {
-                textureHandle.Dispose();
-                textureHandle = null;
-            }
+            effect?.Dispose();
+            effect = null;
+            widthHeightHandle?.Dispose();
+            widthHeightHandle = null;
+            projectionHandle?.Dispose();
+            projectionHandle = null;
+            weightsHandle?.Dispose();
+            weightsHandle = null;
+            textureHandle?.Dispose();
+            textureHandle = null;
         }
     }
 }

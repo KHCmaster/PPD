@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Threading;
-using System.Windows.Forms;
+using System.Windows;
 
 namespace PPDUpdater
 {
@@ -12,13 +12,19 @@ namespace PPDUpdater
 
         public void Initialize()
         {
-            Application.ThreadException += Application_ThreadException;
             Thread.GetDomain().UnhandledException += Program_UnhandledException;
         }
 
-        void Application_ThreadException(object sender, System.Threading.ThreadExceptionEventArgs e)
+        /// <summary>
+        /// UI のスレッドで起きた例外も処理します（以前の WinForms の Application.ThreadException と同じく、処理を続ける）。
+        /// </summary>
+        public void Attach(Application application)
         {
-            ProcessError(e.Exception);
+            application.DispatcherUnhandledException += (sender, e) =>
+            {
+                ProcessError(e.Exception);
+                e.Handled = true;
+            };
         }
 
         void Program_UnhandledException(object sender, UnhandledExceptionEventArgs e)
@@ -43,25 +49,23 @@ namespace PPDUpdater
             MessageBox.Show("Fatal Error Occurred\n");
         }
 
-        void WriteError(Exception e)
+        static void WriteError(Exception e)
         {
             try
             {
-                using (StreamWriter writer = new StreamWriter("error.log", true))
+                using StreamWriter writer = new("error.log", true);
+                writer.WriteLine("------------------------------------------------------------------");
+                writer.WriteLine(String.Format("{0}", DateTime.Now));
+                WriteAssembly(Assembly.GetEntryAssembly(), writer);
+                if (e != null)
                 {
-                    writer.WriteLine("------------------------------------------------------------------");
-                    writer.WriteLine(String.Format("{0}", DateTime.Now));
-                    WriteAssembly(Assembly.GetEntryAssembly(), writer);
-                    if (e != null)
-                    {
-                        WriteErrorImpl(e, writer);
-                    }
-                    else
-                    {
-                        writer.WriteLine("Exception is Null.");
-                    }
-                    writer.WriteLine("------------------------------------------------------------------");
+                    WriteErrorImpl(e, writer);
                 }
+                else
+                {
+                    writer.WriteLine("Exception is Null.");
+                }
+                writer.WriteLine("------------------------------------------------------------------");
             }
             catch
             {
@@ -69,7 +73,7 @@ namespace PPDUpdater
             }
         }
 
-        void WriteAssembly(Assembly assembly, StreamWriter writer)
+        static void WriteAssembly(Assembly assembly, StreamWriter writer)
         {
             writer.WriteLine("FullName:{0}", assembly.FullName);
             WriteBinaryInfo(assembly.Location, writer);
@@ -79,7 +83,7 @@ namespace PPDUpdater
             }
         }
 
-        void WriteBinaryInfo(string filePath, StreamWriter writer)
+        static void WriteBinaryInfo(string filePath, StreamWriter writer)
         {
             try
             {
@@ -94,7 +98,7 @@ namespace PPDUpdater
             }
         }
 
-        void WriteErrorImpl(Exception e, StreamWriter writer)
+        static void WriteErrorImpl(Exception e, StreamWriter writer)
         {
             writer.WriteLine(e.Data);
             writer.WriteLine(e.HelpLink);

@@ -53,14 +53,14 @@ namespace FlowScriptDrawControl.Control
                 var text = CustomText;
                 var iter = 0;
                 var halfPos = text.Length / 2;
-                Func<string> getText = () =>
+                string getText()
                 {
                     if (iter == 0)
                     {
                         return text;
                     }
-                    return $"{text.Substring(0, halfPos - iter)}…{text.Substring(halfPos + iter)}";
-                };
+                    return $"{text[..(halfPos - iter)]}…{text[(halfPos + iter)..]}";
+                }
                 while (width > CustomMaxWidth)
                 {
                     iter++;

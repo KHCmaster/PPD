@@ -1,0 +1,307 @@
+<Window x:Class="PPDEditor.Forms.EditorForm"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:ad="https://github.com/Dirkster99/AvalonDock"
+        xmlns:local="clr-namespace:PPDEditor"
+        xmlns:vm="clr-namespace:PPDEditor.ViewModels"
+        xmlns:conv="clr-namespace:PPDEditor.Converters"
+        mc:Ignorable="d" d:DataContext="{d:DesignInstance Type=vm:MainWindowViewModel}"
+        Title="{Binding WindowTitle}" Width="1008" Height="820" Icon="/ed.ico"
+        AllowDrop="True" DragEnter="Window_DragEnter" DragOver="Window_DragEnter" Drop="Window_Drop"
+        Closing="Window_Closing" Loaded="Window_Loaded" SourceInitialized="Window_SourceInitialized"
+        PreviewKeyDown="Window_PreviewKeyDown">
+    <Window.InputBindings>
+        <!-- メニューのショートカット。ゲームの画面（WPF の外のウィンドウ）で押したときにも、ここから探して実行する -->
+        <KeyBinding Key="S" Modifiers="Control" Command="{Binding OverwriteProjectCommand}" />
+        <KeyBinding Key="G" Modifiers="Control" Command="{Binding StartGameCommand}" CommandParameter="Current" />
+        <KeyBinding Key="G" Modifiers="Control+Shift" Command="{Binding StartGameCommand}" CommandParameter="Beginning" />
+        <KeyBinding Key="D1" Modifiers="Control" Command="{Binding StartGameCommand}" CommandParameter="CurrentAuto" />
+        <KeyBinding Key="D1" Modifiers="Control+Shift" Command="{Binding StartGameCommand}" CommandParameter="BeginningAuto" />
+    </Window.InputBindings>
+    <Window.Resources>
+        <conv:BindingProxy x:Key="Proxy" Data="{Binding}" />
+        <conv:EnumToBooleanConverter x:Key="EnumToBoolean" />
+        <conv:HasFlagConverter x:Key="HasFlag" />
+        <Style x:Key="ToolImageButton" TargetType="ButtonBase">
+            <Setter Property="Padding" Value="2" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+        <Style x:Key="DropDownArrow" TargetType="Button" BasedOn="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">
+            <Setter Property="Padding" Value="1,2" />
+            <Setter Property="VerticalAlignment" Value="Stretch" />
+        </Style>
+        <!-- 項目を並べるメニューに直接置く項目（並べる項目のスタイルが当たらないように、スタイルを決めておく） -->
+        <Style x:Key="FixedMenuItem" TargetType="MenuItem" BasedOn="{StaticResource {x:Type MenuItem}}" />
+        <Style x:Key="FixedSeparator" TargetType="Separator" BasedOn="{StaticResource {x:Static MenuItem.SeparatorStyleKey}}" />
+        <!-- 最近使ったプロジェクト -->
+        <Style x:Key="RecentProjectItem" TargetType="MenuItem">
+            <Setter Property="Header" Value="{Binding Header}" />
+            <Setter Property="Command" Value="{Binding Data.OpenRecentProjectCommand, Source={StaticResource Proxy}}" />
+            <Setter Property="CommandParameter" Value="{Binding}" />
+        </Style>
+        <!-- 言語 -->
+        <Style x:Key="LanguageItem" TargetType="MenuItem">
+            <Setter Property="Header" Value="{Binding Header}" />
+            <Setter Property="IsChecked" Value="{Binding IsChecked, Mode=OneWay}" />
+            <Setter Property="Command" Value="{Binding Data.SelectLanguageCommand, Source={StaticResource Proxy}}" />
+            <Setter Property="CommandParameter" Value="{Binding}" />
+        </Style>
+        <!-- ビューの配置 -->
+        <Style x:Key="ViewLayoutItem" TargetType="MenuItem">
+            <Setter Property="Header" Value="{Binding Header}" />
+            <Setter Property="Command" Value="{Binding Data.LoadViewLayoutCommand, Source={StaticResource Proxy}}" />
+            <Setter Property="CommandParameter" Value="{Binding}" />
+        </Style>
+        <!-- ドックのウィンドウ -->
+        <Style x:Key="DockItem" TargetType="MenuItem">
+            <Setter Property="Header" Value="{Binding Text}" />
+            <Setter Property="IsChecked" Value="{Binding IsShown, Mode=OneWay}" />
+            <!-- チェックの状態は UI Automation では読めない（IsCheckable でないため）ので、状態として出す -->
+            <Setter Property="AutomationProperties.ItemStatus" Value="{Binding IsShown, Mode=OneWay}" />
+            <Setter Property="Command" Value="{Binding Data.ToggleDockCommand, Source={StaticResource Proxy}}" />
+            <Setter Property="CommandParameter" Value="{Binding}" />
+        </Style>
+        <!-- コマンド。フォルダは子を出し、スクリプトは実行する -->
+        <Style x:Key="CommandItem" TargetType="MenuItem">
+            <Setter Property="Header" Value="{Binding Header}" />
+            <Setter Property="AutomationProperties.AutomationId" Value="{Binding Header}" />
+            <Setter Property="InputGestureText" Value="{Binding InputGesture}" />
+            <Setter Property="ItemsSource" Value="{Binding Children}" />
+            <Setter Property="ItemContainerStyle" Value="{DynamicResource CommandItem}" />
+            <Setter Property="Command" Value="{Binding Data.ExecuteCommandCommand, Source={StaticResource Proxy}}" />
+            <Setter Property="CommandParameter" Value="{Binding}" />
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsFolder}" Value="True">
+                    <Setter Property="Command" Value="{x:Null}" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <!-- MOD。フォルダは子を出し、MOD はチェックで使うかを決める -->
+        <Style x:Key="ModItem" TargetType="MenuItem">
+            <Setter Property="Header" Value="{Binding Header}" />
+            <Setter Property="ItemsSource" Value="{Binding Children}" />
+            <Setter Property="ItemContainerStyle" Value="{DynamicResource ModItem}" />
+            <Setter Property="IsCheckable" Value="{Binding IsMod}" />
+            <Setter Property="IsChecked" Value="{Binding IsChecked, Mode=TwoWay}" />
+        </Style>
+    </Window.Resources>
+    <Grid x:Name="rootGrid">
+        <!-- スキンの背景 -->
+        <Rectangle x:Name="backgroundFill" />
+        <Image x:Name="backgroundImage" Stretch="Uniform" StretchDirection="Both" />
+        <DockPanel>
+            <Grid DockPanel.Dock="Top">
+                <Rectangle x:Name="topOverlay" />
+                <StackPanel>
+                    <Menu x:Name="mainMenu" Background="Transparent">
+                        <Menu.Style>
+                            <Style TargetType="Menu">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsMenuHidden}" Value="True">
+                                        <Setter Property="Visibility" Value="Collapsed" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Menu.Style>
+                        <MenuItem x:Name="fileMenu" Header="{Binding Texts[File]}">
+                            <MenuItem AutomationProperties.AutomationId="NewProjectMenuItem" Header="{Binding Texts[CPF]}" Command="{Binding NewProjectCommand}" />
+                            <MenuItem AutomationProperties.AutomationId="OpenProjectMenuItem" Header="{Binding Texts[OpenProject]}" Command="{Binding OpenProjectCommand}" />
+                            <MenuItem AutomationProperties.AutomationId="OverwriteProjectMenuItem" Header="{Binding Texts[OverWriteProject]}" InputGestureText="Ctrl+S" Command="{Binding OverwriteProjectCommand}" />
+                            <MenuItem AutomationProperties.AutomationId="MergeProjectMenuItem" Header="{Binding Texts[MergeProject]}" Command="{Binding MergeProjectCommand}" />
+                            <MenuItem AutomationProperties.AutomationId="FileOpenMenu" Header="{Binding Texts[Open]}">
+                                <MenuItem AutomationProperties.AutomationId="OpenPpdMenuItem" Header="*.ppd" Command="{Binding OpenPpdCommand}" />
+                                <MenuItem AutomationProperties.AutomationId="OpenMovieMenuItem" Header="movie.*" Command="{Binding OpenMovieCommand}" />
+                                <MenuItem AutomationProperties.AutomationId="OpenKasiMenuItem" Header="kasi.txt" Command="{Binding OpenKasiCommand}" />
+                                <MenuItem Header="data.ini" IsEnabled="False" Command="{Binding OpenDataIniCommand}" />
+                                <MenuItem AutomationProperties.AutomationId="OpenEvdMenuItem" Header="*.evd" Command="{Binding OpenEvdCommand}" />
+                            </MenuItem>
+                            <MenuItem AutomationProperties.AutomationId="FileSaveMenu" Header="{Binding Texts[Save]}">
+                                <MenuItem AutomationProperties.AutomationId="SavePpdAsMenuItem" Header="*.ppd" Command="{Binding SavePpdAsCommand}" />
+                                <MenuItem AutomationProperties.AutomationId="SaveKasiAsMenuItem" Header="kasi.txt" Command="{Binding SaveKasiAsCommand}" />
+                                <MenuItem AutomationProperties.AutomationId="SaveSoundSetAsMenuItem" Header="soundset.txt" Command="{Binding SaveSoundSetAsCommand}" />
+                                <MenuItem AutomationProperties.AutomationId="SaveScdAsMenuItem" Header="*.scd" Command="{Binding SaveScdAsCommand}" />
+                                <MenuItem Header="data.ini" IsEnabled="False" Command="{Binding SaveDataIniAsCommand}" />
+                                <MenuItem AutomationProperties.AutomationId="SaveEvdAsMenuItem" Header="*.evd" Command="{Binding SaveEvdAsCommand}" />
+                            </MenuItem>
+                            <MenuItem Header="{Binding Texts[Import]}">
+                                <MenuItem Header="{Binding Texts[Event]}">
+                                    <MenuItem Header="Easy" Command="{Binding ImportEventCommand}" CommandParameter="{x:Static local:AvailableDifficulty.Easy}" />
+                                    <MenuItem Header="Normal" Command="{Binding ImportEventCommand}" CommandParameter="{x:Static local:AvailableDifficulty.Normal}" />
+                                    <MenuItem Header="Hard" Command="{Binding ImportEventCommand}" CommandParameter="{x:Static local:AvailableDifficulty.Hard}" />
+                                    <MenuItem Header="Extreme" Command="{Binding ImportEventCommand}" CommandParameter="{x:Static local:AvailableDifficulty.Extreme}" />
+                                    <MenuItem Header="Base" Command="{Binding ImportEventCommand}" CommandParameter="{x:Static local:AvailableDifficulty.Base}" />
+                                    <MenuItem Header="{Binding Texts[Other Files]}" Command="{Binding ImportEventFileCommand}" />
+                                </MenuItem>
+                            </MenuItem>
+                            <MenuItem Header="{Binding Texts[Publish]}" Command="{Binding PublishCommand}" />
+                            <MenuItem Header="{Binding Texts[PublishMod]}" Command="{Binding PublishModCommand}" />
+                            <Separator />
+                            <MenuItem Header="{Binding Texts[RecentUsedFile]}" ItemsSource="{Binding RecentProjects}" ItemContainerStyle="{StaticResource RecentProjectItem}" />
+                            <MenuItem Header="{Binding Texts[Exit]}" Command="{Binding ExitCommand}" />
+                        </MenuItem>
+                        <MenuItem x:Name="editMenu" Header="{Binding Texts[Edit]}">
+                            <MenuItem Header="{Binding Texts[Undo]}" Command="{Binding UndoCommand}" />
+                            <MenuItem Header="{Binding Texts[Redo]}" Command="{Binding RedoCommand}" />
+                            <MenuItem AutomationProperties.AutomationId="SwapLineMenuItem" Header="{Binding Texts[SwapLine]}" Command="{Binding SwapLineCommand}" />
+                            <MenuItem Header="{Binding Texts[ForceFit]}">
+                                <MenuItem Header="{Binding Texts[EntireSelectedLayer]}" Command="{Binding ForceFitLayerCommand}" />
+                                <MenuItem Header="{Binding Texts[OnlyInSelection]}" Command="{Binding ForceFitSelectionCommand}" />
+                            </MenuItem>
+                        </MenuItem>
+                        <MenuItem AutomationProperties.AutomationId="CommandMenu" Header="{Binding Texts[Command]}" IsEnabled="{Binding IsMenuOfCommandsEnabled}" ItemContainerStyle="{StaticResource CommandItem}">
+                            <MenuItem.ItemsSource>
+                                <CompositeCollection>
+                                    <CollectionContainer Collection="{Binding Data.Commands, Source={StaticResource Proxy}}" />
+                                    <Separator Style="{StaticResource FixedSeparator}" />
+                                    <MenuItem Style="{StaticResource FixedMenuItem}" Header="{Binding Data.Texts[ReloadList], Source={StaticResource Proxy}}"
+                                              Command="{Binding Data.ReadCommandsCommand, Source={StaticResource Proxy}}" />
+                                </CompositeCollection>
+                            </MenuItem.ItemsSource>
+                        </MenuItem>
+                        <MenuItem x:Name="movieMenu" Header="{Binding Texts[Movie]}">
+                            <MenuItem AutomationProperties.AutomationId="PlayMenuItem" Header="{Binding Texts[Play]}" Command="{Binding PlayCommand}" />
+                            <MenuItem AutomationProperties.AutomationId="PauseMenuItem" Header="{Binding Texts[Pause]}" Command="{Binding PauseCommand}" />
+                            <MenuItem AutomationProperties.AutomationId="StopMenuItem" Header="{Binding Texts[Stop]}" Command="{Binding StopCommand}" />
+                            <MenuItem AutomationProperties.AutomationId="RecordKeyMenuItem" Header="{Binding Texts[RecordKey]}" Command="{Binding RecordKeyCommand}" />
+                            <MenuItem AutomationProperties.AutomationId="CutMovieMenuItem" Header="{Binding Texts[Cut]}" Command="{Binding CutMovieCommand}" />
+                        </MenuItem>
+                        <MenuItem x:Name="showMenu" AutomationProperties.AutomationId="ShowMenu" Header="{Binding Texts[Show]}" SubmenuOpened="ShowMenu_SubmenuOpened" ItemContainerStyle="{StaticResource DockItem}">
+                            <MenuItem.ItemsSource>
+                                <CompositeCollection>
+                                    <CollectionContainer Collection="{Binding Data.Docks, Source={StaticResource Proxy}}" />
+                                    <Separator Style="{StaticResource FixedSeparator}" />
+                                    <MenuItem Style="{StaticResource FixedMenuItem}" Header="{Binding Data.Texts[ReadView], Source={StaticResource Proxy}}"
+                                              ItemsSource="{Binding Data.ViewLayouts, Source={StaticResource Proxy}}" ItemContainerStyle="{StaticResource ViewLayoutItem}" />
+                                    <MenuItem Style="{StaticResource FixedMenuItem}" Header="{Binding Data.Texts[FixDockPanel], Source={StaticResource Proxy}}"
+                                              IsCheckable="True" IsChecked="{Binding Data.FixDockPanel, Source={StaticResource Proxy}, Mode=TwoWay}" />
+                                </CompositeCollection>
+                            </MenuItem.ItemsSource>
+                        </MenuItem>
+                        <MenuItem Header="{Binding Texts[Game]}" IsEnabled="{Binding IsMenuOfCommandsEnabled}">
+                            <MenuItem Header="{Binding Texts[GameStart1]}" InputGestureText="Ctrl+G" Command="{Binding StartGameCommand}" CommandParameter="Current" />
+                            <MenuItem Header="{Binding Texts[GameStart2]}" InputGestureText="Ctrl+Shift+G" Command="{Binding StartGameCommand}" CommandParameter="Beginning" />
+                            <MenuItem Header="{Binding Texts[GameStart3]}" InputGestureText="Ctrl+1" Command="{Binding StartGameCommand}" CommandParameter="CurrentAuto" />
+                            <MenuItem Header="{Binding Texts[GameStart4]}" InputGestureText="Ctrl+Shift+1" Command="{Binding StartGameCommand}" CommandParameter="BeginningAuto" />
+                            <MenuItem Header="{Binding Texts[StartFromMenu]}" Command="{Binding StartGameFromMenuCommand}" />
+                            <MenuItem Header="{Binding Texts[ExitPPDProcess]}" Command="{Binding KillProcessCommand}" />
+                            <Separator />
+                            <MenuItem Header="Connect" IsCheckable="True" IsChecked="{Binding Connect, Mode=TwoWay}" />
+                            <MenuItem Header="MOD" ItemsSource="{Binding Mods}" ItemContainerStyle="{StaticResource ModItem}" />
+                            <Separator />
+                            <MenuItem Header="{Binding Texts[DisableExpansion]}" IsCheckable="True" IsChecked="{Binding DisableExpansion, Mode=TwoWay}" />
+                        </MenuItem>
+                        <MenuItem AutomationProperties.AutomationId="DifficultyMenu" Header="{Binding Texts[Difficulty]}" IsEnabled="{Binding ProjectMenusEnabled}">
+                            <MenuItem AutomationProperties.AutomationId="DifficultyEasyMenuItem" Header="Easy" Command="{Binding ChangeDifficultyCommand}" CommandParameter="{x:Static local:AvailableDifficulty.Easy}"
+                                      IsChecked="{Binding CurrentDifficulty, Mode=OneWay, Converter={StaticResource EnumToBoolean}, ConverterParameter=Easy}"
+                                      IsEnabled="{Binding AvailableDifficulty, Converter={StaticResource HasFlag}, ConverterParameter=Easy}" />
+                            <MenuItem Header="Normal" Command="{Binding ChangeDifficultyCommand}" CommandParameter="{x:Static local:AvailableDifficulty.Normal}"
+                                      IsChecked="{Binding CurrentDifficulty, Mode=OneWay, Converter={StaticResource EnumToBoolean}, ConverterParameter=Normal}"
+                                      IsEnabled="{Binding AvailableDifficulty, Converter={StaticResource HasFlag}, ConverterParameter=Normal}" />
+                            <MenuItem Header="Hard" Command="{Binding ChangeDifficultyCommand}" CommandParameter="{x:Static local:AvailableDifficulty.Hard}"
+                                      IsChecked="{Binding CurrentDifficulty, Mode=OneWay, Converter={StaticResource EnumToBoolean}, ConverterParameter=Hard}"
+                                      IsEnabled="{Binding AvailableDifficulty, Converter={StaticResource HasFlag}, ConverterParameter=Hard}" />
+                            <MenuItem Header="Extreme" Command="{Binding ChangeDifficultyCommand}" CommandParameter="{x:Static local:AvailableDifficulty.Extreme}"
+                                      IsChecked="{Binding CurrentDifficulty, Mode=OneWay, Converter={StaticResource EnumToBoolean}, ConverterParameter=Extreme}"
+                                      IsEnabled="{Binding AvailableDifficulty, Converter={StaticResource HasFlag}, ConverterParameter=Extreme}" />
+                            <MenuItem AutomationProperties.AutomationId="DifficultyBaseMenuItem" Header="Base" Command="{Binding ChangeDifficultyCommand}" CommandParameter="{x:Static local:AvailableDifficulty.Base}"
+                                      IsChecked="{Binding CurrentDifficulty, Mode=OneWay, Converter={StaticResource EnumToBoolean}, ConverterParameter=Base}"
+                                      IsEnabled="{Binding AvailableDifficulty, Converter={StaticResource HasFlag}, ConverterParameter=Base}" />
+                            <MenuItem AutomationProperties.AutomationId="CopyDifficultyMenuItem" Header="{Binding Texts[CopyCurrentDifficulty]}" Command="{Binding CopyDifficultyCommand}" />
+                        </MenuItem>
+                        <MenuItem AutomationProperties.AutomationId="LanguageMenu" Header="{Binding Texts[Language]}" ItemsSource="{Binding Languages}" ItemContainerStyle="{StaticResource LanguageItem}" />
+                        <MenuItem AutomationProperties.AutomationId="OthersMenu" Header="{Binding Texts[Others]}">
+                            <MenuItem Header="{Binding Texts[HideToolBar]}" IsCheckable="True" IsChecked="{Binding IsMenuHidden, Mode=TwoWay}" />
+                            <MenuItem AutomationProperties.AutomationId="SettingMenuItem" Header="{Binding Texts[Setting]}" Command="{Binding OpenSettingCommand}" />
+                        </MenuItem>
+                    </Menu>
+                    <ToolBarTray Background="Transparent" IsLocked="True">
+                        <ToolBar Background="Transparent">
+                            <TextBox AutomationProperties.AutomationId="BpmBox" Text="{Binding BpmText, UpdateSourceTrigger=PropertyChanged}" Width="100" ToolTip="BPM" />
+                            <TextBox Text="{Binding BpmOffsetText, UpdateSourceTrigger=PropertyChanged}" Width="100" ToolTip="BPM offset(1/BPM)" />
+                            <TextBox AutomationProperties.AutomationId="DisplayWidthBox" Text="{Binding DisplayWidthText, UpdateSourceTrigger=PropertyChanged}" Width="100" ToolTip="{Binding Texts[DisplayWidth]}" />
+                            <Separator />
+                            <ComboBox Width="180" ItemsSource="{Binding DisplayModes}" DisplayMemberPath="Text" SelectedIndex="{Binding DisplayModeIndex}" />
+                            <ComboBox Width="150" ItemsSource="{Binding BeatTypes}" DisplayMemberPath="Text" SelectedIndex="{Binding BeatTypeIndex}" />
+                            <ComboBox Width="75" SelectedIndex="{Binding SpeedScale}">
+                                <ComboBoxItem Content="x 0.5" />
+                                <ComboBoxItem Content="x 0.75" />
+                                <ComboBoxItem Content="x 1.0" />
+                                <ComboBoxItem Content="x 1.25" />
+                                <ComboBoxItem Content="x 1.5" />
+                                <ComboBoxItem Content="x 1.75" />
+                                <ComboBoxItem Content="x 2.0" />
+                            </ComboBox>
+                            <Separator />
+                            <ToggleButton IsChecked="{Binding Bpmfixed}" ToolTip="{Binding Texts[FixOp]}" Style="{StaticResource ToolImageButton}">
+                                <Image Source="/img/fix.png" Stretch="None" />
+                            </ToggleButton>
+                            <ToggleButton IsChecked="{Binding DrawToggle}" ToolTip="{Binding Texts[Drawtoggle]}" Style="{StaticResource ToolImageButton}">
+                                <Image Source="/img/toggle.png" Stretch="None" />
+                            </ToggleButton>
+                            <ToggleButton IsChecked="{Binding MarkFocus}" ToolTip="{Binding Texts[MarkFocus]}" Style="{StaticResource ToolImageButton}">
+                                <Image Source="/img/markfocus.png" Stretch="None" />
+                            </ToggleButton>
+                            <Button AutomationProperties.AutomationId="FarnessDropDown" Style="{StaticResource DropDownArrow}" Click="DropDownButton_Click">
+                                <Path Data="M 0 0 L 6 0 L 3 3 Z" Fill="Black" VerticalAlignment="Center" />
+                                <Button.ContextMenu>
+                                    <ContextMenu DataContext="{Binding Data, Source={StaticResource Proxy}}">
+                                        <MenuItem AutomationProperties.AutomationId="FarnessDetailMenuItem" Header="{Binding Texts[GridDetailSetting]}" Command="{Binding EditFarnessCommand}" />
+                                    </ContextMenu>
+                                </Button.ContextMenu>
+                            </Button>
+                            <ToggleButton IsChecked="{Binding DisplayGrid}" ToolTip="{Binding Texts[DisplayGrid]}" Style="{StaticResource ToolImageButton}">
+                                <Image Source="/img/grid.png" Stretch="None" />
+                            </ToggleButton>
+                            <Button AutomationProperties.AutomationId="GridDropDown" Style="{StaticResource DropDownArrow}" Click="DropDownButton_Click">
+                                <Path Data="M 0 0 L 6 0 L 3 3 Z" Fill="Black" VerticalAlignment="Center" />
+                                <Button.ContextMenu>
+                                    <ContextMenu DataContext="{Binding Data, Source={StaticResource Proxy}}">
+                                        <MenuItem Header="10px" Command="{Binding SetGridSizeCommand}" CommandParameter="{x:Static vm:GridSizeChoice.Px10}"
+                                                  IsChecked="{Binding GridSize, Mode=OneWay, Converter={StaticResource EnumToBoolean}, ConverterParameter=Px10}" />
+                                        <MenuItem Header="20px" Command="{Binding SetGridSizeCommand}" CommandParameter="{x:Static vm:GridSizeChoice.Px20}"
+                                                  IsChecked="{Binding GridSize, Mode=OneWay, Converter={StaticResource EnumToBoolean}, ConverterParameter=Px20}" />
+                                        <MenuItem Header="50px" Command="{Binding SetGridSizeCommand}" CommandParameter="{x:Static vm:GridSizeChoice.Px50}"
+                                                  IsChecked="{Binding GridSize, Mode=OneWay, Converter={StaticResource EnumToBoolean}, ConverterParameter=Px50}" />
+                                        <MenuItem AutomationProperties.AutomationId="GridDetailMenuItem" Header="{Binding Texts[GridDetailSetting]}" Command="{Binding EditGridCommand}"
+                                                  IsChecked="{Binding GridSize, Mode=OneWay, Converter={StaticResource EnumToBoolean}, ConverterParameter=Custom}" />
+                                    </ContextMenu>
+                                </Button.ContextMenu>
+                            </Button>
+                            <ToggleButton IsChecked="{Binding IsTimeLineRowLimited}" ToolTip="{Binding Texts[LimitTimeLineRow]}" Style="{StaticResource ToolImageButton}">
+                                <Image Source="/img/timeline.png" Stretch="None" />
+                            </ToggleButton>
+                            <Button AutomationProperties.AutomationId="TimeLineRowDropDown" Style="{StaticResource DropDownArrow}" Click="DropDownButton_Click">
+                                <Path Data="M 0 0 L 6 0 L 3 3 Z" Fill="Black" VerticalAlignment="Center" />
+                                <Button.ContextMenu>
+                                    <ContextMenu DataContext="{Binding Data, Source={StaticResource Proxy}}">
+                                        <MenuItem AutomationProperties.AutomationId="TimeLineRowDetailMenuItem" Header="{Binding Texts[GridDetailSetting]}" Command="{Binding EditTimeLineRowsCommand}" />
+                                    </ContextMenu>
+                                </Button.ContextMenu>
+                            </Button>
+                            <ToggleButton IsChecked="{Binding ShowHoldExtent}" ToolTip="{Binding Texts[ShowHoldExtent]}" Style="{StaticResource ToolImageButton}">
+                                <Image Source="/img/showholdextent.png" Stretch="None" />
+                            </ToggleButton>
+                        </ToolBar>
+                    </ToolBarTray>
+                </StackPanel>
+            </Grid>
+            <Grid DockPanel.Dock="Bottom">
+                <Rectangle x:Name="bottomOverlay" />
+                <StatusBar Background="Transparent">
+                    <StatusBarItem Width="79">
+                        <TextBlock x:Name="timeLabel" Text="{Binding TimeText}" />
+                    </StatusBarItem>
+                    <StatusBarItem Width="292">
+                        <TextBlock x:Name="areaSelectionLabel" Text="{Binding AreaSelectionText}" />
+                    </StatusBarItem>
+                    <StatusBarItem>
+                        <TextBlock x:Name="copyBufferLabel" Text="{Binding CopyBufferText}" />
+                    </StatusBarItem>
+                </StatusBar>
+            </Grid>
+            <ad:DockingManager x:Name="dockPanel1" Background="Transparent" />
+        </DockPanel>
+    </Grid>
+</Window>

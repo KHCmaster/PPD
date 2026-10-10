@@ -1,11 +1,12 @@
-﻿using PPDFramework;
+﻿using PPDMath;
+using PPDFramework;
 using PPDFramework.Scene;
 
 namespace PPDTest
 {
-    abstract class TestSceneBase : SceneBase
+    abstract class TestSceneBase(TestSceneManager testSceneManager, PPDDevice device) : SceneBase(device)
     {
-        TestSceneManager testSceneManager;
+        readonly TestSceneManager testSceneManager = testSceneManager;
         protected SpriteObject contentSprite;
 
         protected abstract string Title
@@ -13,20 +14,15 @@ namespace PPDTest
             get;
         }
 
-        protected TestSceneBase(TestSceneManager testSceneManager, PPDDevice device) : base(device)
-        {
-            this.testSceneManager = testSceneManager;
-        }
-
         public override bool Load()
         {
-            this.AddChild(new TextureString(device, Title, 20, new SharpDX.Color4(1, 1, 1, 1))
+            this.AddChild(new TextureString(device, Title, 20, new Vortice.Mathematics.Color4(1, 1, 1, 1))
             {
-                Position = new SharpDX.Vector2(10, 10)
+                Position = new System.Numerics.Vector2(10, 10)
             });
             this.AddChild(contentSprite = new SpriteObject(device)
             {
-                Position = new SharpDX.Vector2(10, 40)
+                Position = new System.Numerics.Vector2(10, 40)
             });
             OnInitialize();
             this.AddChild(new RectangleComponent(device, ResourceManager, PPDColors.Selection)

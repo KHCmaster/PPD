@@ -45,7 +45,7 @@ namespace PPDMulti
                 return;
             }
             var tempAllowedMods = new HashSet<string>(allowedModIds);
-            allowedFileHashes = new HashSet<string>();
+            allowedFileHashes = [];
             foreach (var webMod in webMods)
             {
                 if (!tempAllowedMods.Contains(webMod.Id))

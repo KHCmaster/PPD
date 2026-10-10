@@ -1,6 +1,8 @@
 ﻿using PPDFramework.PPDStructure.PPDData;
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Xml.Linq;
 
@@ -18,13 +20,11 @@ namespace PPDFramework.PPDStructure
         /// <returns></returns>
         public static MarkDataBase[] Read(string path)
         {
-            MarkDataBase[] ret = new MarkDataBase[0];
+            MarkDataBase[] ret = [];
             if (File.Exists(path))
             {
-                using (FileStream fs = File.Open(path, FileMode.Open))
-                {
-                    ret = Read(fs);
-                }
+                using FileStream fs = File.Open(path, FileMode.Open);
+                ret = Read(fs);
             }
             return ret;
         }
@@ -46,37 +46,58 @@ namespace PPDFramework.PPDStructure
         /// <param name="stream"></param>
         /// <param name="signError"></param>
         /// <returns></returns>
+        // 以前の PPDWriter は長さに文字数を書いていたので、日本語などがあると足りない。足りなければ </Root> まで読む
+        private static byte[] ReadRestOfOldParameters(Stream stream, byte[] read)
+        {
+            var end = Encoding.UTF8.GetBytes("</Root>");
+            if (read.AsSpan().EndsWith(end))
+            {
+                return read;
+            }
+            var bytes = new List<byte>(read);
+            while (stream.Position < stream.Length)
+            {
+                bytes.Add((byte)stream.ReadByte());
+                if (bytes.TakeLast(end.Length).SequenceEqual(end))
+                {
+                    break;
+                }
+            }
+            return [.. bytes];
+        }
+
         public static MarkDataBase[] Read(Stream stream, ref bool signError)
         {
             var data = new List<MarkDataBase>();
             var dict = new Dictionary<int, MarkDataBase>();
-            var sign = new byte[] { (byte)'P', (byte)'P', (byte)'D' };
+            var sign = "PPD"u8.ToArray();
             byte[] headdata = new byte[3];
-            stream.Read(headdata, 0, headdata.Length);
+            stream.ReadAtLeast(headdata, headdata.Length, throwOnEndOfStream: false);
             if (sign[0] != headdata[0] || sign[1] != headdata[1] || sign[2] != headdata[2])
             {
                 signError = true;
-                return data.ToArray();
+                return [.. data];
             }
             byte[] fdata = new byte[4];
             while (stream.Position < stream.Length)
             {
-                stream.Read(fdata, 0, fdata.Length);
+                stream.ReadAtLeast(fdata, fdata.Length, throwOnEndOfStream: false);
                 var time = System.BitConverter.ToSingle(fdata, 0);
                 if (float.IsNaN(time))
                 {
-                    stream.Read(fdata, 0, fdata.Length);
+                    stream.ReadAtLeast(fdata, fdata.Length, throwOnEndOfStream: false);
                     var count = System.BitConverter.ToInt32(fdata, 0);
                     int index = 0;
                     while (stream.Position < stream.Length)
                     {
                         uint markId;
-                        stream.Read(fdata, 0, fdata.Length);
+                        stream.ReadAtLeast(fdata, fdata.Length, throwOnEndOfStream: false);
                         markId = System.BitConverter.ToUInt32(fdata, 0);
-                        stream.Read(fdata, 0, fdata.Length);
+                        stream.ReadAtLeast(fdata, fdata.Length, throwOnEndOfStream: false);
                         var length = System.BitConverter.ToInt32(fdata, 0);
                         byte[] temp = new byte[length];
-                        stream.Read(temp, 0, temp.Length);
+                        stream.ReadAtLeast(temp, temp.Length, throwOnEndOfStream: false);
+                        temp = ReadRestOfOldParameters(stream, temp);
                         if (!dict.TryGetValue((int)markId, out MarkDataBase ppdData))
                         {
                             continue;
@@ -95,11 +116,11 @@ namespace PPDFramework.PPDStructure
                     }
                     break;
                 }
-                stream.Read(fdata, 0, fdata.Length);
+                stream.ReadAtLeast(fdata, fdata.Length, throwOnEndOfStream: false);
                 var x = System.BitConverter.ToSingle(fdata, 0);
-                stream.Read(fdata, 0, fdata.Length);
+                stream.ReadAtLeast(fdata, fdata.Length, throwOnEndOfStream: false);
                 var y = System.BitConverter.ToSingle(fdata, 0);
-                stream.Read(fdata, 0, fdata.Length);
+                stream.ReadAtLeast(fdata, fdata.Length, throwOnEndOfStream: false);
                 var rotation = System.BitConverter.ToSingle(fdata, 0);
                 var type = stream.ReadByte();
                 bool withID = type >= 40;
@@ -109,13 +130,13 @@ namespace PPDFramework.PPDStructure
                 float endTime = 0;
                 if (isEx)
                 {
-                    stream.Read(fdata, 0, fdata.Length);
+                    stream.ReadAtLeast(fdata, fdata.Length, throwOnEndOfStream: false);
                     endTime = System.BitConverter.ToSingle(fdata, 0);
                 }
                 uint id = 0;
                 if (withID)
                 {
-                    stream.Read(fdata, 0, fdata.Length);
+                    stream.ReadAtLeast(fdata, fdata.Length, throwOnEndOfStream: false);
                     id = System.BitConverter.ToUInt32(fdata, 0);
                 }
                 var markData = isEx ? new ExMarkData(x, y, rotation, time, endTime, (ButtonType)type, id) : new MarkData(x, y, rotation, time, (ButtonType)type, id);
@@ -125,7 +146,7 @@ namespace PPDFramework.PPDStructure
                     dict[(int)markData.ID] = markData;
                 }
             }
-            return data.ToArray();
+            return [.. data];
         }
     }
 }

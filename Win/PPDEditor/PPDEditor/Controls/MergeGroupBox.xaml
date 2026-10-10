@@ -1,0 +1,21 @@
+<UserControl x:Class="PPDEditor.Controls.MergeGroupBox"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:PPDEditor.ViewModels.Dialogs"
+             mc:Ignorable="d" d:DataContext="{d:DesignInstance Type=vm:MergeSlot}"
+             Width="205">
+    <!-- DataContext は MergeSlot。プロジェクトを選ぶのと文字は、ウィンドウの ViewModel を使う -->
+    <GroupBox Header="{Binding Difficulty}">
+        <StackPanel Margin="4,2,4,0">
+            <DockPanel>
+                <Button DockPanel.Dock="Right" Content="..." Width="25" Height="22" Margin="3,0,0,0"
+                        Command="{Binding DataContext.BrowseProjectCommand, RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding}" />
+                <TextBox Text="{Binding ProjectPath, Mode=OneWay}" Height="20" IsReadOnly="True" VerticalContentAlignment="Center" />
+            </DockPanel>
+            <TextBlock Text="{Binding DataContext.Texts[MFMergeLabel], RelativeSource={RelativeSource AncestorType=Window}}" Margin="0,2,0,0" />
+            <ComboBox ItemsSource="{Binding Difficulties}" SelectedItem="{Binding SelectedDifficulty}" Width="121" HorizontalAlignment="Left" Margin="0,2,0,4" />
+        </StackPanel>
+    </GroupBox>
+</UserControl>

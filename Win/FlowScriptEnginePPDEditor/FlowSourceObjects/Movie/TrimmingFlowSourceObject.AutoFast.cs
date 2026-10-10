@@ -9,19 +9,14 @@ namespace FlowScriptEnginePPDEditor.FlowSourceObjects.Movie
     {
         public override object GetPropertyValue(string propertyName)
         {
-            switch (propertyName)
+            return propertyName switch
             {
-                case "Bottom":
-                    return Bottom;
-                case "Left":
-                    return Left;
-                case "Right":
-                    return Right;
-                case "Top":
-                    return Top;
-                default:
-                    return null;
-            }
+                "Bottom" => Bottom,
+                "Left" => Left,
+                "Right" => Right,
+                "Top" => Top,
+                _ => null,
+            };
         }
 
 

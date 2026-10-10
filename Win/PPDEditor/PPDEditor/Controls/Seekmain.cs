@@ -2,24 +2,48 @@
 using PPDEditor.Forms;
 using PPDFramework;
 using PPDFramework.PPDStructure.PPDData;
-using SharpDX;
+using System.Numerics;
+using PPDMath;
+using Point = Vortice.Mathematics.Int2;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Forms;
-using WeifenLuo.WinFormsUI.Docking;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Threading;
+using Keys = System.Windows.Forms.Keys;
 
 namespace PPDEditor.Controls
 {
-    public partial class Seekmain : CustomUserControl
+    /// <summary>
+    /// タイムラインの、マークを並べるところです。
+    /// </summary>
+    public class Seekmain : UserControl
     {
+        /// <summary>
+        /// 描くところです。描く内容は <see cref="Seekmain"/> に任せる。
+        /// </summary>
+        sealed class TimeLineCanvas(Seekmain owner) : FrameworkElement
+        {
+            protected override void OnRender(DrawingContext drawingContext)
+            {
+                owner.Render(drawingContext);
+            }
+        }
+
         public event EventHandler Seeked;
 
         float assistInfoTime;
         AssistType assistType = AssistType.None;
         bool doDragChange;
         Point mouseDownPos;
-        TransParentForm tpf;
+        // イベントなどの印をドラッグしているときに、その印を書く位置
+        Point dragIconPos;
+        ToolTip assistToolTip;
+        DispatcherTimer assistToolTipTimer;
 
 
         MarkSelectMode markSelectMode = MarkSelectMode.None;
@@ -33,60 +57,124 @@ namespace PPDEditor.Controls
         private float speedScale = 1.0f;
         private float bpm = 100;
         private float bpmStart;
-        HScrollBar Hsc;
+        readonly ScrollBar Hsc;
+        readonly TimeLineCanvas canvas;
+        // ドラッグ中にマウスの位置を見る（以前と同じく 100 ミリ秒ごと）
+        readonly DispatcherTimer timer1 = new() { Interval = TimeSpan.FromMilliseconds(100) };
+        readonly DispatcherTimer timer2 = new() { Interval = TimeSpan.FromMilliseconds(100) };
+        readonly DispatcherTimer timer3 = new() { Interval = TimeSpan.FromMilliseconds(100) };
+        readonly DispatcherTimer timer4 = new() { Interval = TimeSpan.FromMilliseconds(100) };
         MarkData[] copyBuffer;
-        TimeLineDrawer timeLineDrawer;
 
         public Seekmain()
         {
-            timeLineDrawer = new TimeLineDrawer();
             ShortcutManager = new PPDEditor.ShortcutManager();
-            Hsc = new HScrollBar();
-            this.Controls.Add(Hsc);
+            canvas = new TimeLineCanvas(this);
+            Hsc = new ScrollBar
+            {
+                Orientation = Orientation.Horizontal,
+                VerticalAlignment = VerticalAlignment.Bottom
+            };
             Hsc.Scroll += Hsc_Scroll;
-            InitializeComponent();
-            InitializeBuffer();
-            timer1.Interval = 100;
+            var grid = new Grid();
+            grid.Children.Add(canvas);
+            grid.Children.Add(Hsc);
+            Content = grid;
+            Focusable = true;
+            ClipToBounds = true;
+            // 以前の GDI と同じく、線や丸の縁をぼかさない
+            RenderOptions.SetEdgeMode(canvas, EdgeMode.Aliased);
+
             timer1.Tick += MoveSeek;
-            timer2.Interval = 100;
             timer2.Tick += MoveMark;
-            timer3.Interval = 100;
             timer3.Tick += ChangeRec;
-            timer4.Interval = 100;
             timer4.Tick += MoveAssistInformation;
 
-            for (int i = 0; i < this.Controls.Count; i++)
-            {
-                this.Controls[i].PreviewKeyDown += Seekmain_PreviewKeyDown;
-            }
-            this.MouseWheel += Seekmain_MouseWheel;
-            this.SizeChanged += Seekmain_SizeChanged;
+            PreviewKeyDown += Seekmain_PreviewKeyDown;
+            MouseWheel += Seekmain_MouseWheel;
+            canvas.MouseLeftButtonDown += Canvas_MouseLeftButtonDown;
+            canvas.MouseLeftButtonUp += Canvas_MouseLeftButtonUp;
+            canvas.LostMouseCapture += Canvas_LostMouseCapture;
+            SizeChanged += (sender, e) => DrawAndRefresh();
         }
 
-        void Seekmain_MouseWheel(object sender, MouseEventArgs e)
+        void Seekmain_MouseWheel(object sender, MouseWheelEventArgs e)
         {
             var sign = Math.Sign(e.Delta);
-            if ((ModifierKeys & Keys.Shift) == Keys.Shift)
+            if (Keyboard.Modifiers.HasFlag(ModifierKeys.Shift))
             {
-                int result = WindowUtility.MainForm.DisplayWidth + 50 * sign;
+                int result = WindowUtility.Editor.DisplayWidth + 50 * sign;
                 if (result < 50) result = 50;
                 if (result > 300) result = 300;
-                WindowUtility.MainForm.DisplayWidth = result;
+                WindowUtility.Editor.DisplayWidth = result;
             }
-            else if ((ModifierKeys & Keys.Control) == Keys.Control)
+            else if (Keyboard.Modifiers.HasFlag(ModifierKeys.Control))
             {
             }
             else
             {
-                int result = Hsc.Value - sign * 100;
-                if (result < Hsc.Minimum) result = Hsc.Minimum;
-                if (result > Hsc.Maximum) result = Hsc.Maximum;
-                if (Hsc.Visible)
-                {
-                    Hsc.Value = result;
-                    DrawAndRefresh();
-                }
+                int result = ScrollValue - sign * 100;
+                if (result < ScrollMinimum) result = ScrollMinimum;
+                if (result > ScrollMaximum) result = ScrollMaximum;
+                ScrollValue = result;
+                DrawAndRefresh();
             }
+            e.Handled = true;
+        }
+
+        /// <summary>
+        /// 横にスクロールした量（ピクセル）です。
+        /// </summary>
+        private int ScrollValue
+        {
+            get { return (int)Hsc.Value; }
+            set { Hsc.Value = value; }
+        }
+
+        private int ScrollMinimum
+        {
+            get { return (int)Hsc.Minimum; }
+        }
+
+        private int ScrollMaximum
+        {
+            get { return (int)Hsc.Maximum; }
+        }
+
+        private int PixelWidth
+        {
+            get { return (int)ActualWidth; }
+        }
+
+        private int PixelHeight
+        {
+            get { return (int)ActualHeight; }
+        }
+
+        /// <summary>
+        /// 描くところの中のマウスの位置です（以前の GetMousePosition()）。
+        /// </summary>
+        private Point GetMousePosition()
+        {
+            var pos = Mouse.GetPosition(canvas);
+            return new Point((int)Math.Floor(pos.X), (int)Math.Floor(pos.Y));
+        }
+
+        /// <summary>
+        /// 描き直しを予約します。
+        /// </summary>
+        public void DrawAndRefresh()
+        {
+            canvas.InvalidateVisual();
+        }
+
+        /// <summary>
+        /// 横のスクロールを最初に戻します。
+        /// </summary>
+        public void ResetScroll()
+        {
+            ScrollValue = 0;
+            DrawAndRefresh();
         }
 
         public ShortcutManager ShortcutManager
@@ -172,15 +260,33 @@ namespace PPDEditor.Controls
         {
             DrawAndRefresh();
         }
-        protected override void DrawToBuffer(System.Drawing.Graphics g)
+
+        private void Render(DrawingContext dc)
         {
-            if (g == null || Hsc == null || WindowUtility.TimeLineForm == null)
+            if (WindowUtility.TimeLineForm == null || WindowUtility.LayerManager == null || PixelWidth <= 0 || PixelHeight <= 0)
             {
                 return;
             }
 
-            timeLineDrawer.Draw(new TimeLineDrawParameter(g, Width, Height, BackgroundImage, WindowUtility.LayerManager.SelectedPpdSheet,
-                bpm, bpmStart, defaultInterval, DisplayMode, Hsc.Value, (float)currentTime, BeatType));
+            TimeLineDrawer.Draw(new TimeLineDrawParameter(dc, PixelWidth, PixelHeight, WindowUtility.TimeLineForm.TimeLineBackground,
+                WindowUtility.LayerManager.SelectedPpdSheet, bpm, bpmStart, defaultInterval, DisplayMode, ScrollValue, (float)currentTime, BeatType));
+            if (doDragChange)
+            {
+                var icon = assistType switch
+                {
+                    AssistType.Event => TimeLineDrawer.EventMark,
+                    AssistType.Sound => TimeLineDrawer.SoundMark,
+                    AssistType.Lylics => TimeLineDrawer.LylicsMark,
+                    _ => null,
+                };
+                if (icon != null)
+                {
+                    // ドラッグしている印を半透明で書く
+                    dc.PushOpacity(0.7);
+                    TimeLineDrawer.DrawIcon(dc, icon, dragIconPos.X - 8, dragIconPos.Y - 8);
+                    dc.Pop();
+                }
+            }
         }
         public double Length
         {
@@ -200,6 +306,7 @@ namespace PPDEditor.Controls
             Hsc.Minimum = 0;
             Hsc.SmallChange = defaultInterval;
             Hsc.LargeChange = defaultInterval;
+            Hsc.ViewportSize = defaultInterval;
             DrawAndRefresh();
         }
         public double Currenttime
@@ -287,7 +394,7 @@ namespace PPDEditor.Controls
             bool[] ret = new bool[10];
             foreach (var sheet in WindowUtility.LayerManager.Sheets)
             {
-                var temp = sheet.UpdateMark((float)time, speedScale, WindowUtility.EventManager);
+                var temp = sheet.UpdateMark((float)time, speedScale);
                 for (int j = 0; j < ret.Length; j++)
                 {
                     ret[j] |= temp[j];
@@ -306,7 +413,7 @@ namespace PPDEditor.Controls
         {
             get
             {
-                if (!WindowUtility.MainForm.DrawToggle) return null;
+                if (!WindowUtility.Editor.DrawToggle) return null;
                 PPDSheet ppdsheet = WindowUtility.LayerManager.SelectedPpdSheet;
                 if (ppdsheet == null) return null;
                 return ppdsheet.SelectedMark;
@@ -317,7 +424,7 @@ namespace PPDEditor.Controls
         {
             get
             {
-                if (!WindowUtility.MainForm.DrawToggle) return null;
+                if (!WindowUtility.Editor.DrawToggle) return null;
                 PPDSheet ppdsheet = WindowUtility.LayerManager.SelectedPpdSheet;
                 if (ppdsheet == null) return null;
                 var marks = ppdsheet.GetAreaData(true);
@@ -350,9 +457,11 @@ namespace PPDEditor.Controls
             var truepos = new Point(pos.X * 800 / width, pos.Y * 450 / height);
             Mark mk = ppdsheet.SelectedMark;
             var marks = ppdsheet.GetAreaData();
-            bool shiftKey = ModifierKeys.HasFlag(Keys.Shift),
-                ctrlKey = ModifierKeys.HasFlag(Keys.Control),
-                altKey = ModifierKeys.HasFlag(Keys.Alt);
+            // ゲームの画面（WPF の外のウィンドウ）から呼ばれるので、修飾キーはシステムから読む
+            var modifiers = GameView.GetModifiers();
+            bool shiftKey = modifiers.HasFlag(ModifierKeys.Shift),
+                ctrlKey = modifiers.HasFlag(ModifierKeys.Control),
+                altKey = modifiers.HasFlag(ModifierKeys.Alt);
             if (mk != null)
             {
                 switch (markSelectMode)
@@ -415,11 +524,11 @@ namespace PPDEditor.Controls
                 UpdateInfo();
             }
         }
-        private Point ChangePos(Point p)
+        private static Point ChangePos(Point p)
         {
-            if (WindowUtility.MainForm.DisplayGrid)
+            if (WindowUtility.Editor.DisplayGrid)
             {
-                SquareGrid Grid = WindowUtility.MainForm.Grid;
+                SquareGrid Grid = WindowUtility.Editor.Grid;
                 int offsetx = Grid.NormalizedOffsetX;
                 int offsety = Grid.NormalizedOffsetY;
                 p = new Point((p.X + Grid.Width / 2) / Grid.Width * Grid.Width + offsetx, (p.Y + Grid.Height / 2) / Grid.Height * Grid.Height + offsety);
@@ -464,7 +573,7 @@ namespace PPDEditor.Controls
         public MarkData[] GetSorteData()
         {
             PPDSheet ppdsheet = WindowUtility.LayerManager.SelectedPpdSheet;
-            if (ppdsheet == null) return new MarkData[0];
+            if (ppdsheet == null) return [];
             return ppdsheet.GetSortedDataAsMarkData();
         }
         public void MoveLine(int linenum, int diff)
@@ -495,20 +604,18 @@ namespace PPDEditor.Controls
         }
         private void ChangeSeekPoint()
         {
-            float bpminterval = defaultInterval;
-            int offset = -(int)(bpmStart * bpminterval / bpm);
-            int val = (int)(Currenttime * bpm / 60 * defaultInterval) - this.Width / 2;
-            if (val > Hsc.Maximum)
+            int val = (int)(Currenttime * bpm / 60 * defaultInterval) - PixelWidth / 2;
+            if (val > ScrollMaximum)
             {
-                Hsc.Value = Hsc.Maximum;
+                ScrollValue = ScrollMaximum;
             }
-            else if (val < Hsc.Minimum)
+            else if (val < ScrollMinimum)
             {
-                Hsc.Value = Hsc.Minimum;
+                ScrollValue = ScrollMinimum;
             }
             else
             {
-                Hsc.Value = val;
+                ScrollValue = val;
             }
             this.DrawAndRefresh();
         }
@@ -518,30 +625,30 @@ namespace PPDEditor.Controls
         }
         private void ChangeRec(object sender, EventArgs e)
         {
-            var pos = this.PointToClient(Cursor.Position);
+            var pos = GetMousePosition();
             var num = WindowUtility.TimeLineForm.RowManager.GetNormalRowIndex(pos.Y);
             if (num < 0) num = 0;
             if (num > 9) num = 9;
             PPDSheet ppdsheet = WindowUtility.LayerManager.SelectedPpdSheet;
             if (ppdsheet == null) return;
-            ppdsheet.RecEnd = new CustomPoint((float)(pos.X + Hsc.Value) / defaultInterval / bpm * 60, num);
+            ppdsheet.RecEnd = new CustomPoint((float)(pos.X + ScrollValue) / defaultInterval / bpm * 60, num);
             if (pos.X < 0)
             {
                 int gain = pos.X;
-                if (Hsc.Value + gain < Hsc.Minimum)
+                if (ScrollValue + gain < ScrollMinimum)
                 {
-                    gain = Hsc.Minimum - Hsc.Value;
+                    gain = ScrollMinimum - ScrollValue;
                 }
-                Hsc.Value += gain;
+                ScrollValue += gain;
             }
-            else if (pos.X > this.Width)
+            else if (pos.X > PixelWidth)
             {
-                int gain = pos.X - this.Width;
-                if (Hsc.Value + gain > Hsc.Maximum)
+                int gain = pos.X - PixelWidth;
+                if (ScrollValue + gain > ScrollMaximum)
                 {
-                    gain = Hsc.Maximum - Hsc.Value;
+                    gain = ScrollMaximum - ScrollValue;
                 }
-                Hsc.Value += gain;
+                ScrollValue += gain;
             }
             DrawAndRefresh();
         }
@@ -551,8 +658,8 @@ namespace PPDEditor.Controls
             {
                 PPDSheet ppdsheet = WindowUtility.LayerManager.SelectedPpdSheet;
                 if (ppdsheet == null) return;
-                var pos = this.PointToClient(Cursor.Position);
-                float time = (float)(pos.X + Hsc.Value) / defaultInterval / bpm * 60;
+                var pos = GetMousePosition();
+                float time = (float)(pos.X + ScrollValue) / defaultInterval / bpm * 60;
                 if (time <= 0)
                 {
                     time = 0;
@@ -569,10 +676,10 @@ namespace PPDEditor.Controls
         }
         private void MoveSeek(object sender, EventArgs e)
         {
-            var pos = this.PointToClient(Cursor.Position);
+            var pos = GetMousePosition();
             if (pos.Y >= 0 && pos.Y <= PPDEditorSkin.Skin.TimeLineHeight)
             {
-                float time = (float)(Hsc.Value + pos.X) / defaultInterval / bpm * 60;
+                float time = (float)(ScrollValue + pos.X) / defaultInterval / bpm * 60;
                 if (time < 0)
                 {
                     Currenttime = 0;
@@ -585,21 +692,28 @@ namespace PPDEditor.Controls
                 {
                     Currenttime = time;
                 }
-                WindowUtility.MainForm.Pause();
-                WindowUtility.MainForm.SeekMovie(currentTime);
+                WindowUtility.Editor.Pause();
+                WindowUtility.Editor.SeekMovie(currentTime);
                 this.DrawAndRefresh();
             }
         }
 
-        private void Seekmain_MouseDown(object sender, MouseEventArgs e)
+        private void Canvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            if ((e.Button & MouseButtons.Left) == MouseButtons.Left)
+            Focus();
+            canvas.CaptureMouse();
+            var pos = e.GetPosition(canvas);
+            var point = new Point((int)Math.Floor(pos.X), (int)Math.Floor(pos.Y));
+            ProcessMouseLeftDown(point);
+            if (e.ClickCount == 2)
             {
-                ProcessMouseLeftDown(e);
+                Seekmain_DoubleClick();
+                Seekmain_MouseDoubleClick(point);
             }
+            e.Handled = true;
         }
 
-        private void ProcessMouseLeftDown(MouseEventArgs e)
+        private void ProcessMouseLeftDown(Point e)
         {
             assistType = AssistType.None;
             doDragChange = false;
@@ -614,8 +728,8 @@ namespace PPDEditor.Controls
                 PPDSheet ppdsheet = WindowUtility.LayerManager.SelectedPpdSheet;
                 if (ppdsheet == null) return;
                 bool foundpoint = false;
-                var pos = this.PointToClient(Cursor.Position);
-                float time = (float)(pos.X + Hsc.Value) * 60 / defaultInterval / bpm;
+                var pos = GetMousePosition();
+                float time = (float)(pos.X + ScrollValue) * 60 / defaultInterval / bpm;
                 float dt = (float)TimeLineDrawer.CircleWidth / defaultInterval * 60 / bpm / 2;
                 if (rowIndex >= 0 && rowIndex < 10)
                 {
@@ -623,20 +737,20 @@ namespace PPDEditor.Controls
                     {
                         UpdateInfo();
                         SeekToNearSelected();
-                        if (!WindowUtility.MainForm.Bpmfixed)
+                        if (!WindowUtility.Editor.Bpmfixed)
                         {
                             timer2.Start();
                         }
                         ppdsheet.RecStart = new CustomPoint(-1, 0);
                         ppdsheet.RecEnd = new CustomPoint(-1, 0);
                         foundpoint = true;
-                        WindowUtility.MainForm.ChangeAreaSelect(false);
+                        WindowUtility.Editor.ChangeAreaSelect(false);
                     }
-                    if (ModifierKeys == Keys.Control && foundpoint)
+                    if (Keyboard.Modifiers == ModifierKeys.Control && foundpoint)
                     {
                         moveMarkState = MoveMarkState.CopyToOther;
                     }
-                    else if (ModifierKeys == Keys.Shift && foundpoint)
+                    else if (Keyboard.Modifiers == ModifierKeys.Shift && foundpoint)
                     {
                         moveMarkState = MoveMarkState.MoveToOther;
                     }
@@ -651,28 +765,28 @@ namespace PPDEditor.Controls
                     float minx = Math.Min(ppdsheet.RecStart.X, ppdsheet.RecEnd.X), width = Math.Abs(ppdsheet.RecStart.X - ppdsheet.RecEnd.X);
                     if (ppdsheet.AreaSelectionEnabled && miny <= rowIndex && rowIndex <= miny + height && minx <= time && time <= minx + width)
                     {
-                        if (ModifierKeys == Keys.Control)
+                        if (Keyboard.Modifiers == ModifierKeys.Control)
                         {
                             moveMarkState = MoveMarkState.CopyToOther;
                             return;
                         }
-                        else if (ModifierKeys == Keys.Shift)
+                        else if (Keyboard.Modifiers == ModifierKeys.Shift)
                         {
                             moveMarkState = MoveMarkState.MoveToOther;
                             return;
                         }
                     }
-                    ppdsheet.RecStart = new CustomPoint((float)(pos.X + Hsc.Value) / defaultInterval / bpm * 60, rowIndex);
-                    ppdsheet.RecEnd = new CustomPoint((float)(pos.X + Hsc.Value) / defaultInterval / bpm * 60, rowIndex);
-                    WindowUtility.MainForm.ChangeAreaSelect(true);
+                    ppdsheet.RecStart = new CustomPoint((float)(pos.X + ScrollValue) / defaultInterval / bpm * 60, rowIndex);
+                    ppdsheet.RecEnd = new CustomPoint((float)(pos.X + ScrollValue) / defaultInterval / bpm * 60, rowIndex);
+                    WindowUtility.Editor.ChangeAreaSelect(true);
                     timer3.Start();
                 }
             }
             else
             {
-                float drawstarttime = (float)(Hsc.Value - 10) / defaultInterval / bpm * 60;
-                float drawendtime = (float)(Hsc.Value + this.Width + 10) / defaultInterval / bpm * 60;
-                mouseDownPos = new Point(e.X, e.Y);
+                float drawstarttime = (float)(ScrollValue - 10) / defaultInterval / bpm * 60;
+                float drawendtime = (float)(ScrollValue + PixelWidth + 10) / defaultInterval / bpm * 60;
+                mouseDownPos = e;
                 assistInfoTime = GetAssistInformationTime(mouseDownPos, drawstarttime, drawendtime, out assistType);
                 timer4.Start();
             }
@@ -680,60 +794,39 @@ namespace PPDEditor.Controls
 
         private void MoveAssistInformation(object sender, EventArgs e)
         {
-            var pos = this.PointToClient(Cursor.Position);
+            var pos = GetMousePosition();
             if (assistType != AssistType.None)
             {
-                if (!doDragChange)
+                if (!doDragChange && Math.Abs(pos.X - mouseDownPos.X) >= 20)
                 {
-                    if (Math.Abs(pos.X - mouseDownPos.X) >= 20)
-                    {
-                        doDragChange = true;
-                        tpf = new TransParentForm();
-                        var pb = new PictureBox();
-                        switch (assistType)
-                        {
-                            case AssistType.Event:
-                                pb.Image = PPDEditor.Properties.Resources.eventmark;
-                                break;
-                            case AssistType.Sound:
-                                pb.Image = PPDEditor.Properties.Resources.soundmark;
-                                break;
-                            case AssistType.Lylics:
-                                pb.Image = PPDEditor.Properties.Resources.lylicsmark;
-                                break;
-                        }
-                        pb.Location = new System.Drawing.Point(-2, -1);
-                        tpf.Controls.Add(pb);
-                        tpf.Show();
-                        tpf.ClientSize = new System.Drawing.Size(12, 14);
-                        tpf.Location = this.PointToScreen(new System.Drawing.Point(mouseDownPos.X - 8, mouseDownPos.Y - 8));
-                    }
+                    doDragChange = true;
                 }
-                else
+                if (doDragChange)
                 {
-                    tpf.Location = this.PointToScreen(new System.Drawing.Point(pos.X - 6, pos.Y - 7));
+                    dragIconPos = pos;
+                    DrawAndRefresh();
                 }
             }
             bool shouldreflesh = false;
             if (pos.X < 0)
             {
                 int gain = pos.X;
-                if (Hsc.Value + gain < Hsc.Minimum)
+                if (ScrollValue + gain < ScrollMinimum)
                 {
-                    gain = Hsc.Minimum - Hsc.Value;
+                    gain = ScrollMinimum - ScrollValue;
                 }
                 shouldreflesh = true;
-                Hsc.Value += gain;
+                ScrollValue += gain;
             }
-            else if (pos.X > this.Width)
+            else if (pos.X > PixelWidth)
             {
-                int gain = pos.X - this.Width;
-                if (Hsc.Value + gain > Hsc.Maximum)
+                int gain = pos.X - PixelWidth;
+                if (ScrollValue + gain > ScrollMaximum)
                 {
-                    gain = Hsc.Maximum - Hsc.Value;
+                    gain = ScrollMaximum - ScrollValue;
                 }
                 shouldreflesh = true;
-                Hsc.Value += gain;
+                ScrollValue += gain;
             }
             if (shouldreflesh) DrawAndRefresh();
         }
@@ -745,7 +838,7 @@ namespace PPDEditor.Controls
                 PPDEditorSkin.Skin.TimeLineRowHeight * WindowUtility.TimeLineForm.RowManager.OrderedVisibleRowsCount;
             foreach (float eventtime in events)
             {
-                float pos = eventtime * defaultInterval * bpm / 60 - Hsc.Value;
+                float pos = eventtime * defaultInterval * bpm / 60 - ScrollValue;
                 if (Math.Abs(pos - mousepos.X) < 8 && Math.Abs(mousepos.Y - optionheight - 8) < 8)
                 {
                     type = AssistType.Event;
@@ -755,7 +848,7 @@ namespace PPDEditor.Controls
             events = WindowUtility.SoundManager.GetSoundChangeWithinTime(starttime, endtime);
             foreach (float eventtime in events)
             {
-                float pos = eventtime * defaultInterval * bpm / 60 - Hsc.Value;
+                float pos = eventtime * defaultInterval * bpm / 60 - ScrollValue;
                 if (Math.Abs(pos - mousepos.X) < 8 && Math.Abs(mousepos.Y - optionheight - 22) < 8)
                 {
                     type = AssistType.Sound;
@@ -765,7 +858,7 @@ namespace PPDEditor.Controls
             events = WindowUtility.KasiEditor.GetKasiChangeWithinTime(starttime, endtime);
             foreach (float eventtime in events)
             {
-                float pos = eventtime * defaultInterval * bpm / 60 - Hsc.Value;
+                float pos = eventtime * defaultInterval * bpm / 60 - ScrollValue;
                 if (Math.Abs(pos - mousepos.X) < 8 && Math.Abs(mousepos.Y - optionheight - 36) < 8)
                 {
                     type = AssistType.Lylics;
@@ -774,7 +867,7 @@ namespace PPDEditor.Controls
             }
             return -1;
         }
-        private void UpdateInfo()
+        private static void UpdateInfo()
         {
             PPDSheet ppdsheet = WindowUtility.LayerManager.SelectedPpdSheet;
             if (ppdsheet == null) return;
@@ -783,31 +876,45 @@ namespace PPDEditor.Controls
                 Mark mk = ppdsheet.SelectedMark;
                 if (mk != null)
                 {
-                    WindowUtility.MainForm.SetMarkInfo(mk);
+                    WindowUtility.Editor.SetMarkInfo(mk);
                 }
             }
             else
             {
-                WindowUtility.MainForm.SetMarksInfo(ppdsheet.GetAreaData());
+                WindowUtility.Editor.SetMarksInfo(ppdsheet.GetAreaData());
             }
         }
-        private void Seekmain_MouseUp(object sender, MouseEventArgs e)
+        private void Canvas_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            if ((e.Button & MouseButtons.Left) == MouseButtons.Left)
+            var dragged = doDragChange;
+            canvas.ReleaseMouseCapture();
+            ProcessMouseLeftUp();
+            if (!dragged)
             {
-                ProcessMouseLeftUp(e);
+                var pos = e.GetPosition(canvas);
+                Seekmain_MouseClick(new Point((int)Math.Floor(pos.X), (int)Math.Floor(pos.Y)));
+            }
+            e.Handled = true;
+        }
+
+        private void Canvas_LostMouseCapture(object sender, MouseEventArgs e)
+        {
+            // ほかのウィンドウに移ったときなどは、ドラッグをやめる
+            if (timer1.IsEnabled || timer2.IsEnabled || timer3.IsEnabled || timer4.IsEnabled)
+            {
+                ProcessMouseLeftUp();
             }
         }
 
-        private void ProcessMouseLeftUp(MouseEventArgs e)
+        private void ProcessMouseLeftUp()
         {
             timer1.Stop();
             timer2.Stop();
             timer3.Stop();
             timer4.Stop();
-            var pos = PointToClient(Cursor.Position);
+            var pos = GetMousePosition();
             var num = WindowUtility.TimeLineForm.RowManager.GetRowIndex(pos.Y);
-            float time = (float)(Hsc.Value + pos.X) / defaultInterval / bpm * 60;
+            float time = (float)(ScrollValue + pos.X) / defaultInterval / bpm * 60;
             PPDSheet ppdsheet = WindowUtility.LayerManager.SelectedPpdSheet;
             if (ppdsheet == null)
             {
@@ -856,7 +963,7 @@ namespace PPDEditor.Controls
                                         ppdsheet.AddExMark(addtime, addtime + exmk.EndTime - exmk.Time, exmk.Position.X, exmk.Position.Y,
                                             exmk.Rotation, addnum, moveMarkState == MoveMarkState.MoveToOther ? marks[i].ID : ppdsheet.GetCorrectID(marks[i]), parameters);
                                     }
-                                    else if (marks[i] is Mark)
+                                    else if (marks[i] is not null)
                                     {
                                         ppdsheet.AddMark(addtime, marks[i].Position.X, marks[i].Position.Y,
                                             marks[i].Rotation, addnum, moveMarkState == MoveMarkState.MoveToOther ? marks[i].ID : ppdsheet.GetCorrectID(marks[i]), parameters);
@@ -888,7 +995,7 @@ namespace PPDEditor.Controls
                             ppdsheet.AddExMark(time, time + exmk.EndTime - exmk.Time, exmk.Position.X, exmk.Position.Y, exmk.Rotation,
                                 num, moveMarkState == MoveMarkState.MoveToOther ? mark.ID : ppdsheet.GetCorrectID(mark), parameters);
                         }
-                        else if (mark is Mark)
+                        else if (mark is not null)
                         {
                             ppdsheet.AddMark(time, mark.Position.X, mark.Position.Y, mark.Rotation, num,
                                 moveMarkState == MoveMarkState.MoveToOther ? mark.ID : ppdsheet.GetCorrectID(mark), parameters);
@@ -927,7 +1034,7 @@ namespace PPDEditor.Controls
 
             if (!ppdsheet.AreaSelectionEnabled)
             {
-                WindowUtility.MainForm.ChangeAreaSelect(false);
+                WindowUtility.Editor.ChangeAreaSelect(false);
                 DrawAndRefresh();
             }
 
@@ -948,32 +1055,21 @@ namespace PPDEditor.Controls
                 }
                 assistType = AssistType.None;
             }
-            if (tpf != null)
-            {
-                tpf.Close();
-                tpf.Dispose();
-                tpf = null;
-            }
+            DrawAndRefresh();
             UpdateInfo();
         }
 
-        private void Seekmain_SizeChanged(object sender, EventArgs e)
+        private void Seekmain_DoubleClick()
         {
-            Hsc.Location = new System.Drawing.Point(0, this.Height - Hsc.Height);
-            Hsc.Width = this.Width;
-        }
-
-        private void Seekmain_DoubleClick(object sender, EventArgs e)
-        {
-            if (ModifierKeys != Keys.Shift)
+            if (Keyboard.Modifiers != ModifierKeys.Shift)
             {
                 PPDSheet ppdsheet = WindowUtility.LayerManager.SelectedPpdSheet;
                 if (ppdsheet == null) return;
-                var pos = this.PointToClient(Cursor.Position);
+                var pos = GetMousePosition();
                 var num = WindowUtility.TimeLineForm.RowManager.GetRowIndex(pos.Y);
                 if (num >= 0 && num < 10)
                 {
-                    float time = (float)(Hsc.Value + pos.X) / defaultInterval / bpm * 60;
+                    float time = (float)(ScrollValue + pos.X) / defaultInterval / bpm * 60;
                     time = AdjusttimeWhenFixed(time);
                     if (copyBuffer != null && copyBuffer.Length > 0)
                     {
@@ -1004,26 +1100,23 @@ namespace PPDEditor.Controls
                                     var exmk = copyBuffer[i] as ExMarkData;
                                     newMk = ppdsheet.AddExMark(addtime, addtime + exmk.EndTime - exmk.Time, exmk.X, exmk.Y, exmk.Angle, addnum, ppdsheet.GetCorrectID(copyBuffer[i]));
                                 }
-                                else if (copyBuffer[i] is MarkData)
+                                else if (copyBuffer[i] is not null)
                                 {
                                     newMk = ppdsheet.AddMark(addtime, copyBuffer[i].X, copyBuffer[i].Y, copyBuffer[i].Angle, addnum, ppdsheet.GetCorrectID(copyBuffer[i]));
                                 }
-                                if (newMk != null)
-                                {
-                                    newMk.CopyParameters(copyBuffer[i]);
-                                }
+                                newMk?.CopyParameters(copyBuffer[i]);
                             }
                         }
                         ppdsheet.EndGroupCommand();
                         ppdsheet.RecStart = new CustomPoint(-1, -1);
-                        WindowUtility.MainForm.ChangeAreaSelect(false);
+                        WindowUtility.Editor.ChangeAreaSelect(false);
                         DrawAndRefresh();
                     }
                     else
                     {
                         ppdsheet.AddMark(time, num);
                         ppdsheet.RecStart = new CustomPoint(-1, -1);
-                        WindowUtility.MainForm.ChangeAreaSelect(false);
+                        WindowUtility.Editor.ChangeAreaSelect(false);
                         DrawAndRefresh();
                     }
                 }
@@ -1031,7 +1124,7 @@ namespace PPDEditor.Controls
         }
         private float AdjusttimeWhenFixed(float time)
         {
-            if (WindowUtility.MainForm.Bpmfixed)
+            if (WindowUtility.Editor.Bpmfixed)
             {
                 double size = 1;
                 switch (DisplayMode)
@@ -1078,11 +1171,16 @@ namespace PPDEditor.Controls
             return time;
         }
 
-        private void Seekmain_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+        private void Seekmain_PreviewKeyDown(object sender, KeyEventArgs e)
         {
-            if (CheckPreviewKey(e.KeyCode, e.Control, e.Shift, e.Alt))
+            var key = e.Key == Key.System ? e.SystemKey : e.Key;
+            var keyCode = (Keys)KeyInterop.VirtualKeyFromKey(key);
+            var modifiers = Keyboard.Modifiers;
+            var handled = CheckPreviewKey(keyCode, modifiers.HasFlag(ModifierKeys.Control), modifiers.HasFlag(ModifierKeys.Shift), modifiers.HasFlag(ModifierKeys.Alt));
+            // 矢印と Tab は、フォーカスを移す操作にしない（以前の IsInputKey と同じ）
+            if (handled || key is Key.Left or Key.Right or Key.Up or Key.Down or Key.Tab)
             {
-                e.IsInputKey = true;
+                e.Handled = true;
             }
         }
         public void Undo()
@@ -1109,7 +1207,7 @@ namespace PPDEditor.Controls
         {
             PPDSheet ppdsheet = WindowUtility.LayerManager.SelectedPpdSheet;
             if (ppdsheet == null) return;
-            Mark[] marks = null;
+            Mark[] marks;
             if (onlyInSelection)
             {
                 if (!ppdsheet.AreaSelectionEnabled)
@@ -1125,16 +1223,15 @@ namespace PPDEditor.Controls
             var times = new Dictionary<Mark, float[]>();
             foreach (var mark in marks)
             {
-                var exmk = mark as ExMark;
                 var t = AdjusttimeWhenFixed(mark.Time);
                 float[] ts;
-                if (exmk != null)
+                if (mark is ExMark exmk)
                 {
-                    ts = new float[] { t, exmk.EndTime - exmk.Time + t };
+                    ts = [t, exmk.EndTime - exmk.Time + t];
                 }
                 else
                 {
-                    ts = new float[] { t };
+                    ts = [t];
                 }
                 times.Add(mark, ts);
             }
@@ -1163,60 +1260,27 @@ namespace PPDEditor.Controls
 
         public void SeekToNearSelected()
         {
-            if (!WindowUtility.MainForm.MarkFocus) return;
+            if (!WindowUtility.Editor.MarkFocus) return;
             PPDSheet ppdsheet = WindowUtility.LayerManager.SelectedPpdSheet;
             if (ppdsheet == null || ppdsheet.SelectedMark == null) return;
-            float scale = (float)ppdsheet.BPM * WindowUtility.MainForm.SpeedScaleAsFloat / Mark.defaultbpm;
-            Currenttime = ppdsheet.SelectedMark.Time - (2 / scale) * WindowUtility.MainForm.Farness;
-            WindowUtility.MainForm.SeekMovie(currentTime);
+            float scale = (float)ppdsheet.BPM * WindowUtility.Editor.SpeedScaleAsFloat / Mark.defaultbpm;
+            Currenttime = ppdsheet.SelectedMark.Time - (2 / scale) * WindowUtility.Editor.Farness;
+            WindowUtility.Editor.SeekMovie(currentTime);
         }
-        private int GetMove(ShortcutType shortcutType)
+        private static int GetMove(ShortcutType shortcutType)
         {
-            switch (shortcutType)
+            return shortcutType switch
             {
-                case ShortcutType.Left0:
-                case ShortcutType.Right0:
-                case ShortcutType.Up0:
-                case ShortcutType.Down0:
-                    return PPDStaticSetting.Moves[0];
-                case ShortcutType.Left1:
-                case ShortcutType.Right1:
-                case ShortcutType.Up1:
-                case ShortcutType.Down1:
-                    return PPDStaticSetting.Moves[1];
-                case ShortcutType.Left2:
-                case ShortcutType.Right2:
-                case ShortcutType.Up2:
-                case ShortcutType.Down2:
-                    return PPDStaticSetting.Moves[2];
-                case ShortcutType.Left3:
-                case ShortcutType.Right3:
-                case ShortcutType.Up3:
-                case ShortcutType.Down3:
-                    return PPDStaticSetting.Moves[3];
-                case ShortcutType.Left4:
-                case ShortcutType.Right4:
-                case ShortcutType.Up4:
-                case ShortcutType.Down4:
-                    return PPDStaticSetting.Moves[4];
-                case ShortcutType.Left5:
-                case ShortcutType.Right5:
-                case ShortcutType.Up5:
-                case ShortcutType.Down5:
-                    return PPDStaticSetting.Moves[5];
-                case ShortcutType.Left6:
-                case ShortcutType.Right6:
-                case ShortcutType.Up6:
-                case ShortcutType.Down6:
-                    return PPDStaticSetting.Moves[6];
-                case ShortcutType.Left7:
-                case ShortcutType.Right7:
-                case ShortcutType.Up7:
-                case ShortcutType.Down7:
-                    return PPDStaticSetting.Moves[7];
-                default:
-                    return 1;
-            }
+                ShortcutType.Left0 or ShortcutType.Right0 or ShortcutType.Up0 or ShortcutType.Down0 => PPDStaticSetting.Moves[0],
+                ShortcutType.Left1 or ShortcutType.Right1 or ShortcutType.Up1 or ShortcutType.Down1 => PPDStaticSetting.Moves[1],
+                ShortcutType.Left2 or ShortcutType.Right2 or ShortcutType.Up2 or ShortcutType.Down2 => PPDStaticSetting.Moves[2],
+                ShortcutType.Left3 or ShortcutType.Right3 or ShortcutType.Up3 or ShortcutType.Down3 => PPDStaticSetting.Moves[3],
+                ShortcutType.Left4 or ShortcutType.Right4 or ShortcutType.Up4 or ShortcutType.Down4 => PPDStaticSetting.Moves[4],
+                ShortcutType.Left5 or ShortcutType.Right5 or ShortcutType.Up5 or ShortcutType.Down5 => PPDStaticSetting.Moves[5],
+                ShortcutType.Left6 or ShortcutType.Right6 or ShortcutType.Up6 or ShortcutType.Down6 => PPDStaticSetting.Moves[6],
+                ShortcutType.Left7 or ShortcutType.Right7 or ShortcutType.Up7 or ShortcutType.Down7 => PPDStaticSetting.Moves[7],
+                _ => 1,
+            };
         }
         public bool CheckPreviewKey(Keys key, bool Control, bool Shift, bool Alt)
         {
@@ -1231,7 +1295,7 @@ namespace PPDEditor.Controls
             }
             if (shortcutInfo.ShortcutType == ShortcutType.Custom)
             {
-                WindowUtility.MainForm.ExecuteScript(shortcutInfo.ScriptPathWithExtension);
+                WindowUtility.Editor.ExecuteScript(shortcutInfo.ScriptPathWithExtension);
             }
             else
             {
@@ -1344,7 +1408,7 @@ namespace PPDEditor.Controls
                         }
                         break;
                     case ShortcutType.NextAll:
-                        if (ppdsheet.ShiftSelectedMarkInAll(1, WindowUtility.TimeLineForm.RowManager.InverseRowOrders.Select(i => (ButtonType)i).ToArray()))
+                        if (ppdsheet.ShiftSelectedMarkInAll(1, [.. WindowUtility.TimeLineForm.RowManager.InverseRowOrders.Select(i => (ButtonType)i)]))
                         {
                             UpdateInfo();
                             SeekToNearSelected();
@@ -1352,7 +1416,7 @@ namespace PPDEditor.Controls
                         }
                         break;
                     case ShortcutType.PreviousAll:
-                        if (ppdsheet.ShiftSelectedMarkInAll(-1, WindowUtility.TimeLineForm.RowManager.InverseRowOrders.Select(i => (ButtonType)i).ToArray()))
+                        if (ppdsheet.ShiftSelectedMarkInAll(-1, [.. WindowUtility.TimeLineForm.RowManager.InverseRowOrders.Select(i => (ButtonType)i)]))
                         {
                             UpdateInfo();
                             SeekToNearSelected();
@@ -1409,14 +1473,14 @@ namespace PPDEditor.Controls
                         }
                         if (copyBuffer.Length > 0)
                         {
-                            WindowUtility.MainForm.ChangeCopyBuffer(true);
+                            WindowUtility.Editor.ChangeCopyBuffer(true);
                         }
                         break;
                     case ShortcutType.ClearCopyBuffer:
                         if (copyBuffer != null && copyBuffer.Length != 0)
                         {
                             copyBuffer = null;
-                            WindowUtility.MainForm.ChangeCopyBuffer(false);
+                            WindowUtility.Editor.ChangeCopyBuffer(false);
                         }
                         break;
                     case ShortcutType.InterpolateAngleClockwise:
@@ -1433,32 +1497,47 @@ namespace PPDEditor.Controls
             return ret;
         }
 
-        private void Seekmain_MouseClick(object sender, MouseEventArgs e)
+        private void Seekmain_MouseClick(Point e)
         {
             var rowIndex = WindowUtility.TimeLineForm.RowManager.GetRowIndex(e.Y);
             if (rowIndex >= 0)
             {
-                float drawstarttime = (float)(Hsc.Value - 10) / defaultInterval / bpm * 60;
-                float drawendtime = (float)(Hsc.Value + this.Width + 10) / defaultInterval / bpm * 60;
+                float drawstarttime = (float)(ScrollValue - 10) / defaultInterval / bpm * 60;
+                float drawendtime = (float)(ScrollValue + PixelWidth + 10) / defaultInterval / bpm * 60;
 
-                var content = GetAssistInformation(new Point(e.X, e.Y), drawstarttime, drawendtime);
+                var content = GetAssistInformation(e, drawstarttime, drawendtime);
                 if (content != "" && WindowUtility.TimeLineForm != null)
                 {
-                    toolTip1.Show(content, GetWindowTarget(), GetScreenPoint(), 5000);
+                    ShowAssistToolTip(content);
                 }
             }
         }
 
-        public IWin32Window GetWindowTarget()
+        /// <summary>
+        /// イベントなどの内容を、マウスの位置に 5 秒間出す。
+        /// </summary>
+        private void ShowAssistToolTip(string content)
         {
-            if (WindowUtility.TimeLineForm.DockState == DockState.Float) return this;
-            return WindowUtility.MainForm;
-        }
-        public System.Drawing.Point GetScreenPoint()
-        {
-            var p = new System.Drawing.Point(Cursor.Position.X + 10, Cursor.Position.Y + 10);
-            if (WindowUtility.TimeLineForm.DockState == DockState.Float) return this.PointToClient(p);
-            return WindowUtility.MainForm.PointToClient(p);
+            if (assistToolTip != null)
+            {
+                assistToolTip.IsOpen = false;
+            }
+            assistToolTipTimer?.Stop();
+            assistToolTip = new ToolTip
+            {
+                Content = content,
+                PlacementTarget = canvas,
+                Placement = PlacementMode.Mouse,
+                IsOpen = true
+            };
+            assistToolTipTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(5) };
+            var toolTip = assistToolTip;
+            assistToolTipTimer.Tick += (sender, e) =>
+            {
+                ((DispatcherTimer)sender).Stop();
+                toolTip.IsOpen = false;
+            };
+            assistToolTipTimer.Start();
         }
 
         private string GetAssistInformation(Point mousepos, float starttime, float endtime)
@@ -1469,7 +1548,7 @@ namespace PPDEditor.Controls
                 PPDEditorSkin.Skin.TimeLineRowHeight * WindowUtility.TimeLineForm.RowManager.OrderedVisibleRowsCount;
             foreach (float eventtime in events)
             {
-                float pos = eventtime * defaultInterval * bpm / 60 - Hsc.Value;
+                float pos = eventtime * defaultInterval * bpm / 60 - ScrollValue;
                 if (Math.Abs(pos - mousepos.X) < 8 && Math.Abs(mousepos.Y - optionheight - 8) < 8)
                 {
                     return WindowUtility.EventManager.GetFormattedContent(eventtime);
@@ -1478,7 +1557,7 @@ namespace PPDEditor.Controls
             events = WindowUtility.SoundManager.GetSoundChangeWithinTime(starttime, endtime);
             foreach (float eventtime in events)
             {
-                float pos = eventtime * defaultInterval * bpm / 60 - Hsc.Value;
+                float pos = eventtime * defaultInterval * bpm / 60 - ScrollValue;
                 if (Math.Abs(pos - mousepos.X) < 8 && Math.Abs(mousepos.Y - optionheight - 22) < 8)
                 {
                     return WindowUtility.SoundManager.GetFormattedContent(eventtime);
@@ -1487,7 +1566,7 @@ namespace PPDEditor.Controls
             events = WindowUtility.KasiEditor.GetKasiChangeWithinTime(starttime, endtime);
             foreach (float eventtime in events)
             {
-                float pos = eventtime * defaultInterval * bpm / 60 - Hsc.Value;
+                float pos = eventtime * defaultInterval * bpm / 60 - ScrollValue;
                 if (Math.Abs(pos - mousepos.X) < 8 && Math.Abs(mousepos.Y - optionheight - 36) < 8)
                 {
                     return WindowUtility.KasiEditor.GetFormattedContent(eventtime);
@@ -1496,15 +1575,15 @@ namespace PPDEditor.Controls
             return ret;
         }
 
-        private void Seekmain_MouseDoubleClick(object sender, MouseEventArgs e)
+        private void Seekmain_MouseDoubleClick(Point e)
         {
             var rowIndex = WindowUtility.TimeLineForm.RowManager.GetRowIndex(e.Y);
             if (rowIndex >= 0)
             {
-                float drawstarttime = (float)(Hsc.Value - 10) / defaultInterval / bpm * 60;
-                float drawendtime = (float)(Hsc.Value + this.Width + 10) / defaultInterval / bpm * 60;
+                float drawstarttime = (float)(ScrollValue - 10) / defaultInterval / bpm * 60;
+                float drawendtime = (float)(ScrollValue + PixelWidth + 10) / defaultInterval / bpm * 60;
 
-                SetFocusAssistInformation(new Point(e.X, e.Y), drawstarttime, drawendtime);
+                SetFocusAssistInformation(e, drawstarttime, drawendtime);
             }
         }
 
@@ -1515,7 +1594,7 @@ namespace PPDEditor.Controls
                 PPDEditorSkin.Skin.TimeLineRowHeight * WindowUtility.TimeLineForm.RowManager.OrderedVisibleRowsCount;
             foreach (float eventtime in events)
             {
-                float pos = eventtime * defaultInterval * bpm / 60 - Hsc.Value;
+                float pos = eventtime * defaultInterval * bpm / 60 - ScrollValue;
                 if (Math.Abs(pos - mousepos.X) < 8 && Math.Abs(mousepos.Y - optionheight - 8) < 8)
                 {
                     WindowUtility.EventManager.FocusWithTimeData(eventtime);
@@ -1525,7 +1604,7 @@ namespace PPDEditor.Controls
             events = WindowUtility.SoundManager.GetSoundChangeWithinTime(starttime, endtime);
             foreach (float eventtime in events)
             {
-                float pos = eventtime * defaultInterval * bpm / 60 - Hsc.Value;
+                float pos = eventtime * defaultInterval * bpm / 60 - ScrollValue;
                 if (Math.Abs(pos - mousepos.X) < 8 && Math.Abs(mousepos.Y - optionheight - 22) < 8)
                 {
                     WindowUtility.SoundManager.FocusWithTimeData(eventtime);
@@ -1535,7 +1614,7 @@ namespace PPDEditor.Controls
             events = WindowUtility.KasiEditor.GetKasiChangeWithinTime(starttime, endtime);
             foreach (float eventtime in events)
             {
-                float pos = eventtime * defaultInterval * bpm / 60 - Hsc.Value;
+                float pos = eventtime * defaultInterval * bpm / 60 - ScrollValue;
                 if (Math.Abs(pos - mousepos.X) < 8 && Math.Abs(mousepos.Y - optionheight - 36) < 8)
                 {
                     WindowUtility.KasiEditor.FocusWithTimeData(eventtime);

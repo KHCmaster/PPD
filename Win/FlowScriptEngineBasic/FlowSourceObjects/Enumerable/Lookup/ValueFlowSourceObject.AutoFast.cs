@@ -9,15 +9,12 @@ namespace FlowScriptEngineBasic.FlowSourceObjects.Enumerable.Lookup
     {
         public override object GetPropertyValue(string propertyName)
         {
-            switch (propertyName)
+            return propertyName switch
             {
-                case "Count":
-                    return Count;
-                case "EnumerableWithKey":
-                    return EnumerableWithKey;
-                default:
-                    return null;
-            }
+                "Count" => Count,
+                "EnumerableWithKey" => EnumerableWithKey,
+                _ => null,
+            };
         }
 
         protected override void SetPropertyValue(string propertyName, object value)

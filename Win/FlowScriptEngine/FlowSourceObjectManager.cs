@@ -5,18 +5,15 @@ namespace FlowScriptEngine
 {
     public static class FlowSourceObjectManager
     {
-        private static Dictionary<string, AssemblyAndType> dict;
+        private static readonly Dictionary<string, AssemblyAndType> dict;
         static FlowSourceObjectManager()
         {
-            dict = new Dictionary<string, AssemblyAndType>();
+            dict = [];
         }
 
         internal static void AddFlowSourceObject(AssemblyAndType asmAndType)
         {
-            if (!dict.ContainsKey(asmAndType.Type.FullName))
-            {
-                dict.Add(asmAndType.Type.FullName, asmAndType);
-            }
+            dict.TryAdd(asmAndType.Type.FullName, asmAndType);
         }
 
         public static FlowSourceObjectBase CreateSource(string fullName)

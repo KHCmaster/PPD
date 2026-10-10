@@ -2,13 +2,8 @@
 
 namespace FlowScriptDrawControl.Command
 {
-    class RemoveFlowCommand : FlowCommand
+    class RemoveFlowCommand(FlowAreaControl areaControl, ArrowControl arrowControl) : FlowCommand(areaControl, arrowControl, arrowControl.SrcItem, arrowControl.DestItem)
     {
-        public RemoveFlowCommand(FlowAreaControl areaControl, ArrowControl arrowControl)
-            : base(areaControl, arrowControl, arrowControl.SrcItem, arrowControl.DestItem)
-        {
-        }
-
         public override void Execute()
         {
             RemoveArrow(arrowControl);

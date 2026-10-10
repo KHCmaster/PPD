@@ -1,4 +1,5 @@
-﻿using FlowScriptEngine;
+﻿using PPDMath;
+using FlowScriptEngine;
 
 namespace FlowScriptEngineSlimDX.FlowSourceObjects.Matrix
 {
@@ -11,7 +12,7 @@ namespace FlowScriptEngineSlimDX.FlowSourceObjects.Matrix
         }
 
         [ToolTipText("Matrix_RotationAxis_Axis_Summary")]
-        public SharpDX.Vector3 Axis
+        public System.Numerics.Vector3 Axis
         {
             private get;
             set;
@@ -25,13 +26,13 @@ namespace FlowScriptEngineSlimDX.FlowSourceObjects.Matrix
         }
 
         [ToolTipText("Matrix_RotationAxis_Value_Summary")]
-        public SharpDX.Matrix Value
+        public System.Numerics.Matrix4x4 Value
         {
             get
             {
                 SetValue(nameof(Axis));
                 SetValue(nameof(Angle));
-                return SharpDX.Matrix.RotationAxis(Axis, Angle);
+                return System.Numerics.Matrix4x4.RotationAxis(Axis, Angle);
             }
         }
     }

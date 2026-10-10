@@ -22,7 +22,7 @@ namespace PPDFramework.ScreenFilters
         /// </summary>
         public const int MaxWeightCount = 32;
 
-        float[] weights;
+        readonly float[] weights;
         float disperson;
 
         /// <summary>

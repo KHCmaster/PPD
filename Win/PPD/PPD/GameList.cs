@@ -7,11 +7,11 @@ namespace PPD
     class GameList
     {
         const string innerGameListPath = "skins\\GameList.xml";
-        List<GameLoader> games;
+        readonly List<GameLoader> games;
 
         public GameList()
         {
-            games = new List<GameLoader>();
+            games = [];
             if (File.Exists(innerGameListPath))
             {
                 var settings = new XmlReaderSettings();
@@ -55,7 +55,7 @@ namespace PPD
         {
             get
             {
-                return games.ToArray();
+                return [.. games];
             }
         }
     }

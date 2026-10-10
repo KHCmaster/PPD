@@ -1,8 +1,10 @@
-﻿using MoreLinq;
-using PPDEditorCommon;
+﻿using PPDEditorCommon;
+using PPDEditor.ViewModels.Docks;
 using PPDFramework;
 using PPDFramework.PPDStructure.PPDData;
-using SharpDX;
+using System.Numerics;
+using PPDMath;
+using Point = Vortice.Mathematics.Int2;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,46 +20,58 @@ namespace PPDEditor.Command.PPDSheet
             Down = 2,
             Right = 3
         }
-        readonly int[] defaultDrawingOrder = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+        readonly int[] defaultDrawingOrder = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
         public event EventHandler DisplayDataChanged;
         public event EventHandler CommandChanged;
         string name;
-        CustomPoint recstart = new CustomPoint(-1, -1);
-        CustomPoint recend = new CustomPoint(-2, -1);
+        CustomPoint recstart = new(-1, -1);
+        CustomPoint recend = new(-2, -1);
         private float bpm = 100;
         private float bpmstart;
         private int defaultinterval = 240;
         private DisplayLineMode displayMode = DisplayLineMode.Fourth;
         private DisplayBeatType beatType = DisplayBeatType.Fourth;
-        int[] focusedmark = { -1, -1 };
-        SortedList<float, Mark>[] data;
-        SortedList<float, SameTimingMarks> data2;
-        List<Mark> dataForColorDraw;
-        CommandManager commandManager;
+        int[] focusedmark = [-1, -1];
+        readonly SortedList<float, Mark>[] data;
+        readonly SortedList<float, SameTimingMarks> data2;
+        readonly List<Mark> dataForColorDraw;
+        readonly CommandManager commandManager;
         const int buttonnum = 10;
+
+        /// <summary>
+        /// 時間軸に表示している行（範囲選択で使う）を返します。テストで差し替えます。
+        /// </summary>
+        internal Func<int[]> GetVisibleRows { get; set; } = () => WindowUtility.TimeLineForm.RowManager.OrderedVisibleRows;
+
+        /// <summary>
+        /// 次のマークの ID を返します。テストで差し替えます。
+        /// </summary>
+        internal Func<uint> NextID { get; set; } = () => WindowUtility.LayerManager.IDProvider.Next();
+
+        /// <summary>
+        /// 譜面のイベント（表示やノーツの種類、描く順番）です。テストで差し替えます。
+        /// </summary>
+        internal Func<EventManagerViewModel> GetEvents { get; set; } = () => WindowUtility.EventManager.ViewModel;
         public PPDSheet()
         {
-            dataForColorDraw = new List<Mark>();
+            dataForColorDraw = [];
             commandManager = new CommandManager();
-            commandManager.CommandChanged += commandManager_CommandChanged;
+            commandManager.CommandChanged += CommandManager_CommandChanged;
             data = new SortedList<float, Mark>[buttonnum];
             for (int i = 0; i < buttonnum; i++)
             {
-                data[i] = new SortedList<float, Mark>();
+                data[i] = [];
             }
-            data2 = new SortedList<float, SameTimingMarks>();
+            data2 = [];
         }
 
-        void commandManager_CommandChanged(CommandType commandType)
+        void CommandManager_CommandChanged(CommandType commandType)
         {
             if ((commandType & CommandType.Time) == CommandType.Time)
             {
                 ChangeDrawData();
             }
-            if (CommandChanged != null)
-            {
-                CommandChanged.Invoke(this, EventArgs.Empty);
-            }
+            CommandChanged?.Invoke(this, EventArgs.Empty);
         }
 
         private void ChangeDrawData()
@@ -72,7 +86,7 @@ namespace PPDEditor.Command.PPDSheet
                 {
                     if (!data2.TryGetValue(pair.Key, out SameTimingMarks marks))
                     {
-                        marks = new SameTimingMarks();
+                        marks = [];
                         data2.Add(pair.Key, marks);
                     }
                     marks.Add(pair.Value);
@@ -94,10 +108,7 @@ namespace PPDEditor.Command.PPDSheet
             set
             {
                 bpm = value;
-                if (DisplayDataChanged != null)
-                {
-                    DisplayDataChanged.Invoke(this, EventArgs.Empty);
-                }
+                DisplayDataChanged?.Invoke(this, EventArgs.Empty);
             }
         }
         public float BPMStart
@@ -109,10 +120,7 @@ namespace PPDEditor.Command.PPDSheet
             set
             {
                 bpmstart = value;
-                if (DisplayDataChanged != null)
-                {
-                    DisplayDataChanged.Invoke(this, EventArgs.Empty);
-                }
+                DisplayDataChanged?.Invoke(this, EventArgs.Empty);
             }
         }
         public string DisplayName
@@ -135,10 +143,7 @@ namespace PPDEditor.Command.PPDSheet
             set
             {
                 defaultinterval = value;
-                if (DisplayDataChanged != null)
-                {
-                    DisplayDataChanged.Invoke(this, EventArgs.Empty);
-                }
+                DisplayDataChanged?.Invoke(this, EventArgs.Empty);
             }
         }
         public DisplayLineMode DisplayMode
@@ -150,10 +155,7 @@ namespace PPDEditor.Command.PPDSheet
             set
             {
                 displayMode = value;
-                if (DisplayDataChanged != null)
-                {
-                    DisplayDataChanged.Invoke(this, EventArgs.Empty);
-                }
+                DisplayDataChanged?.Invoke(this, EventArgs.Empty);
             }
         }
         public DisplayBeatType BeatType
@@ -165,10 +167,7 @@ namespace PPDEditor.Command.PPDSheet
             set
             {
                 beatType = value;
-                if (DisplayDataChanged != null)
-                {
-                    DisplayDataChanged.Invoke(this, EventArgs.Empty);
-                }
+                DisplayDataChanged?.Invoke(this, EventArgs.Empty);
             }
         }
 
@@ -268,9 +267,9 @@ namespace PPDEditor.Command.PPDSheet
         {
             if (recstart.X == -1 || recstart.Y == -1)
             {
-                return new Mark[0];
+                return [];
             }
-            var rows = WindowUtility.TimeLineForm.RowManager.OrderedVisibleRows;
+            var rows = GetVisibleRows();
             var width = Math.Abs(recstart.X - recend.X);
             int starty = (recstart.Y <= recend.Y ? recstart.Y : recend.Y);
             int height = Math.Abs(recstart.Y - recend.Y) + 1;
@@ -338,7 +337,7 @@ namespace PPDEditor.Command.PPDSheet
                     startnum[minimumnum]++;
                     if (onlyHead)
                     {
-                        return new Mark[] { mks[0] };
+                        return [mks[0]];
                     }
                 }
             }
@@ -363,11 +362,11 @@ namespace PPDEditor.Command.PPDSheet
         }
         public Mark AddMark(float time, float x, float y, float rotation, int num, uint id, KeyValuePair<string, string>[] parameters, bool selectMark = true)
         {
-            var position = Vector2.Clamp(new Vector2(x, y), Vector2.Zero, new Vector2(800, 450));
+            var position = MathCompat.ClampSharpDX(new Vector2(x, y), Vector2.Zero, new Vector2(800, 450));
             rotation = NormalizeAngle(rotation);
             if (num >= 0 && num < 10)
             {
-                if (!data[num].ContainsKey(time) && !checklongmark(num, time))
+                if (!data[num].ContainsKey(time) && !Checklongmark(num, time))
                 {
                     var mk = CreateMark(position.X, position.Y, (ButtonType)num, time, rotation, id);
                     if (parameters != null)
@@ -399,11 +398,11 @@ namespace PPDEditor.Command.PPDSheet
         }
         public Mark AddExMark(float time, float endtime, float x, float y, float rotation, int num, uint id, KeyValuePair<string, string>[] parameters, bool selectMark = true)
         {
-            var position = Vector2.Clamp(new Vector2(x, y), Vector2.Zero, new Vector2(800, 450));
+            var position = MathCompat.ClampSharpDX(new Vector2(x, y), Vector2.Zero, new Vector2(800, 450));
             rotation = NormalizeAngle(rotation);
             if (num >= 0 && num < 10)
             {
-                if (!data[num].ContainsKey(time) && !checklongmark(num, time))
+                if (!data[num].ContainsKey(time) && !Checklongmark(num, time))
                 {
                     Mark mk = CreateExMark(position.X, position.Y, (ButtonType)num, time, endtime, rotation, id);
                     if (parameters != null)
@@ -431,19 +430,17 @@ namespace PPDEditor.Command.PPDSheet
             var command = new SwapLineCommand(data, first, second);
             commandManager.AddCommand(command);
         }
-        public bool[] UpdateMark(float time, float speedscale, EventManager em)
+        public bool[] UpdateMark(float time, float speedscale)
         {
             bool[] ret = new bool[buttonnum];
             if (data2 != null)
             {
-                var last = WindowUtility.EventManager.GetEvent(0);
-                if (last == null)
-                {
-                    last = new EventData();
-                }
+                var em = GetEvents();
+                var last = em.GetEvent(0);
+                last ??= new EventData();
                 foreach (KeyValuePair<float, SameTimingMarks> pair in data2)
                 {
-                    var current = WindowUtility.EventManager.GetEvent(pair.Key);
+                    var current = em.GetEvent(pair.Key);
                     if (last != current && current != null)
                     {
                         last = current;
@@ -479,7 +476,7 @@ namespace PPDEditor.Command.PPDSheet
                     maxy = Math.Max(recstart.Y, recend.Y);
                     minx = Math.Min(recstart.X, recend.X);
                     maxx = Math.Max(recstart.X, recend.X);
-                    var rows = WindowUtility.TimeLineForm.RowManager.OrderedVisibleRows;
+                    var rows = GetVisibleRows();
                     for (int i = miny; i < Math.Min(maxy + 1, rows.Length); i++)
                     {
                         areaDraws.Add(rows[i], true);
@@ -487,11 +484,12 @@ namespace PPDEditor.Command.PPDSheet
                 }
 
                 dataForColorDraw.Clear();
-                var last = WindowUtility.EventManager.GetEvent(0);
+                var events = GetEvents();
+                var last = events.GetEvent(0);
                 int[] drawingOrder = last != null ? last.DrawingOrder : defaultDrawingOrder;
                 foreach (KeyValuePair<float, SameTimingMarks> pair in data2)
                 {
-                    var current = WindowUtility.EventManager.GetEvent(pair.Key);
+                    var current = events.GetEvent(pair.Key);
                     if (last != current && current != null)
                     {
                         drawingOrder = current.DrawingOrder;
@@ -517,7 +515,7 @@ namespace PPDEditor.Command.PPDSheet
                 {
                     if (mk is ExMark exmk)
                     {
-                        exmk.gageDraw();
+                        exmk.GageDraw();
                     }
                 }
                 foreach (Mark mk in dataForColorDraw)
@@ -560,8 +558,7 @@ namespace PPDEditor.Command.PPDSheet
                         if (pos.Y <= 0) pos.Y = 0;
                         if (pos.Y >= 450) pos.Y = 450;
 
-                        var command = commandManager.LastDoneCommand as ChangeMarkPosOrAngleCommand;
-                        if (command == null || command.Mark != mk || command.TType != ChangeMarkPosOrAngleCommand.TransType.Position)
+                        if (commandManager.LastDoneCommand is not ChangeMarkPosOrAngleCommand command || command.Mark != mk || command.TType != ChangeMarkPosOrAngleCommand.TransType.Position)
                         {
                             command = new ChangeMarkPosOrAngleCommand(mk, ChangeMarkPosOrAngleCommand.TransType.Position, new Vector2(pos.X, pos.Y), 0);
                         }
@@ -575,8 +572,7 @@ namespace PPDEditor.Command.PPDSheet
                     {
                         var rotation = GetNormalizedRotation(new Vector2(pos.X, pos.Y), mk.Position, shiftKey, ctrlKey, altKey);
 
-                        var command = commandManager.LastDoneCommand as ChangeMarkPosOrAngleCommand;
-                        if (command == null || command.Mark != mk || command.TType != ChangeMarkPosOrAngleCommand.TransType.Rotation)
+                        if (commandManager.LastDoneCommand is not ChangeMarkPosOrAngleCommand command || command.Mark != mk || command.TType != ChangeMarkPosOrAngleCommand.TransType.Rotation)
                         {
                             command = new ChangeMarkPosOrAngleCommand(mk, ChangeMarkPosOrAngleCommand.TransType.Rotation, Vector2.Zero, rotation);
                         }
@@ -594,8 +590,7 @@ namespace PPDEditor.Command.PPDSheet
                 if (marks.Length > 0)
                 {
                     var rotation = GetNormalizedRotation(new Vector2(pos.X, pos.Y), marks[0].Position, shiftKey, ctrlKey, altKey);
-                    var command = commandManager.LastDoneCommand as ChangeMarksAngleCommand;
-                    if (command == null || !CheckSameArray(command.Marks, marks))
+                    if (commandManager.LastDoneCommand is not ChangeMarksAngleCommand command || !CheckSameArray(command.Marks, marks))
                     {
                         command = new ChangeMarksAngleCommand(marks, rotation);
                     }
@@ -608,7 +603,7 @@ namespace PPDEditor.Command.PPDSheet
             }
         }
 
-        private bool CheckSameArray<T>(T[] array1, T[] array2) where T : class
+        private static bool CheckSameArray<T>(T[] array1, T[] array2) where T : class
         {
             if (array1.Length != array2.Length)
             {
@@ -625,10 +620,10 @@ namespace PPDEditor.Command.PPDSheet
             return true;
         }
 
-        private float GetNormalizedRotation(Vector2 pos1, Vector2 pos2, bool shiftKey, bool ctrlKey, bool altKey)
+        private static float GetNormalizedRotation(Vector2 pos1, Vector2 pos2, bool shiftKey, bool ctrlKey, bool altKey)
         {
             float rotation = 0;
-            int restriction = 0;
+            int restriction;
             if (shiftKey && ctrlKey && altKey)
             {
                 restriction = PPDStaticSetting.Angles[7];
@@ -676,7 +671,7 @@ namespace PPDEditor.Command.PPDSheet
             {
                 Vector2 vec = pos1 - pos2;
                 var length = vec.Length();
-                int anglebase = 0;
+                int anglebase;
                 if (vec.X >= 0)
                 {
                     if (vec.Y >= 0)
@@ -738,8 +733,8 @@ namespace PPDEditor.Command.PPDSheet
                 return;
             }
 
-            float startAngle = marks[0].Rotation, endAngle = marks[marks.Length - 1].Rotation;
-            float startTime = marks[0].Time, endTime = marks[marks.Length - 1].Time;
+            float startAngle = marks[0].Rotation, endAngle = marks[^1].Rotation;
+            float startTime = marks[0].Time, endTime = marks[^1].Time;
             if (startTime == endTime)
             {
                 return;
@@ -767,8 +762,8 @@ namespace PPDEditor.Command.PPDSheet
                 return;
             }
 
-            Vector2 startPosition = marks[0].Position, endPosition = marks[marks.Length - 1].Position;
-            float startTime = marks[0].Time, endTime = marks[marks.Length - 1].Time;
+            Vector2 startPosition = marks[0].Position, endPosition = marks[^1].Position;
+            float startTime = marks[0].Time, endTime = marks[^1].Time;
             if (startTime == endTime)
             {
                 return;
@@ -785,7 +780,7 @@ namespace PPDEditor.Command.PPDSheet
             EndGroupCommand();
         }
 
-        private float NormalizeAngle(float angle)
+        private static float NormalizeAngle(float angle)
         {
             double div = angle / (Math.PI * 2);
             if (0 <= div && div <= 1)
@@ -818,8 +813,7 @@ namespace PPDEditor.Command.PPDSheet
 
         public void MoveLine(int num, float dt)
         {
-            var command = commandManager.LastDoneCommand as ShiftMarkLineTimeCommand;
-            if (command == null || command.Index != num)
+            if (commandManager.LastDoneCommand is not ShiftMarkLineTimeCommand command || command.Index != num)
             {
                 command = new ShiftMarkLineTimeCommand(data, num, dt);
             }
@@ -910,9 +904,14 @@ namespace PPDEditor.Command.PPDSheet
         }
         public void MoveMarkInSame(Mark mk, float time)
         {
-            var command = new ShiftMarkTimeCommand(data, focusedmark[0], mk, time);
+            // マークの行で動かす（以前は選んでいる行を使っていて、選んでいないマークでは別の行を壊した）
+            var selected = SelectedMark;
+            var command = new ShiftMarkTimeCommand(data, (int)mk.Type, mk, time);
             commandManager.AddCommand(command);
-            focusedmark[1] = data[focusedmark[0]].IndexOfKey(mk.Time);
+            if (selected != null)
+            {
+                focusedmark[1] = data[focusedmark[0]].IndexOfValue(selected);
+            }
         }
         public bool CopyMarkInSame(float time)
         {
@@ -921,7 +920,7 @@ namespace PPDEditor.Command.PPDSheet
             {
                 if (mk is ExMark exmk)
                 {
-                    if (!checklongmark(focusedmark[0], time))
+                    if (!Checklongmark(focusedmark[0], time))
                     {
                         var newexmk = CreateExMark(exmk.Position.X, exmk.Position.Y, (ButtonType)focusedmark[0], time, time + exmk.EndTime - exmk.Time, exmk.Rotation, GetCorrectID(mk));
                         newexmk.CopyParameters(exmk);
@@ -951,7 +950,7 @@ namespace PPDEditor.Command.PPDSheet
             }
             else
             {
-                return WindowUtility.LayerManager.IDProvider.Next();
+                return NextID();
             }
         }
         public uint GetCorrectID(MarkData mark)
@@ -964,10 +963,10 @@ namespace PPDEditor.Command.PPDSheet
             }
             else
             {
-                return WindowUtility.LayerManager.IDProvider.Next();
+                return NextID();
             }
         }
-        private bool checklongmark(int num, float time)
+        private bool Checklongmark(int num, float time)
         {
             foreach (Mark mk in data[num].Values)
             {
@@ -1065,7 +1064,7 @@ namespace PPDEditor.Command.PPDSheet
         {
             if (focusedmark[0] >= 0 && focusedmark[0] < 10)
             {
-                var command = new DeleteMarksCommand(data, new Mark[] { data[focusedmark[0]].Values[focusedmark[1]] });
+                var command = new DeleteMarksCommand(data, [data[focusedmark[0]].Values[focusedmark[1]]]);
                 commandManager.AddCommand(command);
                 focusedmark[0] = -1;
                 focusedmark[1] = -1;
@@ -1123,11 +1122,12 @@ namespace PPDEditor.Command.PPDSheet
                 if (next == null)
                 {
                     // find from next time;
-                    var nextTime = data2.Keys.FirstOrDefault(t => t > time);
-                    if (nextTime > 0)
+                    // （時間で探すと、見つからないときの 0 と 0 秒の時間が区別できないので、位置で探す）
+                    var nextIndex = data2.IndexOfKey(time) + 1;
+                    if (nextIndex < data2.Count)
                     {
-                        list = data2[nextTime];
-                        next = list.MinBy(m => typeConverter[(int)m.Type]);
+                        list = data2.Values[nextIndex];
+                        next = list.OrderBy(m => typeConverter[(int)m.Type]).First();
                     }
                 }
             }
@@ -1137,11 +1137,11 @@ namespace PPDEditor.Command.PPDSheet
                 if (next == null)
                 {
                     // find from next time;
-                    var prevTime = data2.Keys.Reverse().FirstOrDefault(t => t < time);
-                    if (prevTime > 0)
+                    var prevIndex = data2.IndexOfKey(time) - 1;
+                    if (prevIndex >= 0)
                     {
-                        list = data2[prevTime];
-                        next = list.MaxBy(m => typeConverter[(int)m.Type]);
+                        list = data2.Values[prevIndex];
+                        next = list.OrderByDescending(m => typeConverter[(int)m.Type]).First();
                     }
                 }
             }
@@ -1159,8 +1159,7 @@ namespace PPDEditor.Command.PPDSheet
             {
                 Mark beforemk = data[focusedmark[0]].Values[focusedmark[1] - 1];
                 Mark mk = data[focusedmark[0]].Values[focusedmark[1]];
-                var command = commandManager.LastDoneCommand as ChangeMarkPosOrAngleCommand;
-                if (command == null || command.TType != ChangeMarkPosOrAngleCommand.TransType.Rotation || command.Mark != mk)
+                if (commandManager.LastDoneCommand is not ChangeMarkPosOrAngleCommand command || command.TType != ChangeMarkPosOrAngleCommand.TransType.Rotation || command.Mark != mk)
                 {
                     command = new ChangeMarkPosOrAngleCommand(mk, ChangeMarkPosOrAngleCommand.TransType.Rotation, Vector2.Zero, beforemk.Rotation);
                 }
@@ -1179,8 +1178,7 @@ namespace PPDEditor.Command.PPDSheet
             {
                 Mark beforemk = data[focusedmark[0]].Values[focusedmark[1] - 1];
                 Mark mk = data[focusedmark[0]].Values[focusedmark[1]];
-                var command = commandManager.LastDoneCommand as ChangeMarkPosOrAngleCommand;
-                if (command == null || command.TType != ChangeMarkPosOrAngleCommand.TransType.Position || command.Mark != mk)
+                if (commandManager.LastDoneCommand is not ChangeMarkPosOrAngleCommand command || command.TType != ChangeMarkPosOrAngleCommand.TransType.Position || command.Mark != mk)
                 {
                     command = new ChangeMarkPosOrAngleCommand(mk, ChangeMarkPosOrAngleCommand.TransType.Position, beforemk.Position, 0);
                 }
@@ -1201,7 +1199,7 @@ namespace PPDEditor.Command.PPDSheet
                 if (mks.Length == 2 && mks[0].Type == mks[1].Type)
                 {
                     //cast check
-                    if (!(mks[0] is ExMark) && !(mks[1] is ExMark))
+                    if (mks[0] is not ExMark && mks[1] is not ExMark)
                     {
                         var exmk = CreateExMark(mks[0].Position.X, mks[0].Position.Y, mks[0].Type, mks[0].Time, mks[1].Time, mks[0].Rotation, mks[0].ID);
                         exmk.CopyParameters(mks[0]);
@@ -1245,14 +1243,13 @@ namespace PPDEditor.Command.PPDSheet
                         newPos = new Vector2((mk.Position.X >= dx ? mk.Position.X - dx : 0), mk.Position.Y);
                         break;
                     case Direction.Down:
-                        newPos = new Vector2(mk.Position.X, (mk.Position.Y <= 450 - dx ? mk.Position.Y + dx : 0));
+                        newPos = new Vector2(mk.Position.X, (mk.Position.Y <= 450 - dx ? mk.Position.Y + dx : 450));
                         break;
                     case Direction.Right:
-                        newPos = new Vector2((mk.Position.X <= 800 - dx ? mk.Position.X + dx : 0), mk.Position.Y);
+                        newPos = new Vector2((mk.Position.X <= 800 - dx ? mk.Position.X + dx : 800), mk.Position.Y);
                         break;
                 }
-                var command = commandManager.LastDoneCommand as ChangeMarkPosOrAngleCommand;
-                if (command == null || command.TType != ChangeMarkPosOrAngleCommand.TransType.Position || command.Mark != mk)
+                if (commandManager.LastDoneCommand is not ChangeMarkPosOrAngleCommand command || command.TType != ChangeMarkPosOrAngleCommand.TransType.Position || command.Mark != mk)
                 {
                     command = new ChangeMarkPosOrAngleCommand(mk, ChangeMarkPosOrAngleCommand.TransType.Position, newPos, 0);
                 }
@@ -1269,7 +1266,7 @@ namespace PPDEditor.Command.PPDSheet
         {
             if (mark != null)
             {
-                position = Vector2.Clamp(position, Vector2.Zero, new Vector2(800, 450));
+                position = MathCompat.ClampSharpDX(position, Vector2.Zero, new Vector2(800, 450));
                 var command = new ChangeMarkPosOrAngleCommand(mark, ChangeMarkPosOrAngleCommand.TransType.Position, position, 0);
                 commandManager.AddCommand(command);
                 return true;
@@ -1295,10 +1292,10 @@ namespace PPDEditor.Command.PPDSheet
                             newPos = new Vector2((mk.Position.X >= dx ? mk.Position.X - dx : 0), mk.Position.Y);
                             break;
                         case Direction.Down:
-                            newPos = new Vector2(mk.Position.X, (mk.Position.Y <= 450 - dx ? mk.Position.Y + dx : 0));
+                            newPos = new Vector2(mk.Position.X, (mk.Position.Y <= 450 - dx ? mk.Position.Y + dx : 450));
                             break;
                         case Direction.Right:
-                            newPos = new Vector2((mk.Position.X <= 800 - dx ? mk.Position.X + dx : 0), mk.Position.Y);
+                            newPos = new Vector2((mk.Position.X <= 800 - dx ? mk.Position.X + dx : 800), mk.Position.Y);
                             break;
                     }
                     var command = new ChangeMarkPosOrAngleCommand(mk, ChangeMarkPosOrAngleCommand.TransType.Position, newPos, 0);
@@ -1323,17 +1320,17 @@ namespace PPDEditor.Command.PPDSheet
 
         public void AssignID()
         {
-            Mark[] marks = null;
+            Mark[] marks;
             if (SelectedMark != null)
             {
-                marks = new Mark[] { SelectedMark };
+                marks = [SelectedMark];
             }
             else
             {
                 marks = GetAreaData();
             }
 
-            if (marks == null && marks.Length == 0)
+            if (marks == null || marks.Length == 0)
             {
                 return;
             }
@@ -1348,7 +1345,7 @@ namespace PPDEditor.Command.PPDSheet
 
         public void AssignID(Mark mk)
         {
-            var command = new AssignIDCommand(mk, WindowUtility.LayerManager.IDProvider.Next());
+            var command = new AssignIDCommand(mk, NextID());
             commandManager.AddCommand(command);
         }
 
@@ -1357,14 +1354,14 @@ namespace PPDEditor.Command.PPDSheet
             Mark[] marks = null;
             if (SelectedMark != null)
             {
-                marks = new Mark[] { SelectedMark };
+                marks = [SelectedMark];
             }
             else
             {
                 marks = GetAreaData();
             }
 
-            if (marks == null && marks.Length == 0)
+            if (marks == null || marks.Length == 0)
             {
                 return;
             }
@@ -1417,7 +1414,7 @@ namespace PPDEditor.Command.PPDSheet
             {
                 focusedmark[0] = focusedmark[1] = -1;
             }
-            var command = new DeleteMarksCommand(data, new Mark[] { mk });
+            var command = new DeleteMarksCommand(data, [mk]);
             commandManager.AddCommand(command);
         }
 
@@ -1426,7 +1423,7 @@ namespace PPDEditor.Command.PPDSheet
             var found = data[(int)mark.Type].Select(p => p.Value).FirstOrDefault(m => m == mark);
             if (found != null)
             {
-                var command = new DeleteMarksCommand(data, new Mark[] { mark });
+                var command = new DeleteMarksCommand(data, [mark]);
                 commandManager.AddCommand(command);
             }
         }
@@ -1447,8 +1444,7 @@ namespace PPDEditor.Command.PPDSheet
             var mks = GetAreaData();
             if (mks.Length > 0)
             {
-                var command = commandManager.LastDoneCommand as ApplyTransCommand;
-                if (command == null || !command.CheckSameData(mks, applyRotation))
+                if (commandManager.LastDoneCommand is not ApplyTransCommand command || !command.CheckSameData(mks, applyRotation))
                 {
                     command = new ApplyTransCommand(mks, poses, dirs, applyRotation);
                 }
@@ -1497,18 +1493,12 @@ namespace PPDEditor.Command.PPDSheet
 
         public void ChangeParameter(Mark mk, string key, string value)
         {
-            if (key == null)
-            {
-                key = "";
-            }
-            if (value == null)
-            {
-                value = "";
-            }
+            key ??= "";
+            value ??= "";
 
             if (mk.ID == 0)
             {
-                var assignCommand = new AssignIDCommand(mk, WindowUtility.LayerManager.IDProvider.Next());
+                var assignCommand = new AssignIDCommand(mk, NextID());
                 commandManager.AddCommand(assignCommand);
             }
             var command = new ChangeParameterCommand(mk, key, value);

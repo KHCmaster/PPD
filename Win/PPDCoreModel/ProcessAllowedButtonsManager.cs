@@ -3,14 +3,8 @@ using PPDFramework;
 
 namespace PPDCoreModel
 {
-    public class ProcessAllowedButtonsManager : TemplateManager<IProcessAllowedButtons>
+    public class ProcessAllowedButtonsManager(Engine engine) : TemplateManager<IProcessAllowedButtons>(engine)
     {
-        public ProcessAllowedButtonsManager(Engine engine)
-            : base(engine)
-        {
-
-        }
-
         public bool Process(IMarkInfo markInfo, out ButtonType[] allowedButtons)
         {
             allowedButtons = null;

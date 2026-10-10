@@ -1,6 +1,7 @@
 ﻿using PPDFramework;
 using PPDFramework.Shaders;
-using SharpDX;
+using System.Numerics;
+using PPDMath;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,11 +12,11 @@ namespace PPDSingle
     {
         public event EventHandler Selected;
 
-        PictureObject back;
+        readonly PictureObject back;
 
-        ISound sound;
-        SpriteObject<MenuItem> menuSprite;
-        RectangleComponent rectangle;
+        readonly ISound sound;
+        readonly SpriteObject<MenuItem> menuSprite;
+        readonly RectangleComponent rectangle;
         int currentIndex;
 
         public ContextMenu(PPDDevice device, PPDFramework.Resource.ResourceManager resourceManager, ISound sound) : base(device)
@@ -194,7 +195,7 @@ namespace PPDSingle
     {
         bool enabled;
         bool selected;
-        TextureString text;
+        readonly TextureString text;
 
         public MenuItem(PPDDevice device, string name) : base(device)
         {

@@ -30,9 +30,9 @@ namespace FlowScriptEngineBasic.FlowSourceObjects.Hashtable
             if (Hashtable != null)
             {
                 SetValue(nameof(Value));
-                Value = Hashtable.ContainsValue(Value);
+                // 元は結果を Value に入れていて、Contains がいつも false だった
+                Contains = Hashtable.ContainsValue(Value);
                 OnSuccess();
-
             }
             else
             {

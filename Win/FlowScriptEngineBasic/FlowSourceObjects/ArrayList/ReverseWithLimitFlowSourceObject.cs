@@ -32,6 +32,12 @@ namespace FlowScriptEngineBasic.FlowSourceObjects.ArrayList
             if (ArrayList != null)
             {
                 ArrayList.Reverse(StartIndex, Count);
+                OnSuccess();
+            }
+            else
+            {
+                // 以前は Success も Failed も出さなかったので、後につないだ処理が動かなかった
+                OnFailed();
             }
         }
     }

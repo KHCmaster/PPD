@@ -16,6 +16,12 @@ namespace FlowScriptEngineBasic.FlowSourceObjects.ArrayList
             if (ArrayList != null)
             {
                 ArrayList.Clear();
+                OnSuccess();
+            }
+            else
+            {
+                // 以前は Success も Failed も出さなかったので、後につないだ処理が動かなかった
+                OnFailed();
             }
         }
     }

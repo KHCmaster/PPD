@@ -9,9 +9,9 @@ namespace PPDCore
 {
     class ReviewManager
     {
-        private List<Thread> threads = new List<Thread>();
+        private readonly List<Thread> threads = [];
 
-        private static ReviewManager manager = new ReviewManager();
+        private static readonly ReviewManager manager = new();
 
         private ReviewManager()
         {

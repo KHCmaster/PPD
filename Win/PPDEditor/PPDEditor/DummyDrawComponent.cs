@@ -4,14 +4,9 @@ using System;
 
 namespace PPDEditor
 {
-    class DummyDrawComponent : GameComponent
+    class DummyDrawComponent(PPDDevice device) : GameComponent(device)
     {
         public event Action Drawing;
-
-        public DummyDrawComponent(PPDDevice device) : base(device)
-        {
-
-        }
 
         protected override void Draw(AlphaBlendContext alphaBlendContext, int depth, int childIndex)
         {

@@ -1,12 +1,14 @@
-﻿using PPDFramework;
+﻿using PPDMath;
+using PPDFramework;
 using PPDMulti.Model;
 using PPDShareComponent;
+using System.Linq;
 
 namespace PPDMulti
 {
-    class UserListComponent : GameComponent
+    class UserListComponent(PPDDevice device, PPDFramework.Resource.ResourceManager resourceManager) : GameComponent(device)
     {
-        PPDFramework.Resource.ResourceManager resourceManager;
+        readonly PPDFramework.Resource.ResourceManager resourceManager = resourceManager;
         int nameAnimCount;
         float nameAlpha = 1;
         float idAlpha;
@@ -46,18 +48,13 @@ namespace PPDMulti
             }
         }
 
-        public UserListComponent(PPDDevice device, PPDFramework.Resource.ResourceManager resourceManager) : base(device)
-        {
-            this.resourceManager = resourceManager;
-        }
-
         public void AddUser(User user)
         {
             var x = 210 * (this.ChildrenCount % 2);
             var y = this.ChildrenCount / 2 * 50;
             this.AddChild(new MenuUserIcon(device, resourceManager, this, user)
             {
-                Position = new SharpDX.Vector2(x, y),
+                Position = new System.Numerics.Vector2(x, y),
                 Alpha = 0
             });
         }
@@ -65,7 +62,7 @@ namespace PPDMulti
         public void RemoveUser(User user)
         {
             MenuUserIcon found = null;
-            foreach (MenuUserIcon menuUser in this.Children)
+            foreach (MenuUserIcon menuUser in Children.Cast<MenuUserIcon>())
             {
                 if (menuUser.User == user)
                 {
@@ -88,7 +85,7 @@ namespace PPDMulti
                 gc.Alpha = AnimationUtility.IncreaseAlpha(gc.Alpha);
                 var x = AnimationUtility.GetAnimationValue(gc.Position.X, 210 * (iter % 2));
                 var y = AnimationUtility.GetAnimationValue(gc.Position.Y, iter / 2 * 50);
-                gc.Position = new SharpDX.Vector2(x, y);
+                gc.Position = new System.Numerics.Vector2(x, y);
                 iter++;
             }
             if (nameAnimCount >= 0)

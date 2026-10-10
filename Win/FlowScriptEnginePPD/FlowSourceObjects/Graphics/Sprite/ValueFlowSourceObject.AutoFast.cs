@@ -9,13 +9,11 @@ namespace FlowScriptEnginePPD.FlowSourceObjects.Graphics.Sprite
     {
         public override object GetPropertyValue(string propertyName)
         {
-            switch (propertyName)
+            return propertyName switch
             {
-                case "Object":
-                    return Object;
-                default:
-                    return null;
-            }
+                "Object" => Object,
+                _ => null,
+            };
         }
 
 

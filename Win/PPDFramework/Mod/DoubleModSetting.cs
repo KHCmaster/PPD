@@ -5,14 +5,23 @@ namespace PPDFramework.Mod
     /// <summary>
     /// 倍精度浮動小数の設定を扱うクラスです。
     /// </summary>
-    public class DoubleModSetting : NumberModSetting<double>
+    /// <remarks>
+    /// コンストラクタです。
+    /// </remarks>
+    /// <param name="key"></param>
+    /// <param name="name"></param>
+    /// <param name="description"></param>
+    /// <param name="defaultValue"></param>
+    /// <param name="minValue"></param>
+    /// <param name="maxValue"></param>
+    public class DoubleModSetting(string key, string name, string description, double defaultValue, double minValue, double maxValue) : NumberModSetting<double>(key, name, description, defaultValue, minValue, maxValue)
     {
         /// <summary>
         /// 最小値がクラスの最小値かどうかを取得します。
         /// </summary>
         protected override double ClassMinValue
         {
-            get { return double.MinValue; throw new NotImplementedException(); }
+            get { return double.MinValue; }
         }
 
         /// <summary>
@@ -21,20 +30,6 @@ namespace PPDFramework.Mod
         protected override double ClassMaxValue
         {
             get { return double.MaxValue; }
-        }
-
-        /// <summary>
-        /// コンストラクタです。
-        /// </summary>
-        /// <param name="key"></param>
-        /// <param name="name"></param>
-        /// <param name="description"></param>
-        /// <param name="defaultValue"></param>
-        /// <param name="minValue"></param>
-        /// <param name="maxValue"></param>
-        public DoubleModSetting(string key, string name, string description, double defaultValue, double minValue, double maxValue)
-            : base(key, name, description, defaultValue, minValue, maxValue)
-        {
         }
 
         /// <summary>

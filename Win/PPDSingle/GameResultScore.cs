@@ -1,7 +1,8 @@
 ﻿using PPDFramework;
 using PPDFrameworkCore;
 using PPDShareComponent;
-using SharpDX;
+using System.Numerics;
+using PPDMath;
 using System;
 using System.Drawing;
 using System.IO;
@@ -31,34 +32,34 @@ namespace PPDSingle
         }
 
         State state = State.Waiting;
-        EffectObject[] result;
-        EffectObject high;
-        NumberPictureObject[] scoresmalls;
-        NumberPictureObject scorebig;
-        PictureObject scoreboard;
-        PictureObject top;
-        PictureObject bottom;
-        PictureObject difficulty;
-        BackGroundDisplay bgd;
-        RectangleComponent black;
-        TextureString songname;
-        TextureString difficultstring;
-        MenuRanking menuRanking;
+        readonly EffectObject[] result;
+        readonly EffectObject high;
+        readonly NumberPictureObject[] scoresmalls;
+        readonly NumberPictureObject scorebig;
+        readonly PictureObject scoreboard;
+        readonly PictureObject top;
+        readonly PictureObject bottom;
+        readonly PictureObject difficulty;
+        readonly BackGroundDisplay bgd;
+        readonly RectangleComponent black;
+        readonly TextureString songname;
+        readonly TextureString difficultstring;
+        readonly MenuRanking menuRanking;
 
-        Button[] buttons;
+        readonly Button[] buttons;
 
-        int scorex = 388;
-        int[] scorey = { 150, 180, 210, 240, 270, 300, 373 };
-        GridSelection gridSelection = new GridSelection();
+        readonly int scorex = 388;
+        readonly int[] scorey = [150, 180, 210, 240, 270, 300, 373];
+        readonly GridSelection gridSelection = new();
 
-        ISound Sound;
-        IGameHost gameHost;
+        readonly ISound Sound;
+        readonly IGameHost gameHost;
 
-        PostDialog td;
-        ReviewDialog rd;
-        IBlueSkyManager BlueSkyManager;
-        IReviewManager ReviewManager;
-        PPDGameUtility ppdGameUtility;
+        readonly PostDialog td;
+        readonly ReviewDialog rd;
+        readonly IBlueSkyManager BlueSkyManager;
+        readonly IReviewManager ReviewManager;
+        readonly PPDGameUtility ppdGameUtility;
 
         public GameResultScore(PPDDevice device, PPDFramework.Resource.ResourceManager resourceManager,
             PPDGameUtility ppdGameUtility, ISound sound, IBlueSkyManager blueSkyManager, IReviewManager reviewManager, IGameHost gameHost) : base(device)
@@ -83,40 +84,30 @@ namespace PPDSingle
                 int y = 74;
                 var anim = new EffectObject(device, resourceManager, Utility.Path.Combine("result", String.Format("{0}.etd", ((ResultEvaluateType)i).ToString().ToLower())))
                 {
-                    Position = new Vector2(x, y)
+                    Position = new Vector2(x, y),
+                    PlayType = Effect2D.EffectManager.PlayType.ReverseLoop
                 };
-                anim.PlayType = Effect2D.EffectManager.PlayType.ReverseLoop;
                 anim.Play();
                 result[i] = anim;
             }
             string filename = "";
-            switch (ppdGameUtility.Difficulty)
+            filename = ppdGameUtility.Difficulty switch
             {
-                case Difficulty.Easy:
-                    filename = "easy.png";
-                    break;
-                case Difficulty.Normal:
-                    filename = "normal.png";
-                    break;
-                case Difficulty.Hard:
-                    filename = "hard.png";
-                    break;
-                case Difficulty.Extreme:
-                    filename = "extreme.png";
-                    break;
-                default:
-                    filename = "normal.png";
-                    break;
-            }
+                Difficulty.Easy => "easy.png",
+                Difficulty.Normal => "normal.png",
+                Difficulty.Hard => "hard.png",
+                Difficulty.Extreme => "extreme.png",
+                _ => "normal.png",
+            };
             difficulty = new PictureObject(device, resourceManager, Utility.Path.Combine("result", filename))
             {
                 Position = new Vector2(45, 105)
             };
             high = new EffectObject(device, resourceManager, Utility.Path.Combine("result", "high.etd"))
             {
-                Position = new Vector2(-25, 300)
+                Position = new Vector2(-25, 300),
+                PlayType = Effect2D.EffectManager.PlayType.Loop
             };
-            high.PlayType = Effect2D.EffectManager.PlayType.Loop;
             high.Play();
             high.Alignment = EffectObject.EffectAlignment.TopLeft;
             scoresmalls = new NumberPictureObject[6];
@@ -188,9 +179,9 @@ namespace PPDSingle
             black = new RectangleComponent(device, resourceManager, PPDColors.Black)
             {
                 RectangleHeight = 450,
-                RectangleWidth = 800
+                RectangleWidth = 800,
+                Alpha = 0
             };
-            black.Alpha = 0;
             buttons = new Button[5];
             for (int i = 0; i < buttons.Length; i++)
             {
@@ -477,9 +468,9 @@ namespace PPDSingle
                 BlueSkyManager.PostFilePath = "result.png";
                 gameHost.SaveScreenShot(BlueSkyManager.PostFilePath, s =>
                 {
-                    using (Bitmap bitmap = new Bitmap(s))
+                    using (Bitmap bitmap = new(s))
                     using (Graphics g = Graphics.FromImage(bitmap))
-                    using (System.Drawing.Font font = new System.Drawing.Font(PPDSetting.Setting.FontName, 20))
+                    using (System.Drawing.Font font = new(PPDSetting.Setting.FontName, 20))
                     {
                         var text = BlueSkyManager.FinishDate.ToString();
                         var size = g.MeasureString(text, font);

@@ -1,4 +1,5 @@
-﻿using PPDFramework;
+﻿using PPDMath;
+using PPDFramework;
 using PPDFrameworkCore;
 using System;
 
@@ -6,23 +7,23 @@ namespace PPDSingle
 {
     class PlayUserIcon : BindableGameComponent
     {
-        PPDFramework.Resource.ResourceManager resourceManager;
+        readonly PPDFramework.Resource.ResourceManager resourceManager;
 
         PictureObject userIcon;
-        TextureString userNameString;
-        NumberPictureObject scorePicture;
-        UserPlayState userPlayState;
+        readonly TextureString userNameString;
+        readonly NumberPictureObject scorePicture;
+        readonly UserPlayState userPlayState;
         MarkEvaluateType evaluate;
         bool isMissPress;
-        LifeGage lifeGage;
-        PictureObject[] evals;
+        readonly LifeGage lifeGage;
+        readonly PictureObject[] evals;
 
         int trueScore;
         int score;
         int drawCount;
-        bool showScore;
-        bool showEvaluate;
-        bool showLife;
+        readonly bool showScore;
+        readonly bool showEvaluate;
+        readonly bool showLife;
 
         private string currentUserIconPath = Utility.Path.Combine("noimage_icon.png");
 
@@ -37,15 +38,15 @@ namespace PPDSingle
 
             this.AddChild((userIcon = new PictureObject(device, resourceManager, PathObject.Absolute(currentUserIconPath), true)
             {
-                Position = new SharpDX.Vector2(19, 19)
+                Position = new System.Numerics.Vector2(19, 19)
             }));
             this.AddChild((userNameString = new TextureString(device, "", 9, 75, PPDColors.White)
             {
-                Position = new SharpDX.Vector2(35, 3)
+                Position = new System.Numerics.Vector2(35, 3)
             }));
             this.AddChild(scorePicture = new NumberPictureObject(device, resourceManager, Utility.Path.Combine("play_user_score.png"))
             {
-                Position = new SharpDX.Vector2(35, 24),
+                Position = new System.Numerics.Vector2(35, 24),
                 Alignment = Alignment.Left,
                 MaxDigit = 7,
                 Hidden = !showScore
@@ -67,15 +68,15 @@ namespace PPDSingle
             {
                 evals[i] = new PictureObject(device, resourceManager, Utility.Path.Combine("eva", filenames[i]))
                 {
-                    Position = new SharpDX.Vector2(35, 14),
+                    Position = new System.Numerics.Vector2(35, 14),
                     Hidden = true,
-                    Scale = new SharpDX.Vector2(0.4f, 0.4f)
+                    Scale = new System.Numerics.Vector2(0.4f, 0.4f)
                 };
                 this.AddChild(evals[i]);
             }
             this.AddChild(lifeGage = new LifeGage(device, resourceManager)
             {
-                Position = new SharpDX.Vector2(37, 32),
+                Position = new System.Numerics.Vector2(37, 32),
                 Hidden = !showLife
             });
 
@@ -181,7 +182,7 @@ namespace PPDSingle
                     this.RemoveChild(userIcon);
                     userIcon = new PictureObject(device, resourceManager, PathObject.Absolute(currentUserIconPath), true)
                     {
-                        Position = new SharpDX.Vector2(19, 19)
+                        Position = new System.Numerics.Vector2(19, 19)
                     };
                     this.InsertChild(userIcon, 0);
                     ChangeUserIconScale();
@@ -211,7 +212,7 @@ namespace PPDSingle
 
         private void ChangeUserIconScale()
         {
-            userIcon.Scale = new SharpDX.Vector2(32 / userIcon.Width, 32 / userIcon.Height);
+            userIcon.Scale = new System.Numerics.Vector2(32 / userIcon.Width, 32 / userIcon.Height);
         }
 
         protected override void UpdateImpl()
@@ -246,7 +247,7 @@ namespace PPDSingle
         class LifeGage : GameComponent
         {
             const int MaxWidth = 76;
-            RectangleComponent rectangle;
+            readonly RectangleComponent rectangle;
 
             float gageWidth;
 

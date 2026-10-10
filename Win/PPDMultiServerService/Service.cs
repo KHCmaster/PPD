@@ -63,16 +63,13 @@ namespace PPDMultiServerService
                 {
                     var server = new PPDServer(room.Port, room.RegisterToPPD ? new WebManager() : null,
                         new RoomInfo(room.UserName, room.RoomName, room.Password, room.Port), timerManager, logDir, room.AllowedModIds);
-                    server.FailedToCreateRoom += server_FailedToCreateRoom;
+                    server.FailedToCreateRoom += Server_FailedToCreateRoom;
                     servers.Add(server);
                     server.Start();
                     Thread.Sleep(1000);
-                    if (logger != null)
-                    {
-                        logger.AddLog($"Room {room.Port} Started");
-                    }
+                    logger?.AddLog($"Room {room.Port} Started");
                 }
-                this.servers = servers.ToArray();
+                this.servers = [.. servers];
                 updateThread.Start();
             }
             catch (Exception e)
@@ -88,7 +85,7 @@ namespace PPDMultiServerService
             }
         }
 
-        void server_FailedToCreateRoom(object sender, EventArgs e)
+        void Server_FailedToCreateRoom(object sender, EventArgs e)
         {
             Console.WriteLine("Failed to create room {0}", ((PPDServer)sender).RoomInfo.RoomName);
         }

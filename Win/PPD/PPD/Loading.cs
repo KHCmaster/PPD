@@ -3,12 +3,8 @@ using System.Collections.Generic;
 
 namespace PPD
 {
-    class Loading : LoadingBase
+    class Loading(PPDDevice device) : LoadingBase(device)
     {
-        public Loading(PPDDevice device) : base(device)
-        {
-        }
-
         public override void EnterLoading()
         {
         }

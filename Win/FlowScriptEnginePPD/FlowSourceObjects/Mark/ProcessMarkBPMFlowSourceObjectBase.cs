@@ -1,4 +1,5 @@
-﻿using FlowScriptEngine;
+﻿using PPDMath;
+using FlowScriptEngine;
 using PPDCoreModel;
 using System.Collections.Generic;
 
@@ -38,9 +39,9 @@ namespace FlowScriptEnginePPD.FlowSourceObjects.Mark
         }
 
         [ToolTipText("Mark_ProcessMarkBPM_Position")]
-        public SharpDX.Vector2 Position
+        public System.Numerics.Vector2 Position
         {
-            get { return markInfo != null ? markInfo.Position : SharpDX.Vector2.Zero; }
+            get { return markInfo != null ? markInfo.Position : System.Numerics.Vector2.Zero; }
         }
 
         [ToolTipText("Mark_ProcessMarkBPM_Rotation")]

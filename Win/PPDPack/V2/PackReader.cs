@@ -12,13 +12,13 @@ namespace PPDPack.V2
         Stream stream;
         Dictionary<string, FileInfo> files;
         int headerOffset;
-        bool fileOpened;
+        readonly bool fileOpened;
 
         public string[] Files
         {
             get
             {
-                return files.Values.Select(f => f.FileName).ToArray();
+                return [.. files.Values.Select(f => f.FileName)];
             }
         }
 
@@ -46,7 +46,7 @@ namespace PPDPack.V2
         private void InnerStruct(Stream stream)
         {
             this.stream = stream;
-            files = new Dictionary<string, FileInfo>();
+            files = [];
             AnalyzeHeader();
         }
 
@@ -64,7 +64,7 @@ namespace PPDPack.V2
             }
 
             byte[] header = new byte[PackUtility.FileSignature.Length];
-            stream.Read(header, 0, header.Length);
+            stream.ReadAtLeast(header, header.Length, throwOnEndOfStream: false);
             for (int i = 0; i < header.Length; i++)
             {
                 if (header[i] != PackUtility.FileSignature[i])
@@ -80,9 +80,9 @@ namespace PPDPack.V2
             }
 
             byte[] bytes = new byte[4];
-            stream.Read(bytes, 0, bytes.Length);
+            stream.ReadAtLeast(bytes, bytes.Length, throwOnEndOfStream: false);
             FileSize = BitConverter.ToUInt32(bytes, 0);
-            stream.Read(bytes, 0, bytes.Length);
+            stream.ReadAtLeast(bytes, bytes.Length, throwOnEndOfStream: false);
             headerOffset = BitConverter.ToInt32(bytes, 0);
             if (stream.Length < FileSize)
             {
@@ -93,12 +93,12 @@ namespace PPDPack.V2
             while (stream.Position < stream.Length && stream.Position < FileSize)
             {
                 byte[] bytes2 = new byte[2];
-                stream.Read(bytes2, 0, bytes2.Length);
+                stream.ReadAtLeast(bytes2, bytes2.Length, throwOnEndOfStream: false);
                 var fileNameLength = BitConverter.ToUInt16(bytes2, 0);
                 byte[] fileNameBytes = new byte[fileNameLength];
-                stream.Read(fileNameBytes, 0, fileNameBytes.Length);
+                stream.ReadAtLeast(fileNameBytes, fileNameBytes.Length, throwOnEndOfStream: false);
                 var fileName = Encoding.UTF8.GetString(fileNameBytes);
-                stream.Read(bytes, 0, bytes.Length);
+                stream.ReadAtLeast(bytes, bytes.Length, throwOnEndOfStream: false);
                 var fileSize = BitConverter.ToUInt32(bytes, 0);
                 files.Add(fileName, new FileInfo(fileName, fileSize, fileHeaderPos));
                 fileHeaderPos += fileSize;
@@ -107,8 +107,8 @@ namespace PPDPack.V2
 
         public PPDPackStreamReader Read(string fileName)
         {
-            var info = files[fileName];
-            if (info == null)
+            // ないファイルは null を返す（以前は例外になっていた）
+            if (!files.TryGetValue(fileName, out var info))
             {
                 return null;
             }
@@ -132,17 +132,14 @@ namespace PPDPack.V2
             GC.SuppressFinalize(this);
         }
 
-        private void Dispose(bool disposing)
+        protected virtual void Dispose(bool disposing)
         {
             if (!this.disposed)
             {
                 if (disposing)
                 {
-                    if (stream != null)
-                    {
-                        stream.Close();
-                        stream = null;
-                    }
+                    stream?.Close();
+                    stream = null;
                 }
             }
             disposed = true;

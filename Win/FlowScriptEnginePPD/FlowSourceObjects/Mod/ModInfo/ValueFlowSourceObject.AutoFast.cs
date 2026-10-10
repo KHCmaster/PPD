@@ -9,17 +9,13 @@ namespace FlowScriptEnginePPD.FlowSourceObjects.Mod.ModInfo
     {
         public override object GetPropertyValue(string propertyName)
         {
-            switch (propertyName)
+            return propertyName switch
             {
-                case "AuthorName":
-                    return AuthorName;
-                case "DisplayName":
-                    return DisplayName;
-                case "FileName":
-                    return FileName;
-                default:
-                    return null;
-            }
+                "AuthorName" => AuthorName,
+                "DisplayName" => DisplayName,
+                "FileName" => FileName,
+                _ => null,
+            };
         }
 
         protected override void SetPropertyValue(string propertyName, object value)

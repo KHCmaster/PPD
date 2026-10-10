@@ -55,7 +55,7 @@ namespace FlowScriptDrawControl.Control
             }
             selectables.Insert(0, this);
 
-            MoveManager = new MoveManager(selectables.ToArray(), areaControl.CommandManager);
+            MoveManager = new MoveManager([.. selectables], areaControl.CommandManager);
             MoveManager.Initialize();
             OnMoveStarted(this, EventArgs.Empty);
         }

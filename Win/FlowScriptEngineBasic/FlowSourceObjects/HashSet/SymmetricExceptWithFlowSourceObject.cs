@@ -24,7 +24,7 @@ namespace FlowScriptEngineBasic.FlowSourceObjects.HashSet
             SetValue(nameof(List));
             if (HashSet != null && List != null)
             {
-                HashSet.SymmetricExceptWith(List.ToArray());
+                HashSet.SymmetricExceptWith([.. List]);
                 OnSuccess();
             }
             else

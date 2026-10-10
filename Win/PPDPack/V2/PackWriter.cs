@@ -26,7 +26,7 @@ namespace PPDPack.V2
         private void InnerStruct(Stream stream)
         {
             this.stream = stream;
-            files = new List<FileInfo>();
+            files = [];
             stream.Write(PackUtility.FileSignature, 0, PackUtility.FileSignature.Length);
             uint temp = 0;
             var bytes = BitConverter.GetBytes(temp);
@@ -86,7 +86,7 @@ namespace PPDPack.V2
             GC.SuppressFinalize(this);
         }
 
-        private void Dispose(bool disposing)
+        protected virtual void Dispose(bool disposing)
         {
             if (!this.disposed)
             {

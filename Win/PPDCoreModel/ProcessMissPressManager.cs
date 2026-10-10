@@ -3,13 +3,8 @@ using PPDCoreModel.Data;
 
 namespace PPDCoreModel
 {
-    public class ProcessMissPressManager : TemplateManager<IProcessMissPress>
+    public class ProcessMissPressManager(Engine engine) : TemplateManager<IProcessMissPress>(engine)
     {
-        public ProcessMissPressManager(Engine engine)
-            : base(engine)
-        {
-        }
-
         public bool Process(IMarkInfo markInfo, MarkType pressedButton, out bool isMissPress)
         {
             isMissPress = false;

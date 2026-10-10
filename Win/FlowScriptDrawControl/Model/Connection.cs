@@ -1,4 +1,4 @@
-﻿using GalaSoft.MvvmLight;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace FlowScriptDrawControl.Model
 {
@@ -14,7 +14,7 @@ namespace FlowScriptDrawControl.Model
                 if (target != value)
                 {
                     target = value;
-                    RaisePropertyChanged("Target");
+                    OnPropertyChanged(nameof(Target));
                 }
             }
         }

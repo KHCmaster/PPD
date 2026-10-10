@@ -1,25 +1,26 @@
-﻿namespace PPDFramework.Effect.DX11
+namespace PPDFramework.Effect.DX11
 {
-    class EffectHandle : EffectHandleBase
+    /// <summary>
+    /// エフェクトのパラメーター（定数バッファの変数、またはテクスチャ）を指します。
+    /// </summary>
+    class EffectHandle(EffectData.Variable variable, int textureSlot) : EffectHandleBase
     {
-        public SharpDX.Direct3D11.EffectVariable _EffectVariable
+        /// <summary>
+        /// 定数バッファの変数です。テクスチャの場合は null です。
+        /// </summary>
+        public EffectData.Variable Variable
         {
             get;
             private set;
-        }
+        } = variable;
 
-        public EffectHandle(SharpDX.Direct3D11.EffectVariable effectVariable)
+        /// <summary>
+        /// テクスチャのスロットです。テクスチャでない場合は -1 です。
+        /// </summary>
+        public int TextureSlot
         {
-            _EffectVariable = effectVariable;
-        }
-
-        protected override void DisposeResource()
-        {
-            if (_EffectVariable != null)
-            {
-                _EffectVariable.Dispose();
-                _EffectVariable = null;
-            }
-        }
+            get;
+            private set;
+        } = textureSlot;
     }
 }

@@ -24,7 +24,7 @@ namespace FlowScriptEngineBasic.FlowSourceObjects.HashSet
             SetValue(nameof(List));
             if (HashSet != null && List != null)
             {
-                HashSet.IntersectWith(List.ToArray());
+                HashSet.IntersectWith([.. List]);
                 OnSuccess();
             }
             else

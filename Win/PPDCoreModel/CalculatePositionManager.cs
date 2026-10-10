@@ -2,14 +2,8 @@
 
 namespace PPDCoreModel
 {
-    public class CalculatePositionManager : TemplateManager<ICalculatePosition>
+    public class CalculatePositionManager(Engine engine) : TemplateManager<ICalculatePosition>(engine)
     {
-        public CalculatePositionManager(Engine engine)
-            : base(engine)
-        {
-
-        }
-
         public bool Calculate(IMarkInfo markInfo, float currentTime, float bpm)
         {
             var handled = false;

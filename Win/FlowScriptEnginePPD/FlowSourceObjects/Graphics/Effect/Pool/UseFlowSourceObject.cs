@@ -1,6 +1,7 @@
 ﻿using PPDCoreModel;
 using PPDFramework;
-using SharpDX;
+using System.Numerics;
+using PPDMath;
 
 namespace FlowScriptEnginePPD.FlowSourceObjects.Graphics.Effect.Pool
 {

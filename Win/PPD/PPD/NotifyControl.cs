@@ -1,28 +1,22 @@
 ﻿using PPDFramework;
 using PPDFrameworkCore;
 using PPDShareComponent;
-using SharpDX;
+using System.Numerics;
+using PPDMath;
 using System;
 using System.Collections.Generic;
 
 namespace PPD
 {
-    class NotifyControl : GameComponent
+    class NotifyControl(PPDDevice device, PPDFramework.Resource.ResourceManager resourceManager, GameTimer gameTimer) : GameComponent(device)
     {
         private const int startY = 20;
         private const int itemHeight = 25;
 
-        private PPDFramework.Resource.ResourceManager resourceManager;
-        private GameTimer gameTimer;
+        private readonly PPDFramework.Resource.ResourceManager resourceManager = resourceManager;
+        private readonly GameTimer gameTimer = gameTimer;
 
-        private Queue<string> textQueue;
-
-        public NotifyControl(PPDDevice device, PPDFramework.Resource.ResourceManager resourceManager, GameTimer gameTimer) : base(device)
-        {
-            this.resourceManager = resourceManager;
-            this.gameTimer = gameTimer;
-            textQueue = new Queue<string>();
-        }
+        private readonly Queue<string> textQueue = new();
 
         public void AddNotify(string text)
         {
@@ -46,14 +40,14 @@ namespace PPD
         {
             private const int ShowMS = 5000;
             private const int HideInterval = 1000;
-            private GameTimer gameTimer;
+            private readonly GameTimer gameTimer;
 
-            private long initTime;
+            private readonly long initTime;
 
             public NotifyComponent(PPDDevice device, PPDFramework.Resource.ResourceManager resourceManager, GameTimer gameTimer, string text) : base(device)
             {
                 this.gameTimer = gameTimer;
-                TextureString textureString = null;
+                TextureString textureString;
                 this.AddChild(textureString = new TextureString(device, text, 10, PPDColors.Black)
                 {
                     Position = new Vector2(26, 8)

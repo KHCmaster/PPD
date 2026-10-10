@@ -4,31 +4,25 @@ namespace PPDSingle
 {
     public delegate void SelectionEventHandler(object sender, SelectionEventArgs args);
 
-    public class SelectionEventArgs
+    public class SelectionEventArgs(TreeViewItem prevItem, TreeViewItem newItem)
     {
-        public SelectionEventArgs(TreeViewItem prevItem, TreeViewItem newItem)
-        {
-            Prev = prevItem;
-            New = newItem;
-        }
-
         public TreeViewItem Prev
         {
             get;
             private set;
-        }
+        } = prevItem;
 
         public TreeViewItem New
         {
             get;
             private set;
-        }
+        } = newItem;
     }
 
     public class TreeView
     {
         public event SelectionEventHandler SelectionChanged;
-        TreeViewItem root;
+        readonly TreeViewItem root;
         public TreeView(TreeViewItem root)
         {
             this.root = root;
@@ -132,10 +126,7 @@ namespace PPDSingle
 
         protected void OnSelectionChanged(TreeViewItem prevItem, TreeViewItem newItem)
         {
-            if (SelectionChanged != null)
-            {
-                SelectionChanged.Invoke(this, new SelectionEventArgs(prevItem, newItem));
-            }
+            SelectionChanged?.Invoke(this, new SelectionEventArgs(prevItem, newItem));
         }
     }
 }

@@ -2,21 +2,22 @@
 using PPDFramework.Web;
 using PPDFrameworkCore;
 using PPDShareComponent;
-using SharpDX;
+using System.Numerics;
+using PPDMath;
 using System.Diagnostics;
 
 namespace PPDSingle
 {
     class OpenBrowserDialog : FocusableGameComponent
     {
-        ISound sound;
+        readonly ISound sound;
 
-        TextureString text;
-        EffectObject confirm;
-        RectangleComponent black;
+        readonly TextureString text;
+        readonly EffectObject confirm;
+        readonly RectangleComponent black;
 
-        SpriteObject sprite;
-        Button[] buttons;
+        readonly SpriteObject sprite;
+        readonly Button[] buttons;
         int selection;
 
         public OpenBrowserDialog(PPDDevice device, PPDFramework.Resource.ResourceManager resourceManager, ISound sound) : base(device)
@@ -54,9 +55,9 @@ namespace PPDSingle
                 }
                 buttons[i] = new Button(device, resourceManager, Utility.Path, str)
                 {
-                    Position = new Vector2(300 + i * 200, 315)
+                    Position = new Vector2(300 + i * 200, 315),
+                    Selected = false
                 };
-                buttons[i].Selected = false;
                 this.AddChild(buttons[i]);
             }
 
@@ -90,7 +91,7 @@ namespace PPDSingle
                 {
                     try
                     {
-                        Process.Start(WebManager.Instance.GetScorePageUrl(ScoreLibraryId));
+                        Process.Start(new ProcessStartInfo(WebManager.Instance.GetScorePageUrl(ScoreLibraryId)) { UseShellExecute = true });
                     }
                     catch
                     {

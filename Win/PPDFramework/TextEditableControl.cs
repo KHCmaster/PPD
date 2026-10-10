@@ -10,33 +10,27 @@ namespace PPDFramework
     /// <summary>
     /// テキストボックスの選択範囲
     /// </summary>
-    public struct TextBoxSelection
+    /// <remarks>
+    /// コンストラクタ
+    /// </remarks>
+    /// <param name="selStart"></param>
+    /// <param name="selEnd"></param>
+    public struct TextBoxSelection(int selStart, int selEnd)
     {
         /// <summary>
         /// 選択開始
         /// </summary>
-        public int SelectionStart;
+        public int SelectionStart = selStart;
 
         /// <summary>
         /// 選択終了
         /// </summary>
-        public int SelectionEnd;
-
-        /// <summary>
-        /// コンストラクタ
-        /// </summary>
-        /// <param name="selStart"></param>
-        /// <param name="selEnd"></param>
-        public TextBoxSelection(int selStart, int selEnd)
-        {
-            SelectionStart = selStart;
-            SelectionEnd = selEnd;
-        }
+        public int SelectionEnd = selEnd;
 
         /// <summary>
         /// 長さ
         /// </summary>
-        public int Length
+        public readonly int Length
         {
             get
             {
@@ -71,7 +65,7 @@ namespace PPDFramework
         /// </summary>
         /// <param name="obj"></param>
         /// <returns></returns>
-        public override bool Equals(object obj)
+        public override readonly bool Equals(object obj)
         {
             return base.Equals(obj);
         }
@@ -80,7 +74,7 @@ namespace PPDFramework
         /// ハッシュコードを取得する
         /// </summary>
         /// <returns></returns>
-        public override int GetHashCode()
+        public override readonly int GetHashCode()
         {
             return base.GetHashCode();
         }
@@ -97,15 +91,15 @@ namespace PPDFramework
         public event EventHandler IMEStarted;
 
         /// <summary>
-        /// 有効状態が変更された
+        /// テキストの編集状態（IsTextEditMode）が変更された
         /// </summary>
-        public event EventHandler _EnabledChanged;
+        public event EventHandler TextEditModeChanged;
 
-        TextBuffer buffer;
+        readonly TextBuffer buffer;
         TextBoxSelection selection;
         int caretIndex;
         bool isTextEditMode;
-        Dictionary<Keys, Action> actionList;
+        readonly Dictionary<Keys, Action> actionList;
         ImeMode lastIMEMode;
         ImeMode offModeIME;
 
@@ -135,13 +129,10 @@ namespace PPDFramework
         void TextEditableControl_ParentChanged(object sender, EventArgs e)
         {
             var form = FindForm();
-            if (form != null)
-            {
-                form.InputLanguageChanged += form_InputLanguageChanged;
-            }
+            form?.InputLanguageChanged += Form_InputLanguageChanged;
         }
 
-        void form_InputLanguageChanged(object sender, InputLanguageChangedEventArgs e)
+        void Form_InputLanguageChanged(object sender, InputLanguageChangedEventArgs e)
         {
             ChangeImeMode(e.Culture.TwoLetterISOLanguageName);
         }
@@ -280,9 +271,9 @@ namespace PPDFramework
         protected override bool IsInputKey(Keys keyData)
         {
             if (!isTextEditMode) return false;
-            if (actionList.ContainsKey(keyData))
+            if (actionList.TryGetValue(keyData, out Action value))
             {
-                actionList[keyData].Invoke();
+                value.Invoke();
                 return true;
             }
             return false;
@@ -363,27 +354,27 @@ namespace PPDFramework
             {
                 switch (m.Msg)
                 {
-                    case WinAPI.WM_IME_COMPOSITION:
+                    case NativeMethods.WM_IME_COMPOSITION:
                         if (IsTextEditMode)
                         {
-                            if ((m.LParam.ToInt32() & WinAPI.GCS_RESULTSTR) != 0)
+                            if ((m.LParam.ToInt32() & NativeMethods.GCS_RESULTSTR) != 0)
                             {
-                                var str = GetIMEString(WinAPI.GCS_RESULTSTR);
+                                var str = GetIMEString(NativeMethods.GCS_RESULTSTR);
                                 ReplaceString(str);
                             }
-                            else if ((m.LParam.ToInt32() & WinAPI.GCS_COMPSTR) != 0)
+                            else if ((m.LParam.ToInt32() & NativeMethods.GCS_COMPSTR) != 0)
                             {
-                                //Console.WriteLine(GetIMEString(WinAPI.GCS_COMPSTR));
+                                //Console.WriteLine(GetIMEString(NativeMethods.GCS_COMPSTR));
                             }
                         }
 
                         break;
-                    case WinAPI.WM_IME_STARTCOMPOSITION:
+                    case NativeMethods.WM_IME_STARTCOMPOSITION:
                         OnIMEStart();
                         UpdateCaret();
-                        WinAPI.SetImeWindowFont(Handle, Font);
+                        NativeMethods.SetImeWindowFont(Handle, Font);
                         break;
-                    case WinAPI.WM_IME_ENDCOMPOSITION:
+                    case NativeMethods.WM_IME_ENDCOMPOSITION:
                         break;
                 }
             }
@@ -401,12 +392,12 @@ namespace PPDFramework
             string text;
             IntPtr ime;
             int len;
-            ime = WinAPI.ImmGetContext(Handle);
-            len = WinAPI.ImmGetCompositionStringW(ime, gcs, null, 0);
+            ime = NativeMethods.ImmGetContext(Handle);
+            len = NativeMethods.ImmGetCompositionStringW(ime, gcs, null, 0);
             byte[] buf = new byte[len];
-            WinAPI.ImmGetCompositionStringW(ime, gcs, buf, len);
+            _ = NativeMethods.ImmGetCompositionStringW(ime, gcs, buf, len);
             text = System.Text.Encoding.Unicode.GetString(buf, 0, buf.Length);
-            WinAPI.ImmReleaseContext(Handle, ime);
+            _ = NativeMethods.ImmReleaseContext(Handle, ime);
             return text;
         }
 
@@ -436,7 +427,7 @@ namespace PPDFramework
                         lastIMEMode = ImeMode;
                         ImeMode = offModeIME;
                     }
-                    this._OnEnabledChanged();
+                    this.OnTextEditModeChanged();
                 }
             }
         }
@@ -464,20 +455,17 @@ namespace PPDFramework
         }
 
         /// <summary>
-        /// 有効状態が変更されたときの処理です
+        /// テキストの編集状態（IsTextEditMode）が変更されたときの処理です
         /// </summary>
-        protected void _OnEnabledChanged()
+        protected void OnTextEditModeChanged()
         {
-            if (_EnabledChanged != null)
-            {
-                _EnabledChanged.Invoke(this, EventArgs.Empty);
-            }
+            TextEditModeChanged?.Invoke(this, EventArgs.Empty);
         }
 
         private void UpdateCaret()
         {
             // move IMM window to caret position
-            WinAPI.SetImeWindowPos(Handle, TextBoxLocation);
+            NativeMethods.SetImeWindowPos(Handle, TextBoxLocation);
         }
 
         /// <summary>
@@ -541,18 +529,15 @@ namespace PPDFramework
         /// </summary>
         protected void OnIMEStart()
         {
-            if (IMEStarted != null)
-            {
-                IMEStarted.Invoke(this, EventArgs.Empty);
-            }
+            IMEStarted?.Invoke(this, EventArgs.Empty);
         }
 
         internal class TextBuffer
         {
-            private List<char> str;
+            private readonly List<char> str;
             public TextBuffer()
             {
-                str = new List<char>();
+                str = [];
             }
 
             public void AppendString(string st)
@@ -590,7 +575,7 @@ namespace PPDFramework
 
             public override string ToString()
             {
-                return new string(str.ToArray());
+                return new string([.. str]);
             }
 
             public string GetText(int begin, int length)

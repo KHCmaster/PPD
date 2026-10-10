@@ -9,13 +9,11 @@ namespace FlowScriptEnginePPDEditor.FlowSourceObjects.Layer
     {
         public override object GetPropertyValue(string propertyName)
         {
-            switch (propertyName)
+            return propertyName switch
             {
-                case "All":
-                    return All;
-                default:
-                    return null;
-            }
+                "All" => All,
+                _ => null,
+            };
         }
 
 

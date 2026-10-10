@@ -4,14 +4,14 @@ namespace PPDEditor.Command.PPDSheet
 {
     class ShiftMarkTimeCommand : Command
     {
-        private SortedList<float, Mark>[] data;
-        private Mark mk;
-        private ExMark exmk;
-        private int typeIndex;
-        private float newTime;
-        private float lastTime;
-        private float newEndTime;
-        private float lastEndTime;
+        private readonly SortedList<float, Mark>[] data;
+        private readonly Mark mk;
+        private readonly ExMark exmk;
+        private readonly int typeIndex;
+        private readonly float newTime;
+        private readonly float lastTime;
+        private readonly float newEndTime;
+        private readonly float lastEndTime;
         public ShiftMarkTimeCommand(SortedList<float, Mark>[] data, int typeIndex, Mark mk, float nt)
         {
             this.data = data;
@@ -35,10 +35,7 @@ namespace PPDEditor.Command.PPDSheet
         {
             data[typeIndex].Remove(mk.Time);
             mk.Time = newTime;
-            if (exmk != null)
-            {
-                exmk.EndTime = newEndTime;
-            }
+            exmk?.EndTime = newEndTime;
             data[typeIndex].Add(mk.Time, mk);
         }
 
@@ -46,10 +43,7 @@ namespace PPDEditor.Command.PPDSheet
         {
             data[typeIndex].Remove(mk.Time);
             mk.Time = lastTime;
-            if (exmk != null)
-            {
-                exmk.EndTime = lastEndTime;
-            }
+            exmk?.EndTime = lastEndTime;
             data[typeIndex].Add(mk.Time, mk);
         }
 

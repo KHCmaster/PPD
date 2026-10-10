@@ -4,16 +4,10 @@ using PPDShareComponent;
 
 namespace PPDMulti
 {
-    class MainGameConfig : MainGameConfigBase
+    class MainGameConfig(ItemManagerComponent itemManager) : MainGameConfigBase
     {
-        ItemManagerComponent itemManager;
+        readonly ItemManagerComponent itemManager = itemManager;
         float speedScale = 1;
-
-
-        public MainGameConfig(ItemManagerComponent itemManager)
-        {
-            this.itemManager = itemManager;
-        }
 
         public override bool Auto
         {

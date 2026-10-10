@@ -1,12 +1,13 @@
 ﻿using PPDFramework;
-using SharpDX;
+using System.Numerics;
+using PPDMath;
 using System.Collections.Generic;
 
 namespace PPDCoreModel
 {
     public class EffectPool : EffectPoolBase
     {
-        ScriptResourceManager scriptResourceManager;
+        readonly ScriptResourceManager scriptResourceManager;
 
         public string FileName
         {

@@ -5,8 +5,8 @@ namespace FlowScriptDrawControl.Command
 {
     public class CommandManager
     {
-        private Stack<CommandBase> doneCommands;
-        private Stack<CommandBase> undoneCommands;
+        private readonly Stack<CommandBase> doneCommands;
+        private readonly Stack<CommandBase> undoneCommands;
         private CommandSet commandSet;
 
         public event Action Modified;

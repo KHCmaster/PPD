@@ -5,10 +5,10 @@ namespace FlowScriptEngine
 {
     public static class TypeFormatterManager
     {
-        private static Dictionary<Type, TypeFormatterBase> dict;
+        private static readonly Dictionary<Type, TypeFormatterBase> dict;
         static TypeFormatterManager()
         {
-            dict = new Dictionary<Type, TypeFormatterBase>();
+            dict = [];
         }
 
         public static TypeFormatterBase GetFormatter(Type type)
@@ -19,11 +19,7 @@ namespace FlowScriptEngine
 
         internal static void AddFormatter(TypeFormatterBase formatter)
         {
-            if (!dict.ContainsKey(formatter.Type))
-            {
-                dict.Add(formatter.Type, formatter);
-            }
-            else
+            if (!dict.TryAdd(formatter.Type, formatter))
             {
                 Console.WriteLine(String.Format("Formatter {0} is multiple defined.", formatter));
             }

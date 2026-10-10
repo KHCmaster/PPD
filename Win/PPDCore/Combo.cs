@@ -1,5 +1,6 @@
 ﻿using PPDFramework;
-using SharpDX;
+using System.Numerics;
+using PPDMath;
 
 namespace PPDCore
 {
@@ -8,7 +9,7 @@ namespace PPDCore
     /// </summary>
     class Combo : GameComponent
     {
-        ComboInternal comboInternal;
+        readonly ComboInternal comboInternal;
 
         public Combo(PPDDevice device, PPDFramework.Resource.ResourceManager resourceManager) : base(device)
         {
@@ -36,7 +37,7 @@ namespace PPDCore
 
         class ComboInternal : GameComponent
         {
-            NumberPictureObject display;
+            readonly NumberPictureObject display;
             int comboCount;
             int displayCount;
 
@@ -54,7 +55,7 @@ namespace PPDCore
                 Nothing = 10
             }
             State state = State.Nothing;
-            PictureObject[] evals;
+            readonly PictureObject[] evals;
 
             const float MinScale = 0.6f;
 
@@ -64,9 +65,9 @@ namespace PPDCore
                 {
                     Position = Vector2.Zero,
                     Alignment = PPDFramework.Alignment.Left,
-                    MaxDigit = -1
+                    MaxDigit = -1,
+                    Hidden = true
                 };
-                display.Hidden = true;
 
                 var filenames = new string[] {
                     "cool.png",

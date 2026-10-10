@@ -12,10 +12,10 @@
         </Grid.RowDefinitions>
         <colorCanvas:ColorCanvas x:Name="colorCanvas" Grid.Row="0" Background="Transparent" BorderBrush="{x:Null}" UsingAlphaChannel="False" UseLayoutRounding="False"/>
         <StackPanel Grid.Row="1" Orientation="Horizontal">
-            <Button x:Name="okButton" Width="60" Margin="60,0,0,0" Click="okButton_Click">
+            <Button x:Name="okButton" Width="60" Margin="60,0,0,0" Click="OkButton_Click">
                 OK
             </Button>
-            <Button x:Name="cancelButton" Width="60" Margin="40,0,0,0" Click="cancelButton_Click">
+            <Button x:Name="cancelButton" Width="60" Margin="40,0,0,0" Click="CancelButton_Click">
                 Cancel
             </Button>
         </StackPanel>

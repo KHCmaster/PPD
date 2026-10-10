@@ -67,19 +67,19 @@ namespace FlowScriptDrawControl.Control
             if (e.OldValue != null)
             {
                 var comment = (Comment)e.NewValue;
-                comment.PropertyChanged -= comment_PropertyChanged;
+                comment.PropertyChanged -= Comment_PropertyChanged;
             }
             if (e.NewValue != null)
             {
                 var comment = (Comment)e.NewValue;
-                comment.PropertyChanged += comment_PropertyChanged;
+                comment.PropertyChanged += Comment_PropertyChanged;
             }
             UpdateFrame();
             UpdateLayout();
             UpdatePosition();
         }
 
-        void comment_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        void Comment_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == "Text")
             {
@@ -132,10 +132,7 @@ namespace FlowScriptDrawControl.Control
         private void CloseButton_Click(object sender, RoutedEventArgs e)
         {
             var canvas = Utility.GetParent<Canvas>(this);
-            if (canvas != null)
-            {
-                canvas.Children.Remove(this);
-            }
+            canvas?.Children.Remove(this);
         }
 
         private void CopyButton_Click(object sender, RoutedEventArgs e)

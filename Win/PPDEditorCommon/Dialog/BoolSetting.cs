@@ -1,17 +1,11 @@
 ﻿namespace PPDEditorCommon.Dialog
 {
-    public class BoolSetting : SettingBase
+    public class BoolSetting(string name, string description, bool defaultValue) : SettingBase(name, description)
     {
         public bool DefaultValue
         {
             get;
             private set;
-        }
-
-        public BoolSetting(string name, string description, bool defaultValue) :
-            base(name, description)
-        {
-            DefaultValue = defaultValue;
-        }
+        } = defaultValue;
     }
 }

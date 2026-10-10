@@ -5,13 +5,13 @@ namespace KeyConfiger
 {
     public class KeyConfig
     {
-        Dictionary<ButtonType, int> keyMap;
-        Dictionary<ButtonType, int> buttonMap;
+        readonly Dictionary<ButtonType, int> keyMap;
+        readonly Dictionary<ButtonType, int> buttonMap;
 
         public KeyConfig()
         {
-            buttonMap = new Dictionary<ButtonType, int>();
-            keyMap = new Dictionary<ButtonType, int>();
+            buttonMap = [];
+            keyMap = [];
             foreach (ButtonType type in ButtonUtility.Array)
             {
                 buttonMap.Add(type, 0);

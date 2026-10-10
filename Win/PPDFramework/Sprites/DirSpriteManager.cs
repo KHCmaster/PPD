@@ -8,18 +8,13 @@ namespace PPDFramework.Sprites
     /// <summary>
     /// フォルダのスプライトマネージャークラスです。
     /// </summary>
-    public class DirSpriteManager : SpriteManagerBase
+    /// <remarks>
+    /// コンストラクタです。
+    /// </remarks>
+    /// <param name="dir"></param>
+    public class DirSpriteManager(string dir) : SpriteManagerBase(dir)
     {
-        string dir;
-
-        /// <summary>
-        /// コンストラクタです。
-        /// </summary>
-        /// <param name="dir"></param>
-        public DirSpriteManager(string dir) : base(dir)
-        {
-            this.dir = dir;
-        }
+        readonly string dir = dir;
 
         /// <summary>
         /// 画像の情報一覧を取得します。
@@ -38,7 +33,7 @@ namespace PPDFramework.Sprites
                 {
                 }
             }
-            return infos.ToArray();
+            return [.. infos];
         }
 
         /// <summary>

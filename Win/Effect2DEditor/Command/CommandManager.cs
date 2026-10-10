@@ -6,8 +6,8 @@ namespace Effect2DEditor.Command
     public class CommandManager
     {
         public event EventHandler CommandChanged;
-        Stack<CommandBase> donecommand;
-        Stack<CommandBase> undonecommand;
+        readonly Stack<CommandBase> donecommand;
+        readonly Stack<CommandBase> undonecommand;
         public CommandBase LastCommand
         {
             get
@@ -101,10 +101,7 @@ namespace Effect2DEditor.Command
         }
         private void FireChangeEvent()
         {
-            if (CommandChanged != null)
-            {
-                CommandChanged.Invoke(this, EventArgs.Empty);
-            }
+            CommandChanged?.Invoke(this, EventArgs.Empty);
         }
     }
 }

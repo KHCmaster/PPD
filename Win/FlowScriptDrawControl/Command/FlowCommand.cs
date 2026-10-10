@@ -3,21 +3,13 @@ using FlowScriptDrawControl.Model;
 
 namespace FlowScriptDrawControl.Command
 {
-    abstract class FlowCommand : CommandBase
+    abstract class FlowCommand(FlowAreaControl areaControl, ArrowControl arrowControl, SourceItemControl src,
+        SourceItemControl dest) : CommandBase
     {
-        protected FlowAreaControl areaControl;
-        protected ArrowControl arrowControl;
-        protected SourceItemControl src;
-        protected SourceItemControl dest;
-
-        protected FlowCommand(FlowAreaControl areaControl, ArrowControl arrowControl, SourceItemControl src,
-            SourceItemControl dest)
-        {
-            this.areaControl = areaControl;
-            this.arrowControl = arrowControl;
-            this.src = src;
-            this.dest = dest;
-        }
+        protected FlowAreaControl areaControl = areaControl;
+        protected ArrowControl arrowControl = arrowControl;
+        protected SourceItemControl src = src;
+        protected SourceItemControl dest = dest;
 
         protected void RemoveArrow(ArrowControl arrowControl)
         {
@@ -30,10 +22,7 @@ namespace FlowScriptDrawControl.Command
         protected virtual void Connect(SourceItemControl srcItem, SourceItemControl destItem, ArrowControl arrowControl)
         {
             arrowControl.SrcItem = srcItem;
-            if (srcItem != null)
-            {
-                srcItem.CurrentItem.AddOutConnection(new Connection { Target = destItem.CurrentItem });
-            }
+            srcItem?.CurrentItem.AddOutConnection(new Connection { Target = destItem.CurrentItem });
 
             arrowControl.SrcItem = srcItem;
             arrowControl.DestItem = destItem;

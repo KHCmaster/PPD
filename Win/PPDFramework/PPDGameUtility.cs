@@ -12,7 +12,7 @@ namespace PPDFramework
     /// </summary>
     public class PPDGameUtility
     {
-        List<ItemInfo> items;
+        readonly List<ItemInfo> items;
         ModInfo[] appliedMods;
 
         /// <summary>
@@ -20,7 +20,7 @@ namespace PPDFramework
         /// </summary>
         public PPDGameUtility()
         {
-            items = new List<ItemInfo>();
+            items = [];
         }
 
         /// <summary>
@@ -189,7 +189,7 @@ namespace PPDFramework
                     ModManager.Instance.WaitForLoadFinish();
                     if (ModManager.Instance.Root != null)
                     {
-                        appliedMods = ModManager.Instance.Root.Descendants().OfType<ModInfo>().Where(m => m.IsApplied).ToArray();
+                        appliedMods = [.. ModManager.Instance.Root.Descendants().OfType<ModInfo>().Where(m => m.IsApplied)];
                     }
                 }
                 return appliedMods;
@@ -232,7 +232,7 @@ namespace PPDFramework
         /// </summary>
         public ItemInfo[] Items
         {
-            get { return items.ToArray(); }
+            get { return [.. items]; }
         }
 
         /// <summary>

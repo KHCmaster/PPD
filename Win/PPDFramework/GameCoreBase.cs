@@ -2,8 +2,10 @@
 using PPDFramework.ScreenFilters.Impl;
 using PPDFramework.Shaders;
 using PPDFrameworkCore;
-using SharpDX;
+using System.Numerics;
+using PPDMath;
 using System;
+using System.Diagnostics;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -25,7 +27,7 @@ namespace PPDFramework
         protected PPDDevice device;
 
         double nextframe;
-        float wait = 1000 / 60f;
+        readonly float wait = 1000 / 60f;
         double lastPresentEndTime;
         double presentStartTime;
         int presentCount;
@@ -127,11 +129,36 @@ namespace PPDFramework
         /// <param name="control"></param>
         protected GameCoreBase(PPDExecuteArg args, Control control)
         {
-            SharpDX.Configuration.EnableReleaseOnFinalizer = true;
+            // 最初の COM オブジェクトの破棄より前に設定する必要がある
+            ComDiagnostics.Configure();
+            // プレイ中に初めて動く処理のコンパイルで止まらないように、先にコンパイルしておく
+            JitWarmup.Start();
             gameTimer = new GameTimer();
             Control = control;
             Args = args;
             ShouldBeExit = false;
+        }
+
+        /// <summary>
+        /// WinForms のコントロールを使わずに、ウィンドウハンドルに描画するときのコンストラクタです（WPF のアプリで使う）。
+        /// </summary>
+        /// <param name="args"></param>
+        /// <param name="windowHandle">スワップチェーンを作るウィンドウ。大きさは呼び出し側で合わせる。</param>
+        protected GameCoreBase(PPDExecuteArg args, IntPtr windowHandle)
+            : this(args, (Control)null)
+        {
+            this.windowHandle = windowHandle;
+        }
+
+        readonly IntPtr windowHandle;
+
+        /// <summary>
+        /// DirectXの初期化に失敗したときの例外を取得します。
+        /// </summary>
+        protected Exception InitializeDirectXException
+        {
+            get;
+            private set;
         }
 
         /// <summary>
@@ -148,11 +175,11 @@ namespace PPDFramework
         {
         }
 
-        private void PreventScreenSaver()
+        private static void PreventScreenSaver()
         {
             try
             {
-                var prev = WinAPI.SetThreadExecutionState(WinAPI.EXECUTION_STATE.ES_DISPLAY_REQUIRED);
+                var prev = NativeMethods.SetThreadExecutionState(NativeMethods.EXECUTION_STATE.ES_DISPLAY_REQUIRED);
             }
             catch
             {
@@ -164,12 +191,19 @@ namespace PPDFramework
         /// </summary>
         public void Routine()
         {
+            // 1 フレームの処理時間の記録（プレイ中でログが有効なときだけ記録される）
+            var frameSession = FrameTimeStatistics.CurrentSession;
+            FrameProfiler.BeginFrame(frameSession != 0);
+            CharCacheManager.RenderThreadId = Environment.CurrentManagedThreadId;
+            var frameStart = Stopwatch.GetTimestamp();
             nextframe = gameTimer.ElapsedTickTime;
             PreventScreenSaver();
             long last = gameTimer.ElapsedTime;
             double beforeUpdateTime = gameTimer.ElapsedTickTime;
             Update();
             LastUpdateTime = (float)(gameTimer.ElapsedTickTime - beforeUpdateTime);
+            var afterUpdate = Stopwatch.GetTimestamp();
+            long afterDraw = afterUpdate, afterSleep = afterUpdate, afterPresent = afterUpdate;
             long current = gameTimer.ElapsedTime;
             if ((double)current < nextframe + wait)
             {
@@ -187,6 +221,7 @@ namespace PPDFramework
                 DrawEnd();
                 device.DrawEnd();
                 LastDrawTime = (float)(gameTimer.ElapsedTickTime - beforeDrawTime);
+                afterDraw = afterSleep = afterPresent = Stopwatch.GetTimestamp();
                 try
                 {
                     //更新
@@ -195,7 +230,9 @@ namespace PPDFramework
                     {
                         Thread.Sleep(diff);
                     }
+                    afterSleep = Stopwatch.GetTimestamp();
                     device.Present();
+                    afterPresent = Stopwatch.GetTimestamp();
                     lastPresentEndTime = gameTimer.ElapsedTickTime;
                     presentCount++;
                     if (presentCount >= 60)
@@ -203,20 +240,38 @@ namespace PPDFramework
                         FPS = (float)(1000 / (lastPresentEndTime - presentStartTime) * 60);
                         if (ShowFPS)
                         {
-                            CurrentFPS = String.Format("PPD FPS:{0}", FPS);
+                            CurrentFPS = String.Format("PPD [{0}] FPS:{1}", device.DirectXVersion, FPS);
                         }
                         presentCount = 0;
                         presentStartTime = lastPresentEndTime;
                     }
                 }
-                catch (SharpDXException e)
+                catch (SharpGen.Runtime.SharpGenException)
                 {
-                    if (e.ResultCode == SharpDX.Direct3D9.ResultCode.DeviceLost)
-                    {
-                        device.ResetDevice();
-                    }
+                    // 表示に失敗したフレームは捨てて、次のフレームで再試行します
+                    afterPresent = Stopwatch.GetTimestamp();
                 }
             }
+            FrameTimeStatistics.Record(frameSession, frameStart, afterUpdate, afterDraw, afterSleep, afterPresent);
+        }
+
+        /// <summary>
+        /// 更新と描画だけを行います。表示（Present）とフレームの待ち合わせは行いません。
+        /// 描画した結果は <see cref="PPDDevice.CopyBackBuffer"/> で読み出します（エディターの WPF の画面に表示するときに使う）。
+        /// </summary>
+        public void RenderWithoutPresent()
+        {
+            CharCacheManager.RenderThreadId = Environment.CurrentManagedThreadId;
+            Update();
+            device.DrawStart();
+            Draw();
+            foreach (var rect in blackRectangles)
+            {
+                rect.Draw();
+            }
+            device.GetModule<AlphaBlendContextCache>().Reset();
+            DrawEnd();
+            device.DrawEnd();
         }
 
         /// <summary>
@@ -235,10 +290,13 @@ namespace PPDFramework
                 {
                     height = 450;
                 }
-                Control.Size = new System.Drawing.Size(width.Value, height.Value);
+                if (Control != null)
+                {
+                    Control.Size = new System.Drawing.Size(width.Value, height.Value);
+                }
                 InitializeUI();
 
-                device = PPDDevice.Initialize(Control.Handle, width.Value, height.Value, expectedWidth.Value, expectedHeight.Value, expectedAspectRatio.Value);
+                device = PPDDevice.Initialize(Control != null ? Control.Handle : windowHandle, width.Value, height.Value, expectedWidth.Value, expectedHeight.Value, expectedAspectRatio.Value);
                 device.RegisterModule(new AlphaBlendContextCache(1024));
                 device.RegisterModule(new ShaderCommon(device));
                 device.RegisterModule(new ColorTextureAllcator(device));
@@ -285,9 +343,10 @@ namespace PPDFramework
                 MessageBox.Show(e.StackTrace);
                 throw;
 #else
-            catch
+            catch (Exception e)
             {
                 //初期化失敗
+                InitializeDirectXException = e;
                 return false;
 #endif
             }
@@ -339,11 +398,20 @@ namespace PPDFramework
         protected override void DisposeResource()
         {
             base.DisposeResource();
-            if (device != null)
+            if (blackRectangles != null)
             {
-                device.Dispose();
-                device = null;
+                foreach (var rect in blackRectangles)
+                {
+                    rect?.Dispose();
+                }
+                blackRectangles = null;
             }
+
+            resourceManager?.Dispose();
+            resourceManager = null;
+            device?.Dispose();
+            device = null;
+            ComDiagnostics.ReportActiveObjects("Active COM objects after GameCoreBase.Dispose");
         }
     }
 }

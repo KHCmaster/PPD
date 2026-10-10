@@ -1,23 +1,13 @@
 ﻿using Effect2D;
 using System;
-using System.Collections.Generic;
-using System.Drawing;
-
 
 namespace Effect2DEditor.Command
 {
-    class AddEffectCommand : CommandBase
+    class AddEffectCommand(EffectManager manager, string exp, int insertindex, string filename) : CommandBase(manager, exp)
     {
-        int insertindex;
-        string filename;
-        SortedList<string, Image> imagepool;
-        public AddEffectCommand(EffectManager manager, string exp, int insertindex, string filename, SortedList<string, Image> imagepool)
-            : base(manager, exp)
-        {
-            this.insertindex = insertindex;
-            this.filename = filename;
-            this.imagepool = imagepool;
-        }
+        readonly int insertindex = insertindex;
+        readonly string filename = filename;
+
         public override void Undo()
         {
             manager.Effects.RemoveAt(insertindex);
@@ -26,8 +16,7 @@ namespace Effect2DEditor.Command
         {
             try
             {
-                var image = Image.FromFile(filename);
-                if (!imagepool.ContainsKey(filename)) imagepool.Add(filename, image);
+                Utility.ValidateImage(filename);
                 var be = new BaseEffect
                 {
                     Filename = filename

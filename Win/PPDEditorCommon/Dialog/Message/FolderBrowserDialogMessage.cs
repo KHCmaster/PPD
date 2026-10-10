@@ -1,8 +1,7 @@
-﻿using GalaSoft.MvvmLight.Messaging;
-
+﻿
 namespace PPDEditorCommon.Dialog.Message
 {
-    class FolderBrowserDialogMessage : MessageBase
+    class FolderBrowserDialogMessage(object sender) : MessageBase(sender)
     {
         public string SelectedPath
         {
@@ -14,11 +13,6 @@ namespace PPDEditorCommon.Dialog.Message
         {
             get;
             set;
-        }
-
-        public FolderBrowserDialogMessage(object sender)
-            : base(sender)
-        {
         }
     }
 }

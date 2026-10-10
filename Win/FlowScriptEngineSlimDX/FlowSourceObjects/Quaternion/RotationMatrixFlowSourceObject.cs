@@ -1,4 +1,5 @@
-﻿using FlowScriptEngine;
+﻿using PPDMath;
+using FlowScriptEngine;
 
 namespace FlowScriptEngineSlimDX.FlowSourceObjects.Quaternion
 {
@@ -11,19 +12,19 @@ namespace FlowScriptEngineSlimDX.FlowSourceObjects.Quaternion
         }
 
         [ToolTipText("Quaternion_RotationMatrix_Matrix_Summary")]
-        public SharpDX.Matrix Matrix
+        public System.Numerics.Matrix4x4 Matrix
         {
             private get;
             set;
         }
 
         [ToolTipText("Quaternion_RotationMatrix_Value_Summary")]
-        public SharpDX.Quaternion Value
+        public System.Numerics.Quaternion Value
         {
             get
             {
                 SetValue(nameof(Matrix));
-                return SharpDX.Quaternion.RotationMatrix(Matrix);
+                return System.Numerics.Quaternion.RotationMatrix(Matrix);
             }
         }
     }

@@ -15,9 +15,9 @@ namespace FlowScriptEnginePPDEditor.FlowSourceObjects.Storage
 
         protected override void OnInitialize()
         {
-            if (Manager.Items.ContainsKey("Storage"))
+            if (Manager.Items.TryGetValue("Storage", out object value))
             {
-                storage = (IStorage)Manager.Items["Storage"];
+                storage = (IStorage)value;
             }
         }
 

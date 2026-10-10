@@ -1,22 +1,23 @@
 ﻿using PPDFramework;
 using PPDShareComponent;
-using SharpDX;
+using System.Numerics;
+using PPDMath;
 using System;
 
 namespace PPDSingle
 {
     abstract class GeneralDialogBase : FocusableGameComponent
     {
-        GridSelection selection;
+        readonly GridSelection selection;
 
-        EffectObject back;
-        TextureString message;
-        SpriteObject sprite;
-        RectangleComponent black;
-        Button[] buttons;
-        ISound sound;
+        readonly EffectObject back;
+        readonly TextureString message;
+        readonly SpriteObject sprite;
+        readonly RectangleComponent black;
+        readonly Button[] buttons;
+        readonly ISound sound;
 
-        int rowCount;
+        readonly int rowCount;
 
         protected virtual int CancelIndex
         {
@@ -55,9 +56,9 @@ namespace PPDSingle
             {
                 buttons[0] = new Button(device, resourceManager, Utility.Path, buttonTexts[0])
                 {
-                    Position = new Vector2(400, 315)
+                    Position = new Vector2(400, 315),
+                    Selected = false
                 };
-                buttons[0].Selected = false;
                 sprite.AddChild(buttons[0]);
                 selection.Add(buttons[0].Position);
             }
@@ -70,9 +71,9 @@ namespace PPDSingle
                     int columnIndex = i % 2;
                     buttons[i] = new Button(device, resourceManager, Utility.Path, buttonTexts[i])
                     {
-                        Position = new Vector2(300 + columnIndex * 200, 315 - (rowCount - rowIndex - 1) * 50)
+                        Position = new Vector2(300 + columnIndex * 200, 315 - (rowCount - rowIndex - 1) * 50),
+                        Selected = false
                     };
-                    buttons[i].Selected = false;
                     sprite.AddChild(buttons[i]);
                     selection.Add(buttons[i].Position);
                 }
@@ -151,29 +152,29 @@ namespace PPDSingle
         {
             back.Stop();
             back.PlayType = Effect2D.EffectManager.PlayType.ReverseOnce;
-            back.Finish += back_ReverseFinish;
+            back.Finish += Back_ReverseFinish;
             back.Play();
         }
 
-        void back_ReverseFinish(object sender, EventArgs e)
+        void Back_ReverseFinish(object sender, EventArgs e)
         {
             back.Hidden = true;
-            back.Finish -= back_ReverseFinish;
+            back.Finish -= Back_ReverseFinish;
         }
 
         void PreviewPlayDialog_GotFocused(IFocusable sender, FocusEventArgs args)
         {
             back.Stop();
             back.PlayType = Effect2D.EffectManager.PlayType.Once;
-            back.Finish += back_NormalFinish;
+            back.Finish += Back_NormalFinish;
             back.Play();
             back.Hidden = false;
         }
 
-        void back_NormalFinish(object sender, EventArgs e)
+        void Back_NormalFinish(object sender, EventArgs e)
         {
             sprite.Hidden = false;
-            back.Finish -= back_NormalFinish;
+            back.Finish -= Back_NormalFinish;
         }
 
         protected override void UpdateImpl()

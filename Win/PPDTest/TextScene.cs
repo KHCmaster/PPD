@@ -1,8 +1,9 @@
-﻿using PPDFramework;
+﻿using PPDMath;
+using PPDFramework;
 
 namespace PPDTest
 {
-    class TextScene : TestSceneBase
+    class TextScene(TestSceneManager testSceneManager, PPDDevice device) : TestSceneBase(testSceneManager, device)
     {
         protected override string Title
         {
@@ -10,11 +11,6 @@ namespace PPDTest
             {
                 return "文字列表示テスト";
             }
-        }
-
-        public TextScene(TestSceneManager testSceneManager, PPDDevice device) : base(testSceneManager, device)
-        {
-
         }
 
         protected override void OnInitialize()
@@ -26,7 +22,7 @@ namespace PPDTest
                     Thickness = 1,
                     Color = PPDColors.Black
                 },
-                Position = new SharpDX.Vector2(100, 100)
+                Position = new System.Numerics.Vector2(100, 100)
             });
         }
     }

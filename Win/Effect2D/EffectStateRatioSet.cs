@@ -1,4 +1,6 @@
 ﻿using BezierCaliculator;
+using System;
+
 namespace Effect2D
 {
     /// <summary>
@@ -6,7 +8,7 @@ namespace Effect2D
     /// </summary>
     public class EffectStateRatioSet
     {
-        private IRatioMaker[] RatioMakers;
+        private readonly IRatioMaker[] RatioMakers;
         /// <summary>
         /// コンストラクタ
         /// </summary>
@@ -107,11 +109,21 @@ namespace Effect2D
         public float[] GetRatios(float CurrentFrame)
         {
             float[] ret = new float[Utility.RatioTypeArray.Length];
+            GetRatios(CurrentFrame, ret);
+            return ret;
+        }
+
+        /// <summary>
+        /// 比を、渡された領域に書き込みます（RatioType の値の順）。
+        /// </summary>
+        /// <param name="currentFrame">現在のフレーム</param>
+        /// <param name="ratios">書き込み先</param>
+        internal void GetRatios(float currentFrame, Span<float> ratios)
+        {
             foreach (RatioType type in Utility.RatioTypeArray)
             {
-                ret[(int)type] = this[type].GetRatio(CurrentFrame);
+                ratios[(int)type] = this[type].GetRatio(currentFrame);
             }
-            return ret;
         }
         /// <summary>
         /// 比を取得する

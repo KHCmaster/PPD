@@ -3,21 +3,16 @@
     /// <summary>
     /// インデックスバッファーの基底クラスです。
     /// </summary>
-    public abstract class IndexBufferBase : DisposableComponent
+    /// <remarks>
+    /// コンストラクタです。
+    /// </remarks>
+    /// <param name="device"></param>
+    public abstract class IndexBufferBase(PPDDevice device) : DisposableComponent
     {
         /// <summary>
         /// デバイスです。
         /// </summary>
-        protected PPDDevice device;
-
-        /// <summary>
-        /// コンストラクタです。
-        /// </summary>
-        /// <param name="device"></param>
-        protected IndexBufferBase(PPDDevice device)
-        {
-            this.device = device;
-        }
+        protected PPDDevice device = device;
 
         /// <summary>
         /// 書き込みます。

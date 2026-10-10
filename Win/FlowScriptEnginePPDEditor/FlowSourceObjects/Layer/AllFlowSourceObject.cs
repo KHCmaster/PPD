@@ -15,9 +15,9 @@ namespace FlowScriptEnginePPDEditor.FlowSourceObjects.Layer
 
         protected override void OnInitialize()
         {
-            if (Manager.Items.ContainsKey("AllLayers"))
+            if (Manager.Items.TryGetValue("AllLayers", out object value))
             {
-                all = (ILayer[])Manager.Items["AllLayers"];
+                all = (ILayer[])value;
             }
         }
 

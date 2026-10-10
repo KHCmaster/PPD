@@ -17,9 +17,9 @@ namespace FlowScriptEnginePPD.FlowSourceObjects
         {
             base.OnInitialize();
 
-            if (this.Manager.Items.ContainsKey("BPMManager"))
+            if (this.Manager.Items.TryGetValue("BPMManager", out object value))
             {
-                bpmManager = this.Manager.Items["BPMManager"] as BPMManager;
+                bpmManager = value as BPMManager;
             }
         }
 
@@ -29,7 +29,7 @@ namespace FlowScriptEnginePPD.FlowSourceObjects
             get { return bpmManager != null ? bpmManager.CurrentBPM : 0; }
             set
             {
-                if (bpmManager != null) { bpmManager.CurrentBPM = value; }
+                bpmManager?.CurrentBPM = value;
             }
         }
 
@@ -39,7 +39,7 @@ namespace FlowScriptEnginePPD.FlowSourceObjects
             get { return bpmManager != null ? bpmManager.TargetBPM : 0; }
             set
             {
-                if (bpmManager != null) { bpmManager.TargetBPM = value; }
+                bpmManager?.TargetBPM = value;
             }
         }
 

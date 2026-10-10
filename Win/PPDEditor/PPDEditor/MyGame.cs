@@ -2,10 +2,14 @@
 using PPDFramework.Sprites;
 using PPDInput;
 using PPDSound;
-using SharpDX;
+using System.Numerics;
+using PPDMath;
+using Point = Vortice.Mathematics.Int2;
 using System;
 using System.Collections.Generic;
-using System.Windows.Forms;
+using System.ComponentModel;
+using System.Windows;
+using System.Windows.Interop;
 
 namespace PPDEditor
 {
@@ -19,8 +23,8 @@ namespace PPDEditor
         PPDFramework.Resource.ResourceManager resourceManager;
         KeyConfigManager keyConfigManager;
         SoundManager sm;
-        Vector2 mousepos = new Vector2(-1, -1);
-        float[] eval = { 0.05f, 0.1f, 0.15f, 0.2f };
+        Vector2 mousepos = new(-1, -1);
+        readonly float[] eval = [0.05f, 0.1f, 0.15f, 0.2f];
         Vector2[] circlepoints;
 
         public IMovie Movie
@@ -40,10 +44,10 @@ namespace PPDEditor
 
         public MyGame(PPDExecuteArg args) : base(args)
         {
-            this.Window.FormClosing += Window_FormClosing;
+            this.Window.Closing += Window_Closing;
         }
 
-        private void Window_FormClosing(object sender, FormClosingEventArgs e)
+        private void Window_Closing(object sender, CancelEventArgs e)
         {
             ShouldBeExit = true;
         }
@@ -51,12 +55,14 @@ namespace PPDEditor
         protected override void Initialize()
         {
             base.Initialize();
-            this.Window.MyGame = this;
+            this.Window.ViewModel.MyGame = this;
+            // 入力と音は、メインのウィンドウに結びつける
+            var windowHandle = new WindowInteropHelper(this.Window).EnsureHandle();
             //Inputクラスの生成
-            input = new Input(this.Window);
+            input = new Input(windowHandle);
             input.Load();
             //Soundクラスの生成
-            sound = new Sound(this.Window);
+            sound = new Sound(windowHandle);
             sound.Initialize();
             keyConfigManager = new KeyConfigManager();
             keyConfigManager.Load("keyconfig.ini");
@@ -69,10 +75,10 @@ namespace PPDEditor
             }
             resourceManager = new PPDFramework.Resource.SpriteResourceManager(device, @"img\PPDEditor");
             CreateResource();
-            sm = this.Window.SoundManager;
-            sm.setSound(this.sound);
-            this.Window.ResourceManager.SetSound(sound);
-            mg = new MainGame(device, this, resourceManager, Window.Grid);
+            sm = WindowUtility.SoundManager;
+            sm.SetSound(this.sound);
+            WindowUtility.ResourceManager.SetSound(sound);
+            mg = new MainGame(device, resourceManager, Window.ViewModel.Grid);
             mg.Dummy.Drawing += Dummy_Drawing;
             Utility.Device = device;
             Utility.ResourceManager = resourceManager;
@@ -82,7 +88,7 @@ namespace PPDEditor
 
         private void Dummy_Drawing()
         {
-            this.Window.DrawMark();
+            WindowUtility.Seekmain.DrawMark();
         }
 
         private void CreateResource()
@@ -105,7 +111,7 @@ namespace PPDEditor
             PPDEditorSkin.Skin.GetLongNoteCircleInfo(out PathObject fn, out float inner, out float outer);
             pathes.Add(fn);
             CreateCirclePoints(inner, outer);
-            PPDEditorSkin.Skin.GetHoldInfo(out fn, out inner, out outer);
+            PPDEditorSkin.Skin.GetHoldInfo(out fn, out _, out _);
             pathes.Add(fn);
         }
         private void CreateCirclePoints(float smallrad, float bigrad)
@@ -132,7 +138,7 @@ namespace PPDEditor
         {
             if (recording)
             {
-                this.Window.Refleshdata();
+                WindowUtility.Seekmain.DrawAndRefresh();
             }
             recording = false;
         }
@@ -145,7 +151,7 @@ namespace PPDEditor
             playing = false;
         }
 
-        void m_Finished(object sender, EventArgs e)
+        void Movie_Finished(object sender, EventArgs e)
         {
             if (playing)
             {
@@ -166,40 +172,37 @@ namespace PPDEditor
         {
             if (recording || playing)
             {
-                this.Window.UpdateStatus();
+                this.Window.ViewModel.UpdateStatus();
             }
             if (recording)
             {
                 var shouldbecheck = input.GetInput(keyConfigManager.CurrentConfig.Keys,
                     keyConfigManager.CurrentConfig.Buttons, out InputInfoBase inputInfo);
-                if (inputInfo == null)
-                {
-                    inputInfo = EmptyInputInfo.Instance;
-                }
+                inputInfo ??= EmptyInputInfo.Instance;
                 if (shouldbecheck)
                 {
-                    double movietime = Window.CurrentTime;
+                    double movietime = Window.ViewModel.CurrentTime;
                     for (int i = 0; i < keyConfigManager.CurrentConfig.Buttons.Length; i++)
                     {
                         if (inputInfo.IsPressed((ButtonType)i))
                         {
-                            this.Window.Record(movietime, i);
+                            this.Window.ViewModel.Record(movietime, i);
                         }
                     }
                 }
             }
             if (!recording)
             {
-                var ret = this.Window.Updatemark(this.Window.CurrentTime);
+                var ret = this.Window.ViewModel.Updatemark(this.Window.ViewModel.CurrentTime);
                 if (playing)
                 {
-                    sm.playsound(ret);
+                    sm.Playsound(ret);
                 }
             }
-            mg.UpdateAssist(this.Window.MarkSelectMode, this.Window.OnMouseMarkSelectMode);
-            mg.Grid.Hidden = !this.Window.DisplayGrid;
-            mg.Kasi.Text = this.Window.CurrentKasi;
-            mg.MarkPointDrawer.DrawAngle = this.Window.DrawAngle;
+            mg.UpdateAssist(WindowUtility.Seekmain.MarkSelectMode, WindowUtility.Seekmain.OnMouseMarkSelectMode);
+            mg.Grid.Hidden = !this.Window.ViewModel.DisplayGrid;
+            mg.Kasi.Text = this.Window.ViewModel.CurrentKasi;
+            mg.MarkPointDrawer.DrawAngle = WindowUtility.PosAndAngleLoaderSaver.DrawAngle;
             mg.MarkPointDrawer.Hidden = !this.Window.DrawPoint;
             if (mg != null && !mg.Disposed)
             {
@@ -217,7 +220,7 @@ namespace PPDEditor
             try
             {
                 mg.InitializeMovie(fileName);
-                mg.Movie.Finished += m_Finished;
+                mg.Movie.Finished += Movie_Finished;
             }
             catch (Exception ex)
             {
@@ -235,16 +238,13 @@ namespace PPDEditor
                 mg.Dispose();
                 mg = null;
             }
-            if (sound != null)
-            {
-                sound.Dispose();
-                sound = null;
-            }
-            if (input != null)
-            {
-                input.Dispose();
-                input = null;
-            }
+
+            sound?.Dispose();
+            sound = null;
+            input?.Dispose();
+            input = null;
+            resourceManager?.Dispose();
+            resourceManager = null;
         }
     }
 }

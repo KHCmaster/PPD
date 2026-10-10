@@ -1,14 +1,18 @@
-﻿using Effect2D;
-using PPDConfiguration;
+using Effect2D;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Windows.Forms;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
+using System.Windows.Input;
+using System.Windows.Media;
 
 namespace Effect2DEditor
 {
-    public partial class TimeLine : CustomUserControl
+    /// <summary>
+    /// ステートを並べるタイムラインです。
+    /// </summary>
+    public class TimeLine : UserControl
     {
         //TODO
         //Undo Redo
@@ -27,6 +31,16 @@ namespace Effect2DEditor
         const int ItemHeight = 18;
         const int KeyWidth = 10;
         const int CircleDiameter = 8;
+
+        static readonly Brush selectedBrush = Brushes.LightBlue;
+        static readonly Brush timeLineAreaBrush = Brushes.WhiteSmoke;
+
+        readonly DrawingSurface surface;
+        readonly ScrollBar hScrollBar1;
+        readonly ScrollBar vScrollBar1;
+        readonly MenuItem キーステートを挿入ToolStripMenuItem;
+        readonly MenuItem ノーマルステートを挿入ToolStripMenuItem;
+        readonly MenuItem ステートを削除ToolStripMenuItem;
 
         bool mousedown;
         KeyOperationMode keyopmode = KeyOperationMode.None;
@@ -54,7 +68,10 @@ namespace Effect2DEditor
             get;
             set;
         }
-        public MainForm MainForm
+        /// <summary>
+        /// ステートの編集を履歴に残したり、カンバスを描き直したりするエディターです。
+        /// </summary>
+        public ViewModels.ITimeLineHost Host
         {
             get;
             set;
@@ -70,8 +87,8 @@ namespace Effect2DEditor
                 if (currentframe != value)
                 {
                     currentframe = value;
-                    if (EffectManager != null) EffectManager.Update(currentframe, null);
-                    if (MainForm != null) MainForm.RefreshCanvas();
+                    EffectManager?.Update(currentframe, null);
+                    Host?.RefreshCanvas();
                     DrawAndRefresh();
                 }
             }
@@ -89,57 +106,95 @@ namespace Effect2DEditor
 
         public TimeLine()
         {
-            InitializeComponent();
-            InitializeBuffer();
-            hScrollBar1.Maximum = 0;
-            hScrollBar1.Minimum = 0;
-            hScrollBar1.SmallChange = 1;
-            hScrollBar1.LargeChange = 1;
-            vScrollBar1.Maximum = 0;
-            vScrollBar1.Minimum = 0;
-            vScrollBar1.LargeChange = 1;
-            vScrollBar1.SmallChange = 1;
-            vScrollBar1.Scroll += vScrollBar1_Scroll;
-            hScrollBar1.Scroll += hScrollBar1_Scroll;
-            this.SizeChanged += TimeLine_SizeChanged;
-            this.MouseWheel += TimeLine_MouseWheel;
-        }
+            surface = new DrawingSurface { Render = Draw };
+            hScrollBar1 = new ScrollBar { Orientation = Orientation.Horizontal, Minimum = 0, Maximum = 0, SmallChange = 1, LargeChange = 1 };
+            vScrollBar1 = new ScrollBar { Orientation = Orientation.Vertical, Minimum = 0, Maximum = 0, SmallChange = 1, LargeChange = 1 };
+            var grid = new Grid();
+            grid.ColumnDefinitions.Add(new ColumnDefinition());
+            grid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+            grid.RowDefinitions.Add(new RowDefinition());
+            grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+            grid.Children.Add(surface);
+            Grid.SetColumn(vScrollBar1, 1);
+            grid.Children.Add(vScrollBar1);
+            Grid.SetRow(hScrollBar1, 1);
+            grid.Children.Add(hScrollBar1);
+            Content = grid;
 
-        public void SetLang(SettingReader setting)
-        {
-            if (setting != null)
+            キーステートを挿入ToolStripMenuItem = CreateMenuItem("InsertKeyState");
+            キーステートを挿入ToolStripMenuItem.Click += キーステートを挿入ToolStripMenuItem_Click;
+            ノーマルステートを挿入ToolStripMenuItem = CreateMenuItem("InsertNormalState");
+            ノーマルステートを挿入ToolStripMenuItem.Click += ノーマルステートを挿入ToolStripMenuItem_Click;
+            ステートを削除ToolStripMenuItem = CreateMenuItem("DeleteState");
+            ステートを削除ToolStripMenuItem.Click += ステートを削除ToolStripMenuItem_Click;
+            surface.ContextMenu = new ContextMenu
             {
-                キーステートを挿入ToolStripMenuItem.Text = setting["InsertKeyState"];
-                ノーマルステートを挿入ToolStripMenuItem.Text = setting["InsertNormalState"];
-                ステートを削除ToolStripMenuItem.Text = setting["DeleteState"];
-            }
+                Items = { キーステートを挿入ToolStripMenuItem, ノーマルステートを挿入ToolStripMenuItem, ステートを削除ToolStripMenuItem }
+            };
+            surface.ContextMenuOpening += ContextMenu_Opening;
+
+            vScrollBar1.Scroll += VScrollBar1_Scroll;
+            hScrollBar1.Scroll += HScrollBar1_Scroll;
+            surface.SizeChanged += TimeLine_SizeChanged;
+            surface.MouseWheel += TimeLine_MouseWheel;
+            surface.MouseDown += TimeLine_MouseDown;
+            surface.MouseMove += TimeLine_MouseMove;
+            surface.MouseUp += TimeLine_MouseUp;
         }
 
-        void hScrollBar1_Scroll(object sender, ScrollEventArgs e)
+        /// <summary>
+        /// 右クリックのメニューの項目を作ります。表示する文字は今の言語の文字にする。
+        /// </summary>
+        private static MenuItem CreateMenuItem(string textKey)
         {
+            var item = new MenuItem();
+            // UI の自動テストで探すための ID（言語ファイルのキー）
+            System.Windows.Automation.AutomationProperties.SetAutomationId(item, textKey + "MenuItem");
+            item.SetBinding(HeaderedItemsControl.HeaderProperty, new System.Windows.Data.Binding("[" + textKey + "]") { Source = ViewModels.LanguageTexts.Instance });
+            return item;
+        }
+
+        public void DrawAndRefresh()
+        {
+            surface.DrawAndRefresh();
+        }
+
+        private int HValue
+        {
+            get { return (int)hScrollBar1.Value; }
+        }
+
+        private int VValue
+        {
+            get { return (int)vScrollBar1.Value; }
+        }
+
+        void HScrollBar1_Scroll(object sender, ScrollEventArgs e)
+        {
+            hScrollBar1.Value = Math.Round(hScrollBar1.Value);
             DrawAndRefresh();
         }
 
-        void TimeLine_MouseWheel(object sender, MouseEventArgs e)
+        void TimeLine_MouseWheel(object sender, MouseWheelEventArgs e)
         {
-            int num = vScrollBar1.Value;
+            int num = VValue;
             if (e.Delta >= 0) num--;
             else num++;
             if (num >= vScrollBar1.Minimum && num <= vScrollBar1.Maximum)
             {
                 vScrollBar1.Value = num;
-                MainForm.RefreshTimeLine();
+                Host.RefreshTimeLine();
             }
         }
 
-        void TimeLine_SizeChanged(object sender, EventArgs e)
+        void TimeLine_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             if (EffectManager == null) return;
             ignorescroll = true;
             AdjustVScrollBar();
             AdjustHScrollBar();
             ignorescroll = false;
-            MainForm.RefreshTimeLine();
+            Host.RefreshTimeLine();
         }
         public void MoveVScroll(int lineindex)
         {
@@ -157,7 +212,7 @@ namespace Effect2DEditor
         }
         public void AdjustHScrollBar()
         {
-            int maxvalue = this.Width / KeyWidth;
+            int maxvalue = SurfaceWidth / KeyWidth;
             int maxframe = MaxKeyFrame;
             int val = maxvalue - maxframe;
             if (val < maxvalue / 2)
@@ -168,6 +223,14 @@ namespace Effect2DEditor
             {
                 hScrollBar1.Maximum = 0;
             }
+        }
+        private int SurfaceWidth
+        {
+            get { return (int)surface.ActualWidth; }
+        }
+        private int SurfaceHeight
+        {
+            get { return (int)surface.ActualHeight; }
         }
         private int MaxKeyFrame
         {
@@ -186,7 +249,7 @@ namespace Effect2DEditor
         {
             get
             {
-                return this.Width / KeyWidth;
+                return SurfaceWidth / KeyWidth;
             }
         }
         private int MaxItemNumber
@@ -200,33 +263,33 @@ namespace Effect2DEditor
         {
             get
             {
-                return Math.Min((this.Height - hScrollBar1.Height - TimeLineAreaHeight) / ItemHeight, EffectManager.Effects.Count);
+                return Math.Max(0, Math.Min((SurfaceHeight - TimeLineAreaHeight) / ItemHeight, EffectManager.Effects.Count));
             }
         }
         public int VScrollValue
         {
             get
             {
-                return vScrollBar1.Value;
+                return VValue;
             }
         }
         public void VScrollChangeValue(int diff)
         {
-            int num = vScrollBar1.Value + diff;
+            int num = VValue + diff;
             if (vScrollBar1.Minimum <= num && num <= vScrollBar1.Maximum) vScrollBar1.Value = num;
-            MainForm.RefreshTimeLine();
+            Host.RefreshTimeLine();
         }
-        void vScrollBar1_Scroll(object sender, ScrollEventArgs e)
+        void VScrollBar1_Scroll(object sender, ScrollEventArgs e)
         {
-            MainForm.RefreshTimeLine();
+            vScrollBar1.Value = Math.Round(vScrollBar1.Value);
+            Host.RefreshTimeLine();
         }
-        protected override void DrawToBuffer(Graphics g)
+        private void Draw(DrawingContext g)
         {
-            g.Clear(SystemColors.Control);
             if (EffectManager == null) return;
-            int itemcount = vScrollBar1.Value == vScrollBar1.Maximum ? ShownItemNumber : ShownItemNumber + 1;
+            int itemcount = VValue == (int)vScrollBar1.Maximum ? ShownItemNumber : ShownItemNumber + 1;
             DrawGrid(g, itemcount);
-            int iter = -vScrollBar1.Value;
+            int iter = -VValue;
             for (int i = EffectManager.Effects.Count - 1; i >= 0; i--)
             {
                 IEffect effect = EffectManager.Effects[i];
@@ -237,11 +300,16 @@ namespace Effect2DEditor
                     {
                         foreach (EffectStateRatioSet set in be.Sets.Values)
                         {
-                            if (first) DrawKey(new Point((set.StartFrame - hScrollBar1.Value) * KeyWidth, iter * ItemHeight + TimeLineAreaHeight), g, set.StartState == SelectedManager.State, true);
-                            DrawKey(new Point((set.EndFrame - hScrollBar1.Value) * KeyWidth, iter * ItemHeight + TimeLineAreaHeight), g, set.EndState == SelectedManager.State, IsKey(set));
-                            var rec = new Rectangle((set.StartFrame + 1 - hScrollBar1.Value) * KeyWidth, iter * ItemHeight + TimeLineAreaHeight, (set.EndFrame - set.StartFrame - 1) * KeyWidth, ItemHeight);
-                            g.FillRectangle(Brushes.White, rec);
-                            g.DrawRectangle(Pens.Black, rec);
+                            if (first) DrawKey((set.StartFrame - HValue) * KeyWidth, iter * ItemHeight + TimeLineAreaHeight, g, set.StartState == SelectedManager.State, true);
+                            DrawKey((set.EndFrame - HValue) * KeyWidth, iter * ItemHeight + TimeLineAreaHeight, g, set.EndState == SelectedManager.State, IsKey(set));
+                            var x = (set.StartFrame + 1 - HValue) * KeyWidth;
+                            var y = iter * ItemHeight + TimeLineAreaHeight;
+                            var width = (set.EndFrame - set.StartFrame - 1) * KeyWidth;
+                            if (width > 0)
+                            {
+                                g.DrawRectangle(Brushes.White, null, new Rect(x, y, width, ItemHeight));
+                            }
+                            DrawingSurface.DrawFrame(g, DrawingSurface.BlackPen, x, y, width, ItemHeight);
                             first = false;
                         }
                     }
@@ -250,78 +318,80 @@ namespace Effect2DEditor
             }
             DrawTimeLine(g, itemcount);
         }
-        private bool IsKey(EffectStateRatioSet set)
+        private static bool IsKey(EffectStateRatioSet set)
         {
             return set[RatioType.X] is ConstantRatioMaker;
         }
-        private void DrawTimeLine(Graphics g, int itemcount)
+        private void DrawTimeLine(DrawingContext g, int itemcount)
         {
-            g.FillRectangle(Brushes.WhiteSmoke, new Rectangle(0, 0, this.Width, TimeLineAreaHeight));
-            g.DrawRectangle(Pens.LightGray, new Rectangle(0, 0, this.Width, TimeLineAreaHeight));
-            g.FillRectangle(Brushes.Salmon, new Rectangle((currentframe - hScrollBar1.Value) * KeyWidth, 0, KeyWidth, TimeLineAreaHeight));
-            int maxnum = this.Width / KeyWidth;
+            g.DrawRectangle(timeLineAreaBrush, null, new Rect(0, 0, SurfaceWidth, TimeLineAreaHeight));
+            DrawingSurface.DrawFrame(g, DrawingSurface.LightGrayPen, 0, 0, SurfaceWidth, TimeLineAreaHeight);
+            g.DrawRectangle(Brushes.Salmon, null, new Rect((currentframe - HValue) * KeyWidth, 0, KeyWidth, TimeLineAreaHeight));
+            int maxnum = SurfaceWidth / KeyWidth;
             for (int i = 0; i <= maxnum; i++)
             {
-                g.DrawLine(Pens.LightGray, i * KeyWidth, TimeLineAreaHeight - 4, i * KeyWidth, TimeLineAreaHeight - 2);
-                if ((i + hScrollBar1.Value) % 5 == 0) g.DrawString((i + hScrollBar1.Value).ToString(), Font, Brushes.Black, new PointF(i * KeyWidth, 3));
+                DrawingSurface.DrawLine(g, DrawingSurface.LightGrayPen, i * KeyWidth, TimeLineAreaHeight - 4, i * KeyWidth, TimeLineAreaHeight - 2);
+                if ((i + HValue) % 5 == 0) surface.DrawText(g, (i + HValue).ToString(), Brushes.Black, i * KeyWidth, 3);
             }
-            g.DrawRectangle(Pens.Red, new Rectangle((currentframe - hScrollBar1.Value) * KeyWidth, 0, KeyWidth, TimeLineAreaHeight));
-            g.DrawLine(Pens.Red, (currentframe + 0.5f - hScrollBar1.Value) * KeyWidth, TimeLineAreaHeight, (currentframe + 0.5f - hScrollBar1.Value) * KeyWidth, TimeLineAreaHeight + itemcount * ItemHeight);
+            DrawingSurface.DrawFrame(g, DrawingSurface.RedPen, (currentframe - HValue) * KeyWidth, 0, KeyWidth, TimeLineAreaHeight);
+            var lineX = (currentframe + 0.5 - HValue) * KeyWidth;
+            DrawingSurface.DrawLine(g, DrawingSurface.RedPen, lineX, TimeLineAreaHeight, lineX, TimeLineAreaHeight + itemcount * ItemHeight);
         }
-        private void DrawGrid(Graphics g, int itemcount)
+        private void DrawGrid(DrawingContext g, int itemcount)
         {
-            g.FillRectangle(Brushes.White, new Rectangle(0, TimeLineAreaHeight, this.Width, itemcount * ItemHeight));
-            int maxnum = this.Width / KeyWidth;
+            g.DrawRectangle(Brushes.White, null, new Rect(0, TimeLineAreaHeight, SurfaceWidth, itemcount * ItemHeight));
+            int maxnum = SurfaceWidth / KeyWidth;
             for (int i = 0; i < maxnum; i++)
             {
-                if ((i + hScrollBar1.Value) % 5 == 0) g.FillRectangle(Brushes.WhiteSmoke, new Rectangle(KeyWidth * i, TimeLineAreaHeight, KeyWidth, itemcount * ItemHeight));
-                g.DrawLine(Pens.Silver, KeyWidth * i, TimeLineAreaHeight, KeyWidth * i, TimeLineAreaHeight + itemcount * ItemHeight);
+                if ((i + HValue) % 5 == 0) g.DrawRectangle(timeLineAreaBrush, null, new Rect(KeyWidth * i, TimeLineAreaHeight, KeyWidth, itemcount * ItemHeight));
+                DrawingSurface.DrawLine(g, DrawingSurface.SilverPen, KeyWidth * i, TimeLineAreaHeight, KeyWidth * i, TimeLineAreaHeight + itemcount * ItemHeight);
             }
             for (int i = 0; i < itemcount; i++)
             {
-                g.DrawLine(Pens.Silver, 0, TimeLineAreaHeight + ItemHeight * i, this.Width, TimeLineAreaHeight + ItemHeight * i);
+                DrawingSurface.DrawLine(g, DrawingSurface.SilverPen, 0, TimeLineAreaHeight + ItemHeight * i, SurfaceWidth, TimeLineAreaHeight + ItemHeight * i);
             }
         }
-        private void DrawKey(Point pos, Graphics g, bool selected, bool IsKey)
+        private static void DrawKey(int x, int y, DrawingContext g, bool selected, bool IsKey)
         {
-            var rec = new Rectangle(pos, new Size(KeyWidth, ItemHeight));
-            if (selected) g.FillRectangle(Brushes.LightBlue, pos.X, pos.Y, KeyWidth, ItemHeight);
-            else g.FillRectangle(Brushes.White, pos.X, pos.Y, KeyWidth, ItemHeight);
-            g.DrawRectangle(Pens.Black, rec);
-            rec = new Rectangle(pos.X + (KeyWidth - CircleDiameter) / 2, pos.Y + (ItemHeight - CircleDiameter) / 2, CircleDiameter, CircleDiameter);
-            if (IsKey) g.FillEllipse(Brushes.Black, rec);
-            else g.DrawEllipse(Pens.Black, rec);
+            g.DrawRectangle(selected ? selectedBrush : Brushes.White, null, new Rect(x, y, KeyWidth, ItemHeight));
+            DrawingSurface.DrawFrame(g, DrawingSurface.BlackPen, x, y, KeyWidth, ItemHeight);
+            var center = new Point(x + KeyWidth / 2.0 + 0.5, y + ItemHeight / 2.0 + 0.5);
+            if (IsKey) g.DrawEllipse(Brushes.Black, null, center, CircleDiameter / 2.0, CircleDiameter / 2.0);
+            else g.DrawEllipse(null, DrawingSurface.BlackPen, center, CircleDiameter / 2.0, CircleDiameter / 2.0);
         }
-        private int KeyIndex(int x)
+        private int KeyIndex(double x)
         {
-            return x / KeyWidth + hScrollBar1.Value;
+            return (int)(x / KeyWidth) + HValue;
         }
-        private int ItemIndex(int y)
+        private int ItemIndex(double y)
         {
-            return EffectManager.Effects.Count - 1 - (y - TimeLineAreaHeight) / ItemHeight - vScrollBar1.Value;
+            return EffectManager.Effects.Count - 1 - (int)((y - TimeLineAreaHeight) / ItemHeight) - VValue;
         }
-        private void TimeLine_MouseDown(object sender, MouseEventArgs e)
+        private void TimeLine_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (e.Button == MouseButtons.Right)
+            if (EffectManager == null) return;
+            var pos = e.GetPosition(surface);
+            if (e.ChangedButton == MouseButton.Right)
             {
-                pressedkeyindex = KeyIndex(e.X);
-                presseditemindex = ItemIndex(e.Y);
+                pressedkeyindex = KeyIndex(pos.X);
+                presseditemindex = ItemIndex(pos.Y);
             }
-            else
+            else if (e.ChangedButton == MouseButton.Left)
             {
-                if ((ModifierKeys & Keys.Control) == Keys.Control) keyopmode = KeyOperationMode.FixMove;
+                surface.CaptureMouse();
+                if (Keyboard.Modifiers.HasFlag(ModifierKeys.Control)) keyopmode = KeyOperationMode.FixMove;
                 else keyopmode = KeyOperationMode.Move;
-                var itemindex = ItemIndex(e.Y);
-                if (e.Y >= TimeLineAreaHeight && itemindex >= 0 && itemindex < EffectManager.Effects.Count)
+                var itemindex = ItemIndex(pos.Y);
+                if (pos.Y >= TimeLineAreaHeight && itemindex >= 0 && itemindex < EffectManager.Effects.Count)
                 {
                     mousedown = true;
-                    MainForm.PropertyDock.IsRatioMakerAvailable = false;
+                    Host.IsRatioMakerAvailable = false;
                     SelectedManager.Effect = EffectManager.Effects[itemindex];
-                    FindKey(itemindex, e.X);
+                    FindKey(itemindex, pos.X);
                 }
-                else if (e.Y >= 0 && e.Y <= TimeLineAreaHeight)
+                else if (pos.Y >= 0 && pos.Y <= TimeLineAreaHeight)
                 {
-                    var keyindex = KeyIndex(e.X);
+                    var keyindex = KeyIndex(pos.X);
                     if (keyindex < 0) keyindex = 0;
                     CurrentFrame = keyindex;
                     movetimeline = true;
@@ -332,7 +402,7 @@ namespace Effect2DEditor
                 }
             }
         }
-        private void FindKey(int itemindex, int x)
+        private void FindKey(int itemindex, double x)
         {
             var keyindex = KeyIndex(x);
             foreach (EffectStateRatioSet set in EffectManager.Effects[itemindex].Sets.Values)
@@ -343,14 +413,14 @@ namespace Effect2DEditor
                     newframe = keyindex;
                     SelectedManager.Set = set;
                     SelectedManager.State = set.StartState;
-                    MainForm.PropertyDock.IsRatioMakerAvailable = false;
+                    Host.IsRatioMakerAvailable = false;
                     return;
                 }
                 else if (set.EndFrame == keyindex)
                 {
                     beforeframe = keyindex;
                     newframe = keyindex;
-                    MainForm.PropertyDock.IsRatioMakerAvailable = !IsKey(set);
+                    Host.IsRatioMakerAvailable = !IsKey(set);
                     SelectedManager.Set = set;
                     SelectedManager.State = set.EndState;
                     return;
@@ -361,9 +431,11 @@ namespace Effect2DEditor
 
         private void TimeLine_MouseMove(object sender, MouseEventArgs e)
         {
+            if (EffectManager == null) return;
+            var pos = e.GetPosition(surface);
             if (movetimeline)
             {
-                var keyindex = KeyIndex(e.X);
+                var keyindex = KeyIndex(pos.X);
                 if (keyindex < 0) keyindex = 0;
                 CurrentFrame = keyindex;
             }
@@ -374,7 +446,7 @@ namespace Effect2DEditor
                     return;
                 }
 
-                var keyindex = KeyIndex(e.X);
+                var keyindex = KeyIndex(pos.X);
                 switch (keyopmode)
                 {
                     case KeyOperationMode.Move:
@@ -402,12 +474,11 @@ namespace Effect2DEditor
                         }
                         SelectedManager.Effect.CheckFrameLength();
                         AdjustHScrollBar();
-                        if (keyindex - hScrollBar1.Value < 0) GainHScroll(-1);
-                        else if (keyindex - hScrollBar1.Value > MaxVisibleFrameCount) GainHScroll(1);
+                        if (keyindex - HValue < 0) GainHScroll(-1);
+                        else if (keyindex - HValue > MaxVisibleFrameCount) GainHScroll(1);
                         DrawAndRefresh();
                         break;
                     case KeyOperationMode.FixMove:
-                        if (keyindex < 0) keyindex = 0;
                         if (SelectedManager.Set.StartState == SelectedManager.State)
                         {
                             keyopmode = KeyOperationMode.RightMoveOnly;
@@ -481,67 +552,70 @@ namespace Effect2DEditor
         }
         private void GainHScroll(int diff)
         {
-            int val = diff + hScrollBar1.Value;
+            int val = diff + HValue;
             if (hScrollBar1.Minimum <= val && val <= hScrollBar1.Maximum) hScrollBar1.Value = val;
         }
-        private void TimeLine_MouseUp(object sender, MouseEventArgs e)
+        private void TimeLine_MouseUp(object sender, MouseButtonEventArgs e)
         {
+            if (e.ChangedButton != MouseButton.Left)
+            {
+                return;
+            }
+            surface.ReleaseMouseCapture();
             if (mousedown && beforeframe != newframe && keyopmode != KeyOperationMode.FixMove && keyopmode != KeyOperationMode.None)
             {
                 SelectedManager.Effect.CheckFrameLength();
-                MainForm.MoveState(beforeframe, newframe, keyopmode);
+                Host.MoveState(beforeframe, newframe, keyopmode);
             }
             mousedown = false;
             movetimeline = false;
         }
 
-        private void キーステートを挿入ToolStripMenuItem_Click(object sender, EventArgs e)
+        private void キーステートを挿入ToolStripMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            MainForm.AddState(presseditemindex, pressedkeyindex, true);
+            Host.AddState(presseditemindex, pressedkeyindex, true);
         }
 
-        private void ノーマルステートを挿入ToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ノーマルステートを挿入ToolStripMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            MainForm.AddState(presseditemindex, pressedkeyindex, false);
+            Host.AddState(presseditemindex, pressedkeyindex, false);
         }
 
-        private void contextMenuStrip1_Opening(object sender, CancelEventArgs e)
+        private void ContextMenu_Opening(object sender, ContextMenuEventArgs e)
         {
-            if (presseditemindex < 0 || presseditemindex >= EffectManager.Effects.Count)
+            if (EffectManager == null || presseditemindex < 0 || presseditemindex >= EffectManager.Effects.Count)
             {
-                e.Cancel = true;
-                //MessageBox.Show("範囲外です:EffectIndex");
+                e.Handled = true;
                 return;
             }
             if (pressedkeyindex < 0)
             {
-                e.Cancel = true;
-                //MessageBox.Show("負のフレーム数です");
+                e.Handled = true;
                 return;
             }
             foreach (EffectStateRatioSet set in EffectManager.Effects[presseditemindex].Sets.Values)
             {
                 if (set.StartFrame == pressedkeyindex || set.EndFrame == pressedkeyindex)
                 {
-                    キーステートを挿入ToolStripMenuItem.Enabled = false;
-                    ノーマルステートを挿入ToolStripMenuItem.Enabled = false;
-                    ステートを削除ToolStripMenuItem.Enabled = true;
+                    キーステートを挿入ToolStripMenuItem.IsEnabled = false;
+                    ノーマルステートを挿入ToolStripMenuItem.IsEnabled = false;
+                    ステートを削除ToolStripMenuItem.IsEnabled = true;
                     return;
                 }
             }
-            キーステートを挿入ToolStripMenuItem.Enabled = true;
-            ノーマルステートを挿入ToolStripMenuItem.Enabled = true;
-            ステートを削除ToolStripMenuItem.Enabled = false;
+            キーステートを挿入ToolStripMenuItem.IsEnabled = true;
+            ノーマルステートを挿入ToolStripMenuItem.IsEnabled = true;
+            ステートを削除ToolStripMenuItem.IsEnabled = false;
         }
 
-        private void ステートを削除ToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ステートを削除ToolStripMenuItem_Click(object sender, RoutedEventArgs e)
         {
             if (EffectManager.Effects[presseditemindex].Sets.Count <= 1)
             {
                 MessageBox.Show("削除するには少なくとも3つ以上のステートが必要です");
                 return;
             }
-            MainForm.DeleteState(presseditemindex, pressedkeyindex);
+            Host.DeleteState(presseditemindex, pressedkeyindex);
         }
     }
 }

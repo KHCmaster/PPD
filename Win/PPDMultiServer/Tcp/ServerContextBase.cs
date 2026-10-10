@@ -9,7 +9,7 @@ namespace PPDMultiServer.Tcp
     public abstract class ServerContextBase : IDisposable
     {
         private bool disposed;
-        Dictionary<Type, Tuple<object, MethodInfo>> processors;
+        readonly Dictionary<Type, Tuple<object, MethodInfo>> processors = [];
 
         public bool Disposed
         {
@@ -29,11 +29,6 @@ namespace PPDMultiServer.Tcp
             set;
         }
 
-        protected ServerContextBase(ServerContextBase previousContext)
-        {
-            processors = new Dictionary<Type, Tuple<object, MethodInfo>>();
-        }
-
         protected void AddProcessor<T>(Action<T> processor) where T : NetworkData
         {
             processors[typeof(T)] = Tuple.Create(processor.Target, processor.Method);
@@ -48,7 +43,7 @@ namespace PPDMultiServer.Tcp
         {
             if (processors.TryGetValue(networkData.GetType(), out Tuple<object, MethodInfo> info))
             {
-                info.Item2.Invoke(info.Item1, new object[] { networkData });
+                info.Item2.Invoke(info.Item1, [networkData]);
             }
         }
 
@@ -62,13 +57,13 @@ namespace PPDMultiServer.Tcp
 
         }
 
-        public virtual void Dispose()
+        public void Dispose()
         {
             Dispose(true);
             GC.SuppressFinalize(this);
         }
 
-        private void Dispose(bool disposing)
+        protected virtual void Dispose(bool disposing)
         {
             if (!this.disposed)
             {

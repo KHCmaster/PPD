@@ -9,35 +9,22 @@ namespace FlowScriptEnginePPD.FlowSourceObjects.Environment
     {
         public override object GetPropertyValue(string propertyName)
         {
-            switch (propertyName)
+            return propertyName switch
             {
-                case "AccountId":
-                    return AccountId;
-                case "DrawSameColorAtSameTimingDisabled":
-                    return DrawSameColorAtSameTimingDisabled;
-                case "FontSize":
-                    return FontSize;
-                case "FPS":
-                    return FPS;
-                case "IsLogined":
-                    return IsLogined;
-                case "LastDrawTime":
-                    return LastDrawTime;
-                case "LastUpdateTime":
-                    return LastUpdateTime;
-                case "MonitorLatency":
-                    return MonitorLatency;
-                case "MovieLatency":
-                    return MovieLatency;
-                case "UserName":
-                    return UserName;
-                case "WindowHeight":
-                    return WindowHeight;
-                case "WindowWidth":
-                    return WindowWidth;
-                default:
-                    return null;
-            }
+                "AccountId" => AccountId,
+                "DrawSameColorAtSameTimingDisabled" => DrawSameColorAtSameTimingDisabled,
+                "FontSize" => FontSize,
+                "FPS" => FPS,
+                "IsLogined" => IsLogined,
+                "LastDrawTime" => LastDrawTime,
+                "LastUpdateTime" => LastUpdateTime,
+                "MonitorLatency" => MonitorLatency,
+                "MovieLatency" => MovieLatency,
+                "UserName" => UserName,
+                "WindowHeight" => WindowHeight,
+                "WindowWidth" => WindowWidth,
+                _ => null,
+            };
         }
 
 

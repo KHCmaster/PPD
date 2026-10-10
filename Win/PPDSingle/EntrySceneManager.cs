@@ -51,7 +51,7 @@ namespace PPDSingle
                 ModManager.Instance.WaitForLoadFinish();
                 foreach (var mod in mods)
                 {
-                    var found = ModManager.Instance.Root.Descendants().OfType<ModInfo>().FirstOrDefault(m => m.ModPath.ToLower() == mod.ToLower());
+                    var found = ModManager.Instance.Root.Descendants().OfType<ModInfo>().FirstOrDefault(m => m.ModPath.Equals(mod, StringComparison.CurrentCultureIgnoreCase));
                     if (found != null)
                     {
                         modInfos.Add(found);
@@ -69,8 +69,8 @@ namespace PPDSingle
             gameutility.SpeedScale = 1;
             gameutility.Random = false;
             gameutility.Connect = connect == "1";
-            gameutility.AppliedMods = modInfos.Count > 0 ? modInfos.ToArray() : null;
-            float.TryParse(starttime, out float starttimevalue);
+            gameutility.AppliedMods = modInfos.Count > 0 ? [.. modInfos] : null;
+            _ = float.TryParse(starttime, out float starttimevalue);
             dic = new Dictionary<string, object>
             {
                 { "PPDGameUtility", gameutility },
@@ -83,23 +83,17 @@ namespace PPDSingle
             };
             return new MainGame(device);
         }
-        private Difficulty ParseDifficulty(string difficuly)
+        private static Difficulty ParseDifficulty(string difficuly)
         {
-            switch (difficuly.ToLower())
+            return difficuly.ToLower() switch
             {
-                case "base":
-                    return Difficulty.Other;
-                case "easy":
-                    return Difficulty.Easy;
-                case "normal":
-                    return Difficulty.Normal;
-                case "hard":
-                    return Difficulty.Hard;
-                case "extreme":
-                    return Difficulty.Extreme;
-                default:
-                    return Difficulty.Other;
-            }
+                "base" => Difficulty.Other,
+                "easy" => Difficulty.Easy,
+                "normal" => Difficulty.Normal,
+                "hard" => Difficulty.Hard,
+                "extreme" => Difficulty.Extreme,
+                _ => Difficulty.Other,
+            };
         }
     }
 }

@@ -1,15 +1,15 @@
 ﻿using System;
-using System.Windows.Forms;
+using System.Threading;
 
 namespace PPDUpdater.Executor
 {
-    abstract class CExecutor
+    /// <summary>
+    /// 別のスレッドで処理を行い、終了と進み具合を作ったスレッドの <see cref="SynchronizationContext"/> に通知する処理の基底クラスです。
+    /// </summary>
+    abstract class CExecutor(SynchronizationContext context)
     {
-        public delegate void VoidDelegate();
-
         public event EventHandler Finished;
         public event EventHandler Progressed;
-        Control control;
 
         public bool Success
         {
@@ -29,11 +29,6 @@ namespace PPDUpdater.Executor
             protected set;
         }
 
-        protected CExecutor(Control control)
-        {
-            this.control = control;
-        }
-
         public virtual void Execute()
         {
             Progress = 0;
@@ -41,28 +36,12 @@ namespace PPDUpdater.Executor
 
         protected void OnFinish()
         {
-            if (control.InvokeRequired)
-            {
-                control.Invoke(new VoidDelegate(OnFinish));
-                return;
-            }
-            if (Finished != null)
-            {
-                Finished.Invoke(this, EventArgs.Empty);
-            }
+            context.Send(_ => Finished?.Invoke(this, EventArgs.Empty), null);
         }
 
         protected void OnProgress()
         {
-            if (control.InvokeRequired)
-            {
-                control.Invoke(new VoidDelegate(OnProgress));
-                return;
-            }
-            if (Progressed != null)
-            {
-                Progressed.Invoke(this, EventArgs.Empty);
-            }
+            context.Send(_ => Progressed?.Invoke(this, EventArgs.Empty), null);
         }
     }
 }

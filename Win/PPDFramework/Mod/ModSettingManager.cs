@@ -1,4 +1,6 @@
-﻿using SharpDX;
+﻿using System.Numerics;
+using PPDMath;
+using Color4 = Vortice.Mathematics.Color4;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,8 +17,8 @@ namespace PPDFramework.Mod
         /// </summary>
         public const string MODSTART = "PPD_MOD_START";
 
-        Dictionary<string, object> settings;
-        List<ModSetting> modSettings;
+        readonly Dictionary<string, object> settings;
+        readonly List<ModSetting> modSettings;
 
         /// <summary>
         /// MODの設定値を取得、設定します。
@@ -42,7 +44,7 @@ namespace PPDFramework.Mod
         {
             get
             {
-                return modSettings.ToArray();
+                return [.. modSettings];
             }
         }
 
@@ -53,7 +55,7 @@ namespace PPDFramework.Mod
         {
             get
             {
-                return settings.ToArray();
+                return [.. settings];
             }
         }
 
@@ -62,8 +64,8 @@ namespace PPDFramework.Mod
         /// </summary>
         public ModSettingManager()
         {
-            settings = new Dictionary<string, object>();
-            modSettings = new List<ModSetting>();
+            settings = [];
+            modSettings = [];
         }
 
         /// <summary>

@@ -2,14 +2,8 @@
 
 namespace FlowScriptDrawControl.Command
 {
-    class RemoveScopeCommand : ScopeCommandBase
+    class RemoveScopeCommand(FlowAreaControl flowAreaControl, ScopeControl scopeControl, ScopeControl parentScopeControl) : ScopeCommandBase(flowAreaControl, scopeControl, parentScopeControl)
     {
-        public RemoveScopeCommand(FlowAreaControl flowAreaControl, ScopeControl scopeControl, ScopeControl parentScopeControl) :
-            base(flowAreaControl, scopeControl, parentScopeControl)
-        {
-
-        }
-
         public override void Execute()
         {
             RemoveScope();

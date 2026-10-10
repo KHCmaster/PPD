@@ -3,14 +3,9 @@ using FlowScriptDrawControl.Model;
 
 namespace FlowScriptDrawControl.Command
 {
-    class RemoveSelectableFromScopeCommand : EditScopeCommandBase
+    class RemoveSelectableFromScopeCommand(FlowAreaControl flowAreaControl, ScopeControl scopeControl, PositionableControl positionableControl) : EditScopeCommandBase(flowAreaControl, scopeControl, positionableControl)
     {
         private Scope previousScope;
-
-        public RemoveSelectableFromScopeCommand(FlowAreaControl flowAreaControl, ScopeControl scopeControl, PositionableControl positionableControl)
-            : base(flowAreaControl, scopeControl, positionableControl)
-        {
-        }
 
         public override void Execute()
         {

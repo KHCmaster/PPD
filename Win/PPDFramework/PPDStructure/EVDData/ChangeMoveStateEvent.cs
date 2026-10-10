@@ -18,18 +18,13 @@
     /// <summary>
     /// 移動タイプ変更イベント
     /// </summary>
-    public class ChangeMoveStateEvent : IEVDData
+    /// <remarks>
+    /// コンストラクタ
+    /// </remarks>
+    /// <param name="time">時間</param>
+    /// <param name="movestate">移動タイプ</param>
+    public class ChangeMoveStateEvent(float time, MoveState movestate) : IEVDData(time, EventType.ChangeMoveState)
     {
-        /// <summary>
-        /// コンストラクタ
-        /// </summary>
-        /// <param name="time">時間</param>
-        /// <param name="movestate">移動タイプ</param>
-        public ChangeMoveStateEvent(float time, MoveState movestate)
-            : base(time, EventType.ChangeMoveState)
-        {
-            MoveState = movestate;
-        }
 
         /// <summary>
         /// 移動タイプ
@@ -38,6 +33,6 @@
         {
             get;
             private set;
-        }
+        } = movestate;
     }
 }

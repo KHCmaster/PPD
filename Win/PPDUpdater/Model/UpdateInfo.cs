@@ -2,37 +2,30 @@
 
 namespace PPDUpdater.Model
 {
-    class UpdateInfo
+    class UpdateInfo(string version, string urlpath)
     {
         public VersionInfo VersionInfo
         {
             get;
             private set;
-        }
+        } = new VersionInfo(version);
 
         public string UrlPath
         {
             get;
             private set;
-        }
+        } = urlpath;
 
         public AssemblyType AssemblyType
         {
             get;
             private set;
-        }
+        } = AssemblyType.x64;
 
         public string FilePath
         {
             get;
             set;
-        }
-
-        public UpdateInfo(string version, string urlpath)
-        {
-            VersionInfo = new VersionInfo(version);
-            UrlPath = urlpath;
-            AssemblyType = AssemblyType.x64;
         }
 
         public override string ToString()

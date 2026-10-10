@@ -1,4 +1,5 @@
-﻿using SharpDX;
+﻿using System.Numerics;
+using PPDMath;
 using System.Collections.Generic;
 using System.Windows.Forms;
 
@@ -9,11 +10,11 @@ namespace PPDFramework
     /// </summary>
     public class MouseManager
     {
-        private Control control;
+        private readonly Control control;
         private Vector2 offset;
         private Vector2 scale;
-        private List<MouseEvent> mouseEvents;
-        private Queue<MouseInfo> mouseInfos;
+        private readonly List<MouseEvent> mouseEvents;
+        private readonly Queue<MouseInfo> mouseInfos;
 
         /// <summary>
         /// コンストラクタ
@@ -26,24 +27,24 @@ namespace PPDFramework
             this.control = control;
             this.offset = offset;
             this.scale = scale;
-            mouseEvents = new List<MouseEvent>();
+            mouseEvents = [];
             mouseInfos = new Queue<MouseInfo>();
-            control.MouseDown += control_MouseDown;
-            control.MouseUp += control_MouseUp;
-            control.MouseWheel += control_MouseWheel;
+            control.MouseDown += Control_MouseDown;
+            control.MouseUp += Control_MouseUp;
+            control.MouseWheel += Control_MouseWheel;
         }
 
-        void control_MouseWheel(object sender, MouseEventArgs e)
+        void Control_MouseWheel(object sender, MouseEventArgs e)
         {
             mouseEvents.Add(new MouseEvent(ConvertToVector2(e.X, e.Y), e.Delta, MouseEvent.MouseEventType.Wheel));
         }
 
-        void control_MouseUp(object sender, MouseEventArgs e)
+        void Control_MouseUp(object sender, MouseEventArgs e)
         {
             mouseEvents.Add(new MouseEvent(ConvertToVector2(e.X, e.Y), true, ConvertToEventType(e.Button)));
         }
 
-        void control_MouseDown(object sender, MouseEventArgs e)
+        void Control_MouseDown(object sender, MouseEventArgs e)
         {
             mouseEvents.Add(new MouseEvent(ConvertToVector2(e.X, e.Y), false, ConvertToEventType(e.Button)));
         }
@@ -53,7 +54,7 @@ namespace PPDFramework
             return new Vector2((x - offset.X) / scale.X, (y - offset.Y) / scale.Y);
         }
 
-        private MouseEvent.MouseEventType ConvertToEventType(MouseButtons buttons)
+        private static MouseEvent.MouseEventType ConvertToEventType(MouseButtons buttons)
         {
             if ((buttons & MouseButtons.Left) == MouseButtons.Left)
             {
@@ -79,7 +80,7 @@ namespace PPDFramework
             control.Invoke(() =>
             {
                 var p = control.PointToClient(Cursor.Position);
-                var mouseInfo = new MouseInfo(ConvertToVector2(p.X, p.Y), mouseEvents.ToArray());
+                var mouseInfo = new MouseInfo(ConvertToVector2(p.X, p.Y), [.. mouseEvents]);
                 mouseEvents.Clear();
                 lock (mouseInfos)
                 {

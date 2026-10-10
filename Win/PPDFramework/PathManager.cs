@@ -6,9 +6,13 @@ namespace PPDFramework
     /// <summary>
     /// パスマネージャーのクラスです。
     /// </summary>
-    public class PathManager
+    /// <remarks>
+    /// コンストラクタです。
+    /// </remarks>
+    /// <param name="baseDir"></param>
+    public class PathManager(string baseDir)
     {
-        string baseDir;
+        readonly string baseDir = baseDir;
 
         /// <summary>
         /// 基底フォルダを取得します。
@@ -16,15 +20,6 @@ namespace PPDFramework
         public string BaseDir
         {
             get { return baseDir; }
-        }
-
-        /// <summary>
-        /// コンストラクタです。
-        /// </summary>
-        /// <param name="baseDir"></param>
-        public PathManager(string baseDir)
-        {
-            this.baseDir = baseDir;
         }
 
         /// <summary>

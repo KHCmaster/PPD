@@ -1,4 +1,5 @@
-﻿using FlowScriptEngine;
+﻿using PPDMath;
+using FlowScriptEngine;
 
 namespace FlowScriptEngineSlimDX.FlowSourceObjects.Matrix
 {
@@ -11,7 +12,7 @@ namespace FlowScriptEngineSlimDX.FlowSourceObjects.Matrix
         }
 
         [ToolTipText("Matrix_Determinant_Matrix_Summary")]
-        public SharpDX.Matrix Matrix
+        public System.Numerics.Matrix4x4 Matrix
         {
             private get;
             set;

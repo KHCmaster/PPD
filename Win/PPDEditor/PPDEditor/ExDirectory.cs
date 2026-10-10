@@ -1,4 +1,6 @@
-﻿namespace System.IO
+﻿using System.IO;
+
+namespace PPDEditor
 {
     public static class ExDirectory
     {

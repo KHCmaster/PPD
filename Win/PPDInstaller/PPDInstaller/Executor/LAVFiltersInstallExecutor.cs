@@ -1,27 +1,22 @@
 ﻿using System;
-using System.Windows.Forms;
+using System.Threading;
 
 namespace PPDInstaller.Executor
 {
-    class LAVFiltersInstallExecutor : CExecutor
+    class LAVFiltersInstallExecutor(string filePath, SynchronizationContext context) : CExecutor(context)
     {
-        public static Uri lavFiltersUri = new Uri("http://lavfilters.googlecode.com/files/LAVFilters-0.58.2.exe");
-        System.Net.WebClient downloadClient = new System.Net.WebClient();
+        public static Uri lavFiltersUri = new("http://lavfilters.googlecode.com/files/LAVFilters-0.58.2.exe");
+        readonly FileDownloader downloadClient = new();
 
-        private string filePath;
-        public LAVFiltersInstallExecutor(string filePath, Control control)
-            : base(control)
-        {
-            this.filePath = filePath;
-        }
+        private readonly string filePath = filePath;
 
         public override void Execute()
         {
             base.Execute();
             try
             {
-                downloadClient.DownloadProgressChanged += downloadClient_DownloadProgressChanged;
-                downloadClient.DownloadFileCompleted += downloadClient_DownloadFileCompleted;
+                downloadClient.ProgressChanged += DownloadClient_DownloadProgressChanged;
+                downloadClient.Completed += DownloadClient_DownloadFileCompleted;
                 downloadClient.DownloadFileAsync(lavFiltersUri, filePath);
                 System.Threading.Thread.Sleep(1000);
             }
@@ -32,12 +27,12 @@ namespace PPDInstaller.Executor
             }
         }
 
-        void downloadClient_DownloadFileCompleted(object sender, System.ComponentModel.AsyncCompletedEventArgs e)
+        void DownloadClient_DownloadFileCompleted(Exception error)
         {
             try
             {
-                downloadClient.DownloadProgressChanged -= downloadClient_DownloadProgressChanged;
-                downloadClient.DownloadFileCompleted -= downloadClient_DownloadFileCompleted;
+                downloadClient.ProgressChanged -= DownloadClient_DownloadProgressChanged;
+                downloadClient.Completed -= DownloadClient_DownloadFileCompleted;
                 var p = new System.Diagnostics.Process();
                 var psi = new System.Diagnostics.ProcessStartInfo
                 {
@@ -56,9 +51,9 @@ namespace PPDInstaller.Executor
             OnFinish();
         }
 
-        void downloadClient_DownloadProgressChanged(object sender, System.Net.DownloadProgressChangedEventArgs e)
+        void DownloadClient_DownloadProgressChanged(int progressPercentage)
         {
-            Progress = e.ProgressPercentage.ToString();
+            Progress = progressPercentage.ToString();
             OnProgress();
         }
     }

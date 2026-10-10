@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Xml;
 
 namespace Effect2D
@@ -26,7 +27,7 @@ namespace Effect2D
     /// </summary>
     public static class EffectLoader
     {
-        static Hashtable table = new Hashtable(128);
+        static readonly Hashtable table = new(128);
         /// <summary>
         /// エフェクトを読み込む
         /// </summary>
@@ -52,10 +53,8 @@ namespace Effect2D
             {
                 return cached;
             }
-            using (FileStream fs = File.Open(filename, FileMode.Open))
-            {
-                return Load(fs, filename, BeCached, callback, f => File.Open(f, FileMode.Open));
-            }
+            using FileStream fs = File.Open(filename, FileMode.Open);
+            return Load(fs, filename, BeCached, callback, f => File.Open(f, FileMode.Open));
         }
 
         /// <summary>
@@ -126,7 +125,7 @@ namespace Effect2D
 
         private static void CallReadResourceCallback(IEffect em, ReadResourceCallBack callback)
         {
-            foreach (BaseEffect effect in em.Effects)
+            foreach (BaseEffect effect in em.Effects.Cast<BaseEffect>())
             {
                 if (effect.Effects.Count == 0)
                 {
@@ -164,8 +163,7 @@ namespace Effect2D
                     switch (reader.Name)
                     {
                         case "Effects":
-                            float val = 0;
-                            if (float.TryParse(reader.GetAttribute("FPS"), NumberStyles.Float, CultureInfo.InvariantCulture, out val))
+                            if (float.TryParse(reader.GetAttribute("FPS"), NumberStyles.Float, CultureInfo.InvariantCulture, out float val))
                             {
                                 manager.FPS = val;
                             }
@@ -193,14 +191,12 @@ namespace Effect2D
 
             foreach (BaseEffect baseEffect in list)
             {
-                using (Stream stream = streamCallBack(baseEffect.Filename))
+                using Stream stream = streamCallBack(baseEffect.Filename);
+                var em = Load(stream, baseEffect.Filename, callback, streamCallBack);
+                if (em != null)
                 {
-                    var em = Load(stream, baseEffect.Filename, callback, streamCallBack);
-                    if (em != null)
-                    {
-                        baseEffect.Effects = em.Effects;
-                        baseEffect.FPS = em.FPS;
-                    }
+                    baseEffect.Effects = em.Effects;
+                    baseEffect.FPS = em.FPS;
                 }
             }
             return manager;
@@ -281,7 +277,7 @@ namespace Effect2D
             }
             if (bcps.Count >= 2)
             {
-                set.BAnalyzer = new BezierAnalyzer(bcps.ToArray());
+                set.BAnalyzer = new BezierAnalyzer([.. bcps]);
             }
             reader.Close();
         }
@@ -373,7 +369,7 @@ namespace Effect2D
                 }
             }
 
-            return ret.ToArray();
+            return [.. ret];
         }
 
         /// <summary>

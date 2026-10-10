@@ -1,6 +1,8 @@
 ﻿using PPDFramework.Texture;
 using PPDFramework.Vertex;
-using SharpDX;
+using System.Numerics;
+using PPDMath;
+using RectangleF = Vortice.Mathematics.Rect;
 
 namespace PPDFramework.Resource
 {

@@ -1,7 +1,10 @@
 ﻿using FlowScriptEngine;
 using PPDCoreModel;
 using PPDFramework;
-using SharpDX;
+using System.Numerics;
+using PPDMath;
+using Color4 = Vortice.Mathematics.Color4;
+using Color = Vortice.Mathematics.Color;
 
 namespace FlowScriptEnginePPD.FlowSourceObjects.Graphics.Text
 {
@@ -19,9 +22,9 @@ namespace FlowScriptEnginePPD.FlowSourceObjects.Graphics.Text
         {
             base.OnInitialize();
 
-            if (this.Manager.Items.ContainsKey("ResourceManager"))
+            if (this.Manager.Items.TryGetValue("ResourceManager", out object value))
             {
-                resourceManager = this.Manager.Items["ResourceManager"] as ScriptResourceManager;
+                resourceManager = value as ScriptResourceManager;
             }
         }
 
@@ -67,10 +70,7 @@ namespace FlowScriptEnginePPD.FlowSourceObjects.Graphics.Text
             SetValue(nameof(Text));
             SetValue(nameof(Color));
 
-            if (Text == null)
-            {
-                Text = "";
-            }
+            Text ??= "";
 
             if (resourceManager != null)
             {

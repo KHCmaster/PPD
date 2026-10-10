@@ -1,4 +1,4 @@
-﻿using GalaSoft.MvvmLight;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,7 +6,7 @@ using System.Windows.Media;
 
 namespace FlowScriptDrawControl.Model
 {
-    public class Item : ObservableObject
+    public class Item(string[] replacedNames) : ObservableObject
     {
         private string name;
         private string value;
@@ -24,15 +24,9 @@ namespace FlowScriptDrawControl.Model
 
         private Connection inConnection;
 
-        private List<Connection> outConnections;
+        private readonly List<Connection> outConnections = [];
 
         public event EventHandler ConnectionChanged;
-
-        public Item(string[] replacedNames)
-        {
-            ReplacedNames = replacedNames;
-            outConnections = new List<Connection>();
-        }
 
         public bool IsMouseOver
         {
@@ -42,7 +36,7 @@ namespace FlowScriptDrawControl.Model
                 if (isMouseOver != value)
                 {
                     isMouseOver = value;
-                    RaisePropertyChanged("IsMouseOver");
+                    OnPropertyChanged(nameof(IsMouseOver));
                 }
             }
         }
@@ -51,7 +45,7 @@ namespace FlowScriptDrawControl.Model
         {
             get;
             private set;
-        }
+        } = replacedNames;
 
         public Connection InConnection
         {
@@ -69,7 +63,7 @@ namespace FlowScriptDrawControl.Model
         {
             get
             {
-                return outConnections.ToArray();
+                return [.. outConnections];
             }
         }
 
@@ -81,7 +75,7 @@ namespace FlowScriptDrawControl.Model
                 if (toolTip != value)
                 {
                     toolTip = value;
-                    RaisePropertyChanged("ToolTip");
+                    OnPropertyChanged(nameof(ToolTip));
                 }
             }
         }
@@ -93,15 +87,9 @@ namespace FlowScriptDrawControl.Model
             {
                 if (source != value)
                 {
-                    if (source != null)
-                    {
-                        source.PropertyChanged -= source_PropertyChanged;
-                    }
+                    source?.PropertyChanged -= Source_PropertyChanged;
                     source = value;
-                    if (source != null)
-                    {
-                        source.PropertyChanged += source_PropertyChanged;
-                    }
+                    source?.PropertyChanged += Source_PropertyChanged;
                     UpdateIsCollapsed();
                 }
             }
@@ -115,7 +103,7 @@ namespace FlowScriptDrawControl.Model
                 if (name != value)
                 {
                     name = value;
-                    RaisePropertyChanged("Name");
+                    OnPropertyChanged(nameof(Name));
                 }
             }
         }
@@ -128,7 +116,7 @@ namespace FlowScriptDrawControl.Model
                 if (this.value != value)
                 {
                     this.value = value;
-                    RaisePropertyChanged("Value");
+                    OnPropertyChanged(nameof(Value));
                     UpdateIsPropertyValueShown();
                     UpdateIsCollapsed();
                 }
@@ -143,7 +131,7 @@ namespace FlowScriptDrawControl.Model
                 if (type != value)
                 {
                     type = value;
-                    RaisePropertyChanged("Type");
+                    OnPropertyChanged(nameof(Type));
                 }
             }
         }
@@ -156,7 +144,7 @@ namespace FlowScriptDrawControl.Model
                 if (typeText != value)
                 {
                     typeText = value;
-                    RaisePropertyChanged("TypeText");
+                    OnPropertyChanged(nameof(TypeText));
                 }
             }
         }
@@ -169,7 +157,7 @@ namespace FlowScriptDrawControl.Model
                 if (typeColor != value)
                 {
                     typeColor = value;
-                    RaisePropertyChanged("TypeColor");
+                    OnPropertyChanged(nameof(TypeColor));
                 }
             }
         }
@@ -182,7 +170,7 @@ namespace FlowScriptDrawControl.Model
                 if (isOut != value)
                 {
                     isOut = value;
-                    RaisePropertyChanged("IsOut");
+                    OnPropertyChanged(nameof(IsOut));
                     UpdateIsCollapsed();
                 }
             }
@@ -196,7 +184,7 @@ namespace FlowScriptDrawControl.Model
                 if (isCollapsed != value)
                 {
                     isCollapsed = value;
-                    RaisePropertyChanged("IsCollapsed");
+                    OnPropertyChanged(nameof(IsCollapsed));
                 }
             }
         }
@@ -209,7 +197,7 @@ namespace FlowScriptDrawControl.Model
                 if (isConnectable != value)
                 {
                     isConnectable = value;
-                    RaisePropertyChanged("IsConnectable");
+                    OnPropertyChanged(nameof(IsConnectable));
                 }
             }
         }
@@ -222,7 +210,7 @@ namespace FlowScriptDrawControl.Model
                 if (propertyType != value)
                 {
                     propertyType = value;
-                    RaisePropertyChanged("PropertyType");
+                    OnPropertyChanged(nameof(PropertyType));
                 }
             }
         }
@@ -235,7 +223,7 @@ namespace FlowScriptDrawControl.Model
                 if (isPropertyValueShown != value)
                 {
                     isPropertyValueShown = value;
-                    RaisePropertyChanged("IsPropertyValueShown");
+                    OnPropertyChanged(nameof(IsPropertyValueShown));
                 }
             }
         }
@@ -278,7 +266,7 @@ namespace FlowScriptDrawControl.Model
             IsPropertyValueShown = InConnection == null && Value != null;
         }
 
-        void source_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        void Source_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             if (e.PropertyName == "IsCollapsed")
             {

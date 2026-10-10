@@ -2,13 +2,9 @@
 
 namespace Effect2DEditor.Command
 {
-    class ClearEffectCommand : CommandBase
+    class ClearEffectCommand(EffectManager manager, string exp) : CommandBase(manager, exp)
     {
         IEffect[] array;
-        public ClearEffectCommand(EffectManager manager, string exp)
-            : base(manager, exp)
-        {
-        }
 
         public override void Undo()
         {

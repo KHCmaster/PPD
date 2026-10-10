@@ -9,13 +9,11 @@ namespace FlowScriptEngineBasic.FlowSourceObjects.Array
     {
         public override object GetPropertyValue(string propertyName)
         {
-            switch (propertyName)
+            return propertyName switch
             {
-                case "Index":
-                    return Index;
-                default:
-                    return null;
-            }
+                "Index" => Index,
+                _ => null,
+            };
         }
 
         protected override void SetPropertyValue(string propertyName, object value)

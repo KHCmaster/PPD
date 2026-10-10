@@ -29,7 +29,7 @@ namespace FlowScriptEngineBasic.FlowSourceObjects.Enumerable
                 SetValue(nameof(Enumerable));
                 if (enumerable == null)
                 {
-                    return System.Linq.Enumerable.Empty<object>();
+                    return [];
                 }
                 SetValue(nameof(Count));
                 return enumerable.Take(Count);

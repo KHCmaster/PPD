@@ -6,7 +6,8 @@ using PPDFrameworkCore;
 using PPDInput;
 using PPDMovie;
 using PPDSound;
-using SharpDX;
+using System.Numerics;
+using PPDMath;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -32,7 +33,7 @@ namespace PPD
         TimerManager timerManager;
 
         KeyConfigManager keyConfigManager;
-        GaussianFilter gaussianFilter = new GaussianFilter();
+        readonly GaussianFilter gaussianFilter = new();
 
         NotifyControl notifyControl;
 
@@ -130,8 +131,8 @@ namespace PPD
                 LoadNormal();
             }
             LoadCommon();
-            TextEditableControl.IMEStarted += control_IMEStarted;
-            TextEditableControl._EnabledChanged += control_EnabledChanged;
+            TextEditableControl.IMEStarted += Control_IMEStarted;
+            TextEditableControl.TextEditModeChanged += Control_EnabledChanged;
         }
 
         private bool CheckExecuteMode(out string gamePath)
@@ -154,9 +155,9 @@ namespace PPD
         {
             currentOverray = new CloseOverlay(device);
             SetPropertyToScene(currentOverray);
-            currentOverray.ResourceManager = new PPDFramework.Resource.ResourceManager(new Tuple<PPDFramework.Resource.ResourceManager, bool>[] {
-                new Tuple<PPDFramework.Resource.ResourceManager, bool>( homeResourceManager,false)
-            });
+            currentOverray.ResourceManager = new PPDFramework.Resource.ResourceManager([
+                new( homeResourceManager,false)
+            ]);
             currentOverray.Load();
             currentOverray.PreScreenFilters.Add(gaussianFilter);
         }
@@ -207,20 +208,14 @@ namespace PPD
             debugMode = true;
         }
 
-        void control_EnabledChanged(object sender, EventArgs e)
+        void Control_EnabledChanged(object sender, EventArgs e)
         {
-            if (TextBoxEnabledChanged != null)
-            {
-                TextBoxEnabledChanged.Invoke(this, EventArgs.Empty);
-            }
+            TextBoxEnabledChanged?.Invoke(this, EventArgs.Empty);
         }
 
-        void control_IMEStarted(object sender, EventArgs e)
+        void Control_IMEStarted(object sender, EventArgs e)
         {
-            if (IMEStarted != null)
-            {
-                IMEStarted.Invoke(this, EventArgs.Empty);
-            }
+            IMEStarted?.Invoke(this, EventArgs.Empty);
         }
 
         private void SetPropertyToScene(ISceneBase scene)
@@ -253,10 +248,7 @@ namespace PPD
                 input.GetInput(KeyConfigManager.CurrentConfig.Keys,
                     KeyConfigManager.CurrentConfig.Buttons, out inputInfo);
             }
-            if (inputInfo == null)
-            {
-                inputInfo = EmptyInputInfo.Instance;
-            }
+            inputInfo ??= EmptyInputInfo.Instance;
             if (ignoreInputCount < 30)
             {
                 inputInfo = EmptyInputInfo.Instance;
@@ -287,10 +279,7 @@ namespace PPD
                 else
                 {
                     sceneManager.Update(EmptyInputInfo.Instance, MouseInfo.Empty, sound);
-                    if (currentOverray != null)
-                    {
-                        currentOverray.Update(Form.IsFirstCloseRequierd, inputInfo, mouseInfo);
-                    }
+                    currentOverray?.Update(Form.IsFirstCloseRequierd, inputInfo, mouseInfo);
                     gaussianFilter.Disperson += 1;
                     if (gaussianFilter.Disperson >= 100)
                     {
@@ -327,10 +316,7 @@ namespace PPD
                 sceneManager.Draw();
                 if (Form.IsCloseRequired)
                 {
-                    if (currentOverray != null)
-                    {
-                        currentOverray.Draw();
-                    }
+                    currentOverray?.Draw();
                 }
             }
             notifyControl.Draw();
@@ -351,25 +337,21 @@ namespace PPD
             DisposeIDisposable(sound);
             DisposeIDisposable(input);
             DisposeIDisposable(homeResourceManager);
+            DisposeIDisposable(movieVolumeSprite);
+            DisposeIDisposable(notifyControl);
         }
 
-        private void DisposeIDisposable(IDisposable dispo)
+        private static void DisposeIDisposable(IDisposable dispo)
         {
-            if (dispo != null)
-            {
-                dispo.Dispose();
-            }
+            dispo?.Dispose();
         }
 
-        private void DisposeScene(ISceneBase scene)
+        private static void DisposeScene(ISceneBase scene)
         {
             if (scene != null)
             {
                 scene.Dispose();
-                if (scene.ResourceManager != null)
-                {
-                    scene.ResourceManager.Dispose();
-                }
+                scene.ResourceManager?.Dispose();
             }
         }
 
@@ -423,15 +405,7 @@ namespace PPD
             var filename = songInformation.MoviePath;
             if (PPDSetting.Setting.IsMovie(filename))
             {
-                switch (PPDSetting.Setting.MoviePlayType)
-                {
-                    /*case MoviePlayType.VMR9:
-                        CurrentPlayerBase = new VMR9Movie(device, ((PPDFramework.DX9.PPDDevice)device).D3D, filename);
-                        break;*/
-                    default:
-                        CurrentPlayerBase = new SampleGrabberMovie(device, filename);
-                        break;
-                }
+                CurrentPlayerBase = new SampleGrabberMovie(device, filename);
             }
             else
             {
@@ -563,7 +537,7 @@ namespace PPD
         {
             get
             {
-                return SharpDX.Windows.RenderForm.ActiveForm == Form;
+                return System.Windows.Forms.Form.ActiveForm == Form;
             }
         }
 
@@ -587,15 +561,13 @@ namespace PPD
 
         public void SetClipping(int x, int y, int width, int height)
         {
-            var ratio = new Vector2((float)device.Width / width, (float)device.Height / height);
-            var pos = new Vector2(x, y);
-            device.SetScissorRect(new SharpDX.Rectangle((int)(x * device.Scale.X + device.Offset.X), (int)(y * device.Scale.Y + device.Offset.Y),
+            device.SetScissorRect(new Vortice.Mathematics.RectI((int)(x * device.Scale.X + device.Offset.X), (int)(y * device.Scale.Y + device.Offset.Y),
                 (int)(width * device.Scale.X), (int)(height * device.Scale.Y)), true);
         }
 
         public void RestoreClipping()
         {
-            device.SetScissorRect(new SharpDX.Rectangle(0, 0, device.Width, device.Height), false);
+            device.SetScissorRect(new Vortice.Mathematics.RectI(0, 0, device.Width, device.Height), false);
         }
 
         public void AddNotify(string text)

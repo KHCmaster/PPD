@@ -36,17 +36,17 @@ namespace FlowScriptEnginePPD.FlowSourceObjects.Song
         {
             base.OnInitialize();
 
-            if (this.Manager.Items.ContainsKey("PPDGameUtility"))
+            if (this.Manager.Items.TryGetValue("PPDGameUtility", out object value))
             {
-                UpdateData(this.Manager.Items["PPDGameUtility"] as PPDGameUtility);
+                UpdateData(value as PPDGameUtility);
             }
         }
 
         protected override void OnReset()
         {
-            if (this.Manager.Items.ContainsKey("PPDGameUtility"))
+            if (this.Manager.Items.TryGetValue("PPDGameUtility", out object value))
             {
-                UpdateData(this.Manager.Items["PPDGameUtility"] as PPDGameUtility);
+                UpdateData(value as PPDGameUtility);
             }
         }
 
@@ -100,12 +100,12 @@ namespace FlowScriptEnginePPD.FlowSourceObjects.Song
             isFirstPlay = playCount == 0;
         }
 
-        private bool IsBestPerformance(ResultInfo bestPerformance, ResultInfo result)
+        private static bool IsBestPerformance(ResultInfo bestPerformance, ResultInfo result)
         {
             return CompareResult(bestPerformance, result) < 0;
         }
 
-        private int CompareResult(ResultInfo result1, ResultInfo result2)
+        private static int CompareResult(ResultInfo result1, ResultInfo result2)
         {
             if (result1 == null && result2 == null)
             {
@@ -157,10 +157,11 @@ namespace FlowScriptEnginePPD.FlowSourceObjects.Song
             return 0;
         }
 
-        private float GetRatio(ResultInfo result)
+        private static float GetRatio(ResultInfo result)
         {
-            return (float)(result.CoolCount + result.GoodCount) /
-                (result.CoolCount + result.GoodCount + result.SafeCount + result.SadCount + result.WorstCount);
+            var total = result.CoolCount + result.GoodCount + result.SafeCount + result.SadCount + result.WorstCount;
+            // 判定がない（マークのない譜面）ときは 0（NaN にすると、比べるときに例外になった）
+            return total == 0 ? 0 : (float)(result.CoolCount + result.GoodCount) / total;
         }
 
         [ToolTipText("Song_InfoEx_ClearCount")]

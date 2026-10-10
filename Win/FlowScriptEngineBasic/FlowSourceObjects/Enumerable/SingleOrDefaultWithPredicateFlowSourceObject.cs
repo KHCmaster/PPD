@@ -38,11 +38,12 @@ namespace FlowScriptEngineBasic.FlowSourceObjects.Enumerable
                 SetValue(nameof(Default));
                 if (Enumerable == null)
                 {
-                    return null;
+                    return Default;
                 }
                 try
                 {
-                    return Enumerable.SingleOrDefault(obj =>
+                    // 当てはまるものが 1 つでなければ Default（元は SingleOrDefault で、ないときに null になっていた）
+                    return Enumerable.Single(obj =>
                     {
                         Value = obj;
                         FireEvent(Predicate, true);

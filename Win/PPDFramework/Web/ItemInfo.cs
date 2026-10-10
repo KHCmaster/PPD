@@ -5,10 +5,15 @@ namespace PPDFramework.Web
     /// <summary>
     /// アイテムの情報を扱うクラスです。
     /// </summary>
-    public class ItemInfo
+    /// <remarks>
+    /// コンストラクターです。
+    /// </remarks>
+    /// <param name="itemId">アイテムのID。</param>
+    /// <param name="itemType">アイテムのタイプ。</param>
+    public class ItemInfo(int itemId, ItemType itemType)
     {
-        private ItemType[] availableItems = { ItemType.Auto1, ItemType.Auto2, ItemType.Auto3, ItemType.Auto4, ItemType.AutoFreePass };
-        private Dictionary<string, object> parameters;
+        private readonly ItemType[] availableItems = [ItemType.Auto1, ItemType.Auto2, ItemType.Auto3, ItemType.Auto4, ItemType.AutoFreePass];
+        private readonly Dictionary<string, object> parameters = [];
 
         /// <summary>
         /// アイテムのIDを取得します。
@@ -17,7 +22,7 @@ namespace PPDFramework.Web
         {
             get;
             private set;
-        }
+        } = itemId;
 
         /// <summary>
         /// アイテムのタイプを取得します。
@@ -26,7 +31,7 @@ namespace PPDFramework.Web
         {
             get;
             private set;
-        }
+        } = itemType;
 
         /// <summary>
         /// 使用したかどうかを取得します。
@@ -57,18 +62,6 @@ namespace PPDFramework.Web
         {
             get { return parameters[paramName]; }
             set { parameters[paramName] = value; }
-        }
-
-        /// <summary>
-        /// コンストラクターです。
-        /// </summary>
-        /// <param name="itemId">アイテムのID。</param>
-        /// <param name="itemType">アイテムのタイプ。</param>
-        public ItemInfo(int itemId, ItemType itemType)
-        {
-            ItemId = itemId;
-            ItemType = itemType;
-            parameters = new Dictionary<string, object>();
         }
 
         /// <summary>

@@ -9,10 +9,10 @@ namespace PPDFramework
     /// <summary>
     /// データベースの基底クラスです
     /// </summary>
-    public abstract class DataBase
+    public abstract class DataBase : IDisposable
     {
         SQLiteConnection connection;
-        readonly object lockObject = new object();
+        readonly object lockObject = new();
 
         /// <summary>
         /// データベースの名前、例えばHoge
@@ -89,23 +89,38 @@ namespace PPDFramework
 
             connection.Close();
             connection = null;
+            // 閉じたことにする（しないと、もう一度開けず、二回閉じると例外になる）
+            IsClosed = true;
         }
 
+        /// <summary>
+        /// トランザクションを開始します。
+        /// </summary>
         public void Begin()
         {
             ExecuteNonQueryCommand("BEGIN");
         }
 
+        /// <summary>
+        /// トランザクションを確定します。
+        /// </summary>
         public void Commit()
         {
             ExecuteNonQueryCommand("COMMIT");
         }
 
+        /// <summary>
+        /// トランザクションを取り消します。
+        /// </summary>
         public void Rollback()
         {
             ExecuteNonQueryCommand("ROLLBACK");
         }
 
+        /// <summary>
+        /// トランザクションを開始します。返されたオブジェクトを破棄すると確定します。
+        /// </summary>
+        /// <returns>トランザクション。</returns>
         public DataBaseTransaction BeginTransaction()
         {
             return new DataBaseTransaction();
@@ -115,6 +130,7 @@ namespace PPDFramework
         /// SQLを実行します
         /// </summary>
         /// <param name="sql"></param>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Security", "CA2100:Review SQL queries for security vulnerabilities", Justification = "SQL は呼び出し側の固定の文字列で、値はパラメーターで渡す")]
         public void ExecuteNonQueryCommand(string sql)
         {
             lock (lockObject)
@@ -131,6 +147,7 @@ namespace PPDFramework
         /// <param name="sql"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Security", "CA2100:Review SQL queries for security vulnerabilities", Justification = "SQL は呼び出し側の固定の文字列で、値はパラメーターで渡す")]
         public long ExecuteDataTable(string sql, SQLiteParameter[] parameters)
         {
             lock (lockObject)
@@ -158,6 +175,7 @@ namespace PPDFramework
         /// <param name="sql"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Security", "CA2100:Review SQL queries for security vulnerabilities", Justification = "SQL は呼び出し側の固定の文字列で、値はパラメーターで渡す")]
         public DataBaseReader ExecuteReader(string sql, SQLiteParameter[] parameters)
         {
             var lockTaken = false;
@@ -251,14 +269,12 @@ namespace PPDFramework
         /// <returns></returns>
         public string GetColumnType(string tableName, string columnName)
         {
-            using (var reader = ExecuteReader(String.Format("PRAGMA table_info({0});", tableName), null))
+            using var reader = ExecuteReader(String.Format("PRAGMA table_info({0});", tableName), null);
+            while (reader.Reader.Read())
             {
-                while (reader.Reader.Read())
+                if (reader.Reader[1].ToString() == columnName)
                 {
-                    if (reader.Reader[1].ToString() == columnName)
-                    {
-                        return reader.Reader[2].ToString().ToLower();
-                    }
+                    return reader.Reader[2].ToString().ToLower();
                 }
             }
             return null;
@@ -285,6 +301,27 @@ namespace PPDFramework
         public void AddColumn(string tableName, string columnName, string columnType, string defaultValue)
         {
             ExecuteNonQueryCommand(string.Format("ALTER TABLE {0} ADD COLUMN {1} {2} default {3};", tableName, columnName, columnType, defaultValue));
+        }
+
+        /// <summary>
+        /// データベースを閉じます（Close() と同じ）。
+        /// </summary>
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        /// <summary>
+        /// 破棄します。
+        /// </summary>
+        /// <param name="disposing">Dispose から呼ばれたときは true。</param>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                Close();
+            }
         }
     }
 }

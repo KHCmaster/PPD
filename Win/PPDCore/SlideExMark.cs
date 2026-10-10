@@ -2,14 +2,16 @@
 using PPDFramework;
 using PPDFramework.PPDStructure.EVDData;
 using PPDFramework.PPDStructure.PPDData;
-using SharpDX;
+using System.Numerics;
+using PPDMath;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace PPDCore
 {
-    class SlideExMark : ExMarkBase
+    class SlideExMark(PPDDevice device, PPDFramework.Resource.ResourceManager resourceManager, MarkImagePathsBase filenames, ExMarkData emd, ButtonType type, float[] eval,
+        float gap, DisplayState dState, NoteType noteType, float slideScale, int sameTimingMarks, KeyValuePair<string, string>[] parameters, PostDrawManager postDrawManager) : ExMarkBase(device, resourceManager, filenames, emd, type, eval, gap, dState, noteType, sameTimingMarks, parameters, postDrawManager)
     {
         public const float ExFrameSec = 1 / 24f;
         public const float ExFrameInvert = 24;
@@ -18,7 +20,7 @@ namespace PPDCore
         GameComponent[] exMarks;
         SlideColorMarkInfo[] colorExMarkInfos;
         float lastPressedTime = float.MaxValue;
-        float slideScale;
+        readonly float slideScale = slideScale;
 
         public ColorMarkInfo FirstSlideColorMarkInfo
         {
@@ -40,15 +42,8 @@ namespace PPDCore
                 {
                     return colorMarkInfo;
                 }
-                return colorExMarkInfos[colorExMarkInfos.Length - 1];
+                return colorExMarkInfos[^1];
             }
-        }
-
-        public SlideExMark(PPDDevice device, PPDFramework.Resource.ResourceManager resourceManager, MarkImagePathsBase filenames, ExMarkData emd, ButtonType type, float[] eval,
-            float gap, DisplayState dState, NoteType noteType, float slideScale, int sameTimingMarks, KeyValuePair<string, string>[] parameters, PostDrawManager postDrawManager)
-            : base(device, resourceManager, filenames, emd, type, eval, gap, dState, noteType, sameTimingMarks, parameters, postDrawManager)
-        {
-            this.slideScale = slideScale;
         }
 
         public override void Initialize(CreateMarkFunc createMark, GetScriptAllowedButtonsFunc getScriptAllowedButtons)
@@ -61,7 +56,7 @@ namespace PPDCore
             int currentDiff = IsRight ? ExMarkPosDiffStart : -ExMarkPosDiffStart;
             for (int i = 0; i < exMarks.Length; i++)
             {
-                createMark(this, out GameComponent mark, out GameComponent colorMark, out GameComponent axis, out GameComponent slide, out GameComponent slideColor, out PictureObject trace);
+                createMark(this, out _, out _, out _, out GameComponent slide, out GameComponent slideColor, out PictureObject trace);
                 exMarks[i] = slide ?? new PictureObject(device, resourceManager, filenames.GetMarkImagePath(GetButtonType() + 2), true);
                 exMarks[i].Position = new Vector2(currentDiff, 0);
                 colorExMarkInfos[i] = new SlideColorMarkInfo(
@@ -358,7 +353,7 @@ namespace PPDCore
                         break;
                 }
                 var vec = CalculateColorPosition(colorExMarkInfos[i], colorExMarkInfos[i].SlideMarkInfo, colorExMarkInfos[i].MarkTime, currentTime, bpm);
-                UpdateColorMarkInfo(colorExMarkInfos[i], colorExMarkInfos[i].SlideMarkInfo, colorExMarkInfos[i].MarkTime, currentTime, bpm, vec);
+                UpdateColorMarkInfo(colorExMarkInfos[i], colorExMarkInfos[i].MarkTime, currentTime, bpm, vec);
                 var prevVisible = !colorExMarkInfos[i].ColorMark.Hidden;
                 colorExMarkInfos[i].DrawTrace = exState < ExState.Pressed || currentTime < colorExMarkInfos[i].MarkTime;
                 colorExMarkInfos[i].ColorMark.Hidden = exMarks[i].Hidden = !colorExMarkInfos[i].DrawTrace;

@@ -1,6 +1,6 @@
-﻿using PPDFramework;
-using SharpDX;
-using SharpDX.DirectInput;
+﻿using SharpGen.Runtime;
+using PPDFramework;
+using Vortice.DirectInput;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,11 +10,14 @@ namespace PPDInput
 {
     public abstract class InputBase : IDisposable
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2213:Disposable fields should be disposed", Justification = "外部から渡されるもので、このクラスは所有しない")]
         protected Form window;
-        DirectInput di;
-        protected Keyboard keyboard;
-        List<Joystick> joysticks;
-        List<string> joystickNames;
+        private readonly IntPtr windowHandle;
+        readonly IDirectInput8 di = DInput.DirectInput8Create();
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2213:Disposable fields should be disposed", Justification = "Dispose から呼ばれる ReleaseObjects で破棄する")]
+        protected IDirectInputDevice8 keyboard;
+        readonly List<IDirectInputDevice8> joysticks = [];
+        readonly List<string> joystickNames = [];
         bool disposed;
         protected const int threshold = 500;
         int currentJoyStickIndex = -1;
@@ -22,13 +25,31 @@ namespace PPDInput
         protected bool loaded;
         private bool assignMode;
 
+        /// <summary>
+        /// WinForms のウィンドウで入力を受け取ります。
+        /// </summary>
         protected InputBase(Form window)
         {
             this.window = window;
-            joysticks = new List<Joystick>();
-            joystickNames = new List<string>();
-            //DirectInput の初期化
-            di = new DirectInput();
+        }
+
+        /// <summary>
+        /// ウィンドウのハンドルで入力を受け取ります（WPF のウィンドウなど）。
+        /// </summary>
+        protected InputBase(IntPtr windowHandle)
+        {
+            this.windowHandle = windowHandle;
+        }
+
+        /// <summary>
+        /// 入力を受け取るウィンドウのハンドルです。
+        /// </summary>
+        protected IntPtr WindowHandle
+        {
+            get
+            {
+                return window != null ? window.Handle : windowHandle;
+            }
         }
 
         public virtual void Load()
@@ -37,17 +58,18 @@ namespace PPDInput
             //キーボードの初期化
             try
             {
-                this.keyboard = new Keyboard(di);
+                this.keyboard = di.CreateDevice(PredefinedDevice.SysKeyboard);
+                this.keyboard.SetDataFormat<RawKeyboardState>().CheckError();
                 this.keyboard.SetCooperativeLevel(
-                  window.Handle,
+                  WindowHandle,
                   CooperativeLevel.Foreground |
                   CooperativeLevel.NonExclusive |
-                  CooperativeLevel.NoWinKey);
+                  CooperativeLevel.NoWinKey).CheckError();
 
                 // バッファ方式を使う場合は、バッファサイズを指定しなければならない。
                 this.keyboard.Properties.BufferSize = 8;
             }
-            catch (SharpDXException e)
+            catch (SharpGenException e)
             {
                 MessageBox.Show(e.Message);
                 return;
@@ -59,9 +81,10 @@ namespace PPDInput
                 // ジョイスティックデバイスの作成と協調レベルの設定
                 try
                 {
-                    Joystick joystick;
-                    joystick = new Joystick(di, d.InstanceGuid);
-                    joystick.SetCooperativeLevel(window.Handle, CooperativeLevel.Foreground | CooperativeLevel.Exclusive);
+                    IDirectInputDevice8 joystick;
+                    joystick = di.CreateDevice(d.InstanceGuid);
+                    joystick.SetDataFormat<RawJoystickState>().CheckError();
+                    joystick.SetCooperativeLevel(WindowHandle, CooperativeLevel.Foreground | CooperativeLevel.Exclusive).CheckError();
 
                     // バッファ方式を使う場合は、バッファサイズを指定しなければならない。
                     joystick.Properties.BufferSize = 16;
@@ -75,9 +98,9 @@ namespace PPDInput
                         }
                     }
                     joysticks.Add(joystick);
-                    joystickNames.Add(joystick.Information.InstanceName);
+                    joystickNames.Add(joystick.DeviceInfo.InstanceName);
                 }
-                catch (SharpDXException e)
+                catch (SharpGenException e)
                 {
                     MessageBox.Show(e.Message);
                     return;
@@ -92,7 +115,7 @@ namespace PPDInput
             loaded = true;
         }
 
-        protected Joystick CurrentJoyStick
+        protected IDirectInputDevice8 CurrentJoyStick
         {
             get
             {
@@ -131,7 +154,7 @@ namespace PPDInput
         {
             get
             {
-                return joystickNames.ToArray();
+                return [.. joystickNames];
             }
         }
 
@@ -143,20 +166,20 @@ namespace PPDInput
                 assignMode = value;
                 if (assignMode)
                 {
-                    Joystick joystick = CurrentJoyStick;
+                    IDirectInputDevice8 joystick = CurrentJoyStick;
                     if (joystick != null)
                     {
-                        joystick.Acquire();
-                        joystick.Poll();
-                        var state = joystick.GetCurrentState();
-                        joystick.GetBufferedData();
+                        joystick.Acquire().CheckError();
+                        joystick.Poll().CheckError();
+                        _ = joystick.GetCurrentJoystickState();
+                        joystick.GetBufferedJoystickData();
                     }
 
                     if (keyboard != null)
                     {
-                        keyboard.Acquire();
-                        keyboard.Poll();
-                        var bufferedData = keyboard.GetBufferedData();
+                        keyboard.Acquire().CheckError();
+                        keyboard.Poll().CheckError();
+                        _ = keyboard.GetBufferedKeyboardData();
                     }
                 }
             }
@@ -164,32 +187,31 @@ namespace PPDInput
 
         protected virtual void ReleaseObjects()
         {
-            if (loaded)
+            // Load が途中で失敗した（loaded が false の）場合も、作成済みのデバイスを解放する
+            // キーボードデバイスの終了
+            if (this.keyboard != null)
             {
-                // キーボードデバイスの終了
-                if (this.keyboard != null)
-                {
-                    this.keyboard.Unacquire();
-                    this.keyboard.Dispose();
-                }
-                // ジョイスティックデバイスの終了
-                foreach (Joystick joystick in joysticks)
-                {
-                    if (joystick != null)
-                    {
-                        joystick.Unacquire();
-                        joystick.Dispose();
-                    }
-                }
-                joysticks.Clear();
-                joystickNames.Clear();
-                currentJoyStickIndex = -1;
-
-                loaded = false;
+                this.keyboard.Unacquire();
+                this.keyboard.Dispose();
+                this.keyboard = null;
             }
+            // ジョイスティックデバイスの終了
+            foreach (IDirectInputDevice8 joystick in joysticks)
+            {
+                if (joystick != null)
+                {
+                    joystick.Unacquire();
+                    joystick.Dispose();
+                }
+            }
+            joysticks.Clear();
+            joystickNames.Clear();
+            currentJoyStickIndex = -1;
+
+            loaded = false;
         }
 
-        protected Joystick GetJoystickFromIndex(int joyStickIndex)
+        protected IDirectInputDevice8 GetJoystickFromIndex(int joyStickIndex)
         {
             return 0 <= joyStickIndex && joyStickIndex < joysticks.Count ? joysticks[joyStickIndex] : null;
         }
@@ -207,7 +229,7 @@ namespace PPDInput
             GC.SuppressFinalize(this);
         }
 
-        private void Dispose(bool disposing)
+        protected virtual void Dispose(bool disposing)
         {
             if (!this.disposed)
             {

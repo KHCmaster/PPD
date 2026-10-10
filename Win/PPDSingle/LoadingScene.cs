@@ -1,6 +1,8 @@
 ﻿using PPDFramework;
 using PPDShareComponent;
-using SharpDX;
+using System.Numerics;
+using PPDMath;
+using Color = Vortice.Mathematics.Color;
 using System;
 using System.Collections.Generic;
 
@@ -9,33 +11,28 @@ namespace PPDSingle
     /// <summary>
     /// ロード中用のシーン
     /// </summary>
-    public class LoadingScene : LoadingSceneWithImage
+    public class LoadingScene(PPDDevice device) : LoadingSceneWithImage(device)
     {
         EffectObject anim;
         TextureString progressText;
-        Queue<int> progressQueue;
-
-        public LoadingScene(PPDDevice device) : base(device)
-        {
-            progressQueue = new Queue<int>();
-        }
+        readonly Queue<int> progressQueue = new();
 
         public override bool Load()
         {
             anim = new EffectObject(device, ResourceManager, Utility.Path.Combine("Loading.etd"))
             {
-                Position = new Vector2(700, 420)
+                Position = new Vector2(700, 420),
+                PlayType = Effect2D.EffectManager.PlayType.Loop
             };
-            anim.PlayType = Effect2D.EffectManager.PlayType.Loop;
             anim.Play();
             progressText = new TextureString(device, "", 20, PPDColors.White)
             {
-                Position = new Vector2(10, 420)
-            };
-            progressText.Border = new Border
-            {
-                Color = PPDColors.Black,
-                Thickness = 1
+                Position = new Vector2(10, 420),
+                Border = new Border
+                {
+                    Color = PPDColors.Black,
+                    Thickness = 1
+                }
             };
             AddChild(anim);
             AddChild(progressText);
@@ -78,14 +75,13 @@ namespace PPDSingle
             {
                 return;
             }
-            if (parameters.ContainsKey("Progress"))
+            if (parameters.TryGetValue("Progress", out object val))
             {
-                var val = parameters["Progress"];
-                if (val is int)
+                if (val is int v)
                 {
                     lock (progressQueue)
                     {
-                        progressQueue.Enqueue((int)val);
+                        progressQueue.Enqueue(v);
                     }
                 }
             }

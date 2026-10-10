@@ -1,12 +1,7 @@
 ﻿namespace PPDMultiCommon.Web
 {
-    public class DeleteRoomExecutor : HostExecutorBase
+    public class DeleteRoomExecutor(WebManager webManager) : HostExecutorBase(webManager)
     {
-        public DeleteRoomExecutor(WebManager webManager)
-            : base(webManager)
-        {
-        }
-
         protected override void InnerStart()
         {
             webManager.DeleteRoom();

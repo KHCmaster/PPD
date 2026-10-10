@@ -1,0 +1,97 @@
+<forms:DockView x:Class="PPDEditor.ScriptManager"
+                xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                xmlns:ad="https://github.com/Dirkster99/AvalonDock"
+                xmlns:forms="clr-namespace:PPDEditor.Forms"
+                xmlns:controls="clr-namespace:PPDEditor.Controls"
+                xmlns:script="clr-namespace:PPDEditor.DockForm.Script"
+                xmlns:flow="clr-namespace:FlowScriptControl.Controls;assembly=FlowScriptControl"
+                xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                xmlns:vm="clr-namespace:PPDEditor.ViewModels.Docks"
+                mc:Ignorable="d" d:DataContext="{d:DesignInstance Type=vm:ScriptManagerViewModel}"
+                KeyDown="ScriptManager_KeyDown">
+    <forms:DockView.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVisibility" />
+    </forms:DockView.Resources>
+    <DockPanel>
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="{Binding Texts[Edit]}">
+                <MenuItem Header="{Binding Texts[Undo]}" InputGestureText="Ctrl+Z" Command="{Binding UndoCommand}" />
+                <MenuItem Header="{Binding Texts[Redo]}" InputGestureText="Ctrl+Y" Command="{Binding RedoCommand}" />
+                <Separator />
+                <MenuItem Header="{Binding Texts[Cut]}" InputGestureText="Ctrl+X" Command="{Binding CutCommand}" />
+                <MenuItem Header="{Binding Texts[Copy]}" InputGestureText="Ctrl+C" Command="{Binding CopyCommand}" />
+                <MenuItem Header="{Binding Texts[Paste]}" InputGestureText="Ctrl+V" Command="{Binding PasteCommand}" />
+                <MenuItem Header="{Binding Texts[PasteWithLinks]}" InputGestureText="Ctrl+Shift+V" Command="{Binding PasteWithLinksCommand}" />
+                <MenuItem Header="{Binding Texts[Delete]}" InputGestureText="Del" Command="{Binding DeleteCommand}" />
+                <Separator />
+                <MenuItem Header="{Binding Texts[FitView]}" Command="{Binding FitViewCommand}" />
+                <MenuItem Header="{Binding Texts[ExpandAll]}" Command="{Binding ExpandAllCommand}" />
+                <MenuItem Header="{Binding Texts[CollapseAll]}" Command="{Binding CollapseAllCommand}" />
+            </MenuItem>
+            <MenuItem Header="{Binding Texts[Show]}" SubmenuOpened="表示MenuItem_SubmenuOpened">
+                <MenuItem x:Name="プロパティMenuItem" Header="プロパティ" Click="プロパティMenuItem_Click" />
+                <MenuItem x:Name="スクリプトリストMenuItem" Header="スクリプトリスト" Click="スクリプトリストMenuItem_Click" />
+                <MenuItem x:Name="ソースリストMenuItem" Header="ソースリスト" Click="ソースリストMenuItem_Click" />
+                <MenuItem x:Name="検索MenuItem" Header="検索" Click="検索MenuItem_Click" />
+                <MenuItem x:Name="デバッグMenuItem" Header="デバッグ" Click="デバッグMenuItem_Click" />
+                <MenuItem x:Name="ログMenuItem" Header="ログ" Click="ログMenuItem_Click" />
+            </MenuItem>
+        </Menu>
+        <!-- デバッグ中だけ出す -->
+        <ToolBar DockPanel.Dock="Top" ToolBarTray.IsLocked="True" Visibility="{Binding IsDebugging, Converter={StaticResource BoolToVisibility}}">
+            <Button ToolTip="{Binding Texts[Continue]}" Command="{Binding ContinueCommand}">
+                <Image Source="/img/playonce.png" Stretch="None" />
+            </Button>
+            <Button ToolTip="{Binding Texts[StepIn]}" Command="{Binding StepInCommand}">
+                <Image Source="/img/stepin.png" Stretch="None" />
+            </Button>
+        </ToolBar>
+        <ad:DockingManager x:Name="dockingManager">
+            <ad:DockingManager.DocumentContextMenu>
+                <ContextMenu>
+                    <MenuItem x:Name="保存MenuItem" Header="保存" Click="保存MenuItem_Click" />
+                    <MenuItem x:Name="閉じるMenuItem" Header="閉じる" Click="閉じるMenuItem_Click" />
+                </ContextMenu>
+            </ad:DockingManager.DocumentContextMenu>
+            <ad:LayoutRoot>
+                <ad:LayoutPanel Orientation="Horizontal">
+                    <ad:LayoutAnchorablePaneGroup Orientation="Vertical" DockWidth="200">
+                        <ad:LayoutAnchorablePane>
+                            <ad:LayoutAnchorable x:Name="scriptListAnchorable" ContentId="PPDEditor.DockForm.Script.ScriptListDockForm" Title="スクリプトリスト" CanClose="False">
+                                <script:ScriptListPanel x:Name="scriptListForm" />
+                            </ad:LayoutAnchorable>
+                        </ad:LayoutAnchorablePane>
+                        <ad:LayoutAnchorablePane>
+                            <ad:LayoutAnchorable x:Name="logAnchorable" ContentId="PPDEditor.DockForm.Script.FlowLogDockForm" Title="ログ" CanClose="False">
+                                <script:FlowLogPanel x:Name="logForm" />
+                            </ad:LayoutAnchorable>
+                        </ad:LayoutAnchorablePane>
+                    </ad:LayoutAnchorablePaneGroup>
+                    <ad:LayoutDocumentPaneGroup>
+                        <ad:LayoutDocumentPane />
+                    </ad:LayoutDocumentPaneGroup>
+                    <ad:LayoutAnchorablePaneGroup Orientation="Vertical" DockWidth="250">
+                        <ad:LayoutAnchorablePane>
+                            <ad:LayoutAnchorable x:Name="searchAnchorable" ContentId="PPDEditor.DockForm.Script.FlowSearchDockForm" Title="検索" CanClose="False">
+                                <flow:FlowSearchPanel x:Name="searchPanel" />
+                            </ad:LayoutAnchorable>
+                            <ad:LayoutAnchorable x:Name="treeViewAnchorable" ContentId="PPDEditor.DockForm.Script.FlowTreeViewDockForm" Title="ソースリスト" CanClose="False">
+                                <flow:FlowTreeView x:Name="treeView" />
+                            </ad:LayoutAnchorable>
+                        </ad:LayoutAnchorablePane>
+                        <ad:LayoutAnchorablePane>
+                            <ad:LayoutAnchorable x:Name="propertyAnchorable" ContentId="PPDEditor.DockForm.Script.FlowPropertyDockForm" Title="プロパティ" CanClose="False">
+                                <controls:CustomFlowPropertyPanel x:Name="propertyPanel" />
+                            </ad:LayoutAnchorable>
+                            <ad:LayoutAnchorable x:Name="executingPropertyAnchorable" ContentId="PPDEditor.DockForm.Script.FlowExecutingPropertyDockForm" Title="デバッグ" CanClose="False">
+                                <flow:FlowExecutingPropertyPanel x:Name="executingPropertyPanel" />
+                            </ad:LayoutAnchorable>
+                        </ad:LayoutAnchorablePane>
+                    </ad:LayoutAnchorablePaneGroup>
+                </ad:LayoutPanel>
+            </ad:LayoutRoot>
+        </ad:DockingManager>
+    </DockPanel>
+</forms:DockView>

@@ -18,23 +18,27 @@ namespace PPDCore
             AC,
         }
 
-        public event Action<int> Progressed;
+        /// <summary>
+        /// 進捗を通知するイベントです（現在は通知していません）。
+        /// </summary>
+        public static event Action<int> Progressed
+        {
+            add { }
+            remove { }
+        }
 
-        private MarkManager markManager;
-        private EventManager eventManager;
-        private FlowScriptManager scriptManager;
-        private float startTime;
-        private float endTime;
-        private int[] evaPoint;
-        private float safeCoolArea;
-        private float safeGoodArea;
-        private bool doJust;
-        private bool doPermutation;
-        private bool doDumpNotes;
-        private bool includeFine;
-        private ButtonType[] buttons;
-        private ItemType autoType;
-        private ISceneBase scene;
+        private readonly MarkManager markManager;
+        private readonly EventManager eventManager;
+        private readonly FlowScriptManager scriptManager;
+        private readonly float startTime;
+        private readonly float endTime;
+        private readonly int[] evaPoint;
+        private readonly float safeCoolArea;
+        private readonly float safeGoodArea;
+        private readonly bool includeFine;
+        private readonly ButtonType[] buttons;
+        private readonly ItemType autoType;
+        private readonly ISceneBase scene;
 
         public bool AllowAllButtons
         {
@@ -67,29 +71,6 @@ namespace PPDCore
             }
             safeCoolArea = PPDSetting.Setting.CoolArea - 0.001f;
             safeGoodArea = PPDSetting.Setting.GoodArea - 0.001f;
-            switch (autoType)
-            {
-                case ItemType.Auto1:
-                    doJust = true;
-                    doPermutation = false;
-                    doDumpNotes = false;
-                    break;
-                case ItemType.Auto2:
-                    doJust = true;
-                    doPermutation = true;
-                    doDumpNotes = false;
-                    break;
-                case ItemType.Auto3:
-                    doJust = false;
-                    doPermutation = true;
-                    doDumpNotes = false;
-                    break;
-                case ItemType.Auto4:
-                    doJust = false;
-                    doPermutation = true;
-                    doDumpNotes = true;
-                    break;
-            }
         }
 
         public bool CanCreate()
@@ -117,9 +98,9 @@ namespace PPDCore
             return true;
         }
 
-        public PPDPlayDecorder Create()
+        public static PPDPlayDecorder Create()
         {
-            return PPDPlayDecorder.FromInputs(new PPDPlayInput[0]);
+            return PPDPlayDecorder.FromInputs([]);
         }
     }
 }

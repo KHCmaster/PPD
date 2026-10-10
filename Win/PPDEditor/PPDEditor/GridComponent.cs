@@ -1,14 +1,17 @@
 ﻿using PPDFramework;
-using SharpDX;
+using System.Numerics;
+using PPDMath;
+using Color4 = Vortice.Mathematics.Color4;
+using Color = Vortice.Mathematics.Color;
 using System;
 
 namespace PPDEditor
 {
     class GridComponent : GameComponent
     {
-        SquareGrid savedGrid;
-        SquareGrid grid;
-        PPDFramework.Resource.ResourceManager resourceManager;
+        readonly SquareGrid savedGrid;
+        readonly SquareGrid grid;
+        readonly PPDFramework.Resource.ResourceManager resourceManager;
 
         public GridComponent(PPDDevice device, PPDFramework.Resource.ResourceManager resourceManager, SquareGrid grid) : base(device)
         {
@@ -35,7 +38,7 @@ namespace PPDEditor
             int offsety = grid.NormalizedOffsetY;
             int maxx = 800 / grid.Width, maxy = 450 / grid.Height;
             var color = new Color4(grid.GridColor.R / 255f, grid.GridColor.G / 255f, grid.GridColor.B / 255f, 1);
-            Action<float, float, float, float> drawRect = (x, y, width, height) =>
+            void drawRect(float x, float y, float width, float height)
             {
                 this.AddChild(new RectangleComponent(device, resourceManager, color)
                 {
@@ -44,7 +47,7 @@ namespace PPDEditor
                     RectangleWidth = width,
                     Color = color
                 });
-            };
+            }
             for (int i = 0; i < maxx; i++)
             {
                 if (i % 2 == 0)

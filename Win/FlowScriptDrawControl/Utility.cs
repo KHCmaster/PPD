@@ -7,8 +7,8 @@ namespace FlowScriptDrawControl
 {
     class Utility
     {
-        static string[] colors = {
-            "#E60012",            "#F39800",            "#FFF100",            "#8FC31F",            "#009944",            "#009E96",            "#00A0E9",            "#0068B7",            "#1D2088",            "#920783",            "#E4007F",            "#E5004F"        };
+        static readonly string[] colors = [
+            "#E60012",            "#F39800",            "#FFF100",            "#8FC31F",            "#009944",            "#009E96",            "#00A0E9",            "#0068B7",            "#1D2088",            "#920783",            "#E4007F",            "#E5004F"        ];
 
         internal static bool IsLoading
         {
@@ -38,12 +38,12 @@ namespace FlowScriptDrawControl
             return MeasureSize(text, fontFamily, fontSize).Width;
         }
 
+        // 旧形式のコンストラクターと同じく、システムの DPI を使う（ツリーにない Visual の DPI はシステムの DPI になる）
+        private static readonly double PixelsPerDip = VisualTreeHelper.GetDpi(new DrawingVisual()).PixelsPerDip;
+
         public static Size MeasureSize(string text, FontFamily fontFamily, double fontSize)
         {
-            if (text == null)
-            {
-                text = "";
-            }
+            text ??= "";
 
             System.Windows.FontStyle fontStyle = FontStyles.Normal;
             FontWeight fontWeight = FontWeights.Medium;
@@ -57,9 +57,9 @@ namespace FlowScriptDrawControl
                     fontWeight,
                     FontStretches.Normal),
                     fontSize,
-                    System.Windows.Media.Brushes.Black
+                    System.Windows.Media.Brushes.Black,
+                    PixelsPerDip
                 );
-            var _textGeometry = formattedText.BuildGeometry(new System.Windows.Point(0, 0));
             var _textHighLightGeometry = formattedText.BuildHighlightGeometry(new System.Windows.Point(0, 0));
             return _textHighLightGeometry == null ? new Size(0, 0) : _textHighLightGeometry.Bounds.Size;
         }

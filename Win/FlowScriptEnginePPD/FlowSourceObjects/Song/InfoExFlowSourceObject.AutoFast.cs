@@ -9,41 +9,25 @@ namespace FlowScriptEnginePPD.FlowSourceObjects.Song
     {
         public override object GetPropertyValue(string propertyName)
         {
-            switch (propertyName)
+            return propertyName switch
             {
-                case "AllClearCount":
-                    return AllClearCount;
-                case "AllPlayCount":
-                    return AllPlayCount;
-                case "BestPerformance":
-                    return BestPerformance;
-                case "BestPerformanceCoolCount":
-                    return BestPerformanceCoolCount;
-                case "BestPerformanceGoodCount":
-                    return BestPerformanceGoodCount;
-                case "BestPerformanceSadCount":
-                    return BestPerformanceSadCount;
-                case "BestPerformanceSafeCount":
-                    return BestPerformanceSafeCount;
-                case "BestPerformanceScore":
-                    return BestPerformanceScore;
-                case "BestPerformanceWorstCount":
-                    return BestPerformanceWorstCount;
-                case "BestScore":
-                    return BestScore;
-                case "ClearCount":
-                    return ClearCount;
-                case "IsAllFirstPlay":
-                    return IsAllFirstPlay;
-                case "IsFirstPlay":
-                    return IsFirstPlay;
-                case "PlayCount":
-                    return PlayCount;
-                case "Results":
-                    return Results;
-                default:
-                    return null;
-            }
+                "AllClearCount" => AllClearCount,
+                "AllPlayCount" => AllPlayCount,
+                "BestPerformance" => BestPerformance,
+                "BestPerformanceCoolCount" => BestPerformanceCoolCount,
+                "BestPerformanceGoodCount" => BestPerformanceGoodCount,
+                "BestPerformanceSadCount" => BestPerformanceSadCount,
+                "BestPerformanceSafeCount" => BestPerformanceSafeCount,
+                "BestPerformanceScore" => BestPerformanceScore,
+                "BestPerformanceWorstCount" => BestPerformanceWorstCount,
+                "BestScore" => BestScore,
+                "ClearCount" => ClearCount,
+                "IsAllFirstPlay" => IsAllFirstPlay,
+                "IsFirstPlay" => IsFirstPlay,
+                "PlayCount" => PlayCount,
+                "Results" => Results,
+                _ => null,
+            };
         }
 
 

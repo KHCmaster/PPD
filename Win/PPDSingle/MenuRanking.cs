@@ -1,4 +1,5 @@
-﻿using PPDFramework;
+﻿using PPDMath;
+using PPDFramework;
 using PPDFramework.Web;
 using PPDFrameworkCore;
 using System;
@@ -7,8 +8,8 @@ namespace PPDSingle
 {
     class MenuRanking : GameComponent
     {
-        MenuRankingBoard globalRanking;
-        MenuRankingBoard rivalRanking;
+        readonly MenuRankingBoard globalRanking;
+        readonly MenuRankingBoard rivalRanking;
         Difficulty currentDifficulty = Difficulty.Normal;
 
         public Difficulty CurrentDifficulty
@@ -33,7 +34,7 @@ namespace PPDSingle
             AddChild(rivalRanking = new MenuRankingBoard(device, resourceManager)
             {
                 RankKindText = Utility.Language["RivalRanking"],
-                Position = new SharpDX.Vector2(0, 90)
+                Position = new System.Numerics.Vector2(0, 90)
             });
         }
 
@@ -50,16 +51,16 @@ namespace PPDSingle
 
     class MenuRankingBoard : GameComponent
     {
-        PPDFramework.Resource.ResourceManager resourceManager;
+        readonly PPDFramework.Resource.ResourceManager resourceManager;
         Ranking currentRanking;
         Difficulty currentDifficulty = Difficulty.Normal;
         Ranking ranking;
         bool findFinished;
 
-        RankingChild[] ranks;
+        readonly RankingChild[] ranks;
 
-        TextureString yourRankText;
-        TextureString rankKindText;
+        readonly TextureString yourRankText;
+        readonly TextureString rankKindText;
 
         public Difficulty CurrentDifficulty
         {
@@ -90,7 +91,7 @@ namespace PPDSingle
             this.AddChild(info = new PictureObject(device, resourceManager, Utility.Path.Combine("infoboard2.png")));
             this.AddChild(yourRankText = new TextureString(device, "", 12, PPDColors.White)
             {
-                Position = new SharpDX.Vector2(280, -10),
+                Position = new System.Numerics.Vector2(280, -10),
                 Alignment = Alignment.Right,
                 Border = new Border
                 {
@@ -100,7 +101,7 @@ namespace PPDSingle
             });
             this.AddChild(rankKindText = new TextureString(device, "", 12, PPDColors.White)
             {
-                Position = new SharpDX.Vector2(5, -10),
+                Position = new System.Numerics.Vector2(5, -10),
                 Border = new Border
                 {
                     Color = PPDColors.Black,
@@ -108,9 +109,9 @@ namespace PPDSingle
                 }
             });
             ranks = new RankingChild[3];
-            info.AddChild(ranks[0] = new RankingChild(device, resourceManager) { Position = new SharpDX.Vector2(15, 10) });
-            info.AddChild(ranks[1] = new RankingChild(device, resourceManager) { Position = new SharpDX.Vector2(15, 30) });
-            info.AddChild(ranks[2] = new RankingChild(device, resourceManager) { Position = new SharpDX.Vector2(15, 50) });
+            info.AddChild(ranks[0] = new RankingChild(device, resourceManager) { Position = new System.Numerics.Vector2(15, 10) });
+            info.AddChild(ranks[1] = new RankingChild(device, resourceManager) { Position = new System.Numerics.Vector2(15, 30) });
+            info.AddChild(ranks[2] = new RankingChild(device, resourceManager) { Position = new System.Numerics.Vector2(15, 50) });
         }
 
         public void ChangeSongInfo(Func<Ranking> rankingFunc)
@@ -168,7 +169,7 @@ namespace PPDSingle
             RankingInfo myRank = null;
             foreach (RankingInfo info in infos)
             {
-                if (info.ID.ToLower() == WebManager.Instance.CurrentAccountId.ToLower())
+                if (info.ID.Equals(WebManager.Instance.CurrentAccountId, StringComparison.CurrentCultureIgnoreCase))
                 {
                     myRank = info;
                 }
@@ -186,10 +187,10 @@ namespace PPDSingle
         {
             private int rank;
 
-            private PictureObject gold;
-            private PictureObject silver;
-            private PictureObject bronze;
-            private TextureString text;
+            private readonly PictureObject gold;
+            private readonly PictureObject silver;
+            private readonly PictureObject bronze;
+            private readonly TextureString text;
 
             public string Text
             {
@@ -243,7 +244,7 @@ namespace PPDSingle
                 gold.Hidden = silver.Hidden = bronze.Hidden = true;
                 text = new TextureString(device, "", 12, 230, PPDColors.White)
                 {
-                    Position = new SharpDX.Vector2(25, 0),
+                    Position = new System.Numerics.Vector2(25, 0),
                     AllowScroll = true
                 };
 

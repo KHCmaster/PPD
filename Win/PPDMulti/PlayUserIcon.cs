@@ -3,23 +3,25 @@ using PPDFrameworkCore;
 using PPDMultiCommon.Data;
 using PPDMultiCommon.Model;
 using PPDShareComponent;
-using SharpDX;
+using System.Numerics;
+using PPDMath;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace PPDMulti
 {
     class PlayUserIcon : BindableGameComponent
     {
-        PPDFramework.Resource.ResourceManager resourceManager;
+        readonly PPDFramework.Resource.ResourceManager resourceManager;
 
         PictureObject userIcon;
         TextureString userNameString;
         NumberPictureObject scorePicture;
-        UserPlayState userPlayState;
+        readonly UserPlayState userPlayState;
         LifeGage lifeGage;
         PictureObject[] evals;
-        ItemManagerComponent itemManager;
+        readonly ItemManagerComponent itemManager;
         Dictionary<ItemEffect, PictureObject> itemPictureDict;
         SpriteObject itemSprite;
 
@@ -43,8 +45,8 @@ namespace PPDMulti
             this.userPlayState = userPlayState;
             this.itemManager = itemManager;
 
-            itemManager.EffectAdded += itemManager_EffectAdded;
-            itemManager.EffectRemoved += itemManager_EffectRemoved;
+            itemManager.EffectAdded += ItemManager_EffectAdded;
+            itemManager.EffectRemoved += ItemManager_EffectRemoved;
 
             InnerStruct();
         }
@@ -52,11 +54,11 @@ namespace PPDMulti
         private void InnerStruct()
         {
             Hidden = true;
-            itemPictureDict = new Dictionary<ItemEffect, PictureObject>();
+            itemPictureDict = [];
 
             this.AddChild(itemSprite = new SpriteObject(device)
             {
-                Position = new SharpDX.Vector2(92, 1)
+                Position = new System.Numerics.Vector2(92, 1)
             });
             this.AddChild((userIcon = new PictureObject(device, resourceManager, PathObject.Absolute(currentUserIconPath), true)
             {
@@ -89,13 +91,13 @@ namespace PPDMulti
                 {
                     Position = new Vector2(35, 14),
                     Hidden = true,
-                    Scale = new SharpDX.Vector2(0.4f, 0.4f)
+                    Scale = new System.Numerics.Vector2(0.4f, 0.4f)
                 };
                 this.AddChild(evals[i]);
             }
             this.AddChild(lifeGage = new LifeGage(device, resourceManager)
             {
-                Position = new SharpDX.Vector2(37, 32)
+                Position = new System.Numerics.Vector2(37, 32)
             });
 
             if (userPlayState.User.IsSelf)
@@ -118,7 +120,7 @@ namespace PPDMulti
             ChangeUserIconScale();
         }
 
-        void itemManager_EffectRemoved(ItemEffect obj)
+        void ItemManager_EffectRemoved(ItemEffect obj)
         {
             if (itemPictureDict.TryGetValue(obj, out PictureObject pic))
             {
@@ -128,11 +130,11 @@ namespace PPDMulti
             ChangeItemPosition();
         }
 
-        void itemManager_EffectAdded(ItemEffect obj)
+        void ItemManager_EffectAdded(ItemEffect obj)
         {
             var pic = new PictureObject(device, resourceManager, Utility.Path.Combine("item", String.Format("{0}.png", obj.ItemType)))
             {
-                Scale = new SharpDX.Vector2(0.75f)
+                Scale = new System.Numerics.Vector2(0.75f)
             };
             itemSprite.AddChild(pic);
             itemPictureDict.Add(obj, pic);
@@ -142,10 +144,10 @@ namespace PPDMulti
         private void ChangeItemPosition()
         {
             int iter = 0;
-            foreach (PictureObject pic in itemSprite.Children)
+            foreach (PictureObject pic in itemSprite.Children.Cast<PictureObject>())
             {
                 pic.Hidden = iter >= 6;
-                pic.Position = new SharpDX.Vector2(iter % 2 == 0 ? 0 : 12, 12 * (iter / 2));
+                pic.Position = new System.Numerics.Vector2(iter % 2 == 0 ? 0 : 12, 12 * (iter / 2));
                 iter++;
             }
         }
@@ -245,7 +247,7 @@ namespace PPDMulti
 
         private void ChangeUserIconScale()
         {
-            userIcon.Scale = new SharpDX.Vector2(32 / userIcon.Width, 32 / userIcon.Height);
+            userIcon.Scale = new System.Numerics.Vector2(32 / userIcon.Width, 32 / userIcon.Height);
         }
 
         protected override void UpdateImpl()
@@ -282,7 +284,7 @@ namespace PPDMulti
         class LifeGage : GameComponent
         {
             const int MaxWidth = 76;
-            RectangleComponent rectangle;
+            readonly RectangleComponent rectangle;
 
             float gageWidth;
 

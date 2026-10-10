@@ -1,4 +1,5 @@
-﻿using SharpDX;
+﻿using System.Numerics;
+using PPDMath;
 using System;
 
 namespace PPDFramework
@@ -6,6 +7,7 @@ namespace PPDFramework
     /// <summary>
     /// 描画可能なゲームコンポーネント
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1063:Implement IDisposable Correctly", Justification = "派生クラスは DisposeResource をオーバーライドして破棄する設計。子のコンポーネントは親が破棄する")]
     public abstract class DrawableGameComponent : IDrawable, IDisposable
     {
         /// <summary>

@@ -1,7 +1,11 @@
-﻿using PPDFramework.Texture;
+﻿using PPDFramework.Sprites;
+using PPDFramework.Texture;
 using PPDFramework.Vertex;
-using SharpDX;
-using SharpDX.Mathematics.Interop;
+using System.Numerics;
+using PPDMath;
+using Matrix = System.Numerics.Matrix4x4;
+using Color4 = Vortice.Mathematics.Color4;
+using Rectangle = Vortice.Mathematics.RectI;
 using System;
 using System.Collections.Generic;
 
@@ -36,6 +40,20 @@ namespace PPDFramework
         /// シェーダー名のプレフィックスを取得します。
         /// </summary>
         internal abstract string ShaderNamePrefix { get; }
+
+        /// <summary>
+        /// 使用しているDirectXのバージョン名を取得します。
+        /// </summary>
+        public abstract string DirectXVersion { get; }
+
+        /// <summary>
+        /// SpriteBatchを取得、設定します。
+        /// </summary>
+        internal SpriteBatch SpriteBatch
+        {
+            get;
+            set;
+        }
 
         /// <summary>
         /// ワークスペースを取得します
@@ -121,7 +139,7 @@ namespace PPDFramework
         /// <summary>
         /// デバイスを取得します。
         /// </summary>
-        public abstract ComObject Device
+        public abstract SharpGen.Runtime.ComObject Device
         {
             get;
         }
@@ -150,8 +168,8 @@ namespace PPDFramework
                 Offset = new Vector2(0, (float)(_height - Scale.X * expectedHeight) / 2);
             }
             World = Matrix.AffineTransformation2D(Scale.X, Vector2.Zero, 0, Offset);
-            modules = new Dictionary<Type, DisposableComponent>();
-            resettableComponents = new HashSet<ResettableComponent>();
+            modules = [];
+            resettableComponents = [];
         }
 
         /// <summary>
@@ -159,11 +177,8 @@ namespace PPDFramework
         /// </summary>
         internal void InitializeWorkspace()
         {
-            if (Workspace != null)
-            {
-                Workspace.Dispose();
-                Workspace = null;
-            }
+            Workspace?.Dispose();
+            Workspace = null;
             Workspace = new Workspace(this);
         }
 
@@ -182,10 +197,7 @@ namespace PPDFramework
         /// <returns></returns>
         internal WorkspaceTexture GetRenderTarget()
         {
-            if (renderTarget == null)
-            {
-                renderTarget = Workspace.Get();
-            }
+            renderTarget ??= Workspace.Get();
             return renderTarget;
         }
 
@@ -248,7 +260,7 @@ namespace PPDFramework
         /// <param name="sourceRect"></param>
         /// <param name="dest"></param>
         /// <param name="destPoint"></param>
-        internal abstract void StretchRectangle(TextureBase src, RawRectangle? sourceRect, TextureBase dest, RawPoint? destPoint);
+        internal abstract void StretchRectangle(TextureBase src, Vortice.RawRect? sourceRect, TextureBase dest, Vortice.Mathematics.Int2? destPoint);
 
         /// <summary>
         /// クリアします。
@@ -263,11 +275,6 @@ namespace PPDFramework
         /// </summary>
         /// <param name="color"></param>
         internal abstract void Clear(Color4 color);
-
-        /// <summary>
-        /// デバイスをリセットします。
-        /// </summary>
-        internal abstract void ResetDevice();
 
         /// <summary>
         /// 描画を開始します。
@@ -315,20 +322,19 @@ namespace PPDFramework
         /// <param name="primCount"></param>
         internal abstract void DrawIndexedPrimitives(PrimitiveType primitiveType, int baseVertexIndex, int minVertexIndex, int numVertices, int startIndex, int primCount);
 
-        /// <summary>
-        /// 描画します。
-        /// </summary>
-        /// <param name="primitiveType"></param>
-        /// <param name="offset"></param>
-        /// <param name="primitiveCount"></param>
-        /// <param name="data"></param>
-        internal abstract void DrawUserPrimitives<T>(PrimitiveType primitiveType, int offset, int primitiveCount, T[] data) where T : struct;
 
         /// <summary>
         /// バックバッファをファイルに書き込みます。
         /// </summary>
         /// <param name="filepath"></param>
         public abstract void BackBufferToFile(string filepath);
+
+        /// <summary>
+        /// バックバッファーの内容（BGRA）を CPU 側のメモリーにコピーします。
+        /// </summary>
+        /// <param name="destination">コピー先の先頭。</param>
+        /// <param name="destinationStride">コピー先の 1 行のバイト数。</param>
+        public abstract void CopyBackBuffer(IntPtr destination, int destinationStride);
 
         /// <summary>
         /// 切り取りの有効状態を切り替えます。
@@ -338,15 +344,27 @@ namespace PPDFramework
         public abstract void SetScissorRect(Rectangle rectangle, bool enabled);
 
         /// <summary>
+        /// 切り取りをすぐにデバイスに反映します。
+        /// </summary>
+        /// <param name="rectangle"></param>
+        /// <param name="enabled"></param>
+        internal abstract void ApplyScissorRect(Rectangle rectangle, bool enabled);
+
+        /// <summary>
+        /// スプライト描画用のアルファブレンドの状態を設定します。
+        /// </summary>
+        /// <param name="pa"></param>
+        internal abstract void SetSpriteAlphaBlend(bool pa);
+
+        /// <summary>
         /// 破棄します。
         /// </summary>
         protected override void DisposeResource()
         {
-            if (Workspace != null)
-            {
-                Workspace.Dispose();
-                Workspace = null;
-            }
+            SpriteBatch?.Dispose();
+            SpriteBatch = null;
+            Workspace?.Dispose();
+            Workspace = null;
             foreach (var module in modules.Values)
             {
                 module.Dispose();
@@ -387,31 +405,15 @@ namespace PPDFramework
         /// <param name="expectedWidth"></param>
         /// <param name="expectedHeight"></param>
         /// <param name="expectedAspectRatio"></param>
-        /// <param name="isDX11"></param>
-        public static PPDDevice Initialize(IntPtr handle, int width, int height, int expectedWidth, int expectedHeight, float expectedAspectRatio, bool isDX11 = false)
+        public static PPDDevice Initialize(IntPtr handle, int width, int height, int expectedWidth, int expectedHeight, float expectedAspectRatio)
         {
-            PPDDevice ppdDevice;
-            if (isDX11)
-            {
-                PPDSetting.Setting.ShaderDisabled = false;
-                Effect.EffectFactoryManager.Initialize(new Effect.DX11.EffectFactory());
-                Resource.ImageResourceFactoryManager.Initialize(new Resource.DX11.ImageResourceFactory());
-                PPDFramework.Texture.TextureFactoryManager.Initialize(new Texture.DX11.TextureFactory());
-                Vertex.VertexBufferFactoryManager.Initialize(new Vertex.DX11.VertexBufferFactory());
-                Vertex.VertexDeclarationFactoryManager.Initialize(new Vertex.DX11.VertexDeclarationFactory());
-                Vertex.IndexBufferFactoryManager.Initialize(new Vertex.DX11.IndexBufferFactory());
-                ppdDevice = new DX11.PPDDevice(handle, width, height, expectedWidth, expectedHeight, expectedAspectRatio);
-            }
-            else
-            {
-                Effect.EffectFactoryManager.Initialize(new Effect.DX9.EffectFactory());
-                Resource.ImageResourceFactoryManager.Initialize(new Resource.DX9.ImageResourceFactory());
-                PPDFramework.Texture.TextureFactoryManager.Initialize(new Texture.DX9.TextureFactory());
-                Vertex.VertexBufferFactoryManager.Initialize((IVertexBufferFactory)new Vertex.DX9.VertexBufferFactory());
-                Vertex.VertexDeclarationFactoryManager.Initialize(new Vertex.DX9.VertexDeclarationFactory());
-                Vertex.IndexBufferFactoryManager.Initialize(new Vertex.DX9.IndexBufferFactory());
-                ppdDevice = new DX9.PPDDevice(handle, width, height, expectedWidth, expectedHeight, expectedAspectRatio);
-            }
+            Effect.EffectFactoryManager.Initialize(new Effect.DX11.EffectFactory());
+            Resource.ImageResourceFactoryManager.Initialize(new Resource.DX11.ImageResourceFactory());
+            PPDFramework.Texture.TextureFactoryManager.Initialize(new Texture.DX11.TextureFactory());
+            Vertex.VertexBufferFactoryManager.Initialize(new Vertex.DX11.VertexBufferFactory());
+            Vertex.VertexDeclarationFactoryManager.Initialize(new Vertex.DX11.VertexDeclarationFactory());
+            Vertex.IndexBufferFactoryManager.Initialize(new Vertex.DX11.IndexBufferFactory());
+            var ppdDevice = new DX11.PPDDevice(handle, width, height, expectedWidth, expectedHeight, expectedAspectRatio);
             ppdDevice.InitializeWorkspace();
             return ppdDevice;
         }

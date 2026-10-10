@@ -3,18 +3,11 @@ using FlowScriptDrawControl.Model;
 
 namespace FlowScriptDrawControl.Command
 {
-    abstract class EditScopeCommandBase : CommandBase
+    abstract class EditScopeCommandBase(FlowAreaControl flowAreaControl, ScopeControl scopeControl, PositionableControl positionableControl) : CommandBase
     {
-        protected FlowAreaControl flowAreaControl;
-        protected ScopeControl scopeControl;
-        protected PositionableControl positionableControl;
-
-        protected EditScopeCommandBase(FlowAreaControl flowAreaControl, ScopeControl scopeControl, PositionableControl positionableControl)
-        {
-            this.flowAreaControl = flowAreaControl;
-            this.scopeControl = scopeControl;
-            this.positionableControl = positionableControl;
-        }
+        protected FlowAreaControl flowAreaControl = flowAreaControl;
+        protected ScopeControl scopeControl = scopeControl;
+        protected PositionableControl positionableControl = positionableControl;
 
         protected void AddToScope()
         {

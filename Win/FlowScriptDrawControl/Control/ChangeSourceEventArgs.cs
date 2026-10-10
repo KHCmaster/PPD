@@ -3,17 +3,12 @@ using System;
 
 namespace FlowScriptDrawControl.Control
 {
-    public class ChangeSourceEventArgs : EventArgs
+    public class ChangeSourceEventArgs(AssemblyAndType asmAndType) : EventArgs
     {
         public AssemblyAndType AssemblyAndType
         {
             get;
             private set;
-        }
-
-        public ChangeSourceEventArgs(AssemblyAndType asmAndType)
-        {
-            AssemblyAndType = asmAndType;
-        }
+        } = asmAndType;
     }
 }

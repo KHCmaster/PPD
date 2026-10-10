@@ -2,7 +2,10 @@
 
 namespace FolderDiffChecker
 {
-    class DiffModel
+    /// <summary>
+    /// 見つかった差分 1 つです。
+    /// </summary>
+    public class DiffModel
     {
         [Flags]
         public enum DiffMode

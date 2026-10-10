@@ -6,7 +6,8 @@ using PPDFramework.PPDStructure;
 using PPDFramework.PPDStructure.PPDData;
 using PPDFramework.Shaders;
 using PPDFrameworkCore;
-using SharpDX;
+using System.Numerics;
+using PPDMath;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -36,14 +37,16 @@ namespace PPDCore
         const float defaultbpm = 130;
 
         int simtype = 1;
-        List<int> simpiclist = new List<int>();
+        readonly List<int> simpiclist = [];
 
-        string[] effectfilenames = new string[(int)EffectType.MaxSlide + 1];
+        readonly string[] effectfilenames = new string[(int)EffectType.MaxSlide + 1];
         MarkDataBase[] ppdat;
         int iter;
-        float sametimeing = 0.01f;
-        HashSet<Mark> removeMarks = new HashSet<Mark>();
-        Dictionary<float, SameTimingMarks> markgroups = new Dictionary<float, SameTimingMarks>();
+        // 作ったノーツの数（重いフレームのログ用）
+        int createdMarkCount;
+        readonly float sametimeing = 0.01f;
+        readonly HashSet<Mark> removeMarks = [];
+        Dictionary<float, SameTimingMarks> markgroups = [];
         bool initialized;
 
         PPDGameUtility gameutility;
@@ -56,18 +59,18 @@ namespace PPDCore
         MarkImagePathsBase imagepathes;
         MainGameConfigBase config;
 
-        ExMarkBase[] ACPressing = new ExMarkBase[10];
+        readonly ExMarkBase[] ACPressing = new ExMarkBase[10];
         PPDFramework.Resource.ResourceManager resourceManager;
         MarkConnectionCommon markConnectionCommon;
         List<MarkData> externalMarks;
 
         int allMarkCount;
         int allLongMarkCount;
-        int[] markCounts = new int[10];
+        readonly int[] markCounts = new int[10];
 
         int currentAllMarkCount;
         int currentAllLongMarkCount;
-        int[] currentMarkCounts = new int[10];
+        readonly int[] currentMarkCounts = new int[10];
         PostDrawManager postDrawManager;
 
         public SpriteObject MarkLayer
@@ -145,9 +148,9 @@ namespace PPDCore
             this.resourceManager = resourceManager;
             this.config = config;
             this.scriptManager = scriptManager;
-            externalMarks = new List<MarkData>();
+            externalMarks = [];
 
-            evals = new float[] { PPDSetting.Setting.CoolArea, PPDSetting.Setting.GoodArea, PPDSetting.Setting.SafeArea, PPDSetting.Setting.SadArea };
+            evals = [PPDSetting.Setting.CoolArea, PPDSetting.Setting.GoodArea, PPDSetting.Setting.SafeArea, PPDSetting.Setting.SadArea];
             Logger.Instance.AddLog("CoolArea:{0}", PPDSetting.Setting.CoolArea);
             Logger.Instance.AddLog("GoodArea:{0}", PPDSetting.Setting.GoodArea);
             Logger.Instance.AddLog("SafeArea:{0}", PPDSetting.Setting.SafeArea);
@@ -198,7 +201,7 @@ namespace PPDCore
             pathes.Add(imagepathes.GetClockAxisImagePath());
             imagepathes.GetLongNoteCircleInfo(out PathObject fn, out float inner, out float outer);
             pathes.Add(fn);
-            imagepathes.GetHoldInfo(out fn, out float x, out float y);
+            imagepathes.GetHoldInfo(out fn, out _, out _);
             pathes.Add(fn);
             CreateCirclePoints(inner, outer);
 
@@ -242,30 +245,38 @@ namespace PPDCore
         {
             if (gameutility.Random)
             {
-                bool hasLR = false, hasDirection = false, hasSymbol = false;
-                foreach (MarkDataBase ppdData in ppdat)
-                {
-                    hasLR |= ppdData.ButtonType == ButtonType.L || ppdData.ButtonType == ButtonType.R;
-                    hasDirection |= ppdData.ButtonType == ButtonType.Left || ppdData.ButtonType == ButtonType.Down
-                        || ppdData.ButtonType == ButtonType.Right || ppdData.ButtonType == ButtonType.Up;
-                    hasSymbol = ppdData.ButtonType == ButtonType.Square || ppdData.ButtonType == ButtonType.Cross
-                        || ppdData.ButtonType == ButtonType.Circle || ppdData.ButtonType == ButtonType.Triangle;
-                }
-                RandomChangeManager.RandomType randomType = RandomChangeManager.RandomType.None;
-                if (hasSymbol)
-                {
-                    randomType |= RandomChangeManager.RandomType.Symbol;
-                }
-                if (hasDirection)
-                {
-                    randomType |= RandomChangeManager.RandomType.Direction;
-                }
-                if (hasLR)
-                {
-                    randomType |= RandomChangeManager.RandomType.LR;
-                }
-                randomChangeManager.Initialize(randomType);
+                randomChangeManager.Initialize(GetRandomType(ppdat));
             }
+        }
+
+        /// <summary>
+        /// 譜面に出てくるボタンの種類から、ランダムで入れ替える範囲を決めます。
+        /// </summary>
+        internal static RandomChangeManager.RandomType GetRandomType(IEnumerable<MarkDataBase> marks)
+        {
+            bool hasLR = false, hasDirection = false, hasSymbol = false;
+            foreach (MarkDataBase ppdData in marks)
+            {
+                hasLR |= ppdData.ButtonType == ButtonType.L || ppdData.ButtonType == ButtonType.R;
+                hasDirection |= ppdData.ButtonType == ButtonType.Left || ppdData.ButtonType == ButtonType.Down
+                    || ppdData.ButtonType == ButtonType.Right || ppdData.ButtonType == ButtonType.Up;
+                hasSymbol |= ppdData.ButtonType == ButtonType.Square || ppdData.ButtonType == ButtonType.Cross
+                    || ppdData.ButtonType == ButtonType.Circle || ppdData.ButtonType == ButtonType.Triangle;
+            }
+            RandomChangeManager.RandomType randomType = RandomChangeManager.RandomType.None;
+            if (hasSymbol)
+            {
+                randomType |= RandomChangeManager.RandomType.Symbol;
+            }
+            if (hasDirection)
+            {
+                randomType |= RandomChangeManager.RandomType.Direction;
+            }
+            if (hasLR)
+            {
+                randomType |= RandomChangeManager.RandomType.LR;
+            }
+            return randomType;
         }
 
         public void AddMark(Vector2 position, float angle, float time, MarkType markType, int id)
@@ -327,7 +338,7 @@ namespace PPDCore
                     if (group.Count > 1)
                     {
                         ret.Add(lastTime, group);
-                        group = new SameTimingMarks();
+                        group = [];
                     }
                     else
                     {
@@ -468,7 +479,7 @@ namespace PPDCore
                 colorposes.Add(mk.ColorPosition);
                 if (mk.NoteType == NoteType.AC || mk.NoteType == NoteType.ACFT)
                 {
-                    mk.ChangeColorPosition += mk_ChangeColorPosition;
+                    mk.ChangeColorPosition += Mk_ChangeColorPosition;
                 }
             }
             simtype++;
@@ -491,11 +502,11 @@ namespace PPDCore
                 Vector2[] convex = null;
                 if (useColorPosition)
                 {
-                    convex = ConvexHull.Convex_Hull(colorposes.ToArray());
+                    convex = ConvexHull.Convex_Hull([.. colorposes]);
                 }
                 else
                 {
-                    convex = ConvexHull.Convex_Hull(poses.ToArray());
+                    convex = ConvexHull.Convex_Hull([.. poses]);
                 }
 
                 var mkc = new MarkConnection(device, markConnectionCommon);
@@ -554,18 +565,18 @@ namespace PPDCore
             }
         }
 
-        bool mk_CheckColorPosition(PPDCoreModel.IMarkInfo markInfo, float currentTime, float bpm)
+        bool Mk_CheckColorPosition(PPDCoreModel.IMarkInfo markInfo, float currentTime, float bpm)
         {
             return scriptManager.CalculatePositionManager.Calculate(markInfo, currentTime, bpm);
         }
 
-        bool mk_ChangeMarkEvaluate(PPDCoreModel.IMarkInfo markInfo, EffectType effectType, bool missPress, bool release, Vector2 position)
+        bool Mk_ChangeMarkEvaluate(PPDCoreModel.IMarkInfo markInfo, EffectType effectType, bool missPress, bool release, Vector2 position)
         {
             PreEvaluate?.Invoke(markInfo, effectType, missPress, release, position);
             return scriptManager.ProcessEvaluateManager.ProcessEvaluate(markInfo, effectType, missPress, release, position);
         }
 
-        Vector2 mk_ChangeColorPosition(float scale, float timediff)
+        Vector2 Mk_ChangeColorPosition(float scale, float timediff)
         {
             return new Vector2(300 * timediff * scale, 0);
         }
@@ -575,7 +586,7 @@ namespace PPDCore
             return CreateMark(ipdata, false, 0);
         }
 
-        private bool IsScratch(ButtonType buttonType, int sameTimingMarks)
+        private static bool IsScratch(ButtonType buttonType, int sameTimingMarks)
         {
             switch (buttonType)
             {
@@ -594,7 +605,7 @@ namespace PPDCore
             return false;
         }
 
-        private bool HasRLSameTiming(int sameTimingMarks)
+        private static bool HasRLSameTiming(int sameTimingMarks)
         {
             return ((sameTimingMarks >> (int)ButtonType.R) & 1) == 1 ||
                  ((sameTimingMarks >> (int)ButtonType.L) & 1) == 1;
@@ -602,9 +613,10 @@ namespace PPDCore
 
         private Mark CreateMark(MarkDataBase ipdata, bool hasSameTimingMark, int sameTimingMarks)
         {
-            var emd = ipdata as ExMarkData;
+            using var profile = FrameProfiler.Measure(FrameSection.MarkCreate);
+            createdMarkCount++;
             Mark mk = null;
-            if (emd != null)
+            if (ipdata is ExMarkData emd)
             {
                 var noteType = EventManager.GetNoteType(ipdata.Time);
                 var displayState = EventManager.GetCorrectDisplaystate(ipdata.Time);
@@ -639,6 +651,7 @@ namespace PPDCore
                     EventManager.GetCorrectDisplaystate(ipdata.Time), EventManager.GetNoteType(ipdata.Time), sameTimingMarks, ipdata.Parameters, postDrawManager);
             }
             mk.HasSameTimingMark = hasSameTimingMark;
+            using var scriptProfile = FrameProfiler.Measure(FrameSection.MarkScript);
             if (scriptManager.ProcessMarkBPMManager.Process(mk, out float bpm))
             {
                 mk.FixedBPM = bpm;
@@ -648,8 +661,8 @@ namespace PPDCore
             {
                 MarkLayer.InsertChild(mk, 0);
                 mk.Initialize(scriptManager.CreateMarkManager.CreateMark, scriptManager.ProcessAllowedButtonsManager.Process);
-                mk.CheckColorPosition += mk_CheckColorPosition;
-                mk.ChangeMarkEvaluate += mk_ChangeMarkEvaluate;
+                mk.CheckColorPosition += Mk_CheckColorPosition;
+                mk.ChangeMarkEvaluate += Mk_ChangeMarkEvaluate;
             }
 
             return mk;
@@ -657,7 +670,7 @@ namespace PPDCore
 
         public void Seek(float seektime)
         {
-            retry();
+            Retry();
             if (!initialized) return;
             while (iter < ppdat.Length)
             {
@@ -671,12 +684,23 @@ namespace PPDCore
         }
         public void Update(float time, bool[] b, bool[] released)
         {
+            using var profile = FrameProfiler.Measure(FrameSection.Marks);
             if (!initialized) return;
+            var createdBefore = createdMarkCount;
             ReadPpdData(time, SpeedScale * EventManager.BPM);
             ReadExternalPpdData(time);
-            Logger.Instance.AddLog("Time:{0}, pressed:{1}, released:{2}", time, String.Join(",", b.Select(v => v ? "1" : "0").ToArray()),
-                String.Join(",", released.Select(v => v ? "1" : "0").ToArray()));
-            foreach (Mark mk in MarkLayer.Children.Reverse())
+            if (createdMarkCount != createdBefore && FrameProfiler.IsRecording)
+            {
+                FrameProfiler.Note(String.Format("marks+{0}(layer={1})", createdMarkCount - createdBefore, MarkLayer.ChildrenCount));
+            }
+            // ログを取らないときに、入力の状態の文字列を毎フレーム作らない
+            if (PPDSetting.Setting.CollectLog)
+            {
+                Logger.Instance.AddLog("Time:{0}, pressed:{1}, released:{2}", time, String.Join(",", b.Select(v => v ? "1" : "0").ToArray()),
+                    String.Join(",", released.Select(v => v ? "1" : "0").ToArray()));
+            }
+            using var updateProfile = FrameProfiler.Measure(FrameSection.MarkUpdate);
+            foreach (Mark mk in MarkLayer.Children.Reverse().Cast<Mark>())
             {
                 if (removeMarks.Contains(mk))
                 {
@@ -709,12 +733,12 @@ namespace PPDCore
                         if (soundType >= 0 && soundType < 10)
                         {
                             var index = randomChangeManager.Invert(soundType);
-                            if (PlaySound != null) PlaySound.Invoke(index, true);
+                            PlaySound?.Invoke(index, true);
                         }
                         else if (soundType >= 10)
                         {
                             var index = randomChangeManager.Invert(soundType - 10);
-                            if (StopSound != null) StopSound.Invoke(index, false);
+                            StopSound?.Invoke(index, false);
                             if (EventManager.GetReleaseSound(index) && PlaySound != null) PlaySound.Invoke(index, false);
                         }
                     }
@@ -724,7 +748,7 @@ namespace PPDCore
                         if (exmk.IsScratch && exmk.IsLong && soundType >= 0 && soundType < 10)
                         {
                             var index = randomChangeManager.Invert(soundType);
-                            if (PlaySound != null) PlaySound.Invoke(index, false);
+                            PlaySound?.Invoke(index, false);
                         }
                         else
                         {
@@ -746,7 +770,7 @@ namespace PPDCore
                         if (soundType != -1)
                         {
                             var index = randomChangeManager.Invert(soundType);
-                            if (PlaySound != null) PlaySound.Invoke(index, false);
+                            PlaySound?.Invoke(index, false);
                         }
                     }
                 }
@@ -764,7 +788,7 @@ namespace PPDCore
                         }
                         Array.Clear(ACPressing, 0, ACPressing.Length);
                     }
-                    if (ChangeCombo != null) ChangeCombo.Invoke(true, mk.Position);
+                    ChangeCombo?.Invoke(true, mk.Position);
                 }
                 if (results[EffectType.Pressing])
                 {
@@ -827,24 +851,18 @@ namespace PPDCore
                 }
                 if (results[EffectType.Safe] || results[EffectType.Sad] || results[EffectType.Worst])
                 {
-                    if (ChangeCombo != null)
-                    {
-                        ChangeCombo.Invoke(false, mk.Position);
-                    }
+                    ChangeCombo?.Invoke(false, mk.Position);
                 }
                 if (results[EffectType.Cool] || results[EffectType.Fine] || results[EffectType.Safe] || results[EffectType.Sad]
                     || results[EffectType.Worst])
                 {
-                    if (EvaluateCount != null)
-                    {
-                        EvaluateCount.Invoke(results.First, false);
-                    }
+                    EvaluateCount?.Invoke(results.First, false);
                 }
                 if (remove)
                 {
-                    if (exmk is SlideExMark && ((SlideExMark)exmk).IsMaxSlide)
+                    if (exmk is SlideExMark mark && mark.IsMaxSlide)
                     {
-                        var slideExMark = ((SlideExMark)exmk);
+                        var slideExMark = mark;
                         var score = 1000 + 10 * slideExMark.ExCount;
                         var position = slideExMark.GetPressedSlidePosition(slideExMark.ExCount);
                         MaxSlide?.Invoke(slideExMark, position, score, exmk.IsRight);
@@ -876,16 +894,16 @@ namespace PPDCore
                             iter--;
                             continue;
                         }
-                        Action proc = () =>
+                        void proc()
                         {
                             b[i] = false;
                             ChangeCombo?.Invoke(false, mk.Position);
                             EvaluateCount.Invoke(eval, true);
-                            mk_ChangeMarkEvaluate(mk, eval, true, false, mk.Position);
+                            Mk_ChangeMarkEvaluate(mk, eval, true, false, mk.Position);
                             MarkLayer.RemoveChild(mk);
                             RemoveFromConnection(mk);
                             mk.Dispose();
-                        };
+                        }
                         if (scriptManager.ProcessMissPressManager.Process(mk, (MarkType)i, out bool isMissPress))
                         {
                             if (isMissPress)
@@ -927,7 +945,7 @@ namespace PPDCore
         {
             if (!gameutility.Connect && !gameutility.Profile.Connect) return;
             MarkConnection foundmc = null;
-            foreach (MarkConnection mc in ConnectLayer.Children)
+            foreach (MarkConnection mc in ConnectLayer.Children.Cast<MarkConnection>())
             {
                 if (mc.Contains(mk))
                 {
@@ -953,7 +971,7 @@ namespace PPDCore
             return initialized;
         }
 
-        public void retry()
+        public void Retry()
         {
             iter = 0;
             simtype = 1;

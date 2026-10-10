@@ -2,15 +2,9 @@
 
 namespace PPDCore
 {
-    class DbLatencyUpdater : LatencyUpdaterBase
+    class DbLatencyUpdater(PPDGameUtility ppdGameUtility) : LatencyUpdaterBase(ppdGameUtility.SongInformation.Latency)
     {
-        PPDGameUtility ppdGameUtility;
-
-        public DbLatencyUpdater(PPDGameUtility ppdGameUtility)
-            : base(ppdGameUtility.SongInformation.Latency)
-        {
-            this.ppdGameUtility = ppdGameUtility;
-        }
+        readonly PPDGameUtility ppdGameUtility = ppdGameUtility;
 
         public override void SaveLatency()
         {

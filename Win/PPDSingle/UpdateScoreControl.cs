@@ -1,22 +1,25 @@
 ﻿using PPDFramework;
 using PPDFramework.Web;
-using SharpDX;
+using System.Numerics;
+using PPDMath;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace PPDSingle
 {
     class UpdateScoreControl : FocusableGameComponent
     {
+        private readonly Lock syncRoot = new();
         const int MaxDisplayCount = 13;
         const int scrollBarStartY = 80;
         const int scrollBarMaxHeight = 330;
 
-        PPDFramework.Resource.ResourceManager resourceManager;
-        ISound sound;
-        PictureObject back;
-        SpriteObject mainSprite;
-        RectangleComponent scrollBar;
+        readonly PPDFramework.Resource.ResourceManager resourceManager;
+        readonly ISound sound;
+        readonly PictureObject back;
+        readonly SpriteObject mainSprite;
+        readonly RectangleComponent scrollBar;
 
         int scrollIndex;
         int updateIndex;
@@ -30,9 +33,9 @@ namespace PPDSingle
             {
                 if (updatedSongInformations != null)
                 {
-                    return updatedSongInformations.ToArray();
+                    return [.. updatedSongInformations];
                 }
-                return new SongInformation[0];
+                return [];
             }
         }
 
@@ -109,8 +112,8 @@ namespace PPDSingle
         {
             updating = true;
             updateIndex = 0;
-            updateSucess = new List<bool>();
-            updatedSongInformations = new List<SongInformation>();
+            updateSucess = [];
+            updatedSongInformations = [];
             WebSongInformationManager.Instance.ScoreUpdated += Instance_ScoreUpdated;
             WebSongInformationManager.Instance.ScoreUpdateFailed += Instance_ScoreUpdateFailed;
             WebSongInformationManager.Instance.UpdateScore();
@@ -118,7 +121,7 @@ namespace PPDSingle
 
         void Instance_ScoreUpdateFailed(int obj, SongInformation songInfo)
         {
-            lock (this)
+            lock (syncRoot)
             {
                 updateSucess.Add(false);
                 updateIndex = obj;
@@ -127,7 +130,7 @@ namespace PPDSingle
 
         void Instance_ScoreUpdated(int obj, SongInformation songInfo)
         {
-            lock (this)
+            lock (syncRoot)
             {
                 updateSucess.Add(true);
                 updatedSongInformations.Add(songInfo);
@@ -170,7 +173,7 @@ namespace PPDSingle
 
         private void CheckUpdateIndex()
         {
-            lock (this)
+            lock (syncRoot)
             {
                 if (updateIndex < scrollIndex)
                 {
@@ -216,11 +219,11 @@ namespace PPDSingle
 
         public class UpdatableScoreGameCompoennt : GameComponent
         {
-            PPDFramework.Resource.ResourceManager resourceManager;
-            WebSongInformation songInformation;
+            readonly PPDFramework.Resource.ResourceManager resourceManager;
+            readonly WebSongInformation songInformation;
             UpdateState state = UpdateState.NotYet;
-            TextureString stateText;
-            TextureString songInfoText;
+            readonly TextureString stateText;
+            readonly TextureString songInfoText;
 
             public enum UpdateState
             {

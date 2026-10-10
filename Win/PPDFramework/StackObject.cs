@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using PPDMath;
+using System.Collections.Generic;
 
 namespace PPDFramework
 {
@@ -64,7 +65,7 @@ namespace PPDFramework
             float sum = 0;
             foreach (GameComponent child in Children)
             {
-                child.Position = new SharpDX.Vector2(sum, 0);
+                child.Position = new System.Numerics.Vector2(sum, 0);
                 sum += child.Width;
             }
         }
@@ -74,7 +75,7 @@ namespace PPDFramework
             float sum = 0;
             foreach (GameComponent child in Children)
             {
-                child.Position = new SharpDX.Vector2(0, sum);
+                child.Position = new System.Numerics.Vector2(0, sum);
                 sum += child.Height;
             }
         }

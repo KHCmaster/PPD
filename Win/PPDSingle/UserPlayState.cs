@@ -3,7 +3,7 @@ using PPDFrameworkCore;
 
 namespace PPDSingle
 {
-    public class UserPlayState : IPropertyChanged
+    public class UserPlayState(UserInfo user) : IPropertyChanged
     {
         const int MIN = 0;
         const int MAX = 1023;
@@ -12,17 +12,11 @@ namespace PPDSingle
         MarkEvaluateType evaluate = (MarkEvaluateType)(-1);
         bool isMissPress;
 
-        public UserPlayState(UserInfo user)
-        {
-            User = user;
-            Rank = 1;
-        }
-
         public UserInfo User
         {
             get;
             private set;
-        }
+        } = user;
 
         public int Score
         {
@@ -32,7 +26,7 @@ namespace PPDSingle
                 if (score != value)
                 {
                     score = value;
-                    OnPropertyChanged("Score");
+                    OnPropertyChanged(nameof(Score));
                 }
             }
         }
@@ -53,8 +47,8 @@ namespace PPDSingle
                 if (life != value)
                 {
                     life = value;
-                    OnPropertyChanged("Life");
-                    OnPropertyChanged("LifeAsFloat");
+                    OnPropertyChanged(nameof(Life));
+                    OnPropertyChanged(nameof(LifeAsFloat));
                 }
             }
         }
@@ -65,7 +59,7 @@ namespace PPDSingle
             set
             {
                 evaluate = value;
-                OnPropertyChanged("Evaluate");
+                OnPropertyChanged(nameof(Evaluate));
             }
         }
 
@@ -75,7 +69,7 @@ namespace PPDSingle
             set
             {
                 isMissPress = value;
-                OnPropertyChanged("IsMissPress");
+                OnPropertyChanged(nameof(IsMissPress));
             }
         }
 
@@ -83,14 +77,11 @@ namespace PPDSingle
         {
             get;
             set;
-        }
+        } = 1;
 
         protected void OnPropertyChanged(string propertyName)
         {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged.Invoke(propertyName);
-            }
+            PropertyChanged?.Invoke(propertyName);
         }
 
         #region IPropertyChanged メンバ

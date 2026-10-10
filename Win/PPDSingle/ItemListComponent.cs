@@ -2,7 +2,8 @@
 using PPDFramework.Web;
 using PPDFrameworkCore;
 using PPDShareComponent;
-using SharpDX;
+using System.Numerics;
+using PPDMath;
 using System;
 using System.Linq;
 
@@ -22,17 +23,17 @@ namespace PPDSingle
         const int ClipHeight = 330;
         const int SpriteY = 90;
         const int ItemHeight = 70;
-        IGameHost gameHost;
-        PPDFramework.Resource.ResourceManager resourceManager;
-        ISound sound;
+        readonly IGameHost gameHost;
+        readonly PPDFramework.Resource.ResourceManager resourceManager;
+        readonly ISound sound;
 
-        SpriteObject mainSprite;
-        SpriteObject waitSprite;
+        readonly SpriteObject mainSprite;
+        readonly SpriteObject waitSprite;
         bool loading;
         ItemInfo[] items;
-        LineRectangleComponent rectangle;
+        readonly LineRectangleComponent rectangle;
         int selection;
-        StackObject stackObject;
+        readonly StackObject stackObject;
         DialogState dialogState = DialogState.None;
 
         public ItemInfo UseItem
@@ -156,7 +157,7 @@ namespace PPDSingle
                     }
                     FocusManager.Focus(dialog);
                     this.InsertChild(dialog, 0);
-                    dialog.LostFocused += drd_LostFocused;
+                    dialog.LostFocused += Drd_LostFocused;
                 }
             }
             else if (args.InputInfo.IsPressed(ButtonType.Triangle))
@@ -169,7 +170,7 @@ namespace PPDSingle
                            Utility.Language[String.Format("Item{0}Name", UseItem.ItemType)]), GeneralDialog.ButtonTypes.OkCancel);
                     FocusManager.Focus(gd);
                     this.InsertChild(gd, 0);
-                    gd.LostFocused += gd_LostFocused;
+                    gd.LostFocused += Gd_LostFocused;
                 }
             }
             else if (args.InputInfo.IsPressed(ButtonType.Down))
@@ -198,7 +199,7 @@ namespace PPDSingle
             }
         }
 
-        void gd_LostFocused(IFocusable sender, FocusEventArgs args)
+        void Gd_LostFocused(IFocusable sender, FocusEventArgs args)
         {
             var drd = sender as GeneralDialog;
             if (drd.OK)
@@ -210,20 +211,20 @@ namespace PPDSingle
             drd.Dispose();
         }
 
-        void drd_LostFocused(IFocusable sender, FocusEventArgs args)
+        void Drd_LostFocused(IFocusable sender, FocusEventArgs args)
         {
             var baseDialog = sender as GeneralDialogBase;
             ItemType itemType = ItemType.None;
-            if (baseDialog is GeneralDialog && ((GeneralDialog)baseDialog).OK)
+            if (baseDialog is GeneralDialog dialog && dialog.OK)
             {
                 UseItem = ((ItemsComponent)mainSprite.GetChildAt(selection)).Items[0];
                 stackObject.Hidden = false;
                 itemType = UseItem.ItemType;
             }
-            else if (baseDialog is SuperAutoDialog && ((SuperAutoDialog)baseDialog).OK)
+            else if (baseDialog is SuperAutoDialog dialog1 && dialog1.OK)
             {
                 UseItem = ((ItemsComponent)mainSprite.GetChildAt(selection)).Items[0];
-                itemType = (ItemType)(((SuperAutoDialog)baseDialog).Result + 1);
+                itemType = (ItemType)(dialog1.Result + 1);
                 UseItem["SubItemType"] = itemType;
                 stackObject.Hidden = false;
             }
@@ -233,17 +234,6 @@ namespace PPDSingle
             }
             this.RemoveChild(baseDialog);
             baseDialog.Dispose();
-        }
-
-        void dialog_LostFocused(IFocusable sender, FocusEventArgs args)
-        {
-            var dialog = sender as GeneralDialog;
-            if (dialog.OK)
-            {
-                UseItem["AllowAllButton"] = true;
-            }
-            this.RemoveChild(dialog);
-            dialog.Dispose();
         }
 
         private void Load()
@@ -268,7 +258,7 @@ namespace PPDSingle
             int iter = 0;
             foreach (var g in groups)
             {
-                var control = new ItemsComponent(device, resourceManager, g.ToArray())
+                var control = new ItemsComponent(device, resourceManager, [.. g])
                 {
                     Position = new Vector2(0, iter * ItemHeight)
                 };
@@ -389,7 +379,7 @@ namespace PPDSingle
 
         class ItemsComponent : GameComponent
         {
-            private PPDFramework.Resource.ResourceManager resourceManager;
+            private readonly PPDFramework.Resource.ResourceManager resourceManager;
 
             public ItemInfo[] Items
             {

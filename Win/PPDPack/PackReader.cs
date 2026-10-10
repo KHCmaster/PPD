@@ -22,7 +22,7 @@ namespace PPDPack
         List<string> filenames;
         List<int> sizes;
         int headeroffset;
-        bool fileOpened;
+        readonly bool fileOpened;
 
         public List<string> FileList
         {
@@ -56,8 +56,8 @@ namespace PPDPack
         private void InnerStruct(Stream stream)
         {
             this.stream = stream;
-            filenames = new List<string>();
-            sizes = new List<int>();
+            filenames = [];
+            sizes = [];
             AnalyzeHeader();
         }
 
@@ -75,7 +75,7 @@ namespace PPDPack
             }
 
             byte[] header = new byte[PackUtility.FileSignature.Length];
-            stream.Read(header, 0, header.Length);
+            stream.ReadAtLeast(header, header.Length, throwOnEndOfStream: false);
             for (int i = 0; i < header.Length; i++)
             {
                 if (header[i] != PackUtility.FileSignature[i])
@@ -106,10 +106,10 @@ namespace PPDPack
             foreach (byte namelength in filenamelength)
             {
                 byte[] name = new byte[namelength];
-                stream.Read(name, 0, name.Length);
+                stream.ReadAtLeast(name, name.Length, throwOnEndOfStream: false);
                 filenames.Add(Encoding.UTF8.GetString(name));
                 byte[] size = new byte[4];
-                stream.Read(size, 0, size.Length);
+                stream.ReadAtLeast(size, size.Length, throwOnEndOfStream: false);
                 var intSize = (int)BitConverter.ToUInt32(size, 0);
                 sizes.Add(intSize);
                 sizeSum += intSize;
@@ -149,17 +149,14 @@ namespace PPDPack
             GC.SuppressFinalize(this);
         }
 
-        private void Dispose(bool disposing)
+        protected virtual void Dispose(bool disposing)
         {
             if (!this.disposed)
             {
                 if (disposing)
                 {
-                    if (stream != null)
-                    {
-                        stream.Close();
-                        stream = null;
-                    }
+                    stream?.Close();
+                    stream = null;
                 }
             }
             disposed = true;

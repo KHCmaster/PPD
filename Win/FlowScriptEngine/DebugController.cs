@@ -3,10 +3,10 @@ using System.Threading;
 
 namespace FlowScriptEngine
 {
-    public class DebugController
+    public class DebugController : IDisposable
     {
         private OperationType operationType;
-        private ManualResetEvent resetEvent;
+        private readonly ManualResetEvent resetEvent = new(false);
         private FlowSourceManager currentFlowSourceManager;
 
         public event Action<string, FlowSourceManager> SourceChanged;
@@ -20,8 +20,20 @@ namespace FlowScriptEngine
             private set;
         }
 
+        /// <summary>
+        /// 実行の中止が要求されたかどうかを取得します。
+        /// 要求されると、実行中のスクリプトは次のノードの評価で止まります（.NET では Thread.Abort が使えないため）。
+        /// </summary>
+        public bool IsAbortRequested
+        {
+            get { return abortRequested; }
+        }
+
+        private volatile bool abortRequested;
+
         public void Abort()
         {
+            abortRequested = true;
             operationType = OperationType.Abort;
             resetEvent.Set();
         }
@@ -59,7 +71,7 @@ namespace FlowScriptEngine
         {
             currentFlowSourceManager = flowSourceManager;
             operationType = OperationType.Wait;
-            resetEvent = new ManualResetEvent(false);
+            resetEvent.Reset();
             Waiting = true;
             OnOperationWaited(flowSourceManager);
             while (operationType == OperationType.Wait)
@@ -88,6 +100,27 @@ namespace FlowScriptEngine
         internal void OnSourceChanged(string str, FlowSourceManager flowSourceManager)
         {
             SourceChanged?.Invoke(str, flowSourceManager);
+        }
+
+        /// <summary>
+        /// 破棄します。
+        /// </summary>
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        /// <summary>
+        /// 破棄します。
+        /// </summary>
+        /// <param name="disposing">Dispose から呼ばれたときは true。</param>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                resetEvent.Dispose();
+            }
         }
     }
 }

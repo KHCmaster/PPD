@@ -19,9 +19,9 @@ namespace FlowScriptEnginePPD.FlowSourceObjects.Audio.Sound
         {
             base.OnInitialize();
 
-            if (this.Manager.Items.ContainsKey("ResourceManager"))
+            if (this.Manager.Items.TryGetValue("ResourceManager", out object value))
             {
-                resourceManager = this.Manager.Items["ResourceManager"] as ScriptResourceManager;
+                resourceManager = value as ScriptResourceManager;
             }
         }
 
@@ -45,7 +45,7 @@ namespace FlowScriptEnginePPD.FlowSourceObjects.Audio.Sound
 
             if (resourceManager != null)
             {
-                Object = (SoundResource)resourceManager.GetResource(Path, PPDCoreModel.Data.ResourceKind.Sound, new Dictionary<string, object>());
+                Object = (SoundResource)resourceManager.GetResource(Path, PPDCoreModel.Data.ResourceKind.Sound, []);
                 OnSuccess();
             }
             else

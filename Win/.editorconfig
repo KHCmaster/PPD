@@ -1,0 +1,35 @@
+# このファイルがリポジトリのコードスタイルの設定の最上位
+root = true
+
+[*.cs]
+# 使われていない引数（IDE0060）は、非公開のメンバーだけを対象にする（公開メンバーの引数を消すと、呼び出し側との互換がなくなる）
+dotnet_code_quality_unused_parameters = non_public
+# インスタンスのデータを使わないメンバーを static にする（CA1822）のは、非公開のメンバーだけを対象にする（公開メンバーを static にすると、呼び出し方が変わる）
+dotnet_code_quality.CA1822.api_surface = private, internal
+# P/Invoke の定義は DllImport のままにする（SYSLIB1054）。ネイティブ AOT は使っておらず、LibraryImport に書き換えると
+# StringBuilder や文字列を含む構造体のマーシャリングが変わる、またはできなくなるため
+dotnet_diagnostic.SYSLIB1054.severity = none
+# 引数や戻り値をインターフェイスや基底クラスで受けている箇所は、描画先やシェーダーの差し替えのための設計なので、具象型にしない（CA1859）
+dotnet_diagnostic.CA1859.severity = none
+
+# FlowScript のノードのクラスは、名前空間を含む完全な名前でスクリプト（.fsml）に保存されるので、名前空間をフォルダーに合わせない
+[FlowScriptEngine*/**.cs]
+dotnet_style_namespace_match_folder = false
+
+# 外部から取り込んだコードは、元のコードとの差分を小さく保つため、アナライザー（CA 規則）の対象外にする。
+# - PPDSound/fmod*.cs: FMOD Ex の C# ラッパー（Firelight Technologies）。文字列は FMOD の仕様どおり ANSI で渡す必要がある
+# - WinFormsUI: DockPanel Suite。子コントロールは Controls コレクションで破棄されるため、CA2213 などは誤検知になる
+[PPDSound/fmod*.cs]
+generated_code = true
+
+[WinFormsUI/**.cs]
+generated_code = true
+
+# DirectShow の COM 相互運用の定義
+# - SYSLIB1096: GeneratedComInterface（ComWrappers）に移すと、Marshal.GetObjectForIUnknown などで得る RCW と混在できなくなるため、ComImport のままにする
+# - CA1069: 列挙型の値は Windows SDK のヘッダーの定義（マスクや別名を含む）に合わせている
+# - CA1816: DSObject は、ラップした RCW に GC.SuppressFinalize を意図して呼んでいる
+[DirectShow/**.cs]
+dotnet_diagnostic.SYSLIB1096.severity = none
+dotnet_diagnostic.CA1069.severity = none
+dotnet_diagnostic.CA1816.severity = none

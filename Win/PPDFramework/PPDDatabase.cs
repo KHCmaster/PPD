@@ -16,12 +16,12 @@ namespace PPDFramework
     {
         static PPDDatabase db;
         internal const string LogicFolderRoot = "LogicFolderRoot";
-        string[] ppds = {
+        readonly string[] ppds = [
             "easy",
             "normal",
             "hard",
             "extreme"
-        };
+        ];
 
         /// <summary>
         /// 名前
@@ -107,12 +107,12 @@ namespace PPDFramework
             {
 
                 var columns = new string[][]{
-                    new string[]{"isaceasy","int"},
-                    new string[]{"isacnormal","int"},
-                    new string[]{"isachard","int"},
-                    new string[]{"isacextreme","int"},
-                    new string[]{"bpmstring","varchar(50)"},
-                    new string[]{"uservolume","int", "100"}
+                    ["isaceasy","int"],
+                    ["isacnormal","int"],
+                    ["isachard","int"],
+                    ["isacextreme","int"],
+                    ["bpmstring","varchar(50)"],
+                    ["uservolume","int", "100"]
                 };
 
                 foreach (string[] column in columns)
@@ -224,12 +224,12 @@ namespace PPDFramework
    date varchar(50)
 );");
                 ExecuteNonQueryCommand(@"create index LogicFolderIndex on LogicFolder(folderid);");
-                ExecuteDataTable("insert into LogicFolder(isfolder,name,childids,date) values(@isfolder,@name,@childids,@date)", new SQLiteParameter[] {
-                    new SQLiteParameter("@isfolder",1),
-                    new SQLiteParameter("@name",LogicFolderRoot),
-                    new SQLiteParameter("@childids",string.Empty),
-                    new SQLiteParameter("@date",DateTime.Now.ToString(CultureInfo.InvariantCulture))
-                });
+                ExecuteDataTable("insert into LogicFolder(isfolder,name,childids,date) values(@isfolder,@name,@childids,@date)", [
+                    new("@isfolder",1),
+                    new("@name",LogicFolderRoot),
+                    new("@childids",string.Empty),
+                    new("@date",DateTime.Now.ToString(CultureInfo.InvariantCulture))
+                ]);
             }
 
             if (!ExistTable("ScoreStorage"))
@@ -255,15 +255,13 @@ namespace PPDFramework
                 return;
             }
             var addedScoreInfo = new List<ModifiedPPDScoreInfo>();
-            using (var transaction = new DataBaseTransaction())
-            {
-                CheckExist(out List<ModifiedPPDScoreInfo> deletedScoreInfo);
-                UpdatePPDSongInformation(PPDSetting.Setting.SongDir, "", forceUpdate, out bool hasppd, addedScoreInfo, songInfos);
-                ReplaceInfo(deletedScoreInfo, addedScoreInfo);
-            }
+            using var transaction = new DataBaseTransaction();
+            CheckExist(out List<ModifiedPPDScoreInfo> deletedScoreInfo);
+            UpdatePPDSongInformation(PPDSetting.Setting.SongDir, "", forceUpdate, out bool hasppd, addedScoreInfo, songInfos);
+            ReplaceInfo(deletedScoreInfo, addedScoreInfo);
         }
 
-        internal void RemoveUnconnectedLinks()
+        internal static void RemoveUnconnectedLinks()
         {
             foreach (LogicFolderInfomation info in LogicFolderInfomation.All)
             {
@@ -286,39 +284,39 @@ namespace PPDFramework
                 });
                 if (index >= 0)
                 {
-                    ExecuteDataTable("update ResultTable set scoreid = @newid where scoreid == @oldid", new SQLiteParameter[] {
-                        new SQLiteParameter("@newid", added[index].ID),
-                        new SQLiteParameter("@oldid", delete.ID)
-                    });
-                    ExecuteDataTable("update LogicFolder set scoreid = @newid where scoreid == @oldid", new SQLiteParameter[] {
-                        new SQLiteParameter("@newid", added[index].ID),
-                        new SQLiteParameter("@oldid", delete.ID)
-                    });
-                    ExecuteDataTable("update ScoreStorage set scoreid = @newid where scoreid == @oldid", new SQLiteParameter[] {
-                        new SQLiteParameter("@newid", added[index].ID),
-                        new SQLiteParameter("@oldid", delete.ID)
-                    });
+                    ExecuteDataTable("update ResultTable set scoreid = @newid where scoreid == @oldid", [
+                        new("@newid", added[index].ID),
+                        new("@oldid", delete.ID)
+                    ]);
+                    ExecuteDataTable("update LogicFolder set scoreid = @newid where scoreid == @oldid", [
+                        new("@newid", added[index].ID),
+                        new("@oldid", delete.ID)
+                    ]);
+                    ExecuteDataTable("update ScoreStorage set scoreid = @newid where scoreid == @oldid", [
+                        new("@newid", added[index].ID),
+                        new("@oldid", delete.ID)
+                    ]);
                     ExecuteDataTable(@"update ScoreTable set 
 bestscoreeasyid = @bestscoreeasyid, 
 bestscorenormalid = @bestscorenormalid, 
 bestscorehardid = @bestscorehardid, 
 bestscoreextremeid = @bestscoreextremeid, 
 latency = @latency,
-uservolume = @uservolume where scoreid = @newid", new SQLiteParameter[]{
-                        new SQLiteParameter("@bestscoreeasyid", delete.BestEasyID),
-                        new SQLiteParameter("@bestscorenormalid", delete.BestNormalID),
-                        new SQLiteParameter("@bestscorehardid", delete.BestHardID),
-                        new SQLiteParameter("@bestscoreextremeid", delete.BestExtremeID),
-                        new SQLiteParameter("@latency", delete.Latency),
-                        new SQLiteParameter("@newid", added[index].ID),
-                        new SQLiteParameter("@uservolume", delete.UserVolume)
-                    });
+uservolume = @uservolume where scoreid = @newid", [
+                        new("@bestscoreeasyid", delete.BestEasyID),
+                        new("@bestscorenormalid", delete.BestNormalID),
+                        new("@bestscorehardid", delete.BestHardID),
+                        new("@bestscoreextremeid", delete.BestExtremeID),
+                        new("@latency", delete.Latency),
+                        new("@newid", added[index].ID),
+                        new("@uservolume", delete.UserVolume)
+                    ]);
                 }
                 else
                 {
-                    ExecuteDataTable("delete from LogicFolder where scoreid == @oldid", new SQLiteParameter[]{
-                        new SQLiteParameter("@oldid",delete.ID)
-                    });
+                    ExecuteDataTable("delete from LogicFolder where scoreid == @oldid", [
+                        new("@oldid",delete.ID)
+                    ]);
                 }
             }
         }
@@ -355,23 +353,18 @@ uservolume = @uservolume where scoreid = @newid", new SQLiteParameter[]{
         }
 
 
-        class ModifiedPPDScoreInfo
+        class ModifiedPPDScoreInfo(int id, string guid)
         {
-            public ModifiedPPDScoreInfo(int id, string guid)
-            {
-                ID = id;
-                Guid = guid;
-            }
             public string Guid
             {
                 get;
                 private set;
-            }
+            } = guid;
             public int ID
             {
                 get;
                 private set;
-            }
+            } = id;
             public int BestEasyID
             {
                 get;
@@ -428,8 +421,8 @@ uservolume = @uservolume where scoreid = @newid", new SQLiteParameter[]{
         private void CheckExist(out List<ModifiedPPDScoreInfo> deletedScoreInfo)
         {
             var deleteIds = new List<object[]>();
-            deletedScoreInfo = new List<ModifiedPPDScoreInfo>();
-            using (var reader = ExecuteReader("select * from ScoreTable;", new SQLiteParameter[0]))
+            deletedScoreInfo = [];
+            using (var reader = ExecuteReader("select * from ScoreTable;", []))
             {
                 while (reader.Reader.Read())
                 {
@@ -439,7 +432,7 @@ uservolume = @uservolume where scoreid = @newid", new SQLiteParameter[]{
                     bool isppd = DatabaseUtility.GetInt32(reader.Reader, 26) == 1;
                     if (!Directory.Exists(directorypath))
                     {
-                        deleteIds.Add(new object[] { scoreid, Directory.Exists(parentpath), parentpath });
+                        deleteIds.Add([scoreid, Directory.Exists(parentpath), parentpath]);
                         if (isppd)
                         {
                             var guid = (string)reader.Reader["guid"];
@@ -470,11 +463,11 @@ uservolume = @uservolume where scoreid = @newid", new SQLiteParameter[]{
             foreach (object[] data in deleteIds)
             {
                 var id = (int)data[0];
-                var parentexist = (bool)data[1];
-                var parentpath = (string)data[2];
-                ExecuteDataTable(@"delete from ScoreTable where scoreid == @scoreid;", new SQLiteParameter[]{
-                    new SQLiteParameter("@scoreid",id)
-                });
+                _ = (bool)data[1];
+                _ = (string)data[2];
+                ExecuteDataTable(@"delete from ScoreTable where scoreid == @scoreid;", [
+                    new("@scoreid",id)
+                ]);
             }
         }
 
@@ -502,21 +495,21 @@ uservolume = @uservolume where scoreid = @newid", new SQLiteParameter[]{
                     IsUpdatedDirectory(dir, time.ToString(CultureInfo.InvariantCulture), out bool IsExistDir);
                     if (!IsExistDir)
                     {
-                        ExecuteDataTable("insert into ScoreTable(directorypath,isppd,parentpath,updatedate) values(@dir,@isppd,@parentdir,@updatedate);", new SQLiteParameter[]{
-                            new SQLiteParameter("@dir",dir),
-                            new SQLiteParameter("@isppd","0"),
-                            new SQLiteParameter("@parentdir",parentdir),
-                            new SQLiteParameter("@updatedate",time.ToString(CultureInfo.InvariantCulture))
-                        });
+                        ExecuteDataTable("insert into ScoreTable(directorypath,isppd,parentpath,updatedate) values(@dir,@isppd,@parentdir,@updatedate);", [
+                            new("@dir",dir),
+                            new("@isppd","0"),
+                            new("@parentdir",parentdir),
+                            new("@updatedate",time.ToString(CultureInfo.InvariantCulture))
+                        ]);
                     }
                 }
                 else
                 {
                     // PPDの譜面がないフォルダ
                     // DBにフォルダがある場合はそのデータを削除
-                    ExecuteDataTable("delete from ScoreTable where directorypath == @dir", new SQLiteParameter[]{
-                        new SQLiteParameter("@dir",dir)
-                    });
+                    ExecuteDataTable("delete from ScoreTable where directorypath == @dir", [
+                        new("@dir",dir)
+                    ]);
                 }
             }
             else
@@ -526,7 +519,7 @@ uservolume = @uservolume where scoreid = @newid", new SQLiteParameter[]{
                 {
                     time = GetLastFileTime(Path.Combine(dir, "data.ini"));
                 }
-                bool shouldUpdate = (IsUpdatedDirectory(dir, time.ToString(CultureInfo.InvariantCulture), out bool IsExistDir) || forceUpdate) || (songInfos != null && songInfos.FirstOrDefault(s => s.DirectoryPath.ToLower() == dir.ToLower()) != null);
+                bool shouldUpdate = (IsUpdatedDirectory(dir, time.ToString(CultureInfo.InvariantCulture), out bool IsExistDir) || forceUpdate) || (songInfos != null && songInfos.FirstOrDefault(s => s.DirectoryPath.Equals(dir, StringComparison.CurrentCultureIgnoreCase)) != null);
                 if (!shouldUpdate)
                 {
                     return;
@@ -608,44 +601,44 @@ uservolume = @uservolume where scoreid = @newid", new SQLiteParameter[]{
                                 @isachard,
                                 @isacextreme,
                                 @bpmstring
-                            );", new SQLiteParameter[]{
-                        new SQLiteParameter("@directorypath",dir),
-                        new SQLiteParameter("@thumbtimestart",info.ThumbStartTime),
-                        new SQLiteParameter("@thumbtimeend",info.ThumbEndTime),
-                        new SQLiteParameter("@start",info.StartTime),
-                        new SQLiteParameter("@end",info.EndTime),
-                        new SQLiteParameter("@bpm",info.BPM),
-                        new SQLiteParameter("@difficultyeasy",info.GetDifficultyString(Difficulty.Easy)),
-                        new SQLiteParameter("@difficultynormal",info.GetDifficultyString(Difficulty.Normal)),
-                        new SQLiteParameter("@difficultyhard",info.GetDifficultyString(Difficulty.Hard)),
-                        new SQLiteParameter("@difficultyextreme",info.GetDifficultyString(Difficulty.Extreme)),
-                        new SQLiteParameter("@availableeasy",(info.Difficulty & SongInformation.AvailableDifficulty.Easy )== SongInformation.AvailableDifficulty.Easy?1:0),
-                        new SQLiteParameter("@availablenormal",(info.Difficulty & SongInformation.AvailableDifficulty.Normal )== SongInformation.AvailableDifficulty.Normal?1:0),
-                        new SQLiteParameter("@availablehard",(info.Difficulty & SongInformation.AvailableDifficulty.Hard )== SongInformation.AvailableDifficulty.Hard?1:0),
-                        new SQLiteParameter("@availableextreme",(info.Difficulty & SongInformation.AvailableDifficulty.Extreme )== SongInformation.AvailableDifficulty.Extreme?1:0),
-                        new SQLiteParameter("@moviecutleft",info.TrimmingData.Left),
-                        new SQLiteParameter("@moviecutright",info.TrimmingData.Right),
-                        new SQLiteParameter("@moviecuttop" ,info.TrimmingData.Top),
-                        new SQLiteParameter("@moviecutbottom",info.TrimmingData.Bottom),
-                        new SQLiteParameter("@guid",info.GUID),
-                        new SQLiteParameter("@authorname",info.AuthorName),
-                        new SQLiteParameter("@updatedate",time.ToString(CultureInfo.InvariantCulture)),
-                        new SQLiteParameter("@isppd",1),
-                        new SQLiteParameter("@movievolume",info.MovieVolume),
-                        new SQLiteParameter("@moviepath",info.MoviePath),
-                        new SQLiteParameter("@parentpath",parentdir),
-                        new SQLiteParameter("@isold",info.IsOld?1:0),
-                        new SQLiteParameter("@latency",info.Latency),
-                        new SQLiteParameter("@easyhash",info.EasyHash),
-                        new SQLiteParameter("@normalhash",info.NormalHash),
-                        new SQLiteParameter("@hardhash",info.HardHash),
-                        new SQLiteParameter("@extremehash",info.ExtremeHash),
-                        new SQLiteParameter("@isaceasy",(int)info.EasyNoteType),
-                        new SQLiteParameter("@isacnormal",(int)info.NormalNoteType),
-                        new SQLiteParameter("@isachard",(int)info.HardNoteType),
-                        new SQLiteParameter("@isacextreme",(int)info.ExtremeNoteType),
-                        new SQLiteParameter("@bpmstring",info.BPMString)
-                    });
+                            );", [
+                        new("@directorypath",dir),
+                        new("@thumbtimestart",info.ThumbStartTime),
+                        new("@thumbtimeend",info.ThumbEndTime),
+                        new("@start",info.StartTime),
+                        new("@end",info.EndTime),
+                        new("@bpm",info.BPM),
+                        new("@difficultyeasy",info.GetDifficultyString(Difficulty.Easy)),
+                        new("@difficultynormal",info.GetDifficultyString(Difficulty.Normal)),
+                        new("@difficultyhard",info.GetDifficultyString(Difficulty.Hard)),
+                        new("@difficultyextreme",info.GetDifficultyString(Difficulty.Extreme)),
+                        new("@availableeasy",(info.Difficulty & SongInformation.AvailableDifficulty.Easy )== SongInformation.AvailableDifficulty.Easy?1:0),
+                        new("@availablenormal",(info.Difficulty & SongInformation.AvailableDifficulty.Normal )== SongInformation.AvailableDifficulty.Normal?1:0),
+                        new("@availablehard",(info.Difficulty & SongInformation.AvailableDifficulty.Hard )== SongInformation.AvailableDifficulty.Hard?1:0),
+                        new("@availableextreme",(info.Difficulty & SongInformation.AvailableDifficulty.Extreme )== SongInformation.AvailableDifficulty.Extreme?1:0),
+                        new("@moviecutleft",info.TrimmingData.Left),
+                        new("@moviecutright",info.TrimmingData.Right),
+                        new("@moviecuttop" ,info.TrimmingData.Top),
+                        new("@moviecutbottom",info.TrimmingData.Bottom),
+                        new("@guid",info.GUID),
+                        new("@authorname",info.AuthorName),
+                        new("@updatedate",time.ToString(CultureInfo.InvariantCulture)),
+                        new("@isppd",1),
+                        new("@movievolume",info.MovieVolume),
+                        new("@moviepath",info.MoviePath),
+                        new("@parentpath",parentdir),
+                        new("@isold",info.IsOld?1:0),
+                        new("@latency",info.Latency),
+                        new("@easyhash",info.EasyHash),
+                        new("@normalhash",info.NormalHash),
+                        new("@hardhash",info.HardHash),
+                        new("@extremehash",info.ExtremeHash),
+                        new("@isaceasy",(int)info.EasyNoteType),
+                        new("@isacnormal",(int)info.NormalNoteType),
+                        new("@isachard",(int)info.HardNoteType),
+                        new("@isacextreme",(int)info.ExtremeNoteType),
+                        new("@bpmstring",info.BPMString)
+                    ]);
                 }
                 else
                 {
@@ -684,69 +677,67 @@ uservolume = @uservolume where scoreid = @newid", new SQLiteParameter[]{
                                 isachard           =@isachard,
                                 isacextreme        =@isacextreme,
                                 bpmstring          =@bpmstring
-                        where directorypath = @directorypath;", new SQLiteParameter[]{
-                        new SQLiteParameter("@directorypath",dir),
-                        new SQLiteParameter("@thumbtimestart",info.ThumbStartTime),
-                        new SQLiteParameter("@thumbtimeend",info.ThumbEndTime),
-                        new SQLiteParameter("@start",info.StartTime),
-                        new SQLiteParameter("@end",info.EndTime),
-                        new SQLiteParameter("@bpm",info.BPM),
-                        new SQLiteParameter("@difficultyeasy",info.GetDifficultyString(Difficulty.Easy)),
-                        new SQLiteParameter("@difficultynormal",info.GetDifficultyString(Difficulty.Normal)),
-                        new SQLiteParameter("@difficultyhard",info.GetDifficultyString(Difficulty.Hard)),
-                        new SQLiteParameter("@difficultyextreme",info.GetDifficultyString(Difficulty.Extreme)),
-                        new SQLiteParameter("@availableeasy",(info.Difficulty & SongInformation.AvailableDifficulty.Easy )== SongInformation.AvailableDifficulty.Easy?1:0),
-                        new SQLiteParameter("@availablenormal",(info.Difficulty & SongInformation.AvailableDifficulty.Normal )== SongInformation.AvailableDifficulty.Normal?1:0),
-                        new SQLiteParameter("@availablehard",(info.Difficulty & SongInformation.AvailableDifficulty.Hard )== SongInformation.AvailableDifficulty.Hard?1:0),
-                        new SQLiteParameter("@availableextreme",(info.Difficulty & SongInformation.AvailableDifficulty.Extreme )== SongInformation.AvailableDifficulty.Extreme?1:0),
-                        new SQLiteParameter("@moviecutleft",info.TrimmingData.Left),
-                        new SQLiteParameter("@moviecutright",info.TrimmingData.Right),
-                        new SQLiteParameter("@moviecuttop" ,info.TrimmingData.Top),
-                        new SQLiteParameter("@moviecutbottom",info.TrimmingData.Bottom),
-                        new SQLiteParameter("@guid",info.GUID),
-                        new SQLiteParameter("@authorname",info.AuthorName),
-                        new SQLiteParameter("@updatedate",time.ToString(CultureInfo.InvariantCulture)),
-                        new SQLiteParameter("@isppd",1),
-                        new SQLiteParameter("@movievolume",info.MovieVolume),
-                        new SQLiteParameter("@moviepath",info.MoviePath),
-                        new SQLiteParameter("@parentpath",parentdir),
-                        new SQLiteParameter("@isold",info.IsOld?1:0),
-                        new SQLiteParameter("@easyhash",info.EasyHash),
-                        new SQLiteParameter("@normalhash",info.NormalHash),
-                        new SQLiteParameter("@hardhash",info.HardHash),
-                        new SQLiteParameter("@extremehash",info.ExtremeHash),
-                        new SQLiteParameter("@isaceasy",(int)info.EasyNoteType),
-                        new SQLiteParameter("@isacnormal",(int)info.NormalNoteType),
-                        new SQLiteParameter("@isachard",(int)info.HardNoteType),
-                        new SQLiteParameter("@isacextreme",(int)info.ExtremeNoteType),
-                        new SQLiteParameter("@bpmstring",info.BPMString)
-                    });
+                        where directorypath = @directorypath;", [
+                        new("@directorypath",dir),
+                        new("@thumbtimestart",info.ThumbStartTime),
+                        new("@thumbtimeend",info.ThumbEndTime),
+                        new("@start",info.StartTime),
+                        new("@end",info.EndTime),
+                        new("@bpm",info.BPM),
+                        new("@difficultyeasy",info.GetDifficultyString(Difficulty.Easy)),
+                        new("@difficultynormal",info.GetDifficultyString(Difficulty.Normal)),
+                        new("@difficultyhard",info.GetDifficultyString(Difficulty.Hard)),
+                        new("@difficultyextreme",info.GetDifficultyString(Difficulty.Extreme)),
+                        new("@availableeasy",(info.Difficulty & SongInformation.AvailableDifficulty.Easy )== SongInformation.AvailableDifficulty.Easy?1:0),
+                        new("@availablenormal",(info.Difficulty & SongInformation.AvailableDifficulty.Normal )== SongInformation.AvailableDifficulty.Normal?1:0),
+                        new("@availablehard",(info.Difficulty & SongInformation.AvailableDifficulty.Hard )== SongInformation.AvailableDifficulty.Hard?1:0),
+                        new("@availableextreme",(info.Difficulty & SongInformation.AvailableDifficulty.Extreme )== SongInformation.AvailableDifficulty.Extreme?1:0),
+                        new("@moviecutleft",info.TrimmingData.Left),
+                        new("@moviecutright",info.TrimmingData.Right),
+                        new("@moviecuttop" ,info.TrimmingData.Top),
+                        new("@moviecutbottom",info.TrimmingData.Bottom),
+                        new("@guid",info.GUID),
+                        new("@authorname",info.AuthorName),
+                        new("@updatedate",time.ToString(CultureInfo.InvariantCulture)),
+                        new("@isppd",1),
+                        new("@movievolume",info.MovieVolume),
+                        new("@moviepath",info.MoviePath),
+                        new("@parentpath",parentdir),
+                        new("@isold",info.IsOld?1:0),
+                        new("@easyhash",info.EasyHash),
+                        new("@normalhash",info.NormalHash),
+                        new("@hardhash",info.HardHash),
+                        new("@extremehash",info.ExtremeHash),
+                        new("@isaceasy",(int)info.EasyNoteType),
+                        new("@isacnormal",(int)info.NormalNoteType),
+                        new("@isachard",(int)info.HardNoteType),
+                        new("@isacextreme",(int)info.ExtremeNoteType),
+                        new("@bpmstring",info.BPMString)
+                    ]);
                 }
-                using (var reader = ExecuteReader("select * from ScoreTable where directorypath = @directorypath;",
-                     new SQLiteParameter[] { new SQLiteParameter("@directorypath", dir) }))
+                using var reader = ExecuteReader("select * from ScoreTable where directorypath = @directorypath;",
+                     [new("@directorypath", dir)]);
+                while (reader.Reader.Read())
                 {
-                    while (reader.Reader.Read())
+                    var index = reader.Reader.GetInt32(0);
+                    var guid = reader.Reader.GetString(23);
+                    if (!IsExistDir)
                     {
-                        var index = reader.Reader.GetInt32(0);
-                        var guid = reader.Reader.GetString(23);
-                        if (!IsExistDir)
+                        var mppdsi = new ModifiedPPDScoreInfo(index, guid)
                         {
-                            var mppdsi = new ModifiedPPDScoreInfo(index, guid)
-                            {
-                                EasyHash = info.EasyHash,
-                                NormalHash = info.NormalHash,
-                                HardHash = info.HardHash,
-                                ExtremeHash = info.ExtremeHash
-                            };
-                            addedScoreInfo.Add(mppdsi);
-                        }
-                        break;
+                            EasyHash = info.EasyHash,
+                            NormalHash = info.NormalHash,
+                            HardHash = info.HardHash,
+                            ExtremeHash = info.ExtremeHash
+                        };
+                        addedScoreInfo.Add(mppdsi);
                     }
+                    break;
                 }
             }
         }
 
-        DateTime GetLastFileTime(string filePath)
+        static DateTime GetLastFileTime(string filePath)
         {
             DateTime dt1 = File.GetCreationTime(filePath), dt2 = File.GetLastWriteTime(filePath);
             return DateTime.Compare(dt1, dt2) > 0 ? dt1 : dt2;
@@ -756,7 +747,7 @@ uservolume = @uservolume where scoreid = @newid", new SQLiteParameter[]{
         {
             bool isUpdated = true;
             isExistDir = false;
-            using (var reader = ExecuteReader("select * from ScoreTable where directorypath = @directorypath", new SQLiteParameter[] { new SQLiteParameter("@directorypath", directorypath) }))
+            using (var reader = ExecuteReader("select * from ScoreTable where directorypath = @directorypath", [new("@directorypath", directorypath)]))
             {
                 while (reader.Reader.Read())
                 {
@@ -780,9 +771,9 @@ uservolume = @uservolume where scoreid = @newid", new SQLiteParameter[]{
             {
                 if (sb.Length > 0)
                 {
-                    sb.Append("|");
+                    sb.Append('|');
                 }
-                sb.Append(data.ToString());
+                sb.Append(data);
             }
             return sb.ToString();
         }
@@ -821,14 +812,12 @@ uservolume = @uservolume where scoreid = @newid", new SQLiteParameter[]{
             score = 0;
             try
             {
-                using (var reader = ExecuteReader("select * from ResultTable where resultid = @resultid;", new SQLiteParameter[] { new SQLiteParameter("@resultid", resultID) }))
+                using var reader = ExecuteReader("select * from ResultTable where resultid = @resultid;", [new("@resultid", resultID)]);
+                while (reader.Reader.Read())
                 {
-                    while (reader.Reader.Read())
-                    {
-                        score = reader.Reader.GetInt32(4);
-                        found = true;
-                        break;
-                    }
+                    score = reader.Reader.GetInt32(4);
+                    found = true;
+                    break;
                 }
             }
             catch
@@ -841,7 +830,7 @@ uservolume = @uservolume where scoreid = @newid", new SQLiteParameter[]{
         {
             bool highscore = false;
             int bestscoreid = -1;
-            using (var reader = ExecuteReader("select * from ScoreTable where scoreid = @scoreid;", new SQLiteParameter[] { new SQLiteParameter("@scoreid", scoreID) }))
+            using (var reader = ExecuteReader("select * from ScoreTable where scoreid = @scoreid;", [new("@scoreid", scoreID)]))
             {
                 while (reader.Reader.Read())
                 {
@@ -865,21 +854,19 @@ uservolume = @uservolume where scoreid = @newid", new SQLiteParameter[]{
             }
             if (bestscoreid != -1)
             {
-                using (var reader = ExecuteReader("select * from ResultTable where resultid = @resultid;", new SQLiteParameter[] { new SQLiteParameter("@resultid", bestscoreid) }))
+                using var reader = ExecuteReader("select * from ResultTable where resultid = @resultid;", [new("@resultid", bestscoreid)]);
+                while (reader.Reader.Read())
                 {
-                    while (reader.Reader.Read())
-                    {
-                        var bestscore = reader.Reader.GetInt32(4);
-                        var bestcounts = new int[]{
+                    var bestscore = reader.Reader.GetInt32(4);
+                    var bestcounts = new int[]{
                             reader.Reader.GetInt32(5),
                             reader.Reader.GetInt32(6),
                             reader.Reader.GetInt32(7),
                             reader.Reader.GetInt32(8),
                             reader.Reader.GetInt32(9)
                         };
-                        var bestmaxcombo = reader.Reader.GetInt32(10);
-                        highscore = IsHighScore(score, counts, maxcombo, bestscore, bestcounts, bestmaxcombo);
-                    }
+                    var bestmaxcombo = reader.Reader.GetInt32(10);
+                    highscore = IsHighScore(score, counts, maxcombo, bestscore, bestcounts, bestmaxcombo);
                 }
             }
             else
@@ -913,27 +900,27 @@ uservolume = @uservolume where scoreid = @newid", new SQLiteParameter[]{
                                    @maxcombo,
                                    @finishtime,
                                    @date
-                                );", new SQLiteParameter[]{
-                new SQLiteParameter("@scoreid",scoreID),
-                new SQLiteParameter("@difficulty",(int)difficulty),
-                new SQLiteParameter("@evaluate",(int)resulttype),
-                new SQLiteParameter("@score",score),
-                new SQLiteParameter("@coolcount",counts[0]),
-                new SQLiteParameter("@goodcount",counts[1]),
-                new SQLiteParameter("@safecount",counts[2]),
-                new SQLiteParameter("@sadcount",counts[3]),
-                new SQLiteParameter("@worstcount",counts[4]),
-                new SQLiteParameter("@maxcombo",maxcombo),
-                new SQLiteParameter("@finishtime",finishtime),
-                new SQLiteParameter("@date",DateTime.Now.ToString(CultureInfo.InvariantCulture))
-            });
+                                );", [
+                new("@scoreid",scoreID),
+                new("@difficulty",(int)difficulty),
+                new("@evaluate",(int)resulttype),
+                new("@score",score),
+                new("@coolcount",counts[0]),
+                new("@goodcount",counts[1]),
+                new("@safecount",counts[2]),
+                new("@sadcount",counts[3]),
+                new("@worstcount",counts[4]),
+                new("@maxcombo",maxcombo),
+                new("@finishtime",finishtime),
+                new("@date",DateTime.Now.ToString(CultureInfo.InvariantCulture))
+            ]);
             if (highscore)
             {
 
-                ExecuteDataTable("update ScoreTable set " + GetSQLColumn(difficulty) + " = @resultid where scoreid = @scoreid;", new SQLiteParameter[] {
-                        new SQLiteParameter("@scoreid", scoreID),
-                        new SQLiteParameter("@resultid", resultId)
-                    });
+                ExecuteDataTable("update ScoreTable set " + GetSQLColumn(difficulty) + " = @resultid where scoreid = @scoreid;", [
+                        new("@scoreid", scoreID),
+                        new("@resultid", resultId)
+                    ]);
                 songInfo.resultIDs[(int)difficulty] = resultId;
                 songInfo.UpdateScore();
             }
@@ -943,9 +930,9 @@ uservolume = @uservolume where scoreid = @newid", new SQLiteParameter[]{
         internal ResultInfo[] GetResults(int id)
         {
             var ret = new List<ResultInfo>();
-            using (var reader = ExecuteReader("select * from ResultTable where scoreid = @scoreid;", new SQLiteParameter[]{
-                new SQLiteParameter("@scoreid",id)
-            }))
+            using (var reader = ExecuteReader("select * from ResultTable where scoreid = @scoreid;", [
+                new("@scoreid",id)
+            ]))
             {
                 while (reader.Reader.Read())
                 {
@@ -969,33 +956,29 @@ uservolume = @uservolume where scoreid = @newid", new SQLiteParameter[]{
                 }
             }
             ret.Sort(ResultInfoComparer.Comparer);
-            return ret.ToArray();
+            return [.. ret];
         }
 
         internal void DeleteResult(int resultId)
         {
-            ExecuteDataTable("delete from ResultTable where resultid = @resultid;", new SQLiteParameter[] {
-                new SQLiteParameter("@resultid", resultId)
-            });
+            ExecuteDataTable("delete from ResultTable where resultid = @resultid;", [
+                new("@resultid", resultId)
+            ]);
         }
 
-        private string GetSQLColumn(Difficulty difficulty)
+        private static string GetSQLColumn(Difficulty difficulty)
         {
-            switch (difficulty)
+            return difficulty switch
             {
-                case Difficulty.Easy:
-                    return "bestscoreeasyid";
-                case Difficulty.Normal:
-                    return "bestscorenormalid";
-                case Difficulty.Hard:
-                    return "bestscorehardid";
-                case Difficulty.Extreme:
-                    return "bestscoreextremeid";
-            }
-            return "";
+                Difficulty.Easy => "bestscoreeasyid",
+                Difficulty.Normal => "bestscorenormalid",
+                Difficulty.Hard => "bestscorehardid",
+                Difficulty.Extreme => "bestscoreextremeid",
+                _ => "",
+            };
         }
 
-        private bool IsHighScore(int newscore, int[] newcounts, int newmaxcombo, int bestscore, int[] bestcounts, int bestmaxcombo)
+        private static bool IsHighScore(int newscore, int[] newcounts, int newmaxcombo, int bestscore, int[] bestcounts, int bestmaxcombo)
         {
             if (newscore > bestscore) return true;
             else if (newscore == bestscore)
@@ -1013,30 +996,30 @@ uservolume = @uservolume where scoreid = @newid", new SQLiteParameter[]{
 
         internal void ChangeLatency(SongInformation songInfo, float latency)
         {
-            ExecuteDataTable("update ScoreTable set latency = @latency where scoreid = @scoreid;", new SQLiteParameter[] {
-                new SQLiteParameter("@scoreid", songInfo.ID),
-                new SQLiteParameter("@latency",latency)
-            });
+            ExecuteDataTable("update ScoreTable set latency = @latency where scoreid = @scoreid;", [
+                new("@scoreid", songInfo.ID),
+                new("@latency",latency)
+            ]);
         }
 
         internal void ChangeUserVolume(SongInformation songInfo, int userVolume)
         {
-            ExecuteDataTable("update ScoreTable set uservolume = @uservolume where scoreid = @scoreid;", new SQLiteParameter[] {
-                new SQLiteParameter("@scoreid", songInfo.ID),
-                new SQLiteParameter("@uservolume",userVolume)
-            });
+            ExecuteDataTable("update ScoreTable set uservolume = @uservolume where scoreid = @scoreid;", [
+                new("@scoreid", songInfo.ID),
+                new("@uservolume",userVolume)
+            ]);
         }
 
         internal ScoreStorage GetScoreStorage(int id)
         {
-            using (var reader = ExecuteReader("select * from ScoreStorage where scoreid = @scoreid;", new SQLiteParameter[]{
-                new SQLiteParameter("@scoreid",id)
-            }))
+            using (var reader = ExecuteReader("select * from ScoreStorage where scoreid = @scoreid;", [
+                new("@scoreid",id)
+            ]))
             {
                 while (reader.Reader.Read())
                 {
                     var storageId = reader.Reader.GetInt32(0);
-                    var scoreId = reader.Reader.GetInt32(1);
+                    _ = reader.Reader.GetInt32(1);
                     var data = reader.Reader.GetString(2);
                     return new ScoreStorage(storageId, id, data);
                 }
@@ -1053,20 +1036,20 @@ uservolume = @uservolume where scoreid = @newid", new SQLiteParameter[]{
                                 data
                                 ) values(
                                 @scoreid,
-                                @data);", new SQLiteParameter[]{
-                    new SQLiteParameter("@scoreid",scoreStorage.SongInformationID),
-                    new SQLiteParameter("@data",scoreStorage.GetString())
-                });
+                                @data);", [
+                    new("@scoreid",scoreStorage.SongInformationID),
+                    new("@data",scoreStorage.GetString())
+                ]);
                 scoreStorage.UpdateId(lastId);
             }
             else
             {
                 ExecuteDataTable(@"update ScoreStorage set
                                 data     =@data
-                                where storageid = @storageid;", new SQLiteParameter[]{
-                    new SQLiteParameter("@storageid",scoreStorage.ID),
-                    new SQLiteParameter("@data", scoreStorage.GetString())
-                });
+                                where storageid = @storageid;", [
+                    new("@storageid",scoreStorage.ID),
+                    new("@data", scoreStorage.GetString())
+                ]);
             }
         }
     }

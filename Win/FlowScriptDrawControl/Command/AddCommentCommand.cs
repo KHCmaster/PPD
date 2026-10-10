@@ -5,7 +5,7 @@ namespace FlowScriptDrawControl.Command
 {
     class AddCommentCommand : CommandBase
     {
-        private FlowAreaControl areaControl;
+        private readonly FlowAreaControl areaControl;
 
         public CommentControl CommentControl
         {

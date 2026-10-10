@@ -1,7 +1,7 @@
-﻿using PPDFramework;
-using SharpDX;
-using SharpDX.DirectSound;
-using SharpDX.Multimedia;
+﻿using SharpGen.Runtime;
+using PPDFramework;
+using Vortice.DirectSound;
+using Vortice.Multimedia;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -13,28 +13,42 @@ namespace PPDSound
     public class Sound : IDisposable, ISound
     {
         private const int CHUNKSIZE = 4096;
-        private DirectSound soundDevice;
-        private Form window;
+        private IDirectSound soundDevice;
+        // ハンドルは初期化するときに取り出す（WinForms のフォームは、表示するまでハンドルがないことがある）
+        private readonly Func<IntPtr> getWindowHandle;
 
-        private Dictionary<string, BufferInfo> sounds;
-        private Dictionary<string, SoundPlayingInfo> playingSounds;
+        private readonly Dictionary<string, BufferInfo> sounds;
+        private readonly Dictionary<string, SoundPlayingInfo> playingSounds;
         protected FMODEX.System system;
 
         bool enabled = true;
         bool disposed;
 
         public Sound(Form window)
+            : this(() => window.Handle)
         {
-            this.window = window;
-            sounds = new Dictionary<string, BufferInfo>();
-            playingSounds = new Dictionary<string, SoundPlayingInfo>();
+        }
+
+        /// <summary>
+        /// ウィンドウハンドルを指定して作ります（WPF のアプリで使う）。
+        /// </summary>
+        public Sound(IntPtr windowHandle)
+            : this(() => windowHandle)
+        {
+        }
+
+        private Sound(Func<IntPtr> getWindowHandle)
+        {
+            this.getWindowHandle = getWindowHandle;
+            sounds = [];
+            playingSounds = [];
             SoundMasterControl.Instance.SeVolumeChanged += Instance_SeVolumeChanged;
         }
 
         public void Initialize()
         {
-            soundDevice = new DirectSound();
-            soundDevice.SetCooperativeLevel(window.Handle, CooperativeLevel.Priority);
+            soundDevice = DSound.DirectSoundCreate();
+            soundDevice.SetCooperativeLevel(getWindowHandle(), CooperativeLevel.Priority).CheckError();
 
             FMODEX.RESULT result;
             result = FMODEX.Factory.System_Create(ref system);
@@ -107,16 +121,17 @@ namespace PPDSound
                 return;
             }
 
-            using (SoundStream wavFile = new SoundStream(stream))
+            using (stream)
             {
-                byte[] data = new byte[wavFile.Length];
-                if (wavFile.Read(data, 0, (int)wavFile.Length) != wavFile.Length)
+                ReadWave(stream, out WaveFormat format, out int length);
+                byte[] data = new byte[length];
+                if (ReadFully(stream, data) != length)
                 {
                     MessageBox.Show(PPDExceptionContentProvider.Provider.GetContent(PPDExceptionType.SoundReadError));
                     return;
                 }
-                var buffer = CreateSecondarySoundBuffer(wavFile.Format, (int)wavFile.Length);
-                buffer.Write(data, 0, SharpDX.DirectSound.LockFlags.EntireBuffer);
+                var buffer = CreateSecondarySoundBuffer(format, length);
+                buffer.Write(data, 0, LockFlags.EntireBuffer);
                 try
                 {
                     this.sounds.Add(dictName, new BufferInfo(buffer));
@@ -129,25 +144,84 @@ namespace PPDSound
             }
         }
 
-        private SecondarySoundBuffer CreateSecondarySoundBuffer(WaveFormat format, int size)
+        /// <summary>
+        /// GetStream で作った RIFF WAVE を読み、fmt チャンクの形式と data チャンクの長さを返します。
+        /// ストリームは data チャンクの中身の先頭に位置します。
+        /// </summary>
+        private static void ReadWave(Stream stream, out WaveFormat format, out int length)
         {
-            return new SecondarySoundBuffer(this.soundDevice, new SoundBufferDescription
+            var reader = new BinaryReader(stream);
+            if (new string(reader.ReadChars(4)) != "RIFF")
+            {
+                throw new InvalidDataException("Not a RIFF file");
+            }
+            reader.ReadInt32();
+            if (new string(reader.ReadChars(4)) != "WAVE")
+            {
+                throw new InvalidDataException("Not a WAVE file");
+            }
+            format = null;
+            while (true)
+            {
+                var id = new string(reader.ReadChars(4));
+                var size = reader.ReadInt32();
+                if (id == "fmt ")
+                {
+                    var next = stream.Position + size;
+                    reader.ReadInt16();
+                    var channels = reader.ReadInt16();
+                    var sampleRate = reader.ReadInt32();
+                    reader.ReadInt32();
+                    reader.ReadInt16();
+                    var bits = reader.ReadInt16();
+                    format = new WaveFormat(sampleRate, bits, channels);
+                    stream.Position = next;
+                }
+                else if (id == "data")
+                {
+                    if (format == null)
+                    {
+                        throw new InvalidDataException("fmt chunk not found");
+                    }
+                    length = size;
+                    return;
+                }
+                else
+                {
+                    stream.Position += size;
+                }
+            }
+        }
+
+        private static int ReadFully(Stream stream, byte[] data)
+        {
+            var total = 0;
+            int read;
+            while (total < data.Length && (read = stream.Read(data, total, data.Length - total)) > 0)
+            {
+                total += read;
+            }
+            return total;
+        }
+
+        private IDirectSoundBuffer CreateSecondarySoundBuffer(WaveFormat format, int size)
+        {
+            return soundDevice.CreateSoundBuffer(new SoundBufferDescription
             {
                 Flags = BufferFlags.ControlVolume | BufferFlags.ControlPan | BufferFlags.ControlFrequency | BufferFlags.GlobalFocus,
                 Format = format,
                 BufferBytes = size
-            });
+            }, null);
         }
 
-        private Stream GetStream(FMODEX.Sound sound)
+        private static Stream GetStream(FMODEX.Sound sound)
         {
-            IntPtr data = IntPtr.Zero;
             MemoryStream stream = null;
             try
             {
                 FMODEX.RESULT result;
                 byte[] buffer = new byte[CHUNKSIZE];
-                data = Marshal.AllocHGlobal(CHUNKSIZE);
+                nint data = Marshal.AllocHGlobal(CHUNKSIZE);
                 uint length = 0, read = 0;
                 uint bytesread = 0;
                 FMODEX.SOUND_FORMAT format = FMODEX.SOUND_FORMAT.AT9;
@@ -292,15 +366,15 @@ namespace PPDSound
                         bufferInfo.Buffer.Restore();
                     }
                     bufferInfo.Buffer.Stop();
-                    bufferInfo.Buffer.CurrentPosition = 0;
-                    bufferInfo.Buffer.Volume = SoundMasterControl.Instance.GetVolume(vol, SoundType.Se);
-                    bufferInfo.Buffer.Pan = 0;
+                    bufferInfo.Buffer.SetCurrentPosition(0);
+                    bufferInfo.Buffer.SetVolume(SoundMasterControl.Instance.GetVolume(vol, SoundType.Se));
+                    bufferInfo.Buffer.SetPan(0);
                     bufferInfo.Buffer.Frequency = (int)(bufferInfo.Frequency * playRatio);
                     bufferInfo.Buffer.Play(0, PlayFlags.None);
                     playingSounds.Remove(filename);
                     playingSounds.Add(filename, new SoundPlayingInfo(filename, vol, bufferInfo));
                 }
-                catch (SharpDXException e)
+                catch (SharpGenException e)
                 {
                     if (checkError)
                     {
@@ -356,11 +430,11 @@ namespace PPDSound
         {
             foreach (SoundPlayingInfo info in playingSounds.Values)
             {
-                if (info.BufferInfo.Buffer == null || info.BufferInfo.Buffer.IsDisposed)
+                if (info.BufferInfo.Buffer == null || info.BufferInfo.Buffer.NativePointer == IntPtr.Zero)
                 {
                     continue;
                 }
-                info.BufferInfo.Buffer.Volume = SoundMasterControl.Instance.GetVolume(info.Volume, SoundType.Se);
+                info.BufferInfo.Buffer.SetVolume(SoundMasterControl.Instance.GetVolume(info.Volume, SoundType.Se));
             }
         }
 
@@ -379,7 +453,7 @@ namespace PPDSound
             GC.SuppressFinalize(this);
         }
 
-        private void CheckError(FMODEX.RESULT result)
+        private static void CheckError(FMODEX.RESULT result)
         {
             if (result != FMODEX.RESULT.OK)
             {
@@ -387,7 +461,7 @@ namespace PPDSound
             }
         }
 
-        private void Dispose(bool disposing)
+        protected virtual void Dispose(bool disposing)
         {
             if (!this.disposed)
             {

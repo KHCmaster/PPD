@@ -4,7 +4,7 @@ namespace PPDMulti
 {
     class SkinSetting : SettingDataBase
     {
-        private static SkinSetting setting = new SkinSetting();
+        private static readonly SkinSetting setting = new();
         public override string Name
         {
             get { return "PPDMulti.setting"; }
@@ -18,7 +18,7 @@ namespace PPDMulti
             }
         }
 
-        public string AutoUseItemTypes
+        public static string AutoUseItemTypes
         {
             get
             {

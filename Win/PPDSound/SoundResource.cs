@@ -8,8 +8,8 @@ namespace PPDSound
     /// </summary>
     public class SoundResource : ResourceBase
     {
-        private ISound sound;
-        private string name;
+        private readonly ISound sound;
+        private readonly string name;
 
         /// <summary>
         /// 名前を取得します。

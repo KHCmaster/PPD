@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PPDFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
@@ -11,7 +12,8 @@ namespace PPDMultiCommon.Web
 {
     public class WebManager
     {
-        private static readonly string baseUrl = @"http://projectdxxx.me" + "/multi-api";
+        // テストでは localhost のテスト用のサーバーにする（readonly にすると、テストから変えられない）
+        private static string baseUrl = @"http://projectdxxx.me" + "/multi-api";
 
         private string token;
         private bool isRoomExist;
@@ -20,22 +22,18 @@ namespace PPDMultiCommon.Web
         {
             try
             {
-                var url = String.Format("{0}/createroom?username={1}&roomname={2}&passwordhash={3}&language={4}&port={5}", baseUrl, roomInfo.UserName,
-                    HttpUtility.UrlEncode(roomInfo.RoomName), roomInfo.PasswordHash, roomInfo.Language, roomInfo.Port);
+                var url = String.Format("{0}/createroom?username={1}&roomname={2}&passwordhash={3}&language={4}&port={5}", baseUrl, HttpUtility.UrlEncode(roomInfo.UserName),
+                    HttpUtility.UrlEncode(roomInfo.RoomName), roomInfo.PasswordHash, HttpUtility.UrlEncode(roomInfo.Language), roomInfo.Port);
                 var req = CreateRequest(url);
-                using (WebResponse res = req.GetResponse())
+                using var res = req.GetResponse();
+                using XmlReader reader = XmlReader.Create(res.GetResponseStream());
+                while (reader.Read())
                 {
-                    using (XmlReader reader = XmlReader.Create(res.GetResponseStream()))
+                    if (reader.IsStartElement("Root"))
                     {
-                        while (reader.Read())
-                        {
-                            if (reader.IsStartElement("Root"))
-                            {
-                                token = reader.GetAttribute("Token");
-                                isRoomExist = true;
-                                break;
-                            }
-                        }
+                        token = reader.GetAttribute("Token");
+                        isRoomExist = true;
+                        break;
                     }
                 }
 
@@ -54,21 +52,9 @@ namespace PPDMultiCommon.Web
                 return HttpStatusCode.OK;
             }
 
-            try
-            {
-                var url = String.Format("{0}/updateroominfo?token={1}&playercount={2}&scorehash={3}", baseUrl, token, playerCount, scoreHash);
-
-                var req = CreateRequest(url);
-                using (var res = (HttpWebResponse)req.GetResponse())
-                {
-                    return res.StatusCode;
-                }
-            }
-            catch (WebException e)
-            {
-                var response = (HttpWebResponse)e.Response;
-                return response.StatusCode;
-            }
+            var url = String.Format("{0}/updateroominfo?token={1}&playercount={2}&scorehash={3}", baseUrl, token, playerCount, scoreHash);
+            // 成功以外のステータスコードも、例外にせずそのまま返す
+            return SyncHttpClient.GetStatusCode(url);
         }
 
         internal void DeleteRoom()
@@ -82,7 +68,7 @@ namespace PPDMultiCommon.Web
             {
                 var url = String.Format("{0}/deleteroom?token={1}", baseUrl, token);
                 var req = CreateRequest(url);
-                using (WebResponse res = req.GetResponse())
+                using (var res = req.GetResponse())
                 {
                 }
 
@@ -102,25 +88,21 @@ namespace PPDMultiCommon.Web
             try
             {
                 var req = CreateRequest(url);
-                using (WebResponse res = req.GetResponse())
+                using var res = req.GetResponse();
+                using XmlReader reader = XmlReader.Create(res.GetResponseStream());
+                while (reader.Read())
                 {
-                    using (XmlReader reader = XmlReader.Create(res.GetResponseStream()))
+                    if (reader.IsStartElement("Room"))
                     {
-                        while (reader.Read())
-                        {
-                            if (reader.IsStartElement("Room"))
-                            {
-                                ret.Add(new RoomInfo(
-                                    reader.GetAttribute("UserName"),
-                                    reader.GetAttribute("RoomName"),
-                                    reader.GetAttribute("PasswordHash"),
-                                    int.Parse(reader.GetAttribute("Port")),
-                                    reader.GetAttribute("Language"),
-                                    reader.GetAttribute("IP"),
-                                    int.Parse(reader.GetAttribute("PlayerCount"))
-                                ));
-                            }
-                        }
+                        ret.Add(new RoomInfo(
+                            reader.GetAttribute("UserName"),
+                            reader.GetAttribute("RoomName"),
+                            reader.GetAttribute("PasswordHash"),
+                            int.Parse(reader.GetAttribute("Port")),
+                            reader.GetAttribute("Language"),
+                            reader.GetAttribute("IP"),
+                            int.Parse(reader.GetAttribute("PlayerCount"))
+                        ));
                     }
                 }
             }
@@ -128,7 +110,7 @@ namespace PPDMultiCommon.Web
             {
             }
 
-            return ret.ToArray();
+            return [.. ret];
         }
 
         public static PPDScoreInfo[] GetScores()
@@ -137,7 +119,7 @@ namespace PPDMultiCommon.Web
             {
                 var list = new List<PPDScoreInfo>();
                 var request = CreateRequest(String.Format("{0}/api/all-score-list", PPDFrameworkCore.Web.WebManager.BaseUrl));
-                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                using (var response = request.GetResponse())
                 using (Stream stream = response.GetResponseStream())
                 using (XmlReader reader = XmlReader.Create(stream))
                 {
@@ -165,40 +147,46 @@ namespace PPDMultiCommon.Web
                         }
                     }
                 }
-                return list.ToArray();
+                return [.. list];
             }
             catch
             {
-                return new PPDScoreInfo[0];
+                return [];
             }
         }
 
         private static string GetString(string url)
         {
             var req = CreateRequest(url);
-            using (HttpWebResponse response = (HttpWebResponse)req.GetResponse())
-            {
-                using (StreamReader reader = new StreamReader(response.GetResponseStream()))
-                {
-                    return reader.ReadToEnd();
-                }
-            }
+            using var response = req.GetResponse();
+            using StreamReader reader = new(response.GetResponseStream());
+            return reader.ReadToEnd();
         }
 
-        private static HttpWebRequest CreateRequest(string url)
+        private static Request CreateRequest(string url)
         {
-            var req = (HttpWebRequest)HttpWebRequest.Create(url);
-            return req;
+            return new Request(url);
+        }
+
+        /// <summary>
+        /// 送る前のリクエストです（HttpWebRequest の代わり）。
+        /// </summary>
+        private sealed class Request(string url)
+        {
+            private readonly string url = url;
+
+            public HttpResponse GetResponse()
+            {
+                return SyncHttpClient.Get(url);
+            }
         }
 
         public static string GetPasswordHash(string password)
         {
-            var sha = new SHA256Managed();
-
             string val = "a83" + password + "asdo9";
             var array = Encoding.UTF8.GetBytes(val);
 
-            var hash = sha.ComputeHash(array);
+            var hash = SHA256.HashData(array);
 
             var ret = new StringBuilder();
             for (int i = 0; i < hash.Length; i++)

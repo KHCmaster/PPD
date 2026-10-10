@@ -60,11 +60,11 @@ namespace PPDEditor
 
     public class ShortcutManager
     {
-        List<ShortcutInfo> list;
+        readonly List<ShortcutInfo> list;
 
         public ShortcutManager()
         {
-            list = new List<ShortcutInfo>();
+            list = [];
         }
 
         public void RegisterShortcut(ShortcutInfo shortcutInfo)
@@ -94,7 +94,7 @@ namespace PPDEditor
         {
             get
             {
-                return list.ToArray();
+                return [.. list];
             }
         }
     }

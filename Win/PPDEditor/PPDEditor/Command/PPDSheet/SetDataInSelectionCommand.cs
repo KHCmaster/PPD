@@ -1,17 +1,18 @@
-﻿using SharpDX;
+﻿using System.Numerics;
+using PPDMath;
 using System;
 
 namespace PPDEditor.Command.PPDSheet
 {
     class SetDataInSelectionCommand : Command
     {
-        float[][] lastInfo;
-        Vector2[] positions;
-        float[] angles;
-        bool reverse;
-        bool withAngle;
+        readonly float[][] lastInfo;
+        readonly Vector2[] positions;
+        readonly float[] angles;
+        readonly bool reverse;
+        readonly bool withAngle;
 
-        Mark[] mks;
+        readonly Mark[] mks;
 
         public SetDataInSelectionCommand(Mark[] mks, Vector2[] positions, float[] angles, bool reverse, bool withAngle)
         {
@@ -30,11 +31,11 @@ namespace PPDEditor.Command.PPDSheet
                 {
                     if (withAngle)
                     {
-                        lastInfo[i] = new float[] { mks[iter].Position.X, mks[iter].Position.Y, mks[iter].Rotation };
+                        lastInfo[i] = [mks[iter].Position.X, mks[iter].Position.Y, mks[iter].Rotation];
                     }
                     else
                     {
-                        lastInfo[i] = new float[] { mks[iter].Position.X, mks[iter].Position.Y };
+                        lastInfo[i] = [mks[iter].Position.X, mks[iter].Position.Y];
                     }
                     iter++;
                     if (iter >= mks.Length) break;
@@ -47,11 +48,11 @@ namespace PPDEditor.Command.PPDSheet
                 {
                     if (withAngle)
                     {
-                        lastInfo[i] = new float[] { mks[iter].Position.X, mks[iter].Position.Y, mks[iter].Rotation };
+                        lastInfo[i] = [mks[iter].Position.X, mks[iter].Position.Y, mks[iter].Rotation];
                     }
                     else
                     {
-                        lastInfo[i] = new float[] { mks[iter].Position.X, mks[iter].Position.Y };
+                        lastInfo[i] = [mks[iter].Position.X, mks[iter].Position.Y];
                     }
                     iter--;
                     if (iter < 0) break;

@@ -6,8 +6,8 @@ namespace PPDEditor.Command
     public class CommandManager
     {
         public event CommandEventHandler CommandChanged;
-        Stack<Command> donecommand;
-        Stack<Command> undonecommand;
+        readonly Stack<Command> donecommand;
+        readonly Stack<Command> undonecommand;
 
         private CommandSet commandSet;
 
@@ -104,6 +104,8 @@ namespace PPDEditor.Command
             commandSet = null;
             if (temp.CommandCount > 0)
             {
+                // 新しく変えたので、やり直しはできない（1 つのコマンドのときと同じ。以前は残っていて、古い変更をやり直せてしまった）
+                undonecommand.Clear();
                 donecommand.Push(temp);
                 OnCommandChange(temp.CommandType);
             }
@@ -127,10 +129,7 @@ namespace PPDEditor.Command
         }
         private void OnCommandChange(CommandType commandType)
         {
-            if (CommandChanged != null)
-            {
-                CommandChanged.Invoke(commandType);
-            }
+            CommandChanged?.Invoke(commandType);
         }
     }
 }

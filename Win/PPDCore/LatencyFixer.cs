@@ -4,23 +4,16 @@ using System.Linq;
 
 namespace PPDCore
 {
-    class LatencyFixer
+    class LatencyFixer(int initialLatencyCount)
     {
-        List<float> diffs;
-        int initialLatencyCount;
+        readonly List<float> diffs = [];
+        readonly int initialLatencyCount = initialLatencyCount;
 
         public bool Enabled
         {
             get;
             set;
-        }
-
-        public LatencyFixer(int initialLatencyCount)
-        {
-            Enabled = true;
-            this.initialLatencyCount = initialLatencyCount;
-            diffs = new List<float>();
-        }
+        } = true;
 
         public void Add(float diff)
         {

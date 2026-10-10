@@ -47,10 +47,7 @@ namespace PPDMultiCommon.Web
         private void OnFinished()
         {
             IsFinished = true;
-            if (Finished != null)
-            {
-                Finished.Invoke(this, EventArgs.Empty);
-            }
+            Finished?.Invoke(this, EventArgs.Empty);
         }
     }
 }

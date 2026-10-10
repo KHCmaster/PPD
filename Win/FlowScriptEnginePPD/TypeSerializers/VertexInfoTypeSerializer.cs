@@ -15,8 +15,8 @@ namespace FlowScriptEnginePPD.TypeSerializers
         public override void Serialize(Serializer serializer, XElement element, object value)
         {
             var vertexInfo = (VertexInfo)value;
-            var positionElem = serializer.CreateElement("Position");
-            var textureCoordinatesElem = serializer.CreateElement("TextureCoordinates");
+            _ = serializer.CreateElement("Position");
+            _ = serializer.CreateElement("TextureCoordinates");
             var countElem = serializer.CreateElement("Count");
             element.Add(countElem);
             serializer.Serialize(countElem, vertexInfo.Count);

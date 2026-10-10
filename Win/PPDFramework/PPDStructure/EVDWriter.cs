@@ -16,10 +16,8 @@ namespace PPDFramework.PPDStructure
         /// <returns></returns>
         public static void Write(string path, IEVDData[] eventData)
         {
-            using (Stream stream = File.Create(path))
-            {
-                Write(stream, eventData);
-            }
+            using Stream stream = File.Create(path);
+            Write(stream, eventData);
         }
 
         /// <summary>

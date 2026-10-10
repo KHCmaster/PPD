@@ -2,8 +2,8 @@
 {
     class ChangeMarksAngleCommand : Command
     {
-        Mark[] marks;
-        float[] previousAngles;
+        readonly Mark[] marks;
+        readonly float[] previousAngles;
         float angle;
         public ChangeMarksAngleCommand(Mark[] marks, float angle)
         {

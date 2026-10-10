@@ -1,15 +1,16 @@
 ﻿using PPDFramework.Sprites;
 using PPDFramework.Texture;
 using PPDFramework.Vertex;
-using SharpDX;
+using System.Numerics;
+using PPDMath;
 
 namespace PPDFramework.Resource
 {
     class SpriteImageResource : ImageResourceBase
     {
         VertexInfo vertices;
-        ImageResourceBase imageResource;
-        SpriteInfo spriteInfo;
+        readonly ImageResourceBase imageResource;
+        readonly SpriteInfo spriteInfo;
         ImageScale imageScale;
         Vector2 uv;
         Vector2 uvSize;
@@ -32,12 +33,12 @@ namespace PPDFramework.Resource
         {
             vertices = device.GetModule<ShaderCommon>().CreateVertex(4);
             var rect = GetActualUVRectangle(0, 0, 1, 1);
-            vertices.Write(new[] {
+            vertices.Write([
                 new ColoredTexturedVertex(new Vector3(0, 0, 0.5f), rect.TopLeft),
                 new ColoredTexturedVertex(new Vector3(Width, 0, 0.5f), rect.TopRight),
                 new ColoredTexturedVertex(new Vector3(0, Height, 0.5f), rect.BottomLeft),
                 new ColoredTexturedVertex(new Vector3(Width, Height, 0.5f), rect.BottomRight)
-            });
+            ]);
         }
 
         public ImageScale ImageScale
@@ -123,11 +124,8 @@ namespace PPDFramework.Resource
         protected override void DisposeResource()
         {
             base.DisposeResource();
-            if (vertices != null)
-            {
-                vertices.Dispose();
-                vertices = null;
-            }
+            vertices?.Dispose();
+            vertices = null;
         }
     }
 }

@@ -9,17 +9,13 @@ namespace FlowScriptEnginePPD.FlowSourceObjects.EventManager
     {
         public override object GetPropertyValue(string propertyName)
         {
-            switch (propertyName)
+            return propertyName switch
             {
-                case "KeepPlayings":
-                    return KeepPlayings;
-                case "ReleaseSounds":
-                    return ReleaseSounds;
-                case "VolumePercents":
-                    return VolumePercents;
-                default:
-                    return null;
-            }
+                "KeepPlayings" => KeepPlayings,
+                "ReleaseSounds" => ReleaseSounds,
+                "VolumePercents" => VolumePercents,
+                _ => null,
+            };
         }
 
 

@@ -2,7 +2,8 @@
 using PPDMultiCommon.Data;
 using PPDMultiCommon.Model;
 using PPDShareComponent;
-using SharpDX;
+using System.Numerics;
+using PPDMath;
 using System;
 
 namespace PPDMulti
@@ -11,26 +12,26 @@ namespace PPDMulti
     {
         public event EventHandler RuleChanged;
 
-        PPDFramework.Resource.ResourceManager resourceManager;
-        ISound sound;
-        PictureObject back;
+        readonly PPDFramework.Resource.ResourceManager resourceManager;
+        readonly ISound sound;
+        readonly PictureObject back;
 
-        SpriteObject ruleSprite;
-        SpriteObject itemSupplyTypeSprite;
-        GridSelection gridSelection;
-        SelectableComponent[] selectList;
+        readonly SpriteObject ruleSprite;
+        readonly SpriteObject itemSupplyTypeSprite;
+        readonly GridSelection gridSelection;
+        readonly SelectableComponent[] selectList;
 
-        ListBoxComponent resultSort;
-        CheckBoxComponent itemAvailable;
-        RadioBoxComponent comboSupply;
-        RadioBoxComponent rankSupply;
-        ListBoxComponent comboSupplyCount;
-        ListBoxComponent worstSupplyCount;
-        ListBoxComponent maxItemCount;
-        ButtonComponent okButton;
-        ButtonComponent cancelButton;
+        readonly ListBoxComponent resultSort;
+        readonly CheckBoxComponent itemAvailable;
+        readonly RadioBoxComponent comboSupply;
+        readonly RadioBoxComponent rankSupply;
+        readonly ListBoxComponent comboSupplyCount;
+        readonly ListBoxComponent worstSupplyCount;
+        readonly ListBoxComponent maxItemCount;
+        readonly ButtonComponent okButton;
+        readonly ButtonComponent cancelButton;
 
-        GameRule gameRule = new GameRule();
+        readonly GameRule gameRule = new();
 
         private SelectableComponent CurrentSelectedComponent
         {
@@ -70,12 +71,12 @@ namespace PPDMulti
 
             ruleSprite.AddChild(resultSort = new ListBoxComponent(device, resourceManager, Utility.Path, Utility.Language["RankOrder"], Utility.Language["Score"], Utility.Language["Accuracy"])
             {
-                Position = new SharpDX.Vector2(80, 80),
+                Position = new System.Numerics.Vector2(80, 80),
                 Selected = true
             });
             ruleSprite.AddChild(itemAvailable = new CheckBoxComponent(device, resourceManager, Utility.Path, Utility.Language["ItemAvailable"])
             {
-                Position = new SharpDX.Vector2(50, 120)
+                Position = new System.Numerics.Vector2(50, 120)
             });
             ruleSprite.AddChild(okButton = new ButtonComponent(device, resourceManager, Utility.Path, Utility.Language["OK"])
             {
@@ -106,7 +107,7 @@ namespace PPDMulti
                 Position = new Vector2(80, 320)
             });
 
-            selectList = new SelectableComponent[]{
+            selectList = [
                 resultSort,
                 itemAvailable,
                 maxItemCount,
@@ -116,7 +117,7 @@ namespace PPDMulti
                 rankSupply,
                 okButton,
                 cancelButton
-            };
+            ];
             gridSelection = new GridSelection();
             foreach (SelectableComponent comp in selectList)
             {
@@ -136,7 +137,7 @@ namespace PPDMulti
 
         void ItemSettingComponent_GotFocused(IFocusable sender, FocusEventArgs args)
         {
-            back.Position = new SharpDX.Vector2(0, 50);
+            back.Position = new System.Numerics.Vector2(0, 50);
             Alpha = 0;
         }
 
@@ -208,10 +209,7 @@ namespace PPDMulti
                 if (CurrentSelectedComponent == okButton)
                 {
                     SetRule();
-                    if (RuleChanged != null)
-                    {
-                        RuleChanged.Invoke(this, EventArgs.Empty);
-                    }
+                    RuleChanged?.Invoke(this, EventArgs.Empty);
                     sound.Play(PPDSetting.DefaultSounds[1], -1000);
                 }
                 else if (CurrentSelectedComponent == cancelButton)
@@ -240,12 +238,12 @@ namespace PPDMulti
         {
             if (OverFocused)
             {
-                back.Position = new SharpDX.Vector2(0, AnimationUtility.GetAnimationValue(back.Position.Y, 0));
+                back.Position = new System.Numerics.Vector2(0, AnimationUtility.GetAnimationValue(back.Position.Y, 0));
                 Alpha = AnimationUtility.IncreaseAlpha(Alpha);
             }
             else
             {
-                back.Position = new SharpDX.Vector2(0, AnimationUtility.GetAnimationValue(back.Position.Y, 50));
+                back.Position = new System.Numerics.Vector2(0, AnimationUtility.GetAnimationValue(back.Position.Y, 50));
                 Alpha = AnimationUtility.DecreaseAlpha(Alpha);
             }
         }

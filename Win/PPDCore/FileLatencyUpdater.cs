@@ -4,14 +4,9 @@ using System.IO;
 
 namespace PPDCore
 {
-    class FileLatencyUpdater : LatencyUpdaterBase
+    class FileLatencyUpdater(PPDGameUtility ppdGameUtility) : LatencyUpdaterBase(GetLatency(ppdGameUtility))
     {
-        PPDGameUtility ppdGameUtility;
-        public FileLatencyUpdater(PPDGameUtility ppdGameUtility) :
-            base(GetLatency(ppdGameUtility))
-        {
-            this.ppdGameUtility = ppdGameUtility;
-        }
+        readonly PPDGameUtility ppdGameUtility = ppdGameUtility;
 
         public override void SaveLatency()
         {

@@ -17,9 +17,9 @@ namespace FlowScriptEnginePPD.FlowSourceObjects.Environment
         {
             base.OnInitialize();
 
-            if (Manager.Items.ContainsKey("GameHost"))
+            if (Manager.Items.TryGetValue("GameHost", out object value))
             {
-                gameHost = Manager.Items["GameHost"] as IGameHost;
+                gameHost = value as IGameHost;
             }
         }
 

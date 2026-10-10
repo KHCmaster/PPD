@@ -7,7 +7,7 @@ namespace FlowScriptEngine
 {
     public abstract class FlowSourceObjectBase
     {
-        private static Dictionary<Type, InnerData> dataDictionary;
+        private static readonly Dictionary<Type, InnerData> dataDictionary;
 
         class InnerData
         {
@@ -43,23 +43,23 @@ namespace FlowScriptEngine
         private Dictionary<string, string> replacedOutPropertyNames;
         private Dictionary<string, string> replacedMethodNames;
         private Dictionary<string, string> replacedEventNames;
-        private Dictionary<string, FlowObject> inFlowList;
-        private Dictionary<string, bool> inIsConnected;
-        private Dictionary<string, bool> outIsConnected;
+        private readonly Dictionary<string, FlowObject> inFlowList;
+        private readonly Dictionary<string, bool> inIsConnected;
+        private readonly Dictionary<string, bool> outIsConnected;
 
         InnerData innerData;
         protected FlowSourceObjectBase()
         {
-            inFlowList = new Dictionary<string, FlowObject>();
-            inIsConnected = new Dictionary<string, bool>();
-            outIsConnected = new Dictionary<string, bool>();
+            inFlowList = [];
+            inIsConnected = [];
+            outIsConnected = [];
 
             SetDefaultInfos();
         }
 
         static FlowSourceObjectBase()
         {
-            dataDictionary = new Dictionary<Type, InnerData>();
+            dataDictionary = [];
         }
 
         private void SetDefaultInfos()
@@ -97,11 +97,11 @@ namespace FlowScriptEngine
             var attributes = type.GetCustomAttributes(true);
             foreach (Object attribute in attributes)
             {
-                if (attribute is IToolTipText)
+                if (attribute is IToolTipText text)
                 {
-                    summary = ((IToolTipText)attribute).Summary;
-                    flowToolTipText = ((IToolTipText)attribute).Text;
-                    flowToolTipTextKey = ((IToolTipText)attribute).TextKey;
+                    summary = text.Summary;
+                    flowToolTipText = text.Text;
+                    flowToolTipTextKey = text.TextKey;
 #if DEBUG
                     attributeFound = true;
                     if (String.IsNullOrEmpty(flowToolTipText))
@@ -110,10 +110,10 @@ namespace FlowScriptEngine
                     }
 #endif
                 }
-                else if (attribute is IWarning)
+                else if (attribute is IWarning warning1)
                 {
-                    warningKey = ((IWarning)attribute).TextKey;
-                    warning = ((IWarning)attribute).Text;
+                    warningKey = warning1.TextKey;
+                    warning = warning1.Text;
                 }
             }
 
@@ -305,7 +305,7 @@ namespace FlowScriptEngine
                 {
                     try
                     {
-                        memberInfo.MemberInfo.Invoke(this, new object[] { new FlowEventArgs(this, false) });
+                        memberInfo.MemberInfo.Invoke(this, [new FlowEventArgs(this, false)]);
                     }
                     catch (Exception e)
                     {
@@ -334,7 +334,7 @@ namespace FlowScriptEngine
             {
                 if (objects[i] is IgnoreAttribute)
                 {
-                    replacedNames = replaced.ToArray();
+                    replacedNames = [.. replaced];
                     return false;
                 }
                 else if (objects[i] is IToolTipText)
@@ -362,7 +362,7 @@ namespace FlowScriptEngine
                 Console.WriteLine("[{0}]'s [{1}]'s summary is not implemented", source.GetType(), memberInfo);
             }
 #endif
-            replacedNames = replaced.ToArray();
+            replacedNames = [.. replaced];
             return true;
         }
 
@@ -621,17 +621,13 @@ namespace FlowScriptEngine
             {
                 return;
             }
-            if (inFlowList.ContainsKey(actualDestName))
+            if (!inFlowList.TryAdd(actualDestName, flow))
             {
                 //disconnect current
                 // error
                 throw new Exception("error in connection");
                 /*InFlowList[flow.DestPropertyName].DisConnect();
                 InFlowList.Add(flow.DestPropertyName, flow);*/
-            }
-            else
-            {
-                inFlowList.Add(actualDestName, flow);
             }
         }
 
@@ -641,7 +637,8 @@ namespace FlowScriptEngine
             actualDestName = methodNameOfDest;
             if (eventList.ContainsKey(methodNameOfSource) || replacedEventNames.TryGetValue(methodNameOfSource, out actualSrcName))
             {
-                if (destObject.methodList.ContainsKey(methodNameOfDest) || replacedMethodNames.TryGetValue(methodNameOfDest, out actualDestName))
+                // 古い名前は、つなぐ先のノードの名前で探す（元はつなぐ元のノードで探していて、見つからなかった）
+                if (destObject.methodList.ContainsKey(methodNameOfDest) || destObject.replacedMethodNames.TryGetValue(methodNameOfDest, out actualDestName))
                 {
                     MethodInfo mi = destObject.methodList[actualDestName].MemberInfo;
                     ConnectEvent(actualSrcName, (FlowEventHandler)Delegate.CreateDelegate(typeof(FlowEventHandler), destObject, mi));

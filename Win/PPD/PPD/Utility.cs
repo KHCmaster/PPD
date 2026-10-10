@@ -4,8 +4,8 @@ namespace PPD
 {
     public static class Utility
     {
-        private static ExLanguageReader langReader = new ExLanguageReader("PPD");
-        private static PathManager pathManager = new PathManager(@"img\PPD\home");
+        private static readonly ExLanguageReader langReader = new("PPD");
+        private static readonly PathManager pathManager = new(@"img\PPD\home");
 
         public static ExLanguageReader Language
         {

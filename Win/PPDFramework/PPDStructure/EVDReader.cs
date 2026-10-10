@@ -17,7 +17,7 @@ namespace PPDFramework.PPDStructure
         /// <returns></returns>
         public static IEVDData[] Read(string path)
         {
-            IEVDData[] ret = new IEVDData[0];
+            IEVDData[] ret = [];
             if (File.Exists(path))
             {
                 var fs = File.Open(path, FileMode.Open);
@@ -40,7 +40,7 @@ namespace PPDFramework.PPDStructure
             byte mode;
             while (stream.Position < stream.Length)
             {
-                stream.Read(tb, 0, tb.Length);
+                stream.ReadAtLeast(tb, tb.Length, throwOnEndOfStream: false);
                 time = BitConverter.ToSingle(tb, 0);
                 mode = (byte)stream.ReadByte();
 
@@ -53,7 +53,7 @@ namespace PPDFramework.PPDStructure
                         evddata = new ChangeVolumeEvent(time, volpercent, channel);
                         break;
                     case 1:
-                        stream.Read(tb, 0, tb.Length);
+                        stream.ReadAtLeast(tb, tb.Length, throwOnEndOfStream: false);
                         evddata = new ChangeBPMEvent(time, BitConverter.ToSingle(tb, 0));
                         if ((evddata as ChangeBPMEvent).BPM < 0)
                         {
@@ -61,9 +61,9 @@ namespace PPDFramework.PPDStructure
                         }
                         break;
                     case 2:
-                        stream.Read(tb, 0, tb.Length);
+                        stream.ReadAtLeast(tb, tb.Length, throwOnEndOfStream: false);
                         byte[] rapid = new byte[1];
-                        stream.Read(rapid, 0, rapid.Length);
+                        stream.ReadAtLeast(rapid, rapid.Length, throwOnEndOfStream: false);
                         evddata = new RapidChangeBPMEvent(time, BitConverter.ToSingle(tb, 0), BitConverter.ToBoolean(rapid, 0));
                         if ((evddata as RapidChangeBPMEvent).BPM < 0)
                         {
@@ -95,7 +95,7 @@ namespace PPDFramework.PPDStructure
                     case 8:
                         byte[] table = new byte[10];
                         ButtonType[] convertedTable = new ButtonType[10];
-                        stream.Read(table, 0, table.Length);
+                        stream.ReadAtLeast(table, table.Length, throwOnEndOfStream: false);
                         for (int i = 0; i < 10; i++)
                         {
                             convertedTable[i] = (ButtonType)table[i];
@@ -103,14 +103,14 @@ namespace PPDFramework.PPDStructure
                         evddata = new ChangeInitializeOrderEvent(time, convertedTable);
                         break;
                     case 9:
-                        stream.Read(tb, 0, tb.Length);
+                        stream.ReadAtLeast(tb, tb.Length, throwOnEndOfStream: false);
                         var slideScale = BitConverter.ToSingle(tb, 0);
                         evddata = new ChangeSlideScaleEvent(time, slideScale);
                         break;
                 }
                 if (evddata != null) data.Add(evddata);
             }
-            return data.ToArray();
+            return [.. data];
         }
     }
 }

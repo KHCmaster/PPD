@@ -1,5 +1,6 @@
 ﻿using PPDFramework;
-using SharpDX;
+using System.Numerics;
+using PPDMath;
 using System;
 
 namespace PPDCore
@@ -11,7 +12,7 @@ namespace PPDCore
     {
         uint score;
         uint truescore;
-        NumberPictureObject display;
+        readonly NumberPictureObject display;
         public Score(PPDDevice device, PPDFramework.Resource.ResourceManager resourceManager) : base(device)
         {
             display = new NumberPictureObject(device, resourceManager, Utility.Path.Combine("numpoint.png"))

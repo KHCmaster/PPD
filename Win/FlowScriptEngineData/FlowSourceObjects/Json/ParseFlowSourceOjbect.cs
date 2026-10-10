@@ -40,29 +40,28 @@ namespace FlowScriptEngineData.FlowSourceObjects.Json
             }
         }
 
-        private object Convert(object obj)
+        private static object Convert(object obj)
         {
-            if (obj is JObject)
+            if (obj is JObject @object)
             {
                 var ret = new Dictionary<object, object>();
-                foreach (var p in (JObject)obj)
+                foreach (var p in @object)
                 {
                     ret[p.Key] = Convert(p.Value);
                 }
                 return ret;
             }
-            else if (obj is JArray)
+            else if (obj is JArray array)
             {
                 var ret = new List<object>();
-                foreach (var o in (JArray)obj)
+                foreach (var o in array)
                 {
                     ret.Add(Convert(o));
                 }
                 return ret;
             }
-            else if (obj is JValue)
+            else if (obj is JValue v)
             {
-                var v = (JValue)obj;
                 if (v.Value is long)
                 {
                     var vv = (long)v.Value;
@@ -79,9 +78,8 @@ namespace FlowScriptEngineData.FlowSourceObjects.Json
                         return (int)vv;
                     }
                 }
-                else if (v.Value is double)
+                else if (v.Value is double vv)
                 {
-                    var vv = (double)v.Value;
                     if ((float)vv == vv)
                     {
                         return (float)vv;

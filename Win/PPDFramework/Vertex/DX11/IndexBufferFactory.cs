@@ -1,4 +1,4 @@
-﻿using SharpDX.Direct3D11;
+using Vortice.Direct3D11;
 
 namespace PPDFramework.Vertex.DX11
 {
@@ -6,13 +6,13 @@ namespace PPDFramework.Vertex.DX11
     {
         public IndexBufferBase Create(PPDDevice device, int sizeInBytes)
         {
-            return new IndexBuffer(device, new Buffer((SharpDX.Direct3D11.Device)((PPDFramework.DX11.PPDDevice)device).Device, new BufferDescription
+            return new IndexBuffer(device, ((ID3D11Device)device.Device).CreateBuffer(new BufferDescription
             {
-                SizeInBytes = sizeInBytes,
-                CpuAccessFlags = CpuAccessFlags.Write,
+                ByteWidth = (uint)sizeInBytes,
+                CPUAccessFlags = CpuAccessFlags.None,
                 BindFlags = BindFlags.IndexBuffer,
-                Usage = ResourceUsage.Dynamic
-            }));
+                Usage = ResourceUsage.Default
+            }, (SubresourceData?)null));
         }
     }
 }

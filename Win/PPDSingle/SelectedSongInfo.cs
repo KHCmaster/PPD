@@ -6,7 +6,7 @@ namespace PPDSingle
 {
     class SelectedSongInfo
     {
-        private bool[] perfectTrials = new bool[4];
+        private readonly bool[] perfectTrials = new bool[4];
 
         public SelectedSongInfo(SongInformation songInformation)
         {

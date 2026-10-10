@@ -32,15 +32,15 @@ namespace FlowScriptDrawControl.Control
         {
             if (e.OldValue != null)
             {
-                ((Item)e.OldValue).PropertyChanged -= newItem_PropertyChanged;
+                ((Item)e.OldValue).PropertyChanged -= NewItem_PropertyChanged;
             }
             if (e.NewValue != null)
             {
-                ((Item)e.NewValue).PropertyChanged += newItem_PropertyChanged;
+                ((Item)e.NewValue).PropertyChanged += NewItem_PropertyChanged;
             }
         }
 
-        void newItem_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        void NewItem_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             if (e.PropertyName == "IsConnectable")
             {

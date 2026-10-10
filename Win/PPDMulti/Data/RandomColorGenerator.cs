@@ -1,11 +1,13 @@
-﻿using SharpDX;
+﻿using System.Numerics;
+using PPDMath;
+using Color4 = Vortice.Mathematics.Color4;
 using System;
 
 namespace PPDMulti.Data
 {
     class RandomColorGenerator
     {
-        static byte[] table = { 0x66, 0x77, 0x88, 0x99, 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF };
+        static readonly byte[] table = [0x66, 0x77, 0x88, 0x99, 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF];
         public static Color4 GetColor()
         {
             var rand = new Random();

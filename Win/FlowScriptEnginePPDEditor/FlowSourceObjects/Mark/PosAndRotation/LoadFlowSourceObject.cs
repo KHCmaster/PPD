@@ -14,9 +14,9 @@ namespace FlowScriptEnginePPDEditor.FlowSourceObjects.Mark.PosAndRotation
 
         protected override void OnInitialize()
         {
-            if (Manager.Items.ContainsKey("PosAndAngleLoader"))
+            if (Manager.Items.TryGetValue("PosAndAngleLoader", out object value))
             {
-                loader = (IPosAndAngleLoader)Manager.Items["PosAndAngleLoader"];
+                loader = (IPosAndAngleLoader)value;
             }
         }
 

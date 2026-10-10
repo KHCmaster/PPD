@@ -1,7 +1,10 @@
 ﻿using Effect2D;
 using PPDFramework.ScreenFilters;
 using PPDFramework.Shaders;
-using SharpDX;
+using System.Numerics;
+using PPDMath;
+using Matrix = System.Numerics.Matrix4x4;
+using Color4 = Vortice.Mathematics.Color4;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +14,7 @@ namespace PPDFramework
     /// <summary>
     /// ゲームコンポーネントクラス
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1063:Implement IDisposable Correctly", Justification = "派生クラスは DisposeResource をオーバーライドして破棄する設計。子のコンポーネントは親が破棄する")]
     public abstract class GameComponent : IGameComponent
     {
         /// <summary>
@@ -111,7 +115,7 @@ namespace PPDFramework
         protected PPDDevice device;
 
         private GameComponent parent;
-        private List<GameComponent> children;
+        private readonly List<GameComponent> children;
         private bool childChanged;
 
         private float _width;
@@ -304,11 +308,11 @@ namespace PPDFramework
             Scale = Vector2.One;
             Alpha = 1;
             AcceptMouseOperation = true;
-            children = new List<GameComponent>();
-            colorFilters = new List<ColorFilterBase>();
-            preScreenFilters = new List<ScreenFilterBase>();
-            postScreenFilters = new List<ScreenFilterBase>();
-            renderMasks = new List<RenderMaskBase>();
+            children = [];
+            colorFilters = [];
+            preScreenFilters = [];
+            postScreenFilters = [];
+            renderMasks = [];
         }
 
         /// <summary>
@@ -329,10 +333,7 @@ namespace PPDFramework
             if (component == null)
                 throw new NullReferenceException("");
             if (component.parent == this) return;
-            if (component.parent != null)
-            {
-                component.parent.RemoveChild(component);
-            }
+            component.parent?.RemoveChild(component);
             children.Add(component);
             component.parent = this;
             childChanged = true;
@@ -348,10 +349,7 @@ namespace PPDFramework
             if (disposed) return;
             if (component == null)
                 throw new NullReferenceException("");
-            if (component.parent != null)
-            {
-                component.parent.RemoveChild(component);
-            }
+            component.parent?.RemoveChild(component);
             children.Insert(index, component);
             component.parent = this;
             childChanged = true;
@@ -366,9 +364,8 @@ namespace PPDFramework
             if (disposed) return;
             if (component == null)
                 throw new NullReferenceException("");
-            if (children.Contains(component))
+            if (children.Remove(component))
             {
-                children.Remove(component);
                 component.parent = null;
             }
             childChanged = true;
@@ -595,11 +592,8 @@ namespace PPDFramework
                 if (disposing)
                 {
                     DisposeResource();
-                    if (this.parent != null)
-                    {
-                        this.parent.RemoveChild(this);
-                        this.parent = null;
-                    }
+                    this.parent?.RemoveChild(this);
+                    this.parent = null;
                     for (int i = children.Count - 1; i >= 0; i--)
                     {
                         children[i].Dispose();
@@ -667,10 +661,7 @@ namespace PPDFramework
                 Parent.childChanged = true;
             }
             lastPosition = Position;
-            if (Mask != null)
-            {
-                Mask.Update();
-            }
+            Mask?.Update();
 
             UpdateImpl();
         }
@@ -913,10 +904,7 @@ namespace PPDFramework
 
         internal void DrawInternal(AlphaBlendContext alphaBlendContext, int depth)
         {
-            if (Clip != null)
-            {
-                Clip.GameHost.SetClipping(Clip.PositionX, Clip.PositionY, Clip.Width, Clip.Height);
-            }
+            Clip?.GameHost.SetClipping(Clip.PositionX, Clip.PositionY, Clip.Width, Clip.Height);
             if (preScreenFilters.Count > 0)
             {
                 device.GetModule<AlphaBlend>().Flush();
@@ -938,10 +926,11 @@ namespace PPDFramework
             var currentAlpha = alphaBlendContext.Alpha;
             var currentBlendMode = alphaBlendContext.BlendMode;
             var currentFilterCount = alphaBlendContext.FilterCount;
-            var enabledRenderMask = renderMasks.Where(m => m.Enabled).ToArray();
+            // ほとんどのコンポーネントはレンダーマスクを持たないので、そのときは LINQ の確保を避ける
+            RenderMaskBase[] enabledRenderMask = renderMasks.Count == 0 ? [] : [.. renderMasks.Where(m => m.Enabled)];
 
             WorkspaceTexture renderMaskTexture = null;
-            if (enabledRenderMask.Length > 0 && !PPDSetting.Setting.ShaderDisabled)
+            if (enabledRenderMask.Length > 0)
             {
                 device.GetModule<AlphaBlend>().Flush();
                 var renderTarget = device.GetRenderTarget();
@@ -953,7 +942,7 @@ namespace PPDFramework
                 device.SetRenderTarget(renderTarget);
             }
             WorkspaceTexture maskTexture = null;
-            if (Mask != null && !PPDSetting.Setting.ShaderDisabled)
+            if (Mask != null)
             {
                 device.GetModule<AlphaBlend>().Flush();
                 maskTexture = device.Workspace.Get();
@@ -969,7 +958,7 @@ namespace PPDFramework
             }
             WorkspaceTexture filterTargetTexture = null;
             WorkspaceTexture prevRenderTarget = null;
-            if (currentFilterCount >= 2 && !PPDSetting.Setting.ShaderDisabled)
+            if (currentFilterCount >= 2)
             {
                 device.GetModule<AlphaBlend>().Flush();
                 alphaBlendContext.Alpha = 1;
@@ -980,7 +969,7 @@ namespace PPDFramework
                 device.Clear(new Color4(0, 0, 0, 0));
             }
             DrawImpl(alphaBlendContext);
-            if (currentFilterCount >= 2 && !PPDSetting.Setting.ShaderDisabled)
+            if (currentFilterCount >= 2)
             {
                 device.GetModule<AlphaBlend>().Flush();
                 var context = device.GetModule<AlphaBlendContextCache>().Get();
@@ -1009,31 +998,22 @@ namespace PPDFramework
                         device.GetModule<AlphaBlend>().Draw(device, context);
                     }
                 }
-                if (renderedTexture != null)
-                {
-                    renderedTexture.Dispose();
-                }
+                renderedTexture?.Dispose();
             }
-            if (enabledRenderMask.Length > 0 && !PPDSetting.Setting.ShaderDisabled)
+            if (enabledRenderMask.Length > 0)
             {
                 device.GetModule<AlphaBlend>().Flush();
                 foreach (var renderMask in enabledRenderMask)
                 {
                     renderMask.Draw(device, renderMaskTexture);
                 }
-                if (renderMaskTexture != null)
-                {
-                    renderMaskTexture.Dispose();
-                }
+                renderMaskTexture?.Dispose();
             }
             DrawChildrenImpl(alphaBlendContext, currentAlpha, currentBlendMode, currentFilterCount, depth + 1);
-            if (Mask != null && !PPDSetting.Setting.ShaderDisabled)
+            if (Mask != null)
             {
                 alphaBlendContext.MaskTexture = null;
-                if (maskTexture != null)
-                {
-                    maskTexture.Dispose();
-                }
+                maskTexture?.Dispose();
             }
             alphaBlendContext.SRTDepth = depth;
             alphaBlendContext.Alpha = currentAlpha;
@@ -1048,10 +1028,7 @@ namespace PPDFramework
                     filter.Filter(device);
                 }
             }
-            if (Clip != null)
-            {
-                Clip.GameHost.RestoreClipping();
-            }
+            Clip?.GameHost.RestoreClipping();
         }
 
         /// <summary>
@@ -1182,10 +1159,7 @@ namespace PPDFramework
         /// <param name="mouseEvent"></param>
         protected void OnMouseLeftDown(MouseEvent mouseEvent)
         {
-            if (MouseLeftDown != null)
-            {
-                MouseLeftDown.Invoke(this, mouseEvent);
-            }
+            MouseLeftDown?.Invoke(this, mouseEvent);
         }
 
         /// <summary>
@@ -1194,10 +1168,7 @@ namespace PPDFramework
         /// <param name="mouseEvent"></param>
         protected void OnMouseLeftUp(MouseEvent mouseEvent)
         {
-            if (MouseLeftUp != null)
-            {
-                MouseLeftUp.Invoke(this, mouseEvent);
-            }
+            MouseLeftUp?.Invoke(this, mouseEvent);
         }
 
         /// <summary>
@@ -1206,10 +1177,7 @@ namespace PPDFramework
         /// <param name="mouseEvent"></param>
         protected void OnMouseMiddleDown(MouseEvent mouseEvent)
         {
-            if (MouseMiddleDown != null)
-            {
-                MouseMiddleDown.Invoke(this, mouseEvent);
-            }
+            MouseMiddleDown?.Invoke(this, mouseEvent);
         }
 
         /// <summary>
@@ -1218,10 +1186,7 @@ namespace PPDFramework
         /// <param name="mouseEvent"></param>
         protected void OnMouseMiddleUp(MouseEvent mouseEvent)
         {
-            if (MouseMiddleUp != null)
-            {
-                MouseMiddleUp.Invoke(this, mouseEvent);
-            }
+            MouseMiddleUp?.Invoke(this, mouseEvent);
         }
 
         /// <summary>
@@ -1230,10 +1195,7 @@ namespace PPDFramework
         /// <param name="mouseEvent"></param>
         protected void OnMouseRightDown(MouseEvent mouseEvent)
         {
-            if (MouseRightDown != null)
-            {
-                MouseRightDown.Invoke(this, mouseEvent);
-            }
+            MouseRightDown?.Invoke(this, mouseEvent);
         }
 
         /// <summary>
@@ -1242,10 +1204,7 @@ namespace PPDFramework
         /// <param name="mouseEvent"></param>
         protected void OnMouseRightUp(MouseEvent mouseEvent)
         {
-            if (MouseRightUp != null)
-            {
-                MouseRightUp.Invoke(this, mouseEvent);
-            }
+            MouseRightUp?.Invoke(this, mouseEvent);
         }
 
         /// <summary>
@@ -1254,10 +1213,7 @@ namespace PPDFramework
         /// <param name="mouseEvent"></param>
         protected void OnMouseWheel(MouseEvent mouseEvent)
         {
-            if (MouseWheel != null)
-            {
-                MouseWheel.Invoke(this, mouseEvent);
-            }
+            MouseWheel?.Invoke(this, mouseEvent);
         }
 
         /// <summary>
@@ -1266,10 +1222,7 @@ namespace PPDFramework
         /// <param name="mouseEvent"></param>
         protected void OnMouseMove(MouseEvent mouseEvent)
         {
-            if (MouseMove != null)
-            {
-                MouseMove.Invoke(this, mouseEvent);
-            }
+            MouseMove?.Invoke(this, mouseEvent);
         }
 
         /// <summary>
@@ -1278,10 +1231,7 @@ namespace PPDFramework
         /// <param name="mouseEvent"></param>
         protected void OnMouseEnter(MouseEvent mouseEvent)
         {
-            if (MouseEnter != null)
-            {
-                MouseEnter.Invoke(this, mouseEvent);
-            }
+            MouseEnter?.Invoke(this, mouseEvent);
         }
 
         /// <summary>
@@ -1290,10 +1240,7 @@ namespace PPDFramework
         /// <param name="mouseEvent"></param>
         protected void OnMouseLeave(MouseEvent mouseEvent)
         {
-            if (MouseLeave != null)
-            {
-                MouseLeave.Invoke(this, mouseEvent);
-            }
+            MouseLeave?.Invoke(this, mouseEvent);
         }
 
         /// <summary>
@@ -1302,10 +1249,7 @@ namespace PPDFramework
         /// <param name="mouseEvent"></param>
         protected void OnMouseLeftClick(MouseEvent mouseEvent)
         {
-            if (MouseLeftClick != null)
-            {
-                MouseLeftClick.Invoke(this, mouseEvent);
-            }
+            MouseLeftClick?.Invoke(this, mouseEvent);
         }
 
         /// <summary>
@@ -1314,10 +1258,7 @@ namespace PPDFramework
         /// <param name="mouseEvent"></param>
         protected void OnMouseRightClick(MouseEvent mouseEvent)
         {
-            if (MouseRightClick != null)
-            {
-                MouseRightClick.Invoke(this, mouseEvent);
-            }
+            MouseRightClick?.Invoke(this, mouseEvent);
         }
 
         /// <summary>
@@ -1326,10 +1267,7 @@ namespace PPDFramework
         /// <param name="mouseEvent"></param>
         protected void OnMouseMiddleClick(MouseEvent mouseEvent)
         {
-            if (MouseMiddleClick != null)
-            {
-                MouseMiddleClick.Invoke(this, mouseEvent);
-            }
+            MouseMiddleClick?.Invoke(this, mouseEvent);
         }
     }
 }

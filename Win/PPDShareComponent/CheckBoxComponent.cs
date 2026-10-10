@@ -1,12 +1,13 @@
 ﻿using PPDFramework;
-using SharpDX;
+using System.Numerics;
+using PPDMath;
 
 namespace PPDShareComponent
 {
     public class CheckBoxComponent : SelectableComponent
     {
-        private PictureObject check;
-        private PictureObject checkBox;
+        private readonly PictureObject check;
+        private readonly PictureObject checkBox;
 
         public CheckBoxComponent(PPDDevice device, PPDFramework.Resource.ResourceManager resourceManager, PathManager pathManager, string text) : base(device)
         {
@@ -22,8 +23,7 @@ namespace PPDShareComponent
                 Scale = new Vector2(0.5f),
                 Alpha = 0
             });
-            TextureString str;
-            this.AddChild(str = new TextureString(device, text, 20, PPDColors.White)
+            this.AddChild(_ = new TextureString(device, text, 20, PPDColors.White)
             {
                 Position = new Vector2(30, 0)
             });

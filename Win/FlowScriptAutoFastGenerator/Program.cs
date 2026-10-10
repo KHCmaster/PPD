@@ -11,9 +11,9 @@ using System.Xml;
 
 namespace FlowScriptAutoFastGenerator
 {
-    class Program
+    partial class Program
     {
-        static HashSet<ClassInfo> errorFiles = new HashSet<ClassInfo>();
+        static readonly HashSet<ClassInfo> errorFiles = [];
 
 
 #if DEBUG
@@ -72,7 +72,7 @@ namespace FlowScriptAutoFastGenerator
             var fileList = GetFileList(projectPath);
             var dict = GetClassInfo(fileList);
 
-            foreach (AssemblyAndType asm in FlowSourceEnumerator.EnumerateFromFile(dllPath, new Type[] { typeof(FlowSourceObjectBase) }))
+            foreach (AssemblyAndType asm in FlowSourceEnumerator.EnumerateFromFile(dllPath, [typeof(FlowSourceObjectBase)]))
             {
                 var temp = (FlowSourceObjectBase)asm.Assembly.CreateInstance(asm.Type.FullName);
                 if (temp != null)
@@ -88,7 +88,7 @@ namespace FlowScriptAutoFastGenerator
                         if (!classInfo.HasPartial)
                         {
                             string content;
-                            using (StreamReader sr = new StreamReader(classInfo.FilePath, Encoding.UTF8))
+                            using (StreamReader sr = new(classInfo.FilePath, Encoding.UTF8))
                             {
                                 content = sr.ReadToEnd();
                             }
@@ -97,7 +97,7 @@ namespace FlowScriptAutoFastGenerator
                             var m = classRegex.Match(content);
                             if (m.Success)
                             {
-                                content = content.Substring(0, m.Groups[0].Index) + "public partial class " + classInfo.ClassName + content.Substring(m.Groups[0].Index + m.Groups[0].Length);
+                                content = content[..m.Groups[0].Index] + "public partial class " + classInfo.ClassName + content[(m.Groups[0].Index + m.Groups[0].Length)..];
                                 UpdateContent(content, classInfo.FilePath);
                             }
                         }
@@ -151,12 +151,12 @@ namespace FlowScriptAutoFastGenerator
 
         private static string GetGenericClassName(string name)
         {
-            var backQuoteIndex = name.IndexOf("`");
+            var backQuoteIndex = name.IndexOf('`');
             if (backQuoteIndex < 0)
             {
                 return name;
             }
-            return name.Substring(0, backQuoteIndex);
+            return name[..backQuoteIndex];
         }
 
         static void UpdateContent(string content, string filePath)
@@ -179,20 +179,18 @@ namespace FlowScriptAutoFastGenerator
                     return;
                 }
             }
-            using (StreamWriter sw = new StreamWriter(filePath, false, encoding))
-            {
-                sw.Write(content);
-            }
+            using StreamWriter sw = new(filePath, false, encoding);
+            sw.Write(content);
         }
 
         static string GetRelativePath(string dir, string filePath)
         {
-            return filePath.Substring(dir.Length + 1);
+            return filePath[(dir.Length + 1)..];
         }
 
         static void HideAutoFastCs(string projectDir)
         {
-            var regex = new Regex("^\\w+\\.AutoFast\\.cs$");
+            var regex = AutoFastFileRegex();
             var autoFasts = new List<string>();
             var dirs = new Queue<string>();
             dirs.Enqueue(projectDir);
@@ -232,7 +230,7 @@ namespace FlowScriptAutoFastGenerator
                 {
                     string path = elem.Attributes["Include"].Value;
                     Console.WriteLine(path);
-                    if (regex.Match(Path.GetFileName(path)).Success)
+                    if (regex.IsMatch(Path.GetFileName(path)))
                     {
                         autoFasts.Remove(path);
                         while (elem.ChildNodes.Count > 0)
@@ -261,20 +259,18 @@ namespace FlowScriptAutoFastGenerator
                     compileElem.AppendChild(newElem);
                 }
 
-                using (MemoryStream stream = new MemoryStream())
-                {
-                    doc.Save(stream);
-                    var content = Encoding.UTF8.GetString(stream.ToArray());
-                    content = content.Substring(1);
-                    UpdateContent(content, filePath, false);
-                }
+                using MemoryStream stream = new();
+                doc.Save(stream);
+                var content = Encoding.UTF8.GetString(stream.ToArray());
+                content = content[1..];
+                UpdateContent(content, filePath, false);
                 break;
             }
         }
 
         static string[] GetFileList(string projectDir)
         {
-            var regex = new Regex("^\\w+\\.cs$");
+            var regex = CsFileRegex();
             var ret = new List<string>();
             var queue = new Queue<string>();
             queue.Enqueue(projectDir);
@@ -288,56 +284,54 @@ namespace FlowScriptAutoFastGenerator
 
                 foreach (string childFile in Directory.GetFiles(dir))
                 {
-                    if (regex.Match(Path.GetFileName(childFile)).Success)
+                    if (regex.IsMatch(Path.GetFileName(childFile)))
                     {
                         ret.Add(childFile);
                     }
                 }
             }
 
-            return ret.ToArray();
+            return [.. ret];
         }
 
         static Dictionary<string, ClassInfo> GetClassInfo(string[] fileList)
         {
             var ret = new Dictionary<string, ClassInfo>();
-            var classRegex = new Regex("public +(?<partial>partial)? *(?<abstract>abstract)? *class +(?<className>[\\w]+)");
-            var namespaceRegex = new Regex("namespace +(?<namespace>[\\w.]+)");
-            var setValueRegex1 = new Regex("SetValue\\(\"([a-zA-Z_][a-zA-Z0-9_]*)\"\\)");
-            var setValueRegex2 = new Regex("SetValue\\(nameof\\(([a-zA-Z_][a-zA-Z0-9_]*)\\)\\)");
+            var classRegex = ClassDeclarationRegex();
+            var namespaceRegex = NamespaceDeclarationRegex();
+            var setValueRegex1 = SetValueStringRegex();
+            var setValueRegex2 = SetValueNameofRegex();
 
             foreach (string filePath in fileList)
             {
-                using (StreamReader sr = new StreamReader(filePath, Encoding.UTF8))
-                {
-                    var content = sr.ReadToEnd();
-                    Match classMatch = classRegex.Match(content),
-                        namespaceMatch = namespaceRegex.Match(content);
+                using StreamReader sr = new(filePath, Encoding.UTF8);
+                var content = sr.ReadToEnd();
+                Match classMatch = classRegex.Match(content),
+                    namespaceMatch = namespaceRegex.Match(content);
 
-                    if (classMatch.Success && namespaceMatch.Success)
+                if (classMatch.Success && namespaceMatch.Success)
+                {
+                    var names = new HashSet<string>();
+                    foreach (Match match in setValueRegex1.Matches(content))
                     {
-                        var names = new HashSet<string>();
-                        foreach (Match match in setValueRegex1.Matches(content))
-                        {
-                            names.Add(match.Groups[1].Value);
-                        }
-                        foreach (Match match in setValueRegex2.Matches(content))
-                        {
-                            names.Add(match.Groups[1].Value);
-                        }
-                        var classInfo = new ClassInfo
-                        {
-                            FilePath = filePath,
-                            ClassName = classMatch.Groups["className"].Value,
-                            HasPartial = !String.IsNullOrEmpty(classMatch.Groups["partial"].Value),
-                            IsAbstract = !String.IsNullOrEmpty(classMatch.Groups["abstract"].Value)
-                        };
-                        foreach (var name in names)
-                        {
-                            classInfo.AddSetValue(name);
-                        }
-                        ret.Add(String.Format("{0}.{1}", namespaceMatch.Groups["namespace"], classMatch.Groups["className"].Value), classInfo);
+                        names.Add(match.Groups[1].Value);
                     }
+                    foreach (Match match in setValueRegex2.Matches(content))
+                    {
+                        names.Add(match.Groups[1].Value);
+                    }
+                    var classInfo = new ClassInfo
+                    {
+                        FilePath = filePath,
+                        ClassName = classMatch.Groups["className"].Value,
+                        HasPartial = !String.IsNullOrEmpty(classMatch.Groups["partial"].Value),
+                        IsAbstract = !String.IsNullOrEmpty(classMatch.Groups["abstract"].Value)
+                    };
+                    foreach (var name in names)
+                    {
+                        classInfo.AddSetValue(name);
+                    }
+                    ret.Add(String.Format("{0}.{1}", namespaceMatch.Groups["namespace"], classMatch.Groups["className"].Value), classInfo);
                 }
             }
 
@@ -346,26 +340,26 @@ namespace FlowScriptAutoFastGenerator
 
         class ClassInfo
         {
-            List<string> errors;
-            HashSet<string> setValues;
+            readonly List<string> errors;
+            readonly HashSet<string> setValues;
 
             public string[] Errors
             {
                 get
                 {
-                    return errors.ToArray();
+                    return [.. errors];
                 }
             }
 
             public string[] SetValues
             {
-                get { return setValues.ToArray(); }
+                get { return [.. setValues]; }
             }
 
             public ClassInfo()
             {
-                errors = new List<string>();
-                setValues = new HashSet<string>();
+                errors = [];
+                setValues = [];
             }
 
             public string FilePath
@@ -408,25 +402,32 @@ namespace FlowScriptAutoFastGenerator
             }
         }
 
-        class Warning
+        class Warning(string filePath, string warningText)
         {
             public string FilePath
             {
                 get;
                 private set;
-            }
+            } = filePath;
 
             public string WarningText
             {
                 get;
                 private set;
-            }
-
-            public Warning(string filePath, string warningText)
-            {
-                FilePath = filePath;
-                WarningText = warningText;
-            }
+            } = warningText;
         }
+
+        [GeneratedRegex("^\\w+\\.AutoFast\\.cs$")]
+        private static partial Regex AutoFastFileRegex();
+        [GeneratedRegex("^\\w+\\.cs$")]
+        private static partial Regex CsFileRegex();
+        [GeneratedRegex("public +(?<partial>partial)? *(?<abstract>abstract)? *class +(?<className>[\\w]+)")]
+        private static partial Regex ClassDeclarationRegex();
+        [GeneratedRegex("namespace +(?<namespace>[\\w.]+)")]
+        private static partial Regex NamespaceDeclarationRegex();
+        [GeneratedRegex("SetValue\\(\"([a-zA-Z_][a-zA-Z0-9_]*)\"\\)")]
+        private static partial Regex SetValueStringRegex();
+        [GeneratedRegex("SetValue\\(nameof\\(([a-zA-Z_][a-zA-Z0-9_]*)\\)\\)")]
+        private static partial Regex SetValueNameofRegex();
     }
 }

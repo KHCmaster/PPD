@@ -3,7 +3,15 @@
     /// <summary>
     /// 文字列の設定を扱うクラスです。
     /// </summary>
-    public class StringModSetting : TemplateModSetting<string>
+    /// <remarks>
+    /// コンストラクタです。
+    /// </remarks>
+    /// <param name="key"></param>
+    /// <param name="name"></param>
+    /// <param name="description"></param>
+    /// <param name="defaultValue"></param>
+    /// <param name="maxLength"></param>
+    public class StringModSetting(string key, string name, string description, string defaultValue, int maxLength) : TemplateModSetting<string>(key, name, description, defaultValue)
     {
         /// <summary>
         /// 文字列の最大長を取得します。
@@ -12,7 +20,7 @@
         {
             get;
             private set;
-        }
+        } = maxLength;
 
         /// <summary>
         /// 最大長が設定されているかどうかを取得します。
@@ -23,20 +31,6 @@
             {
                 return int.MaxValue == MaxLength;
             }
-        }
-
-        /// <summary>
-        /// コンストラクタです。
-        /// </summary>
-        /// <param name="key"></param>
-        /// <param name="name"></param>
-        /// <param name="description"></param>
-        /// <param name="defaultValue"></param>
-        /// <param name="maxLength"></param>
-        public StringModSetting(string key, string name, string description, string defaultValue, int maxLength)
-            : base(key, name, description, defaultValue)
-        {
-            MaxLength = maxLength;
         }
 
         /// <summary>

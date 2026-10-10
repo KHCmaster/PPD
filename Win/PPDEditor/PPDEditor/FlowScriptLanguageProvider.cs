@@ -3,14 +3,9 @@ using PPDConfiguration;
 
 namespace PPDEditor
 {
-    class FlowScriptLanguageProvider : ILanguageProvider
+    class FlowScriptLanguageProvider(SettingReader flowLang) : ILanguageProvider
     {
-        private SettingReader flowLang;
-
-        public FlowScriptLanguageProvider(SettingReader flowLang)
-        {
-            this.flowLang = flowLang;
-        }
+        private readonly SettingReader flowLang = flowLang;
 
         #region ILanguageProvider メンバ
 

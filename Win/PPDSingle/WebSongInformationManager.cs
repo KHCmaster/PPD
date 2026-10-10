@@ -11,14 +11,15 @@ namespace PPDSingle
 {
     class WebSongInformationManager
     {
-        private static WebSongInformationManager instance = new WebSongInformationManager();
+        private static readonly WebSongInformationManager instance = new();
 
         private Thread updateWorkerThread;
+        private volatile bool stopRequested;
         private Thread updateScoreWorkerThread;
 
         private WebSongInformation[] informations;
-        private Dictionary<string, WebSongInformation> webSongInfoHashDict = new Dictionary<string, WebSongInformation>();
-        private Dictionary<string, WebSongInformation> webSongInfoIDDict = new Dictionary<string, WebSongInformation>();
+        private readonly Dictionary<string, WebSongInformation> webSongInfoHashDict = [];
+        private readonly Dictionary<string, WebSongInformation> webSongInfoIDDict = [];
 
         public static WebSongInformationManager Instance
         {
@@ -49,9 +50,9 @@ namespace PPDSingle
             {
                 if (informations == null)
                 {
-                    return new WebSongInformation[0];
+                    return [];
                 }
-                return informations.Where(info => info.CanUpdate).ToArray();
+                return [.. informations.Where(info => info.CanUpdate)];
             }
         }
 
@@ -98,6 +99,7 @@ namespace PPDSingle
                 {
                     return;
                 }
+                stopRequested = false;
                 updateWorkerThread = ThreadManager.Instance.GetThread(UpdateImpl);
                 updateWorkerThread.Start();
             }
@@ -119,29 +121,30 @@ namespace PPDSingle
 
         public void UpdateScore()
         {
+            stopRequested = false;
             updateScoreWorkerThread = ThreadManager.Instance.GetThread(UpdateScoreImpl);
             updateScoreWorkerThread.Start();
         }
 
         public void Stop()
         {
-            if (updateWorkerThread != null && updateWorkerThread.IsAlive)
-            {
-                updateWorkerThread.Abort();
-                updateWorkerThread = null;
-            }
-            if (updateScoreWorkerThread != null && updateScoreWorkerThread.IsAlive)
-            {
-                updateScoreWorkerThread.Abort();
-                updateScoreWorkerThread = null;
-            }
+            // .NET では Thread.Abort が使えないので、止めるよう要求する。
+            // スレッドは次の区切り（1 曲ごと）で止まり、それ以降の結果は反映しない
+            stopRequested = true;
+            updateWorkerThread = null;
+            updateScoreWorkerThread = null;
         }
 
         private void UpdateImpl()
         {
             try
             {
-                informations = WebManager.Instance.GetScores();
+                var newInformations = WebManager.Instance.GetScores();
+                if (stopRequested)
+                {
+                    return;
+                }
+                informations = newInformations;
                 webSongInfoHashDict.Clear();
                 webSongInfoIDDict.Clear();
                 foreach (var information in informations)
@@ -163,7 +166,7 @@ namespace PPDSingle
             }
         }
 
-        private void UpdateLastTime(string dir)
+        private static void UpdateLastTime(string dir)
         {
             DateTime now = DateTime.Now;
             Directory.SetLastWriteTime(dir, now);
@@ -185,6 +188,10 @@ namespace PPDSingle
                 WebSongInformation[] list = UpdatableInformations;
                 foreach (WebSongInformation webSongInfo in list)
                 {
+                    if (stopRequested)
+                    {
+                        return;
+                    }
                     try
                     {
                         var tempPath = Path.GetTempFileName();
@@ -200,7 +207,7 @@ namespace PPDSingle
                         Utility.FastZip.ExtractZip(tempPath, unzipDir, "");
                         foreach (string dir in Directory.GetDirectories(unzipDir))
                         {
-                            Utility.CopyDirectory(dir, target.DirectoryPath, new System.Text.RegularExpressions.Regex[0]);
+                            Utility.CopyDirectory(dir, target.DirectoryPath, []);
                         }
                         UpdateLastTime(target.DirectoryPath);
 

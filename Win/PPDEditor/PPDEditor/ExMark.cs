@@ -1,7 +1,9 @@
 ﻿using PPDFramework;
 using PPDFramework.PPDStructure.EVDData;
 using PPDFramework.PPDStructure.PPDData;
-using SharpDX;
+using System.Numerics;
+using PPDMath;
+using Color4 = Vortice.Mathematics.Color4;
 using System;
 
 namespace PPDEditor
@@ -14,13 +16,13 @@ namespace PPDEditor
         const int ExMarkPosDiffStart = 24;
         protected float endtime;
         float lasttime;
-        PictureObject outcircle;
-        PictureObject outjiku;
+        readonly PictureObject outcircle;
+        readonly PictureObject outjiku;
         PictureObject[] exMarks;
         PictureObject[] exMarksc;
-        Vector2[] circlepoints;
+        readonly Vector2[] circlepoints;
         PictureObject trace;
-        PictureObject hold;
+        readonly PictureObject hold;
         Vector2 holdoffset;
         bool played;
         float slideScale = 1;
@@ -29,7 +31,7 @@ namespace PPDEditor
         {
             this.endtime = endtime;
             this.circlepoints = circlepoints;
-            skin.GetLongNoteCircleInfo(out PathObject filename, out float a, out float b);
+            skin.GetLongNoteCircleInfo(out PathObject filename, out _, out _);
             outcircle = new PictureObject(device, resourceManager, filename, true)
             {
                 Position = new Vector2(x, y)
@@ -42,7 +44,7 @@ namespace PPDEditor
             {
                 Position = new Vector2(x, y)
             };
-            skin.GetHoldInfo(out filename, out a, out b);
+            skin.GetHoldInfo(out filename, out float a, out float b);
             hold = new PictureObject(device, resourceManager, filename, true)
             {
                 Position = new Vector2(x + a, y + b)
@@ -227,7 +229,7 @@ namespace PPDEditor
             markc.Draw();
         }
 
-        public void gageDraw()
+        public void GageDraw()
         {
             if (Hidden || noteType == NoteType.AC || noteType == NoteType.ACFT) return;
             if (lasttime >= this.time)
@@ -276,12 +278,12 @@ namespace PPDEditor
             {
                 fwv[i * 2].Position = new Vector3(x + circlepoints[i * 2].X, y + circlepoints[i * 2].Y, 0.5f);
                 fwv[i * 2].TextureCoordinates = new Vector2(1.0f, 0.5f);
-                fwv[i * 2].Color = new Color4(alpha, 1, 1, 1).ToBgra();
+                fwv[i * 2].Color = new Color4(alpha, 1, 1, 1).ToBgraInt();
                 fwv[i * 2 + 1].Position = new Vector3(x + circlepoints[i * 2 + 1].X, y + circlepoints[i * 2 + 1].Y, 0.5f);
                 fwv[i * 2 + 1].TextureCoordinates = new Vector2(1.0f, 0.5f);
-                fwv[i * 2 + 1].Color = new Color4(alpha, 1, 1, 1).ToBgra();
+                fwv[i * 2 + 1].Color = new Color4(alpha, 1, 1, 1).ToBgraInt();
             }
-            var t = trace.ImageResource.Texture;
+
         }
 
         protected override void UpdateMarkImage()

@@ -5,14 +5,11 @@ using System.Windows.Forms;
 
 namespace PPDCore
 {
-    class ExSound
+    class ExSound(ISound sound)
     {
         int count = 1;
-        ISound sound;
-        public ExSound(ISound sound)
-        {
-            this.sound = sound;
-        }
+        readonly ISound sound = sound;
+
         public bool ExAddSound(string filename)
         {
             if (File.Exists(filename))
@@ -35,6 +32,7 @@ namespace PPDCore
                 return false;
             }
         }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "呼び出し側との互換のため残している。効果音の再生速度は変えない（従来の動作）")]
         public bool ExPlay(int num, int vol, double playRatio)
         {
             if (num < count)

@@ -9,31 +9,20 @@ namespace FlowScriptEngineBasic.FlowSourceObjects.TimeSpan
     {
         public override object GetPropertyValue(string propertyName)
         {
-            switch (propertyName)
+            return propertyName switch
             {
-                case "Days":
-                    return Days;
-                case "Hours":
-                    return Hours;
-                case "Milliseconds":
-                    return Milliseconds;
-                case "Minutes":
-                    return Minutes;
-                case "Seconds":
-                    return Seconds;
-                case "TotalDays":
-                    return TotalDays;
-                case "TotalHours":
-                    return TotalHours;
-                case "TotalMilliseconds":
-                    return TotalMilliseconds;
-                case "TotalMinutes":
-                    return TotalMinutes;
-                case "TotalSeconds":
-                    return TotalSeconds;
-                default:
-                    return null;
-            }
+                "Days" => Days,
+                "Hours" => Hours,
+                "Milliseconds" => Milliseconds,
+                "Minutes" => Minutes,
+                "Seconds" => Seconds,
+                "TotalDays" => TotalDays,
+                "TotalHours" => TotalHours,
+                "TotalMilliseconds" => TotalMilliseconds,
+                "TotalMinutes" => TotalMinutes,
+                "TotalSeconds" => TotalSeconds,
+                _ => null,
+            };
         }
 
         protected override void SetPropertyValue(string propertyName, object value)

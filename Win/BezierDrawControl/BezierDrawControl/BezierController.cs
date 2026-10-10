@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Windows.Forms;
 
 namespace BezierDrawControl
 {
@@ -54,7 +53,7 @@ namespace BezierDrawControl
         }
 
         Mode mode = Mode.None;
-        DrawMode dmode = DrawMode.Anchor | DrawMode.Line;
+        readonly DrawMode dmode = DrawMode.Anchor | DrawMode.Line;
         TransformMode tmode = TransformMode.None;
         bool fixAspect;
         TransformBezierControlPoints transBeziers;
@@ -63,8 +62,8 @@ namespace BezierDrawControl
 
         private bool changedFlag;
         private bool mouseDown;
-        private RingBuffer<List<BezierControlPoint>> bufferData = new RingBuffer<List<BezierControlPoint>>(100);
-        private List<BezierControlPoint> data = new List<BezierControlPoint>();
+        private readonly RingBuffer<List<BezierControlPoint>> bufferData = new(100);
+        private List<BezierControlPoint> data = [];
         private BezierControlPoint selectedPoint;
 
         private BezierControlPoint SelectedPoint
@@ -102,12 +101,12 @@ namespace BezierDrawControl
                 }
                 else
                 {
-                    return Copy(data).ToArray();
+                    return [.. Copy(data)];
                 }
             }
             set
             {
-                data = new List<BezierControlPoint>(value);
+                data = [.. value];
                 bufferData.Add(Copy(data));
                 OnDrawRequired();
             }
@@ -122,7 +121,7 @@ namespace BezierDrawControl
                 {
                     ret.Add(bcp);
                 }
-                return ret.ToArray();
+                return [.. ret];
             }
         }
 
@@ -142,10 +141,7 @@ namespace BezierDrawControl
             }
             set
             {
-                if (transBeziers != null)
-                {
-                    transBeziers.TransformRectange.Scale = value;
-                }
+                transBeziers?.TransformRectange.Scale = value;
             }
         }
 
@@ -157,10 +153,7 @@ namespace BezierDrawControl
             }
             set
             {
-                if (transBeziers != null)
-                {
-                    transBeziers.TransformRectange.Rotation = value;
-                }
+                transBeziers?.TransformRectange.Rotation = value;
             }
         }
 
@@ -172,10 +165,7 @@ namespace BezierDrawControl
             }
             set
             {
-                if (transBeziers != null)
-                {
-                    transBeziers.TransformRectange.Move = value;
-                }
+                transBeziers?.TransformRectange.Move = value;
             }
         }
 
@@ -206,20 +196,22 @@ namespace BezierDrawControl
         public void Draw(IBezierDrawContext context)
         {
             OnBeforePaint(context);
+            // 点は中心からの位置なので、中心をずらして描く（マウスの位置も中心からの位置に直している）
+            var centered = Center.IsEmpty ? context : new CenteredDrawContext(context, Center);
             if (tmode > TransformMode.None)
             {
-                DrawTransData(context);
+                DrawTransData(centered);
             }
             else
             {
-                DrawNormalData(context);
+                DrawNormalData(centered);
             }
             OnAfterPaint(context);
         }
 
         private void DrawTransData(IBezierDrawContext context)
         {
-            context.DrawLines(Color.Black, new PointF[] { transBeziers.TransformRectange.TopLeft, transBeziers.TransformRectange.TopRight, transBeziers.TransformRectange.BottomRight, transBeziers.TransformRectange.BottomLeft, transBeziers.TransformRectange.TopLeft });
+            context.DrawLines(Color.Black, [transBeziers.TransformRectange.TopLeft, transBeziers.TransformRectange.TopRight, transBeziers.TransformRectange.BottomRight, transBeziers.TransformRectange.BottomLeft, transBeziers.TransformRectange.TopLeft]);
             DrawSquare(transBeziers.TransformRectange.TopLeft, context);
             DrawSquare(transBeziers.TransformRectange.TopRight, context);
             DrawSquare(transBeziers.TransformRectange.BottomLeft, context);
@@ -341,7 +333,7 @@ namespace BezierDrawControl
             }
         }
 
-        private void DrawBezeier(PointF p1, PointF p2, PointF p3, PointF p4, IBezierDrawContext context)
+        private static void DrawBezeier(PointF p1, PointF p2, PointF p3, PointF p4, IBezierDrawContext context)
         {
             PointF lastbezeirpoint, bezeirpoint;
             lastbezeirpoint = p1;
@@ -355,35 +347,35 @@ namespace BezierDrawControl
             }
         }
 
-        private void FillSquare(PointF p, IBezierDrawContext context)
+        private static void FillSquare(PointF p, IBezierDrawContext context)
         {
             context.FillRectangle(Color.Black, p.X - 3, p.Y - 3, 6, 6);
         }
 
-        private void DrawSquare(PointF p, IBezierDrawContext context)
+        private static void DrawSquare(PointF p, IBezierDrawContext context)
         {
             context.DrawRectangle(Color.Black, p.X - 3, p.Y - 3, 6, 6);
         }
 
-        private PointF CreateDevisionPoint(PointF p1, PointF p2, float t)
+        private static PointF CreateDevisionPoint(PointF p1, PointF p2, float t)
         {
             float invt = 1 - t;
             return new PointF(p1.X * t + p2.X * invt, p1.Y * t + p2.Y * invt);
         }
 
-        private float GetLength(PointF p1)
+        private static float GetLength(PointF p1)
         {
             var length = (float)(Math.Sqrt(p1.X * p1.X + p1.Y * p1.Y));
             return length;
         }
 
-        private PointF GetNormalizePoint(PointF p1, PointF p2)
+        private static PointF GetNormalizePoint(PointF p1, PointF p2)
         {
             var temp = new PointF(p1.X + p2.X, p1.Y + p2.Y);
             return BezierCaliculate.GetNormalizePoint(temp);
         }
 
-        private bool IsInside(PointF target, PointF src)
+        private static bool IsInside(PointF target, PointF src)
         {
             if (target.X - 5 <= src.X && src.X <= target.X + 5)
             {
@@ -395,7 +387,7 @@ namespace BezierDrawControl
             return false;
         }
 
-        private bool IsInside(RectangleF target, PointF src)
+        private static bool IsInside(RectangleF target, PointF src)
         {
             if (target.X <= src.X && src.X <= target.X + target.Width)
             {
@@ -407,7 +399,7 @@ namespace BezierDrawControl
             return false;
         }
 
-        private bool IsInside(PointF p, PointF a, PointF b, PointF c)
+        private static bool IsInside(PointF p, PointF a, PointF b, PointF c)
         {
             if (Cross(new PointF(p.X - a.X, p.Y - a.Y), new PointF(b.X - a.X, b.Y - a.Y)) < 0.0) return false;
             if (Cross(new PointF(p.X - b.X, p.Y - b.Y), new PointF(c.X - b.X, c.Y - b.Y)) < 0.0) return false;
@@ -415,12 +407,12 @@ namespace BezierDrawControl
             return true;
         }
 
-        private bool IsInside(TransformRectangle target, PointF src)
+        private static bool IsInside(TransformRectangle target, PointF src)
         {
             return IsInside(src, target.TopLeft, target.BottomLeft, target.BottomRight) || IsInside(src, target.BottomRight, target.TopRight, target.TopLeft);
         }
 
-        private float Cross(PointF a, PointF b)
+        private static float Cross(PointF a, PointF b)
         {
             return a.X * b.Y - a.Y * b.X;
         }
@@ -430,7 +422,7 @@ namespace BezierDrawControl
             return new PointF(x - Center.X, y - Center.Y);
         }
 
-        public void MouseDown(float x, float y, MouseButtons buttons, Keys modifierKeys)
+        public void MouseDown(float x, float y, bool isLeftButton, BezierModifierKeys modifierKeys)
         {
             if (!AllowMouseOperation) return;
             mouseDown = true;
@@ -441,14 +433,14 @@ namespace BezierDrawControl
             }
             else
             {
-                NormalMouseDown(p, buttons == MouseButtons.Left, modifierKeys);
+                NormalMouseDown(p, isLeftButton, modifierKeys);
             }
         }
 
-        private void TransMouseDown(PointF downPos, Keys modifierKeys)
+        private void TransMouseDown(PointF downPos, BezierModifierKeys modifierKeys)
         {
             mouseDownPos = downPos;
-            fixAspect = ((modifierKeys & Keys.Shift) == Keys.Shift);
+            fixAspect = ((modifierKeys & BezierModifierKeys.Shift) == BezierModifierKeys.Shift);
             if (IsInside(transBeziers.TransformRectange.TopLeft, downPos))
             {
                 tmode = TransformMode.ExpandTopLeft;
@@ -481,7 +473,7 @@ namespace BezierDrawControl
             {
                 tmode = TransformMode.ExpandRight;
             }
-            else if (IsInside(transBeziers.TransformRectange, downPos) && (modifierKeys & Keys.Control) == Keys.Control)
+            else if (IsInside(transBeziers.TransformRectange, downPos) && (modifierKeys & BezierModifierKeys.Control) == BezierModifierKeys.Control)
             {
                 tmode = TransformMode.Move;
             }
@@ -491,9 +483,9 @@ namespace BezierDrawControl
             }
         }
 
-        private void NormalMouseDown(PointF downpos, bool isLeftButton, Keys modifierKeys)
+        private void NormalMouseDown(PointF downpos, bool isLeftButton, BezierModifierKeys modifierKeys)
         {
-            if ((modifierKeys & Keys.Control) == Keys.Control)
+            if ((modifierKeys & BezierModifierKeys.Control) == BezierModifierKeys.Control)
             {
                 bool foundanchor = false;
                 if (SelectedPoint != null && SelectedPoint.ValidFirst && SelectedPoint.ValidThird)
@@ -527,7 +519,7 @@ namespace BezierDrawControl
                     }
                 }
             }
-            else if ((modifierKeys & Keys.Shift) == Keys.Shift)
+            else if ((modifierKeys & BezierModifierKeys.Shift) == BezierModifierKeys.Shift)
             {
                 SelectedPoint = null;
                 for (int i = 0; i < data.Count; i++)
@@ -542,7 +534,7 @@ namespace BezierDrawControl
                     }
                 }
             }
-            else if ((modifierKeys & Keys.Alt) == Keys.Alt)
+            else if ((modifierKeys & BezierModifierKeys.Alt) == BezierModifierKeys.Alt)
             {
                 bool foundanchor = false;
                 if (SelectedPoint != null && SelectedPoint.ValidFirst && SelectedPoint.ValidThird)
@@ -587,7 +579,7 @@ namespace BezierDrawControl
                 BezierControlPoint next = null;
                 if (IsOnLine(downpos, out BezierControlPoint previous, out float t))
                 {
-                    if (data.Count >= 2 && previous == data[0] && data[0] != data[data.Count - 1] && t >= 0.95)
+                    if (data.Count >= 2 && previous == data[0] && data[0] != data[^1] && t >= 0.95)
                     {
                         //loop
                         SelectedPoint = previous;
@@ -685,17 +677,15 @@ namespace BezierDrawControl
             return ret;
         }
 
-        private float DotProduct(PointF p1, PointF p2)
+        private static float DotProduct(PointF p1, PointF p2)
         {
             return p1.X * p2.X + p1.Y * p2.Y;
         }
 
-        private bool OnStaraightLine(PointF p1, PointF p2, PointF c, out float outt)
+        private static bool OnStaraightLine(PointF p1, PointF p2, PointF c, out float outt)
         {
             bool found = false;
             outt = -1;
-            var evector = new PointF(p2.X - p1.X, p2.Y - p1.Y);
-            var cvector = new PointF(c.X - p1.X, c.Y - p1.Y);
             if (CollisionLineAndCircle(p1, p2, c, 2))
             {
                 found = true;
@@ -738,7 +728,7 @@ namespace BezierDrawControl
             return false;
         }
 
-        private bool CollisionLineAndCircle(PointF p1, PointF p2, PointF center, float radius)
+        private static bool CollisionLineAndCircle(PointF p1, PointF p2, PointF center, float radius)
         {
             var V = new PointF(p2.X - p1.X, p2.Y - p1.Y);
             var C = new PointF(center.X - p1.X, center.Y - p1.Y);
@@ -781,7 +771,7 @@ namespace BezierDrawControl
             }
         }
 
-        public Cursor MouseMove(float x, float y, Keys modifierKeys)
+        public BezierCursor? MouseMove(float x, float y, BezierModifierKeys modifierKeys)
         {
             if (!AllowMouseOperation) return null;
             var p = ChangePointFromCenter(x, y);
@@ -811,7 +801,7 @@ namespace BezierDrawControl
             return null;
         }
 
-        private Cursor CheckTransMouseMove(PointF mousePos, Keys modifierKeys)
+        private BezierCursor CheckTransMouseMove(PointF mousePos, BezierModifierKeys modifierKeys)
         {
             if (IsInside(transBeziers.TransformRectange.TopLeft, mousePos))
             {
@@ -845,44 +835,44 @@ namespace BezierDrawControl
             {
                 return GetCursor(transBeziers.TransformRectange.TopLeft, transBeziers.TransformRectange.TopRight);
             }
-            else if (IsInside(transBeziers.TransformRectange, mousePos) && (modifierKeys & Keys.Control) == Keys.Control)
+            else if (IsInside(transBeziers.TransformRectange, mousePos) && (modifierKeys & BezierModifierKeys.Control) == BezierModifierKeys.Control)
             {
-                return Cursors.SizeAll;
+                return BezierCursor.SizeAll;
             }
             else
             {
-                return MyCursors.Rotate;
+                return BezierCursor.Rotate;
             }
         }
 
-        private Cursor GetCursor(PointF p1, PointF p2)
+        private static BezierCursor GetCursor(PointF p1, PointF p2)
         {
             var vec1 = BezierCaliculate.GetNormalizePoint(Substruct(p1, p2));
             var rotate = GetRotation(BezierCaliculate.GetNormalizePoint(vec1));
-            return MyCursors.CreateArrowCursor((int)(rotate * 180 / Math.PI));
+            return BezierCursor.Arrow((int)(rotate * 180 / Math.PI));
         }
 
-        private Cursor GetCursor(PointF p1, PointF p2, PointF p3)
+        private static BezierCursor GetCursor(PointF p1, PointF p2, PointF p3)
         {
             var vec1 = BezierCaliculate.GetNormalizePoint(Substruct(p1, p3));
             var vec2 = BezierCaliculate.GetNormalizePoint(Substruct(p2, p3));
             var rotate = GetRotation(Inverse(BezierCaliculate.GetNormalizePoint(Add(vec1, vec2))));
-            return MyCursors.CreateArrowCursor((int)(rotate * 180 / Math.PI));
+            return BezierCursor.Arrow((int)(rotate * 180 / Math.PI));
         }
 
-        private Cursor CheckNormalMouseMove(PointF mousePos, Keys modifierKeys)
+        private BezierCursor CheckNormalMouseMove(PointF mousePos, BezierModifierKeys modifierKeys)
         {
-            if ((modifierKeys & Keys.Control) == Keys.Control)
+            if ((modifierKeys & BezierModifierKeys.Control) == BezierModifierKeys.Control)
             {
                 if (SelectedPoint != null && SelectedPoint.ValidFirst && SelectedPoint.ValidThird)
                 {
                     if (IsInside(SelectedPoint.First, mousePos))
                     {
-                        return MyCursors.Handle;
+                        return BezierCursor.Handle;
                     }
                     else if (IsInside(SelectedPoint.Third, mousePos))
                     {
-                        return MyCursors.Handle;
+                        return BezierCursor.Handle;
                     }
                 }
                 for (int i = 0; i < data.Count; i++)
@@ -890,34 +880,34 @@ namespace BezierDrawControl
                     var bcp = data[i] as BezierControlPoint;
                     if (IsInside(bcp.Second, mousePos))
                     {
-                        return MyCursors.Anchor;
+                        return BezierCursor.Anchor;
                     }
                 }
-                return Cursors.Default;
+                return BezierCursor.Default;
             }
-            else if ((modifierKeys & Keys.Shift) == Keys.Shift)
+            else if ((modifierKeys & BezierModifierKeys.Shift) == BezierModifierKeys.Shift)
             {
                 for (int i = 0; i < data.Count; i++)
                 {
                     var bcp = data[i] as BezierControlPoint;
                     if (IsInside(bcp.Second, mousePos))
                     {
-                        return MyCursors.Anchor;
+                        return BezierCursor.Anchor;
                     }
                 }
-                return Cursors.Default;
+                return BezierCursor.Default;
             }
-            else if ((modifierKeys & Keys.Alt) == Keys.Alt)
+            else if ((modifierKeys & BezierModifierKeys.Alt) == BezierModifierKeys.Alt)
             {
                 if (SelectedPoint != null && SelectedPoint.ValidFirst && SelectedPoint.ValidThird)
                 {
                     if (IsInside(SelectedPoint.First, mousePos))
                     {
-                        return MyCursors.Handle;
+                        return BezierCursor.Handle;
                     }
                     else if (IsInside(SelectedPoint.Third, mousePos))
                     {
-                        return MyCursors.Handle;
+                        return BezierCursor.Handle;
                     }
                 }
                 for (int i = 0; i < data.Count; i++)
@@ -925,20 +915,20 @@ namespace BezierDrawControl
                     var bcp = data[i] as BezierControlPoint;
                     if (IsInside(bcp.Second, mousePos))
                     {
-                        return MyCursors.Handle;
+                        return BezierCursor.Handle;
                     }
                 }
-                return Cursors.Default;
+                return BezierCursor.Default;
             }
             else
             {
-                if (IsOnLine(mousePos, out BezierControlPoint previous, out float t))
+                if (IsOnLine(mousePos, out _, out _))
                 {
-                    return MyCursors.AnchorPlus;
+                    return BezierCursor.AnchorPlus;
                 }
                 else
                 {
-                    return Cursors.Default;
+                    return BezierCursor.Default;
                 }
             }
         }
@@ -998,7 +988,7 @@ namespace BezierDrawControl
             OnDrawRequired();
         }
 
-        private float GetRotation(PointF p)
+        private static float GetRotation(PointF p)
         {
             float ret = 0;
             if (p.Y < 0)
@@ -1013,22 +1003,22 @@ namespace BezierDrawControl
             return ret;
         }
 
-        private PointF Rotate(PointF p, float r)
+        private static PointF Rotate(PointF p, float r)
         {
             return new PointF((float)(Math.Cos(r) * p.X - Math.Sin(r) * p.Y), (float)(Math.Sin(r) * p.X + Math.Cos(r) * p.Y));
         }
 
-        private PointF Add(PointF p1, PointF p2)
+        private static PointF Add(PointF p1, PointF p2)
         {
             return new PointF(p1.X + p2.X, p1.Y + p2.Y);
         }
 
-        private PointF Substruct(PointF p1, PointF p2)
+        private static PointF Substruct(PointF p1, PointF p2)
         {
             return new PointF(p1.X - p2.X, p1.Y - p2.Y);
         }
 
-        private PointF Inverse(PointF p)
+        private static PointF Inverse(PointF p)
         {
             return new PointF(-p.X, -p.Y);
         }
@@ -1053,7 +1043,7 @@ namespace BezierDrawControl
                             if (neiborbcp != null)
                             {
                                 var vec = Substruct(mousePos, neiborbcp.Second);
-                                int anglebase = 0;
+                                int anglebase;
                                 if (vec.X >= 0)
                                 {
                                     if (vec.Y >= 0)
@@ -1225,7 +1215,7 @@ namespace BezierDrawControl
             else
             {
                 tmode = TransformMode.Still;
-                transBeziers = new TransformBezierControlPoints(data.ToArray());
+                transBeziers = new TransformBezierControlPoints([.. data]);
                 OnDrawRequired();
             }
         }
@@ -1241,9 +1231,9 @@ namespace BezierDrawControl
                     data[iter] = bcp;
                     iter++;
                 }
-                if (data.Count >= 3 && data[0].Serialize() == data[data.Count - 1].Serialize())
+                if (data.Count >= 3 && data[0].Serialize() == data[^1].Serialize())
                 {
-                    data[data.Count - 1] = data[0];
+                    data[^1] = data[0];
                 }
                 bufferData.Add(Copy(data));
                 OnEdited(EditType.TransformEnd);
@@ -1251,17 +1241,17 @@ namespace BezierDrawControl
             }
         }
 
-        private List<BezierControlPoint> Copy(List<BezierControlPoint> src)
+        private static List<BezierControlPoint> Copy(List<BezierControlPoint> src)
         {
             var ret = new List<BezierControlPoint>(src.Count);
-            bool loop = (src.Count >= 3 && src[0].Serialize() == src[src.Count - 1].Serialize());
+            bool loop = (src.Count >= 3 && src[0].Serialize() == src[^1].Serialize());
             foreach (BezierControlPoint bcp in src)
             {
                 ret.Add(bcp.Clone());
             }
             if (loop)
             {
-                ret[ret.Count - 1] = ret[0];
+                ret[^1] = ret[0];
             }
             return ret;
         }
@@ -1285,18 +1275,12 @@ namespace BezierDrawControl
 
         private void OnBeforePaint(IBezierDrawContext context)
         {
-            if (BeforePaint != null)
-            {
-                BeforePaint.Invoke(this, new UserPaintEventArgs(context));
-            }
+            BeforePaint?.Invoke(this, new UserPaintEventArgs(context));
         }
 
         private void OnAfterPaint(IBezierDrawContext context)
         {
-            if (AfterPaint != null)
-            {
-                AfterPaint.Invoke(this, new UserPaintEventArgs(context));
-            }
+            AfterPaint?.Invoke(this, new UserPaintEventArgs(context));
         }
 
         private void OnEdited(EditType editType)

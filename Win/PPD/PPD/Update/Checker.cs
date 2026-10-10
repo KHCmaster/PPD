@@ -1,5 +1,6 @@
 ﻿using PPDConfiguration;
 using PPDFramework.Web;
+using PPDFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -14,9 +15,9 @@ using System.Xml;
 
 namespace PPD.Update
 {
-    class Checker
+    static class Checker
     {
-        public bool CheckInstallInfo()
+        public static bool CheckInstallInfo()
         {
             try
             {
@@ -28,7 +29,7 @@ namespace PPD.Update
             }
         }
 
-        public bool CheckUpdate()
+        public static bool CheckUpdate()
         {
             try
             {
@@ -40,7 +41,7 @@ namespace PPD.Update
             }
         }
 
-        public bool CheckAssembly(out string errors)
+        public static bool CheckAssembly(out string errors)
         {
             errors = "";
             try
@@ -53,7 +54,7 @@ namespace PPD.Update
             }
         }
 
-        private bool CheckInstallInfoImpl()
+        private static bool CheckInstallInfoImpl()
         {
             if (!File.Exists("install.info"))
             {
@@ -69,7 +70,7 @@ namespace PPD.Update
             return true;
         }
 
-        private bool CheckUpdateImpl()
+        private static bool CheckUpdateImpl()
         {
             if (!NetworkInterface.GetIsNetworkAvailable())
             {
@@ -78,11 +79,10 @@ namespace PPD.Update
 
             var installVersion = new Version(Settings.Setting.Install["InstallVersion"]);
             var splits = Settings.Setting.Updater["UrlList"].Split('/').Select(s => s.Replace("{0}", "")).ToArray();
-            splits[splits.Length - 1] = Settings.Setting.Updater["Channel"] + splits[splits.Length - 1];
+            splits[^1] = Settings.Setting.Updater["Channel"] + splits[^1];
             var url = new Uri(String.Join("/", splits));
             var latestVersion = new Version("0.0.0.0");
-            var req = (HttpWebRequest)HttpWebRequest.Create(url);
-            using (HttpWebResponse res = (HttpWebResponse)req.GetResponse())
+            using (var res = SyncHttpClient.Get(url.AbsoluteUri))
             using (Stream stream = res.GetResponseStream())
             using (XmlReader reader = XmlReader.Create(stream))
             {
@@ -103,7 +103,7 @@ namespace PPD.Update
             return installVersion >= latestVersion;
         }
 
-        private bool CheckAssemblyImpl(out string errors)
+        private static bool CheckAssemblyImpl(out string errors)
         {
             errors = "";
             if (!NetworkInterface.GetIsNetworkAvailable())
@@ -117,19 +117,17 @@ namespace PPD.Update
 
             var content = GetUrlContent(url);
             var asms = new List<AssemblyInfo>();
-            using (MemoryStream stream = new MemoryStream())
+            using (MemoryStream stream = new())
             {
                 var byteContent = Encoding.ASCII.GetBytes(content);
                 stream.Write(byteContent, 0, byteContent.Length);
                 stream.Seek(0, SeekOrigin.Begin);
-                using (XmlReader reader = XmlReader.Create(stream))
+                using XmlReader reader = XmlReader.Create(stream);
+                while (reader.Read())
                 {
-                    while (reader.Read())
+                    if (reader.IsStartElement("Assembly"))
                     {
-                        if (reader.IsStartElement("Assembly"))
-                        {
-                            asms.Add(new AssemblyInfo(reader.GetAttribute("FileName"), reader.GetAttribute("Version")));
-                        }
+                        asms.Add(new AssemblyInfo(reader.GetAttribute("FileName"), reader.GetAttribute("Version")));
                     }
                 }
             }
@@ -148,18 +146,20 @@ namespace PPD.Update
                 "ColorCanvas.dll",
                 "DirectShow.dll",
                 "Effect2D.dll",
-                "EntityFramework.dll",
-                "EntityFramework.SqlServer.dll",
                 "ErrorHandle.dll",
                 "FlowScriptControl.dll",
                 "FlowScriptDrawControl.dll",
                 "FlowScriptEngine.dll",
-                "GalaSoft.MvvmLight.dll",
-                "GalaSoft.MvvmLight.Extras.dll",
+                "CommunityToolkit.Mvvm.dll",
+                "Microsoft.Bcl.AsyncInterfaces.dll",
+                "System.Buffers.dll",
+                "System.ComponentModel.Annotations.dll",
+                "System.Memory.dll",
+                "System.Numerics.Vectors.dll",
+                "System.Runtime.CompilerServices.Unsafe.dll",
+                "Microsoft.Xaml.Behaviors.dll",
                 "ICSharpCode.SharpZipLib.dll",
                 "MessagePack.dll",
-                "Microsoft.Practices.ServiceLocation.dll",
-                "MoreLinq.dll",
                 "Newtonsoft.Json.dll",
                 "PPDConfiguration.dll",
                 "PPDCore.dll",
@@ -173,38 +173,28 @@ namespace PPD.Update
                 "PPDPack.dll",
                 "PPDShareComponent.dll",
                 "PPDSound.dll",
-                "SharpDX.dll",
-                "SharpDX.Desktop.dll",
-                "SharpDX.Mathematics.dll",
-                "SharpDX.Direct2D1.dll",
-                "SharpDX.Direct3D9.dll",
-                "SharpDX.DirectInput.dll",
-                "SharpDX.DirectSound.dll",
-                "SharpDX.DXGI.dll",
-                "SharpDX.Direct3D11.Effects.dll",
-                "SharpDX.Direct3D11.dll",
-                "SharpDX.D3DCompiler.dll",
+                "PPDMath.dll",
+                "Vortice.Mathematics.dll",
+                "Vortice.Direct2D1.dll",
+                "Vortice.DirectInput.dll",
+                "Vortice.DirectX.dll",
+                "SharpGen.Runtime.dll",
+                "SharpGen.Runtime.COM.dll",
+                "Vortice.DirectSound.dll",
+                "Vortice.DXGI.dll",
+                "Vortice.Direct3D11.dll",
                 "System.Data.SQLite.dll",
-                "System.Data.SQLite.EF6.dll",
-                "System.Data.SQLite.Linq.dll",
                 "System.Threading.Tasks.Extensions.dll",
                 "System.ValueTuple.dll",
-                "System.Windows.Interactivity.dll",
-                "System.Windows.Controls.DataVisualization.Toolkit.dll",
-                "WacomMTDN.dll",
-                "WeifenLuo.WinFormsUI.Docking.dll",
-                "WPFToolkit.dll",
+                "DotNetProjects.DataVisualization.Toolkit.dll",
+                "AvalonDock.dll",
                 "YamlDotNet.dll",
                 "x64\\SQLite.Interop.dll",
-                "skins\\GalaSoft.MvvmLight.dll",
-                "skins\\GalaSoft.MvvmLight.Extras.dll",
-                "skins\\Microsoft.Practices.ServiceLocation.dll",
                 "skins\\PPDModSettingUI.dll",
                 "skins\\PPDMulti.dll",
                 "skins\\PPDMultiCommon.dll",
                 "skins\\PPDMultiServer.dll",
                 "skins\\PPDSingle.dll",
-                "skins\\System.Windows.Interactivity.dll",
                 "dlls\\FlowScriptEngineBasic.dll",
                 "dlls\\FlowScriptEngineBasicExtension.dll",
                 "dlls\\FlowScriptEngineConsole.dll",
@@ -224,7 +214,7 @@ namespace PPD.Update
                     errorFileNames.Add(String.Format("{0}:{1}", filePath, "File Not Found"));
                     continue;
                 }
-                var info = asms.FirstOrDefault(i => Path.GetFileName(file).ToLower() == i.FileName.ToLower());
+                var info = asms.FirstOrDefault(i => Path.GetFileName(file).Equals(i.FileName, StringComparison.CurrentCultureIgnoreCase));
                 if (info == null)
                 {
                     errorFileNames.Add(String.Format("{0}:{1}", filePath, "Assembly List Item Not Found"));
@@ -253,37 +243,24 @@ namespace PPD.Update
             return verionInfo.FileVersion;
         }
 
-        private string GetUrlContent(string url)
+        private static string GetUrlContent(string url)
         {
-            var request = (HttpWebRequest)HttpWebRequest.Create(url);
-            using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
-            {
-                using (StreamReader reader = new StreamReader(response.GetResponseStream()))
-                {
-                    return reader.ReadToEnd();
-                }
-            }
+            return SyncHttpClient.GetString(url);
         }
 
-        class AssemblyInfo
+        class AssemblyInfo(string fileName, string version)
         {
             public string FileName
             {
                 get;
                 private set;
-            }
+            } = fileName;
 
             public string Version
             {
                 get;
                 private set;
-            }
-
-            public AssemblyInfo(string fileName, string version)
-            {
-                FileName = fileName;
-                Version = version;
-            }
+            } = version;
         }
     }
 }

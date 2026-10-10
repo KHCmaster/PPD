@@ -1,25 +1,17 @@
 ﻿namespace PPDFramework.Vertex.DX11
 {
-    class VertexDeclaration : VertexDeclarationBase
+    class VertexDeclaration(Vortice.Direct3D11.ID3D11InputLayout inputLayout) : VertexDeclarationBase
     {
-        public SharpDX.Direct3D11.InputLayout _InputLayout
+        public Vortice.Direct3D11.ID3D11InputLayout InputLayout
         {
             get;
             private set;
-        }
-
-        public VertexDeclaration(SharpDX.Direct3D11.InputLayout inputLayout)
-        {
-            _InputLayout = inputLayout;
-        }
+        } = inputLayout;
 
         protected override void DisposeResource()
         {
-            if (_InputLayout != null)
-            {
-                _InputLayout.Dispose();
-                _InputLayout = null;
-            }
+            InputLayout?.Dispose();
+            InputLayout = null;
         }
     }
 }

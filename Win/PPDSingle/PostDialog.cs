@@ -1,35 +1,36 @@
 ﻿using PPDFramework;
 using PPDShareComponent;
-using SharpDX;
+using System.Numerics;
+using PPDMath;
 using System;
 
 namespace PPDSingle
 {
     class PostDialog : FocusableGameComponent
     {
-        EffectObject back;
+        readonly EffectObject back;
         int selection;
 
-        TextureString message;
-        TextureString content;
-        TextureString processing;
-        TextureString failedString;
+        readonly TextureString message;
+        readonly TextureString content;
+        readonly TextureString processing;
+        readonly TextureString failedString;
 
         int failedStringShowCount;
 
-        RectangleComponent black;
+        readonly RectangleComponent black;
 
-        Button[] buttons;
+        readonly Button[] buttons;
 
-        ISound Sound;
-        IBlueSkyManager BlueSkyManager;
+        readonly ISound Sound;
+        readonly IBlueSkyManager BlueSkyManager;
         bool postWaiting;
         bool opening;
 
         public PostDialog(PPDDevice device, PPDFramework.Resource.ResourceManager resourceManager, ISound sound, IBlueSkyManager blueSkyManager) : base(device)
         {
             this.BlueSkyManager = blueSkyManager;
-            blueSkyManager.PostFinished += blueSkyMangager_PostFinished;
+            blueSkyManager.PostFinished += BlueSkyMangager_PostFinished;
             this.Sound = sound;
             back = new EffectObject(device, resourceManager, Utility.Path.Combine("postconfirm.etd"))
             {
@@ -72,10 +73,10 @@ namespace PPDSingle
                 }
                 buttons[i] = new Button(device, resourceManager, Utility.Path, text)
                 {
-                    Position = new Vector2(300 + i * 200, 315)
+                    Position = new Vector2(300 + i * 200, 315),
+                    Selected = false,
+                    Hidden = true
                 };
-                buttons[i].Selected = false;
-                buttons[i].Hidden = true;
                 this.AddChild(buttons[i]);
             }
 
@@ -104,7 +105,7 @@ namespace PPDSingle
             private set;
         }
 
-        void blueSkyMangager_PostFinished(bool ok)
+        void BlueSkyMangager_PostFinished(bool ok)
         {
             if (ok)
             {
@@ -183,14 +184,14 @@ namespace PPDSingle
             message.Hidden = content.Hidden = buttons[0].Hidden = buttons[1].Hidden = true;
             back.Stop();
             back.PlayType = Effect2D.EffectManager.PlayType.ReverseOnce;
-            back.Finish += back_ReverseFinish;
+            back.Finish += Back_ReverseFinish;
             back.Play();
         }
 
-        void back_ReverseFinish(object sender, EventArgs e)
+        void Back_ReverseFinish(object sender, EventArgs e)
         {
             back.Hidden = true;
-            back.Finish -= back_ReverseFinish;
+            back.Finish -= Back_ReverseFinish;
         }
 
         void PostDialog_GotFocused(IFocusable sender, FocusEventArgs args)
@@ -200,15 +201,15 @@ namespace PPDSingle
             PostString = BlueSkyManager.PostText;
             back.Stop();
             back.PlayType = Effect2D.EffectManager.PlayType.Once;
-            back.Finish += back_NormalFinish;
+            back.Finish += Back_NormalFinish;
             back.Play();
             back.Hidden = false;
         }
 
-        void back_NormalFinish(object sender, EventArgs e)
+        void Back_NormalFinish(object sender, EventArgs e)
         {
             message.Hidden = content.Hidden = buttons[0].Hidden = buttons[1].Hidden = false;
-            back.Finish -= back_NormalFinish;
+            back.Finish -= Back_NormalFinish;
             opening = false;
         }
 

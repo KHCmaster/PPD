@@ -1,5 +1,8 @@
 ﻿using FlowScriptEngine;
-using SharpDX;
+using System.Numerics;
+using PPDMath;
+using Matrix = System.Numerics.Matrix4x4;
+using Color4 = Vortice.Mathematics.Color4;
 using System;
 using System.Collections.Generic;
 
@@ -7,7 +10,7 @@ namespace FlowScriptEngineSlimDX
 {
     public class TypeColors : TypeColorBase
     {
-        Dictionary<Type, System.Drawing.Color> dictionary;
+        readonly Dictionary<Type, System.Drawing.Color> dictionary;
         public TypeColors()
         {
             dictionary = new Dictionary<Type, System.Drawing.Color>

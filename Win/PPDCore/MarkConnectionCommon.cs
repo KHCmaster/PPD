@@ -1,6 +1,8 @@
 ﻿using PPDFramework;
 using PPDFramework.Resource;
-using SharpDX;
+using System.Numerics;
+using PPDMath;
+using RectangleF = Vortice.Mathematics.Rect;
 using System;
 
 namespace PPDCore
@@ -17,7 +19,7 @@ namespace PPDCore
         public const float RandWidth = 15;
         public const int WidthPerCount = MaxWidth / SplitCount * 2;
 
-        Random r;
+        readonly Random r;
         int iter;
 
         public ImageResourceBase ImageResource

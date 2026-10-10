@@ -27,10 +27,7 @@
             base.In(e);
             SetValue(nameof(Default));
             SetValue(nameof(MaxLength));
-            if (modSettingManager != null)
-            {
-                modSettingManager.AddStringSetting(Key, DisplayName, Description, Default, MaxLength);
-            }
+            modSettingManager?.AddStringSetting(Key, DisplayName, Description, Default, MaxLength);
         }
     }
 }

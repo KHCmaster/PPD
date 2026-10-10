@@ -14,12 +14,8 @@ namespace PPDCore
     /// ポーズのクラスです
     /// 必ずpublic実装する必要があります
     /// </summary>
-    public abstract class PauseMenuBase : GameComponent
+    public abstract class PauseMenuBase(PPDDevice device) : GameComponent(device)
     {
-        protected PauseMenuBase(PPDDevice device) : base(device)
-        {
-
-        }
 
         /// <summary>
         /// 再開

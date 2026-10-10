@@ -1,6 +1,7 @@
 ﻿using PPDFramework;
 using PPDFramework.Shaders;
-using SharpDX;
+using System.Numerics;
+using PPDMath;
 using System;
 
 namespace PPDSingle
@@ -17,12 +18,12 @@ namespace PPDSingle
             vanishing = 2,
             next = 3
         }
-        TextureString songname;
-        TextureString difficulty;
-        EffectObject confirm;
-        RectangleComponent black;
+        readonly TextureString songname;
+        readonly TextureString difficulty;
+        readonly EffectObject confirm;
+        readonly RectangleComponent black;
 
-        SpriteObject sprite;
+        readonly SpriteObject sprite;
 
         State state;
 
@@ -33,7 +34,7 @@ namespace PPDSingle
             {
                 Position = new Vector2(400, 225)
             };
-            confirm.Finish += confirm_Finish;
+            confirm.Finish += Confirm_Finish;
             black = new RectangleComponent(device, resourceManager, PPDColors.Black)
             {
                 RectangleHeight = 450,
@@ -74,7 +75,7 @@ namespace PPDSingle
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void confirm_Finish(object sender, EventArgs e)
+        void Confirm_Finish(object sender, EventArgs e)
         {
             switch (state)
             {

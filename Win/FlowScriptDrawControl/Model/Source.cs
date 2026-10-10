@@ -5,27 +5,20 @@ using System.Linq;
 
 namespace FlowScriptDrawControl.Model
 {
-    public class Source : ScopeChild
+    public class Source(AssemblyAndType currentAsm) : ScopeChild
     {
         private int id;
         private string name;
         private string fullName;
-        private List<Item> items;
+        private readonly List<Item> items = [];
         private bool isCollapsed;
         private string toolTip;
         private string warning;
         private Comment comment;
         private bool canChange;
         private bool isBreakPointSet;
-        private List<AssemblyAndType> sameNameSources;
-        private AssemblyAndType currentAsm;
-
-        public Source(AssemblyAndType currentAsm)
-        {
-            this.currentAsm = currentAsm;
-            items = new List<Item>();
-            sameNameSources = new List<AssemblyAndType>();
-        }
+        private readonly List<AssemblyAndType> sameNameSources = [];
+        private readonly AssemblyAndType currentAsm = currentAsm;
 
         public string ToolTip
         {
@@ -35,7 +28,7 @@ namespace FlowScriptDrawControl.Model
                 if (toolTip != value)
                 {
                     toolTip = value;
-                    RaisePropertyChanged("ToolTip");
+                    OnPropertyChanged(nameof(ToolTip));
                 }
             }
         }
@@ -48,7 +41,7 @@ namespace FlowScriptDrawControl.Model
                 if (warning != value)
                 {
                     warning = value;
-                    RaisePropertyChanged("Warning");
+                    OnPropertyChanged(nameof(Warning));
                 }
             }
         }
@@ -61,7 +54,7 @@ namespace FlowScriptDrawControl.Model
                 if (id != value)
                 {
                     id = value;
-                    RaisePropertyChanged("Id");
+                    OnPropertyChanged(nameof(Id));
                 }
             }
         }
@@ -74,7 +67,7 @@ namespace FlowScriptDrawControl.Model
                 if (name != value)
                 {
                     name = value;
-                    RaisePropertyChanged("Name");
+                    OnPropertyChanged(nameof(Name));
                 }
             }
         }
@@ -87,7 +80,7 @@ namespace FlowScriptDrawControl.Model
                 if (fullName != value)
                 {
                     fullName = value;
-                    RaisePropertyChanged("FullName");
+                    OnPropertyChanged(nameof(FullName));
                 }
             }
         }
@@ -100,7 +93,7 @@ namespace FlowScriptDrawControl.Model
                 if (isCollapsed != value)
                 {
                     isCollapsed = value;
-                    RaisePropertyChanged("IsCollapsed");
+                    OnPropertyChanged(nameof(IsCollapsed));
                 }
             }
         }
@@ -113,7 +106,7 @@ namespace FlowScriptDrawControl.Model
                 if (isBreakPointSet != value)
                 {
                     isBreakPointSet = value;
-                    RaisePropertyChanged("IsBreakPointSet");
+                    OnPropertyChanged(nameof(IsBreakPointSet));
                 }
             }
         }
@@ -122,7 +115,7 @@ namespace FlowScriptDrawControl.Model
         {
             get
             {
-                return items.ToArray();
+                return [.. items];
             }
         }
 
@@ -130,7 +123,7 @@ namespace FlowScriptDrawControl.Model
         {
             get
             {
-                return items.Where(i => i.Type == "event" && !i.IsOut).ToArray();
+                return [.. items.Where(i => i.Type == "event" && !i.IsOut)];
             }
         }
 
@@ -138,7 +131,7 @@ namespace FlowScriptDrawControl.Model
         {
             get
             {
-                return items.Where(i => i.Type == "event" && i.IsOut).ToArray();
+                return [.. items.Where(i => i.Type == "event" && i.IsOut)];
             }
         }
 
@@ -146,7 +139,7 @@ namespace FlowScriptDrawControl.Model
         {
             get
             {
-                return items.Where(i => i.Type != "event" && !i.IsOut).ToArray();
+                return [.. items.Where(i => i.Type != "event" && !i.IsOut)];
             }
         }
 
@@ -154,7 +147,7 @@ namespace FlowScriptDrawControl.Model
         {
             get
             {
-                return items.Where(i => i.Type != "event" && i.IsOut).ToArray();
+                return [.. items.Where(i => i.Type != "event" && i.IsOut)];
             }
         }
 
@@ -162,7 +155,7 @@ namespace FlowScriptDrawControl.Model
         {
             get
             {
-                return items.Where(i => !i.IsOut).ToArray();
+                return [.. items.Where(i => !i.IsOut)];
             }
         }
 
@@ -170,7 +163,7 @@ namespace FlowScriptDrawControl.Model
         {
             get
             {
-                return items.Where(i => i.IsOut).ToArray();
+                return [.. items.Where(i => i.IsOut)];
             }
         }
 
@@ -190,7 +183,7 @@ namespace FlowScriptDrawControl.Model
                 if (canChange != value)
                 {
                     canChange = value;
-                    RaisePropertyChanged("CanChange");
+                    OnPropertyChanged(nameof(CanChange));
                 }
             }
         }
@@ -203,7 +196,7 @@ namespace FlowScriptDrawControl.Model
                 if (comment != value)
                 {
                     comment = value;
-                    RaisePropertyChanged("Comment");
+                    OnPropertyChanged(nameof(Comment));
                 }
             }
         }
@@ -212,11 +205,11 @@ namespace FlowScriptDrawControl.Model
         {
             item.Source = this;
             items.Add(item);
-            item.ConnectionChanged += item_ConnectionChanged;
-            item.PropertyChanged += item_PropertyChanged;
+            item.ConnectionChanged += Item_ConnectionChanged;
+            item.PropertyChanged += Item_PropertyChanged;
         }
 
-        void item_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        void Item_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             switch (e.PropertyName)
             {
@@ -226,7 +219,7 @@ namespace FlowScriptDrawControl.Model
             }
         }
 
-        void item_ConnectionChanged(object sender, EventArgs e)
+        void Item_ConnectionChanged(object sender, EventArgs e)
         {
             UpdateCanChange();
         }

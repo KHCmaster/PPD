@@ -5,7 +5,18 @@ namespace PPDFramework.Sprites
     /// <summary>
     /// スプライト情報のクラスです。
     /// </summary>
-    public class SpriteInfo
+    /// <remarks>
+    /// コンストラクタです。
+    /// </remarks>
+    /// <param name="path"></param>
+    /// <param name="width"></param>
+    /// <param name="height"></param>
+    /// <param name="spaceWidth"></param>
+    /// <param name="spaceHeight"></param>
+    /// <param name="x"></param>
+    /// <param name="y"></param>
+    /// <param name="lastWriteTime"></param>
+    public class SpriteInfo(string path, int width, int height, int spaceWidth, int spaceHeight, int x, int y, DateTime lastWriteTime)
     {
         /// <summary>
         /// パスを取得します。
@@ -14,7 +25,7 @@ namespace PPDFramework.Sprites
         {
             get;
             private set;
-        }
+        } = path;
 
         /// <summary>
         /// 幅を取得します。
@@ -23,7 +34,7 @@ namespace PPDFramework.Sprites
         {
             get;
             private set;
-        }
+        } = width;
 
         /// <summary>
         /// 全体としてのスペースの幅を取得します。
@@ -32,7 +43,7 @@ namespace PPDFramework.Sprites
         {
             get;
             private set;
-        }
+        } = spaceWidth;
 
         /// <summary>
         /// 高さを取得します。
@@ -41,7 +52,7 @@ namespace PPDFramework.Sprites
         {
             get;
             private set;
-        }
+        } = height;
 
         /// <summary>
         /// 全体としてのスペースの高さを取得します。
@@ -50,7 +61,7 @@ namespace PPDFramework.Sprites
         {
             get;
             private set;
-        }
+        } = spaceHeight;
 
         /// <summary>
         /// X座標を取得します。
@@ -59,7 +70,7 @@ namespace PPDFramework.Sprites
         {
             get;
             private set;
-        }
+        } = x;
 
         /// <summary>
         /// Y座標を取得します。
@@ -68,7 +79,7 @@ namespace PPDFramework.Sprites
         {
             get;
             private set;
-        }
+        } = y;
 
         /// <summary>
         /// 最後に書き込んだ日時を取得します。
@@ -77,7 +88,7 @@ namespace PPDFramework.Sprites
         {
             get;
             private set;
-        }
+        } = lastWriteTime;
 
         /// <summary>
         /// イメージのスケールを取得します。
@@ -86,29 +97,6 @@ namespace PPDFramework.Sprites
         {
             get;
             private set;
-        }
-
-        /// <summary>
-        /// コンストラクタです。
-        /// </summary>
-        /// <param name="path"></param>
-        /// <param name="width"></param>
-        /// <param name="height"></param>
-        /// <param name="spaceWidth"></param>
-        /// <param name="spaceHeight"></param>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
-        /// <param name="lastWriteTime"></param>
-        public SpriteInfo(string path, int width, int height, int spaceWidth, int spaceHeight, int x, int y, DateTime lastWriteTime)
-        {
-            Path = path;
-            Width = width;
-            SpaceWidth = spaceWidth;
-            Height = height;
-            SpaceHeight = spaceHeight;
-            X = x;
-            Y = y;
-            LastWriteTime = lastWriteTime;
         }
     }
 }

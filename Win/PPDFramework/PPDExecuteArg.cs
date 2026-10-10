@@ -9,8 +9,8 @@ namespace PPDFramework
     /// </summary>
     public class PPDExecuteArg
     {
-        private static PPDExecuteArg empty = new PPDExecuteArg(new string[0]);
-        private Dictionary<string, string> dict;
+        private static readonly PPDExecuteArg empty = new([]);
+        private readonly Dictionary<string, string> dict;
 
         /// <summary>
         /// 空の引数を取得します。
@@ -60,7 +60,7 @@ namespace PPDFramework
         public PPDExecuteArg(string[] args)
         {
             Args = args;
-            dict = new Dictionary<string, string>();
+            dict = [];
             Initialize();
         }
 
@@ -81,9 +81,9 @@ namespace PPDFramework
         /// <returns>値。</returns>
         public string GetValue(string key)
         {
-            if (dict.ContainsKey(key))
+            if (dict.TryGetValue(key, out string value))
             {
-                return dict[key];
+                return value;
             }
             else
             {
@@ -91,9 +91,9 @@ namespace PPDFramework
             }
         }
 
-        private bool IsKey(string str)
+        private static bool IsKey(string str)
         {
-            return str.StartsWith("-") && !Double.TryParse(str, System.Globalization.NumberStyles.Float, CultureInfo.InvariantCulture, out double val);
+            return str.StartsWith('-') && !Double.TryParse(str, System.Globalization.NumberStyles.Float, CultureInfo.InvariantCulture, out _);
         }
 
         private void Initialize()
@@ -106,9 +106,9 @@ namespace PPDFramework
             while (true)
             {
                 var key = (string)iter.Current;
-                if (key.StartsWith("-"))
+                if (key.StartsWith('-'))
                 {
-                    key = key.Substring(1);
+                    key = key[1..];
                     var hasNext = iter.MoveNext();
                     if (!hasNext || IsKey((string)iter.Current))
                     {
@@ -138,14 +138,10 @@ namespace PPDFramework
 
         private void Add(string key, string value)
         {
-            if (dict.ContainsKey(key))
+            if (!dict.TryAdd(key, value))
             {
                 Console.WriteLine("key:{0} is duplicated.", key);
                 dict[key] = value;
-            }
-            else
-            {
-                dict.Add(key, value);
             }
         }
     }

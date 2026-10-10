@@ -1,4 +1,5 @@
-﻿using FlowScriptEngine;
+﻿using PPDMath;
+using FlowScriptEngine;
 
 namespace FlowScriptEngineSlimDX.FlowSourceObjects.Matrix
 {
@@ -18,7 +19,7 @@ namespace FlowScriptEngineSlimDX.FlowSourceObjects.Matrix
         }
 
         [ToolTipText("Matrix_AffineTransformation2D_RotationCenter_Summary")]
-        public SharpDX.Vector2 RotationCenter
+        public System.Numerics.Vector2 RotationCenter
         {
             private get;
             set;
@@ -32,14 +33,14 @@ namespace FlowScriptEngineSlimDX.FlowSourceObjects.Matrix
         }
 
         [ToolTipText("Matrix_AffineTransformation2D_Translation_Summary")]
-        public SharpDX.Vector2 Translation
+        public System.Numerics.Vector2 Translation
         {
             private get;
             set;
         }
 
         [ToolTipText("Matrix_AffineTransformation2D_Value_Summary")]
-        public SharpDX.Matrix Value
+        public System.Numerics.Matrix4x4 Value
         {
             get
             {
@@ -47,7 +48,7 @@ namespace FlowScriptEngineSlimDX.FlowSourceObjects.Matrix
                 SetValue(nameof(RotationCenter));
                 SetValue(nameof(Rotation));
                 SetValue(nameof(Translation));
-                return SharpDX.Matrix.AffineTransformation2D(Scale, RotationCenter, Rotation, Translation);
+                return System.Numerics.Matrix4x4.AffineTransformation2D(Scale, RotationCenter, Rotation, Translation);
             }
         }
     }

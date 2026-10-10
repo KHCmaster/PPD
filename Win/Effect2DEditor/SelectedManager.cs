@@ -3,7 +3,7 @@ using System;
 
 namespace Effect2DEditor
 {
-    public class SelectedManager
+    public class SelectedManager(EffectManager effectManager)
     {
         public delegate void StateChangeEventHandler(object sender, StateChangeEventArgs e);
         public event StateChangeEventHandler StateChanged;
@@ -12,10 +12,7 @@ namespace Effect2DEditor
         IEffect selectedeffect;
         EffectStateStructure selectedstate;
         EffectStateRatioSet selectedset;
-        public SelectedManager(EffectManager effectManager)
-        {
-            EffectManager = effectManager;
-        }
+
         public bool IgnoreEvent
         {
             get;
@@ -25,7 +22,7 @@ namespace Effect2DEditor
         {
             get;
             private set;
-        }
+        } = effectManager;
         private IEffect LastEffect
         {
             get;
@@ -49,13 +46,9 @@ namespace Effect2DEditor
             get { return selectedstate; }
             set
             {
-                int lastitemindex = -1;
-                int laststateindex = -1;
-                int itemindex = -1;
-                int stateindex = -1;
-                GetItemAndStateIndex(LastEffect, out lastitemindex, out laststateindex);
+                GetItemAndStateIndex(LastEffect, out int lastitemindex, out int laststateindex);
                 selectedstate = value;
-                GetItemAndStateIndex(Effect, out itemindex, out stateindex);
+                GetItemAndStateIndex(Effect, out int itemindex, out int stateindex);
                 if (StateChanged != null && !IgnoreEvent)
                 {
                     StateChanged.Invoke(this, new StateChangeEventArgs(lastitemindex, laststateindex, itemindex, stateindex));
@@ -98,34 +91,27 @@ namespace Effect2DEditor
             }
         }
     }
-    public class StateChangeEventArgs : EventArgs
+    public class StateChangeEventArgs(int lastitemindex, int laststateindex, int itemindex, int stateindex) : EventArgs
     {
-        public StateChangeEventArgs(int lastitemindex, int laststateindex, int itemindex, int stateindex)
-        {
-            LastItemIndex = lastitemindex;
-            LastStateIndex = laststateindex;
-            ItemIndex = itemindex;
-            StateIndex = stateindex;
-        }
         public int LastItemIndex
         {
             get;
             private set;
-        }
+        } = lastitemindex;
         public int LastStateIndex
         {
             get;
             private set;
-        }
+        } = laststateindex;
         public int ItemIndex
         {
             get;
             private set;
-        }
+        } = itemindex;
         public int StateIndex
         {
             get;
             private set;
-        }
+        } = stateindex;
     }
 }

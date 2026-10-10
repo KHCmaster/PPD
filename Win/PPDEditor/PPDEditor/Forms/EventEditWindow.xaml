@@ -1,0 +1,152 @@
+<Window x:Class="PPDEditor.Forms.EventEditWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:controls="clr-namespace:PPDEditor.Controls"
+        xmlns:vm="clr-namespace:PPDEditor.ViewModels.Dialogs"
+        xmlns:conv="clr-namespace:PPDEditor.Converters"
+        mc:Ignorable="d" d:DataContext="{d:DesignInstance Type=vm:EventEditViewModel}"
+        Title="{Binding Texts[EEF]}" SizeToContent="WidthAndHeight" ResizeMode="NoResize" ShowInTaskbar="False">
+    <Window.Resources>
+        <conv:EnumToBooleanConverter x:Key="EnumToBoolean" />
+        <Style x:Key="VolumeLabel" TargetType="TextBlock">
+            <Setter Property="Width" Value="124" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+        <Style x:Key="SoundOption" TargetType="CheckBox">
+            <Setter Property="Margin" Value="135,0,0,0" />
+        </Style>
+    </Window.Resources>
+    <StackPanel>
+        <TabControl Width="610">
+            <TabItem Header="{Binding Texts[EEFTab1]}">
+                <StackPanel Margin="8,4,8,0" IsEnabled="{Binding IsEditable}">
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                        <TextBlock Text="{Binding Texts[EEFLabel1]}" Style="{StaticResource VolumeLabel}" />
+                        <controls:SoundVolumeControl VolumePercent="{Binding MovieVolumePercent}" />
+                    </StackPanel>
+                    <!-- ボタンごとの音（2 列で、スクエアからエルの順） -->
+                    <ItemsControl ItemsSource="{Binding Sounds}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <UniformGrid Columns="2" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Margin="0,0,0,8">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="{Binding Label}" Style="{StaticResource VolumeLabel}" />
+                                        <controls:SoundVolumeControl VolumePercent="{Binding VolumePercent}" />
+                                    </StackPanel>
+                                    <CheckBox Content="{Binding DataContext.Texts[EEFKeepPlaying], RelativeSource={RelativeSource AncestorType=Window}}"
+                                              IsChecked="{Binding KeepPlaying}" Style="{StaticResource SoundOption}" />
+                                    <CheckBox Content="{Binding DataContext.Texts[EEFReleaseSound], RelativeSource={RelativeSource AncestorType=Window}}"
+                                              IsChecked="{Binding ReleaseSound}" Style="{StaticResource SoundOption}" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </TabItem>
+            <TabItem Header="{Binding Texts[EEFTabOthers]}">
+                <StackPanel Margin="6,4,6,0" IsEnabled="{Binding IsEditable}">
+                    <StackPanel Orientation="Horizontal">
+                        <GroupBox Header="{Binding Texts[EEFGroup1]}" Width="147" Height="88">
+                            <Grid Margin="2,2,2,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="20" />
+                                    <ColumnDefinition Width="47" />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="24" />
+                                    <RowDefinition Height="24" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <TextBlock Text="{Binding Texts[EEFLabel12]}" VerticalAlignment="Center" />
+                                <TextBox Grid.Column="2" Text="{Binding BeforeBpm, Mode=OneWay}" Height="20" IsEnabled="False" VerticalContentAlignment="Center" />
+                                <TextBlock Grid.Row="1" Text="{Binding Texts[EEFLabel13]}" VerticalAlignment="Center" />
+                                <!-- 数値でないときに出す -->
+                                <Image Grid.Row="1" Grid.Column="1" Source="/PPDEditor;component/img/alert.png" Width="16" Height="16" ToolTip="{Binding Texts[EEFError1]}">
+                                    <Image.Style>
+                                        <Style TargetType="Image">
+                                            <Setter Property="Visibility" Value="Hidden" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsBpmInvalid}" Value="True">
+                                                    <Setter Property="Visibility" Value="Visible" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Image.Style>
+                                </Image>
+                                <TextBox Grid.Row="1" Grid.Column="2" Text="{Binding Bpm, UpdateSourceTrigger=PropertyChanged}" Height="20" VerticalContentAlignment="Center" />
+                                <CheckBox Grid.Row="2" Grid.ColumnSpan="3" Content="{Binding Texts[EEFCheckBox1]}" IsChecked="{Binding BpmRapidChange}" Margin="0,4,0,0" />
+                            </Grid>
+                        </GroupBox>
+                        <GroupBox Header="{Binding Texts[EEFGroup2]}" Width="94" Height="88" Margin="6,0,0,0">
+                            <StackPanel Margin="2,4,0,0">
+                                <RadioButton GroupName="DisplayState" Content="{Binding Texts[EEFRadioButton1]}"
+                                             IsChecked="{Binding DisplayState, Converter={StaticResource EnumToBoolean}, ConverterParameter=Normal}" />
+                                <RadioButton GroupName="DisplayState" Content="{Binding Texts[EEFRadioButton2]}" Margin="0,5,0,0"
+                                             IsChecked="{Binding DisplayState, Converter={StaticResource EnumToBoolean}, ConverterParameter=Sudden}" />
+                                <RadioButton GroupName="DisplayState" Content="{Binding Texts[EEFRadioButton3]}" Margin="0,5,0,0"
+                                             IsChecked="{Binding DisplayState, Converter={StaticResource EnumToBoolean}, ConverterParameter=Hidden}" />
+                            </StackPanel>
+                        </GroupBox>
+                        <GroupBox Header="{Binding Texts[EEFGroup3]}" Width="80" Height="88" Margin="6,0,0,0">
+                            <StackPanel Margin="2,14,0,0">
+                                <RadioButton GroupName="MoveState" Content="{Binding Texts[EEFRadioButton4]}"
+                                             IsChecked="{Binding MoveState, Converter={StaticResource EnumToBoolean}, ConverterParameter=Normal}" />
+                                <RadioButton GroupName="MoveState" Content="{Binding Texts[EEFRadioButton5]}" Margin="0,5,0,0"
+                                             IsChecked="{Binding MoveState, Converter={StaticResource EnumToBoolean}, ConverterParameter=Stop}" />
+                            </StackPanel>
+                        </GroupBox>
+                        <GroupBox Header="AC" Width="72" Height="88" Margin="6,0,0,0">
+                            <StackPanel Margin="8,4,0,0">
+                                <RadioButton GroupName="NoteType" Content="{Binding Texts[EEFRadioButton4]}"
+                                             IsChecked="{Binding NoteType, Converter={StaticResource EnumToBoolean}, ConverterParameter=Normal}" />
+                                <RadioButton GroupName="NoteType" Content="AC" Margin="0,5,0,0"
+                                             IsChecked="{Binding NoteType, Converter={StaticResource EnumToBoolean}, ConverterParameter=AC}" />
+                                <RadioButton GroupName="NoteType" Content="ACFT" Margin="0,5,0,0"
+                                             IsChecked="{Binding NoteType, Converter={StaticResource EnumToBoolean}, ConverterParameter=ACFT}" />
+                            </StackPanel>
+                        </GroupBox>
+                        <GroupBox Header="{Binding Texts[Slide]}" Width="169" Height="88" Margin="6,0,0,0">
+                            <DockPanel Margin="2,4,2,0" VerticalAlignment="Top">
+                                <TextBox DockPanel.Dock="Right" Text="{Binding SlideScale, UpdateSourceTrigger=PropertyChanged}" Width="47" Height="20" VerticalContentAlignment="Center" />
+                                <TextBlock Text="{Binding Texts[Scale]}" VerticalAlignment="Center" />
+                            </DockPanel>
+                        </GroupBox>
+                    </StackPanel>
+                    <GroupBox Header="{Binding Texts[EEFGroup5]}" Width="245" Height="194" HorizontalAlignment="Left" Margin="2,6,0,0">
+                        <Grid Margin="4,4,4,4">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="131" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel>
+                                <RadioButton GroupName="InitializeOrder" Content="{Binding Texts[EEFRadioButton4]}"
+                                             IsChecked="{Binding OrderMode, Converter={StaticResource EnumToBoolean}, ConverterParameter=Normal}" />
+                                <RadioButton GroupName="InitializeOrder" Content="AC" Margin="0,5,0,0"
+                                             IsChecked="{Binding OrderMode, Converter={StaticResource EnumToBoolean}, ConverterParameter=AC}" />
+                                <RadioButton GroupName="InitializeOrder" Content="{Binding Texts[EEFRadioButton10]}" Margin="0,5,0,0"
+                                             IsChecked="{Binding OrderMode, Converter={StaticResource EnumToBoolean}, ConverterParameter=Custom}" />
+                            </StackPanel>
+                            <StackPanel VerticalAlignment="Bottom">
+                                <Button Content="{Binding Texts[EEFButton3]}" Width="75" Height="23" HorizontalAlignment="Left" Command="{Binding MoveUpCommand}" />
+                                <Button Content="{Binding Texts[EEFButton4]}" Width="75" Height="23" HorizontalAlignment="Left" Margin="0,6,0,0" Command="{Binding MoveDownCommand}" />
+                            </StackPanel>
+                            <ListBox Grid.Column="1" ItemsSource="{Binding InitializeOrder}" DisplayMemberPath="Name" SelectedIndex="{Binding SelectedOrderIndex}" />
+                        </Grid>
+                    </GroupBox>
+                </StackPanel>
+            </TabItem>
+        </TabControl>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,14,0,14">
+            <Button AutomationProperties.AutomationId="EventOkButton" Content="OK" Width="75" Height="23" IsDefault="True" Command="{Binding OkCommand}" />
+            <Button Content="Cancel" Width="75" Height="23" Margin="141,0,0,0" IsCancel="True" />
+        </StackPanel>
+    </StackPanel>
+</Window>

@@ -7,12 +7,14 @@ using System.Threading;
 
 namespace PPDEditor.FlowScript
 {
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1001:Types that own disposable fields should be disposable", Justification = "止まらなかったスクリプトのスレッドが DebugController を使い続ける可能性があるので破棄しない（イベントのハンドルは GC で解放される）")]
     class Executor
     {
-        private Dictionary<string, object> items;
+        private readonly Dictionary<string, object> items;
         private Thread thread;
-        private DebugController debugController;
-        private TcpDebugControllerClient controllerClient;
+        private volatile bool killed;
+        private readonly DebugController debugController;
+        private readonly TcpDebugControllerClient controllerClient;
 
         public string ScriptFilePath
         {
@@ -54,7 +56,7 @@ namespace PPDEditor.FlowScript
             Layers = layers;
             debugController = new DebugController();
             controllerClient = new TcpDebugControllerClient(debugController);
-            items = new Dictionary<string, object>();
+            items = [];
             AddItem("AllLayers", layers);
         }
 
@@ -67,17 +69,17 @@ namespace PPDEditor.FlowScript
         {
             if (thread != null && thread.IsAlive)
             {
-                thread.Abort();
-                while (!thread.Join(100))
-                {
-                    thread.Abort();
-                }
+                // .NET では Thread.Abort が使えないので、スクリプトに中止を要求する（次のノードの評価で止まる）。
+                // 止まらない場合（ノードの中で処理が終わらない場合）も、バックグラウンドスレッドなのでアプリの終了は妨げない
+                killed = true;
+                debugController.Abort();
+                thread.Join(3000);
             }
         }
 
         public void Execute()
         {
-            thread = new Thread(ExecuteImpl);
+            thread = new Thread(ExecuteImpl) { IsBackground = true };
             thread.SetApartmentState(ApartmentState.STA);
             thread.Start();
         }
@@ -91,7 +93,7 @@ namespace PPDEditor.FlowScript
                     controllerClient.Create();
                 }
                 var engine = new Engine();
-                engine.Error += engine_Error;
+                engine.Error += Engine_Error;
                 using (FileStream fs = File.Open(ScriptFilePath, FileMode.Open))
                 {
                     var manager = engine.Load(fs, true, Guid.NewGuid(), debugController);
@@ -117,15 +119,17 @@ namespace PPDEditor.FlowScript
             }
             finally
             {
-                if (controllerClient != null)
-                {
-                    controllerClient.Close();
-                }
+                controllerClient?.Close();
+            }
+            if (killed)
+            {
+                // 以前は Kill で Thread.Abort していたので、Finished は呼ばれなかった
+                return;
             }
             Finished?.Invoke(this, EventArgs.Empty);
         }
 
-        void engine_Error(FlowExecutionException obj)
+        void Engine_Error(FlowExecutionException obj)
         {
             ProcessError(obj);
         }

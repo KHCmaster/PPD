@@ -10,9 +10,9 @@ namespace FlowScriptEnginePPDEditor.FlowSourceObjects.Movie
         {
             base.OnInitialize();
 
-            if (this.Manager.Items.ContainsKey("Movie"))
+            if (this.Manager.Items.TryGetValue("Movie", out object value))
             {
-                movie = this.Manager.Items["Movie"] as IMovie;
+                movie = value as IMovie;
             }
         }
     }

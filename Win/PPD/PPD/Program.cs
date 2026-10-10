@@ -81,8 +81,7 @@ namespace PPD
                 isDebug: arg.Count > 0,
                 songDir: arg.ContainsKey("songdir") ? arg["songdir"] : "",
                 langIso: arg.ContainsKey("lang") ? arg["lang"] : null,
-                disableExpansion: arg.ContainsKey("disableexpansion"),
-                disableShader: arg.ContainsKey("disableshader"));
+                disableExpansion: arg.ContainsKey("disableexpansion"));
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             var errorHandler = new SendErrorHandler();
@@ -103,6 +102,8 @@ namespace PPD
                     {
                         var psi = new ProcessStartInfo();
                         psi.FileName = "PPDUpdater.exe";
+                        // .NET Framework の既定値と同じ。管理者権限が必要な場合も起動できるようにシェル経由で起動する
+                        psi.UseShellExecute = true;
                         Process.Start(psi);
                     }
 #endif
@@ -115,7 +116,7 @@ namespace PPD
                 }
             }
             RunExpansion();
-            using (MyGame game = new MyGame(arg))
+            using (MyGame game = new(arg))
             {
                 try
                 {
@@ -154,20 +155,17 @@ namespace PPD
 
         static bool CheckInstallInfo()
         {
-            var checker = new Checker();
-            return checker.CheckInstallInfo();
+            return Checker.CheckInstallInfo();
         }
 
         static bool CheckVersion()
         {
-            var checker = new Checker();
-            return checker.CheckUpdate();
+            return Checker.CheckUpdate();
         }
 
         static bool CheckAssembly(out string errors)
         {
-            var checker = new Checker();
-            return checker.CheckAssembly(out errors);
+            return Checker.CheckAssembly(out errors);
         }
     }
 }

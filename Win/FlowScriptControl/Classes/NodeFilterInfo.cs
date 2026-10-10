@@ -3,16 +3,17 @@ using System.Text.RegularExpressions;
 
 namespace FlowScriptControl.Classes
 {
-    public class NodeFilterInfo : NodeFilterInfoBase
+    public partial class NodeFilterInfo(string name, Regex[] includeAssemblyNames, Regex[] includeNodeNames,
+        Regex[] excludeAssemblyNames, Regex[] excludeNodeNames) : NodeFilterInfoBase
     {
-        private static NodeFilterInfo defaultFilter = new NodeFilterInfo("All",
-            new Regex[] { new Regex(".") },
-            new Regex[] { new Regex(".") });
-        private string name;
-        private Regex[] includeAssemblyNames;
-        private Regex[] includeNodeNames;
-        private Regex[] excludeAssemblyNames;
-        private Regex[] excludeNodeNames;
+        private static readonly NodeFilterInfo defaultFilter = new("All",
+            [AnyCharRegex()],
+            [AnyCharRegex()]);
+        private readonly string name = name;
+        private readonly Regex[] includeAssemblyNames = includeAssemblyNames;
+        private readonly Regex[] includeNodeNames = includeNodeNames;
+        private readonly Regex[] excludeAssemblyNames = excludeAssemblyNames;
+        private readonly Regex[] excludeNodeNames = excludeNodeNames;
 
         public static NodeFilterInfo DefaultFilter
         {
@@ -27,16 +28,6 @@ namespace FlowScriptControl.Classes
         public NodeFilterInfo(string name, Regex[] includeAssemblyNames, Regex[] includeNodeNames)
             : this(name, includeAssemblyNames, includeNodeNames, null, null)
         {
-        }
-
-        public NodeFilterInfo(string name, Regex[] includeAssemblyNames, Regex[] includeNodeNames,
-            Regex[] excludeAssemblyNames, Regex[] excludeNodeNames)
-        {
-            this.name = name;
-            this.includeAssemblyNames = includeAssemblyNames;
-            this.includeNodeNames = includeNodeNames;
-            this.excludeAssemblyNames = excludeAssemblyNames;
-            this.excludeNodeNames = excludeNodeNames;
         }
 
         public override bool IsHide(FlowSourceDumper dumper)
@@ -61,5 +52,8 @@ namespace FlowScriptControl.Classes
 
             return true;
         }
+
+        [GeneratedRegex(".")]
+        private static partial Regex AnyCharRegex();
     }
 }

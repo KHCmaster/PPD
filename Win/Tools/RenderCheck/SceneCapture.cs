@@ -1,0 +1,243 @@
+using System;
+using System.Diagnostics;
+using System.Drawing;
+using System.IO;
+using System.Runtime.InteropServices;
+using System.Threading;
+
+/// <summary>
+/// PPDTest を起動し、Y キーで全シーンを送りながらスクリーンショットを撮ります。
+/// 使い方: SceneCapture.exe <PPDTest.exe> <出力フォルダ> <シーン数>
+/// </summary>
+static class SceneCapture
+{
+    [DllImport("user32.dll")] static extern bool SetProcessDPIAware();
+    [DllImport("user32.dll")] static extern bool SetForegroundWindow(IntPtr hWnd);
+    [DllImport("user32.dll")] static extern IntPtr GetForegroundWindow();
+    [DllImport("user32.dll")] static extern bool GetClientRect(IntPtr hWnd, out RECT rect);
+    [DllImport("user32.dll")] static extern bool ClientToScreen(IntPtr hWnd, ref POINT point);
+    [DllImport("user32.dll")] static extern void keybd_event(byte vk, byte scan, uint flags, UIntPtr extra);
+    [DllImport("user32.dll")] static extern bool ShowWindow(IntPtr hWnd, int cmd);
+
+    struct RECT { public int Left, Top, Right, Bottom; }
+    struct POINT { public int X, Y; }
+
+    const uint KEYEVENTF_KEYUP = 2;
+    const byte VK_MENU = 0x12;
+    const byte VK_Y = 0x59;
+    const byte SCAN_Y = 0x15;
+
+    static int Main(string[] args)
+    {
+        if (args.Length < 3)
+        {
+            Console.WriteLine("usage: SceneCapture.exe <PPDTest.exe> <outputDir> <sceneCount>");
+            return 2;
+        }
+        SetProcessDPIAware();
+        var exe = Path.GetFullPath(args[0]);
+        var outDir = args[1];
+        var sceneCount = int.Parse(args[2]);
+        Directory.CreateDirectory(outDir);
+        var process = Process.Start(new ProcessStartInfo(exe) { WorkingDirectory = Path.GetDirectoryName(exe), UseShellExecute = false });
+        try
+        {
+            var hwnd = WaitForWindow(process);
+            if (hwnd == IntPtr.Zero)
+            {
+                Console.WriteLine("window not found");
+                return 1;
+            }
+            Thread.Sleep(4000);
+            for (var scene = 0; scene < sceneCount; scene++)
+            {
+                if (!BringToFront(hwnd))
+                {
+                    Console.WriteLine("could not bring window to front at scene " + scene);
+                    return 1;
+                }
+                Thread.Sleep(2500);
+                if (process.HasExited)
+                {
+                    Console.WriteLine("process exited at scene " + scene + " code " + process.ExitCode);
+                    return 1;
+                }
+                var path = Path.Combine(outDir, string.Format("scene{0}.png", scene));
+                var stable = CaptureStable(hwnd, path);
+                Console.WriteLine("captured " + path + (stable ? "" : " (not stable)"));
+                // 別のアプリにキーが届かないように、前面にあることを確かめてから送る
+                if (!BringToFront(hwnd))
+                {
+                    Console.WriteLine("could not bring window to front before switching scene " + scene);
+                    return 1;
+                }
+                // DirectInput に届くようにスキャンコード付きで送る
+                keybd_event(VK_Y, SCAN_Y, 0, UIntPtr.Zero);
+                Thread.Sleep(150);
+                keybd_event(VK_Y, SCAN_Y, KEYEVENTF_KEYUP, UIntPtr.Zero);
+                Thread.Sleep(500);
+            }
+            return 0;
+        }
+        finally
+        {
+            if (!process.HasExited)
+            {
+                process.Kill();
+            }
+        }
+    }
+
+    static IntPtr WaitForWindow(Process process)
+    {
+        for (var i = 0; i < 100; i++)
+        {
+            Thread.Sleep(200);
+            process.Refresh();
+            if (process.MainWindowHandle != IntPtr.Zero)
+            {
+                return process.MainWindowHandle;
+            }
+        }
+        return IntPtr.Zero;
+    }
+
+    static bool BringToFront(IntPtr hwnd)
+    {
+        for (var i = 0; i < 10; i++)
+        {
+            ShowWindow(hwnd, 9);
+            // 他のプロセスのウィンドウを前面にするための制限を回避する（Alt キーを押して離す）
+            keybd_event(VK_MENU, 0, 0, UIntPtr.Zero);
+            keybd_event(VK_MENU, 0, KEYEVENTF_KEYUP, UIntPtr.Zero);
+            SetForegroundWindow(hwnd);
+            Thread.Sleep(200);
+            if (GetForegroundWindow() == hwnd)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /// <summary>
+    /// 描画が落ち着く（連続した 2 回の撮影結果が一致する）まで待ってから保存します。
+    /// 動画など常に変化するシーンでは、最大回数に達した時点の画像を保存します。
+    /// </summary>
+    static bool CaptureStable(IntPtr hwnd, string path)
+    {
+        byte[] previous = null;
+        Bitmap bitmap = null;
+        try
+        {
+            // 起動直後はまだ描画されていないことがあるので、最大 20 秒待つ
+            for (var i = 0; i < 40; i++)
+            {
+                bitmap?.Dispose();
+                bitmap = Capture(hwnd);
+                if (bitmap == null)
+                {
+                    // 別のウィンドウが前面に来た。前面に戻してやり直す
+                    Console.WriteLine("window lost focus; retrying");
+                    BringToFront(hwnd);
+                    previous = null;
+                    Thread.Sleep(1000);
+                    continue;
+                }
+                var current = ToBytes(bitmap);
+                if (previous != null && IsSame(previous, current) && !IsUniform(current, bitmap.Width, bitmap.Height))
+                {
+                    bitmap.Save(path, System.Drawing.Imaging.ImageFormat.Png);
+                    return true;
+                }
+                previous = current;
+                Thread.Sleep(500);
+            }
+            if (bitmap == null)
+            {
+                throw new InvalidOperationException("could not capture the window (another window kept the focus)");
+            }
+            bitmap.Save(path, System.Drawing.Imaging.ImageFormat.Png);
+            return false;
+        }
+        finally
+        {
+            bitmap?.Dispose();
+        }
+    }
+
+    /// <summary>
+    /// ウィンドウのクライアント領域を画面からコピーして撮影します。
+    /// （DirectX のスワップチェーンの内容は PrintWindow では取得できないため、画面からコピーする。
+    /// 別のウィンドウが写り込まないように、撮影の前後で対象ウィンドウが前面にあることを確認し、違えば null を返す）
+    /// </summary>
+    static Bitmap Capture(IntPtr hwnd)
+    {
+        if (GetForegroundWindow() != hwnd)
+        {
+            return null;
+        }
+        RECT rect;
+        GetClientRect(hwnd, out rect);
+        var point = new POINT();
+        ClientToScreen(hwnd, ref point);
+        var w = rect.Right - rect.Left;
+        var h = rect.Bottom - rect.Top;
+        var bitmap = new Bitmap(w, h, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+        using (var g = Graphics.FromImage(bitmap))
+        {
+            g.CopyFromScreen(point.X, point.Y, 0, 0, new Size(w, h));
+        }
+        if (GetForegroundWindow() != hwnd)
+        {
+            bitmap.Dispose();
+            return null;
+        }
+        return bitmap;
+    }
+
+    static byte[] ToBytes(Bitmap bitmap)
+    {
+        var data = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height), System.Drawing.Imaging.ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+        try
+        {
+            var bytes = new byte[data.Stride * data.Height];
+            Marshal.Copy(data.Scan0, bytes, 0, bytes.Length);
+            return bytes;
+        }
+        finally
+        {
+            bitmap.UnlockBits(data);
+        }
+    }
+
+    static bool IsSame(byte[] a, byte[] b)
+    {
+        if (a.Length != b.Length) return false;
+        for (var i = 0; i < a.Length; i++)
+        {
+            if (a[i] != b[i]) return false;
+        }
+        return true;
+    }
+
+    /// <summary>
+    /// 一色だけの画像（まだ描画されていないウィンドウ）かどうかを調べます。
+    /// Windows 11 の角丸の部分には背景が写るので、周囲 16 ピクセルは見ない。
+    /// </summary>
+    static bool IsUniform(byte[] a, int width, int height)
+    {
+        const int margin = 16;
+        var stride = width * 4;
+        var first = (margin * width + margin) * 4;
+        for (var y = margin; y < height - margin; y++)
+        {
+            for (var x = margin; x < width - margin; x++)
+            {
+                var i = y * stride + x * 4;
+                if (a[i] != a[first] || a[i + 1] != a[first + 1] || a[i + 2] != a[first + 2]) return false;
+            }
+        }
+        return true;
+    }
+}

@@ -4,9 +4,9 @@ namespace PPDMulti
 {
     class Utility
     {
-        private static ExLanguageReader langReader = new ExLanguageReader("PPDMulti");
-        private static PathManager pathManager = new PathManager(@"img\PPD\multi");
-        private static PathManager mainGamePathManager = new PathManager(@"img\PPD\main_game");
+        private static readonly ExLanguageReader langReader = new("PPDMulti");
+        private static readonly PathManager pathManager = new(@"img\PPD\multi");
+        private static readonly PathManager mainGamePathManager = new(@"img\PPD\main_game");
 
         public static ExLanguageReader Language
         {

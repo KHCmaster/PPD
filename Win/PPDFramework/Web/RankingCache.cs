@@ -4,7 +4,7 @@ namespace PPDFramework.Web
 {
     class RankingCache
     {
-        private static RankingCache cache = new RankingCache();
+        private static readonly RankingCache cache = new();
 
         public static RankingCache Cache
         {
@@ -14,8 +14,8 @@ namespace PPDFramework.Web
             }
         }
 
-        ArrayTree<byte, RankingCacheInfo> tree;
-        ArrayTree<byte, RankingCacheInfo> rivalTree;
+        readonly ArrayTree<byte, RankingCacheInfo> tree;
+        readonly ArrayTree<byte, RankingCacheInfo> rivalTree;
 
         private RankingCache()
         {
@@ -93,32 +93,25 @@ namespace PPDFramework.Web
             }
         }
 
-        class RankingCacheInfo
+        class RankingCacheInfo(Ranking ranking, byte[] hash)
         {
-            public RankingCacheInfo(Ranking ranking, byte[] hash)
-            {
-                Ranking = ranking;
-                Hash = hash;
-                CreatedTime = DateTime.Now;
-            }
-
             public Ranking Ranking
             {
                 get;
                 private set;
-            }
+            } = ranking;
 
             public Byte[] Hash
             {
                 get;
                 private set;
-            }
+            } = hash;
 
             public DateTime CreatedTime
             {
                 get;
                 private set;
-            }
+            } = DateTime.Now;
         }
     }
 }

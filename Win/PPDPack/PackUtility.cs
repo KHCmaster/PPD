@@ -2,7 +2,7 @@
 {
     public static class PackUtility
     {
-        public static byte[] FileSignature = {
+        public static readonly byte[] FileSignature = [
             (byte)'P',
             (byte)'P',
             (byte)'D',
@@ -12,7 +12,7 @@
             (byte)'K',
             (byte)'V',
             (byte)'1'
-        };
+        ];
 
         public static int CheckHeaderStartIndex(byte[] array)
         {
@@ -21,7 +21,8 @@
                 return -1;
             }
 
-            for (int i = 0; i < array.Length - FileSignature.Length; i++)
+            // 配列の最後で終わるところまで探す（以前は最後の位置を探していなかった）
+            for (int i = 0; i <= array.Length - FileSignature.Length; i++)
             {
                 if (CheckContainsArray(array, i))
                 {

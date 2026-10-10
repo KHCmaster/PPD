@@ -19,10 +19,8 @@ namespace PPDFramework.PPDStructure
         /// <returns></returns>
         public static void Write(string path, MarkData[] markData)
         {
-            using (Stream stream = File.Create(path))
-            {
-                Write(stream, markData);
-            }
+            using Stream stream = File.Create(path);
+            Write(stream, markData);
         }
 
         /// <summary>
@@ -33,7 +31,7 @@ namespace PPDFramework.PPDStructure
         /// <returns></returns>
         public static void Write(Stream stream, MarkData[] markData)
         {
-            var sign = new byte[] { (byte)'P', (byte)'P', (byte)'D' };
+            var sign = "PPD"u8.ToArray();
             byte[] fdata;
             stream.Write(sign, 0, sign.Length);
             var hasParameters = new List<MarkData>();
@@ -48,8 +46,7 @@ namespace PPDFramework.PPDStructure
                 fdata = System.BitConverter.GetBytes(markData[i].Angle);
                 stream.Write(fdata, 0, fdata.Length);
                 var offset = (byte)(markData[i].ID != 0 ? 40 : 0);
-                var exmkData = markData[i] as ExMarkData;
-                if (exmkData == null)
+                if (markData[i] is not ExMarkData exmkData)
                 {
                     stream.WriteByte((byte)(markData[i].ButtonType + offset));
                 }
@@ -90,7 +87,8 @@ namespace PPDFramework.PPDStructure
                 }
                 var str = document.ToString();
                 var bytes = Encoding.UTF8.GetBytes(str);
-                fdata = System.BitConverter.GetBytes(str.Length);
+                // 長さはバイト数（元は文字数で、日本語などのパラメーターがあると読めなくなっていた）
+                fdata = System.BitConverter.GetBytes(bytes.Length);
                 stream.Write(fdata, 0, fdata.Length);
                 stream.Write(bytes, 0, bytes.Length);
             }

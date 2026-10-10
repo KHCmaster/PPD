@@ -138,7 +138,7 @@ namespace FlowScriptEngineBasic.FlowSourceObjects.Logic
             }
         }
 
-        private bool CheckEquals(object object1, object object2)
+        private static bool CheckEquals(object object1, object object2)
         {
             if (object1 == null && object2 == null)
             {

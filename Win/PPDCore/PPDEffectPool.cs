@@ -5,8 +5,8 @@ namespace PPDCore
 {
     class PPDEffectPool : EffectPoolBase
     {
-        PathObject filename;
-        PPDFramework.Resource.ResourceManager resourceManager;
+        readonly PathObject filename;
+        readonly PPDFramework.Resource.ResourceManager resourceManager;
 
         public PPDEffectPool(PPDDevice device, PathObject filename, int count, PPDFramework.Resource.ResourceManager resourceManager)
             : base(device, count)

@@ -1,7 +1,9 @@
 ﻿using PPDFramework;
 using PPDFramework.PPDStructure.EVDData;
 using PPDFramework.PPDStructure.PPDData;
-using SharpDX;
+using System.Numerics;
+using PPDMath;
+using Matrix = System.Numerics.Matrix4x4;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,7 +37,7 @@ namespace PPDEditor
             this.time = time;
             this.skin = skin;
             this.resourceManager = resourceManager;
-            parameters = new Dictionary<string, string>();
+            parameters = [];
             mark = new PictureObject(device, resourceManager, skin.GetMarkImagePath(type), true)
             {
                 Position = new Vector2(x, y)
@@ -375,7 +377,7 @@ namespace PPDEditor
 
         public KeyValuePair<string, string>[] Parameters
         {
-            get { return parameters.ToArray(); }
+            get { return [.. parameters]; }
         }
 
         public string this[string key]

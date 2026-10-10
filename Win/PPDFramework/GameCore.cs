@@ -1,5 +1,4 @@
 ﻿using PPDFrameworkCore;
-using SharpDX.Windows;
 using System.Windows.Forms;
 
 namespace PPDFramework
@@ -85,7 +84,7 @@ namespace PPDFramework
             Form.MainForm.Show();
             OnWindowShown();
             Initialize();
-            RenderLoop.Run(Form.RenderForm, Render, true);
+            RenderLoop.Run(Form.RenderForm, Render);
             OnWindowClose();
         }
 

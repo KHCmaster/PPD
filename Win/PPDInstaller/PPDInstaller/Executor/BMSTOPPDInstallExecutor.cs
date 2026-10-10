@@ -1,23 +1,17 @@
 ﻿using System;
 using System.IO;
 using System.Text.RegularExpressions;
-using System.Windows.Forms;
+using System.Threading;
 
 namespace PPDInstaller.Executor
 {
-    class BMSTOPPDInstallExecutor : CExecutor
+    partial class BMSTOPPDInstallExecutor(string dataDirectory, string installDirectory, SynchronizationContext context) : CExecutor(context)
     {
-        Regex[] BMSTOPPDIgnoreList = {
-          new Regex("setting\\.ini",RegexOptions.IgnoreCase)
-        };
-        string dataDirectory;
-        string installDirectory;
-        public BMSTOPPDInstallExecutor(string dataDirectory, string installDirectory, Control control)
-            : base(control)
-        {
-            this.dataDirectory = dataDirectory;
-            this.installDirectory = installDirectory;
-        }
+        readonly Regex[] BMSTOPPDIgnoreList = [
+          SettingIniRegex()
+        ];
+        readonly string dataDirectory = dataDirectory;
+        readonly string installDirectory = installDirectory;
 
         public override void Execute()
         {
@@ -35,5 +29,8 @@ namespace PPDInstaller.Executor
             }
             OnFinish();
         }
+
+        [GeneratedRegex("setting\\.ini", RegexOptions.IgnoreCase)]
+        private static partial Regex SettingIniRegex();
     }
 }

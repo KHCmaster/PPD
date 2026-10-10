@@ -1,4 +1,5 @@
-﻿using SharpDX;
+﻿using System.Numerics;
+using PPDMath;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -30,7 +31,7 @@ namespace PPDFramework.Sprites
         /// <summary>
         /// 許可された拡張子の一覧です。
         /// </summary>
-        protected string[] allowedExtensions = { ".jpg", ".jpeg", ".png", ".gif" };
+        protected string[] allowedExtensions = [".jpg", ".jpeg", ".png", ".gif"];
 
         /// <summary>
         /// スプライト辞書の一覧を取得します。
@@ -83,7 +84,7 @@ namespace PPDFramework.Sprites
         /// </summary>
         public void Initialize()
         {
-            Dicts = GetDicts(out string version);
+            Dicts = GetDicts(out _);
         }
 
         /// <summary>
@@ -96,7 +97,7 @@ namespace PPDFramework.Sprites
             if (!CheckUpdate(infos) || version != Version)
             {
                 Write(infos);
-                Dicts = GetDicts(out version);
+                Dicts = GetDicts(out _);
                 OnPacked();
             }
         }
@@ -154,7 +155,7 @@ namespace PPDFramework.Sprites
                     }
                 }
             }
-            return dicts.ToArray();
+            return [.. dicts];
         }
 
         private void Write(ImageInfo[] imageInfos)
@@ -203,7 +204,7 @@ namespace PPDFramework.Sprites
             doc.Save(MetaXmlPath);
         }
 
-        private PackInfo[] PackImpl(ImageInfo[] infos, int startIndex, out int nextIndex, out int size)
+        private static PackInfo[] PackImpl(ImageInfo[] infos, int startIndex, out int nextIndex, out int size)
         {
             size = infos.Skip(startIndex).Max(i => i.WidthPowerOfTwo);
             nextIndex = startIndex;
@@ -212,7 +213,7 @@ namespace PPDFramework.Sprites
                 var packInfos = new List<PackInfo>();
                 var availables = new List<AvailableInfo>
                 {
-                    new AvailableInfo { Position = Vector2.Zero, Width = size }
+                    new() { Position = Vector2.Zero, Width = size }
                 };
                 bool overflow = false;
                 var i = startIndex;
@@ -298,7 +299,7 @@ namespace PPDFramework.Sprites
                     }
                 }
                 nextIndex = i;
-                return packInfos.ToArray();
+                return [.. packInfos];
             }
         }
 
@@ -307,9 +308,19 @@ namespace PPDFramework.Sprites
             public Vector2 Position;
             public float Width;
 
-            public bool Equals(AvailableInfo other)
+            public readonly bool Equals(AvailableInfo other)
             {
                 return Position == other.Position && Width == other.Width;
+            }
+
+            public override readonly bool Equals(object obj)
+            {
+                return obj is AvailableInfo other && Equals(other);
+            }
+
+            public override readonly int GetHashCode()
+            {
+                return HashCode.Combine(Position, Width);
             }
         }
     }

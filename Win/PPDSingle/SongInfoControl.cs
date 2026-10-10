@@ -1,7 +1,8 @@
 ﻿using PPDFramework;
 using PPDFrameworkCore;
 using PPDShareComponent;
-using SharpDX;
+using System.Numerics;
+using PPDMath;
 using System;
 
 namespace PPDSingle
@@ -21,35 +22,35 @@ namespace PPDSingle
         Difficulty selectdifficulty;
         SelectedSongInfo songinfo;
         State state = State.normal;
-        TextureString focusedbpm;
-        TextureString hiscore;
-        TextureString difficulty;
-        TextureString[] infos;
-        PictureObject[] infoboards;
-        Button[] buttons;
-        string[] score = new string[4];
+        readonly TextureString focusedbpm;
+        readonly TextureString hiscore;
+        readonly TextureString difficulty;
+        readonly TextureString[] infos;
+        readonly PictureObject[] infoboards;
+        readonly Button[] buttons;
+        readonly string[] score = new string[4];
         bool[] exist = new bool[6];
         const int xx = 610;
         const int xxx = 640;
         const int height = 220;
         const int secondheight = 250;
-        MenuRanking menuRanking;
+        readonly MenuRanking menuRanking;
 
-        BestEvaluate[] bestEvaluates;
-        PictureObject[] acs;
-        PictureObject[] fts;
-        PictureObject[] perfects;
-        PictureObject[] buttonAcs;
-        PictureObject[] buttonFts;
-        PictureObject[] buttonPerfects;
+        readonly BestEvaluate[] bestEvaluates;
+        readonly PictureObject[] acs;
+        readonly PictureObject[] fts;
+        readonly PictureObject[] perfects;
+        readonly PictureObject[] buttonAcs;
+        readonly PictureObject[] buttonFts;
+        readonly PictureObject[] buttonPerfects;
 
         public SongInfoControl(PPDDevice device, PPDFramework.Resource.ResourceManager resourceManager) : base(device)
         {
             menuRanking = new MenuRanking(device, resourceManager)
             {
-                Position = new Vector2(500, 105)
+                Position = new Vector2(500, 105),
+                Hidden = true
             };
-            menuRanking.Hidden = true;
             this.AddChild(menuRanking);
             state = State.normal;
             infoboards = new PictureObject[2];
@@ -66,9 +67,9 @@ namespace PPDSingle
             };
             infoboards[1] = new PictureObject(device, resourceManager, Utility.Path.Combine("infoboard2.png"))
             {
-                Position = new Vector2(500, 280)
+                Position = new Vector2(500, 280),
+                Hidden = true
             };
-            infoboards[1].Hidden = true;
             this.AddChild(infoboards[0]);
             this.AddChild(infoboards[1]);
             TextureString easy, normal, hard, extreme;
@@ -439,19 +440,14 @@ namespace PPDSingle
         {
             get
             {
-                switch (selectdifficulty)
+                return selectdifficulty switch
                 {
-                    case Difficulty.Easy:
-                        return "EASY";
-                    case Difficulty.Normal:
-                        return "NORMAL";
-                    case Difficulty.Hard:
-                        return "HARD";
-                    case Difficulty.Extreme:
-                        return "EXTREME";
-                    default:
-                        return "";
-                }
+                    Difficulty.Easy => "EASY",
+                    Difficulty.Normal => "NORMAL",
+                    Difficulty.Hard => "HARD",
+                    Difficulty.Extreme => "EXTREME",
+                    _ => "",
+                };
             }
         }
         public Difficulty Difficulty
@@ -494,7 +490,7 @@ namespace PPDSingle
 
         class BestEvaluate : GameComponent
         {
-            PPDFramework.Resource.ResourceManager resourceManager;
+            readonly PPDFramework.Resource.ResourceManager resourceManager;
 
             ResultEvaluateType result;
 

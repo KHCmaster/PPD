@@ -9,7 +9,7 @@ namespace PPDSingle
     /// <summary>
     /// ゲーム結果のUI
     /// </summary>
-    public class GameResult : GameResultBase
+    public class GameResult(PPDDevice device) : GameResultBase(device)
     {
         public override event EventHandler Returned;
         public override event EventHandler Retryed;
@@ -24,10 +24,6 @@ namespace PPDSingle
             grs.Retry();
         }
 
-        public GameResult(PPDDevice device) : base(device)
-        {
-        }
-
         public override void Load()
         {
             focusManager = new FocusManager();
@@ -35,9 +31,9 @@ namespace PPDSingle
             ScoreSent += GameResult_ScoreSent;
             ScoreSending += GameResult_ScoreSending;
             grs = new GameResultScore(device, ResourceManager, PPDGameUtility, Sound, BlueSkyManager, ReviewManager, GameHost);
-            grs.Retryed += grs_Retryed;
-            grs.Returned += grs_Returned;
-            grs.Replayed += grs_Replayed;
+            grs.Retryed += Grs_Retryed;
+            grs.Returned += Grs_Returned;
+            grs.Replayed += Grs_Replayed;
             focusManager.Focus(grs);
             grs.UpdateRanking();
 
@@ -71,19 +67,19 @@ namespace PPDSingle
             }
             if (data != null)
             {
-                if (data.ContainsKey("Exp"))
+                if (data.TryGetValue("Exp", out string expValue))
                 {
-                    var exp = int.Parse(data["Exp"]);
+                    var exp = int.Parse(expValue);
                     GameHost.AddNotify(String.Format(Utility.Language["GotExp"], exp));
                 }
-                if (data.ContainsKey("Item"))
+                if (data.TryGetValue("Item", out string itemValue))
                 {
-                    var itemType = (ItemType)int.Parse(data["Item"]);
+                    var itemType = (ItemType)int.Parse(itemValue);
                     GameHost.AddNotify(String.Format(Utility.Language["GotItem"], Utility.Language[String.Format("Item{0}Name", itemType)]));
                 }
-                if (data.ContainsKey("LastLevel") && data.ContainsKey("Level"))
+                if (data.TryGetValue("LastLevel", out string lastLevelValue) && data.TryGetValue("Level", out string levelValue))
                 {
-                    int lastLevel = int.Parse(data["LastLevel"]), level = int.Parse(data["Level"]);
+                    int lastLevel = int.Parse(lastLevelValue), level = int.Parse(levelValue);
                     if (lastLevel != level)
                     {
                         GameHost.AddNotify(String.Format(Utility.Language["LevelUp"], lastLevel, level));
@@ -106,28 +102,19 @@ namespace PPDSingle
             }
         }
 
-        void grs_Returned(object sender, EventArgs e)
+        void Grs_Returned(object sender, EventArgs e)
         {
-            if (this.Returned != null)
-            {
-                this.Returned.Invoke(this, EventArgs.Empty);
-            }
+            this.Returned?.Invoke(this, EventArgs.Empty);
         }
 
-        void grs_Retryed(object sender, EventArgs e)
+        void Grs_Retryed(object sender, EventArgs e)
         {
-            if (this.Retryed != null)
-            {
-                this.Retryed.Invoke(this, EventArgs.Empty);
-            }
+            this.Retryed?.Invoke(this, EventArgs.Empty);
         }
 
-        void grs_Replayed(object sender, EventArgs e)
+        void Grs_Replayed(object sender, EventArgs e)
         {
-            if (this.Replayed != null)
-            {
-                this.Replayed.Invoke(this, EventArgs.Empty);
-            }
+            this.Replayed?.Invoke(this, EventArgs.Empty);
         }
 
         /// <summary>

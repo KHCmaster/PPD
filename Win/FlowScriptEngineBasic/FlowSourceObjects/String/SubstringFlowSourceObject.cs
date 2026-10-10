@@ -33,7 +33,7 @@ namespace FlowScriptEngineBasic.FlowSourceObjects.String
                 if (A != null)
                 {
                     SetValue(nameof(Index));
-                    return A.Substring(Index);
+                    return A[Index..];
                 }
                 return null;
             }

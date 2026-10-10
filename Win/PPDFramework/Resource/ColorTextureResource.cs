@@ -1,15 +1,23 @@
 ﻿using PPDFramework.Texture;
-using SharpDX;
+using System.Numerics;
+using PPDMath;
+using Color4 = Vortice.Mathematics.Color4;
+using Color = Vortice.Mathematics.Color;
 
 namespace PPDFramework.Resource
 {
     /// <summary>
     /// 色のテクスチャリソースクラスです
     /// </summary>
-    public class ColorTextureResource : ColorTextureResourceBase
+    /// <remarks>
+    /// コンストラクタです
+    /// </remarks>
+    /// <param name="device"></param>
+    /// <param name="color"></param>
+    public class ColorTextureResource(PPDDevice device, Color4 color) : ColorTextureResourceBase
     {
-        TextureBase texture;
-        Color4 color;
+        readonly TextureBase texture = device.GetModule<ColorTextureAllcator>().CreateTexture(color);
+        readonly Color4 color = color;
 
         /// <summary>
         /// テクスチャを取得します
@@ -31,25 +39,6 @@ namespace PPDFramework.Resource
             {
                 return color;
             }
-        }
-
-        /// <summary>
-        /// コンストラクタです
-        /// </summary>
-        /// <param name="device"></param>
-        /// <param name="color"></param>
-        public ColorTextureResource(PPDDevice device, Color4 color)
-        {
-            this.color = color;
-            texture = device.GetModule<ColorTextureAllcator>().CreateTexture(color);
-        }
-
-        /// <summary>
-        /// デストラクタ
-        /// </summary>
-        ~ColorTextureResource()
-        {
-            Dispose();
         }
 
         /// <summary>

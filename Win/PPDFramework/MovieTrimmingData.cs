@@ -103,7 +103,7 @@
             return GetTrimming(Bottom, height);
         }
 
-        private float GetTrimming(float ratio_or_pixel, float value)
+        private static float GetTrimming(float ratio_or_pixel, float value)
         {
             if (IsRatio(ratio_or_pixel))
             {
@@ -112,7 +112,7 @@
             return ratio_or_pixel;
         }
 
-        private bool IsRatio(float trim)
+        private static bool IsRatio(float trim)
         {
             return -1 < trim && trim < 1;
         }

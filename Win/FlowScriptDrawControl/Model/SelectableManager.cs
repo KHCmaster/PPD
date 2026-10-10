@@ -5,20 +5,20 @@ namespace FlowScriptDrawControl.Model
 {
     public class SelectableManager
     {
-        List<Selectable> selectedSelectables;
+        readonly List<Selectable> selectedSelectables;
 
         public event Action SelectionChanged;
 
         public SelectableManager()
         {
-            selectedSelectables = new List<Selectable>();
+            selectedSelectables = [];
         }
 
         public Selectable[] SelectedSelectables
         {
             get
             {
-                return selectedSelectables.ToArray();
+                return [.. selectedSelectables];
             }
         }
 
@@ -45,9 +45,8 @@ namespace FlowScriptDrawControl.Model
 
         public void RemoveSelect(Selectable selectable)
         {
-            if (selectedSelectables.Contains(selectable))
+            if (selectedSelectables.Remove(selectable))
             {
-                selectedSelectables.Remove(selectable);
                 selectable.IsSelected = false;
                 OnSelectionChanged();
             }

@@ -19,7 +19,7 @@ namespace PPDExpansion
         protected override void OnStartup(StartupEventArgs e)
         {
             AppDomain.CurrentDomain.FirstChanceException +=
-           (object source, FirstChanceExceptionEventArgs ee) =>
+           (source, ee) =>
            {
                Console.WriteLine("FirstChanceException event raised in {0}: {1}",
                    AppDomain.CurrentDomain.FriendlyName, ee.Exception.Message);

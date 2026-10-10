@@ -6,20 +6,20 @@ namespace PPDFramework
         where T : struct
         where V : class
     {
-        Dictionary<T, ArrayTree<T, V>> subtrees;
+        readonly Dictionary<T, ArrayTree<T, V>> subtrees;
         private V value;
-        private int depth;
-        private ArrayTree<T, V> parent;
+        private readonly int depth;
+        private readonly ArrayTree<T, V> parent;
 
 
         public ArrayTree()
         {
-            subtrees = new Dictionary<T, ArrayTree<T, V>>();
+            subtrees = [];
         }
 
         private ArrayTree(ArrayTree<T, V> parent, int depth)
         {
-            subtrees = new Dictionary<T, ArrayTree<T, V>>();
+            subtrees = [];
             this.parent = parent;
             this.depth = depth;
         }
@@ -49,10 +49,8 @@ namespace PPDFramework
         public void Remove(T[] array)
         {
             var existTree = GetExistTree(array, 0);
-            if (existTree != null)
-            {
-                existTree.subtrees.Remove(array[existTree.depth - 1]);
-            }
+            // 見つけた木を親から外す（元は見つけた木の子から外していて、消えなかった）
+            existTree?.parent?.subtrees.Remove(array[existTree.depth - 1]);
         }
 
         public V Find(T[] array)

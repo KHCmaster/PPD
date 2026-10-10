@@ -9,15 +9,12 @@ namespace FlowScriptEnginePPD.FlowSourceObjects
     {
         public override object GetPropertyValue(string propertyName)
         {
-            switch (propertyName)
+            return propertyName switch
             {
-                case "CurrentBPM":
-                    return CurrentBPM;
-                case "TargetBPM":
-                    return TargetBPM;
-                default:
-                    return null;
-            }
+                "CurrentBPM" => CurrentBPM,
+                "TargetBPM" => TargetBPM,
+                _ => null,
+            };
         }
 
         protected override void SetPropertyValue(string propertyName, object value)

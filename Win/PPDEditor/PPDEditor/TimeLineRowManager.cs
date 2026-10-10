@@ -4,8 +4,8 @@ namespace PPDEditor
 {
     public class TimeLineRowManager
     {
-        private RowItem limitedRow;
-        private RowItem normalRow;
+        private readonly RowItem limitedRow;
+        private readonly RowItem normalRow;
         private RowItem currentRow;
         private bool isLimited;
 
@@ -20,7 +20,7 @@ namespace PPDEditor
         {
             get
             {
-                return currentRow.RowOrders.Where(r => currentRow.RowVisibilities[r]).ToArray();
+                return [.. currentRow.RowOrders.Where(r => currentRow.RowVisibilities[r])];
             }
         }
 

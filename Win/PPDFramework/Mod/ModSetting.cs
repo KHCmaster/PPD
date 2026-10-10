@@ -3,7 +3,13 @@
     /// <summary>
     /// MODの設定を扱うクラスです。
     /// </summary>
-    public abstract class ModSetting
+    /// <remarks>
+    /// コンストラクタです。
+    /// </remarks>
+    /// <param name="key"></param>
+    /// <param name="name"></param>
+    /// <param name="description"></param>
+    public abstract class ModSetting(string key, string name, string description)
     {
         /// <summary>
         /// キーを取得します。
@@ -12,7 +18,7 @@
         {
             get;
             private set;
-        }
+        } = key;
 
         /// <summary>
         /// 名前を取得します。
@@ -21,7 +27,7 @@
         {
             get;
             private set;
-        }
+        } = name;
 
         /// <summary>
         /// 説明を取得します。
@@ -30,7 +36,7 @@
         {
             get;
             private set;
-        }
+        } = description;
 
         /// <summary>
         /// デフォルト値を取得します。
@@ -49,19 +55,6 @@
             {
                 return null;
             }
-        }
-
-        /// <summary>
-        /// コンストラクタです。
-        /// </summary>
-        /// <param name="key"></param>
-        /// <param name="name"></param>
-        /// <param name="description"></param>
-        protected ModSetting(string key, string name, string description)
-        {
-            Key = key;
-            Name = name;
-            Description = description;
         }
 
         /// <summary>

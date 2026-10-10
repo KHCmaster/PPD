@@ -5,7 +5,6 @@ using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
-using System.Security.Permissions;
 
 namespace DirectShow
 {
@@ -36,8 +35,8 @@ namespace DirectShow
         public const int TIME_PERIODIC = 0x0001;
         public const object NULL = null;
 
-        public static void _TRACE(string _message) { if (!string.IsNullOrEmpty(_message)) Trace.WriteLine(_message); }
-        public static void TRACE(string _message) { if (!string.IsNullOrEmpty(_message)) _message += "\n"; API.OutputDebugString(_message); }
+        public static void TraceWriteLine(string _message) { if (!string.IsNullOrEmpty(_message)) Trace.WriteLine(_message); }
+        public static void TRACE(string _message) { if (!string.IsNullOrEmpty(_message)) _message += "\n"; NativeMethods.OutputDebugString(_message); }
 
         public static void TRACE_ENTER()
         {
@@ -46,7 +45,7 @@ namespace DirectShow
         }
         public static bool SUCCEEDED(int hr) { return (hr >= 0); }
         public static bool FAILED(int hr) { return (hr < 0); }
-        public static void ASSERT(object _object) { if (_object is BOOL) Debug.Assert((bool)_object); if (_object is HRESULT) Debug.Assert((bool)_object); else if (_object is bool) Debug.Assert((bool)_object); else Debug.Assert(_object != null); }
+        public static void ASSERT(object _object) { if (_object is BOOL) Debug.Assert((bool)_object); if (_object is HRESULT) Debug.Assert((bool)_object); else if (_object is bool v) Debug.Assert(v); else Debug.Assert(_object != null); }
         public static int HIWORD(int _value) { return ((_value >> 16) & 0xffff); }
         public static int LOWORD(int _value) { return (_value & 0xffff); }
         public const long MAX_LONG = 0x7FFFFFFFFFFFFFFF;
@@ -72,7 +71,9 @@ namespace DirectShow
 
         #region HRESULT
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "Win32 の HRESULT の名前に合わせる")]
         public static HRESULT S_OK { get { return (HRESULT)0; } }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "Win32 の HRESULT の名前に合わせる")]
         public static HRESULT S_FALSE { get { return (HRESULT)1; } }
         public static HRESULT NOERROR { get { return S_OK; } }
         public static HRESULT E_INVALIDARG { get { unchecked { return (HRESULT)0x80070057; } } }
@@ -110,22 +111,22 @@ namespace DirectShow
 
         #region API
 
-        public static class API
+        internal static class NativeMethods
         {
             [DllImport("kernel32.dll", EntryPoint = "OutputDebugStringW", CharSet = CharSet.Unicode)]
-            public static extern void OutputDebugString(string _text);
+            internal static extern void OutputDebugString(string _text);
 
             [DllImport("kernel32.dll", EntryPoint = "RtlMoveMemory")]
-            public static extern void CopyMemory(IntPtr Destination, IntPtr Source, [MarshalAs(UnmanagedType.U4)] int Length);
+            internal static extern void CopyMemory(IntPtr Destination, IntPtr Source, [MarshalAs(UnmanagedType.U4)] int Length);
 
             [DllImport("ole32.dll")]
-            public static extern int CreateBindCtx(int reserved, out IBindCtx ppbc);
+            internal static extern int CreateBindCtx(int reserved, out IBindCtx ppbc);
 
             [DllImport("ole32.dll", CharSet = CharSet.Unicode)]
-            public static extern int MkParseDisplayName(IBindCtx pbc, string szUserName, ref int pchEaten, out IMoniker ppmk);
+            internal static extern int MkParseDisplayName(IBindCtx pbc, string szUserName, ref int pchEaten, out IMoniker ppmk);
 
             [DllImport("olepro32.dll")]
-            public static extern int OleCreatePropertyFrame(
+            internal static extern int OleCreatePropertyFrame(
                 IntPtr hwndOwner,
                 int x,
                 int y,
@@ -139,6 +140,12 @@ namespace DirectShow
                 int dwReserved,
                 IntPtr lpvReserved
                 );
+
+            [DllImport("quartz.dll", EntryPoint = "AMGetErrorText", CharSet = CharSet.Auto)]
+            internal static extern uint AMGetErrorText(int hr, IntPtr sText, [In] uint _length);
+
+            [DllImport("quartz.dll", CharSet = CharSet.Unicode, ExactSpelling = true, EntryPoint = "AMGetErrorTextW")]
+            internal static extern int AMGetErrorText(int hr, System.Text.StringBuilder buf, int max);
         }
 
         #endregion
@@ -148,7 +155,7 @@ namespace DirectShow
     {
         #region Variables
 
-        private bool m_Result = false;
+        private readonly bool m_Result = false;
 
         #endregion
 
@@ -160,7 +167,7 @@ namespace DirectShow
 
         public BOOL(int _value)
         {
-            m_Result = _value == 0 ? false : true;
+            m_Result = _value != 0;
         }
 
         public BOOL(bool _value)
@@ -179,9 +186,9 @@ namespace DirectShow
 
         public int CompareTo(object obj)
         {
-            if (obj is BOOL)
+            if (obj is BOOL bOOL)
             {
-                return m_Result.CompareTo(((BOOL)obj).m_Result);
+                return m_Result.CompareTo(bOOL.m_Result);
             }
             return m_Result.CompareTo(obj);
         }
@@ -201,9 +208,9 @@ namespace DirectShow
 
         public override bool Equals(object obj)
         {
-            if (obj is BOOL)
+            if (obj is BOOL bOOL)
             {
-                return m_Result.Equals(((BOOL)obj).m_Result);
+                return m_Result.Equals(bOOL.m_Result);
             }
             return m_Result.Equals(obj);
         }
@@ -317,7 +324,7 @@ namespace DirectShow
     {
         #region Variables
 
-        private int m_Result = 0;
+        private readonly int m_Result = 0;
 
         #endregion
 
@@ -362,9 +369,9 @@ namespace DirectShow
 
         public int CompareTo(object obj)
         {
-            if (obj is HRESULT)
+            if (obj is HRESULT hRESULT)
             {
-                return m_Result.CompareTo(((HRESULT)obj).m_Result);
+                return m_Result.CompareTo(hRESULT.m_Result);
             }
             return m_Result.CompareTo(obj);
         }
@@ -384,9 +391,9 @@ namespace DirectShow
 
         public override bool Equals(object obj)
         {
-            if (obj is HRESULT)
+            if (obj is HRESULT hRESULT)
             {
-                return m_Result.Equals(((HRESULT)obj).m_Result);
+                return m_Result.Equals(hRESULT.m_Result);
             }
             return m_Result.Equals(obj);
         }
@@ -418,7 +425,7 @@ namespace DirectShow
             IntPtr _ptr = Marshal.AllocCoTaskMem((int)_length);
             try
             {
-                if (AMGetErrorText(m_Result, _ptr, _length) > 0)
+                if (NativeMethods.AMGetErrorText(m_Result, _ptr, _length) > 0)
                 {
                     _text = Marshal.PtrToStringAuto(_ptr);
                 }
@@ -464,13 +471,6 @@ namespace DirectShow
                     ));
             }
         }
-
-        #endregion
-
-        #region Imports
-
-        [DllImport("quartz.dll", EntryPoint = "AMGetErrorText", CharSet = CharSet.Auto)]
-        private static extern uint AMGetErrorText(int hr, IntPtr sText, [In] uint _length);
 
         #endregion
 
@@ -530,13 +530,13 @@ namespace DirectShow
 
         private const ushort m_usB = 0x0000;
         private const ushort m_usC = 0x0010;
-        private static readonly byte[] m_abtD = { 0x80, 0x00, 0x00, 0xAA, 0x00, 0x38, 0x9B, 0x71 };
+        private static readonly byte[] m_abtD = [0x80, 0x00, 0x00, 0xAA, 0x00, 0x38, 0x9B, 0x71];
 
         #endregion
 
         #region Variables
 
-        private uint m_uiFourcc = 0;
+        private readonly uint m_uiFourcc = 0;
 
         #endregion
 
@@ -558,7 +558,7 @@ namespace DirectShow
         public FOURCC(Guid _guid)
         {
             byte[] _data = _guid.ToByteArray();
-            byte[] _result = { _data[0], _data[1], _data[2], _data[3] };
+            byte[] _result = [_data[0], _data[1], _data[2], _data[3]];
             m_uiFourcc = BitConverter.ToUInt32(_result, 0);
         }
 
@@ -631,9 +631,9 @@ namespace DirectShow
 
         public override bool Equals(object obj)
         {
-            if (obj is FOURCC)
+            if (obj is FOURCC fOURCC)
             {
-                return m_uiFourcc.Equals(((FOURCC)obj).m_uiFourcc);
+                return m_uiFourcc.Equals(fOURCC.m_uiFourcc);
             }
             return m_uiFourcc.Equals(obj);
         }
@@ -672,9 +672,9 @@ namespace DirectShow
 
         public int CompareTo(object obj)
         {
-            if (obj is FOURCC)
+            if (obj is FOURCC fOURCC)
             {
-                return m_uiFourcc.CompareTo(((FOURCC)obj).m_uiFourcc);
+                return m_uiFourcc.CompareTo(fOURCC.m_uiFourcc);
             }
             return m_uiFourcc.CompareTo(obj);
         }
@@ -815,8 +815,6 @@ namespace DirectShow
 
     #region Base COM object
 
-    [SecurityPermission(SecurityAction.InheritanceDemand, UnmanagedCode = true)]
-    [SecurityPermission(SecurityAction.Demand, UnmanagedCode = true)]
     public class DSObject<T> : COMHelper, IDisposable where T : class
     {
         #region Variables
@@ -917,7 +915,7 @@ namespace DirectShow
 
         ~DSObject()
         {
-            Dispose();
+            Dispose(false);
         }
 
         #endregion
@@ -956,7 +954,13 @@ namespace DirectShow
 
         #region IDisposable Members
 
-        public virtual void Dispose()
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
         {
             if (m_bReleaseOnDestroy && m_pUnknown != null)
             {
@@ -982,7 +986,7 @@ namespace DirectShow
                 IntPtr _interface = IntPtr.Zero;
                 try
                 {
-                    int hr = Marshal.QueryInterface(_this, ref _guid, out _interface);
+                    int hr = Marshal.QueryInterface(_this, in _guid, out _interface);
 
                     if (SUCCEEDED(hr) && _interface != IntPtr.Zero)
                     {
@@ -1027,7 +1031,7 @@ namespace DirectShow
                 IntPtr _interface = IntPtr.Zero;
                 try
                 {
-                    return SUCCEEDED(Marshal.QueryInterface(_this, ref _guid, out _interface));
+                    return SUCCEEDED(Marshal.QueryInterface(_this, in _guid, out _interface));
                 }
                 finally
                 {
@@ -1129,10 +1133,7 @@ namespace DirectShow
             get
             {
                 Guid _guid = Guid.Empty;
-                if (m_pUnknown != null)
-                {
-                    m_pUnknown.GetClassID(out _guid);
-                }
+                m_pUnknown?.GetClassID(out _guid);
                 return _guid;
 
             }
@@ -1148,10 +1149,7 @@ namespace DirectShow
             get
             {
                 string _out = "";
-                if (m_pUnknown != null)
-                {
-                    m_pUnknown.GetDisplayName(null, null, out _out);
-                }
+                m_pUnknown?.GetDisplayName(null, null, out _out);
                 return _out;
             }
         }
@@ -1182,10 +1180,10 @@ namespace DirectShow
             IBindCtx _context = null;
             try
             {
-                if (SUCCEEDED(API.CreateBindCtx(0, out _context)))
+                if (SUCCEEDED(NativeMethods.CreateBindCtx(0, out _context)))
                 {
                     int n = 0;
-                    ASSERT(SUCCEEDED(API.MkParseDisplayName(_context, _moniker, ref n, out m_pUnknown)));
+                    ASSERT(SUCCEEDED(NativeMethods.MkParseDisplayName(_context, _moniker, ref n, out m_pUnknown)));
                 }
             }
             finally
@@ -1250,7 +1248,6 @@ namespace DirectShow
                 if (_property != null)
                 {
                     Marshal.ReleaseComObject(_property);
-                    _property = null;
                 }
             }
             return null;
@@ -1263,7 +1260,7 @@ namespace DirectShow
     {
         #region Variabless
 
-        protected List<T> m_Objects = new List<T>();
+        protected List<T> m_Objects = [];
         protected IEnumMoniker m_pEnumMoniker = null;
         protected Guid m_Category = Guid.Empty;
 
@@ -1351,7 +1348,7 @@ namespace DirectShow
 
         #region IDisposable Members
 
-        public override void Dispose()
+        protected override void Dispose(bool disposing)
         {
             if (m_pEnumMoniker != null)
             {
@@ -1365,7 +1362,7 @@ namespace DirectShow
                 m_Objects.RemoveAt(0);
             }
 
-            base.Dispose();
+            base.Dispose(disposing);
         }
 
         #endregion
@@ -1431,7 +1428,7 @@ namespace DirectShow
         #endregion
     }
 
-    public class DSCategory : DSEnumerator<DSDevice>
+    public class DSCategory(Guid _category) : DSEnumerator<DSDevice>(_category)
     {
         #region Properties
 
@@ -1475,14 +1472,7 @@ namespace DirectShow
         }
 
         #endregion
-
         #region Constructor
-
-        public DSCategory(Guid _category)
-            : base(_category)
-        {
-
-        }
 
         #endregion
     }
@@ -1491,15 +1481,10 @@ namespace DirectShow
 
     #region Pin Helper
 
-    public class DSPin : DSObject<IPin>
+    public class DSPin(IPin _pin) : DSObject<IPin>(_pin)
     {
+
         #region Constructor
-
-        public DSPin(IPin _pin)
-            : base(_pin)
-        {
-
-        }
 
         #endregion
 
@@ -1624,8 +1609,8 @@ namespace DirectShow
                 {
                     if (SUCCEEDED(m_pUnknown.EnumMediaTypes(out IEnumMediaTypes pEnum)))
                     {
-                        IntPtr ulMediaCount = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(uint)));
-                        IntPtr pTypes = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(IntPtr)));
+                        IntPtr ulMediaCount = Marshal.AllocCoTaskMem(Marshal.SizeOf<uint>());
+                        IntPtr pTypes = Marshal.AllocCoTaskMem(Marshal.SizeOf<nint>());
 
                         try
                         {
@@ -1642,7 +1627,7 @@ namespace DirectShow
                                 {
                                     if (_ptrStructure != IntPtr.Zero)
                                     {
-                                        _list.Add((AMMediaType)Marshal.PtrToStructure(_ptrStructure, typeof(AMMediaType)));
+                                        _list.Add(Marshal.PtrToStructure<AMMediaType>(_ptrStructure));
                                     }
                                 }
                                 finally
@@ -1671,7 +1656,7 @@ namespace DirectShow
             get
             {
                 Guid _result = Guid.Empty;
-                int iSize = Marshal.SizeOf(typeof(Guid));
+                int iSize = Marshal.SizeOf<Guid>();
                 IntPtr ipOut = Marshal.AllocCoTaskMem(iSize);
                 try
                 {
@@ -1683,14 +1668,13 @@ namespace DirectShow
                         int hr = pKs.Get(g, (int)AMPropertyPin.Category, IntPtr.Zero, 0, ipOut, iSize, out int cbBytes);
                         if (SUCCEEDED(hr))
                         {
-                            _result = (Guid)Marshal.PtrToStructure(ipOut, typeof(Guid));
+                            _result = Marshal.PtrToStructure<Guid>(ipOut);
                         }
                     }
                 }
                 finally
                 {
                     Marshal.FreeCoTaskMem(ipOut);
-                    ipOut = IntPtr.Zero;
                 }
                 return _result;
             }
@@ -1820,7 +1804,6 @@ namespace DirectShow
                 if (_pin)
                 {
                     _pin.Dispose();
-                    _pin = null;
                 }
             }
         }
@@ -2146,7 +2129,7 @@ namespace DirectShow
                 {
                     pProp.GetPages(out DsCAUUID pCAUUID);
                     var oDevice = (object)m_pUnknown;
-                    int hr = API.OleCreatePropertyFrame(_hwnd, 0, 0, Name, 1, ref oDevice, pCAUUID.cElems, pCAUUID.pElems, 0, 0, IntPtr.Zero);
+                    int hr = NativeMethods.OleCreatePropertyFrame(_hwnd, 0, 0, Name, 1, ref oDevice, pCAUUID.cElems, pCAUUID.pElems, 0, 0, IntPtr.Zero);
                     if (hr < 0) Marshal.ThrowExceptionForHR(hr);
                     Marshal.FreeCoTaskMem(pCAUUID.pElems);
                     pProp = null;
@@ -2258,10 +2241,8 @@ namespace DirectShow
 
         public DSPin RemoveFiltersChain()
         {
-            DSPin _input = null;
-            DSPin _output = null;
-            _output = RemoveFiltersChain(PinDirection.Output);
-            _input = RemoveFiltersChain(PinDirection.Input);
+            DSPin _output = RemoveFiltersChain(PinDirection.Output);
+            DSPin _input = RemoveFiltersChain(PinDirection.Input);
             if (_output != null) return _output;
             return _input;
         }
@@ -2653,15 +2634,12 @@ namespace DirectShow
 
         #region Overridden Methods
 
-        public override void Dispose()
+        protected override void Dispose(bool disposing)
         {
             m_SampleGrabber = (ISampleGrabber)QueryInterface(typeof(ISampleGrabber));
-            if (m_SampleGrabber != null)
-            {
-                m_SampleGrabber.SetCallback(null, 0);
-                m_SampleGrabber = null;
-            }
-            base.Dispose();
+            m_SampleGrabber?.SetCallback(null, 0);
+            m_SampleGrabber = null;
+            base.Dispose(disposing);
         }
 
         #endregion

@@ -9,27 +9,18 @@ namespace FlowScriptEnginePPDEditor.FlowSourceObjects.Mark
     {
         public override object GetPropertyValue(string propertyName)
         {
-            switch (propertyName)
+            return propertyName switch
             {
-                case "ID":
-                    return ID;
-                case "IsLong":
-                    return IsLong;
-                case "Parameters":
-                    return Parameters;
-                case "Position":
-                    return Position;
-                case "ReleaseTime":
-                    return ReleaseTime;
-                case "Rotation":
-                    return Rotation;
-                case "Time":
-                    return Time;
-                case "Type":
-                    return Type;
-                default:
-                    return null;
-            }
+                "ID" => ID,
+                "IsLong" => IsLong,
+                "Parameters" => Parameters,
+                "Position" => Position,
+                "ReleaseTime" => ReleaseTime,
+                "Rotation" => Rotation,
+                "Time" => Time,
+                "Type" => Type,
+                _ => null,
+            };
         }
 
         protected override void SetPropertyValue(string propertyName, object value)

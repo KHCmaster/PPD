@@ -4,10 +4,10 @@ namespace FlowScriptEngineBasic
 {
     public class ToolTipText : IToolTipText
     {
-        private string toolTipText;
-        private string summary;
-        private string remark;
-        private string key;
+        private readonly string toolTipText;
+        private readonly string summary;
+        private readonly string remark;
+        private readonly string key;
 
         public ToolTipText(string summary)
         {

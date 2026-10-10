@@ -35,7 +35,8 @@ namespace FlowScriptEngineBasic.FlowSourceObjects.String
                 SetValue(nameof(Args));
                 if (A != null && Args != null)
                 {
-                    return System.String.Format(A, Args.ToArray());
+                    // 書式指定のない float / double は .NET Framework と同じ書式にする
+                    return System.String.Format(LegacyNumberFormat.CurrentCulture, A, Args.ToArray());
                 }
                 return "";
             }

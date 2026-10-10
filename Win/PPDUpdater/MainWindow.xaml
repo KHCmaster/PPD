@@ -1,0 +1,91 @@
+﻿<Window x:Class="PPDUpdater.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:PPDUpdater.ViewModels"
+        mc:Ignorable="d" d:DataContext="{d:DesignInstance Type=vm:MainWindowViewModel}"
+        Title="PPDUpdater" Width="769" SizeToContent="Height" ResizeMode="CanMinimize" Icon="ppdupdatericon.ico"
+        WindowState="Minimized" ShowInTaskbar="False" ShowActivated="False"
+        Loaded="Window_Loaded" Closing="Window_Closing">
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVisibility" />
+        <!-- DataGrid の列は見た目のツリーにないので、DataContext をここから受け取る -->
+        <vm:BindingProxy x:Key="Proxy" Data="{Binding}" />
+    </Window.Resources>
+    <!-- AutomationId は UI の自動テスト（UITests）で使う -->
+    <DockPanel>
+        <Menu DockPanel.Dock="Top">
+            <MenuItem AutomationProperties.AutomationId="FileMenu" Header="{Binding Texts[File]}">
+                <MenuItem AutomationProperties.AutomationId="FinishMenuItem" Header="{Binding Texts[Finish]}" Command="{Binding CloseCommand}" />
+            </MenuItem>
+            <MenuItem AutomationProperties.AutomationId="LanguageMenu" Header="{Binding Texts[Language]}" ItemsSource="{Binding Languages}">
+                <MenuItem.ItemContainerStyle>
+                    <Style TargetType="MenuItem">
+                        <Setter Property="IsChecked" Value="{Binding IsChecked}" />
+                        <Setter Property="Command" Value="{Binding DataContext.SelectLanguageCommand, RelativeSource={RelativeSource AncestorType=MenuItem}}" />
+                        <Setter Property="CommandParameter" Value="{Binding}" />
+                        <Setter Property="AutomationProperties.Name" Value="{Binding DisplayName}" />
+                    </Style>
+                </MenuItem.ItemContainerStyle>
+                <MenuItem.ItemTemplate>
+                    <DataTemplate>
+                        <!-- 名前の「_」がアクセスキーとして扱われないように、TextBlock で表示する -->
+                        <TextBlock Text="{Binding DisplayName}" />
+                    </DataTemplate>
+                </MenuItem.ItemTemplate>
+            </MenuItem>
+        </Menu>
+        <StackPanel Margin="12,4,12,12">
+            <!-- 更新の確認中だけ表示する -->
+            <StackPanel Orientation="Horizontal" Height="18">
+                <StackPanel.Style>
+                    <Style TargetType="StackPanel">
+                        <Setter Property="Visibility" Value="Hidden" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsChecking}" Value="True">
+                                <Setter Property="Visibility" Value="Visible" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </StackPanel.Style>
+                <ProgressBar IsIndeterminate="True" Width="60" Height="10" VerticalAlignment="Center" />
+                <TextBlock Text="{Binding Texts[Label3]}" Margin="6,0,0,0" VerticalAlignment="Center" />
+            </StackPanel>
+            <DataGrid ItemsSource="{Binding Rows}" Height="205" AutoGenerateColumns="False" IsReadOnly="True" CanUserAddRows="False"
+                      CanUserDeleteRows="False" CanUserResizeColumns="False" CanUserResizeRows="False" CanUserSortColumns="False"
+                      HeadersVisibility="Column">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="{Binding Data.Texts[Header1], Source={StaticResource Proxy}}" Binding="{Binding Version}" Width="*" />
+                    <DataGridTextColumn Header="{Binding Data.Texts[Header2], Source={StaticResource Proxy}}" Binding="{Binding StateText}" Width="*" />
+                    <DataGridTemplateColumn Header="{Binding Data.Texts[Download], Source={StaticResource Proxy}}" Width="*">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <ProgressBar Value="{Binding DownloadProgress, Mode=OneWay}" Maximum="100" Margin="2" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="{Binding Data.Texts[Install], Source={StaticResource Proxy}}" Width="*">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <ProgressBar Value="{Binding InstallProgress, Mode=OneWay}" Maximum="100" Margin="2" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+            <DockPanel Margin="0,7,0,0">
+                <Button AutomationProperties.AutomationId="CloseButton" DockPanel.Dock="Right" Content="{Binding Texts[Button1]}" Width="75" Command="{Binding CloseCommand}" />
+                <TextBlock Text="{Binding Texts[Label1]}" VerticalAlignment="Center" />
+                <TextBlock AutomationProperties.AutomationId="CurrentVersionText" Text="{Binding CurrentVersion}" Margin="40,0,0,0" VerticalAlignment="Center" />
+            </DockPanel>
+            <DockPanel Margin="0,10,0,0">
+                <Button DockPanel.Dock="Right" VerticalAlignment="Top" Content="{Binding Texts[Button2]}" AutomationProperties.AutomationId="LogButton" MinWidth="106" Margin="6,0,0,0" Command="{Binding ToggleLogCommand}" />
+                <GroupBox Header="{Binding Texts[GroupBox1]}">
+                    <TextBox AutomationProperties.AutomationId="LogTextBox" Text="{Binding LogText, Mode=OneWay}" Height="95" Margin="2" IsReadOnly="True" AcceptsReturn="True" TextWrapping="Wrap"
+                             VerticalScrollBarVisibility="Auto" Visibility="{Binding IsLogVisible, Converter={StaticResource BoolToVisibility}}" />
+                </GroupBox>
+            </DockPanel>
+        </StackPanel>
+    </DockPanel>
+</Window>

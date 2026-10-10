@@ -4,26 +4,19 @@ using System.Linq;
 
 namespace FlowScriptEngine
 {
-    public class FunctionScope
+    public class FunctionScope(ScopeType scopeType)
     {
         public event Action<FunctionScopeArg> EventInvoked;
         public event Action<FunctionScopeArg> PreviewEventInvoked;
-        Dictionary<string, object> dict;
+        readonly Dictionary<string, object> dict = [];
 
-        private List<FunctionScope> childScopes;
+        private readonly List<FunctionScope> childScopes = [];
 
         public ScopeType ScopeType
         {
             get;
             private set;
-        }
-
-        public FunctionScope(ScopeType scopeType)
-        {
-            ScopeType = scopeType;
-            childScopes = new List<FunctionScope>();
-            dict = new Dictionary<string, object>();
-        }
+        } = scopeType;
 
         internal int Id
         {
@@ -47,7 +40,7 @@ namespace FlowScriptEngine
         {
             get
             {
-                return dict.ToArray();
+                return [.. dict];
             }
         }
 
@@ -59,21 +52,17 @@ namespace FlowScriptEngine
 
         public void SetValue(string name, object value)
         {
-            if (dict.ContainsKey(name))
+            if (!dict.TryAdd(name, value))
             {
                 dict[name] = value;
-            }
-            else
-            {
-                dict.Add(name, value);
             }
         }
 
         public object GetValue(string name)
         {
-            if (dict.ContainsKey(name))
+            if (dict.TryGetValue(name, out object value))
             {
-                return dict[name];
+                return value;
             }
             else
             {
@@ -136,20 +125,17 @@ namespace FlowScriptEngine
                 {
                     bool anyHandled = false;
                     int currentEndCount = 0;
-                    Action childInvokeEnd = () =>
+                    void childInvokeEnd()
                     {
                         if (!anyHandled)
                         {
                             var scopeArg2 = new FunctionScopeArg(eventName, arg, (e2) =>
                             {
-                                if (allEnd != null)
-                                {
-                                    allEnd.Invoke(anyHandled | e2.Handled);
-                                }
+                                allEnd?.Invoke(anyHandled | e2.Handled);
                             });
                             OnEventInvoked(scopeArg2);
                         }
-                    };
+                    }
                     if (childScopes.Count > 0)
                     {
                         foreach (FunctionScope child in childScopes)
@@ -160,14 +146,14 @@ namespace FlowScriptEngine
                                 currentEndCount++;
                                 if (currentEndCount == childScopes.Count)
                                 {
-                                    childInvokeEnd.Invoke();
+                                    childInvokeEnd();
                                 }
                             });
                         }
                     }
                     else
                     {
-                        childInvokeEnd.Invoke();
+                        childInvokeEnd();
                     }
                 }
             });
@@ -176,25 +162,47 @@ namespace FlowScriptEngine
 
         protected void OnPreviewEventInvoked(FunctionScopeArg arg)
         {
-            if (PreviewEventInvoked != null)
-            {
-                PreviewEventInvoked.Invoke(arg);
-            }
-            else
-            {
-                arg.OnEndInvoked();
-            }
+            Dispatch(PreviewEventInvoked, arg);
         }
 
         protected void OnEventInvoked(FunctionScopeArg arg)
         {
-            if (EventInvoked != null)
-            {
-                EventInvoked.Invoke(arg);
-            }
-            else
+            Dispatch(EventInvoked, arg);
+        }
+
+        /// <summary>
+        /// イベントを受けるもの（ノード）それぞれに渡し、すべてが終わったときに 1 回だけ次へ進めます。どれかが処理したら、処理したことにします。
+        /// </summary>
+        /// <remarks>
+        /// 以前は同じ引数をすべてに渡していたので、受けるものがそれぞれ次へ進め、子のスコープにイベントが何回も届いていた。
+        /// </remarks>
+        private static void Dispatch(Action<FunctionScopeArg> handlers, FunctionScopeArg arg)
+        {
+            if (handlers == null)
             {
                 arg.OnEndInvoked();
+                return;
+            }
+            var list = handlers.GetInvocationList();
+            if (list.Length == 1)
+            {
+                handlers(arg);
+                return;
+            }
+            var remaining = list.Length;
+            var handled = arg.Handled;
+            foreach (Action<FunctionScopeArg> handler in list)
+            {
+                handler(new FunctionScopeArg(arg.EventName, arg.Arg, e =>
+                {
+                    handled |= e.Handled;
+                    remaining--;
+                    if (remaining == 0)
+                    {
+                        arg.Handled = handled;
+                        arg.OnEndInvoked();
+                    }
+                }));
             }
         }
 

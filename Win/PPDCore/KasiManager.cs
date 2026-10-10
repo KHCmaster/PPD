@@ -3,6 +3,7 @@ using PPDFramework;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 
 namespace PPDCore
 {
@@ -11,42 +12,52 @@ namespace PPDCore
         public delegate void KasiChangeEventHandler(string kasi);
         public event KasiChangeEventHandler KasiChanged;
         float nexttime = float.MaxValue;
-        float starttime = float.MaxValue;
-        SortedList<float, string> pool = new SortedList<float, string>();
+        readonly float starttime = float.MaxValue;
+        readonly SortedList<float, string> pool = [];
         int index;
-        bool initialized;
+        readonly bool initialized;
         string kasi;
         public KasiManager(PPDGameUtility ppdgameutility)
         {
             var path = Path.Combine(ppdgameutility.SongInformation.DirectoryPath, "kasi.txt");
             if (File.Exists(path))
             {
-                using (StreamReader sr = new StreamReader(path))
+                using StreamReader sr = new(path);
+                var data = sr.ReadToEnd();
+                sr.Close();
+                data = data.Replace("\r\n", "\r").Replace("\r", "\n");
+                if (string.IsNullOrEmpty(data)) return;
+                var datas = data.Split('\n');
+                foreach (string eachdata in datas)
                 {
-                    var data = sr.ReadToEnd();
-                    sr.Close();
-                    data = data.Replace("\r\n", "\r").Replace("\r", "\n");
-                    if (string.IsNullOrEmpty(data)) return;
-                    var datas = data.Split('\n');
-                    foreach (string eachdata in datas)
+                    // 最初の「:」で時間と歌詞に分ける（歌詞の中の「:」で切らない）
+                    var temp = eachdata.Split(':', 2);
+                    try
                     {
-                        var temp = eachdata.Split(':');
-                        try
-                        {
-                            if (temp.Length >= 2) pool.Add(float.Parse(temp[0], CultureInfo.InvariantCulture), temp[1]);
-                            else pool.Add(float.Parse(temp[0], CultureInfo.InvariantCulture), "");
-                        }
-                        catch
-                        {
-                        }
+                        if (temp.Length >= 2) pool.Add(float.Parse(temp[0], CultureInfo.InvariantCulture), temp[1]);
+                        else pool.Add(float.Parse(temp[0], CultureInfo.InvariantCulture), "");
                     }
-                    if (pool.Count > 0)
+                    catch
                     {
-                        nexttime = pool.Keys[0];
-                        starttime = nexttime;
                     }
-                    initialized = true;
                 }
+                if (pool.Count > 0)
+                {
+                    nexttime = pool.Keys[0];
+                    starttime = nexttime;
+                }
+                initialized = true;
+            }
+        }
+
+        /// <summary>
+        /// 歌詞で使われる文字（重複なし）を取得します。
+        /// </summary>
+        public string LyricCharacters
+        {
+            get
+            {
+                return new string([.. string.Concat(pool.Values).Distinct()]);
             }
         }
 
@@ -59,7 +70,7 @@ namespace PPDCore
             set
             {
                 kasi = value;
-                if (KasiChanged != null) KasiChanged.Invoke(kasi);
+                KasiChanged?.Invoke(kasi);
             }
         }
 

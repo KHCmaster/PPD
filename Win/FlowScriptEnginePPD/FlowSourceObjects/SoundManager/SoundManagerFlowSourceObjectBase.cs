@@ -10,13 +10,13 @@ namespace FlowScriptEnginePPD.FlowSourceObjects.SoundManager
         protected override void OnInitialize()
         {
             base.OnInitialize();
-            if (Manager.Items.ContainsKey("SoundManager"))
+            if (Manager.Items.TryGetValue("SoundManager", out object soundManagerValue))
             {
-                soundManager = (ISoundManager)Manager.Items["SoundManager"];
+                soundManager = (ISoundManager)soundManagerValue;
             }
-            if (Manager.Items.ContainsKey("PlayRatio"))
+            if (Manager.Items.TryGetValue("PlayRatio", out object playRatioValue))
             {
-                playRatio = (double)Manager.Items["PlayRatio"];
+                playRatio = (double)playRatioValue;
             }
         }
     }

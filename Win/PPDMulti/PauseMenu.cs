@@ -1,7 +1,8 @@
 ﻿using PPDCore;
 using PPDFramework;
 using PPDShareComponent;
-using SharpDX;
+using System.Numerics;
+using PPDMath;
 using System;
 
 namespace PPDMulti
@@ -9,7 +10,7 @@ namespace PPDMulti
     /// <summary>
     /// 停止中の画面UI
     /// </summary>
-    public class PauseMenu : PauseMenuBase
+    public class PauseMenu(PPDDevice device) : PauseMenuBase(device)
     {
         enum PauseType
         {
@@ -41,10 +42,6 @@ namespace PPDMulti
         Button[] buttons;
         PauseType pausetype = PauseType.Resume;
 
-        public PauseMenu(PPDDevice device) : base(device)
-        {
-        }
-
         public override void Load()
         {
             buttons = new Button[2];
@@ -53,9 +50,9 @@ namespace PPDMulti
             {
                 buttons[i] = new Button(device, ResourceManager, Utility.Path, names[i])
                 {
-                    Position = new Vector2(400, 185 + 80 * i)
+                    Position = new Vector2(400, 185 + 80 * i),
+                    Selected = false
                 };
-                buttons[i].Selected = false;
                 this.AddChild(buttons[i]);
             }
             buttons[0].Selected = true;
@@ -89,19 +86,19 @@ namespace PPDMulti
             else if (inputInfo.IsPressed(ButtonType.Cross) || inputInfo.IsPressed(ButtonType.Start))
             {
                 // 再開
-                if (Resumed != null) Resumed.Invoke(this, EventArgs.Empty);
+                Resumed?.Invoke(this, EventArgs.Empty);
             }
             else if (inputInfo.IsPressed(ButtonType.Circle))
             {
                 // 再開
                 if (pausetype == PauseType.Resume)
                 {
-                    if (Resumed != null) Resumed.Invoke(this, EventArgs.Empty);
+                    Resumed?.Invoke(this, EventArgs.Empty);
                 }
                 // リターン
                 else if (pausetype == PauseType.Return)
                 {
-                    if (Returned != null) Returned.Invoke(this, EventArgs.Empty);
+                    Returned?.Invoke(this, EventArgs.Empty);
                 }
             }
             base.Update();

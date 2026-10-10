@@ -1,12 +1,8 @@
 ﻿namespace PPDEditor
 {
-    public class IDProvider
+    public class IDProvider(uint currentMax)
     {
-        uint nextID;
-        public IDProvider(uint currentMax)
-        {
-            nextID = currentMax + 1;
-        }
+        uint nextID = currentMax + 1;
 
         public uint Next()
         {

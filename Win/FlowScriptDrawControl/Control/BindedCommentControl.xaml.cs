@@ -52,7 +52,7 @@ namespace FlowScriptDrawControl.Control
         {
             InitializeComponent();
 
-            textBox.TextChanged += textBox_TextChanged;
+            textBox.TextChanged += TextBox_TextChanged;
             Loaded += BoundCommentControl_Loaded;
         }
 
@@ -76,7 +76,7 @@ namespace FlowScriptDrawControl.Control
             frame.Points.Add(new Point(0, height + mainGrid.Margin.Left * 2));
         }
 
-        void textBox_TextChanged(object sender, TextChangedEventArgs e)
+        void TextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             UpdateFrame();
             UpdateLayout();

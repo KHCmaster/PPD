@@ -5,7 +5,7 @@ using System.Windows.Interop;
 
 namespace FlowScriptDrawControl
 {
-    class Win32
+    class NativeMethods
     {
         [DllImport("user32.dll")]
         static extern int GetWindowLong(IntPtr hwnd, int index);
@@ -21,6 +21,10 @@ namespace FlowScriptDrawControl
         static extern IntPtr SendMessage(IntPtr hwnd, uint msg,
                    IntPtr wParam, IntPtr lParam);
 
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        internal static extern bool SetCursorPos(int x, int y);
+
         const int GWL_EXSTYLE = -20;
         const int WS_EX_DLGMODALFRAME = 0x0001;
         const int SWP_NOSIZE = 0x0001;
@@ -33,7 +37,7 @@ namespace FlowScriptDrawControl
         {
             IntPtr hwnd = new WindowInteropHelper(window).Handle;
             var extendedStyle = GetWindowLong(hwnd, GWL_EXSTYLE);
-            SetWindowLong(hwnd, GWL_EXSTYLE, extendedStyle | WS_EX_DLGMODALFRAME);
+            _ = SetWindowLong(hwnd, GWL_EXSTYLE, extendedStyle | WS_EX_DLGMODALFRAME);
             SetWindowPos(hwnd, IntPtr.Zero, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_FRAMECHANGED);
         }
     }

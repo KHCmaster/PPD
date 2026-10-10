@@ -1,0 +1,34 @@
+<forms:DockView x:Class="PPDEditor.LayerManager"
+                xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                xmlns:forms="clr-namespace:PPDEditor.Forms"
+                xmlns:controls="clr-namespace:PPDEditor.Controls"
+                xmlns:vm="clr-namespace:PPDEditor.ViewModels.Docks"
+                mc:Ignorable="d" d:DataContext="{d:DesignInstance Type=vm:LayerManagerViewModel}">
+    <ScrollViewer x:Name="scrollViewer" AutomationProperties.AutomationId="LayerArea" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Background="Transparent">
+        <ScrollViewer.ContextMenu>
+            <ContextMenu>
+                <MenuItem AutomationProperties.AutomationId="NewLayerMenuItem" Header="{Binding Texts[LMMenu1]}" Command="{Binding NewLayerCommand}" />
+            </ContextMenu>
+        </ScrollViewer.ContextMenu>
+        <Grid VerticalAlignment="Top">
+            <!-- 後ろのレイヤーほど上に並べる。ドラッグで並べ替える -->
+            <ItemsControl x:Name="layersPanel" ItemsSource="{Binding DisplayLayers}"
+                          MouseLeftButtonDown="Layers_MouseLeftButtonDown" MouseMove="Layers_MouseMove"
+                          MouseLeftButtonUp="Layers_MouseLeftButtonUp" LostMouseCapture="Layers_LostMouseCapture">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <controls:LayerDisplay />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            <!-- ドラッグで並べ替えるときに、つかんでいるレイヤーの絵と入る場所の線を書く -->
+            <Canvas x:Name="dragCanvas" IsHitTestVisible="False" ClipToBounds="False">
+                <Rectangle x:Name="dragImage" Opacity="0.6" Visibility="Collapsed" />
+                <Rectangle x:Name="dropBar" Height="3" Fill="Black" Visibility="Collapsed" />
+            </Canvas>
+        </Grid>
+    </ScrollViewer>
+</forms:DockView>

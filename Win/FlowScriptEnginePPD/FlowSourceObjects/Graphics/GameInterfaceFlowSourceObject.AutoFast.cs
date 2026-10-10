@@ -9,25 +9,17 @@ namespace FlowScriptEnginePPD.FlowSourceObjects.Graphics
     {
         public override object GetPropertyValue(string propertyName)
         {
-            switch (propertyName)
+            return propertyName switch
             {
-                case "ComboLayer":
-                    return ComboLayer;
-                case "ConnectLayer":
-                    return ConnectLayer;
-                case "HoldLayer":
-                    return HoldLayer;
-                case "MarkEffectLayer":
-                    return MarkEffectLayer;
-                case "MarkLayer":
-                    return MarkLayer;
-                case "SlideLayer":
-                    return SlideLayer;
-                case "Value":
-                    return Value;
-                default:
-                    return null;
-            }
+                "ComboLayer" => ComboLayer,
+                "ConnectLayer" => ConnectLayer,
+                "HoldLayer" => HoldLayer,
+                "MarkEffectLayer" => MarkEffectLayer,
+                "MarkLayer" => MarkLayer,
+                "SlideLayer" => SlideLayer,
+                "Value" => Value,
+                _ => null,
+            };
         }
 
 

@@ -5,12 +5,17 @@ namespace PPDFramework.Web
     /// <summary>
     /// リストの情報を表すクラスです。
     /// </summary>
-    public class ListInfo
+    /// <remarks>
+    /// コンストラクタです。
+    /// </remarks>
+    /// <param name="title">名前です。</param>
+    /// <param name="isWatch">ウォッチかどうかです。</param>
+    public class ListInfo(string title, bool isWatch)
     {
         /// <summary>
         /// 譜面の情報一覧です。
         /// </summary>
-        private List<ListScoreInfo> scoreInfos;
+        private readonly List<ListScoreInfo> scoreInfos = [];
 
         /// <summary>
         /// 名前を取得します。
@@ -19,7 +24,7 @@ namespace PPDFramework.Web
         {
             get;
             private set;
-        }
+        } = title;
 
         /// <summary>
         /// ウォッチかどうかです。
@@ -28,7 +33,7 @@ namespace PPDFramework.Web
         {
             get;
             private set;
-        }
+        } = isWatch;
 
         /// <summary>
         /// 譜面の情報一覧を取得します。
@@ -37,20 +42,8 @@ namespace PPDFramework.Web
         {
             get
             {
-                return scoreInfos.ToArray();
+                return [.. scoreInfos];
             }
-        }
-
-        /// <summary>
-        /// コンストラクタです。
-        /// </summary>
-        /// <param name="title">名前です。</param>
-        /// <param name="isWatch">ウォッチかどうかです。</param>
-        public ListInfo(string title, bool isWatch)
-        {
-            Title = title;
-            IsWatch = isWatch;
-            scoreInfos = new List<ListScoreInfo>();
         }
 
         /// <summary>

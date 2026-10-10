@@ -6,29 +6,18 @@ namespace PPDFramework.PPDStructure.PPDData
     /// <summary>
     /// PPDDataクラス
     /// </summary>
-    public abstract class MarkDataBase
+    /// <remarks>
+    /// コンストラクタ
+    /// </remarks>
+    /// <param name="x">X</param>
+    /// <param name="y">Y</param>
+    /// <param name="angle">回転角</param>
+    /// <param name="time">時間</param>
+    /// <param name="buttontype">ボタンタイプ</param>
+    /// <param name="id">ID</param>
+    public abstract class MarkDataBase(float x, float y, float angle, float time, ButtonType buttontype, uint id)
     {
-        private Dictionary<string, string> parameters;
-
-        /// <summary>
-        /// コンストラクタ
-        /// </summary>
-        /// <param name="x">X</param>
-        /// <param name="y">Y</param>
-        /// <param name="angle">回転角</param>
-        /// <param name="time">時間</param>
-        /// <param name="buttontype">ボタンタイプ</param>
-        /// <param name="id">ID</param>
-        protected MarkDataBase(float x, float y, float angle, float time, ButtonType buttontype, uint id)
-        {
-            X = x;
-            Y = y;
-            Angle = angle;
-            Time = time;
-            ButtonType = buttontype;
-            ID = id;
-            parameters = new Dictionary<string, string>();
-        }
+        private readonly Dictionary<string, string> parameters = [];
 
         /// <summary>
         /// X
@@ -37,7 +26,7 @@ namespace PPDFramework.PPDStructure.PPDData
         {
             get;
             private set;
-        }
+        } = x;
 
         /// <summary>
         /// Y
@@ -46,7 +35,7 @@ namespace PPDFramework.PPDStructure.PPDData
         {
             get;
             private set;
-        }
+        } = y;
 
         /// <summary>
         /// 回転角
@@ -55,7 +44,7 @@ namespace PPDFramework.PPDStructure.PPDData
         {
             get;
             private set;
-        }
+        } = angle;
 
         /// <summary>
         /// 時間
@@ -64,7 +53,7 @@ namespace PPDFramework.PPDStructure.PPDData
         {
             get;
             private set;
-        }
+        } = time;
 
         /// <summary>
         /// ボタンタイプ
@@ -73,7 +62,7 @@ namespace PPDFramework.PPDStructure.PPDData
         {
             get;
             private set;
-        }
+        } = buttontype;
 
         /// <summary>
         /// ID
@@ -82,14 +71,14 @@ namespace PPDFramework.PPDStructure.PPDData
         {
             get;
             private set;
-        }
+        } = id;
 
         /// <summary>
         /// パラメーター。
         /// </summary>
         public KeyValuePair<string, string>[] Parameters
         {
-            get { return parameters.ToArray(); }
+            get { return [.. parameters]; }
         }
 
         /// <summary>

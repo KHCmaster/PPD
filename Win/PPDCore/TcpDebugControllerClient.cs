@@ -6,18 +6,19 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 
 namespace PPDCore
 {
-    public class TcpDebugControllerClient : TcpDebugControllerBase
+    public class TcpDebugControllerClient : TcpDebugControllerBase, IDisposable
     {
-        private DebugController debugController;
+        private readonly DebugController debugController;
         private TcpClient tcpClient;
         private bool connected;
-        private Dictionary<string, int[]> breakPoints;
-        private Dictionary<string, FlowSourceManager> dict;
+        private readonly Dictionary<string, int[]> breakPoints;
+        private readonly Dictionary<string, FlowSourceManager> dict;
         private Thread asyncReadThread;
 
         public bool Connected
@@ -39,19 +40,19 @@ namespace PPDCore
         public TcpDebugControllerClient(DebugController debugController)
         {
             this.debugController = debugController;
-            breakPoints = new Dictionary<string, int[]>();
-            dict = new Dictionary<string, FlowSourceManager>();
+            breakPoints = [];
+            dict = [];
 
-            debugController.OperationWaited += debugController_OperationWaited;
-            debugController.OperationAccepted += debugController_OperationAccepted;
-            debugController.SourceChanged += debugController_SourceChanged;
-            debugController.ErrorOccurred += debugController_ErrorOccurred;
+            debugController.OperationWaited += DebugController_OperationWaited;
+            debugController.OperationAccepted += DebugController_OperationAccepted;
+            debugController.SourceChanged += DebugController_SourceChanged;
+            debugController.ErrorOccurred += DebugController_ErrorOccurred;
             LogManager.Instance.LogReceived += Instance_LogReceived;
         }
 
         private void Instance_LogReceived(LogInfo obj)
         {
-            var bytes = GetBytes(new string[] { MethodName, LogType, LogText }, writer =>
+            var bytes = GetBytes([MethodName, LogType, LogText], writer =>
             {
                 switch (writer.Filename)
                 {
@@ -78,9 +79,11 @@ namespace PPDCore
         {
             try
             {
-                tcpClient = new TcpClient(LocalHost, Port);
+                // エディターは IPv4 の localhost（127.0.0.1）で待ち受ける。"localhost" だと先に IPv6 につなごうとして、断られるまで待つ
+                tcpClient = new TcpClient();
+                tcpClient.Connect(IPAddress.Loopback, Port);
 
-                var bytes = GetBytes(new string[] { MethodName }, writer =>
+                var bytes = GetBytes([MethodName], writer =>
                 {
                     switch (writer.Filename)
                     {
@@ -92,8 +95,8 @@ namespace PPDCore
                 Send(bytes);
                 bytes = Read(tcpClient.GetStream());
                 string[] fileNames;
-                using (MemoryStream stream = new MemoryStream(bytes))
-                using (PackReader reader = new PackReader(stream))
+                using (MemoryStream stream = new(bytes))
+                using (PackReader reader = new(stream))
                 {
                     var ret = ParseString(reader, Return);
                     fileNames = ret.Split(',');
@@ -101,7 +104,7 @@ namespace PPDCore
 
                 foreach (var fileName in fileNames)
                 {
-                    bytes = GetBytes(new string[] { MethodName, FileName }, writer =>
+                    bytes = GetBytes([MethodName, FileName], writer =>
                     {
                         switch (writer.Filename)
                         {
@@ -115,14 +118,12 @@ namespace PPDCore
                     });
                     Send(bytes);
                     bytes = Read(tcpClient.GetStream());
-                    using (MemoryStream stream = new MemoryStream(bytes))
-                    using (PackReader reader = new PackReader(stream))
+                    using MemoryStream stream = new(bytes);
+                    using PackReader reader = new(stream);
+                    var ret = ParseString(reader, Return);
+                    if (!String.IsNullOrEmpty(ret))
                     {
-                        var ret = ParseString(reader, Return);
-                        if (!String.IsNullOrEmpty(ret))
-                        {
-                            breakPoints.Add(fileName, ret.Split(',').Select(s => int.Parse(s)).ToArray());
-                        }
+                        breakPoints.Add(fileName, [.. ret.Split(',').Select(s => int.Parse(s))]);
                     }
                 }
 
@@ -137,11 +138,8 @@ namespace PPDCore
         public void Close()
         {
             LogManager.Instance.LogReceived -= Instance_LogReceived;
-            if (asyncReadThread != null && asyncReadThread.IsAlive)
-            {
-                asyncReadThread.Abort();
-                asyncReadThread = null;
-            }
+            // .NET では Thread.Abort が使えない。受信のスレッドは、接続を閉じると Read が終わるので止まる
+            asyncReadThread = null;
 
             if (!connected)
             {
@@ -158,9 +156,9 @@ namespace PPDCore
             return dict.FirstOrDefault(kvp => kvp.Value == flowSourceManager).Key;
         }
 
-        void debugController_ErrorOccurred(FlowSourceManager arg1, FlowExecutionException arg2)
+        void DebugController_ErrorOccurred(FlowSourceManager arg1, FlowExecutionException arg2)
         {
-            var bytes = GetBytes(new string[] { MethodName, FileName, ErrorText, ErrorId }, writer =>
+            var bytes = GetBytes([MethodName, FileName, ErrorText, ErrorId], writer =>
             {
                 switch (writer.Filename)
                 {
@@ -181,9 +179,9 @@ namespace PPDCore
             Send(bytes);
         }
 
-        void debugController_SourceChanged(string arg1, FlowSourceManager arg2)
+        void DebugController_SourceChanged(string arg1, FlowSourceManager arg2)
         {
-            var bytes = GetBytes(new string[] { MethodName, SerializedText, FileName }, writer =>
+            var bytes = GetBytes([MethodName, SerializedText, FileName], writer =>
             {
                 switch (writer.Filename)
                 {
@@ -201,9 +199,9 @@ namespace PPDCore
             Send(bytes);
         }
 
-        void debugController_OperationAccepted(FlowSourceManager obj)
+        void DebugController_OperationAccepted(FlowSourceManager obj)
         {
-            var bytes = GetBytes(new string[] { MethodName, FileName }, writer =>
+            var bytes = GetBytes([MethodName, FileName], writer =>
             {
                 switch (writer.Filename)
                 {
@@ -218,9 +216,9 @@ namespace PPDCore
             Send(bytes);
         }
 
-        void debugController_OperationWaited(FlowSourceManager obj)
+        void DebugController_OperationWaited(FlowSourceManager obj)
         {
-            var bytes = GetBytes(new string[] { MethodName, FileName }, writer =>
+            var bytes = GetBytes([MethodName, FileName], writer =>
             {
                 switch (writer.Filename)
                 {
@@ -235,44 +233,42 @@ namespace PPDCore
             Send(bytes);
             AsyncRead(b =>
             {
-                using (MemoryStream stream = new MemoryStream(b))
-                using (PackReader reader = new PackReader(stream))
+                using MemoryStream stream = new(b);
+                using PackReader reader = new(stream);
+                var methodName = ParseString(reader, MethodName);
+                switch (methodName)
                 {
-                    var methodName = ParseString(reader, MethodName);
-                    switch (methodName)
-                    {
-                        case ContinueMethod:
-                            debugController.Continue();
-                            return true;
-                        case StepInMethod:
-                            debugController.StepIn();
-                            return true;
-                        case AddBreakPointMethod:
-                            var fileName = ParseString(reader, FileName);
-                            FlowSourceManager manager;
-                            if (dict.TryGetValue(fileName, out manager))
-                            {
-                                var id = ParseInt(reader, SourceId);
-                                manager.AddBreakPoint(id);
-                            }
-                            break;
-                        case RemoveBreakPointMethod:
-                            fileName = ParseString(reader, FileName);
-                            if (dict.TryGetValue(fileName, out manager))
-                            {
-                                var id = ParseInt(reader, SourceId);
-                                manager.RemoveBreakPoint(id);
-                            }
-                            break;
-                        case ChangeSourceMethod:
-                            fileName = ParseString(reader, FileName);
-                            if (dict.TryGetValue(fileName, out manager))
-                            {
-                                var id = ParseInt(reader, SourceId);
-                                debugController.ChangeSource(id);
-                            }
-                            break;
-                    }
+                    case ContinueMethod:
+                        debugController.Continue();
+                        return true;
+                    case StepInMethod:
+                        debugController.StepIn();
+                        return true;
+                    case AddBreakPointMethod:
+                        var fileName = ParseString(reader, FileName);
+                        FlowSourceManager manager;
+                        if (dict.TryGetValue(fileName, out manager))
+                        {
+                            var id = ParseInt(reader, SourceId);
+                            manager.AddBreakPoint(id);
+                        }
+                        break;
+                    case RemoveBreakPointMethod:
+                        fileName = ParseString(reader, FileName);
+                        if (dict.TryGetValue(fileName, out manager))
+                        {
+                            var id = ParseInt(reader, SourceId);
+                            manager.RemoveBreakPoint(id);
+                        }
+                        break;
+                    case ChangeSourceMethod:
+                        fileName = ParseString(reader, FileName);
+                        if (dict.TryGetValue(fileName, out manager))
+                        {
+                            var id = ParseInt(reader, SourceId);
+                            debugController.ChangeSource(id);
+                        }
+                        break;
                 }
                 return false;
             });
@@ -285,11 +281,17 @@ namespace PPDCore
 
         private void AsyncRead(Func<byte[], bool> callback)
         {
+            var stream = tcpClient.GetStream();
             asyncReadThread = ThreadManager.Instance.GetThread(() =>
             {
                 while (true)
                 {
-                    var bytes = Read(tcpClient.GetStream());
+                    var bytes = Read(stream);
+                    if (bytes.Length == 0)
+                    {
+                        // 接続が閉じられた（以前は OnClosed → Close の中でこのスレッドを Abort していた）
+                        break;
+                    }
                     if (callback(bytes))
                     {
                         break;
@@ -303,6 +305,27 @@ namespace PPDCore
         {
             connected = false;
             Close();
+        }
+
+        /// <summary>
+        /// 接続を閉じます（Close() と同じ）。
+        /// </summary>
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        /// <summary>
+        /// 破棄します。
+        /// </summary>
+        /// <param name="disposing">Dispose から呼ばれたときは true。</param>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                Close();
+            }
         }
     }
 }

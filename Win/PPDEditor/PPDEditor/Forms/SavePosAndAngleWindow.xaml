@@ -1,0 +1,26 @@
+<Window x:Class="PPDEditor.Forms.SavePosAndAngleWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:PPDEditor.ViewModels.Dialogs"
+        xmlns:conv="clr-namespace:PPDEditor.Converters"
+        mc:Ignorable="d" d:DataContext="{d:DesignInstance Type=vm:SavePosAndAngleViewModel}"
+        Title="確認" SizeToContent="WidthAndHeight" ResizeMode="NoResize" ShowInTaskbar="False"
+        FocusManager.FocusedElement="{Binding ElementName=nameTextBox}">
+    <Window.Resources>
+        <conv:InverseBooleanConverter x:Key="Inverse" />
+    </Window.Resources>
+    <StackPanel Margin="10" MinWidth="160">
+        <TextBlock Text="{Binding Caption}" />
+        <RadioButton Content="{Binding Texts[PAALSDialogRadio1]}" IsChecked="{Binding WithAngle, Converter={StaticResource Inverse}}" Margin="20,10,0,0" />
+        <RadioButton Content="{Binding Texts[PAALSDialogRadio2]}" IsChecked="{Binding WithAngle}" Margin="20,12,0,0" />
+        <TextBlock Text="{Binding Texts[PAALSDialogLabel1]}" Margin="3,16,0,0" />
+        <TextBox x:Name="nameTextBox" Text="{Binding FileName, UpdateSourceTrigger=PropertyChanged}" Width="155" Height="20" HorizontalAlignment="Left" Margin="3,4,0,0" VerticalContentAlignment="Center" />
+        <StackPanel Orientation="Horizontal" Margin="2,16,0,0">
+            <!-- テキストボックスで Enter を押すと OK になる（以前と同じ） -->
+            <Button Content="OK" Width="75" Height="23" IsDefault="True" Command="{Binding OkCommand}" />
+            <Button Content="Cancel" Width="75" Height="23" Margin="6,0,0,0" IsCancel="True" />
+        </StackPanel>
+    </StackPanel>
+</Window>

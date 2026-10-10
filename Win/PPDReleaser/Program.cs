@@ -14,6 +14,19 @@ namespace PPDReleaser
         private static string resourceDir;
         private static string currentReleaseDir;
         private static string x64Dir;
+        private static readonly string[] configFiles =
+        [
+            "Effect2DEditor.exe.config",
+            "FlowScriptControlTest.exe.config",
+            "KeyConfiger.exe.config",
+            "PPD.exe.config",
+            "PPDConfig.exe.config",
+            "PPDEditor.exe.config",
+            "PPDExpansion.exe.config",
+            "PPDMultiServerService.exe.config",
+            "MultiRoomInfo.xml",
+            "PPDUpdater.exe.config",
+        ];
 
         private static void Main()
         {
@@ -60,22 +73,22 @@ namespace PPDReleaser
         {
             var copyInfo = new CopyInfo(srcDir, targetDir);
             copyInfo.CopyDir("Lang");
-            copyInfo.CopyFiles(new string[]{
+            copyInfo.CopyFiles([
                 "ICSharpCode.SharpZipLib.dll",
                 "Interop.IWshRuntimeLibrary.dll",
                 "PPDInstaller.exe",
                 "PPDInstaller.exe.config",
                 "ErrorHandle.dll",
                 "PPDConfiguration.dll"
-            });
+            ]);
 
             copyInfo = new CopyInfo(srcDir, Path.Combine(targetDir, "Data"));
 
             var pdCopyInfo = copyInfo.GetNext("BMSTOPPD");
-            pdCopyInfo.CopyFiles(new string[]{
+            pdCopyInfo.CopyFiles([
                 "BMSTOPPD.exe",
                 "BMSTOPPD.exe.config"
-            });
+            ]);
 
             var executables = new string[]{
                 "Effect2DEditor.exe",
@@ -92,18 +105,20 @@ namespace PPDReleaser
                 "ColorCanvas.dll",
                 "DirectShow.dll",
                 "Effect2D.dll",
-                "EntityFramework.dll",
-                "EntityFramework.SqlServer.dll",
                 "ErrorHandle.dll",
                 "FlowScriptControl.dll",
                 "FlowScriptDrawControl.dll",
                 "FlowScriptEngine.dll",
-                "GalaSoft.MvvmLight.dll",
-                "GalaSoft.MvvmLight.Extras.dll",
+                "CommunityToolkit.Mvvm.dll",
+                "Microsoft.Bcl.AsyncInterfaces.dll",
+                "System.Buffers.dll",
+                "System.ComponentModel.Annotations.dll",
+                "System.Memory.dll",
+                "System.Numerics.Vectors.dll",
+                "System.Runtime.CompilerServices.Unsafe.dll",
+                "Microsoft.Xaml.Behaviors.dll",
                 "ICSharpCode.SharpZipLib.dll",
                 "MessagePack.dll",
-                "Microsoft.Practices.ServiceLocation.dll",
-                "MoreLinq.dll",
                 "Newtonsoft.Json.dll",
                 "PPDConfiguration.dll",
                 "PPDCore.dll",
@@ -117,39 +132,29 @@ namespace PPDReleaser
                 "PPDPack.dll",
                 "PPDShareComponent.dll",
                 "PPDSound.dll",
-                "SharpDX.dll",
-                "SharpDX.Desktop.dll",
-                "SharpDX.Mathematics.dll",
-                "SharpDX.Direct2D1.dll",
-                "SharpDX.Direct3D9.dll",
-                "SharpDX.DirectInput.dll",
-                "SharpDX.DirectSound.dll",
-                "SharpDX.DXGI.dll",
-                "SharpDX.Direct3D11.Effects.dll",
-                "SharpDX.Direct3D11.dll",
-                "SharpDX.D3DCompiler.dll",
+                "PPDMath.dll",
+                "Vortice.Mathematics.dll",
+                "Vortice.Direct2D1.dll",
+                "Vortice.DirectInput.dll",
+                "Vortice.DirectX.dll",
+                "SharpGen.Runtime.dll",
+                "SharpGen.Runtime.COM.dll",
+                "Vortice.DirectSound.dll",
+                "Vortice.DXGI.dll",
+                "Vortice.Direct3D11.dll",
                 "System.Data.SQLite.dll",
-                "System.Data.SQLite.EF6.dll",
-                "System.Data.SQLite.Linq.dll",
                 "System.Threading.Tasks.Extensions.dll",
                 "System.ValueTuple.dll",
-                "System.Windows.Interactivity.dll",
-                "System.Windows.Controls.DataVisualization.Toolkit.dll",
-                "WacomMTDN.dll",
-                "WeifenLuo.WinFormsUI.Docking.dll",
-                "WPFToolkit.dll",
+                "DotNetProjects.DataVisualization.Toolkit.dll",
+                "AvalonDock.dll",
                 "YamlDotNet.dll",
                 "BlueSky.dll",
                 "x64\\SQLite.Interop.dll",
-                "skins\\GalaSoft.MvvmLight.dll",
-                "skins\\GalaSoft.MvvmLight.Extras.dll",
-                "skins\\Microsoft.Practices.ServiceLocation.dll",
                 "skins\\PPDModSettingUI.dll",
                 "skins\\PPDMulti.dll",
                 "skins\\PPDMultiCommon.dll",
                 "skins\\PPDMultiServer.dll",
                 "skins\\PPDSingle.dll",
-                "skins\\System.Windows.Interactivity.dll",
                 "dlls\\FlowScriptEngineBasic.dll",
                 "dlls\\FlowScriptEngineBasicExtension.dll",
                 "dlls\\FlowScriptEngineConsole.dll",
@@ -163,26 +168,19 @@ namespace PPDReleaser
             pdCopyInfo.CopyDir("Functions");
             pdCopyInfo.CopyDir("Commands");
             pdCopyInfo.CopyDir("Review_Preset");
-            pdCopyInfo.CopyFiles(executables.Concat(new string[]{
-                "Effect2DEditor.exe.config",
-                "FlowScriptControlTest.exe.config",
-                "KeyConfiger.exe.config",
-                "PPD.exe.config",
-                "PPDConfig.exe.config",
-                "PPDEditor.exe.config",
-                "PPDExpansion.exe.config",
-                "PPDMultiServerService.exe.config",
-                "MultiRoomInfo.xml",
-                "PPDUpdater.exe.config",
-            }).ToArray());
+            pdCopyInfo.CopyFiles(
+            [
+                .. executables,
+                .. configFiles,
+            ]);
 
             CopyFile("Items\\x64\\fmodex64.dll", Path.Combine(pdCopyInfo.Dir, "fmodex64.dll"));
-            executables = executables.Concat(new string[] { "fmodex64.dll" }).ToArray();
+            executables = [.. executables, "fmodex64.dll"];
 
             var prefixes = new string[] { "", "beta_" };
             foreach (var prefix in prefixes)
             {
-                CreateAssemblyInfo(Path.Combine(Directory.GetParent(targetDir).FullName, String.Format("{0}assembly_x64.xml", prefix)), executables.Select(e => Path.Combine(targetDir, "Data", "PPD", e)).ToArray());
+                CreateAssemblyInfo(Path.Combine(Directory.GetParent(targetDir).FullName, String.Format("{0}assembly_x64.xml", prefix)), [.. executables.Select(e => Path.Combine(targetDir, "Data", "PPD", e))]);
             }
         }
 
@@ -234,15 +232,13 @@ namespace PPDReleaser
                 Indent = true,
                 NewLineChars = Environment.NewLine
             };
-            using (XmlWriter writer = XmlWriter.Create(filePath, setting))
+            using XmlWriter writer = XmlWriter.Create(filePath, setting);
+            writer.WriteStartElement("Root");
+            foreach (string file in filePaths)
             {
-                writer.WriteStartElement("Root");
-                foreach (string file in filePaths)
-                {
-                    WriteVersionInfo(writer, file);
-                }
-                writer.WriteEndElement();
+                WriteVersionInfo(writer, file);
             }
+            writer.WriteEndElement();
         }
 
         public static void WriteVersionInfo(XmlWriter writer, string filePath)
@@ -255,16 +251,10 @@ namespace PPDReleaser
         }
     }
 
-    internal class CopyInfo
+    internal class CopyInfo(string srcDir, string targetDir)
     {
-        private string srcDir;
-        private string targetDir;
-
-        public CopyInfo(string srcDir, string targetDir)
-        {
-            this.srcDir = srcDir;
-            this.targetDir = targetDir;
-        }
+        private readonly string srcDir = srcDir;
+        private readonly string targetDir = targetDir;
 
         public void CopyFile(string fileName)
         {

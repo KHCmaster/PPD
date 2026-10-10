@@ -6,10 +6,14 @@ namespace PPDFramework.Resource
     /// <summary>
     /// リソースマネージャーのクラス
     /// </summary>
-    public class ResourceManager : DisposableComponent
+    /// <remarks>
+    /// コンストラクタ
+    /// </remarks>
+    /// <param name="parents"></param>
+    public class ResourceManager(Tuple<ResourceManager, bool>[] parents) : DisposableComponent
     {
-        Dictionary<string, ResourceBase> resources;
-        Tuple<ResourceManager, bool>[] parents;
+        readonly Dictionary<string, ResourceBase> resources = new(StringComparer.OrdinalIgnoreCase);
+        readonly Tuple<ResourceManager, bool>[] parents = parents;
 
         /// <summary>
         /// コンストラクタ
@@ -19,18 +23,9 @@ namespace PPDFramework.Resource
         }
 
         /// <summary>
-        /// コンストラクタ
+        /// デストラクタ。Dispose されずに回収されたときも、リソースを破棄します。
         /// </summary>
-        /// <param name="parents"></param>
-        public ResourceManager(Tuple<ResourceManager, bool>[] parents)
-        {
-            resources = new Dictionary<string, ResourceBase>(StringComparer.OrdinalIgnoreCase);
-            this.parents = parents;
-        }
-
-        /// <summary>
-        /// デストラクタ
-        /// </summary>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1063:Implement IDisposable Correctly", Justification = "Dispose されなかったリソースマネージャーのリソースを破棄するため")]
         ~ResourceManager()
         {
             Dispose();
@@ -46,10 +41,7 @@ namespace PPDFramework.Resource
         {
             lock (resources)
             {
-                if (!resources.ContainsKey(resourceName))
-                {
-                    resources.Add(resourceName, resource);
-                }
+                resources.TryAdd(resourceName, resource);
                 return resource;
             }
         }
@@ -106,9 +98,10 @@ namespace PPDFramework.Resource
             }
             lock (resources)
             {
-                if (resources.ContainsKey(resourceName))
+                // 型が違うものは見つからないことにする（以前は null で「見つかった」を返し、親で見つかると子を探さなかった）
+                if (resources.TryGetValue(resourceName, out ResourceBase value) && value is T found)
                 {
-                    resource = resources[resourceName] as T;
+                    resource = found;
                     return true;
                 }
             }
@@ -129,7 +122,7 @@ namespace PPDFramework.Resource
         /// <returns></returns>
         public bool HasResource<T>(string resourceName) where T : ResourceBase
         {
-            return TryGetResource(resourceName, out T temp);
+            return TryGetResource(resourceName, out T _);
         }
 
         /// <summary>
@@ -140,13 +133,10 @@ namespace PPDFramework.Resource
         {
             lock (resources)
             {
-                if (TryGetResource<ResourceBase>(resourceName, out ResourceBase resource))
+                // 自分のものだけを消す（以前は親のものを探して破棄し、親に破棄したものが残った）
+                if (resources.Remove(resourceName, out ResourceBase resource))
                 {
                     resource.Dispose();
-                    lock (resources)
-                    {
-                        resources.Remove(resourceName);
-                    }
                 }
             }
         }

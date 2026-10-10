@@ -37,7 +37,7 @@ namespace FlowScriptEngineBasic.FlowSourceObjects.Enumerable
                 SetValue(nameof(InnerEnumerable));
                 if (enumerable == null || InnerEnumerable == null)
                 {
-                    return System.Linq.Enumerable.Empty<object>();
+                    return [];
                 }
                 return enumerable.GroupJoin(InnerEnumerable, obj =>
                 {

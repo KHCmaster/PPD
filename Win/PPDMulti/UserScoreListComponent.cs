@@ -1,4 +1,5 @@
-﻿using PPDFramework;
+﻿using PPDMath;
+using PPDFramework;
 using PPDMultiCommon.Model;
 using PPDShareComponent;
 using System.Linq;
@@ -10,8 +11,8 @@ namespace PPDMulti
         const int ItemHeight = 45;
         const int MaxDisplayCount = 8;
 
-        SpriteObject iconSprite;
-        PPDFramework.Resource.ResourceManager resourceManager;
+        readonly SpriteObject iconSprite;
+        readonly PPDFramework.Resource.ResourceManager resourceManager;
 
         public UserScoreListComponent(PPDDevice device, PPDFramework.Resource.ResourceManager resourceManager) : base(device)
         {
@@ -24,7 +25,7 @@ namespace PPDMulti
         {
             var playUserIcon = new PlayUserIcon(device, resourceManager, userPlayState)
             {
-                Position = new SharpDX.Vector2(0, ChildrenCount * ItemHeight)
+                Position = new System.Numerics.Vector2(0, ChildrenCount * ItemHeight)
             };
             iconSprite.AddChild(playUserIcon);
         }
@@ -33,7 +34,7 @@ namespace PPDMulti
         {
             var playUserIcon = new PlayUserIcon(device, resourceManager, selfUserPlayState, itemManager)
             {
-                Position = new SharpDX.Vector2(0, ChildrenCount * ItemHeight)
+                Position = new System.Numerics.Vector2(0, ChildrenCount * ItemHeight)
             };
             iconSprite.AddChild(playUserIcon);
         }
@@ -46,7 +47,7 @@ namespace PPDMulti
         public void DeleteUser(UserPlayState userPlayState)
         {
             PlayUserIcon found = null;
-            foreach (PlayUserIcon playUserIcon in iconSprite.Children)
+            foreach (PlayUserIcon playUserIcon in iconSprite.Children.Cast<PlayUserIcon>())
             {
                 if (playUserIcon.UserPlayState == userPlayState)
                 {
@@ -84,7 +85,7 @@ namespace PPDMulti
             for (int i = 0; i < icons.Count; i++)
             {
                 var newY = i * ItemHeight;
-                icons[i].Position = new SharpDX.Vector2(0, noAnimation ? newY : AnimationUtility.GetAnimationValue(icons[i].Position.Y, newY));
+                icons[i].Position = new System.Numerics.Vector2(0, noAnimation ? newY : AnimationUtility.GetAnimationValue(icons[i].Position.Y, newY));
             }
             var selfIndex = icons.FindIndex(icon => icon.UserPlayState.User.IsSelf);
             var y = 0;
@@ -92,7 +93,7 @@ namespace PPDMulti
             {
                 y = -(selfIndex - MaxDisplayCount + 1) * ItemHeight;
             }
-            iconSprite.Position = new SharpDX.Vector2(iconSprite.Position.X, noAnimation ? y : AnimationUtility.GetAnimationValue(iconSprite.Position.Y, y));
+            iconSprite.Position = new System.Numerics.Vector2(iconSprite.Position.X, noAnimation ? y : AnimationUtility.GetAnimationValue(iconSprite.Position.Y, y));
         }
 
         protected override void UpdateImpl()

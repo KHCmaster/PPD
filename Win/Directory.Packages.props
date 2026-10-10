@@ -1,0 +1,36 @@
+﻿<Project>
+  <!-- NuGet パッケージの版はここでまとめて管理する（各 csproj の PackageReference には Version を書かない） -->
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageVersion Include="CommunityToolkit.Mvvm" Version="8.4.2" />
+    <PackageVersion Include="Dirkster.AvalonDock" Version="5.0.1" />
+    <!-- AvalonDock 5 から、配置の保存と読み込み（XmlLayoutSerializer）は別のパッケージ -->
+    <PackageVersion Include="Dirkster.AvalonDock.Serializer.Xml" Version="5.0.1" />
+    <PackageVersion Include="DotNetProjects.WpfToolkit.DataVisualization" Version="6.1.94" />
+    <PackageVersion Include="MessagePack" Version="3.1.11" />
+    <PackageVersion Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.161" />
+    <PackageVersion Include="Newtonsoft.Json" Version="13.0.4" />
+    <PackageVersion Include="Vortice.Mathematics" Version="2.1.1" />
+    <PackageVersion Include="Vortice.DirectInput" Version="3.8.3" />
+    <PackageVersion Include="Vortice.DirectSound" Version="3.8.3" />
+    <PackageVersion Include="Vortice.D3DCompiler" Version="3.8.3" />
+    <PackageVersion Include="Vortice.Direct2D1" Version="3.8.3" />
+    <PackageVersion Include="Vortice.Direct3D11" Version="3.8.3" />
+    <PackageVersion Include="Vortice.DXGI" Version="3.8.3" />
+    <PackageVersion Include="SharpZipLib" Version="1.4.2" />
+    <PackageVersion Include="System.Data.SQLite.Core" Version="1.0.119" />
+    <PackageVersion Include="WinSCP" Version="6.5.7" />
+    <PackageVersion Include="YamlDotNet" Version="18.1.0" />
+    <!-- UI の自動テスト（UITests） -->
+    <PackageVersion Include="FlaUI.UIA3" Version="5.0.0" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.10.1" />
+    <PackageVersion Include="xunit" Version="2.9.3" />
+    <PackageVersion Include="xunit.runner.visualstudio" Version="4.0.1" />
+    <!-- ViewModel などの単体テスト（UnitTests）のカバレッジ -->
+    <PackageVersion Include="coverlet.collector" Version="10.1.0" />
+    <!-- .NET で必要になったもの -->
+    <PackageVersion Include="System.ServiceProcess.ServiceController" Version="10.0.12" />
+  </ItemGroup>
+</Project>

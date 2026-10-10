@@ -1,6 +1,7 @@
 ﻿using FlowScriptEngine;
 using PPDCoreModel;
-using SharpDX;
+using System.Numerics;
+using PPDMath;
 using System.Collections.Generic;
 
 namespace FlowScriptEnginePPD.FlowSourceObjects.Mark
@@ -39,7 +40,7 @@ namespace FlowScriptEnginePPD.FlowSourceObjects.Mark
         }
 
         [ToolTipText("Mark_CalculatePos_Position")]
-        public SharpDX.Vector2 Position
+        public System.Numerics.Vector2 Position
         {
             get { return markInfo != null ? markInfo.Position : Vector2.Zero; }
         }
@@ -136,7 +137,7 @@ namespace FlowScriptEnginePPD.FlowSourceObjects.Mark
         }
 
         [ToolTipText("Mark_CalculatePos_ColorPosition")]
-        public SharpDX.Vector2 ColorPosition
+        public System.Numerics.Vector2 ColorPosition
         {
             protected get;
             set;

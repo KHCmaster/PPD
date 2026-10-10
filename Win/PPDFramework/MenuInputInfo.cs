@@ -8,19 +8,13 @@ namespace PPDFramework
     /// <remarks>
     /// 方向キー、L、Rで長押し選択を可能にします。
     /// </remarks>
-    public class MenuInputInfo : InputInfoBase
+    /// <remarks>
+    /// コンストラクタです。
+    /// </remarks>
+    /// <param name="inputInfo"></param>
+    public class MenuInputInfo(InputInfoBase inputInfo) : InputInfoBase(inputInfo.Accurate)
     {
-        private InputInfoBase baseInputInfo;
-
-        /// <summary>
-        /// コンストラクタです。
-        /// </summary>
-        /// <param name="inputInfo"></param>
-        public MenuInputInfo(InputInfoBase inputInfo)
-            : base(inputInfo.Accurate)
-        {
-            baseInputInfo = inputInfo;
-        }
+        private readonly InputInfoBase baseInputInfo = inputInfo;
 
         /// <summary>
         /// 押されているフレーム数を取得します。

@@ -1,28 +1,21 @@
 ﻿using PPDFramework;
-using SharpDX;
+using System.Numerics;
+using PPDMath;
 using System;
 using System.Collections.Generic;
 
 namespace PPDCoreModel
 {
-    public abstract class EffectPoolBase
+    public abstract class EffectPoolBase(PPDDevice device, int count)
     {
-        protected PPDDevice device;
-        Queue<EffectObject> nonUsedList;
+        protected PPDDevice device = device;
+        readonly Queue<EffectObject> nonUsedList = new(count);
 
         public int Count
         {
             get;
             private set;
-        }
-
-
-        protected EffectPoolBase(PPDDevice device, int count)
-        {
-            this.device = device;
-            Count = count;
-            nonUsedList = new Queue<EffectObject>(count);
-        }
+        } = count;
 
         public void Initialize()
         {
@@ -37,11 +30,11 @@ namespace PPDCoreModel
         private EffectObject CreateEffectInner()
         {
             var eo = CreateEffect();
-            eo.Finish += eo_Finish;
+            eo.Finish += Eo_Finish;
             return eo;
         }
 
-        void eo_Finish(object sender, EventArgs e)
+        void Eo_Finish(object sender, EventArgs e)
         {
             var eo = sender as EffectObject;
             nonUsedList.Enqueue(eo);
@@ -52,7 +45,8 @@ namespace PPDCoreModel
             EffectObject eo;
             if (nonUsedList.Count == 0)
             {
-                eo = CreateEffect();
+                // 足りなくて作ったものも、終わったら使い回す（元は CreateEffect で作り、プールに戻らなかった）
+                eo = CreateEffectInner();
             }
             else
             {

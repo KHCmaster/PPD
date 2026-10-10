@@ -1,7 +1,8 @@
 ﻿using PPDFramework;
 using PPDMultiCommon.Web;
 using PPDShareComponent;
-using SharpDX;
+using System.Numerics;
+using PPDMath;
 using System;
 
 namespace PPDMulti
@@ -11,8 +12,8 @@ namespace PPDMulti
         public event EventHandler Processed;
 
         bool shouldFocusTextBox;
-        DxTextBox textBox;
-        RoomInfo roomInfo;
+        readonly DxTextBox textBox;
+        readonly RoomInfo roomInfo;
 
         public bool IsValid
         {
@@ -28,8 +29,8 @@ namespace PPDMulti
             {
                 DrawOnlyFocus = false
             };
-            textBox.LostFocused += textBox_LostFocused;
-            textBox.Position = new SharpDX.Vector2(300, 250);
+            textBox.LostFocused += TextBox_LostFocused;
+            textBox.Position = new System.Numerics.Vector2(300, 250);
             textBox.TextBoxHeight = 20;
             textBox.TextBoxWidth = textBox.MaxWidth = 200;
             textBox.Text = "";
@@ -59,16 +60,13 @@ namespace PPDMulti
             }
         }
 
-        void textBox_LostFocused(IFocusable sender, FocusEventArgs args)
+        void TextBox_LostFocused(IFocusable sender, FocusEventArgs args)
         {
             string text = textBox.Text;
             IsValid = roomInfo.PasswordHash == WebManager.GetPasswordHash(text);
 
             textBox.Parent.RemoveChild(textBox);
-            if (Processed != null)
-            {
-                Processed.Invoke(this, EventArgs.Empty);
-            }
+            Processed?.Invoke(this, EventArgs.Empty);
 
             if (!IsValid)
             {

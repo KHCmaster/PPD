@@ -1,5 +1,7 @@
 ﻿using PPDFramework;
-using SharpDX;
+using System.Numerics;
+using PPDMath;
+using RectangleF = Vortice.Mathematics.Rect;
 using System;
 using System.Collections.Generic;
 
@@ -20,16 +22,16 @@ namespace PPDCore
 
         State state = State.Normal;
 
-        SpriteObject flareSprite;
-        SpriteObject backSprite;
-        SpriteObject overraySprite;
-        SpriteObject onpuSprite;
+        readonly SpriteObject flareSprite;
+        readonly SpriteObject backSprite;
+        readonly SpriteObject overraySprite;
+        readonly SpriteObject onpuSprite;
 
-        PictureObject frame;
-        PictureObject black;
-        List<OnpuObject> onpus;
+        readonly PictureObject frame;
+        readonly PictureObject black;
+        readonly List<OnpuObject> onpus;
         float currentlife = 50;
-        PPDFramework.Resource.ResourceManager resourceManager;
+        readonly PPDFramework.Resource.ResourceManager resourceManager;
 
 
         public LifeGage(PPDDevice device, PPDFramework.Resource.ResourceManager resourceManager) : base(device)
@@ -41,7 +43,7 @@ namespace PPDCore
             };
             frame = new PictureObject(device, resourceManager, Utility.Path.Combine("lifegage", "frame.png"))
             {
-                Scale = new SharpDX.Vector2(0.99f, 0.95f)
+                Scale = new System.Numerics.Vector2(0.99f, 0.95f)
             };
             this.AddChild(frame);
             this.AddChild(black);
@@ -70,9 +72,9 @@ namespace PPDCore
                 }
                 var flare = new EffectObject(device, resourceManager, Utility.Path.Combine("lifegage", String.Format("{0}{1}", content, "flare.etd")))
                 {
-                    Position = new Vector2(56, 11)
+                    Position = new Vector2(56, 11),
+                    PlayType = Effect2D.EffectManager.PlayType.ReverseLoop
                 };
-                flare.PlayType = Effect2D.EffectManager.PlayType.ReverseLoop;
                 flare.Play();
                 flareSprite.AddChild(flare);
                 backSprite.AddChild(new PictureObject(device, resourceManager, Utility.Path.Combine("lifegage", String.Format("{0}{1}", content, "back.png")))
@@ -88,7 +90,7 @@ namespace PPDCore
 
             flareSprite[(int)state].Hidden = overraySprite[(int)state].Hidden = backSprite[(int)state].Hidden = false;
 
-            onpus = new List<OnpuObject>();
+            onpus = [];
             CurrentLife = 50;
 
             InitializeComponentPosition();
@@ -111,10 +113,9 @@ namespace PPDCore
         {
             set
             {
-                float previouslife = currentlife;
                 currentlife = value;
                 black.Rectangle = new RectangleF(0, 0, black.Width * (1 - value / 100f), black.Height);
-                black.Position = new SharpDX.Vector2(Position.X + 2 + black.Width - black.Rectangle.Width, black.Position.Y);
+                black.Position = new System.Numerics.Vector2(Position.X + 2 + black.Width - black.Rectangle.Width, black.Position.Y);
 
                 flareSprite[(int)state].Hidden = overraySprite[(int)state].Hidden = backSprite[(int)state].Hidden = true;
 
@@ -147,7 +148,7 @@ namespace PPDCore
             for (int i = onpus.Count - 1; i >= 0; i--)
             {
                 OnpuObject onpu = onpus[i];
-                onpu.Position = new SharpDX.Vector2(onpu.Position.X + onpu.VelX, onpu.Position.Y);
+                onpu.Position = new System.Numerics.Vector2(onpu.Position.X + onpu.VelX, onpu.Position.Y);
                 onpu.Alpha = (black.Position.X - onpu.Position.X) / (black.Width - black.Rectangle.Width);
                 if (onpu.Alpha <= 0)
                 {

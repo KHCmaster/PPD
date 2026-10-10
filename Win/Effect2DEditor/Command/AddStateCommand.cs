@@ -1,27 +1,21 @@
 ﻿using BezierCaliculator;
 using Effect2D;
 using System.Drawing;
-using System.Drawing.Drawing2D;
+using System.Numerics;
 
 
 namespace Effect2DEditor.Command
 {
-    class AddStateCommand : CommandBase
+    class AddStateCommand(EffectManager manager, string exp, bool IsKey, int itemindex, int keyindex) : CommandBase(manager, exp)
     {
-        bool iskey;
-        int itemindex;
-        int keyindex;
+        readonly bool iskey = IsKey;
+        readonly int itemindex = itemindex;
+        readonly int keyindex = keyindex;
         bool islast;
         bool twoframeinserted;
         EffectStateRatioSet previousset;
         int setindex;
-        public AddStateCommand(EffectManager manager, string exp, bool IsKey, int itemindex, int keyindex)
-            : base(manager, exp)
-        {
-            iskey = IsKey;
-            this.itemindex = itemindex;
-            this.keyindex = keyindex;
-        }
+
         public override void Undo()
         {
             IEffect effect = manager.Effects[itemindex];
@@ -102,7 +96,7 @@ namespace Effect2DEditor.Command
                             var brm = set[type] as BezierRatioMaker;
                             GetDevidedBezierFromX(brm.Analyzer.BCPS, (float)(keyindex - 1 - set.StartFrame) / (set.EndFrame - set.StartFrame), out BezierControlPoint[] bcps1, out BezierControlPoint[] bcps2);
                             set[type] = new BezierRatioMaker(bcps1[0], bcps1[1]);
-                            GetDevidedBezierFromX(bcps2, (float)1 / (set.EndFrame - keyindex + 1), out bcps1, out BezierControlPoint[] bcps3);
+                            GetDevidedBezierFromX(bcps2, (float)1 / (set.EndFrame - keyindex + 1), out _, out BezierControlPoint[] bcps3);
                             newset2[type] = new BezierRatioMaker(bcps3[0], bcps3[1]);
                         }
                         newset1[type] = new ConstantRatioMaker();
@@ -207,7 +201,7 @@ namespace Effect2DEditor.Command
                 islast = false;
             }
         }
-        private void GetDevidedBezierFromX(BezierControlPoint[] bcps, float ratio, out BezierControlPoint[] out1, out BezierControlPoint[] out2)
+        private static void GetDevidedBezierFromX(BezierControlPoint[] bcps, float ratio, out BezierControlPoint[] out1, out BezierControlPoint[] out2)
         {
             var ba = new BezierAnalyzer(bcps);
             float x = BezierRatioMaker.MaxLength * ratio;
@@ -226,23 +220,24 @@ namespace Effect2DEditor.Command
                 ScaleAt(new PointF(BezierRatioMaker.MaxLength, 0), new PointF(BezierRatioMaker.MaxLength / (BezierRatioMaker.MaxLength - bcp22.Second.X), BezierRatioMaker.MaxLength / bcp22.Second.Y), bcp3);
                 ScaleAt(new PointF(BezierRatioMaker.MaxLength, 0), new PointF(BezierRatioMaker.MaxLength / (BezierRatioMaker.MaxLength - bcp22.Second.X), BezierRatioMaker.MaxLength / bcp22.Second.Y), bcp22);
                 bcp22.Second = new PointF(0, 128);
-                out1 = new BezierControlPoint[] { bcp1, bcp2 };
-                out2 = new BezierControlPoint[] { bcp22, bcp3 };
+                out1 = [bcp1, bcp2];
+                out2 = [bcp22, bcp3];
             }
         }
-        private void ScaleAt(PointF basepoint, PointF Scale, BezierControlPoint bcp)
+        private static void ScaleAt(PointF basepoint, PointF Scale, BezierControlPoint bcp)
         {
-            var mat = new Matrix();
-            mat.Translate(basepoint.X, basepoint.Y);
-            mat.Scale(Scale.X, Scale.Y);
-            mat.Translate(-basepoint.X, -basepoint.Y);
-            var temp = new PointF[] { bcp.First, bcp.Second, bcp.Third };
-            mat.TransformPoints(temp);
-            bcp.Second = temp[1];
-            if (bcp.ValidFirst) bcp.First = temp[0];
-            if (bcp.ValidThird) bcp.Third = temp[2];
+            // basepoint を中心に拡大する（以前の System.Drawing.Drawing2D.Matrix と同じ変換）
+            var mat = Matrix3x2.CreateScale(Scale.X, Scale.Y, new Vector2(basepoint.X, basepoint.Y));
+            bcp.Second = Transform(bcp.Second, mat);
+            if (bcp.ValidFirst) bcp.First = Transform(bcp.First, mat);
+            if (bcp.ValidThird) bcp.Third = Transform(bcp.Third, mat);
         }
-        private EffectStateRatioSet GetSetFromFrameIndex(IEffect effect, int frameindex)
+        private static PointF Transform(PointF point, Matrix3x2 matrix)
+        {
+            var v = Vector2.Transform(new Vector2(point.X, point.Y), matrix);
+            return new PointF(v.X, v.Y);
+        }
+        private static EffectStateRatioSet GetSetFromFrameIndex(IEffect effect, int frameindex)
         {
             if (effect.StartFrame > frameindex || frameindex > effect.StartFrame + effect.FrameLength) return null;
             float num = frameindex - effect.StartFrame;

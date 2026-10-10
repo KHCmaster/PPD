@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace PPDTest
 {
-    class MovieScene : TestSceneBase
+    class MovieScene(TestSceneManager testSceneManager, PPDDevice device) : TestSceneBase(testSceneManager, device)
     {
         protected override string Title
         {
@@ -11,11 +11,6 @@ namespace PPDTest
             {
                 return "動画表示のテスト";
             }
-        }
-
-        public MovieScene(TestSceneManager testSceneManager, PPDDevice device) : base(testSceneManager, device)
-        {
-
         }
 
         protected override void OnInitialize()

@@ -2,19 +2,14 @@
 
 namespace Effect2DEditor.Command
 {
-    class DeleteStateCommand : CommandBase
+    class DeleteStateCommand(EffectManager manager, string exp, int itemindex, int keyindex) : CommandBase(manager, exp)
     {
-        int itemindex;
-        int keyindex;
+        readonly int itemindex = itemindex;
+        readonly int keyindex = keyindex;
         int insertindex;
         EffectStateRatioSet previousset1;
         EffectStateRatioSet previousset2;
-        public DeleteStateCommand(EffectManager manager, string exp, int itemindex, int keyindex)
-            : base(manager, exp)
-        {
-            this.itemindex = itemindex;
-            this.keyindex = keyindex;
-        }
+
         public override void Undo()
         {
             IEffect effect = manager.Effects[itemindex];
@@ -26,11 +21,8 @@ namespace Effect2DEditor.Command
             }
             else if (previousset1 != null)
             {
-                manager.Sets.Add(previousset1.StartFrame, previousset1);
-            }
-            else if (previousset2 != null)
-            {
-                manager.Sets.Add(previousset1.StartFrame, previousset1);
+                // 最初か最後のステートを消したときは、消した組をエフェクトに戻す（以前はエフェクトでなく EffectManager に足していた）
+                effect.Sets.Add(previousset1.StartFrame, previousset1);
             }
         }
 

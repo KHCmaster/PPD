@@ -9,13 +9,11 @@ namespace FlowScriptEnginePPD.FlowSourceObjects
     {
         public override object GetPropertyValue(string propertyName)
         {
-            switch (propertyName)
+            return propertyName switch
             {
-                case "Time":
-                    return Time;
-                default:
-                    return null;
-            }
+                "Time" => Time,
+                _ => null,
+            };
         }
 
 

@@ -1,27 +1,23 @@
 ﻿using PPDFramework;
 using PPDFramework.Scene;
-using SharpDX;
+using System.Numerics;
+using PPDMath;
 
 namespace PPDSingle
 {
-    public class TestMenu : SceneBase
+    public class TestMenu(PPDDevice device) : SceneBase(device)
     {
-        public TestMenu(PPDDevice device) : base(device)
-        {
-
-        }
-
         public override bool Load()
         {
             SpriteObject sprite;
             AddChild(sprite = new SpriteObject(device)
             {
-                Position = new SharpDX.Vector2(100, 100),
+                Position = new System.Numerics.Vector2(100, 100),
                 Alpha = 0.5f
             });
             sprite.AddChild(new PictureObject(device, ResourceManager, Utility.Path.Combine("confirm.png"))
             {
-                Position = new SharpDX.Vector2(100, 100),
+                Position = new System.Numerics.Vector2(100, 100),
                 Alpha = 0.5f
             });
             sprite.AddChild(new TextureString(device, "AAAAAAAAAAAAAAAAAA", 20, 200, PPDColors.White)

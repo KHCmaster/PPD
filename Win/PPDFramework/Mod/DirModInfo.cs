@@ -5,7 +5,11 @@ namespace PPDFramework.Mod
     /// <summary>
     /// Modのフォルダ情報です。
     /// </summary>
-    public class DirModInfo : ModInfoBase
+    /// <remarks>
+    /// コンストラクタです。
+    /// </remarks>
+    /// <param name="dirPath"></param>
+    public class DirModInfo(string dirPath) : ModInfoBase(dirPath, true)
     {
         /// <summary>
         /// 表示名を取得します。
@@ -13,15 +17,6 @@ namespace PPDFramework.Mod
         public string DisplayName
         {
             get { return Path.GetFileNameWithoutExtension(ModPath); }
-        }
-
-        /// <summary>
-        /// コンストラクタです。
-        /// </summary>
-        /// <param name="dirPath"></param>
-        public DirModInfo(string dirPath)
-            : base(dirPath, true)
-        {
         }
     }
 }

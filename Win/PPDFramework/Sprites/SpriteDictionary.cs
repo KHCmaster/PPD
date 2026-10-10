@@ -10,9 +10,9 @@ namespace PPDFramework.Sprites
     /// <summary>
     /// スプライト辞書のクラスです。
     /// </summary>
-    public class SpriteDictionary
+    public partial class SpriteDictionary
     {
-        static readonly Regex scaleRegex = new Regex(@"\.\d+_\d+(\.\w+)$");
+        static readonly Regex scaleRegex = ScaleSuffixRegex();
 
         /// <summary>
         /// 画像のパスを取得します。
@@ -58,8 +58,8 @@ namespace PPDFramework.Sprites
         /// <param name="imageScale"></param>
         public SpriteDictionary(string dir, int index, ImageScale imageScale)
         {
-            Sprites = new Dictionary<string, SpriteInfo>();
-            SpritesWithActualPath = new Dictionary<string, SpriteInfo>();
+            Sprites = [];
+            SpritesWithActualPath = [];
             ImageScale = imageScale;
             ImagePath = Path.Combine(dir, String.Format("{0}.{1}_{2}.png", index, imageScale.Numerator, imageScale.Denominator));
             var xmlPath = Path.Combine(dir, String.Format("{0}.{1}_{2}.xml", index, imageScale.Numerator, imageScale.Denominator));
@@ -84,6 +84,11 @@ namespace PPDFramework.Sprites
             }
         }
 
+        /// <summary>
+        /// パスから拡大率の部分（例: "image.2_1.png" の ".2_1"）を取り除きます。
+        /// </summary>
+        /// <param name="path">パス。</param>
+        /// <returns>拡大率を取り除いたパス。</returns>
         public static string RemoveScale(string path)
         {
             return scaleRegex.Replace(path, (match) =>
@@ -100,14 +105,12 @@ namespace PPDFramework.Sprites
                 {
                     foreach (var packInfo in packInfos)
                     {
-                        using (var img = packInfo.ImageInfo.GetImage())
-                        {
-                            g.DrawImage(
-                                img,
-                                new System.Drawing.Rectangle((int)packInfo.Position.X, (int)packInfo.Position.Y, img.Width, img.Height),
-                                new System.Drawing.Rectangle(0, 0, img.Width, img.Height),
-                                GraphicsUnit.Pixel);
-                        }
+                        using var img = packInfo.ImageInfo.GetImage();
+                        g.DrawImage(
+                            img,
+                            new System.Drawing.Rectangle((int)packInfo.Position.X, (int)packInfo.Position.Y, img.Width, img.Height),
+                            new System.Drawing.Rectangle(0, 0, img.Width, img.Height),
+                            GraphicsUnit.Pixel);
                     }
                 }
                 Utility.PreMultiplyAlpha(bitmap);
@@ -133,5 +136,8 @@ namespace PPDFramework.Sprites
             }
             doc.Save(imageXmlPath);
         }
+
+        [GeneratedRegex(@"\.\d+_\d+(\.\w+)$")]
+        private static partial Regex ScaleSuffixRegex();
     }
 }

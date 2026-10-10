@@ -5,7 +5,7 @@
     /// </summary>
     public class EmptyInputInfo : InputInfoBase
     {
-        private static EmptyInputInfo instance = new EmptyInputInfo();
+        private static readonly EmptyInputInfo instance = new();
 
         /// <summary>
         /// シングルトンのインスタンスを取得します。

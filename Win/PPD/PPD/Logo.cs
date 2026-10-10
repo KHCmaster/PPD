@@ -5,12 +5,13 @@ using PPDFramework.Shaders;
 using PPDFramework.Vertex;
 using PPDFrameworkCore;
 using PPDShareComponent;
-using SharpDX;
+using System.Numerics;
+using PPDMath;
 using System;
 
 namespace PPD
 {
-    class Logo : SceneBase
+    class Logo(PPDDevice device) : SceneBase(device)
     {
         enum State
         {
@@ -43,11 +44,6 @@ namespace PPD
         {
             get;
             private set;
-        }
-
-        public Logo(PPDDevice device) : base(device)
-        {
-
         }
 
         public override bool Load()
@@ -213,9 +209,9 @@ namespace PPD
 
         class Circle : GameComponent
         {
-            ImageResourceBase loadCircleImageResource;
-            VertexInfo loadCircleImageVertex;
-            VertexInfo invLoadCircleImageVertex;
+            readonly ImageResourceBase loadCircleImageResource;
+            readonly VertexInfo loadCircleImageVertex;
+            readonly VertexInfo invLoadCircleImageVertex;
             int displayNum;
 
             public bool Inverse

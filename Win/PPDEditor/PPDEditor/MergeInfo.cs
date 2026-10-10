@@ -1,30 +1,23 @@
 ﻿namespace PPDEditor
 {
-    public class MergeInfo
+    public class MergeInfo(string projectPath, int version, AvailableDifficulty difficulty)
     {
-        public MergeInfo(string projectPath, int version, AvailableDifficulty difficulty)
-        {
-            ProjectPath = projectPath;
-            Difficulty = difficulty;
-            ProjectVersion = version;
-        }
-
         public string ProjectPath
         {
             get;
             private set;
-        }
+        } = projectPath;
 
         public int ProjectVersion
         {
             get;
             private set;
-        }
+        } = version;
 
         public AvailableDifficulty Difficulty
         {
             get;
             private set;
-        }
+        } = difficulty;
     }
 }

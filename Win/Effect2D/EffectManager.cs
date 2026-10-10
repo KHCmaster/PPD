@@ -5,7 +5,6 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
 
 namespace Effect2D
@@ -23,6 +22,7 @@ namespace Effect2D
     /// </summary>
     public class EffectManager : IEffect
     {
+
         /// <summary>
         /// 終了イベント
         /// </summary>
@@ -71,7 +71,7 @@ namespace Effect2D
         }
 
         PlayState state = PlayState.Stop;
-        Stopwatch stopwatch;
+        readonly Stopwatch stopwatch;
         float currentFrame;
         PlayType playType = PlayType.Once;
 
@@ -155,8 +155,8 @@ namespace Effect2D
         {
             stopwatch = new Stopwatch();
             FPS = 60;
-            Effects = new List<IEffect>();
-            Sets = new SortedList<int, EffectStateRatioSet>();
+            Effects = [];
+            Sets = [];
             var set = new EffectStateRatioSet
             {
                 StartState = new EffectStateStructure(),
@@ -259,7 +259,7 @@ namespace Effect2D
                 stopwatch.Stop();
                 stopwatch.Reset();
                 currentFrame = FrameLength;
-                if (Finish != null) Finish.Invoke(this, EventArgs.Empty);
+                Finish?.Invoke(this, EventArgs.Empty);
             }
             else if (currentFrame < 0 && playType == PlayType.ReverseOnce)
             {
@@ -267,7 +267,7 @@ namespace Effect2D
                 stopwatch.Stop();
                 stopwatch.Reset();
                 currentFrame = 0;
-                if (Finish != null) Finish.Invoke(this, EventArgs.Empty);
+                Finish?.Invoke(this, EventArgs.Empty);
             }
             InnerUpdate();
         }
@@ -275,22 +275,33 @@ namespace Effect2D
         private void InnerUpdate()
         {
             EffectStateRatioSet set = Sets.Values[BinaryFinder.FindNearest(Sets.Keys, ref currentFrame)];
-            CurrentState = set.StartState.GetMixedState(set.GetRatios(CurrentFrame), set.EndState);
-            Parallel.ForEach(Effects, new ParallelOptions { MaxDegreeOfParallelism = Environment.ProcessorCount }, effect =>
+            // 毎フレームの確保を避けるため、比は stackalloc で、状態は前のフレームのインスタンスに書き込む
+            Span<float> ratios = stackalloc float[Utility.RatioTypeArray.Length];
+            set.GetRatios(CurrentFrame, ratios);
+            CurrentState ??= new EffectStateStructure();
+            CurrentState.SetMixedState(set.StartState, ratios, set.EndState);
+            // 子のエフェクトの更新は 1 つあたり数マイクロ秒なので、並列にするとスレッドを起こす・待つコストのほうが大きい
+            // （CPU の計測で、メインスレッドの時間の約 25% がこの待ちだった）。順に更新する
+            foreach (var effect in Effects)
             {
-                if (effect.Effects.Count == 0) effect.Update(currentFrame, CurrentState);
-                else effect.Update(currentFrame * effect.FPS / FPS, CurrentState);
-            });
+                UpdateEffect(effect);
+            }
         }
 
-        private float NormalizeValue(float val, float baseval)
+        private void UpdateEffect(IEffect effect)
+        {
+            if (effect.Effects.Count == 0) effect.Update(currentFrame, CurrentState);
+            else effect.Update(currentFrame * effect.FPS / FPS, CurrentState);
+        }
+
+        private static float NormalizeValue(float val, float baseval)
         {
             val = (float)Math.IEEERemainder(val, baseval);
             if (val < 0) val += baseval;
             return val;
         }
 
-        private float ReverseValue(float val, float baseval)
+        private static float ReverseValue(float val, float baseval)
         {
             if (val > baseval) return baseval * 2 - val;
             else return val;
@@ -402,7 +413,7 @@ namespace Effect2D
             }
         }
 
-        private void WriteEffect(IEffect effect, XmlWriter writer)
+        private static void WriteEffect(IEffect effect, XmlWriter writer)
         {
             if (effect.Effects.Count == 0)
             {
@@ -442,7 +453,7 @@ namespace Effect2D
             }
         }
 
-        private void WriteSets(SortedList<int, EffectStateRatioSet> sets, XmlWriter writer)
+        private static void WriteSets(SortedList<int, EffectStateRatioSet> sets, XmlWriter writer)
         {
             bool first = true;
             foreach (EffectStateRatioSet set in sets.Values)
@@ -469,7 +480,7 @@ namespace Effect2D
             }
         }
 
-        private void WriteBezierPosition(BezierAnalyzer BAnalyzer, XmlWriter writer)
+        private static void WriteBezierPosition(BezierAnalyzer BAnalyzer, XmlWriter writer)
         {
             writer.WriteStartElement("BezierPositions");
             foreach (BezierControlPoint bcp in BAnalyzer.BCPS)
@@ -483,7 +494,7 @@ namespace Effect2D
             writer.WriteEndElement();
         }
 
-        private void WriteState(EffectStateStructure state, XmlWriter writer)
+        private static void WriteState(EffectStateStructure state, XmlWriter writer)
         {
             writer.WriteStartElement("State");
             foreach (RatioType type in Utility.RatioTypeArray)
@@ -498,7 +509,7 @@ namespace Effect2D
             writer.WriteEndElement();
         }
 
-        private void WriteRaioMaker(IRatioMaker ratiomaker, RatioType type, XmlWriter writer)
+        private static void WriteRaioMaker(IRatioMaker ratiomaker, RatioType type, XmlWriter writer)
         {
             writer.WriteStartElement("RatioMaker");
             writer.WriteStartAttribute("Type");

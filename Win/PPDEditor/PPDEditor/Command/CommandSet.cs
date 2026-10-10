@@ -4,11 +4,11 @@ namespace PPDEditor.Command
 {
     class CommandSet : Command
     {
-        List<Command> commands;
+        readonly List<Command> commands;
         CommandType commandType;
         public CommandSet()
         {
-            commands = new List<Command>();
+            commands = [];
         }
 
         public void AddCommand(Command command)

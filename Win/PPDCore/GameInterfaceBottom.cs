@@ -1,5 +1,6 @@
 ﻿using PPDFramework;
-using SharpDX;
+using System.Numerics;
+using PPDMath;
 
 namespace PPDCore
 {
@@ -8,11 +9,11 @@ namespace PPDCore
     /// </summary>
     class GameInterfaceBottom : GameComponent
     {
-        PictureObject bottom;
-        PictureObject bottomdanger;
-        LifeGage lg;
-        TemporaryEvaluate te;
-        TextureString kasi;
+        readonly PictureObject bottom;
+        readonly PictureObject bottomdanger;
+        readonly LifeGage lg;
+        readonly TemporaryEvaluate te;
+        readonly TextureString kasi;
         bool _danger;
 
         public bool Danger
@@ -59,6 +60,11 @@ namespace PPDCore
             {
                 kasi.Text = value;
             }
+        }
+
+        public void PrefetchKasi(string characters)
+        {
+            kasi.PrefetchCharacters(characters);
         }
 
         public GameInterfaceBottom(PPDDevice device, PPDFramework.Resource.ResourceManager resourceManager, PPDGameUtility gameUtility) : base(device)

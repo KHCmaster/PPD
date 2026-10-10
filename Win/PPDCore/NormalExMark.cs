@@ -3,30 +3,25 @@ using PPDCoreModel.Data;
 using PPDFramework;
 using PPDFramework.PPDStructure.EVDData;
 using PPDFramework.PPDStructure.PPDData;
-using SharpDX;
+using System.Numerics;
+using PPDMath;
 using System;
 using System.Collections.Generic;
 
 namespace PPDCore
 {
-    class NormalExMark : ExMarkBase
+    class NormalExMark(PPDDevice device, PPDFramework.Resource.ResourceManager resourceManager, MarkImagePathsBase filenames, ExMarkData emd, ButtonType type, float[] eval,
+        float gap, Vector2[] circlepoints, DisplayState dState, NoteType noteType, int sameTimingMarks, KeyValuePair<string, string>[] parameters, PostDrawManager postDrawManager) : ExMarkBase(device, resourceManager, filenames, emd, type, eval, gap, dState, noteType, sameTimingMarks, parameters, postDrawManager)
     {
         PictureObject outCircle;
         PictureObject outAxis;
         NormalExMarkGage gage;
-        Vector2[] circlePoints;
-
-        public NormalExMark(PPDDevice device, PPDFramework.Resource.ResourceManager resourceManager, MarkImagePathsBase filenames, ExMarkData emd, ButtonType type, float[] eval,
-            float gap, Vector2[] circlepoints, DisplayState dState, NoteType noteType, int sameTimingMarks, KeyValuePair<string, string>[] parameters, PostDrawManager postDrawManager)
-            : base(device, resourceManager, filenames, emd, type, eval, gap, dState, noteType, sameTimingMarks, parameters, postDrawManager)
-        {
-            this.circlePoints = circlepoints;
-        }
+        readonly Vector2[] circlePoints = circlepoints;
 
         public override void Initialize(CreateMarkFunc createMark, GetScriptAllowedButtonsFunc getScriptAllowedButtons)
         {
             base.Initialize(createMark, getScriptAllowedButtons);
-            filenames.GetLongNoteCircleInfo(out PathObject fn, out float a, out float b);
+            filenames.GetLongNoteCircleInfo(out PathObject fn, out _, out _);
             outCircle = new PictureObject(device, resourceManager, fn, true);
             outAxis = new PictureObject(device, resourceManager, filenames.GetCircleAxisImagePath(), true);
             outCircle.Scale = outAxis.Scale = Vector2.Zero;

@@ -1,5 +1,7 @@
 ﻿using PPDFramework;
-using SharpDX;
+using System.Numerics;
+using PPDMath;
+using RectangleF = Vortice.Mathematics.Rect;
 
 namespace PPDCore
 {
@@ -8,8 +10,8 @@ namespace PPDCore
     /// </summary>
     class TemporaryEvaluate : GameComponent
     {
-        PictureObject[] gages;
-        PictureObject movieposdraw;
+        readonly PictureObject[] gages;
+        readonly PictureObject movieposdraw;
 
         int currentdraw = 4;
 
@@ -17,7 +19,7 @@ namespace PPDCore
         {
             set
             {
-                movieposdraw.Position = new SharpDX.Vector2(value - movieposdraw.Width / 2, movieposdraw.Position.Y);
+                movieposdraw.Position = new System.Numerics.Vector2(value - movieposdraw.Width / 2, movieposdraw.Position.Y);
             }
         }
 
@@ -25,7 +27,7 @@ namespace PPDCore
         {
             movieposdraw = new PictureObject(device, resourceManager, Utility.Path.Combine("movieseeker", "movieseeker.png"))
             {
-                Position = new SharpDX.Vector2(0, -1)
+                Position = new System.Numerics.Vector2(0, -1)
             };
             this.AddChild(movieposdraw);
 
@@ -53,7 +55,7 @@ namespace PPDCore
 
         private void InitializeComponentPosition()
         {
-            this.Position = new SharpDX.Vector2(0, 41);
+            this.Position = new System.Numerics.Vector2(0, 41);
         }
 
         /// <summary>

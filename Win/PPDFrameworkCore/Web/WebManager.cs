@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
+using System.Threading;
 
 namespace PPDFrameworkCore.Web
 {
@@ -12,7 +13,7 @@ namespace PPDFrameworkCore.Web
 #pragma warning restore RECS0014 // If all fields, properties and methods members are static, the class can be made static.
     {
         private static string baseUrl;
-        private static object baseUrlLock = new object();
+        private static readonly Lock baseUrlLock = new();
 
         /// <summary>
         /// 既定のURLです。

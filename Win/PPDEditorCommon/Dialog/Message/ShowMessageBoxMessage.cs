@@ -1,19 +1,12 @@
-﻿using GalaSoft.MvvmLight.Messaging;
-
+﻿
 namespace PPDEditorCommon.Dialog.Message
 {
-    class ShowMessageBoxMessage : MessageBase
+    class ShowMessageBoxMessage(object sender, string text) : MessageBase(sender)
     {
         public string Text
         {
             get;
             private set;
-        }
-
-        public ShowMessageBoxMessage(object sender, string text)
-            : base(sender)
-        {
-            Text = text;
-        }
+        } = text;
     }
 }

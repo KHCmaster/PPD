@@ -1,67 +1,15 @@
-﻿using PPDConfiguration;
-using System;
+﻿using System.Windows.Controls;
 
 namespace PPDInstaller.Controls
 {
-    public partial class StartPanel : PanelBase
+    /// <summary>
+    /// 最初のページ（かんたんインストールかカスタムインストールかを選ぶ）です。処理は <see cref="ViewModels.StartPageViewModel"/> にあります。
+    /// </summary>
+    public partial class StartPanel : UserControl
     {
         public StartPanel()
         {
             InitializeComponent();
-        }
-
-        public override bool CanPrevious
-        {
-            get
-            {
-                return false;
-            }
-        }
-
-        public override bool IsPreviousVisible
-        {
-            get
-            {
-                return false;
-            }
-        }
-
-        public override bool CanNext
-        {
-            get
-            {
-                return false;
-            }
-        }
-
-        public override bool IsNextVisible
-        {
-            get
-            {
-                return false;
-            }
-        }
-
-        public override void SetLang(SettingReader setting)
-        {
-            base.SetLang(setting);
-            this.label1.Text = setting["Label1"];
-            this.button1.Text = setting["EasyInstall"];
-            this.button2.Text = setting["CustomInstall"];
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            while (!(PanelManager.CurrentPanel is ConfirmPanel))
-            {
-                PanelManager.Next();
-            }
-            PanelManager.Next();
-        }
-
-        private void button2_Click(object sender, EventArgs e)
-        {
-            PanelManager.Next();
         }
     }
 }

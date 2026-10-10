@@ -16,9 +16,9 @@ namespace FlowScriptEnginePPDEditor.FlowSourceObjects.Song
         protected override void OnInitialize()
         {
             base.OnInitialize();
-            if (Manager.Items.ContainsKey("SongInfo"))
+            if (Manager.Items.TryGetValue("SongInfo", out object value))
             {
-                songInfo = Manager.Items["SongInfo"] as ISongInfo;
+                songInfo = value as ISongInfo;
             }
         }
 

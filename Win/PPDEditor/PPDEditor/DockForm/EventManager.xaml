@@ -1,0 +1,37 @@
+<forms:DockView x:Class="PPDEditor.EventManager"
+                xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                xmlns:forms="clr-namespace:PPDEditor.Forms"
+                xmlns:controls="clr-namespace:PPDEditor.Controls"
+                xmlns:vm="clr-namespace:PPDEditor.ViewModels.Docks"
+                xmlns:conv="clr-namespace:PPDEditor.Converters"
+                mc:Ignorable="d" d:DataContext="{d:DesignInstance Type=vm:EventManagerViewModel}">
+    <forms:DockView.Resources>
+        <conv:BindingProxy x:Key="Proxy" Data="{Binding}" />
+    </forms:DockView.Resources>
+    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+        <StackPanel Width="282" HorizontalAlignment="Left">
+            <DataGrid x:Name="eventGrid" ItemsSource="{Binding Items}" SelectedIndex="{Binding SelectedIndex}" Height="132" AutoGenerateColumns="False" IsReadOnly="True" SelectionMode="Single"
+                      SelectionUnit="FullRow" HeadersVisibility="Column" CanUserSortColumns="False" CanUserAddRows="False">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="{Binding Data.Texts[EMDataGridColumn1], Source={StaticResource Proxy}}" Binding="{Binding Key}" Width="Auto" />
+                    <DataGridTextColumn Header="{Binding Data.Texts[EMDataGridColumn2], Source={StaticResource Proxy}}" Binding="{Binding Value}" Width="*" />
+                </DataGrid.Columns>
+            </DataGrid>
+            <StackPanel Margin="12,6,12,12">
+                <StackPanel Orientation="Horizontal">
+                    <Button AutomationProperties.AutomationId="EventAddButton" Content="{Binding Texts[EMButton1]}" MinWidth="91" Height="23" Padding="6,0" Command="{Binding AddCommand}" />
+                    <Button AutomationProperties.AutomationId="EventEditButton" Content="{Binding Texts[EMButton3]}" MinWidth="120" Height="23" Margin="6,0,0,0" Padding="6,0" Command="{Binding EditSelectedCommand}" />
+                </StackPanel>
+                <Button AutomationProperties.AutomationId="EventDeleteButton" Content="{Binding Texts[EMButton2]}" HorizontalAlignment="Left" MinWidth="182" Height="23" Margin="0,6,0,0" Padding="6,0" Command="{Binding DeleteSelectedCommand}" />
+                <DockPanel Width="208" HorizontalAlignment="Left" Margin="0,8,0,0">
+                    <controls:NumericUpDown DockPanel.Dock="Right" Width="100" DecimalPlaces="2" Increment="0.01" Minimum="-100" Maximum="100" Value="{Binding ShiftAmount}" />
+                    <TextBlock Text="{Binding Texts[EMLabel1]}" VerticalAlignment="Center" />
+                </DockPanel>
+                <Button Content="{Binding Texts[EMButton4]}" HorizontalAlignment="Left" Width="208" Height="23" Margin="0,6,0,0" Command="{Binding ShiftSelectedCommand}" />
+            </StackPanel>
+        </StackPanel>
+    </ScrollViewer>
+</forms:DockView>

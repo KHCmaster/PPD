@@ -3,26 +3,15 @@ using System;
 
 namespace PPDInput
 {
-    class InputInfo : InputInfoBase
+    class InputInfo(bool accurate) : InputInfoBase(accurate)
     {
         private int[] pressCount;
         private bool[] released;
 
-        public InputInfo(bool accurate)
-            : base(accurate)
-        {
-        }
-
         public void Update(int[] keyPressCount, bool[] keyReleased, int[] buttonPressCount, bool[] buttonReleased)
         {
-            if (pressCount == null)
-            {
-                pressCount = new int[keyPressCount.Length];
-            }
-            if (released == null)
-            {
-                released = new bool[keyReleased.Length];
-            }
+            pressCount ??= new int[keyPressCount.Length];
+            released ??= new bool[keyReleased.Length];
 
             for (int i = 0; i < keyPressCount.Length; i++)
             {

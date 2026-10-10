@@ -4,10 +4,7 @@ using System.Text;
 
 namespace BlueSky
 {
-    internal class JsonContent<T> : StringContent
+    internal class JsonContent<T>(T value, JsonSerializerSettings serializerSettings) : StringContent(JsonConvert.SerializeObject(value, serializerSettings), Encoding.UTF8, "application/json")
     {
-        public JsonContent(T value, JsonSerializerSettings serializerSettings) : base(JsonConvert.SerializeObject(value, serializerSettings), Encoding.UTF8, "application/json")
-        {
-        }
     }
 }

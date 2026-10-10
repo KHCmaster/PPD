@@ -4,7 +4,7 @@ namespace PPDExpansion
 {
     class Utility
     {
-        private static ExLanguageReader langReader = new ExLanguageReader("PPDExpansion");
+        private static readonly ExLanguageReader langReader = new("PPDExpansion");
 
         public static ExLanguageReader Language
         {

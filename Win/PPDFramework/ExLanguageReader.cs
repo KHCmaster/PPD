@@ -5,16 +5,12 @@ namespace PPDFramework
     /// <summary>
     /// 言語読み取りクラスです。
     /// </summary>
-    public class ExLanguageReader : LanguageReader
+    /// <remarks>
+    /// コンストラクタです。
+    /// </remarks>
+    /// <param name="componentName"></param>
+    public class ExLanguageReader(string componentName) : LanguageReader(
+            componentName, PPDSetting.Setting.LangISO)
     {
-        /// <summary>
-        /// コンストラクタです。
-        /// </summary>
-        /// <param name="componentName"></param>
-        public ExLanguageReader(string componentName)
-            : base(
-                componentName, PPDSetting.Setting.LangISO)
-        {
-        }
     }
 }

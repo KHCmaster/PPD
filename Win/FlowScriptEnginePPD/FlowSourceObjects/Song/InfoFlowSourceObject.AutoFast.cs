@@ -9,65 +9,37 @@ namespace FlowScriptEnginePPD.FlowSourceObjects.Song
     {
         public override object GetPropertyValue(string propertyName)
         {
-            switch (propertyName)
+            return propertyName switch
             {
-                case "AllLongMarkCount":
-                    return AllLongMarkCount;
-                case "AllMarkCount":
-                    return AllMarkCount;
-                case "AuthorName":
-                    return AuthorName;
-                case "BPM":
-                    return BPM;
-                case "Difficulty":
-                    return Difficulty;
-                case "DifficultyPointAverage":
-                    return DifficultyPointAverage;
-                case "DifficultyPointPeak":
-                    return DifficultyPointPeak;
-                case "DifficultyString":
-                    return DifficultyString;
-                case "EndTime":
-                    return EndTime;
-                case "FiveMarkCount":
-                    return FiveMarkCount;
-                case "FourMarkCount":
-                    return FourMarkCount;
-                case "IsAuto":
-                    return IsAuto;
-                case "IsConnect":
-                    return IsConnect;
-                case "IsDebug":
-                    return IsDebug;
-                case "IsGodMode":
-                    return IsGodMode;
-                case "IsMuteSE":
-                    return IsMuteSE;
-                case "IsRandom":
-                    return IsRandom;
-                case "IsRegular":
-                    return IsRegular;
-                case "Marks":
-                    return Marks;
-                case "NoteType":
-                    return NoteType;
-                case "OneMarkCount":
-                    return OneMarkCount;
-                case "SixMarkCount":
-                    return SixMarkCount;
-                case "SongName":
-                    return SongName;
-                case "SpeedScale":
-                    return SpeedScale;
-                case "StartTime":
-                    return StartTime;
-                case "ThreeMarkCount":
-                    return ThreeMarkCount;
-                case "TwoMarkCount":
-                    return TwoMarkCount;
-                default:
-                    return null;
-            }
+                "AllLongMarkCount" => AllLongMarkCount,
+                "AllMarkCount" => AllMarkCount,
+                "AuthorName" => AuthorName,
+                "BPM" => BPM,
+                "Difficulty" => Difficulty,
+                "DifficultyPointAverage" => DifficultyPointAverage,
+                "DifficultyPointPeak" => DifficultyPointPeak,
+                "DifficultyString" => DifficultyString,
+                "EndTime" => EndTime,
+                "FiveMarkCount" => FiveMarkCount,
+                "FourMarkCount" => FourMarkCount,
+                "IsAuto" => IsAuto,
+                "IsConnect" => IsConnect,
+                "IsDebug" => IsDebug,
+                "IsGodMode" => IsGodMode,
+                "IsMuteSE" => IsMuteSE,
+                "IsRandom" => IsRandom,
+                "IsRegular" => IsRegular,
+                "Marks" => Marks,
+                "NoteType" => NoteType,
+                "OneMarkCount" => OneMarkCount,
+                "SixMarkCount" => SixMarkCount,
+                "SongName" => SongName,
+                "SpeedScale" => SpeedScale,
+                "StartTime" => StartTime,
+                "ThreeMarkCount" => ThreeMarkCount,
+                "TwoMarkCount" => TwoMarkCount,
+                _ => null,
+            };
         }
 
 

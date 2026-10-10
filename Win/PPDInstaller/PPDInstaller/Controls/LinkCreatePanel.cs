@@ -1,26 +1,15 @@
-﻿using PPDConfiguration;
+﻿using System.Windows.Controls;
 
 namespace PPDInstaller.Controls
 {
-    public partial class LinkCreatePanel : PanelBase
+    /// <summary>
+    /// スタートメニューに登録するかを選ぶページです。処理は <see cref="ViewModels.LinkCreatePageViewModel"/> にあります。
+    /// </summary>
+    public partial class LinkCreatePanel : UserControl
     {
         public LinkCreatePanel()
         {
             InitializeComponent();
-        }
-
-        public override void SetLang(SettingReader setting)
-        {
-            base.SetLang(setting);
-            registerStartMenuCheckBox.Text = setting["RegisterStartMenu"];
-        }
-
-        public bool CreateStartMenu
-        {
-            get
-            {
-                return registerStartMenuCheckBox.Checked;
-            }
         }
     }
 }

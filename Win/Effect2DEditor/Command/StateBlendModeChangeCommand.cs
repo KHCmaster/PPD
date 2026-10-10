@@ -2,18 +2,11 @@
 
 namespace Effect2DEditor.Command
 {
-    class StateBlendModeChangeCommand : CommandBase
+    class StateBlendModeChangeCommand(EffectManager manager, string exp, SelectedManager SManager, BlendMode blendMode) : CommandBase(manager, exp)
     {
-        SelectedManager SManager;
+        readonly SelectedManager SManager = SManager;
         BlendMode previousBlend;
-        BlendMode blendMode;
-
-        public StateBlendModeChangeCommand(EffectManager manager, string exp, SelectedManager SManager, BlendMode blendMode)
-            : base(manager, exp)
-        {
-            this.SManager = SManager;
-            this.blendMode = blendMode;
-        }
+        BlendMode blendMode = blendMode;
 
         public BlendMode BlendMode
         {

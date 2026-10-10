@@ -1,5 +1,7 @@
 ﻿using PPDFramework.Texture;
-using SharpDX;
+using System.Numerics;
+using PPDMath;
+using Color4 = Vortice.Mathematics.Color4;
 using System.Collections.Generic;
 
 namespace PPDFramework
@@ -7,19 +9,14 @@ namespace PPDFramework
     /// <summary>
     /// 1x1の色付きテクスチャを作成するクラスです
     /// </summary>
-    public class ColorTextureAllcator : DisposableComponent
+    /// <remarks>
+    /// コンストラクタです。
+    /// </remarks>
+    /// <param name="device"></param>
+    public class ColorTextureAllcator(PPDDevice device) : DisposableComponent
     {
-        PPDDevice device;
-        Dictionary<Color4, TextureBase> cache = new Dictionary<Color4, TextureBase>();
-
-        /// <summary>
-        /// コンストラクタです。
-        /// </summary>
-        /// <param name="device"></param>
-        public ColorTextureAllcator(PPDDevice device)
-        {
-            this.device = device;
-        }
+        readonly PPDDevice device = device;
+        readonly Dictionary<Color4, TextureBase> cache = [];
 
         /// <summary>
         /// テクスチャを作成します
@@ -43,14 +40,14 @@ namespace PPDFramework
             {
                 lock (cache)
                 {
-                    if (cache.ContainsKey(color))
+                    if (cache.TryGetValue(color, out TextureBase value))
                     {
-                        return cache[color];
+                        return value;
                     }
                 }
             }
             var texture = TextureFactoryManager.Factory.Create(device, 1, 1, 1, true);
-            texture.Write(new byte[] { (byte)(255 * color.Blue), (byte)(255 * color.Green), (byte)(255 * color.Red), (byte)(255 * color.Alpha) });
+            texture.Write([(byte)(255 * color.Blue), (byte)(255 * color.Green), (byte)(255 * color.Red), (byte)(255 * color.Alpha)]);
             if (withCache)
             {
                 lock (cache)

@@ -1,0 +1,66 @@
+<UserControl x:Class="Effect2DEditor.DockForm.PropertyDock"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:local="clr-namespace:Effect2DEditor"
+             xmlns:vm="clr-namespace:Effect2DEditor.ViewModels"
+             xmlns:effect="clr-namespace:Effect2D;assembly=Effect2D"
+             mc:Ignorable="d" d:DataContext="{d:DesignInstance Type=vm:PropertyViewModel}">
+    <UserControl.Resources>
+        <!-- TextBlock の仲間は、テンプレートの外の暗黙のスタイルが当たらないので、名前を付けて使う -->
+        <Style x:Key="ValueLabel" TargetType="local:ChangeValueLabel">
+            <Setter Property="HorizontalAlignment" Value="Right" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Margin" Value="0,0,6,0" />
+        </Style>
+        <Style TargetType="TextBox">
+            <Setter Property="Width" Value="100" />
+            <Setter Property="Height" Value="20" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+        </Style>
+        <Style TargetType="Button">
+            <Setter Property="Width" Value="25" />
+            <Setter Property="Height" Value="23" />
+            <Setter Property="Margin" Value="6,0,0,0" />
+        </Style>
+    </UserControl.Resources>
+    <!-- 名前、値、変化の割合のボタンを並べる。名前を左右にドラッグすると値が変わる -->
+    <StackPanel Margin="6" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.IsSharedSizeScope="True">
+        <Grid Height="25">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" MinWidth="62" SharedSizeGroup="Name" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <local:ChangeValueLabel Text="Blend" Style="{StaticResource ValueLabel}" />
+            <ComboBox AutomationProperties.AutomationId="BlendCombo" Grid.Column="1" Width="100" Height="20" VerticalAlignment="Center"
+                      ItemsSource="{Binding BlendModes}" SelectedItem="{Binding SelectedBlendMode}" />
+        </Grid>
+        <ItemsControl ItemsSource="{Binding Rows}">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Grid Height="25">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" MinWidth="62" SharedSizeGroup="Name" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <local:ChangeValueLabel Text="{Binding Label}" Style="{StaticResource ValueLabel}" ValueChange="ValueLabel_ValueChange" />
+                        <TextBox AutomationProperties.AutomationId="{Binding Type, StringFormat={}{0}Box}" Grid.Column="1" Text="{Binding Text, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsTextEnabled}" />
+                        <Button AutomationProperties.AutomationId="{Binding Type, StringFormat={}{0}RatioButton}" Grid.Column="2" IsEnabled="{Binding IsRatioEnabled}"
+                                Command="{Binding DataContext.EditRatioCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}" CommandParameter="{Binding Type}" />
+                    </Grid>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <Grid Height="25">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <local:ChangeValueLabel Text="BezierPosition" Style="{StaticResource ValueLabel}" />
+            <Button AutomationProperties.AutomationId="BezierPositionButton" Grid.Column="1" HorizontalAlignment="Right" IsEnabled="{Binding IsBezierPositionEnabled}"
+                    Command="{Binding EditRatioCommand}" CommandParameter="{x:Static effect:RatioType.BezierPosition}" />
+        </Grid>
+    </StackPanel>
+</UserControl>

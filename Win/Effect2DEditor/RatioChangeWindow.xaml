@@ -1,0 +1,23 @@
+<Window x:Class="Effect2DEditor.RatioChangeWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Effect2DEditor"
+        xmlns:vm="clr-namespace:Effect2DEditor.ViewModels.Dialogs"
+        mc:Ignorable="d" d:DataContext="{d:DesignInstance Type=vm:RatioChangeViewModel}"
+        Title="RatioChangeForm" Width="250" Height="205" WindowStyle="None" ResizeMode="NoResize" ShowInTaskbar="False"
+        WindowStartupLocation="Manual" SourceInitialized="Window_SourceInitialized">
+    <Border BorderBrush="Gray" BorderThickness="1" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}">
+        <Canvas>
+            <Border Canvas.Left="25" Canvas.Top="11" BorderBrush="Gray" BorderThickness="1">
+                <local:BezierRatioDrawer x:Name="bezierRatioDrawer1" Width="128" Height="128" />
+            </Border>
+            <Button AutomationProperties.AutomationId="RatioLinearButton" Canvas.Left="159" Canvas.Top="11" Width="75" Height="23" Content="{Binding Texts[RCFButton3]}" Command="{Binding SetLinearCommand}" />
+            <Button AutomationProperties.AutomationId="RatioCopyButton" Canvas.Left="159" Canvas.Top="40" Width="75" Height="23" Content="{Binding Texts[RCFButton4]}" Command="{Binding CopyCommand}" />
+            <Button AutomationProperties.AutomationId="RatioPasteButton" Canvas.Left="159" Canvas.Top="69" Width="75" Height="23" Content="{Binding Texts[RCFButton5]}" Command="{Binding PasteCommand}" />
+            <Button AutomationProperties.AutomationId="RatioOkButton" Canvas.Left="11" Canvas.Top="171" Width="75" Height="23" Content="OK" IsDefault="True" Command="{Binding OkCommand}" />
+            <Button Canvas.Left="92" Canvas.Top="171" Width="75" Height="23" Content="Cancel" IsCancel="True" />
+        </Canvas>
+    </Border>
+</Window>

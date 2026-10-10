@@ -1,4 +1,6 @@
-﻿using SharpDX;
+﻿using System.Numerics;
+using PPDMath;
+using Color4 = Vortice.Mathematics.Color4;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -9,7 +11,7 @@ namespace PPDFramework.Mod
 {
     class ModSettingDatabase : SettingDataBase
     {
-        private static ModSettingDatabase setting = new ModSettingDatabase();
+        private static readonly ModSettingDatabase setting = new();
 
         private ModSettingDatabase()
         {
@@ -34,13 +36,13 @@ namespace PPDFramework.Mod
             string setting = this[key];
             if (String.IsNullOrEmpty(setting))
             {
-                return new Dictionary<string, object>();
+                return [];
             }
 
             return Parse(setting);
         }
 
-        private Dictionary<string, object> Parse(string setting)
+        private static Dictionary<string, object> Parse(string setting)
         {
             var document = XDocument.Parse(setting);
             var query = from p in document.Root.Elements("Setting")
@@ -49,7 +51,7 @@ namespace PPDFramework.Mod
                             {
                                 Key = p.Attribute("Key").Value,
 #pragma warning disable RECS0069 // Redundant explicit property name
-                                Value = p.Attribute("Value").Value,
+                                p.Attribute("Value").Value,
 #pragma warning restore RECS0069 // Redundant explicit property name
                                 Type = p.Attribute("Type").Value,
                             };
@@ -67,15 +69,13 @@ namespace PPDFramework.Mod
                         }
                         break;
                     case "Float":
-                        float floatVal;
-                        if (float.TryParse(elem.Value, NumberStyles.Float, CultureInfo.InvariantCulture, out floatVal))
+                        if (float.TryParse(elem.Value, NumberStyles.Float, CultureInfo.InvariantCulture, out float floatVal))
                         {
                             addValue = floatVal;
                         }
                         break;
                     case "Double":
-                        double doubleVal;
-                        if (double.TryParse(elem.Value, NumberStyles.Float, CultureInfo.InvariantCulture, out doubleVal))
+                        if (double.TryParse(elem.Value, NumberStyles.Float, CultureInfo.InvariantCulture, out double doubleVal))
                         {
                             addValue = doubleVal;
                         }
@@ -84,8 +84,7 @@ namespace PPDFramework.Mod
                         addValue = elem.Value;
                         break;
                     case "Boolean":
-                        bool boolVal;
-                        if (bool.TryParse(elem.Value, out boolVal))
+                        if (bool.TryParse(elem.Value, out bool boolVal))
                         {
                             addValue = boolVal;
                         }
@@ -93,7 +92,7 @@ namespace PPDFramework.Mod
                     case "Color4":
                         if (int.TryParse(elem.Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out intVal))
                         {
-                            addValue = new Color4(intVal);
+                            addValue = MathCompat.Color4FromRgba(intVal);
                         }
                         break;
                     default:
@@ -118,7 +117,7 @@ namespace PPDFramework.Mod
             this[key] = GetString(dict);
         }
 
-        private string GetString(Dictionary<string, object> dict)
+        private static string GetString(Dictionary<string, object> dict)
         {
             var document = new XDocument(new XElement("Root"));
             foreach (KeyValuePair<string, object> pair in dict)
@@ -150,10 +149,10 @@ namespace PPDFramework.Mod
                     type = "Boolean";
                     value = ((bool)pair.Value).ToString(CultureInfo.InvariantCulture);
                 }
-                else if (pair.Value is Color4)
+                else if (pair.Value is Color4 color)
                 {
                     type = "Color4";
-                    value = ((Color4)pair.Value).ToRgba().ToString(CultureInfo.InvariantCulture);
+                    value = color.ToRgbaInt().ToString(CultureInfo.InvariantCulture);
                 }
                 else
                 {
@@ -173,7 +172,7 @@ namespace PPDFramework.Mod
             {
                 return false;
             }
-            bool.TryParse(setting, out bool ret);
+            _ = bool.TryParse(setting, out bool ret);
             return ret;
         }
 
@@ -182,7 +181,7 @@ namespace PPDFramework.Mod
             this[GetAppliedKey(key)] = value.ToString();
         }
 
-        private string GetAppliedKey(string key)
+        private static string GetAppliedKey(string key)
         {
             return String.Format("IsApplied::{0}", key);
         }

@@ -12,7 +12,7 @@
                 if (text != value)
                 {
                     text = value;
-                    RaisePropertyChanged("Text");
+                    OnPropertyChanged(nameof(Text));
                 }
             }
         }

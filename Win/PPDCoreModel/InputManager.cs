@@ -6,7 +6,7 @@ namespace PPDCoreModel
     public class InputManager
     {
         bool forceEnabled;
-        bool[] disabled;
+        readonly bool[] disabled;
 
         public bool Modified
         {
@@ -16,7 +16,7 @@ namespace PPDCoreModel
 
         public InputManager()
         {
-            disabled = new bool[Enum.GetValues(typeof(MarkType)).Length];
+            disabled = new bool[Enum.GetValues<MarkType>().Length];
             Initialize();
         }
 

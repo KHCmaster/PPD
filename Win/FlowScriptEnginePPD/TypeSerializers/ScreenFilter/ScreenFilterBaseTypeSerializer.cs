@@ -14,7 +14,6 @@ namespace FlowScriptEnginePPD.TypeSerializers.ScreenFilter
 
         public override void Serialize(Serializer serializer, XElement element, object value)
         {
-            var filter = (ScreenFilterBase)value;
         }
     }
 }

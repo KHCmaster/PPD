@@ -7,7 +7,7 @@ namespace PPD
 {
     class PPDGeneralSetting : SettingDataBase
     {
-        private static PPDGeneralSetting setting = new PPDGeneralSetting();
+        private static readonly PPDGeneralSetting setting = new();
         public override string Name
         {
             get { return "PPDGeneral.setting"; }
@@ -90,57 +90,49 @@ namespace PPD
 
 
         #region Encrypt & Decrypt
-        string password = "i@w8ewgh8faot9aasPIJ(Y8y0ghio";
+        readonly string password = "i@w8ewgh8faot9aasPIJ(Y8y0ghio";
 
         private string EncryptString(string sourceString)
         {
-            var rijndael = new RijndaelManaged();
-            GenerateKeyFromPassword(password, rijndael.KeySize, out byte[] key, rijndael.BlockSize, out byte[] iv);
-            rijndael.Key = key;
-            rijndael.IV = iv;
-
             var strBytes = Encoding.UTF8.GetBytes(sourceString);
 
-            using (ICryptoTransform encryptor = rijndael.CreateEncryptor())
+            using var aes = CreateAes();
+            using ICryptoTransform encryptor = aes.CreateEncryptor();
+            try
             {
-                try
-                {
-                    var encBytes = encryptor.TransformFinalBlock(strBytes, 0, strBytes.Length);
-                    return Convert.ToBase64String(encBytes);
-                }
-                catch
-                {
-                    return "";
-                }
+                var encBytes = encryptor.TransformFinalBlock(strBytes, 0, strBytes.Length);
+                return Convert.ToBase64String(encBytes);
+            }
+            catch
+            {
+                return "";
             }
         }
 
         private string DecryptString(string sourceString)
         {
-            var rijndael = new RijndaelManaged();
-            GenerateKeyFromPassword(password, rijndael.KeySize, out byte[] key, rijndael.BlockSize, out byte[] iv);
-            rijndael.Key = key;
-            rijndael.IV = iv;
-
             var strBytes = Convert.FromBase64String(sourceString);
 
-            using (ICryptoTransform decryptor = rijndael.CreateDecryptor())
-            {
-                var decBytes = decryptor.TransformFinalBlock(strBytes, 0, strBytes.Length);
-                return Encoding.UTF8.GetString(decBytes);
-            }
+            using var aes = CreateAes();
+            using ICryptoTransform decryptor = aes.CreateDecryptor();
+            var decBytes = decryptor.TransformFinalBlock(strBytes, 0, strBytes.Length);
+            return Encoding.UTF8.GetString(decBytes);
         }
 
-        private void GenerateKeyFromPassword(string password, int keySize, out byte[] key, int blockSize, out byte[] iv)
+        /// <summary>
+        /// 保存済みの設定を読めるように、従来（RijndaelManaged + Rfc2898DeriveBytes）と同じ鍵・IV・方式の AES を作ります。
+        /// （鍵 256 ビット、ブロック 128 ビット、CBC、PKCS7。鍵と IV は PBKDF2-SHA1 1000 回で導出した 48 バイトを順に使う）
+        /// </summary>
+        private Aes CreateAes()
         {
             var salt = Encoding.UTF8.GetBytes("jps9u0sfd8kooASP`OP`JSA)(Yhi43");
-            var deriveBytes = new Rfc2898DeriveBytes(password, salt)
-            {
-                IterationCount = 1000
-            };
-
-            key = deriveBytes.GetBytes(keySize / 8);
-            iv = deriveBytes.GetBytes(blockSize / 8);
+            var aes = Aes.Create();
+            var keyLength = aes.KeySize / 8;
+            var ivLength = aes.BlockSize / 8;
+            var bytes = Rfc2898DeriveBytes.Pbkdf2(password, salt, 1000, HashAlgorithmName.SHA1, keyLength + ivLength);
+            aes.Key = bytes.AsSpan(0, keyLength).ToArray();
+            aes.IV = bytes.AsSpan(keyLength, ivLength).ToArray();
+            return aes;
         }
 
         #endregion

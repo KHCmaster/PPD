@@ -2,13 +2,8 @@
 
 namespace FlowScriptDrawControl.Command
 {
-    class AddScopeCommand : ScopeCommandBase
+    class AddScopeCommand(FlowAreaControl flowAreaControl, ScopeControl scopeControl, ScopeControl parentScopeControl) : ScopeCommandBase(flowAreaControl, scopeControl, parentScopeControl)
     {
-        public AddScopeCommand(FlowAreaControl flowAreaControl, ScopeControl scopeControl, ScopeControl parentScopeControl) :
-            base(flowAreaControl, scopeControl, parentScopeControl)
-        {
-        }
-
         public override void Execute()
         {
             AddScope();

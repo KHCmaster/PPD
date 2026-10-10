@@ -4,8 +4,9 @@ using PPDFramework.Sprites;
 using PPDFrameworkCore;
 using PPDInput;
 using PPDMovie;
-using SharpDX;
-using SharpDX.DirectInput;
+using System.Numerics;
+using PPDMath;
+using Vortice.DirectInput;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -88,12 +89,20 @@ namespace PPDTest
             testSceneManager.Add(typeof(NumberImageScene));
             testSceneManager.Add(typeof(ScreenFilterScene));
             testSceneManager.Add(typeof(MaskScene));
+            testSceneManager.Add(typeof(EffectScene));
+            testSceneManager.Add(typeof(Effect2DScene));
+            testSceneManager.Add(typeof(Effect2DPlayScene));
             testSceneManager.Add(typeof(MovieScene));
+            if (Args.ContainsKey("scene") && !testSceneManager.SetInitialScene(Args["scene"]))
+            {
+                MessageBox.Show(string.Format("シーン「{0}」が見つかりません。最初のシーンから始めます。{1}{1}{2}",
+                    Args["scene"], Environment.NewLine, string.Join(Environment.NewLine, testSceneManager.GetSceneNames())), "PPDTest");
+            }
             var scene = testSceneManager.Initialize();
             SetPropertyToScene(scene);
             scene.Load();
             sceneManager.CurrentScene = scene;
-            TextEditableControl.IMEStarted += control_IMEStarted;
+            TextEditableControl.IMEStarted += Control_IMEStarted;
         }
 
         private void SetPropertyToScene(ISceneBase scene)
@@ -104,7 +113,7 @@ namespace PPDTest
             scene.GameHost = this;
         }
 
-        void control_IMEStarted(object sender, EventArgs e)
+        void Control_IMEStarted(object sender, EventArgs e)
         {
         }
 
@@ -115,11 +124,18 @@ namespace PPDTest
 
         protected override void Update()
         {
+            // 閉じるボタン（WM_CLOSE）で終了する。確認はしない
+            if (Form.IsCloseRequired)
+            {
+                Form.CloseAdmitted = true;
+                ShouldBeExit = true;
+                return;
+            }
             InputInfoBase inputInfo = null;
             if (IsWindowActive)
             {
-                input.GetInput(new Key[]
-                {
+                input.GetInput(
+                [
                 Key.H,
                 Key.J,
                 Key.K,
@@ -132,14 +148,11 @@ namespace PPDTest
                 Key.E,
                 Key.Escape,
                 Key.Space
-                }, new int[] {
+                ], [
                 0,1,2,3,28024,19024,10024,1024,5,6,9,12
-                }, out inputInfo);
+                ], out inputInfo);
             }
-            if (inputInfo == null)
-            {
-                inputInfo = EmptyInputInfo.Instance;
-            }
+            inputInfo ??= EmptyInputInfo.Instance;
             sceneManager.Update(inputInfo, MouseInfo.Empty, null);
         }
 
@@ -150,6 +163,17 @@ namespace PPDTest
 
         public void Exit(object sender, EventArgs e)
         {
+            if (sceneManager != null)
+            {
+                sceneManager.CurrentScene?.Dispose();
+                sceneManager.Dispose();
+                sceneManager = null;
+            }
+
+            resourceManager?.Dispose();
+            resourceManager = null;
+            input?.Dispose();
+            input = null;
         }
 
         public IMovie GetMovie(SongInformation songInformation)
@@ -189,15 +213,13 @@ namespace PPDTest
 
         public void SetClipping(int x, int y, int width, int height)
         {
-            var ratio = new Vector2((float)device.Width / width, (float)device.Height / height);
-            var pos = new Vector2(x, y);
-            device.SetScissorRect(new SharpDX.Rectangle((int)(x * device.Scale.X + device.Offset.X), (int)(y * device.Scale.Y + device.Offset.Y),
+            device.SetScissorRect(new Vortice.Mathematics.RectI((int)(x * device.Scale.X + device.Offset.X), (int)(y * device.Scale.Y + device.Offset.Y),
                 (int)(width * device.Scale.X), (int)(height * device.Scale.Y)), true);
         }
 
         public void RestoreClipping()
         {
-            device.SetScissorRect(new SharpDX.Rectangle(0, 0, device.Width, device.Height), false);
+            device.SetScissorRect(new Vortice.Mathematics.RectI(0, 0, device.Width, device.Height), false);
         }
 
         public void AddNotify(string text)

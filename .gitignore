@@ -13,3 +13,6 @@ Thumbs.db
 /Win/packages
 /Mono/packages
 /Mono/.vs
+/Win/UnitTests/TestResults
+/Win/CoverageResults
+/Win/UITests/TestResults

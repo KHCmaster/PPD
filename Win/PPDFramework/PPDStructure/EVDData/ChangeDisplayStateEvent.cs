@@ -30,18 +30,13 @@
     /// <summary>
     /// マーク表示タイプ変更イベントクラス
     /// </summary>
-    public class ChangeDisplayStateEvent : IEVDData
+    /// <remarks>
+    /// コンストラクタ
+    /// </remarks>
+    /// <param name="time">時間</param>
+    /// <param name="displaystate">表示タイプ</param>
+    public class ChangeDisplayStateEvent(float time, DisplayState displaystate) : IEVDData(time, EventType.ChangeDisplayState)
     {
-        /// <summary>
-        /// コンストラクタ
-        /// </summary>
-        /// <param name="time">時間</param>
-        /// <param name="displaystate">表示タイプ</param>
-        public ChangeDisplayStateEvent(float time, DisplayState displaystate)
-            : base(time, EventType.ChangeDisplayState)
-        {
-            DisplayState = displaystate;
-        }
         /// <summary>
         /// 表示タイプ
         /// </summary>
@@ -49,6 +44,6 @@
         {
             get;
             private set;
-        }
+        } = displaystate;
     }
 }

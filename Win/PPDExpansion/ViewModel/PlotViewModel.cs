@@ -1,4 +1,4 @@
-﻿using GalaSoft.MvvmLight.Command;
+﻿using CommunityToolkit.Mvvm.Input;
 using PPDExpansionCore;
 using System;
 using System.Windows;
@@ -9,10 +9,10 @@ using System.Windows.Threading;
 
 namespace PPDExpansion.ViewModel
 {
-    abstract class PlotViewModel : PlayViewModel
+    abstract class PlotViewModel(MainWindowViewModel mainWindowViewModel) : PlayViewModel(mainWindowViewModel)
     {
-        protected readonly Dispatcher dispatcher;
-        protected readonly DateTime baseTime = new DateTime(2000, 1, 1);
+        protected readonly Dispatcher dispatcher = Dispatcher.CurrentDispatcher;
+        protected readonly DateTime baseTime = new(2000, 1, 1);
 
         protected ScoreInfo currentScoreInfo;
 
@@ -40,7 +40,7 @@ namespace PPDExpansion.ViewModel
                 if (xMinimum != value)
                 {
                     xMinimum = value;
-                    RaisePropertyChanged("XMinimum");
+                    OnPropertyChanged(nameof(XMinimum));
                 }
             }
         }
@@ -53,7 +53,7 @@ namespace PPDExpansion.ViewModel
                 if (xMaximum != value)
                 {
                     xMaximum = value;
-                    RaisePropertyChanged("XMaximum");
+                    OnPropertyChanged(nameof(XMaximum));
                 }
             }
         }
@@ -66,7 +66,7 @@ namespace PPDExpansion.ViewModel
                 if (yMinimum != value)
                 {
                     yMinimum = value;
-                    RaisePropertyChanged("YMinimum");
+                    OnPropertyChanged(nameof(YMinimum));
                 }
             }
         }
@@ -79,7 +79,7 @@ namespace PPDExpansion.ViewModel
                 if (yMaximum != value)
                 {
                     yMaximum = value;
-                    RaisePropertyChanged("YMaximum");
+                    OnPropertyChanged(nameof(YMaximum));
                 }
             }
         }
@@ -90,8 +90,8 @@ namespace PPDExpansion.ViewModel
         {
             get
             {
-                return zoomCommand ?? (zoomCommand = new RelayCommand<MouseWheelEventArgs>(
-                    ZoomCommand_Execute));
+                return zoomCommand ??= new RelayCommand<MouseWheelEventArgs>(
+                    ZoomCommand_Execute);
             }
         }
 
@@ -99,8 +99,8 @@ namespace PPDExpansion.ViewModel
         {
             get
             {
-                return resetZoomCommand ?? (resetZoomCommand = new RelayCommand<MouseButtonEventArgs>(
-                    ResetZoomCommand_Execute));
+                return resetZoomCommand ??= new RelayCommand<MouseButtonEventArgs>(
+                    ResetZoomCommand_Execute);
             }
         }
 
@@ -108,8 +108,8 @@ namespace PPDExpansion.ViewModel
         {
             get
             {
-                return panStartCommand ?? (panStartCommand = new RelayCommand<MouseButtonEventArgs>(
-                    PanStartCommand_Execute));
+                return panStartCommand ??= new RelayCommand<MouseButtonEventArgs>(
+                    PanStartCommand_Execute);
             }
         }
 
@@ -117,17 +117,10 @@ namespace PPDExpansion.ViewModel
         {
             get
             {
-                return panCommand ?? (panCommand = new RelayCommand<MouseEventArgs>(
-                    PanCommand_Execute));
+                return panCommand ??= new RelayCommand<MouseEventArgs>(
+                    PanCommand_Execute);
             }
         }
-
-        protected PlotViewModel(MainWindowViewModel mainWindowViewModel)
-            : base(mainWindowViewModel)
-        {
-            this.dispatcher = Dispatcher.CurrentDispatcher;
-        }
-
 
         private void ZoomCommand_Execute(MouseWheelEventArgs e)
         {
@@ -135,10 +128,7 @@ namespace PPDExpansion.ViewModel
             {
                 return;
             }
-            if (YMaximum == null)
-            {
-                YMaximum = ActualYMaximum;
-            }
+            YMaximum ??= ActualYMaximum;
             var pos = e.GetPosition(edgePanel);
             var ratio = new Point(pos.X / edgePanel.ActualWidth, 1 - pos.Y / edgePanel.ActualHeight);
             int h = YMaximum.Value - YMinimum.Value;
@@ -212,7 +202,7 @@ namespace PPDExpansion.ViewModel
 
         private void ResetZoomCommand_Execute(MouseButtonEventArgs e)
         {
-            if (!IsPlotArea((DependencyObject)e.OriginalSource, out EdgePanel edgePanel))
+            if (!IsPlotArea((DependencyObject)e.OriginalSource, out _))
             {
                 return;
             }
@@ -232,10 +222,7 @@ namespace PPDExpansion.ViewModel
             if (e.ChangedButton == MouseButton.Left && e.ButtonState == MouseButtonState.Pressed)
             {
                 panStartPoint = e.GetPosition(edgePanel);
-                if (YMaximum == null)
-                {
-                    YMaximum = ActualYMaximum;
-                }
+                YMaximum ??= ActualYMaximum;
                 panStartX = XMinimum.ToBinary();
                 panStartY = YMinimum.Value;
                 panStartHeight = YMaximum.Value - YMinimum.Value;
@@ -256,17 +243,14 @@ namespace PPDExpansion.ViewModel
             }
 
             var pos = e.GetPosition(edgePanel);
-            if (YMaximum == null)
-            {
-                YMaximum = ActualYMaximum;
-            }
+            YMaximum ??= ActualYMaximum;
             XMinimum = DateTime.FromBinary(panStartX + (long)(panStartWidth * (-pos.X + panStartPoint.X) / edgePanel.ActualWidth));
             YMinimum = panStartY + (int)(panStartHeight * (pos.Y - panStartPoint.Y) / edgePanel.ActualHeight);
             XMaximum = DateTime.FromBinary(xMinimum.ToBinary() + panStartWidth);
             YMaximum = YMinimum + panStartHeight;
         }
 
-        private bool IsPlotArea(DependencyObject dependencyObject, out EdgePanel edgePanel)
+        private static bool IsPlotArea(DependencyObject dependencyObject, out EdgePanel edgePanel)
         {
             edgePanel = null;
             while (dependencyObject != null)

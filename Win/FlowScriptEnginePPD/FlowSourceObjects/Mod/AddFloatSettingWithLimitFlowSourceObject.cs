@@ -35,10 +35,7 @@
             SetValue(nameof(Default));
             SetValue(nameof(Min));
             SetValue(nameof(Max));
-            if (modSettingManager != null)
-            {
-                modSettingManager.AddFloatSetting(Key, DisplayName, Description, Default, Min, Max);
-            }
+            modSettingManager?.AddFloatSetting(Key, DisplayName, Description, Default, Min, Max);
         }
     }
 }

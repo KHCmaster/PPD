@@ -1,4 +1,5 @@
-﻿using FlowScriptEngine;
+﻿using PPDMath;
+using FlowScriptEngine;
 
 namespace FlowScriptEngineSlimDX.FlowSourceObjects.Vector3
 {
@@ -11,27 +12,27 @@ namespace FlowScriptEngineSlimDX.FlowSourceObjects.Vector3
         }
 
         [ToolTipText("Vector_TransformCoordinate_A_Summary")]
-        public SharpDX.Vector3 A
+        public System.Numerics.Vector3 A
         {
             private get;
             set;
         }
 
         [ToolTipText("Vector_TransformCoordinate_B_Summary")]
-        public SharpDX.Matrix B
+        public System.Numerics.Matrix4x4 B
         {
             private get;
             set;
         }
 
         [ToolTipText("Vector_TransformCoordinate_Value_Summary")]
-        public SharpDX.Vector3 Value
+        public System.Numerics.Vector3 Value
         {
             get
             {
                 SetValue(nameof(A));
                 SetValue(nameof(B));
-                return SharpDX.Vector3.TransformCoordinate(A, B);
+                return System.Numerics.Vector3.TransformCoordinate(A, B);
             }
         }
     }

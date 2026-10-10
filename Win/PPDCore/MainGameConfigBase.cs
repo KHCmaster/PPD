@@ -4,7 +4,7 @@ namespace PPDCore
 {
     public class MainGameConfigBase
     {
-        private static MainGameConfigBase _default = new MainGameConfigBase();
+        private static readonly MainGameConfigBase _default = new();
 
         public static MainGameConfigBase Default
         {
