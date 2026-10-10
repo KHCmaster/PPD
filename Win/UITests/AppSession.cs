@@ -27,7 +27,7 @@ namespace UITests
         /// <summary>
         /// コピーしないファイルです（アカウントの情報や鍵を含むことがあるもの）。「*.拡張子」は、その拡張子のすべてのファイル。
         /// </summary>
-        static readonly string[] excludedFileNames = ["PPD.ini", "credentials.txt", "Data.pak", "*.ppk", "lastUser.txt"];
+        static readonly string[] excludedFileNames = ["PPD.ini", "credentials.txt", "Data.pak", "*.ppk", "lastUser.txt", "upload_settings.txt"];
 
         readonly Application application;
 
