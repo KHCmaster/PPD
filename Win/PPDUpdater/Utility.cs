@@ -32,6 +32,15 @@ namespace PPDUpdater
         public static string UpdateRegexGroup = "version";
 
 
+        /// <summary>
+        /// PPDUpdater のあるフォルダー（PPD のフォルダー）から、インストール先を決めます。
+        /// 一時フォルダーから動き直したときに、元のフォルダーを渡す。
+        /// </summary>
+        public static void SetApplicationDirectory(string dir)
+        {
+            KHCDir = Directory.GetParent(Path.GetFullPath(dir).TrimEnd(Path.DirectorySeparatorChar)).FullName;
+        }
+
         public static string GetRelativePath(string path, int level)
         {
             while (level > 0)

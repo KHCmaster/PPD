@@ -13,6 +13,11 @@ namespace PPDUpdater
         {
             var errorHandler = new ErrorHandler();
             errorHandler.Initialize();
+            // 自分自身や自分の使う dll も更新できるように、一時フォルダーにコピーして、そこから動き直す
+            if (SelfRelauncher.TryRelaunch(args))
+            {
+                return;
+            }
             var mutex = new System.Threading.Mutex(false, "PPDUpdater");
             if (mutex.WaitOne(0, false) == false)
             {
