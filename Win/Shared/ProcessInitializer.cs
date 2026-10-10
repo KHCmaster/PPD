@@ -35,6 +35,10 @@ namespace PPDShared
         /// <summary>
         /// フォルダーに、名前の dll があれば読み込みます。
         /// </summary>
+        /// <remarks>
+        /// 求められた版より古いときは読み込まない。この探し方は、LoadFrom で読み込んだ dll と同じフォルダーを探す .NET の探し方より先に動くので、
+        /// アプリのフォルダーに古い dll が残っていると（開発のときの、前のビルドのものなど）、skins にある正しい版を使えなくなる。
+        /// </remarks>
         /// <returns>見つからないときは null（ほかの方法で探す）。</returns>
         internal static Assembly ResolveFromDirectory(AssemblyLoadContext context, AssemblyName name, string directory)
         {
@@ -43,7 +47,24 @@ namespace PPDShared
                 return null;
             }
             var path = Path.Combine(directory, name.Name + ".dll");
-            return File.Exists(path) ? context.LoadFromAssemblyPath(path) : null;
+            if (!File.Exists(path))
+            {
+                return null;
+            }
+            try
+            {
+                var found = AssemblyName.GetAssemblyName(path);
+                if (name.Version != null && found.Version < name.Version)
+                {
+                    return null;
+                }
+            }
+            catch (BadImageFormatException)
+            {
+                // .NET の dll でないもの（ネイティブの dll など）は読み込まない
+                return null;
+            }
+            return context.LoadFromAssemblyPath(path);
         }
     }
 }
