@@ -139,7 +139,7 @@
                             <MenuItem Header="{Binding Texts[PublishMod]}" Command="{Binding PublishModCommand}" />
                             <Separator />
                             <MenuItem Header="{Binding Texts[RecentUsedFile]}" ItemsSource="{Binding RecentProjects}" ItemContainerStyle="{StaticResource RecentProjectItem}" />
-                            <MenuItem Header="{Binding Texts[Exit]}" Command="{Binding ExitCommand}" />
+                            <MenuItem AutomationProperties.AutomationId="ExitMenuItem" Header="{Binding Texts[Exit]}" Command="{Binding ExitCommand}" />
                         </MenuItem>
                         <MenuItem x:Name="editMenu" Header="{Binding Texts[Edit]}">
                             <MenuItem Header="{Binding Texts[Undo]}" Command="{Binding UndoCommand}" />
