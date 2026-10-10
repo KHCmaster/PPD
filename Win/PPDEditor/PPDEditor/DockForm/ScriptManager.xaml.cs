@@ -1,7 +1,7 @@
 ﻿using AvalonDock;
 using AvalonDock.Controls;
 using AvalonDock.Layout;
-using AvalonDock.Layout.Serialization;
+using AvalonDock.Serializer.Xml;
 using FlowScriptControl.Classes;
 using PPDEditor.DockForm.Script;
 using PPDEditor.Forms;

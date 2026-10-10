@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <!-- ViewModel や Model の単体テストです。画面は表示しないので、デスクトップがなくても実行できる -->
   <PropertyGroup>
     <TargetFramework>net10.0-windows</TargetFramework>
@@ -23,7 +23,7 @@
     <!-- PPDMath（SharpDX の計算を移したもの）が元と同じ結果になるかを、元の SharpDX と比べて確かめる。テストだけで使う -->
     <PackageReference Include="SharpDX.Mathematics" VersionOverride="4.2.0" />
     <!-- 以前に配った版の FlowScript のノードの DLL を、読み込まずに調べる（Mod の互換性のテスト） -->
-    <PackageReference Include="System.Reflection.MetadataLoadContext" VersionOverride="7.0.0" />
+    <PackageReference Include="System.Reflection.MetadataLoadContext" VersionOverride="10.0.12" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BMSTOPPD\BMSTOPPD\BMSTOPPD.csproj" />

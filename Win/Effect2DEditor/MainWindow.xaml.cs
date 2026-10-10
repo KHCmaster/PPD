@@ -1,5 +1,5 @@
-using AvalonDock.Layout;
-using AvalonDock.Layout.Serialization;
+﻿using AvalonDock.Layout;
+using AvalonDock.Serializer.Xml;
 using BezierCaliculator;
 using Effect2DEditor.ViewModels;
 using Effect2DEditor.ViewModels.Dialogs;

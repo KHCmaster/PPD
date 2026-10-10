@@ -47,13 +47,13 @@ namespace PPDInstaller
         {
             string fileFilter = "";
             // UTF-8 フラグのないファイル名は、従来（SharpZipLib 0.86）と同じく OEM コードページで読む
-            ICSharpCode.SharpZipLib.Zip.ZipStrings.CodePage = System.Globalization.CultureInfo.CurrentCulture.TextInfo.OEMCodePage;
             var fastZip =
                 new ICSharpCode.SharpZipLib.Zip.FastZip
                 {
                     RestoreAttributesOnExtract = true,
                     RestoreDateTimeOnExtract = true,
-                    CreateEmptyDirectories = true
+                    CreateEmptyDirectories = true,
+                    StringCodec = ICSharpCode.SharpZipLib.Zip.StringCodec.FromCodePage(System.Globalization.CultureInfo.CurrentCulture.TextInfo.OEMCodePage)
                 };
             fastZip.ExtractZip(path, unzippath, fileFilter);
         }

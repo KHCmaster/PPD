@@ -30,6 +30,7 @@
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" />
     <PackageReference Include="Dirkster.AvalonDock" />
+    <PackageReference Include="Dirkster.AvalonDock.Serializer.Xml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PPDMath\PPDMath.csproj" />
