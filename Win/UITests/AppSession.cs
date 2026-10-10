@@ -390,14 +390,15 @@ namespace UITests
         {
             // メインのウィンドウの中は探さない（PPDEditor のように大きいウィンドウでは、すべてを探すと時間切れになる）
             var mainHandle = HandleOf(MainWindow);
-            // ポップアップは、Win32 で見えるウィンドウと、UI Automation のデスクトップの子の両方から探す（どちらかにしか出ないことがある）
+            // ポップアップは、Win32 で見えるウィンドウと、UI Automation のデスクトップの子の両方から探す（どちらかにしか出ないことがある）。
+            // 探している間に閉じたウィンドウ（前のメニューなど）は例外になるので、探し直す
             var result = Retry.WhileNull(() => NativeWindows.OfProcess(application.ProcessId)
                 .Where(handle => handle != mainHandle)
                 .Select(handle => Automation.FromHandle(handle))
                 .Concat(Automation.GetDesktop().FindAllChildren(cf => cf.ByProcessId(application.ProcessId))
                     .Where(window => window.Properties.NativeWindowHandle.ValueOrDefault != mainHandle))
                 .Select(window => window.FindFirstDescendant(cf => cf.ByAutomationId(automationId)))
-                .FirstOrDefault(element => element != null), timeout ?? defaultTimeout);
+                .FirstOrDefault(element => element != null), timeout ?? defaultTimeout, ignoreException: true);
             return result.Result ?? throw new InvalidOperationException(automationId + " がポップアップにありません。");
         }
 
