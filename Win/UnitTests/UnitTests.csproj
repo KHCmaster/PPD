@@ -57,6 +57,7 @@
     <ProjectReference Include="..\PPDEditorCommon\PPDEditorCommon.csproj" />
     <ProjectReference Include="..\PPDPack\PPDPack.csproj" />
     <ProjectReference Include="..\PPDConfiguration\PPDConfiguration.csproj" />
+    <ProjectReference Include="..\PPDReleaser\PPDReleaser.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Update="xunit.runner.json" CopyToOutputDirectory="PreserveNewest" />
