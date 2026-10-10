@@ -9,6 +9,9 @@
     <EmbeddedResourceUseDependentUponConvention>false</EmbeddedResourceUseDependentUponConvention>
     <!-- WFO1000: WinForms デザイナー向けの分析（コントロールの公開プロパティに DesignerSerializationVisibility を付ける）。実行時の動作には影響しないので抑止する -->
     <NoWarn>$(NoWarn);WFO1000</NoWarn>
+    <!-- NuGet パッケージの言語ごとのリソース（AvalonDock.resources.dll など）は出力しない（言語ごとのフォルダーができないように）。
+         表示の言語は Lang の ini で切り替えるので、パッケージの文字は本体に入っている英語のままにする -->
+    <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
   </PropertyGroup>
   <ItemGroup>
     <!-- カルチャーのデータ（日付や数値の書式、文字列の比較など）を .NET Framework と同じ Windows の NLS にする。
