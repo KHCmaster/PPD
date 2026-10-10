@@ -7,15 +7,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlowScriptExec", "FlowScrip
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlowScriptEngine", "..\Win\FlowScriptEngine\FlowScriptEngine.csproj", "{952271CD-8EAC-46BD-B32E-D5262D26B290}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ErrorHandle", "..\Win\ErrorHandler\ErrorHandle.csproj", "{7BF2846D-6813-4E83-8B26-42C5B98B2099}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PPDFrameworkCore", "..\Win\PPDFrameworkCore\PPDFrameworkCore.csproj", "{97909DE9-E25A-43C5-8116-B5393D752132}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PPDMultiCommon", "..\Win\PPDMultiCommon\PPDMultiCommon.csproj", "{D51828FC-C5C4-44E3-B8D9-C64EC73510CE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PPDMultiServer", "..\Win\PPDMultiServer\PPDMultiServer.csproj", "{AA19D395-25AA-4DC7-B305-19051180E99E}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PPDMultiServerService", "..\Win\PPDMultiServerService\PPDMultiServerService.csproj", "{AE6B8D3A-0174-484A-9AE1-838F708D66BB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlowScriptEngineBasic", "..\Win\FlowScriptEngineBasic\FlowScriptEngineBasic.csproj", "{B0C2F685-552B-4D65-B4DC-666088802067}"
 EndProject
@@ -39,10 +35,6 @@ Global
 		{952271CD-8EAC-46BD-B32E-D5262D26B290}.Debug|x64.Build.0 = Debug|x64
 		{952271CD-8EAC-46BD-B32E-D5262D26B290}.Release|x64.ActiveCfg = Release|x64
 		{952271CD-8EAC-46BD-B32E-D5262D26B290}.Release|x64.Build.0 = Release|x64
-		{7BF2846D-6813-4E83-8B26-42C5B98B2099}.Debug|x64.ActiveCfg = Debug|x64
-		{7BF2846D-6813-4E83-8B26-42C5B98B2099}.Debug|x64.Build.0 = Debug|x64
-		{7BF2846D-6813-4E83-8B26-42C5B98B2099}.Release|x64.ActiveCfg = Release|x64
-		{7BF2846D-6813-4E83-8B26-42C5B98B2099}.Release|x64.Build.0 = Release|x64
 		{97909DE9-E25A-43C5-8116-B5393D752132}.Debug|x64.ActiveCfg = Debug|x64
 		{97909DE9-E25A-43C5-8116-B5393D752132}.Debug|x64.Build.0 = Debug|x64
 		{97909DE9-E25A-43C5-8116-B5393D752132}.Release|x64.ActiveCfg = Release|x64
@@ -55,10 +47,6 @@ Global
 		{AA19D395-25AA-4DC7-B305-19051180E99E}.Debug|x64.Build.0 = Debug|x64
 		{AA19D395-25AA-4DC7-B305-19051180E99E}.Release|x64.ActiveCfg = Release|x64
 		{AA19D395-25AA-4DC7-B305-19051180E99E}.Release|x64.Build.0 = Release|x64
-		{AE6B8D3A-0174-484A-9AE1-838F708D66BB}.Debug|x64.ActiveCfg = Debug|x64
-		{AE6B8D3A-0174-484A-9AE1-838F708D66BB}.Debug|x64.Build.0 = Debug|x64
-		{AE6B8D3A-0174-484A-9AE1-838F708D66BB}.Release|x64.ActiveCfg = Release|x64
-		{AE6B8D3A-0174-484A-9AE1-838F708D66BB}.Release|x64.Build.0 = Release|x64
 		{B0C2F685-552B-4D65-B4DC-666088802067}.Debug|x64.ActiveCfg = Debug|x64
 		{B0C2F685-552B-4D65-B4DC-666088802067}.Debug|x64.Build.0 = Debug|x64
 		{B0C2F685-552B-4D65-B4DC-666088802067}.Release|x64.ActiveCfg = Release|x64
@@ -81,8 +69,5 @@ Global
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {712D626A-C03E-4C3E-A256-9878EF6342EA}
-	EndGlobalSection
-	GlobalSection(MonoDevelopProperties) = preSolution
-		StartupItem = FlowScriptExec\FlowScriptExec.csproj
 	EndGlobalSection
 EndGlobal

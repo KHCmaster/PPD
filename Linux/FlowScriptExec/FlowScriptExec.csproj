@@ -1,0 +1,37 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Linux で FlowScript を実行するためのコンソールアプリ。参照する Win のライブラリは Linux でも動くように net10.0（-windows なし）にしている -->
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>FlowScriptExec</RootNamespace>
+    <AssemblyName>FlowScriptExec</AssemblyName>
+    <Platforms>x64</Platforms>
+    <!-- 出力先は従来どおり bin\<Platform>\<Configuration>\（net10.0 のフォルダーを付けない） -->
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <!-- バージョンなどは Properties\AssemblyInfo.cs で指定している -->
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Win\FlowScriptEngine\FlowScriptEngine.csproj" />
+    <ProjectReference Include="..\..\Win\FlowScriptEngineBasic\FlowScriptEngineBasic.csproj" />
+    <ProjectReference Include="..\..\Win\FlowScriptEngineBasicExtension\FlowScriptEngineBasicExtension.csproj" />
+    <ProjectReference Include="..\..\Win\FlowScriptEngineConsole\FlowScriptEngineConsole.csproj" />
+    <ProjectReference Include="..\..\Win\FlowScriptEngineData\FlowScriptEngineData.csproj" />
+  </ItemGroup>
+</Project>

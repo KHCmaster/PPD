@@ -5,6 +5,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Threading;
 using System.Reflection;
+using System.Text;
 
 namespace FlowScriptExec
 {
@@ -27,18 +28,24 @@ namespace FlowScriptExec
                 return;
             }
 
+            // .NET では Shift_JIS（932）などのコードページが既定では使えないので登録する（FlowScript の EncodingType で使う）
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+
             EnumerateFile("FlowScriptEngineBasic.dll");
             EnumerateFile("FlowScriptEngineBasicExtension.dll");
             EnumerateFile("FlowScriptEngineConsole.dll");
             EnumerateFile("FlowScriptEngineData.dll");
 
-            var thread = new Thread(Execute);
+            // .NET では Thread.Abort が使えないので、時間切れのときはプロセスごと終了する
+            var thread = new Thread(Execute)
+            {
+                IsBackground = true
+            };
             thread.Start(args);
             if (!thread.Join(TimeSpan.FromSeconds(5)))
             {
-                thread.Abort();
                 Console.Error.WriteLine("Time Limit Exceeded");
-                Environment.ExitCode = -1;
+                Environment.Exit(-1);
             }
         }
 
