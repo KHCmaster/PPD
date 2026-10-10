@@ -94,7 +94,8 @@ namespace PPDReleaser
                 .. ReleaseFiles.OtherFiles,
             ]);
 
-            CopyFile("Items\x64\fmodex64.dll", Path.Combine(pdCopyInfo.Dir, "fmodex64.dll"));
+            // fmodex64.dll は PPDReleaser のフォルダーにあるもの（今のフォルダーにかかわらず、PPDReleaser の場所から探す）
+            CopyFile(Path.Combine(AppContext.BaseDirectory, "Items", "x64", "fmodex64.dll"), Path.Combine(pdCopyInfo.Dir, "fmodex64.dll"));
             executables = [.. executables, "fmodex64.dll"];
             errors = [.. errors, .. CheckDependencies(pdCopyInfo.Dir)];
             if (errors.Length > 0)
