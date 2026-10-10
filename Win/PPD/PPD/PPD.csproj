@@ -32,6 +32,10 @@
     <PackageReference Include="Vortice.DirectInput" />
     <PackageReference Include="System.Data.SQLite.Core" />
     <PackageReference Include="YamlDotNet" />
+    <!-- skins の dll（PPDSingle、PPDMulti）が使うパッケージ。クラスライブラリはパッケージの dll を出力しないので、PPD が持つ
+         （PPD の deps.json に載るので、skins から読み込んだ dll も、PPD のフォルダーの正しい版を使う） -->
+    <PackageReference Include="SharpZipLib" />
+    <PackageReference Include="CommunityToolkit.Mvvm" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\PPDMath\PPDMath.csproj" />
