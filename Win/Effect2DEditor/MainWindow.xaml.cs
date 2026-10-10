@@ -1,4 +1,4 @@
-﻿using AvalonDock.Layout;
+using AvalonDock.Layout;
 using AvalonDock.Serializer.Xml;
 using BezierCaliculator;
 using Effect2DEditor.ViewModels;

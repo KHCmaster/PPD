@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <!-- ViewModel や Model の単体テストです。画面は表示しないので、デスクトップがなくても実行できる -->
   <PropertyGroup>
     <TargetFramework>net10.0-windows</TargetFramework>

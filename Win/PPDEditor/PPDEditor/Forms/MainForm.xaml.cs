@@ -1,4 +1,4 @@
-﻿using AvalonDock.Layout;
+using AvalonDock.Layout;
 using AvalonDock.Serializer.Xml;
 using PPDEditor.Controls;
 using PPDEditor.ViewModels;
