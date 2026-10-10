@@ -20,6 +20,8 @@ namespace UITests.PPDUpdater
             ExcludedFiles = ["PPDUpdater.ini", "install.info"],
             // 起動する前に確かめる
             Prepare = workDirectory => Assert.False(File.Exists(Path.Combine(workDirectory, "PPDUpdater.ini")), "更新のリストの場所がある設定をコピーしてはいけない"),
+            // 一時フォルダーから動き直すと、起動したプロセスがすぐ終わって画面を調べられないので、その場で動かす
+            Environment = { ["PPDUPDATER_NO_RELAUNCH"] = "1" },
         });
 
         public void Dispose()
