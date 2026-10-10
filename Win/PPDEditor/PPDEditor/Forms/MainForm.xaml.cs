@@ -61,6 +61,8 @@ namespace PPDEditor.Forms
         readonly Microsoft.Win32.SaveFileDialog saveFileDialog = new() { RestoreDirectory = true };
         // ゲームの画面でマウスを押している間、マークを動かす（以前と同じく 100 ミリ秒ごと）
         readonly DispatcherTimer moveMarkTimer = new() { Interval = TimeSpan.FromMilliseconds(100) };
+        // エラーで止まって閉じるときは、保存していない変更などを確かめない
+        bool forceClosing;
         readonly WriteDoneWindow saveDoneWindow = new();
 
         /// <summary>
@@ -416,6 +418,12 @@ namespace PPDEditor.Forms
 
         private void Window_Closing(object sender, CancelEventArgs e)
         {
+            // 終了のメニューでも閉じるボタンでも、保存していない変更などを確かめる（エラーで止まったときは確かめない）
+            if (!forceClosing && !ViewModel.CanClose())
+            {
+                e.Cancel = true;
+                return;
+            }
             moveMarkTimer.Stop();
             try
             {
@@ -444,20 +452,7 @@ namespace PPDEditor.Forms
         {
             var handle = new WindowInteropHelper(this).Handle;
             HwndSource.FromHwnd(handle).AddHook(WndProc);
-            const Int32 MF_BYPOSITION = 0x400;
-            const Int32 MF_REMOVE = 0x1000;
-
-            const UInt32 SC_CLOSE = 0x0000F060;
-            const UInt32 MF_BYCOMMAND = 0x00000000;
-            var menu = NativeMethods.GetSystemMenu(handle, false);
-            NativeMethods.RemoveMenu(menu, SC_CLOSE, MF_BYCOMMAND);
-            var menuCount = NativeMethods.GetMenuItemCount(menu);
-            if (menuCount > 1)
-            {
-                //メニューの「閉じる」を削除
-                NativeMethods.RemoveMenu(menu, (uint)(menuCount - 1), MF_BYPOSITION | MF_REMOVE);
-                NativeMethods.DrawMenuBar(handle);
-            }
+            // 以前は DirectX 9 のデバイスのリセットの問題のために閉じるボタンを無くしていたが、DirectX 11 では起きないので、閉じるボタンは残す
         }
 
         private IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
@@ -494,6 +489,7 @@ namespace PPDEditor.Forms
         /// </summary>
         public void ForceClose()
         {
+            forceClosing = true;
             try
             {
                 Close();

@@ -14,18 +14,6 @@ namespace PPDEditor
         [DllImport("winmm.dll")]
         internal static extern void timeEndPeriod(int x);
 
-        [DllImport("user32.dll")]
-        internal static extern IntPtr GetSystemMenu(IntPtr hWnd, bool bRevert);
-
-        [DllImport("user32.dll")]
-        internal static extern int GetMenuItemCount(IntPtr hMenu);
-
-        [DllImport("user32.dll")]
-        internal static extern bool DrawMenuBar(IntPtr hWnd);
-
-        [DllImport("user32.dll")]
-        internal static extern bool RemoveMenu(IntPtr hMenu, uint uPosition, uint uFlags);
-
         // ゲームの画面（GameView）のウィンドウで使う
 
         internal delegate IntPtr WndProc(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam);

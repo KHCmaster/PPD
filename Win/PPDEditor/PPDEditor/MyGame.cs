@@ -7,7 +7,6 @@ using PPDMath;
 using Point = Vortice.Mathematics.Int2;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Windows;
 using System.Windows.Interop;
 
@@ -44,12 +43,8 @@ namespace PPDEditor
 
         public MyGame(PPDExecuteArg args) : base(args)
         {
-            this.Window.Closing += Window_Closing;
-        }
-
-        private void Window_Closing(object sender, CancelEventArgs e)
-        {
-            ShouldBeExit = true;
+            // ゲームのループは、ウィンドウが閉じたとき（Closed）に止まる（Game）。
+            // 閉じる前（Closing）に止めると、保存の確かめでキャンセルしても、次のフレームでまた閉じようとしてしまう
         }
 
         protected override void Initialize()

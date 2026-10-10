@@ -869,25 +869,37 @@ namespace PPDEditor.ViewModels
             view.ShowMessage("Data was rescued at\n" + Path.GetFullPath(rescuedirectory));
         }
 
+        /// <summary>
+        /// 終了のメニューです。ウィンドウを閉じる（確かめと保存は、閉じるボタンと同じく <see cref="CanClose"/> でする）。
+        /// </summary>
         [RelayCommand]
         private void Exit()
         {
+            view.Close();
+        }
+
+        /// <summary>
+        /// ウィンドウを閉じてよいかを確かめ（動いている PPD やスクリプト、保存していない変更）、閉じるときは設定を保存します。
+        /// </summary>
+        /// <returns>閉じてよいかどうか。</returns>
+        public bool CanClose()
+        {
             if (!CheckProcess() || !CheckExecutor())
             {
-                return;
+                return false;
             }
             if (IsNotSaved)
             {
                 var answer = view.AskSave(Utility.Language["AskSave"], Utility.Language["Confirm"], false);
                 if (answer == null || answer == true && !SaveProjectAs())
                 {
-                    return;
+                    return false;
                 }
             }
             var placement = view.Placement;
             EditorSettingsStore.SaveConfig(placement.Bounds, placement.Maximized);
             SaveRecentProjects();
-            view.Close();
+            return true;
         }
 
         #endregion

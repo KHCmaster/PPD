@@ -101,6 +101,10 @@ namespace PPDEditor
         void Window_Closed(object sender, EventArgs e)
         {
             running = false;
+            // エディターのウィンドウを閉じたら、アプリを終わらせる。
+            // ShutdownMode.OnMainWindowClose はアプリのメインのウィンドウ（Application.MainWindow）が閉じたときだけ終わるので、
+            // ほかのウィンドウがメインのウィンドウになっていると、閉じてもプロセスが残る
+            application?.Shutdown();
         }
     }
 }
