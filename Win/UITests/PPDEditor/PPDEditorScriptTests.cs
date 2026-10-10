@@ -57,6 +57,11 @@ namespace UITests.PPDEditor
             FlaUI.Core.Input.Keyboard.Type(FlaUI.Core.WindowsAPI.VirtualKeyShort.ENTER);
             Assert.True(AppSession.WaitUntil(() => File.Exists(Path.Combine(ScriptsDirectory, "renamed.fsml"))), "名前が変わりません");
 
+            // 有効なスクリプトは、保存すると譜面（Base.ppd）の中に入る
+            Save();
+            Assert.True(session.WaitForNoModal(), session.DescribeModalWindows());
+            Assert.Contains("renamed", System.Text.Encoding.UTF8.GetString(File.ReadAllBytes(Path.Combine(ProjectDirectory, "Base.ppd"))));
+
             // 無効にすると、プロジェクトに書かれる
             ClickMenu(ItemNamed("renamed"), "ToggleScriptMenuItem");
             Save();

@@ -44,6 +44,26 @@ namespace UnitTests.Libraries
         }
 
         [Fact]
+        public void CopyTo_WritesIntoThePack()
+        {
+            // PPDEditor は、保存するときにスクリプトのファイルを CopyTo で書き込む（.NET は書き込めない先には書かない）
+            using var folder = new TempFolder();
+            var path = folder.Combine("a.pak");
+            using (var writer = new PackWriter(path))
+            {
+                foreach (var stream in writer.Write(["script"]))
+                {
+                    Assert.True(stream.CanWrite);
+                    using var source = new MemoryStream(Encoding.UTF8.GetBytes("<Root />"));
+                    source.CopyTo(stream);
+                }
+            }
+
+            using var reader = new PackReader(path);
+            Assert.Equal("<Root />", ReadAll(reader.Read("script")));
+        }
+
+        [Fact]
         public void LongFileName_IsCutTo255Bytes()
         {
             var stream = new MemoryStream();
@@ -93,7 +113,8 @@ namespace UnitTests.Libraries
                 {
                     var bytes = Encoding.ASCII.GetBytes(s.Filename == "first" ? "0123456789" : "abcdef");
                     s.Write(bytes, 0, bytes.Length);
-                    Assert.False(s.CanRead || s.CanSeek || s.CanWrite);
+                    Assert.False(s.CanRead || s.CanSeek);
+                    Assert.True(s.CanWrite);
                     Assert.Equal(0, s.Length);
                     Assert.Equal(0, s.Read(new byte[1], 0, 1));
                     Assert.Equal(0, s.Seek(0, SeekOrigin.Begin));
