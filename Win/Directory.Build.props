@@ -13,6 +13,12 @@
          表示の言語は Lang の ini で切り替えるので、パッケージの文字は本体に入っている英語のままにする -->
     <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
   </PropertyGroup>
+  <!-- CI の lint 用。AnalysisLogDir を指定してビルドすると、コンパイラとアナライザーの診断（info を含む）をプロジェクトごとの SARIF に書き出す。
+       ビルドのログには info が出ないため、.github\workflows\ci.yml で SARIF を読んで確かめる。
+       フォルダーは先に作っておく。XAML のコンパイル用の一時プロジェクト（*_wpftmp）は本体と同じコードなので書き出さない -->
+  <PropertyGroup Condition="'$(AnalysisLogDir)' != '' And !$(MSBuildProjectName.EndsWith('_wpftmp'))">
+    <ErrorLog>$(AnalysisLogDir)\$(MSBuildProjectName).sarif,version=2.1</ErrorLog>
+  </PropertyGroup>
   <ItemGroup>
     <!-- カルチャーのデータ（日付や数値の書式、文字列の比較など）を .NET Framework と同じ Windows の NLS にする。
          .NET 5 以降は既定で ICU になり、スクリプト（Mod）の表示や並び順が変わる可能性があるため -->

@@ -1,0 +1,101 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# 同じブランチやプルリクエストで新しく実行したら、古い実行は止める
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  windows:
+    # UI のテスト（UITests）は実行しない
+    runs-on: windows-latest
+    timeout-minutes: 30
+    env:
+      DOTNET_NOLOGO: true
+      DOTNET_CLI_TELEMETRY_OPTOUT: true
+      ANALYSIS_LOG_DIR: ${{ github.workspace }}\artifacts\sarif
+    steps:
+      # FlowScript のノードのファイル名が長いので、長いパスを有効にしてから取得する。
+      # 改行は Windows の CRLF でそろえる（dotnet format の whitespace は改行も確かめるため）
+      - name: Configure git
+        run: |
+          git config --global core.longpaths true
+          git config --global core.autocrlf true
+
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      # PPDInstaller の COM 参照（ResolveComReference）は .NET SDK の MSBuild ではビルドできないので、Visual Studio の MSBuild を使う
+      - uses: microsoft/setup-msbuild@v2
+
+      - uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: nuget-${{ runner.os }}-${{ hashFiles('Win/Directory.Packages.props', 'Win/**/*.csproj') }}
+          restore-keys: nuget-${{ runner.os }}-
+
+      - name: Build
+        id: build
+        run: |
+          New-Item -ItemType Directory -Force $env:ANALYSIS_LOG_DIR | Out-Null
+          msbuild Win\PPD.sln -restore -m -nologo -v:m `
+            -p:Configuration=Debug -p:Platform=x64 `
+            -p:EnforceCodeStyleInBuild=true `
+            "-p:AnalysisLogDir=$env:ANALYSIS_LOG_DIR"
+
+      # コンパイラとアナライザーの診断（error、warning、info）が 1 つもないことを確かめる
+      - name: Lint
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+        run: .github\scripts\Check-Sarif.ps1 -LogDir $env:ANALYSIS_LOG_DIR
+
+      - name: Format
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+        run: dotnet format whitespace Win\PPD.sln --no-restore --verify-no-changes
+
+      - name: Test
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+        run: dotnet test Win\UnitTests\UnitTests.csproj --no-build -c Debug -p:Platform=x64 --logger "trx;LogFileName=UnitTests.trx" --results-directory artifacts\TestResults
+
+      - name: Upload results
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-results
+          path: |
+            artifacts/sarif
+            artifacts/TestResults
+          if-no-files-found: ignore
+
+  # Linux 用のマルチプレイのサーバー（Linux\Linux.sln）
+  linux:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      DOTNET_NOLOGO: true
+      DOTNET_CLI_TELEMETRY_OPTOUT: true
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Build
+        id: build
+        run: dotnet build Linux/Linux.sln -c Release -p:Platform=x64 -warnaserror
+
+      - name: Format
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+        run: dotnet format whitespace Linux/Linux.sln --no-restore --verify-no-changes
