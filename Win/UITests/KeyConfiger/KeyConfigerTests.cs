@@ -15,7 +15,8 @@ namespace UITests.KeyConfiger
     /// </remarks>
     public sealed class KeyConfigerTests : IDisposable
     {
-        readonly AppSession session = AppSession.Start(Path.Combine("KeyConfiger", "KeyConfiger"), "KeyConfiger.exe");
+        // 手で動かしたときに保存した設定（言語やキー）を使わないように、設定のファイルはコピーしない
+        readonly AppSession session = AppSession.Start(Path.Combine("KeyConfiger", "KeyConfiger"), "KeyConfiger.exe", "KeyConfiger.ini", "keyconfig.ini");
 
         public void Dispose()
         {
