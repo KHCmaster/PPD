@@ -37,5 +37,5 @@ using System.Runtime.InteropServices;
 // [assembly: AssemblyVersion("1.0.*")]
 // PPDInstaller のバージョンはリリースの版（PPDReleaser のバージョン）と同じにする。
 // インストーラーはこのバージョンを install.info の InstallVersion に書き、PPD と PPDUpdater はこれより新しい更新を探す
-[assembly: AssemblyVersion("1.3.0.0")]
-[assembly: AssemblyFileVersion("1.3.0.0")]
+[assembly: AssemblyVersion("1.3.0.1")]
+[assembly: AssemblyFileVersion("1.3.0.1")]
