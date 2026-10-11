@@ -42,29 +42,74 @@ namespace PPDConfig.ViewModels
         /// </summary>
         public IReadOnlyList<int> AccurateInputSleepTimes { get; } = [.. Enumerable.Range(0, MaxAccurateInputSleepTime + 1)];
 
-        [ObservableProperty] private string windowSize = "800,450";
-        [ObservableProperty] private bool fullScreen;
-        [ObservableProperty] private bool drawConnectUnderAllMark;
-        [ObservableProperty] private string monitorLatency = "0";
-        [ObservableProperty] private string movieLatency = "0";
-        [ObservableProperty] private string movieExtensions = "";
-        [ObservableProperty] private string musicExtensions = "";
-        [ObservableProperty] private string fontName = "";
-        [ObservableProperty] private string fontSize = "30";
-        [ObservableProperty] private string blueSkyId = "";
-        [ObservableProperty] private string blueSkyPassword = "";
-        [ObservableProperty] private bool textBoxDisabled;
-        [ObservableProperty] private bool drawSameColorDisabled;
-        [ObservableProperty] private bool allowedToUseMuchMemory;
-        [ObservableProperty] private bool everyFramePollingDisabled;
-        [ObservableProperty] private int accurateInputSleepTime;
-        [ObservableProperty] private bool menuMoviePreviewDisabled;
-        [ObservableProperty] private bool autoAdjustLatencyDisabled;
-        [ObservableProperty] private bool fontScaleDisabled;
-        [ObservableProperty] private bool highResolutionImageDisabled;
-        [ObservableProperty] private bool fixedFPSDisabled;
-        [ObservableProperty] private bool runExpansion;
-        [ObservableProperty] private string expansionPort = DefaultExpansionPort.ToString();
+        [ObservableProperty]
+        public partial string WindowSize { get; set; } = "800,450";
+
+        [ObservableProperty]
+        public partial bool FullScreen { get; set; }
+
+        [ObservableProperty]
+        public partial bool DrawConnectUnderAllMark { get; set; }
+
+        [ObservableProperty]
+        public partial string MonitorLatency { get; set; } = "0";
+
+        [ObservableProperty]
+        public partial string MovieLatency { get; set; } = "0";
+
+        [ObservableProperty]
+        public partial string MovieExtensions { get; set; } = "";
+
+        [ObservableProperty]
+        public partial string MusicExtensions { get; set; } = "";
+
+        [ObservableProperty]
+        public partial string FontName { get; set; } = "";
+
+        [ObservableProperty]
+        public partial string FontSize { get; set; } = "30";
+
+        [ObservableProperty]
+        public partial string BlueSkyId { get; set; } = "";
+
+        [ObservableProperty]
+        public partial string BlueSkyPassword { get; set; } = "";
+
+        [ObservableProperty]
+        public partial bool TextBoxDisabled { get; set; }
+
+        [ObservableProperty]
+        public partial bool DrawSameColorDisabled { get; set; }
+
+        [ObservableProperty]
+        public partial bool AllowedToUseMuchMemory { get; set; }
+
+        [ObservableProperty]
+        public partial bool EveryFramePollingDisabled { get; set; }
+
+        [ObservableProperty]
+        public partial int AccurateInputSleepTime { get; set; }
+
+        [ObservableProperty]
+        public partial bool MenuMoviePreviewDisabled { get; set; }
+
+        [ObservableProperty]
+        public partial bool AutoAdjustLatencyDisabled { get; set; }
+
+        [ObservableProperty]
+        public partial bool FontScaleDisabled { get; set; }
+
+        [ObservableProperty]
+        public partial bool HighResolutionImageDisabled { get; set; }
+
+        [ObservableProperty]
+        public partial bool FixedFPSDisabled { get; set; }
+
+        [ObservableProperty]
+        public partial bool RunExpansion { get; set; }
+
+        [ObservableProperty]
+        public partial string ExpansionPort { get; set; } = DefaultExpansionPort.ToString();
 
         /// <param name="ppdIniPath">PPD の設定のファイル（PPD.ini）。</param>
         /// <param name="settingPath">このアプリの設定のファイル（言語を保存する）。</param>

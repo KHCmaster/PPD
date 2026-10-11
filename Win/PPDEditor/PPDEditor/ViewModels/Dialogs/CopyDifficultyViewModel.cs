@@ -10,13 +10,13 @@ namespace PPDEditor.ViewModels.Dialogs
     public partial class CopyDifficultyViewModel : DialogViewModel
     {
         [ObservableProperty]
-        private AvailableDifficulty destDifficulty;
+        public partial AvailableDifficulty DestDifficulty { get; set; }
 
         public CopyDifficultyViewModel(AvailableDifficulty currentDifficulty)
         {
             CurrentDifficulty = currentDifficulty;
             Difficulties = [.. Models.ProjectFiles.DifficultyArray.Where(d => d != currentDifficulty && d != AvailableDifficulty.None)];
-            destDifficulty = Difficulties[0];
+            DestDifficulty = Difficulties[0];
         }
 
         public AvailableDifficulty CurrentDifficulty { get; }

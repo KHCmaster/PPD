@@ -71,19 +71,19 @@ namespace PPDEditor.ViewModels.Docks
         int currentIndex;
 
         [ObservableProperty]
-        private int selectedIndex = -1;
+        public partial int SelectedIndex { get; set; } = -1;
 
         /// <summary>
         /// 試しに鳴らす音・消す音・入れ替える音の番号です。
         /// </summary>
         [ObservableProperty]
-        private int previewIndex;
+        public partial int PreviewIndex { get; set; }
 
         /// <summary>
         /// 選んでいる割り当てを、ボタンごとの音の選択に表示するかです。
         /// </summary>
         [ObservableProperty]
-        private bool syncSelection;
+        public partial bool SyncSelection { get; set; }
 
         public SoundManagerViewModel(ISoundManagerHost host)
         {

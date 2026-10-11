@@ -10,6 +10,6 @@ namespace PPDEditor.ViewModels.Dialogs
         public string BeforeText { get; } = beforeText;
 
         [ObservableProperty]
-        private string newText = "";
+        public partial string NewText { get; set; } = "";
     }
 }

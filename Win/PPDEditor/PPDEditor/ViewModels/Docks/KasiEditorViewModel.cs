@@ -47,20 +47,19 @@ namespace PPDEditor.ViewModels.Docks
         /// 一覧で選んでいる行の番号です（選んでいないときは -1）。
         /// </summary>
         [ObservableProperty]
-        private int selectedIndex = -1;
+        public partial int SelectedIndex { get; set; } = -1;
 
         /// <summary>
         /// 入力している歌詞です。
         /// </summary>
         [ObservableProperty]
-        private string inputText = "";
+        public partial string InputText { get; set; } = "";
 
         /// <summary>
         /// 時間をずらす量（秒）です。
         /// </summary>
         [ObservableProperty]
-        private decimal shiftAmount;
-
+        public partial decimal ShiftAmount { get; set; }
         public ObservableCollection<KeyValuePair<float, string>> Items { get; } = [];
 
         public float[] GetKasiChangeWithinTime(float startTime, float endTime)

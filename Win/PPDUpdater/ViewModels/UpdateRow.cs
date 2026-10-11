@@ -25,7 +25,7 @@ namespace PPDUpdater.ViewModels
         internal UpdateRow(UpdateInfo info, UpdateState state, LanguageTexts texts)
         {
             Info = info;
-            this.state = state;
+            State = state;
             this.texts = texts;
             // 言語を変えたら状態の表示も変える
             texts.PropertyChanged += (sender, e) => OnPropertyChanged(nameof(StateText));
@@ -40,7 +40,7 @@ namespace PPDUpdater.ViewModels
 
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(StateText))]
-        private UpdateState state;
+        public partial UpdateState State { get; set; }
 
         public string StateText
         {
@@ -48,9 +48,9 @@ namespace PPDUpdater.ViewModels
         }
 
         [ObservableProperty]
-        private int downloadProgress;
+        public partial int DownloadProgress { get; set; }
 
         [ObservableProperty]
-        private int installProgress;
+        public partial int InstallProgress { get; set; }
     }
 }

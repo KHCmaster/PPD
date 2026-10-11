@@ -14,7 +14,7 @@ namespace PPDEditor.ViewModels.Dialogs
         readonly string[] sounds;
 
         [ObservableProperty]
-        private int previewIndex;
+        public partial int PreviewIndex { get; set; }
 
         public SoundChangeEditViewModel(ushort[] change, string[] sounds)
         {
@@ -60,6 +60,6 @@ namespace PPDEditor.ViewModels.Dialogs
     public partial class SoundSlot : ObservableObject
     {
         [ObservableProperty]
-        private int selectedIndex;
+        public partial int SelectedIndex { get; set; }
     }
 }

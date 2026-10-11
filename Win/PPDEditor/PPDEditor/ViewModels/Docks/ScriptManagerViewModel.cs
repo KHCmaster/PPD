@@ -72,15 +72,14 @@ namespace PPDEditor.ViewModels.Docks
         /// デバッグしているかです（デバッグのツールバーを出す）。
         /// </summary>
         [ObservableProperty]
-        private bool isDebugging;
+        public partial bool IsDebugging { get; set; }
 
         /// <summary>
         /// スクリプトが止まっているかです（続行・ステップインができる）。
         /// </summary>
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(ContinueCommand), nameof(StepInCommand))]
-        private bool isWaiting;
-
+        public partial bool IsWaiting { get; set; }
         public FlowLogViewModel Log { get; } = new();
 
         private void RunOnUIThread(Action action)

@@ -16,10 +16,10 @@ namespace PPDEditor.ViewModels.Docks
         /// 最後の 2 回の間の時間（ミリ秒）です。
         /// </summary>
         [ObservableProperty]
-        private string interval = "0";
+        public partial string Interval { get; set; } = "0";
 
         [ObservableProperty]
-        private string bpm = "0";
+        public partial string Bpm { get; set; } = "0";
 
         /// <summary>
         /// 拍を 1 つ数えます。

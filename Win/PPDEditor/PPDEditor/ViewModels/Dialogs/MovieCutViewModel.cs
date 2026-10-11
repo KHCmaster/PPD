@@ -9,22 +9,22 @@ namespace PPDEditor.ViewModels.Dialogs
     public partial class MovieCutViewModel(MovieTrimmingData trimmingData) : DialogViewModel
     {
         [ObservableProperty]
-        private string left = trimmingData?.Left.ToString() ?? "0";
+        public partial string Left { get; set; } = trimmingData?.Left.ToString() ?? "0";
 
         [ObservableProperty]
-        private string right = trimmingData?.Right.ToString() ?? "0";
+        public partial string Right { get; set; } = trimmingData?.Right.ToString() ?? "0";
 
         [ObservableProperty]
-        private string top = trimmingData?.Top.ToString() ?? "0";
+        public partial string Top { get; set; } = trimmingData?.Top.ToString() ?? "0";
 
         [ObservableProperty]
-        private string bottom = trimmingData?.Bottom.ToString() ?? "0";
+        public partial string Bottom { get; set; } = trimmingData?.Bottom.ToString() ?? "0";
 
         /// <summary>
         /// 設定ファイルライターにも反映させるかです。
         /// </summary>
         [ObservableProperty]
-        private bool applyToIni = PPDStaticSetting.ApplyToIniMovieTrimming;
+        public partial bool ApplyToIni { get; set; } = PPDStaticSetting.ApplyToIniMovieTrimming;
 
         /// <summary>
         /// 入力した切り取りの幅です（OK を押したときに決まる）。

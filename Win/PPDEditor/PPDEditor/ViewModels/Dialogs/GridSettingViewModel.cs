@@ -11,20 +11,20 @@ namespace PPDEditor.ViewModels.Dialogs
     public partial class GridSettingViewModel(SquareGrid grid) : DialogViewModel
     {
         [ObservableProperty]
-        private string width = grid.Width.ToString();
+        public partial string Width { get; set; } = grid.Width.ToString();
 
         [ObservableProperty]
-        private string height = grid.Height.ToString();
+        public partial string Height { get; set; } = grid.Height.ToString();
 
         [ObservableProperty]
-        private string offsetX = grid.OffsetX.ToString();
+        public partial string OffsetX { get; set; } = grid.OffsetX.ToString();
 
         [ObservableProperty]
-        private string offsetY = grid.OffsetY.ToString();
+        public partial string OffsetY { get; set; } = grid.OffsetY.ToString();
 
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(ColorText), nameof(IsDarkColor))]
-        private Color gridColor = grid.GridColor;
+        public partial Color GridColor { get; set; } = grid.GridColor;
 
         /// <summary>
         /// 色を選ばせます（今の色を渡し、キャンセルしたときは null を返す）。

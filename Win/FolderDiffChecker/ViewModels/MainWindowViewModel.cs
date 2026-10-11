@@ -51,29 +51,29 @@ namespace FolderDiffChecker.ViewModels
         long startTime;
 
         [ObservableProperty]
-        private string oldFolder = "";
+        public partial string OldFolder { get; set; } = "";
 
         [ObservableProperty]
-        private string newFolder = "";
+        public partial string NewFolder { get; set; } = "";
 
         /// <summary>
         /// 強制的に変更済みにするファイル（「:」区切り）。
         /// </summary>
         [ObservableProperty]
-        private string forceIncludeFiles = "";
+        public partial string ForceIncludeFiles { get; set; } = "";
 
         /// <summary>
         /// 一覧に出さないファイル名（「:」区切り）。
         /// </summary>
         [ObservableProperty]
-        private string ignoreFiles = "PPD.ini:Data.pak";
+        public partial string IgnoreFiles { get; set; } = "PPD.ini:Data.pak";
 
         [ObservableProperty]
-        private string statusText = "";
+        public partial string StatusText { get; set; } = "";
 
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(DiffCheckCommand), nameof(CopyDiffCommand), nameof(CopyDiffCleverCommand))]
-        private bool isChecking;
+        public partial bool IsChecking { get; set; }
 
         public MainWindowViewModel(IDialogService dialog, string releasesDir)
         {

@@ -51,13 +51,13 @@ namespace PPDEditor.ViewModels.Docks
         Dictionary<string, string> copiedParameters;
 
         [ObservableProperty]
-        private List<KeyValuePair<string, string>> parameters = [];
+        public partial List<KeyValuePair<string, string>> Parameters { get; set; } = [];
 
         [ObservableProperty]
-        private bool canCopy;
+        public partial bool CanCopy { get; set; }
 
         [ObservableProperty]
-        private bool canPaste;
+        public partial bool CanPaste { get; set; }
 
         public InfoViewModel(IInfoEditor editor)
         {

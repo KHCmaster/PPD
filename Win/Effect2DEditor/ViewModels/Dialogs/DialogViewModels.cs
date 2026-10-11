@@ -43,10 +43,10 @@ namespace Effect2DEditor.ViewModels.Dialogs
     public partial class AskFrameCountViewModel : DialogViewModel
     {
         [ObservableProperty]
-        private string frameCountText = "";
+        public partial string FrameCountText { get; set; } = "";
 
         [ObservableProperty]
-        private bool withReverse;
+        public partial bool WithReverse { get; set; }
 
         /// <summary>
         /// フレーム数（数でないときや 1 より小さいときは 1）。
@@ -63,10 +63,10 @@ namespace Effect2DEditor.ViewModels.Dialogs
     public partial class CanvasSizeViewModel(int width, int height) : DialogViewModel
     {
         [ObservableProperty]
-        private string widthText = width.ToString();
+        public partial string WidthText { get; set; } = width.ToString();
 
         [ObservableProperty]
-        private string heightText = height.ToString();
+        public partial string HeightText { get; set; } = height.ToString();
 
         /// <summary>
         /// 幅（数でないときは 256、1 より小さいときは 1）。
@@ -106,13 +106,13 @@ namespace Effect2DEditor.ViewModels.Dialogs
     public partial class ChangeBackGroundViewModel(BackGroundMode mode, Color color, string fileName) : DialogViewModel
     {
         [ObservableProperty]
-        private BackGroundMode mode = mode;
+        public partial BackGroundMode Mode { get; set; } = mode;
 
         [ObservableProperty]
-        private Color color = color;
+        public partial Color Color { get; set; } = color;
 
         [ObservableProperty]
-        private string fileName = fileName;
+        public partial string FileName { get; set; } = fileName;
 
         public IPickerView View { get; set; }
 

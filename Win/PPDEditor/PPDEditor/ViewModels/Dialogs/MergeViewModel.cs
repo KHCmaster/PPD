@@ -14,10 +14,10 @@ namespace PPDEditor.ViewModels.Dialogs
     {
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(OkCommand))]
-        private string destProjectFilePath = "";
+        public partial string DestProjectFilePath { get; set; } = "";
 
         [ObservableProperty]
-        private AvailableDifficulty? baseInfoProjectDifficulty;
+        public partial AvailableDifficulty? BaseInfoProjectDifficulty { get; set; }
 
         public MergeViewModel()
         {
@@ -125,11 +125,10 @@ namespace PPDEditor.ViewModels.Dialogs
         public AvailableDifficulty Difficulty { get; } = difficulty;
 
         [ObservableProperty]
-        private string projectPath = "";
+        public partial string ProjectPath { get; set; } = "";
 
         [ObservableProperty]
-        private AvailableDifficulty? selectedDifficulty;
-
+        public partial AvailableDifficulty? SelectedDifficulty { get; set; }
         public int ProjectVersion
         {
             get;

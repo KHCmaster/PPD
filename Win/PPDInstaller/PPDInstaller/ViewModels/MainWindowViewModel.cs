@@ -49,11 +49,11 @@ namespace PPDInstaller.ViewModels
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(NextText))]
         [NotifyCanExecuteChangedFor(nameof(NextOrCloseCommand), nameof(PreviousCommand), nameof(CancelCommand))]
-        private PageViewModel currentPage;
+        public partial PageViewModel CurrentPage { get; set; }
 
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(NextOrCloseCommand), nameof(PreviousCommand), nameof(CancelCommand))]
-        private bool isInstalling;
+        public partial bool IsInstalling { get; set; }
 
         public MainWindowViewModel(IWindowService window, LanguageTexts texts, string dataDirectory)
         {

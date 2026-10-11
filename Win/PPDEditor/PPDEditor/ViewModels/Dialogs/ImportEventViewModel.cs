@@ -20,11 +20,11 @@ namespace PPDEditor.ViewModels.Dialogs
 
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(DeleteCommand))]
-        private KeyValuePair<float, EventData>? selectedCurrentEvent;
+        public partial KeyValuePair<float, EventData>? SelectedCurrentEvent { get; set; }
 
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(ImportCommand))]
-        private KeyValuePair<float, EventData>? selectedReadOnlyEvent;
+        public partial KeyValuePair<float, EventData>? SelectedReadOnlyEvent { get; set; }
 
         public ImportEventViewModel(SortedList<float, EventData> currentEvent, SortedList<float, EventData> readOnlyEvent)
         {

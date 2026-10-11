@@ -16,9 +16,9 @@ namespace PPDEditor.ViewModels.Dialogs
         public string[] Lines { get; } = [.. Enumerable.Range(1, LineCount).Select(i => LanguageTexts.Instance["SwapLineBox" + i])];
 
         [ObservableProperty]
-        private int first;
+        public partial int First { get; set; }
 
         [ObservableProperty]
-        private int second;
+        public partial int Second { get; set; }
     }
 }

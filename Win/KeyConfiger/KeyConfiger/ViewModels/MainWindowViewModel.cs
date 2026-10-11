@@ -35,13 +35,13 @@ namespace KeyConfiger.ViewModels
     public partial class KeyRowViewModel : ObservableObject
     {
         [ObservableProperty]
-        private string header = "";
+        public partial string Header { get; set; } = "";
 
         [ObservableProperty]
-        private string key = "0";
+        public partial string Key { get; set; } = "0";
 
         [ObservableProperty]
-        private string button = "0";
+        public partial string Button { get; set; } = "0";
     }
 
     /// <summary>
@@ -71,13 +71,13 @@ namespace KeyConfiger.ViewModels
         public ObservableCollection<KeyRowViewModel> Rows { get; } = [];
 
         [ObservableProperty]
-        private int selectedIndex = -1;
+        public partial int SelectedIndex { get; set; } = -1;
 
         [ObservableProperty]
-        private bool isWaitingInput;
+        public partial bool IsWaitingInput { get; set; }
 
         [ObservableProperty]
-        private MenuOption<KeyConfig> currentConfig;
+        public partial MenuOption<KeyConfig> CurrentConfig { get; set; }
 
         /// <param name="keyConfigPath">キーの設定のファイル（keyconfig.ini）。</param>
         /// <param name="settingPath">このアプリの設定のファイル（言語を保存する）。</param>

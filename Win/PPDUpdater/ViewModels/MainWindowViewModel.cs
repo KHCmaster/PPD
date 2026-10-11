@@ -46,10 +46,10 @@ namespace PPDUpdater.ViewModels
         string languageIso;
 
         [ObservableProperty]
-        private bool isChecking;
+        public partial bool IsChecking { get; set; }
 
         [ObservableProperty]
-        private bool isLogVisible;
+        public partial bool IsLogVisible { get; set; }
 
         public MainWindowViewModel(IWindowService window, WorkState workState)
         {

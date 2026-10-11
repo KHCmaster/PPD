@@ -50,44 +50,43 @@ namespace PPDEditor.ViewModels.Dialogs
         ];
 
         [ObservableProperty]
-        private int movieVolumePercent;
+        public partial int MovieVolumePercent { get; set; }
 
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(IsBpmInvalid))]
-        private string bpm;
+        public partial string Bpm { get; set; }
 
         [ObservableProperty]
-        private bool bpmRapidChange;
+        public partial bool BpmRapidChange { get; set; }
 
         [ObservableProperty]
-        private DisplayState displayState;
+        public partial DisplayState DisplayState { get; set; }
 
         [ObservableProperty]
-        private MoveState moveState;
+        public partial MoveState MoveState { get; set; }
 
         [ObservableProperty]
-        private NoteType noteType;
+        public partial NoteType NoteType { get; set; }
 
         [ObservableProperty]
-        private string slideScale;
+        public partial string SlideScale { get; set; }
+        [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(MoveUpCommand), nameof(MoveDownCommand))]
+        public partial InitializeOrderMode OrderMode { get; set; }
 
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(MoveUpCommand), nameof(MoveDownCommand))]
-        private InitializeOrderMode orderMode;
-
-        [ObservableProperty]
-        [NotifyCanExecuteChangedFor(nameof(MoveUpCommand), nameof(MoveDownCommand))]
-        private int selectedOrderIndex = -1;
+        public partial int SelectedOrderIndex { get; set; } = -1;
 
         /// <param name="eventData">編集するイベント。</param>
         /// <param name="isReadOnly">見るだけで、編集できないようにするか。</param>
         public EventEditViewModel(EventData eventData, bool isReadOnly = false)
         {
             IsEditable = !isReadOnly;
-            movieVolumePercent = eventData.MovieVolumePercent;
+            MovieVolumePercent = eventData.MovieVolumePercent;
             BeforeBpm = eventData.BPM.ToString();
-            bpm = BeforeBpm;
-            bpmRapidChange = eventData.BPMRapidChange;
+            Bpm = BeforeBpm;
+            BpmRapidChange = eventData.BPMRapidChange;
             Sounds =
             [
                 new SoundSetting("EEFLabel2", eventData.SquareVolumePercent, eventData.SquareKeepPlaying, eventData.SquareReleaseSound),
@@ -101,23 +100,23 @@ namespace PPDEditor.ViewModels.Dialogs
                 new SoundSetting("EEFLabel10", eventData.RVolumePercent, eventData.RKeepPlaying, eventData.RReleaseSound),
                 new SoundSetting("EEFLabel11", eventData.LVolumePercent, eventData.LKeepPlaying, eventData.LReleaseSound)
             ];
-            displayState = eventData.DisplayState;
-            moveState = eventData.MoveState;
-            noteType = eventData.NoteType;
-            slideScale = eventData.SlideScale.ToString();
+            DisplayState = eventData.DisplayState;
+            MoveState = eventData.MoveState;
+            NoteType = eventData.NoteType;
+            SlideScale = eventData.SlideScale.ToString();
 
             SetOrder(eventData.InitializeOrder);
             if (Utility.IsSameArray(normalInitializeOrder, eventData.InitializeOrder))
             {
-                orderMode = InitializeOrderMode.Normal;
+                OrderMode = InitializeOrderMode.Normal;
             }
             else if (Utility.IsSameArray(acInitializeOrder, eventData.InitializeOrder))
             {
-                orderMode = InitializeOrderMode.AC;
+                OrderMode = InitializeOrderMode.AC;
             }
             else
             {
-                orderMode = InitializeOrderMode.Custom;
+                OrderMode = InitializeOrderMode.Custom;
             }
         }
 
@@ -271,13 +270,13 @@ namespace PPDEditor.ViewModels.Dialogs
         }
 
         [ObservableProperty]
-        private int volumePercent = volumePercent;
+        public partial int VolumePercent { get; set; } = volumePercent;
 
         [ObservableProperty]
-        private bool keepPlaying = keepPlaying;
+        public partial bool KeepPlaying { get; set; } = keepPlaying;
 
         [ObservableProperty]
-        private bool releaseSound = releaseSound;
+        public partial bool ReleaseSound { get; set; } = releaseSound;
     }
 
     /// <summary>

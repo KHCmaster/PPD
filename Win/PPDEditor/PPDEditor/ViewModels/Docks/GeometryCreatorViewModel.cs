@@ -66,68 +66,68 @@ namespace PPDEditor.ViewModels.Docks
         bool updatingTransform;
 
         [ObservableProperty]
-        private bool antialias;
+        public partial bool Antialias { get; set; }
 
         [ObservableProperty]
-        private bool drawPos = true;
+        public partial bool DrawPos { get; set; } = true;
 
         [ObservableProperty]
-        private bool drawAngle = true;
+        public partial bool DrawAngle { get; set; } = true;
 
         [ObservableProperty]
-        private bool squareGridEnabled;
+        public partial bool SquareGridEnabled { get; set; }
 
         /// <summary>
         /// 曲線を動かすたびにマークに当てはめるかです。
         /// </summary>
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(ApplyCommand))]
-        private bool applyMoved;
+        public partial bool ApplyMoved { get; set; }
 
         /// <summary>
         /// 多角形を作るか（でなければ円）です。
         /// </summary>
         [ObservableProperty]
-        private bool createPolygon;
+        public partial bool CreatePolygon { get; set; }
 
         [ObservableProperty]
-        private string polygonCount = "3";
+        public partial string PolygonCount { get; set; } = "3";
 
         [ObservableProperty]
-        private GeometryIntervalMode intervalMode;
+        public partial GeometryIntervalMode IntervalMode { get; set; }
 
         [ObservableProperty]
-        private string fixedDistanceText = "30";
+        public partial string FixedDistanceText { get; set; } = "30";
 
         [ObservableProperty]
-        private GeometryAngleMode angleMode;
+        public partial GeometryAngleMode AngleMode { get; set; }
 
         /// <summary>
         /// Shift+ドラッグで動かすときの角度の刻みです（0 は制限なし）。
         /// </summary>
         [ObservableProperty]
-        private decimal angleRestriction;
+        public partial decimal AngleRestriction { get; set; }
 
         /// <summary>
         /// 変形しているかです（変形の値の欄を出す）。
         /// </summary>
         [ObservableProperty]
-        private bool isTransforming;
+        public partial bool IsTransforming { get; set; }
 
         [ObservableProperty]
-        private string transformWidth = "";
+        public partial string TransformWidth { get; set; } = "";
 
         [ObservableProperty]
-        private string transformHeight = "";
+        public partial string TransformHeight { get; set; } = "";
 
         [ObservableProperty]
-        private string transformRotation = "";
+        public partial string TransformRotation { get; set; } = "";
 
         [ObservableProperty]
-        private string transformX = "";
+        public partial string TransformX { get; set; } = "";
 
         [ObservableProperty]
-        private string transformY = "";
+        public partial string TransformY { get; set; } = "";
 
         public SquareGrid SquareGrid
         {

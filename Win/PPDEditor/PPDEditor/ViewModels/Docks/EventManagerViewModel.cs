@@ -58,11 +58,10 @@ namespace PPDEditor.ViewModels.Docks
         int currentIndex = -1;
 
         [ObservableProperty]
-        private int selectedIndex = -1;
+        public partial int SelectedIndex { get; set; } = -1;
 
         [ObservableProperty]
-        private decimal shiftAmount;
-
+        public partial decimal ShiftAmount { get; set; }
         public ObservableCollection<KeyValuePair<float, string>> Items { get; } = [];
 
         /// <summary>

@@ -284,7 +284,7 @@ namespace PPDEditor.ViewModels
         public ObservableCollection<FileMenuItem> ViewLayouts { get; } = [];
 
         [ObservableProperty]
-        private bool fixDockPanel;
+        public partial bool FixDockPanel { get; set; }
 
         partial void OnFixDockPanelChanged(bool value)
         {
@@ -296,7 +296,7 @@ namespace PPDEditor.ViewModels
         /// メニューを隠しているかどうか（タイトルバーにマウスが来たら出す）。
         /// </summary>
         [ObservableProperty]
-        private bool isMenuHidden;
+        public partial bool IsMenuHidden { get; set; }
 
         private void LoadViewLayouts()
         {
@@ -353,52 +353,52 @@ namespace PPDEditor.ViewModels
         public LocalizedText[] BeatTypes { get; }
 
         [ObservableProperty]
-        private string bpmText = "100";
+        public partial string BpmText { get; set; } = "100";
 
         [ObservableProperty]
-        private string bpmOffsetText = "0";
+        public partial string BpmOffsetText { get; set; } = "0";
 
         [ObservableProperty]
-        private string displayWidthText = "240";
+        public partial string DisplayWidthText { get; set; } = "240";
 
         [ObservableProperty]
-        private int displayModeIndex = -1;
+        public partial int DisplayModeIndex { get; set; } = -1;
 
         [ObservableProperty]
-        private int beatTypeIndex = -1;
+        public partial int BeatTypeIndex { get; set; } = -1;
 
         /// <summary>
         /// 速さの倍率の番号です（0 から 6 で、0.5 倍から 2 倍）。
         /// </summary>
         [ObservableProperty]
-        private int speedScale = -1;
+        public partial int SpeedScale { get; set; } = -1;
 
         /// <summary>
         /// 打鍵の操作を BPM に合わせるかどうか。
         /// </summary>
         [ObservableProperty]
-        private bool bpmfixed = true;
+        public partial bool Bpmfixed { get; set; } = true;
 
         [ObservableProperty]
-        private bool drawToggle = true;
+        public partial bool DrawToggle { get; set; } = true;
 
         [ObservableProperty]
-        private bool markFocus;
+        public partial bool MarkFocus { get; set; }
 
         [ObservableProperty]
-        private bool showHoldExtent = true;
+        public partial bool ShowHoldExtent { get; set; } = true;
 
         [ObservableProperty]
-        private bool displayGrid;
+        public partial bool DisplayGrid { get; set; }
 
         /// <summary>
         /// グリッドの大きさの、選んでいるメニューの項目です。
         /// </summary>
         [ObservableProperty]
-        private GridSizeChoice gridSize;
+        public partial GridSizeChoice GridSize { get; set; }
 
         [ObservableProperty]
-        private bool isTimeLineRowLimited;
+        public partial bool IsTimeLineRowLimited { get; set; }
 
         /// <summary>
         /// マークフォーカスで、マークを画面のどこに出すか（0 から 1）。
@@ -607,15 +607,15 @@ namespace PPDEditor.ViewModels
         #region 状態の表示
 
         [ObservableProperty]
-        private string timeText = "0:00:00:000";
+        public partial string TimeText { get; set; } = "0:00:00:000";
 
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(AreaSelectionText))]
-        private bool isAreaSelectionEnabled;
+        public partial bool IsAreaSelectionEnabled { get; set; }
 
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(CopyBufferText))]
-        private bool hasCopyBuffer;
+        public partial bool HasCopyBuffer { get; set; }
 
         public string AreaSelectionText
         {

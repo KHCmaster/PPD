@@ -12,7 +12,7 @@ namespace PPDEditor.ViewModels.Dialogs
 
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(OkCommand))]
-        private KeyValuePair<string, string>? selectedSuggest;
+        public partial KeyValuePair<string, string>? SelectedSuggest { get; set; }
 
         protected override bool CanOk()
         {

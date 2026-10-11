@@ -88,18 +88,18 @@ namespace FlowScriptControlTest.ViewModels
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(UndoCommand), nameof(RedoCommand), nameof(CopyCommand), nameof(PasteCommand), nameof(PasteWithLinksCommand),
             nameof(DeleteCommand), nameof(AdjustPositionCommand), nameof(ExpandAllCommand), nameof(CollapseAllCommand), nameof(OpenCommand), nameof(SaveCommand))]
-        private FlowDocumentViewModel selectedDocument;
+        public partial FlowDocumentViewModel SelectedDocument { get; set; }
 
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(ExecuteCommand), nameof(StopCommand))]
-        private bool isExecuting;
+        public partial bool IsExecuting { get; set; }
 
         /// <summary>
         /// ブレークポイントなどで止まっているかです（続行・ステップインができる）。
         /// </summary>
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(ContinueCommand), nameof(StepInCommand))]
-        private bool isWaiting;
+        public partial bool IsWaiting { get; set; }
 
         public MainWindowViewModel(IWindowService window)
         {

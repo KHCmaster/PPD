@@ -15,7 +15,7 @@ namespace PPDEditor.ViewModels.Dialogs
 
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(MoveUpCommand), nameof(MoveDownCommand))]
-        private TimeLineRowItem selectedRow;
+        public partial TimeLineRowItem SelectedRow { get; set; }
 
         /// <summary>
         /// 編集した順番と表示を反映します。
@@ -65,7 +65,7 @@ namespace PPDEditor.ViewModels.Dialogs
         public int RowIndex { get; } = rowIndex;
 
         [ObservableProperty]
-        private bool isVisible = isVisible;
+        public partial bool IsVisible { get; set; } = isVisible;
 
         public string Name
         {

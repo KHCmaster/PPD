@@ -44,7 +44,7 @@ namespace PPDEditor.ViewModels
         private static InfoForm Info => WindowUtility.InfoForm;
 
         [ObservableProperty]
-        private string windowTitle = "PPDEditor";
+        public partial string WindowTitle { get; set; } = "PPDEditor";
 
         /// <summary>
         /// プロジェクトを使うメニュー（上書き保存、難易度、発行）を使えるかどうか。
@@ -53,15 +53,15 @@ namespace PPDEditor.ViewModels
         [NotifyCanExecuteChangedFor(nameof(OverwriteProjectCommand))]
         [NotifyCanExecuteChangedFor(nameof(PublishCommand))]
         [NotifyCanExecuteChangedFor(nameof(PublishModCommand))]
-        private bool projectMenusEnabled;
+        public partial bool ProjectMenusEnabled { get; set; }
 
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(ImportEventCommand))]
-        private AvailableDifficulty currentDifficulty = AvailableDifficulty.Base;
+        public partial AvailableDifficulty CurrentDifficulty { get; set; } = AvailableDifficulty.Base;
 
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(ImportEventCommand))]
-        private AvailableDifficulty availableDifficulty;
+        public partial AvailableDifficulty AvailableDifficulty { get; set; }
 
         /// <summary>
         /// 最近使ったプロジェクトです（新しい順に 5 つまで）。

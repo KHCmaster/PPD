@@ -39,7 +39,7 @@ namespace KeyConfiger.ViewModels
         } = value;
 
         [ObservableProperty]
-        private bool isChecked;
+        public partial bool IsChecked { get; set; }
     }
 
     /// <summary>

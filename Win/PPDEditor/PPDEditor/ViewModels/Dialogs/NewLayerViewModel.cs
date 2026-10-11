@@ -8,6 +8,6 @@ namespace PPDEditor.ViewModels.Dialogs
     public partial class NewLayerViewModel(string layerName) : DialogViewModel
     {
         [ObservableProperty]
-        private string layerName = layerName;
+        public partial string LayerName { get; set; } = layerName;
     }
 }

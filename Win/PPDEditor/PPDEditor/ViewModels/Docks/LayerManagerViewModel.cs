@@ -369,30 +369,30 @@ namespace PPDEditor.ViewModels.Docks
         string bpm = "BPM";
 
         [ObservableProperty]
-        private string displayName;
+        public partial string DisplayName { get; set; }
 
         [ObservableProperty]
-        private bool displayVisible = true;
+        public partial bool DisplayVisible { get; set; } = true;
 
         [ObservableProperty]
-        private bool isSelected;
+        public partial bool IsSelected { get; set; }
 
         [ObservableProperty]
-        private Color markColor = PPDEditorSkin.Skin.TimeLineMarkColor;
+        public partial Color MarkColor { get; set; } = PPDEditorSkin.Skin.TimeLineMarkColor;
 
         /// <summary>
         /// 名前を編集しているかです。
         /// </summary>
         [ObservableProperty]
-        private bool isEditingName;
+        public partial bool IsEditingName { get; set; }
 
         [ObservableProperty]
-        private string editingName = "";
+        public partial string EditingName { get; set; } = "";
 
         internal LayerViewModel(LayerManagerViewModel owner, string name)
         {
             this.owner = owner;
-            displayName = name;
+            DisplayName = name;
             PPDData.DisplayName = name;
         }
 

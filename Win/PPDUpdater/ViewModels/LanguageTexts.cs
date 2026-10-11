@@ -79,7 +79,7 @@ namespace PPDUpdater.ViewModels
         public string Iso { get; } = iso;
 
         [ObservableProperty]
-        private bool isChecked;
+        public partial bool IsChecked { get; set; }
     }
 
     /// <summary>

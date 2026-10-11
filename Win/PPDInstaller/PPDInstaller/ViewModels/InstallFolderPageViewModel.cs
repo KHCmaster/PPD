@@ -13,7 +13,7 @@ namespace PPDInstaller.ViewModels
         readonly IWindowService window;
 
         [ObservableProperty]
-        private string installFolder = "";
+        public partial string InstallFolder { get; set; } = "";
 
         public InstallFolderPageViewModel(LanguageTexts texts, IWindowService window) : base(texts)
         {

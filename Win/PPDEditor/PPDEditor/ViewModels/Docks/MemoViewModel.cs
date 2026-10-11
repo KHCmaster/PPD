@@ -12,14 +12,14 @@ namespace PPDEditor.ViewModels.Docks
         const float MaxFontSize = 100;
 
         [ObservableProperty]
-        private string memoText = "";
+        public partial string MemoText { get; set; } = "";
 
         /// <summary>
         /// 文字の大きさ（ポイント）です。設定ファイルには以前と同じくポイントで保存します。
         /// </summary>
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(FontSizePixels))]
-        private float memoFontSize = 9;
+        public partial float MemoFontSize { get; set; } = 9;
 
         /// <summary>
         /// 画面に使う文字の大きさ（ピクセル）です。

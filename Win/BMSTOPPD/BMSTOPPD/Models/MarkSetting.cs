@@ -11,16 +11,16 @@ namespace BMSTOPPD.Models
     public partial class MarkSetting : ObservableObject
     {
         [ObservableProperty]
-        private string name;
+        public partial string Name { get; set; }
 
         [ObservableProperty]
-        private string x;
+        public partial string X { get; set; }
 
         [ObservableProperty]
-        private string y;
+        public partial string Y { get; set; }
 
         [ObservableProperty]
-        private string angle;
+        public partial string Angle { get; set; }
 
         public float GetX()
         {

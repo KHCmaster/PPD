@@ -9,7 +9,7 @@ namespace PPDEditor.ViewModels.Dialogs
     public partial class FarnessSettingViewModel(float farness) : DialogViewModel
     {
         [ObservableProperty]
-        private int percent = (int)Math.Min(farness * 100, 100);
+        public partial int Percent { get; set; } = (int)Math.Min(farness * 100, 100);
 
         public float Farness
         {

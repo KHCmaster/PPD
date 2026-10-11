@@ -72,7 +72,7 @@ namespace PPDEditor.ViewModels
         /// ウィンドウが出ているかどうか（メニューを開いたときに調べる）。
         /// </summary>
         [ObservableProperty]
-        private bool isShown;
+        public partial bool IsShown { get; set; }
     }
 
     /// <summary>
@@ -88,7 +88,7 @@ namespace PPDEditor.ViewModels
         public string Path { get; } = path;
 
         [ObservableProperty]
-        private bool isChecked;
+        public partial bool IsChecked { get; set; }
     }
 
     /// <summary>
@@ -129,7 +129,7 @@ namespace PPDEditor.ViewModels
         public ObservableCollection<ModMenuItem> Children { get; } = [];
 
         [ObservableProperty]
-        private bool isChecked;
+        public partial bool IsChecked { get; set; }
 
         /// <summary>
         /// mods のフォルダからの名前（「フォルダ\名前」）です。

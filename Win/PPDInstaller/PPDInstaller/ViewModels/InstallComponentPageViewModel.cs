@@ -18,16 +18,16 @@ namespace PPDInstaller.ViewModels
         readonly bool fontInstalled;
 
         [ObservableProperty]
-        private bool installPPD = true;
+        public partial bool InstallPPD { get; set; } = true;
 
         [ObservableProperty]
-        private bool installLAVFilters = true;
+        public partial bool InstallLAVFilters { get; set; } = true;
 
         [ObservableProperty]
-        private bool installIPAFont;
+        public partial bool InstallIPAFont { get; set; }
 
         [ObservableProperty]
-        private bool installBMSTOPPD = true;
+        public partial bool InstallBMSTOPPD { get; set; } = true;
 
         internal InstallComponentPageViewModel(LanguageTexts texts, InstallFolderPageViewModel folderPage) : base(texts)
         {

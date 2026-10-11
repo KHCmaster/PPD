@@ -18,7 +18,7 @@ namespace FlowScriptControlTest.ViewModels
         /// </summary>
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(Header))]
-        private string filePath = Guid.NewGuid().ToString();
+        public partial string FilePath { get; set; } = Guid.NewGuid().ToString();
 
         public FlowDrawPanel Editor { get; } = editor;
 

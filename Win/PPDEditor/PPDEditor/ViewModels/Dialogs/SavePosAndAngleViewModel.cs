@@ -15,10 +15,10 @@ namespace PPDEditor.ViewModels.Dialogs
         public string Caption { get; } = caption;
 
         [ObservableProperty]
-        private bool withAngle;
+        public partial bool WithAngle { get; set; }
 
         [ObservableProperty]
-        private string fileName = "";
+        public partial string FileName { get; set; } = "";
 
         /// <summary>
         /// 名前が使えなかったときに起こります（入力し直してもらう）。

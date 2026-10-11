@@ -20,41 +20,40 @@ namespace PPDEditor.ViewModels.Dialogs
         /// 表示しているページです（0: 一般、1: ショートカットキー、2: 環境変数）。
         /// </summary>
         [ObservableProperty]
-        private int pageIndex;
+        public partial int PageIndex { get; set; }
+
+        // 作者名と動画の遅延は、変えたら再起動が要るので、変わったときの処理が走らないように初期化子で今の設定にする
+        [ObservableProperty]
+        public partial string AuthorName { get; set; } = PPDStaticSetting.AuthorName;
 
         [ObservableProperty]
-        private string authorName;
+        public partial string MovieLatency { get; set; } = PPDStaticSetting.MovieLatency.ToString();
 
         [ObservableProperty]
-        private string movieLatency;
+        public partial bool ShowToggleArrow { get; set; }
 
         [ObservableProperty]
-        private bool showToggleArrow;
+        public partial bool ShowToggleRectangle { get; set; }
 
         [ObservableProperty]
-        private bool showToggleRectangle;
-
-        [ObservableProperty]
-        private bool enableToChangeMarkTypeAndTime;
+        public partial bool EnableToChangeMarkTypeAndTime { get; set; }
 
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(RemoveCommandCommand), nameof(DeleteShortcutCommand))]
-        private ShortcutRow selectedRow;
+        public partial ShortcutRow SelectedRow { get; set; }
 
         /// <summary>
         /// 入力中のショートカットキーの表示です。
         /// </summary>
         [ObservableProperty]
-        private string editingKey = "";
+        public partial string EditingKey { get; set; } = "";
 
         public SettingViewModel(ShortcutManager shortcutManager)
         {
             this.shortcutManager = shortcutManager;
-            authorName = PPDStaticSetting.AuthorName;
-            movieLatency = PPDStaticSetting.MovieLatency.ToString();
-            showToggleArrow = !PPDStaticSetting.HideToggleArrow;
-            showToggleRectangle = !PPDStaticSetting.HideToggleRectangle;
-            enableToChangeMarkTypeAndTime = PPDStaticSetting.EnableToChangeMarkTypeAndTime;
+            ShowToggleArrow = !PPDStaticSetting.HideToggleArrow;
+            ShowToggleRectangle = !PPDStaticSetting.HideToggleRectangle;
+            EnableToChangeMarkTypeAndTime = PPDStaticSetting.EnableToChangeMarkTypeAndTime;
             Moves = [.. PPDStaticSetting.Moves.Select(v => (decimal)v)];
             Angles = [.. PPDStaticSetting.Angles.Select(v => (decimal)v)];
 
@@ -304,7 +303,7 @@ namespace PPDEditor.ViewModels.Dialogs
         public string Command { get; } = command;
 
         [ObservableProperty]
-        private string key = key;
+        public partial string Key { get; set; } = key;
 
         public ShortcutType ShortcutType { get; } = shortcutType;
     }

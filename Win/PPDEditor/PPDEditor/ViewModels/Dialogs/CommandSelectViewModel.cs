@@ -14,7 +14,7 @@ namespace PPDEditor.ViewModels.Dialogs
 
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(OkCommand))]
-        private CommandNode selectedNode;
+        public partial CommandNode SelectedNode { get; set; }
 
         public CommandSelectViewModel()
         {

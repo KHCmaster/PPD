@@ -36,7 +36,7 @@ namespace PPDEditor.ViewModels
         [NotifyCanExecuteChangedFor(nameof(StartGameCommand))]
         [NotifyCanExecuteChangedFor(nameof(StartGameFromMenuCommand))]
         [NotifyCanExecuteChangedFor(nameof(KillProcessCommand))]
-        private bool isProcessRunning;
+        public partial bool IsProcessRunning { get; set; }
 
         /// <summary>
         /// コマンドを実行しているかどうか（その間はコマンドとゲームのメニューを使えない）。
@@ -45,7 +45,7 @@ namespace PPDEditor.ViewModels
         [NotifyCanExecuteChangedFor(nameof(StartGameCommand))]
         [NotifyCanExecuteChangedFor(nameof(StartGameFromMenuCommand))]
         [NotifyPropertyChangedFor(nameof(IsMenuOfCommandsEnabled))]
-        private bool isCommandRunning;
+        public partial bool IsCommandRunning { get; set; }
 
         /// <summary>
         /// コマンドとゲームのメニューを使えるかどうか。
@@ -59,13 +59,13 @@ namespace PPDEditor.ViewModels
         /// PPD を起動するときに、ネットにつなぐかどうか。
         /// </summary>
         [ObservableProperty]
-        private bool connect;
+        public partial bool Connect { get; set; }
 
         /// <summary>
         /// PPD を起動するときに、Expansion を起動しないかどうか。
         /// </summary>
         [ObservableProperty]
-        private bool disableExpansion;
+        public partial bool DisableExpansion { get; set; }
 
         /// <summary>
         /// コマンドのメニューです（Commands のフォルダの FlowScript）。

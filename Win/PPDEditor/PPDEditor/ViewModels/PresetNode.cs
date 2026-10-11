@@ -24,13 +24,13 @@ namespace PPDEditor.ViewModels
         /// 選んでいるマークに、プリセットのパラメーターがすべて当てはまるかです。
         /// </summary>
         [ObservableProperty]
-        private bool isChecked;
+        public partial bool IsChecked { get; set; }
 
         /// <summary>
         /// 選んでいるマークに、プリセットのパラメーターが一部だけ当てはまるかです。
         /// </summary>
         [ObservableProperty]
-        private bool isPartial;
+        public partial bool IsPartial { get; set; }
 
         /// <summary>
         /// フォルダーの中身からメニューの項目を作ります（フォルダーを先に、プリセットを後に並べる）。

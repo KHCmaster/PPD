@@ -8,6 +8,6 @@ namespace PPDEditor.ViewModels.Dialogs
     public partial class AuthorNameViewModel : DialogViewModel
     {
         [ObservableProperty]
-        private string authorName = "";
+        public partial string AuthorName { get; set; } = "";
     }
 }

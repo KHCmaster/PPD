@@ -38,16 +38,16 @@ namespace Effect2DEditor.ViewModels
         public float Divisor { get; } = divisor;
 
         [ObservableProperty]
-        private string text = "";
+        public partial string Text { get; set; } = "";
 
         [ObservableProperty]
-        private bool isTextEnabled = true;
+        public partial bool IsTextEnabled { get; set; } = true;
 
         /// <summary>
         /// 変化の割合のボタンを使えるかどうか。
         /// </summary>
         [ObservableProperty]
-        private bool isRatioEnabled;
+        public partial bool IsRatioEnabled { get; set; }
 
         partial void OnTextChanged(string value)
         {
@@ -111,13 +111,13 @@ namespace Effect2DEditor.ViewModels
         public StateValueRow[] Rows { get; }
 
         [ObservableProperty]
-        private BlendMode? selectedBlendMode;
+        public partial BlendMode? SelectedBlendMode { get; set; }
 
         /// <summary>
         /// ベジエの位置の変化の割合のボタンを使えるかどうか。
         /// </summary>
         [ObservableProperty]
-        private bool isBezierPositionEnabled;
+        public partial bool IsBezierPositionEnabled { get; set; }
 
         /// <summary>
         /// 選んでいるステートで、変化の割合を変えられるかどうか（ステートの組の終わりのステートで、キーでないとき）。

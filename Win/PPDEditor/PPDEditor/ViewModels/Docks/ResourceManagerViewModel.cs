@@ -49,16 +49,16 @@ namespace PPDEditor.ViewModels.Docks
         readonly IResourceHost host;
 
         [ObservableProperty]
-        private ResourceNode selectedNode;
+        public partial ResourceNode SelectedNode { get; set; }
 
         [ObservableProperty]
-        private ResourcePreview preview;
+        public partial ResourcePreview Preview { get; set; }
 
         /// <summary>
         /// リソースを追加できるか（プロジェクトを開いているか）です。
         /// </summary>
         [ObservableProperty]
-        private bool canAdd;
+        public partial bool CanAdd { get; set; }
 
         public ResourceManagerViewModel(IResourceHost host)
         {
@@ -333,7 +333,7 @@ namespace PPDEditor.ViewModels.Docks
         public ObservableCollection<ResourceNode> Children { get; } = [];
 
         [ObservableProperty]
-        private bool isDisabled;
+        public partial bool IsDisabled { get; set; }
 
         public bool IsFolder
         {

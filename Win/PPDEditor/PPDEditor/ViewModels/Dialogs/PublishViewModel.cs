@@ -14,27 +14,27 @@ namespace PPDEditor.ViewModels.Dialogs
         readonly string projectDir;
 
         [ObservableProperty]
-        private string publishFolderPath = Path.GetFullPath("publish");
+        public partial string PublishFolderPath { get; set; } = Path.GetFullPath("publish");
 
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(OkCommand))]
-        private string publishFolderName;
+        public partial string PublishFolderName { get; set; }
 
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(OkCommand))]
-        private bool easy;
+        public partial bool Easy { get; set; }
 
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(OkCommand))]
-        private bool normal;
+        public partial bool Normal { get; set; }
 
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(OkCommand))]
-        private bool hard;
+        public partial bool Hard { get; set; }
 
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(OkCommand))]
-        private bool extreme;
+        public partial bool Extreme { get; set; }
 
         /// <param name="availableDifficulty">プロジェクトにある難易度（選べるのはこれだけ）。</param>
         /// <param name="publishFolderName">発行するフォルダーの名前の初期値。</param>
@@ -42,12 +42,12 @@ namespace PPDEditor.ViewModels.Dialogs
         public PublishViewModel(AvailableDifficulty availableDifficulty, string publishFolderName, string projectDir)
         {
             this.projectDir = projectDir;
-            this.publishFolderName = publishFolderName;
+            PublishFolderName = publishFolderName;
             AvailableDifficulty = availableDifficulty;
-            easy = CanEasy;
-            normal = CanNormal;
-            hard = CanHard;
-            extreme = CanExtreme;
+            Easy = CanEasy;
+            Normal = CanNormal;
+            Hard = CanHard;
+            Extreme = CanExtreme;
         }
 
         public AvailableDifficulty AvailableDifficulty { get; }

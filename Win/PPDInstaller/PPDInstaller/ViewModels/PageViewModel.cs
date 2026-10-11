@@ -101,7 +101,7 @@ namespace PPDInstaller.ViewModels
     public partial class LinkCreatePageViewModel(LanguageTexts texts) : PageViewModel(texts)
     {
         [ObservableProperty]
-        private bool registerStartMenu = true;
+        public partial bool RegisterStartMenu { get; set; } = true;
     }
 
     /// <summary>
@@ -136,7 +136,7 @@ namespace PPDInstaller.ViewModels
 
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(HasError))]
-        private string errorText;
+        public partial string ErrorText { get; set; }
 
         public bool HasError
         {

@@ -69,25 +69,25 @@ namespace PPDEditor.ViewModels.Docks
         };
 
         [ObservableProperty]
-        private LayerStats selectedLayer;
+        public partial LayerStats SelectedLayer { get; set; }
 
         [ObservableProperty]
-        private int chartModeIndex;
+        public partial int ChartModeIndex { get; set; }
 
         [ObservableProperty]
-        private IReadOnlyList<KeyValuePair<string, object>> dataRows = [];
+        public partial IReadOnlyList<KeyValuePair<string, object>> DataRows { get; set; } = [];
 
         [ObservableProperty]
-        private IReadOnlyList<PieChartItem> pieItems = [];
+        public partial IReadOnlyList<PieChartItem> PieItems { get; set; } = [];
 
         [ObservableProperty]
-        private IReadOnlyList<KeyValuePair<int, float>> difficultyPoints = [];
+        public partial IReadOnlyList<KeyValuePair<int, float>> DifficultyPoints { get; set; } = [];
 
         /// <summary>
         /// 難易度のグラフで赤くする秒（今の時間）です。
         /// </summary>
         [ObservableProperty]
-        private int? highlightTime;
+        public partial int? HighlightTime { get; set; }
 
         readonly IStatsSource source;
 

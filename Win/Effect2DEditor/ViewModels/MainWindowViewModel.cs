@@ -122,7 +122,7 @@ namespace Effect2DEditor.ViewModels
         public string Path { get; } = path;
 
         [ObservableProperty]
-        private bool isChecked;
+        public partial bool IsChecked { get; set; }
     }
 
     /// <summary>
@@ -468,16 +468,16 @@ namespace Effect2DEditor.ViewModels
         /// </summary>
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(PlayToolTip))]
-        private EffectManager.PlayType playType = EffectManager.PlayType.Once;
+        public partial EffectManager.PlayType PlayType { get; set; } = EffectManager.PlayType.Once;
 
         /// <summary>
         /// 再生しているかどうか（再生のボタンを押すと切り替わる）。
         /// </summary>
         [ObservableProperty]
-        private bool isPlaying;
+        public partial bool IsPlaying { get; set; }
 
         [ObservableProperty]
-        private string fpsText = "60";
+        public partial string FpsText { get; set; } = "60";
 
         /// <summary>
         /// 再生のボタンの説明（再生のしかた）です。

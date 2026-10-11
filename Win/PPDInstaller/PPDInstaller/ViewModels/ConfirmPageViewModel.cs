@@ -29,7 +29,7 @@ namespace PPDInstaller.ViewModels
         public ObservableCollection<InstallNode> Children { get; } = [];
 
         [ObservableProperty]
-        private InstallState state;
+        public partial InstallState State { get; set; }
     }
 
     /// <summary>
@@ -53,7 +53,7 @@ namespace PPDInstaller.ViewModels
         public event EventHandler InstallFinished;
 
         [ObservableProperty]
-        private string statusText = texts["Label7"];
+        public partial string StatusText { get; set; } = texts["Label7"];
 
         public ObservableCollection<InstallNode> Nodes { get; } = [];
 

@@ -11,24 +11,24 @@ namespace PPDEditor.ViewModels.Dialogs
     public partial class ModPublishViewModel : DialogViewModel
     {
         [ObservableProperty]
-        private string modFileName = "";
+        public partial string ModFileName { get; set; } = "";
 
         [ObservableProperty]
-        private string modDisplayName = "";
+        public partial string ModDisplayName { get; set; } = "";
 
         [ObservableProperty]
-        private string modAuthorName = PPDStaticSetting.AuthorName;
+        public partial string ModAuthorName { get; set; } = PPDStaticSetting.AuthorName;
 
         [ObservableProperty]
-        private string modVersion = "";
+        public partial string ModVersion { get; set; } = "";
 
         [ObservableProperty]
-        private string publishFolder;
+        public partial string PublishFolder { get; set; }
 
         public ModPublishViewModel()
         {
-            publishFolder = Path.GetFullPath("publish_mod");
-            Directory.CreateDirectory(publishFolder);
+            PublishFolder = Path.GetFullPath("publish_mod");
+            Directory.CreateDirectory(PublishFolder);
         }
 
         [RelayCommand]

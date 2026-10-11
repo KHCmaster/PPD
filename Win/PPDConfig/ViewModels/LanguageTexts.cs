@@ -37,6 +37,6 @@ namespace PPDConfig.ViewModels
         } = iso;
 
         [ObservableProperty]
-        private bool isChecked;
+        public partial bool IsChecked { get; set; }
     }
 }

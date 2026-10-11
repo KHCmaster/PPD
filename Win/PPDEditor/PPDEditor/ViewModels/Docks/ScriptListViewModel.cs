@@ -37,7 +37,7 @@ namespace PPDEditor.ViewModels.Docks
         readonly IScriptListHost host;
 
         [ObservableProperty]
-        private ScriptNode selectedNode;
+        public partial ScriptNode SelectedNode { get; set; }
 
         public ScriptListViewModel(IScriptListHost host)
         {
@@ -445,25 +445,25 @@ namespace PPDEditor.ViewModels.Docks
     public partial class ScriptNode(ScriptListViewModel owner, ScriptNode parent, string name, bool isFolder) : ObservableObject
     {
         [ObservableProperty]
-        private string name = name;
+        public partial string Name { get; set; } = name;
 
         [ObservableProperty]
-        private bool isDisabled;
+        public partial bool IsDisabled { get; set; }
 
         [ObservableProperty]
-        private bool isExpanded;
+        public partial bool IsExpanded { get; set; }
 
         [ObservableProperty]
-        private bool isSelected;
+        public partial bool IsSelected { get; set; }
 
         /// <summary>
         /// 名前を変えているかです。
         /// </summary>
         [ObservableProperty]
-        private bool isEditing;
+        public partial bool IsEditing { get; set; }
 
         [ObservableProperty]
-        private string editingName = "";
+        public partial string EditingName { get; set; } = "";
 
         public ScriptNode Parent { get; } = parent;
 

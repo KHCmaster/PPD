@@ -76,42 +76,42 @@ namespace PPDEditor.ViewModels.Docks
         bool hasAngle;
 
         [ObservableProperty]
-        private int selectedFileIndex = -1;
+        public partial int SelectedFileIndex { get; set; } = -1;
 
         /// <summary>
         /// ゲームの画面に角度を表示するかです。
         /// </summary>
         [ObservableProperty]
-        private bool displayAngle;
+        public partial bool DisplayAngle { get; set; }
 
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(IsPointEnabled), nameof(IsLineEnabled), nameof(IsLineXEnabled), nameof(IsLineYEnabled), nameof(IsSymmetricAngleEnabled))]
-        private PosAndAngleApplyMode applyMode;
+        public partial PosAndAngleApplyMode ApplyMode { get; set; }
 
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(IsLineXEnabled), nameof(IsLineYEnabled))]
-        private LineSymmetryMode lineMode;
+        public partial LineSymmetryMode LineMode { get; set; }
 
         [ObservableProperty]
-        private bool symmetricAngle;
+        public partial bool SymmetricAngle { get; set; }
 
         [ObservableProperty]
-        private string pointX = "400";
+        public partial string PointX { get; set; } = "400";
 
         [ObservableProperty]
-        private string pointY = "225";
+        public partial string PointY { get; set; } = "225";
 
         [ObservableProperty]
-        private string lineX1 = "0";
+        public partial string LineX1 { get; set; } = "0";
 
         [ObservableProperty]
-        private string lineY1 = "225";
+        public partial string LineY1 { get; set; } = "225";
 
         [ObservableProperty]
-        private string lineX2 = "800";
+        public partial string LineX2 { get; set; } = "800";
 
         [ObservableProperty]
-        private string lineY2 = "225";
+        public partial string LineY2 { get; set; } = "225";
 
         public PosAndAngleViewModel(IPosAndAngleHost host)
         {

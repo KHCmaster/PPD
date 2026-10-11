@@ -26,13 +26,13 @@ namespace BMSTOPPD.ViewModels
     public partial class MainWindowViewModel(IDialogService dialogService, IReadOnlyList<MarkSetting> settings) : ObservableObject
     {
         [ObservableProperty]
-        private string fileName = "";
+        public partial string FileName { get; set; } = "";
 
         [ObservableProperty]
-        private string timeOffset = "";
+        public partial string TimeOffset { get; set; } = "";
 
         [ObservableProperty]
-        private bool isDtx;
+        public partial bool IsDtx { get; set; }
 
         [RelayCommand]
         private void Open()
