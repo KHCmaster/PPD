@@ -35,16 +35,16 @@ namespace PPDInstaller.ViewModels
     /// <summary>
     /// インストールするものを確かめるページです。次へを押すと、ここでダウンロードとインストールを行います。
     /// </summary>
-    public partial class ConfirmPageViewModel : PageViewModel
+    public partial class ConfirmPageViewModel(LanguageTexts texts, InstallFolderPageViewModel folderPage, InstallComponentPageViewModel componentPage, string dataDirectory) : PageViewModel(texts)
     {
         const string cacheFolder = "Cache";
         const string ipaFontName = "ipag00302.zip";
         const string lavFiltersName = "lavFilters.exe";
         const string lavFilters = "LAVFilters";
 
-        readonly InstallFolderPageViewModel folderPage;
-        readonly InstallComponentPageViewModel componentPage;
-        readonly string dataDirectory;
+        readonly InstallFolderPageViewModel folderPage = folderPage;
+        readonly InstallComponentPageViewModel componentPage = componentPage;
+        readonly string dataDirectory = dataDirectory;
         readonly Queue<(CExecutor Executor, InstallNode Node)> executeQueue = [];
 
         /// <summary>
@@ -53,15 +53,7 @@ namespace PPDInstaller.ViewModels
         public event EventHandler InstallFinished;
 
         [ObservableProperty]
-        private string statusText;
-
-        public ConfirmPageViewModel(LanguageTexts texts, InstallFolderPageViewModel folderPage, InstallComponentPageViewModel componentPage, string dataDirectory) : base(texts)
-        {
-            this.folderPage = folderPage;
-            this.componentPage = componentPage;
-            this.dataDirectory = dataDirectory;
-            statusText = texts["Label7"];
-        }
+        private string statusText = texts["Label7"];
 
         public ObservableCollection<InstallNode> Nodes { get; } = [];
 

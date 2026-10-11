@@ -74,8 +74,8 @@ namespace UnitTests.FlowScript
             Assert.True(LegacyNumberFormat.TryParse("-0", NumberStyles.Float, invariant, out double d));
             Assert.False(float.IsNegative(f));
             Assert.False(double.IsNegative(d));
-            Assert.False(LegacyNumberFormat.TryParse("x", NumberStyles.Float, invariant, out f));
-            Assert.False(LegacyNumberFormat.TryParse("x", NumberStyles.Float, invariant, out d));
+            Assert.False(LegacyNumberFormat.TryParse("x", NumberStyles.Float, invariant, out float _));
+            Assert.False(LegacyNumberFormat.TryParse("x", NumberStyles.Float, invariant, out double _));
             Assert.True(LegacyNumberFormat.TryParse("-1.5", NumberStyles.Float, invariant, out f));
             Assert.Equal(-1.5f, f);
         }

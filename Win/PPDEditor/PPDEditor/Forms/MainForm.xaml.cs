@@ -1,6 +1,7 @@
 using AvalonDock.Layout;
 using AvalonDock.Serializer.Xml;
 using PPDEditor.Controls;
+using PPDEditor.DockForm;
 using PPDEditor.ViewModels;
 using PPDEditor.ViewModels.Dialogs;
 using PPDEditorCommon.Dialog;

@@ -93,7 +93,7 @@ namespace UnitTests.FlowScript
 
             var records = s.Run();
 
-            Assert.Equal(new object[] { 0, 1, 2, 3, 4 }, Values(records, "i"));
+            Assert.Equal([0, 1, 2, 3, 4], Values(records, "i"));
             Assert.Equal(5, Values(records, "end").Length);
         }
 
@@ -115,8 +115,8 @@ namespace UnitTests.FlowScript
 
             var records = s.Run();
 
-            Assert.Equal(new object[] { "a", "b", "c" }, records.Select(r => r.Value));
-            Assert.Equal(new object[] { 0, 1, 2 }, records.Select(r => r.Value2));
+            Assert.Equal(["a", "b", "c"], records.Select(r => r.Value));
+            Assert.Equal([0, 1, 2], records.Select(r => r.Value2));
         }
 
         [Fact]
@@ -167,7 +167,7 @@ namespace UnitTests.FlowScript
             var ok = s.Probe("ok");
             s.Flow(entry, "Start", parse, "In").Flow(parse, "Success", ok, "In").Flow(parse, "Result", ok, "Value");
 
-            Assert.Equal(new object[] { true }, s.Run().Select(r => r.Value));
+            Assert.Equal([true], s.Run().Select(r => r.Value));
         }
 
         [Fact]
@@ -195,8 +195,8 @@ namespace UnitTests.FlowScript
 
             var records = s.Run();
 
-            Assert.Equal(new object[] { 2 }, Values(records, "count"));
-            Assert.Equal(new object[] { true }, Values(records, "contains"));
+            Assert.Equal([2], Values(records, "count"));
+            Assert.Equal([true], Values(records, "contains"));
         }
 
         [Fact]
@@ -227,11 +227,11 @@ namespace UnitTests.FlowScript
 
             var records = s.Run();
 
-            Assert.Equal(new object[] { 7 }, Values(records, "value"));
+            Assert.Equal([7], Values(records, "value"));
             // ない鍵は Failed になる（以前はいつも Success で、値を読むとエラーになっていた）
             Assert.Single(records, r => r.Label == "missing");
             Assert.DoesNotContain(records, r => r.Label == "missing ok");
-            Assert.Equal(new object[] { false }, Values(records, "contains"));
+            Assert.Equal([false], Values(records, "contains"));
         }
 
         // "a,b,a" のうち "a" だけを残して数える
@@ -251,7 +251,7 @@ namespace UnitTests.FlowScript
                 .Flow(where, "Value", equal, "A").Flow(equal, "Value", where, "Result")
                 .Flow(where, "Enumerable", count, "Enumerable").Flow(count, "Count", probe, "Value");
 
-            Assert.Equal(new object[] { 2 }, s.Run().Select(r => r.Value));
+            Assert.Equal([2], s.Run().Select(r => r.Value));
         }
 
         // 別の名前のイベントを前もって受けるノードが 2 つあっても、イベントは 1 回だけ届く
@@ -273,7 +273,7 @@ namespace UnitTests.FlowScript
 
             var records = s.Run();
 
-            Assert.Equal(new object[] { 5 }, Values(records, "handled"));
+            Assert.Equal([5], Values(records, "handled"));
             Assert.Single(records, r => r.Label == "preview x");
         }
 
@@ -297,7 +297,7 @@ namespace UnitTests.FlowScript
 
             var records = s.Run();
 
-            Assert.Equal(new object[] { false }, Values(records, "before"));
+            Assert.Equal([false], Values(records, "before"));
             Assert.Equal(("after", "stored", (object)false), records[1]);
         }
     }

@@ -216,7 +216,7 @@ namespace UnitTests.PPDEditor
         public void SelectingTreeNode_ListsItsTemplates()
         {
             var vm = new NewProjectWindowViewModel(language);
-            TemplateInfo Template() => new();
+            static TemplateInfo Template() => new();
             var root = new TreeNodeViewModel<TemplateInfo> { Text = "Basic" };
             var child = new TreeNodeViewModel<TemplateInfo> { Text = "Song" };
             var first = Template();
@@ -259,7 +259,7 @@ namespace UnitTests.PPDEditor
             var node = new TreeNodeViewModel<TemplateInfo>();
             var item = new ListViewModel<TemplateInfo>();
             var changes = new List<string>();
-            PropertyChangedEventHandler record = (s, e) => changes.Add(e.PropertyName);
+            void record(object s, PropertyChangedEventArgs e) => changes.Add(e.PropertyName);
             node.PropertyChanged += record;
             item.PropertyChanged += record;
             var value = new TemplateInfo();

@@ -117,7 +117,7 @@ namespace UnitTests.FlowScript
         {
             var circle = Node("Input", null, ("Button", MarkType.Circle));
             var any = Node("Input", null, ("HandleAny", true));
-            void Press(NodeHarness h, MarkType button) => h.Node.Manager.Call("PPD.Input", [button, 3, true, false]);
+            static void Press(NodeHarness h, MarkType button) => h.Node.Manager.Call("PPD.Input", [button, 3, true, false]);
 
             Press(circle, MarkType.Cross);
             Assert.Empty(circle.Fired);
@@ -148,7 +148,7 @@ namespace UnitTests.FlowScript
             Assert.Equal(stages.Select(s => s.Item2), hold.Fired);
             Assert.Equal(400, hold.Get("CurrentHoldScore"));
             Assert.Equal(5000, hold.Get("MaxHoldBonus"));
-            Assert.Equal(new object[] { MarkType.Circle, MarkType.Cross }, ((IEnumerable<object>)hold.Get("HoldMarks")).ToArray());
+            Assert.Equal(new object[] { MarkType.Circle, MarkType.Cross }, [.. ((IEnumerable<object>)hold.Get("HoldMarks"))]);
         }
 
         sealed class FakeLyrics : ILylics

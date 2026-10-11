@@ -140,7 +140,7 @@ namespace PPDFramework
             if (interval.Length > 0)
             {
                 // 間隔が中央値の 1.5 倍を超えたフレーム（表示が 1 回以上抜けた可能性がある）
-                var median = Percentile(interval.OrderBy(x => x).ToArray(), 0.5);
+                var median = Percentile([.. interval.OrderBy(x => x)], 0.5);
                 lines.Add(String.Format("  frame slow frames (interval > {0:F2}ms): {1}", median * 1.5, interval.Count(x => x > median * 1.5)));
             }
             if (spikeCount > 0)

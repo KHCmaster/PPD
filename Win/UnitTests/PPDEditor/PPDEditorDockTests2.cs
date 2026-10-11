@@ -115,10 +115,13 @@ namespace UnitTests.PPDEditor
         {
             var host = new FakeEventHost();
             var viewModel = new EventManagerViewModel(host);
-            var data = new EventData { DisplayState = DisplayState.Sudden };
-            data.MovieVolumePercent = 50;
-            data.CrossVolumePercent = 80;
-            data.LReleaseSound = true;
+            var data = new EventData
+            {
+                DisplayState = DisplayState.Sudden,
+                MovieVolumePercent = 50,
+                CrossVolumePercent = 80,
+                LReleaseSound = true
+            };
             viewModel.AddChange(1, data);
 
             viewModel.OnSeeked(0.5f);
@@ -144,8 +147,10 @@ namespace UnitTests.PPDEditor
         public void EventManager_InitialBpmMoveAndEvd()
         {
             var host = new FakeEventHost();
-            var viewModel = new EventManagerViewModel(host);
-            viewModel.ChangeData = new SortedList<float, EventData> { [0] = new EventData { BPM = 100 }, [2] = new EventData { BPM = 140 } };
+            var viewModel = new EventManagerViewModel(host)
+            {
+                ChangeData = new SortedList<float, EventData> { [0] = new EventData { BPM = 100 }, [2] = new EventData { BPM = 140 } }
+            };
 
             host.ConfirmAnswer = false;
             viewModel.CheckInitialBpm(120);

@@ -290,10 +290,7 @@ namespace PPDFramework
                 {
                     height = 450;
                 }
-                if (Control != null)
-                {
-                    Control.Size = new System.Drawing.Size(width.Value, height.Value);
-                }
+                Control?.Size = new System.Drawing.Size(width.Value, height.Value);
                 InitializeUI();
 
                 device = PPDDevice.Initialize(Control != null ? Control.Handle : windowHandle, width.Value, height.Value, expectedWidth.Value, expectedHeight.Value, expectedAspectRatio.Value);

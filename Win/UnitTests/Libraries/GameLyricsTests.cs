@@ -39,7 +39,8 @@ namespace UnitTests.Libraries
             lyrics.Seek(2.5f);
             Assert.Equal(["", "Re:Start", "second"], changed);
             // 使う文字（文字のテクスチャを先に作るため）
-            Assert.Equal(new HashSet<char>("Re:Startsecond"), new HashSet<char>(lyrics.LyricCharacters));
+            HashSet<char> expected = [.. "Re:Startsecond"];
+            Assert.Equal(expected, [.. lyrics.LyricCharacters]);
         }
 
         [Fact]

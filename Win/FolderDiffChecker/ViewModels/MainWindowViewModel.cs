@@ -46,7 +46,7 @@ namespace FolderDiffChecker.ViewModels
     public partial class MainWindowViewModel : ObservableObject
     {
         readonly IDialogService dialog;
-        string outPath;
+        readonly string outPath;
         string lastFolder;
         long startTime;
 

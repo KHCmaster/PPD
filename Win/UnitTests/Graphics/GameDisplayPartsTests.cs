@@ -14,16 +14,10 @@ namespace UnitTests.Graphics
     /// 表示の状態は外から見えないので、フィールドを読んで確かめる。
     /// </remarks>
     [Collection(GraphicsCollection.Name)]
-    public sealed class GameDisplayPartsTests : IDisposable
+    public sealed class GameDisplayPartsTests(GraphicsDevice graphics) : IDisposable
     {
-        readonly GraphicsDevice graphics;
-        readonly GameResources resources;
-
-        public GameDisplayPartsTests(GraphicsDevice graphics)
-        {
-            this.graphics = graphics;
-            resources = new GameResources(graphics);
-        }
+        readonly GraphicsDevice graphics = graphics;
+        readonly GameResources resources = new(graphics);
 
         public void Dispose()
         {

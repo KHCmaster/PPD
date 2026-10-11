@@ -83,8 +83,8 @@ namespace UnitTests.FlowScript
 
             var records = s.Run();
 
-            Assert.Equal(new object[] { "outer" }, Values(records, "outer"));
-            Assert.Equal(new object[] { "inner" }, Values(records, "inner"));
+            Assert.Equal(["outer"], Values(records, "outer"));
+            Assert.Equal(["inner"], Values(records, "inner"));
         }
 
         [Fact]
@@ -164,7 +164,7 @@ namespace UnitTests.FlowScript
             var records = RunLoop(loop, "Break", 3);
 
             // 値を増やしてから調べるので、i が 3 になった回で抜ける（その回の本体は動かない）
-            Assert.Equal(new object[] { 1, 2 }, Values(records, "body"));
+            Assert.Equal([1, 2], Values(records, "body"));
             Assert.Equal("end", records.Last().Label);
         }
 
@@ -177,7 +177,7 @@ namespace UnitTests.FlowScript
         {
             var records = RunLoop(loop, "Continue", 3);
 
-            Assert.Equal(new object[] { 1, 2, 4, 5 }, Values(records, "body"));
+            Assert.Equal([1, 2, 4, 5], Values(records, "body"));
             Assert.Equal("end", records.Last().Label);
         }
 
@@ -244,12 +244,12 @@ namespace UnitTests.FlowScript
             engine.Start();
             engine.Start();
             // OnceGate は 1 回だけ通す。2 回目のスタートでは通らない
-            Assert.Equal(new object[] { false }, Values(ProbeFlowSourceObject.Records, "passed"));
+            Assert.Equal([false], Values(ProbeFlowSourceObject.Records, "passed"));
 
             engine.Reset();
             engine.Start();
             // Reset で OnceGate がまた通り、GlobalScope の値も消えている
-            Assert.Equal(new object[] { false, false }, Values(ProbeFlowSourceObject.Records, "passed"));
+            Assert.Equal([false, false], Values(ProbeFlowSourceObject.Records, "passed"));
 
             engine.Clear();
             engine.Start();

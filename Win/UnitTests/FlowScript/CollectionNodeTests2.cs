@@ -59,7 +59,7 @@ namespace UnitTests.FlowScript
         [Fact]
         public void HashSet_SetOperations()
         {
-            HashSet<object> Set(params object[] items) => [.. items];
+            static HashSet<object> Set(params object[] items) => [.. items];
             object[] other = [2, 3, 4];
 
             var union = Set(1, 2);
@@ -127,8 +127,8 @@ namespace UnitTests.FlowScript
 
             Assert.Equal(2, Ok("Hashtable.Count", ("Hashtable", table)).Get("Value"));
             Assert.Equal(true, Ok("Hashtable.ContainsValue", ("Hashtable", table), ("Value", 2)).Get("Contains"));
-            Assert.Equal(new object[] { "a", "b" }, ((IEnumerable<object>)Ok("Hashtable.Keys", ("Hashtable", table)).Get("Value")).ToArray());
-            Assert.Equal(new object[] { 1, 2 }, ((IEnumerable<object>)Ok("Hashtable.Values", ("Hashtable", table)).Get("Value")).ToArray());
+            Assert.Equal(new object[] { "a", "b" }, [.. ((IEnumerable<object>)Ok("Hashtable.Keys", ("Hashtable", table)).Get("Value"))]);
+            Assert.Equal(new object[] { 1, 2 }, [.. ((IEnumerable<object>)Ok("Hashtable.Values", ("Hashtable", table)).Get("Value"))]);
             var pairs = ((IEnumerable<object>)new NodeHarness("Hashtable.Pairs").Set("Hashtable", table).Get("Pairs")).ToArray();
             Assert.Equal(new KeyValuePair<object, object>("a", 1), pairs[0]);
             Ok("Hashtable.Remove", ("Hashtable", table), ("Key", "a"));
@@ -207,7 +207,7 @@ namespace UnitTests.FlowScript
             Assert.Equal("一行目\n二行目", Ok("Stream.ReadAllText", ("Stream", text), ("Encoding", EncodingType.UTF_8)).Get("Value"));
 
             var lines = new MemoryStream(Encoding.UTF8.GetBytes("a\r\nb\nc"));
-            Assert.Equal(new object[] { "a", "b", "c" }, ((List<object>)Ok("Stream.ReadAllLines", ("Stream", lines), ("Encoding", EncodingType.UTF_8)).Get("Value")).ToArray());
+            Assert.Equal(new object[] { "a", "b", "c" }, [.. ((List<object>)Ok("Stream.ReadAllLines", ("Stream", lines), ("Encoding", EncodingType.UTF_8)).Get("Value"))]);
 
             // 日本語の文字コード（ゲームでは起動したときにコードページを使えるようにしている）
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);

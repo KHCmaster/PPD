@@ -9,7 +9,7 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
 
-namespace PPDEditor
+namespace PPDEditor.DockForm
 {
     /// <summary>
     /// 曲線の上にマークを並べます。処理は <see cref="GeometryCreatorViewModel"/> にあります。

@@ -107,10 +107,7 @@ namespace PPDEditor.DockForm.Script
         private void ScriptTree_PreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
             var node = GetNodeAt(e.OriginalSource as DependencyObject);
-            if (node != null)
-            {
-                node.IsSelected = true;
-            }
+            node?.IsSelected = true;
         }
 
         private void ScriptTree_KeyDown(object sender, KeyEventArgs e)

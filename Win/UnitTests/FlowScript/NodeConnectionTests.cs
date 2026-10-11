@@ -67,7 +67,7 @@ namespace UnitTests.FlowScript
 
             var records = s.Run();
 
-            Assert.Equal(new object[] { "text" }, Values(records, "fired"));
+            Assert.Equal(["text"], Values(records, "fired"));
         }
 
         [Fact]

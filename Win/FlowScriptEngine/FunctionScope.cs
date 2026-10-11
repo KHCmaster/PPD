@@ -191,8 +191,9 @@ namespace FlowScriptEngine
             }
             var remaining = list.Length;
             var handled = arg.Handled;
-            foreach (Action<FunctionScopeArg> handler in list)
+            foreach (var item in list)
             {
+                var handler = (Action<FunctionScopeArg>)item;
                 handler(new FunctionScopeArg(arg.EventName, arg.Arg, e =>
                 {
                     handled |= e.Handled;

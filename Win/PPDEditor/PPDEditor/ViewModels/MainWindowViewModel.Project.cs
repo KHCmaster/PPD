@@ -1,6 +1,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using PPDConfiguration;
+using PPDEditor.DockForm;
 using PPDEditor.Models;
 using PPDEditor.ViewModels.Dialogs;
 using PPDEditor.ViewModels.Docks;
@@ -896,8 +897,8 @@ namespace PPDEditor.ViewModels
                     return false;
                 }
             }
-            var placement = view.Placement;
-            EditorSettingsStore.SaveConfig(placement.Bounds, placement.Maximized);
+            var (bounds, maximized) = view.Placement;
+            EditorSettingsStore.SaveConfig(bounds, maximized);
             SaveRecentProjects();
             return true;
         }

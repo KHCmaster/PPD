@@ -13,7 +13,9 @@ namespace PPDMultiCommon.Web
     public class WebManager
     {
         // テストでは localhost のテスト用のサーバーにする（readonly にすると、テストから変えられない）
+#pragma warning disable IDE0044
         private static string baseUrl = @"http://projectdxxx.me" + "/multi-api";
+#pragma warning restore IDE0044
 
         private string token;
         private bool isRoomExist;

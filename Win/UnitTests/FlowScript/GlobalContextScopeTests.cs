@@ -38,8 +38,8 @@ namespace UnitTests.FlowScript
 
         static (object Value, object Defined) Read(System.Collections.Generic.List<(string Label, object Value, object Value2)> records, string label)
         {
-            var record = Assert.Single(records, r => r.Label == label);
-            return (record.Value, record.Value2);
+            var (_, value, value2) = Assert.Single(records, r => r.Label == label);
+            return (value, value2);
         }
 
         [Fact]
@@ -84,10 +84,10 @@ namespace UnitTests.FlowScript
                     .Flow(s.Node(scope + ".GetValue"), "Value", probe, "Value")
                     .Flow(s.Node(scope + ".IsDefined"), "Value", probe, "Value2");
 
-                var record = Assert.Single(s.Run());
+                var (_, value, value2) = Assert.Single(s.Run());
 
-                Assert.Null(record.Value);
-                Assert.Equal(false, record.Value2);
+                Assert.Null(value);
+                Assert.Equal(false, value2);
             }
         }
 

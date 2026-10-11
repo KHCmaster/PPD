@@ -18,17 +18,11 @@ namespace UnitTests.Graphics
     /// 時間軸の行と ID は、ウィンドウの代わりに PPDSheet の差し替え口から渡す。
     /// </remarks>
     [Collection(GraphicsCollection.Name)]
-    public sealed class PPDSheetTests : IDisposable
+    public sealed class PPDSheetTests(GraphicsDevice graphics) : IDisposable
     {
-        readonly EditorMarkEnvironment environment;
-        readonly GraphicsDevice graphics;
+        readonly EditorMarkEnvironment environment = new(graphics);
+        readonly GraphicsDevice graphics = graphics;
         uint lastID = 100;
-
-        public PPDSheetTests(GraphicsDevice graphics)
-        {
-            this.graphics = graphics;
-            environment = new EditorMarkEnvironment(graphics);
-        }
 
         public void Dispose()
         {
@@ -590,7 +584,7 @@ namespace UnitTests.Graphics
             // 範囲選択の中（3 つ全部が変わる）
             Select(sheet, -0.5f, ButtonType.Circle, 2.5f, ButtonType.Circle);
             Assert.True(sheet.SetData(positions, angles, reverse, 1, withAngle));
-            var ordered = reverse ? marks.Reverse().ToArray() : marks;
+            var ordered = reverse ? [.. marks.Reverse()] : marks;
             Assert.Equal([new Vector2(1, 1), new Vector2(2, 2), new Vector2(3, 3)], ordered.Select(m => m.Position));
             Assert.Equal(withAngle ? [1f, 2f, 3f] : [0.5f, 0.5f, 0.5f], ordered.Select(m => m.Rotation));
             sheet.Undo();
@@ -727,13 +721,13 @@ namespace UnitTests.Graphics
             sheet.FocusedMark = [-1, -1];
             Select(sheet, 0, ButtonType.Circle, 3, ButtonType.Circle);
             sheet.ChangeParameter("all", "1");
-            Assert.All(new[] { mark, other }, m => Assert.Equal("1", m["all"]));
+            Assert.All([mark, other], m => Assert.Equal("1", m["all"]));
             sheet.RemoveParameter("all");
-            Assert.All(new[] { mark, other }, m => Assert.Null(m["all"]));
+            Assert.All([mark, other], m => Assert.Null(m["all"]));
             sheet.UnassignID(() => true);
-            Assert.All(new[] { mark, other }, m => Assert.Equal(0u, m.ID));
+            Assert.All([mark, other], m => Assert.Equal(0u, m.ID));
             sheet.AssignID();
-            Assert.All(new[] { mark, other }, m => Assert.NotEqual(0u, m.ID));
+            Assert.All([mark, other], m => Assert.NotEqual(0u, m.ID));
             sheet.AssignID(mark);
             Assert.Equal(lastID, mark.ID);
         }

@@ -164,11 +164,19 @@ namespace UnitTests.PPDEditor
         [Fact]
         public void EventEdit_ReadsAndBuildsEvent()
         {
-            var source = new EventData { BPM = 150, BPMRapidChange = true, DisplayState = DisplayState.Hidden, MoveState = MoveState.Stop, NoteType = NoteType.AC, SlideScale = 2 };
-            source.MovieVolumePercent = 40;
-            source.CrossVolumePercent = 70;
-            source.LKeepPlaying = true;
-            source.UpReleaseSound = true;
+            var source = new EventData
+            {
+                BPM = 150,
+                BPMRapidChange = true,
+                DisplayState = DisplayState.Hidden,
+                MoveState = MoveState.Stop,
+                NoteType = NoteType.AC,
+                SlideScale = 2,
+                MovieVolumePercent = 40,
+                CrossVolumePercent = 70,
+                LKeepPlaying = true,
+                UpReleaseSound = true
+            };
             var viewModel = new EventEditViewModel(source);
 
             Assert.True(viewModel.IsEditable);

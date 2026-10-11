@@ -118,7 +118,7 @@ namespace UnitTests.FlowScript
         public void IsType_WithInterfaceTypes()
         {
             object[] items = [1, 2];
-            bool IsType(string node, object target) => (bool)new NodeHarness(node).Set("Target", target).Get("Value");
+            static bool IsType(string node, object target) => (bool)new NodeHarness(node).Set("Target", target).Get("Value");
 
             Assert.True(IsType("Enumerable.IsType", List(1)));
             Assert.True(IsType("Enumerable.IsType", items));
@@ -146,8 +146,8 @@ namespace UnitTests.FlowScript
                 return result;
             }
 
-            Assert.Equal(new object[] { "b", "c", "aa", "bb" }, Read(Then("ThenBy")));
-            Assert.Equal(new object[] { "c", "b", "bb", "aa" }, Read(Then("ThenByDescending")));
+            Assert.Equal(["b", "c", "aa", "bb"], Read(Then("ThenBy")));
+            Assert.Equal(["c", "b", "bb", "aa"], Read(Then("ThenByDescending")));
             Assert.Null(Read(new NodeHarness("Enumerable.Ordered.ThenBy")));
             Assert.Null(Read(new NodeHarness("Enumerable.Ordered.ThenByDescending")));
         }
@@ -162,7 +162,7 @@ namespace UnitTests.FlowScript
             var lookup = new object[] { "a", "bb", "cc" }.ToLookup(s => (object)((string)s).Length);
             var value = new NodeHarness("Enumerable.Lookup.Value").Set("Lookup", lookup).Set("Key", 2);
             Assert.Equal(2, value.Get("Count"));
-            Assert.Equal(new object[] { "bb", "cc" }, ((IEnumerable<object>)value.Get("EnumerableWithKey")).ToArray());
+            Assert.Equal(new object[] { "bb", "cc" }, [.. ((IEnumerable<object>)value.Get("EnumerableWithKey"))]);
             var empty = new NodeHarness("Enumerable.Lookup.Value");
             Assert.Equal(0, empty.Get("Count"));
             Assert.Empty((IEnumerable<object>)empty.Get("EnumerableWithKey"));

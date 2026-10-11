@@ -15,7 +15,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
-namespace PPDEditor
+namespace PPDEditor.DockForm
 {
     /// <summary>
     /// スクリプトのドックです。中に自分のドッキングのレイアウト（スクリプトの一覧、タブ、ノードの一覧など）を持ちます。

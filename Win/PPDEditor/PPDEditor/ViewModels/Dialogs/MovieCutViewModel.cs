@@ -6,33 +6,25 @@ namespace PPDEditor.ViewModels.Dialogs
     /// <summary>
     /// 動画の上下左右を切り取る幅（ピクセル）を設定するダイアログです。
     /// </summary>
-    public partial class MovieCutViewModel : DialogViewModel
+    public partial class MovieCutViewModel(MovieTrimmingData trimmingData) : DialogViewModel
     {
         [ObservableProperty]
-        private string left;
+        private string left = trimmingData?.Left.ToString() ?? "0";
 
         [ObservableProperty]
-        private string right;
+        private string right = trimmingData?.Right.ToString() ?? "0";
 
         [ObservableProperty]
-        private string top;
+        private string top = trimmingData?.Top.ToString() ?? "0";
 
         [ObservableProperty]
-        private string bottom;
+        private string bottom = trimmingData?.Bottom.ToString() ?? "0";
 
         /// <summary>
         /// 設定ファイルライターにも反映させるかです。
         /// </summary>
         [ObservableProperty]
         private bool applyToIni = PPDStaticSetting.ApplyToIniMovieTrimming;
-
-        public MovieCutViewModel(MovieTrimmingData trimmingData)
-        {
-            left = trimmingData?.Left.ToString() ?? "0";
-            right = trimmingData?.Right.ToString() ?? "0";
-            top = trimmingData?.Top.ToString() ?? "0";
-            bottom = trimmingData?.Bottom.ToString() ?? "0";
-        }
 
         /// <summary>
         /// 入力した切り取りの幅です（OK を押したときに決まる）。

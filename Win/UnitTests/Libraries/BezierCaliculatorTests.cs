@@ -31,9 +31,15 @@ namespace UnitTests.Libraries
         [Fact]
         public void CloneAndSerialize_RoundTrip()
         {
-            var bcp = new BezierControlPoint { Second = new PointF(1.5f, -2.25f), ValidFirst = true, ValidSecond = false, ValidThird = true };
-            bcp.First = new PointF(4.5f, 1.75f);
-            bcp.Third = new PointF(-3, -2.25f);
+            var bcp = new BezierControlPoint
+            {
+                Second = new PointF(1.5f, -2.25f),
+                ValidFirst = true,
+                ValidSecond = false,
+                ValidThird = true,
+                First = new PointF(4.5f, 1.75f),
+                Third = new PointF(-3, -2.25f)
+            };
 
             var clone = bcp.Clone();
             var text = bcp.Serialize();

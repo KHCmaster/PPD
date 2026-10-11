@@ -32,15 +32,9 @@ namespace Effect2DEditor
             get { return commandManager; }
             set
             {
-                if (commandManager != null)
-                {
-                    commandManager.CommandChanged -= CommandManager_CommandChanged;
-                }
+                commandManager?.CommandChanged -= CommandManager_CommandChanged;
                 commandManager = value;
-                if (commandManager != null)
-                {
-                    commandManager.CommandChanged += CommandManager_CommandChanged;
-                }
+                commandManager?.CommandChanged += CommandManager_CommandChanged;
                 CommandManager_CommandChanged(this, EventArgs.Empty);
             }
         }

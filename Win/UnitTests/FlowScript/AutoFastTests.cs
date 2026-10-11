@@ -263,7 +263,7 @@ namespace UnitTests.FlowScript
                 {
                     // 名前を使い、イベントごとに別のデリゲートにする（何も使わないラムダは 1 つを使い回す）
                     var name = @event.Name;
-                    FlowEventHandler handler = e => GC.KeepAlive(name);
+                    void handler(FlowEventArgs e) => GC.KeepAlive(name);
                     connected[@event.Name] = handler;
                     node.ConnectEvent(@event.Name, handler);
                 }

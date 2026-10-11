@@ -8,32 +8,23 @@ namespace PPDEditor.ViewModels.Dialogs
     /// <summary>
     /// グリッド（幅、高さ、オフセット、色）を設定するダイアログです。
     /// </summary>
-    public partial class GridSettingViewModel : DialogViewModel
+    public partial class GridSettingViewModel(SquareGrid grid) : DialogViewModel
     {
         [ObservableProperty]
-        private string width;
+        private string width = grid.Width.ToString();
 
         [ObservableProperty]
-        private string height;
+        private string height = grid.Height.ToString();
 
         [ObservableProperty]
-        private string offsetX;
+        private string offsetX = grid.OffsetX.ToString();
 
         [ObservableProperty]
-        private string offsetY;
+        private string offsetY = grid.OffsetY.ToString();
 
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(ColorText), nameof(IsDarkColor))]
-        private Color gridColor;
-
-        public GridSettingViewModel(SquareGrid grid)
-        {
-            width = grid.Width.ToString();
-            height = grid.Height.ToString();
-            offsetX = grid.OffsetX.ToString();
-            offsetY = grid.OffsetY.ToString();
-            gridColor = grid.GridColor;
-        }
+        private Color gridColor = grid.GridColor;
 
         /// <summary>
         /// 色を選ばせます（今の色を渡し、キャンセルしたときは null を返す）。

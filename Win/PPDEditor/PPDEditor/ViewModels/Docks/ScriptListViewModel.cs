@@ -326,10 +326,7 @@ namespace PPDEditor.ViewModels.Docks
         [RelayCommand]
         private void ToggleDisabled()
         {
-            if (SelectedNode != null)
-            {
-                SelectedNode.IsDisabled = !SelectedNode.IsDisabled;
-            }
+            SelectedNode?.IsDisabled = !SelectedNode.IsDisabled;
         }
 
         [RelayCommand]

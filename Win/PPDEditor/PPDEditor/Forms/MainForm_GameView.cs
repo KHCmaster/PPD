@@ -186,8 +186,7 @@ namespace PPDEditor.Forms
             // Window.GetWindow でも PresentationSource でも浮かせたウィンドウを取れない。ゲームの画面の一番上の親のウィンドウから探す
             const uint GA_ROOT = 2;
             var root = NativeMethods.GetAncestor(GameView.RenderHandle, GA_ROOT);
-            var window = System.Windows.Interop.HwndSource.FromHwnd(root)?.RootVisual as Window;
-            if (window == null || window == this)
+            if (System.Windows.Interop.HwndSource.FromHwnd(root)?.RootVisual is not Window window || window == this)
             {
                 return;
             }

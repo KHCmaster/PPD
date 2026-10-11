@@ -94,7 +94,7 @@ namespace UnitTests.FlowScript
             var data = (Dictionary<object, object>)Ok(typeof(Yaml.ParseFlowSourceObject), ("Yaml", "name: 譜面\nlevels:\n  - 1\n  - 2\n")).Get("Data");
 
             Assert.Equal("譜面", data["name"]);
-            Assert.Equal(new object[] { "1", "2" }, ((List<object>)data["levels"]).ToArray());
+            Assert.Equal(new object[] { "1", "2" }, [.. ((List<object>)data["levels"])]);
 
             var yaml = (string)Ok(typeof(Yaml.DumpFlowSourceObject), ("Data", new Dictionary<object, object> { ["a"] = 1, ["b"] = new List<object> { "x" } })).Get("Yaml");
             Assert.Equal("a: 1\nb:\n- x\n", yaml.ReplaceLineEndings("\n"));
@@ -156,20 +156,20 @@ namespace UnitTests.FlowScript
         [Fact]
         public void EnumerableRange()
         {
-            object[] Range(Type node, params (string, object)[] inputs)
+            static object[] Range(Type node, params (string, object)[] inputs)
             {
                 var harness = new NodeHarness(node);
                 foreach (var (name, value) in inputs)
                 {
                     harness.Set(name, value);
                 }
-                return ((IEnumerable<object>)harness.Get("Range")).ToArray();
+                return [.. ((IEnumerable<object>)harness.Get("Range"))];
             }
 
-            Assert.Equal(new object[] { 0, 1, 2 }, Range(typeof(Extension.Enumerable.RangeFlowSourceObject), ("EndIndex", 3)));
-            Assert.Equal(new object[] { 2, 3 }, Range(typeof(Extension.Enumerable.RangeWithStartIndexFlowSourceObject), ("StartIndex", 2), ("EndIndex", 4)));
-            Assert.Equal(new object[] { 1, 4, 7 }, Range(typeof(Extension.Enumerable.RangeWithStepFlowSourceObject), ("StartIndex", 1), ("EndIndex", 8), ("Step", 3)));
-            Assert.Equal(new object[] { 5, 3, 1 }, Range(typeof(Extension.Enumerable.RangeWithStepFlowSourceObject), ("StartIndex", 5), ("EndIndex", 0), ("Step", -2)));
+            Assert.Equal([0, 1, 2], Range(typeof(Extension.Enumerable.RangeFlowSourceObject), ("EndIndex", 3)));
+            Assert.Equal([2, 3], Range(typeof(Extension.Enumerable.RangeWithStartIndexFlowSourceObject), ("StartIndex", 2), ("EndIndex", 4)));
+            Assert.Equal([1, 4, 7], Range(typeof(Extension.Enumerable.RangeWithStepFlowSourceObject), ("StartIndex", 1), ("EndIndex", 8), ("Step", 3)));
+            Assert.Equal([5, 3, 1], Range(typeof(Extension.Enumerable.RangeWithStepFlowSourceObject), ("StartIndex", 5), ("EndIndex", 0), ("Step", -2)));
             Assert.Empty(Range(typeof(Extension.Enumerable.RangeWithStepFlowSourceObject), ("StartIndex", 0), ("EndIndex", 5), ("Step", 0)));
             Assert.Empty(Range(typeof(Extension.Enumerable.RangeFlowSourceObject), ("EndIndex", -1)));
         }

@@ -148,11 +148,11 @@ namespace UnitTests.Graphics
             Assert.Equal((255, 0, 0), Rgb(Pixel(graphics.Render(rectangle), 50, 50)));
             colorFilter.Weight = 1;
 
-            var actual = Rgb(Pixel(graphics.Render(rectangle), 50, 50));
+            var (red, green, blue) = Rgb(Pixel(graphics.Render(rectangle), 50, 50));
 
-            Assert.InRange(actual.R, r - 2, r + 2);
-            Assert.InRange(actual.G, g - 2, g + 2);
-            Assert.InRange(actual.B, b - 2, b + 2);
+            Assert.InRange(red, r - 2, r + 2);
+            Assert.InRange(green, g - 2, g + 2);
+            Assert.InRange(blue, b - 2, b + 2);
         }
 
         [Fact]
@@ -163,11 +163,11 @@ namespace UnitTests.Graphics
             rectangle.ColorFilters.Add(new InvertColorFilter { Weight = 1 });
             rectangle.ColorFilters.Add(new BrightnessColorFilter { Scale = 0.5f, Weight = 1 });
 
-            var actual = Rgb(Pixel(graphics.Render(rectangle), 50, 50));
+            var (red, green, blue) = Rgb(Pixel(graphics.Render(rectangle), 50, 50));
 
-            Assert.InRange(actual.R, 0, 2);
-            Assert.InRange(actual.G, 126, 130);
-            Assert.InRange(actual.B, 126, 130);
+            Assert.InRange(red, 0, 2);
+            Assert.InRange(green, 126, 130);
+            Assert.InRange(blue, 126, 130);
             // 枠の外は描かない
             Assert.Equal((0, 0, 0), Rgb(Pixel(graphics.Render(rectangle), 150, 50)));
         }

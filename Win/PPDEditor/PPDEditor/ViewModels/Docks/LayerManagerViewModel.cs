@@ -155,8 +155,10 @@ namespace PPDEditor.ViewModels.Docks
 
         private LayerViewModel CreateLayer(string name, float bpm, float bpmOffset, int displayWidth, DisplayLineMode displayMode, DisplayBeatType beatType)
         {
-            var layer = new LayerViewModel(this, name);
-            layer.BPM = Texts["LMBPM"] + " " + bpm;
+            var layer = new LayerViewModel(this, name)
+            {
+                BPM = Texts["LMBPM"] + " " + bpm
+            };
             layer.PPDData.BPM = bpm;
             layer.PPDData.BPMStart = bpmOffset;
             layer.PPDData.DisplayWidth = displayWidth;

@@ -12,7 +12,9 @@ using System.Windows.Interop;
 
 namespace PPDEditor
 {
-    public class MyGame : Game
+    // ゲームのループは、ウィンドウが閉じたとき（Closed）に止まる（Game）。
+    // 閉じる前（Closing）に止めると、保存の確かめでキャンセルしても、次のフレームでまた閉じようとしてしまう
+    public class MyGame(PPDExecuteArg args) : Game(args)
     {
         Input input;
         Sound sound;
@@ -39,12 +41,6 @@ namespace PPDEditor
         public bool Playing
         {
             get { return playing; }
-        }
-
-        public MyGame(PPDExecuteArg args) : base(args)
-        {
-            // ゲームのループは、ウィンドウが閉じたとき（Closed）に止まる（Game）。
-            // 閉じる前（Closing）に止めると、保存の確かめでキャンセルしても、次のフレームでまた閉じようとしてしまう
         }
 
         protected override void Initialize()

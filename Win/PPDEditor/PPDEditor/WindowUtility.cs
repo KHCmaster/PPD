@@ -1,4 +1,5 @@
 ﻿using PPDEditor.Controls;
+using PPDEditor.DockForm;
 using PPDEditor.Forms;
 using AvalonDock;
 

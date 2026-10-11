@@ -13,17 +13,11 @@ namespace UnitTests.Graphics
     /// エディターのマーク（Mark、長押しの ExMark）の表示と、音を鳴らす時のテストです。
     /// </summary>
     [Collection(GraphicsCollection.Name)]
-    public sealed class EditorMarkTests : IDisposable
+    public sealed class EditorMarkTests(GraphicsDevice graphics) : IDisposable
     {
         const float Bpm = Mark.defaultbpm;
-        readonly GraphicsDevice graphics;
-        readonly EditorMarkEnvironment environment;
-
-        public EditorMarkTests(GraphicsDevice graphics)
-        {
-            this.graphics = graphics;
-            environment = new EditorMarkEnvironment(graphics);
-        }
+        readonly GraphicsDevice graphics = graphics;
+        readonly EditorMarkEnvironment environment = new(graphics);
 
         public void Dispose()
         {

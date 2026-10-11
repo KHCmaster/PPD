@@ -51,7 +51,7 @@ namespace PPDEditor.ViewModels.Docks
     /// <remarks>
     /// 曲線の編集は描画のコントロールが持っている <see cref="BezierController"/> が行うので、<see cref="Attach"/> で受け取る。
     /// </remarks>
-    public partial class GeometryCreatorViewModel : DockViewModel
+    public partial class GeometryCreatorViewModel(IGeometryHost host) : DockViewModel
     {
         const int StartX = 100;
         const int StartY = 50;
@@ -59,7 +59,7 @@ namespace PPDEditor.ViewModels.Docks
         const float CenterX = 300;
         const float CenterY = 162;
 
-        readonly IGeometryHost host;
+        readonly IGeometryHost host = host;
         BezierController controller;
         Vector2[] positions = [];
         Vector2[] directions = [];
@@ -128,11 +128,6 @@ namespace PPDEditor.ViewModels.Docks
 
         [ObservableProperty]
         private string transformY = "";
-
-        public GeometryCreatorViewModel(IGeometryHost host)
-        {
-            this.host = host;
-        }
 
         public SquareGrid SquareGrid
         {

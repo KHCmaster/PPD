@@ -1518,10 +1518,7 @@ namespace PPDEditor.Controls
         /// </summary>
         private void ShowAssistToolTip(string content)
         {
-            if (assistToolTip != null)
-            {
-                assistToolTip.IsOpen = false;
-            }
+            assistToolTip?.IsOpen = false;
             assistToolTipTimer?.Stop();
             assistToolTip = new ToolTip
             {

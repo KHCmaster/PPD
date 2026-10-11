@@ -183,7 +183,7 @@ namespace UnitTests.FolderDiffChecker
         private static List<string> ZipEntries(string path)
         {
             using var zip = ZipFile.OpenRead(path);
-            return zip.Entries.Select(e => e.FullName.Replace('\\', '/')).ToList();
+            return [.. zip.Entries.Select(e => e.FullName.Replace('\\', '/'))];
         }
 
         [Fact]

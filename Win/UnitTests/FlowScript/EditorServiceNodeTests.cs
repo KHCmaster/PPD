@@ -238,7 +238,7 @@ namespace UnitTests.FlowScript
             Assert.Equal(2f, value.Get("SlideScale"));
             Assert.Equal(180f, value.Get("BPM"));
             Assert.Equal(true, value.Get("BPMRapidChange"));
-            Assert.Equal(new object[] { 50, 90, 90, 100, 0, 90, 90, 90, 90, 90, 90 }, (object[])value.Get("VolumePercents"));
+            Assert.Equal([50, 90, 90, 100, 0, 90, 90, 90, 90, 90, 90], (object[])value.Get("VolumePercents"));
             Assert.Equal(true, ((object[])value.Get("KeepPlayings"))[1]);
             Assert.Equal(true, ((object[])value.Get("ReleaseSounds"))[9]);
             Assert.Equal(ButtonType.L, ((object[])value.Get("InitializeOrder"))[0]);

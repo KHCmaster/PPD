@@ -163,11 +163,18 @@ namespace UnitTests.PPDEditor
         {
             var list = Create();
             list.Add(1, new EventData { BPM = 120, BPMRapidChange = true });
-            var changed = new EventData { BPM = 120, MoveState = MoveState.Stop, DisplayState = DisplayState.Hidden, NoteType = NoteType.AC, SlideScale = 2 };
-            changed.MovieVolumePercent = 50;
-            changed.SquareKeepPlaying = true;
-            changed.CrossReleaseSound = true;
-            changed.InitializeOrder = [.. Enumerable.Range(0, 10).Reverse().Select(i => (ButtonType)i)];
+            var changed = new EventData
+            {
+                BPM = 120,
+                MoveState = MoveState.Stop,
+                DisplayState = DisplayState.Hidden,
+                NoteType = NoteType.AC,
+                SlideScale = 2,
+                MovieVolumePercent = 50,
+                SquareKeepPlaying = true,
+                CrossReleaseSound = true,
+                InitializeOrder = [.. Enumerable.Range(0, 10).Reverse().Select(i => (ButtonType)i)]
+            };
             list.Add(2, changed);
 
             var evd = list.ToEvdData(100);
@@ -384,7 +391,7 @@ namespace UnitTests.PPDEditor
         private static string CreateProject(TempFolder folder, string name, string difficulty, bool withMovie)
         {
             folder.Write(name + ".ppdproj", $"[version]2\n[{difficulty}.layer0]Layer0\n[{difficulty}.layer0BPM]{name.Length * 10}\n[other]x\n");
-            var dir = Path.Combine(name, "");
+            _ = Path.Combine(name, "");
             folder.Write(Path.Combine(name, difficulty + "_layers", "layer0.ppd"), name);
             folder.Write(Path.Combine(name, difficulty + ".ppd"), name + " ppd");
             folder.Write(Path.Combine(name, difficulty + ".scd"), name + " scd");

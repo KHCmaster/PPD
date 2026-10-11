@@ -232,7 +232,7 @@ namespace UnitTests.FlowScript
         [Fact]
         public void PosAndRotation_Load()
         {
-            NodeHarness Load(string fileName, bool withLoader = true)
+            static NodeHarness Load(string fileName, bool withLoader = true)
             {
                 var load = Node("Mark.PosAndRotation.Load", ("FileName", fileName));
                 if (withLoader)
@@ -266,7 +266,7 @@ namespace UnitTests.FlowScript
 
             var value = Node("Mark.ParameterPreset.Value", ("Value", preset));
             Assert.Equal("preset", value.Get("PresetName"));
-            Assert.Equal(new object[] { new KeyValuePair<object, object>("a", "1"), new KeyValuePair<object, object>("b", "2") }, (object[])value.Get("Parameters"));
+            Assert.Equal([new KeyValuePair<object, object>("a", "1"), new KeyValuePair<object, object>("b", "2")], (object[])value.Get("Parameters"));
             Assert.Equal("", Node("Mark.ParameterPreset.Value").Get("PresetName"));
             Assert.Null(Node("Mark.ParameterPreset.Value").Get("Parameters"));
 

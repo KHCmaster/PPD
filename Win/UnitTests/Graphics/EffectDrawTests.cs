@@ -100,11 +100,11 @@ namespace UnitTests.Graphics
             blue.BlendMode = mode;
             sprite.InsertChild(blue, 0);
 
-            var actual = Rgb(Pixel(graphics.Render(sprite), 50, 50));
+            var (actualR, actualG, actualB) = Rgb(Pixel(graphics.Render(sprite), 50, 50));
 
-            Assert.InRange(actual.R, r - 3, r + 3);
-            Assert.InRange(actual.G, g - 3, g + 3);
-            Assert.InRange(actual.B, b - 3, b + 3);
+            Assert.InRange(actualR, r - 3, r + 3);
+            Assert.InRange(actualG, g - 3, g + 3);
+            Assert.InRange(actualB, b - 3, b + 3);
         }
 
         static int Lit(uint[] pixels, int left, int top, int width, int height, System.Func<(int R, int G, int B), bool> match)

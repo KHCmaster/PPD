@@ -168,12 +168,12 @@ namespace UnitTests.FlowScript
             Ok("Array.SetAt", ("Array", array), ("Index", 0), ("Value", 9));
             var destination = new object[4];
             Ok("Array.Copy", ("Array", array), ("DestinationArray", destination), ("Length", 2));
-            Assert.Equal(new object[] { 9, 2, null, null }, destination);
+            Assert.Equal([9, 2, null, null], destination);
             Ok("Array.CopyWithLimit", ("Array", array), ("SourceIndex", 2), ("DestinationArray", destination), ("DestinationIndex", 2), ("Length", 2));
-            Assert.Equal(new object[] { 9, 2, 3, 4 }, destination);
+            Assert.Equal([9, 2, 3, 4], destination);
 
             Ok("Array.ClearWithLimit", ("Array", destination), ("Index", 1), ("Length", 2));
-            Assert.Equal(new object[] { 9, null, null, 4 }, destination);
+            Assert.Equal([9, null, null, 4], destination);
             Ok("Array.Clear", ("Array", destination));
             Assert.All(destination, Assert.Null);
             Assert.Equal(4, new NodeHarness("Array.Length").Set("Array", array).Get("Value"));
@@ -190,9 +190,9 @@ namespace UnitTests.FlowScript
             Assert.Equal(0, Ok("Array.LastIndexOfWithLimit", ("Array", array), ("Value", "a"), ("StartIndex", 1), ("Count", 2)).Get("Index"));
 
             Ok("Array.ReverseWithLimit", ("Array", array), ("Index", 1), ("Length", 2));
-            Assert.Equal(new object[] { "a", "a", "b", "c" }, array);
+            Assert.Equal(["a", "a", "b", "c"], array);
             Ok("Array.Reverse", ("Array", array));
-            Assert.Equal(new object[] { "c", "b", "a", "a" }, array);
+            Assert.Equal(["c", "b", "a", "a"], array);
         }
 
         [Fact]
@@ -219,16 +219,16 @@ namespace UnitTests.FlowScript
             var array = new object[] { 5, 3, 9, 1 };
 
             new NodeHarness("Array.Sort").Set("Array", array).On("Compare", Compare).Invoke();
-            Assert.Equal(new object[] { 1, 3, 5, 9 }, array);
+            Assert.Equal([1, 3, 5, 9], array);
 
             var items = new object[] { "e", "c", "i", "a" };
             var keys = new object[] { 5, 3, 9, 1 };
             new NodeHarness("Array.SortWithItems").Set("Array", keys).Set("Items", items).On("Compare", Compare).Invoke();
-            Assert.Equal(new object[] { "a", "c", "e", "i" }, items);
+            Assert.Equal(["a", "c", "e", "i"], items);
 
             var partial = new object[] { 4, 3, 2, 1 };
             new NodeHarness("Array.SortWithLimit").Set("Array", partial).Set("StartIndex", 1).Set("Length", 2).On("Compare", Compare).Invoke();
-            Assert.Equal(new object[] { 4, 2, 3, 1 }, partial);
+            Assert.Equal([4, 2, 3, 1], partial);
 
             var search = new NodeHarness("Array.BinarySearch").Set("Array", array)
                 .On("Compare", h => h.Set("Result", ((int)h.Get("X")).CompareTo(5)));

@@ -116,9 +116,10 @@ namespace UnitTests.PPDEditor
         [Fact]
         public void Coordinates_ValidateAndNudge()
         {
-            var viewModel = new PosAndAngleViewModel(host);
-
-            viewModel.PointX = "abc";
+            var viewModel = new PosAndAngleViewModel(host)
+            {
+                PointX = "abc"
+            };
             Assert.Equal("0", viewModel.PointX);
             Assert.Equal([Utility.Language["PAALSInvalidNumber"]], host.Messages);
 

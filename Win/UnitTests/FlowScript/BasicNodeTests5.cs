@@ -82,8 +82,8 @@ namespace UnitTests.FlowScript
             var sort = new NodeHarness("Array.SortWithItemsWithLimit").Set("Array", keys).Set("Items", items).Set("StartIndex", 1).Set("Length", 3)
                 .On("Compare", Compare).Invoke();
             Assert.Equal("Success", sort.Fired[^1]);
-            Assert.Equal(new object[] { 9, 1, 2, 3, 0 }, keys);
-            Assert.Equal(new object[] { "i", "a", "b", "c", "z" }, items);
+            Assert.Equal([9, 1, 2, 3, 0], keys);
+            Assert.Equal(["i", "a", "b", "c", "z"], items);
             Assert.Equal(["Failed"], new NodeHarness("Array.SortWithItemsWithLimit").Invoke().Fired);
 
             // 範囲の中だけ探す
@@ -102,7 +102,7 @@ namespace UnitTests.FlowScript
                 .Set("DestinationArray", destination).Set("DestinationIndex", 2).Set("Length", 2).Invoke();
 
             Assert.Equal(["Success"], copy.Fired);
-            Assert.Equal(new object[] { null, null, 2, 3 }, destination);
+            Assert.Equal([null, null, 2, 3], destination);
             Assert.Equal(["Failed"], new NodeHarness("Array.ConstrainedCopy").Set("Array", new object[1]).Invoke().Fired);
         }
 

@@ -28,9 +28,10 @@ namespace UnitTests.FlowScript
         [Fact]
         public void Combo_KeepsMaxAndNeverNegative()
         {
-            var result = new GameResultManager();
-
-            result.CurrentCombo = 12;
+            var result = new GameResultManager
+            {
+                CurrentCombo = 12
+            };
             result.CurrentCombo = 3;
             Assert.Equal(12, result.MaxCombo);
             result.CurrentCombo = -1;

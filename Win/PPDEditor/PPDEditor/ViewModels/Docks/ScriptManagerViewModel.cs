@@ -60,10 +60,10 @@ namespace PPDEditor.ViewModels.Docks
     /// <remarks>
     /// デバッグの通知は別のスレッドから来るので、UI のスレッドに移してから処理する。
     /// </remarks>
-    public partial class ScriptManagerViewModel : DockViewModel, IDisposable
+    public partial class ScriptManagerViewModel(IScriptWorkspace workspace) : DockViewModel, IDisposable
     {
-        readonly IScriptWorkspace workspace;
-        readonly SynchronizationContext context;
+        readonly IScriptWorkspace workspace = workspace;
+        readonly SynchronizationContext context = SynchronizationContext.Current ?? new SynchronizationContext();
         TcpDebugControllerHost controllerHost;
         Source[] currentSources;
         string currentFileName;
@@ -80,12 +80,6 @@ namespace PPDEditor.ViewModels.Docks
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(ContinueCommand), nameof(StepInCommand))]
         private bool isWaiting;
-
-        public ScriptManagerViewModel(IScriptWorkspace workspace)
-        {
-            this.workspace = workspace;
-            context = SynchronizationContext.Current ?? new SynchronizationContext();
-        }
 
         public FlowLogViewModel Log { get; } = new();
 

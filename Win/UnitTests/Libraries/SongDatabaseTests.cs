@@ -117,7 +117,7 @@ namespace UnitTests.Libraries
             database.AddSong(Path.Combine("group", "b"), "guid-b", 120, ("Normal", null), ("Extreme", [new ChangeNoteTypeEvent(0, NoteType.ACFT)]));
             Directory.CreateDirectory(Path.Combine(database.SongDir, "empty"));
             var updated = 0;
-            EventHandler onUpdated = (s, e) => updated++;
+            void onUpdated(object s, EventArgs e) => updated++;
             SongInformation.Updated += onUpdated;
             try
             {
@@ -256,7 +256,7 @@ namespace UnitTests.Libraries
         {
             using var database = new SongDatabase();
             // 拡張子は PPD.ini から読む（テストには PPD.ini がない）
-            void Set(string name, string[] value) => typeof(PPDSetting).GetProperty(name, BindingFlags.Instance | BindingFlags.NonPublic).SetValue(PPDSetting.Setting, value);
+            static void Set(string name, string[] value) => typeof(PPDSetting).GetProperty(name, BindingFlags.Instance | BindingFlags.NonPublic).SetValue(PPDSetting.Setting, value);
             Set(nameof(PPDSetting.MovieExtensions), ["avi"]);
             Set(nameof(PPDSetting.MusicExtensions), ["ogg"]);
             var video = database.AddSong("video", "guid-v", 120, ("Easy", null));
@@ -411,9 +411,9 @@ namespace UnitTests.Libraries
             var added = new List<LogicFolderInfomation>();
             var removed = new List<LogicFolderInfomation>();
             var moved = new List<LogicFolderInfomation>();
-            EventHandler onAdd = (s, e) => added.Add((LogicFolderInfomation)s);
-            EventHandler onRemove = (s, e) => removed.Add((LogicFolderInfomation)s);
-            EventHandler onMove = (s, e) => moved.Add((LogicFolderInfomation)s);
+            void onAdd(object s, EventArgs e) => added.Add((LogicFolderInfomation)s);
+            void onRemove(object s, EventArgs e) => removed.Add((LogicFolderInfomation)s);
+            void onMove(object s, EventArgs e) => moved.Add((LogicFolderInfomation)s);
             LogicFolderInfomation.StaticAfterAdd += onAdd;
             LogicFolderInfomation.StaticBeforeRemove += onRemove;
             LogicFolderInfomation.StaticBeforeChangeIndex += onMove;

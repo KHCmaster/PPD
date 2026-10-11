@@ -174,10 +174,7 @@ namespace PPDEditor.ViewModels.Dialogs
         public void AssignKey(Keys key, bool shift, bool control, bool alt)
         {
             EditingKey = GetReadableShortcut(new ShortcutInfo(key, shift, control, alt, ShortcutType.None));
-            if (SelectedRow != null)
-            {
-                SelectedRow.Key = EditingKey;
-            }
+            SelectedRow?.Key = EditingKey;
         }
 
         /// <summary>

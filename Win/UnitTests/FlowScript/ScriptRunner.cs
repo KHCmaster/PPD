@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Xml.Linq;
 
 namespace UnitTests.FlowScript
@@ -57,7 +58,7 @@ namespace UnitTests.FlowScript
     /// </summary>
     public class ScriptRunner
     {
-        static readonly object registerLock = new();
+        static readonly Lock registerLock = new();
         static bool registered;
 
         readonly XElement sources = new("Sources");

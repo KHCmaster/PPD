@@ -1,4 +1,4 @@
-<forms:DockView x:Class="PPDEditor.ScriptManager"
+<forms:DockView x:Class="PPDEditor.DockForm.ScriptManager"
                 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                 xmlns:ad="https://github.com/Dirkster99/AvalonDock"
