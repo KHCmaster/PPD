@@ -162,7 +162,7 @@ namespace UnitTests.PPDUpdater
     /// <summary>
     /// PPDUpdater の ViewModel のテストです。更新のリストの場所を設定しないので、ネットワークにはつながない。
     /// </summary>
-    public class PPDUpdaterViewModelTests : IDisposable
+    public sealed class PPDUpdaterViewModelTests : IDisposable
     {
         sealed class FakeWindowService : IWindowService
         {

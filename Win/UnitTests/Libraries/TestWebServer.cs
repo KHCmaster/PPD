@@ -164,7 +164,7 @@ namespace UnitTests.Libraries
 
         public TestWebServer Server { get; } = new();
 
-        public PPDFramework.Web.WebManager Web => PPDFramework.Web.WebManager.Instance;
+        public PPDFramework.Web.WebManager Web { get; } = PPDFramework.Web.WebManager.Instance;
 
         public WebTestScope()
         {

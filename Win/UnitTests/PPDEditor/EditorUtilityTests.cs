@@ -10,7 +10,7 @@ namespace UnitTests.PPDEditor
     /// <summary>
     /// エディターの小さな関数（フォルダーの写し、数の読み取り、範囲）のテストです。
     /// </summary>
-    public class EditorUtilityTests
+    public partial class EditorUtilityTests
     {
         [Fact]
         public void CopyDirectory_SkipsExceptedFilesAndAsksBeforeOverwriting()
@@ -24,7 +24,7 @@ namespace UnitTests.PPDEditor
             var asked = new List<string>();
 
             // 上書きしないと答える
-            Utility.CopyDirectory(folder.Combine("src"), folder.Combine("dest"), [new Regex(@"\.mp4$")], path =>
+            Utility.CopyDirectory(folder.Combine("src"), folder.Combine("dest"), [Mp4FileRegex()], path =>
             {
                 asked.Add(Path.GetFileName(path));
                 return false;
@@ -61,5 +61,8 @@ namespace UnitTests.PPDEditor
             Assert.Equal((0, 5, 3), (Utility.Clamp(-1, 0, 5), Utility.Clamp(9, 0, 5), Utility.Clamp(3, 0, 5)));
             Assert.Equal((0f, 1f, 0.5f), (Utility.Clamp(-1f, 0f, 1f), Utility.Clamp(2f, 0f, 1f), Utility.Clamp(0.5f, 0f, 1f)));
         }
+
+        [GeneratedRegex(@"\.mp4$")]
+        private static partial Regex Mp4FileRegex();
     }
 }

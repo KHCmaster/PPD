@@ -16,7 +16,7 @@ namespace UnitTests.FlowScript
     /// リポジトリの .AutoFast.cs は、作ったあとで書き方（switch 式など）を整えているので、文字列ではなく
     /// 「名前 → メンバー」の対応で、今のノードから作ったものと同じかを比べる。
     /// </remarks>
-    public class AutoFastGeneratorTests
+    public partial class AutoFastGeneratorTests
     {
         static readonly string[] engines =
         [
@@ -57,16 +57,16 @@ namespace UnitTests.FlowScript
                 {
                     section = "event";
                 }
-                var expression = Regex.Match(line, "^((?:\"\\w+\"(?:\\s+or\\s+)?)+)\\s*=>\\s*(\\w+),$");
+                var expression = SwitchArmRegex().Match(line);
                 if (expression.Success)
                 {
-                    foreach (Match name in Regex.Matches(expression.Groups[1].Value, "\"(\\w+)\""))
+                    foreach (Match name in QuotedNameRegex().Matches(expression.Groups[1].Value))
                     {
                         cases.Add($"{section} {name.Groups[1].Value}", expression.Groups[2].Value);
                     }
                     continue;
                 }
-                var @case = Regex.Match(line, "^case \"(\\w+)\":$");
+                var @case = CaseLabelRegex().Match(line);
                 if (@case.Success)
                 {
                     pending.Add(@case.Groups[1].Value);
@@ -74,7 +74,7 @@ namespace UnitTests.FlowScript
                 }
                 if (pending.Count > 0)
                 {
-                    var target = Regex.Match(line, "^(?:return\\s+(\\w+);|(\\w+)\\s*(?:=|\\+=)\\s)");
+                    var target = CaseTargetRegex().Match(line);
                     Assert.True(target.Success, $"読めない行: {line}");
                     foreach (var name in pending)
                     {
@@ -98,8 +98,8 @@ namespace UnitTests.FlowScript
                 foreach (var path in Directory.EnumerateFiles(Path.Combine(win, engine), "*.AutoFast.cs", SearchOption.AllDirectories))
                 {
                     var text = File.ReadAllText(path);
-                    var ns = Regex.Match(text, "namespace ([\\w.]+)").Groups[1].Value;
-                    var cls = Regex.Match(text, "partial class (\\w+)").Groups[1].Value;
+                    var ns = NamespaceRegex().Match(text).Groups[1].Value;
+                    var cls = PartialClassRegex().Match(text).Groups[1].Value;
                     files[ns + "." + cls] = path;
                 }
             }
@@ -171,5 +171,23 @@ namespace UnitTests.FlowScript
 
             Assert.Equal(["event Start"], code.Keys);
         }
+
+        [GeneratedRegex("^((?:\"\\w+\"(?:\\s+or\\s+)?)+)\\s*=>\\s*(\\w+),$")]
+        private static partial Regex SwitchArmRegex();
+
+        [GeneratedRegex("\"(\\w+)\"")]
+        private static partial Regex QuotedNameRegex();
+
+        [GeneratedRegex("^case \"(\\w+)\":$")]
+        private static partial Regex CaseLabelRegex();
+
+        [GeneratedRegex("^(?:return\\s+(\\w+);|(\\w+)\\s*(?:=|\\+=)\\s)")]
+        private static partial Regex CaseTargetRegex();
+
+        [GeneratedRegex("namespace ([\\w.]+)")]
+        private static partial Regex NamespaceRegex();
+
+        [GeneratedRegex("partial class (\\w+)")]
+        private static partial Regex PartialClassRegex();
     }
 }

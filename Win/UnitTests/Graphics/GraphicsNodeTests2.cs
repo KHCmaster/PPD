@@ -71,7 +71,7 @@ namespace UnitTests.Graphics
             }
         }
 
-        NodeHarness Node(string name, Dictionary<string, object> items, params (string Name, object Value)[] inputs)
+        static NodeHarness Node(string name, Dictionary<string, object> items, params (string Name, object Value)[] inputs)
         {
             var type = typeof(FlowScriptEnginePPD.ToolTipText).Assembly.GetType($"FlowScriptEnginePPD.FlowSourceObjects.{name}FlowSourceObject", true);
             var harness = new NodeHarness(type);

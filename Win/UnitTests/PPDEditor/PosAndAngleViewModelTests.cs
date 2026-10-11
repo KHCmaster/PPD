@@ -13,7 +13,7 @@ namespace UnitTests.PPDEditor
     /// <summary>
     /// 位置と角度の保存と当てはめのドックのテストです。保存したデータは一時フォルダーの posdat に置く。
     /// </summary>
-    public class PosAndAngleViewModelTests : IDisposable
+    public sealed class PosAndAngleViewModelTests : IDisposable
     {
         sealed class FakePosAndAngleHost : IPosAndAngleHost
         {

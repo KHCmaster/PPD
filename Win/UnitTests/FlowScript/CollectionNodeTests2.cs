@@ -275,7 +275,7 @@ namespace UnitTests.FlowScript
             var records = s.Run();
 
             Assert.Equal(6, records.Count);
-            Assert.All(records, r => Assert.Contains(r.Label, new[] { "out0", "out2" }));
+            Assert.All(records, r => Assert.True(r.Label is "out0" or "out2", r.Label));
         }
 
         [Fact]

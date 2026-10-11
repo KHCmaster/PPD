@@ -17,7 +17,7 @@ namespace UnitTests.Libraries
     {
         static readonly ButtonType[] Reversed = [.. Enumerable.Range(0, 10).Reverse().Select(i => (ButtonType)i)];
 
-        (EventManager Events, FlowScriptManager Script, List<int> MovieVolumes) Create(MainGameConfigBase config = null, params IEVDData[] events)
+        static (EventManager Events, FlowScriptManager Script, List<int> MovieVolumes) Create(MainGameConfigBase config = null, params IEVDData[] events)
         {
             var song = new SongInformation();
             typeof(SongInformation).GetProperty(nameof(SongInformation.BPM)).SetValue(song, 120f);

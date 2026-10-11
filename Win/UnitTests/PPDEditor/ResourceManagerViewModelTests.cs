@@ -13,7 +13,7 @@ namespace UnitTests.PPDEditor
     /// <summary>
     /// リソースのドックのテストです。プロジェクトは一時フォルダーに作る。
     /// </summary>
-    public class ResourceManagerViewModelTests : IDisposable
+    public sealed class ResourceManagerViewModelTests : IDisposable
     {
         sealed class FakeResourceHost(string projectDir) : IResourceHost
         {

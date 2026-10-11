@@ -170,7 +170,7 @@ namespace UnitTests.PPDEditor
     /// <summary>
     /// 発行する前の確かめのテストです。メッセージは言語ファイルの文字を使う。
     /// </summary>
-    public class PublishCheckerTests : System.IDisposable
+    public sealed class PublishCheckerTests : System.IDisposable
     {
         readonly TempFolder folder = new(setCurrentDirectory: true);
 

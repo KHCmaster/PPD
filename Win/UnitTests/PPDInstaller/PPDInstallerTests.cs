@@ -154,7 +154,7 @@ namespace UnitTests.PPDInstaller
         }
     }
 
-    public class InstallExecutorTests
+    public partial class InstallExecutorTests
     {
         private static CExecutor Run(CExecutor executor)
         {
@@ -246,17 +246,20 @@ namespace UnitTests.PPDInstaller
             folder.Write(Path.Combine("dst", "a.ini"), "old");
             folder.Write(Path.Combine("dst", "b.txt"), "old");
 
-            Utility.CopyDirectory(folder.Combine("src"), folder.Combine("dst") + "\\", [new Regex("\\.ini$")]);
+            Utility.CopyDirectory(folder.Combine("src"), folder.Combine("dst") + "\\", [IniFileRegex()]);
 
             Assert.Equal("old", File.ReadAllText(folder.Combine("dst", "a.ini")));
             Assert.Equal("new", File.ReadAllText(folder.Combine("dst", "b.txt")));
         }
+
+        [GeneratedRegex("\\.ini$")]
+        private static partial Regex IniFileRegex();
     }
 
     /// <summary>
     /// PPDInstaller の ViewModel のテストです。インストール（ダウンロード）は始めないので、確認のページでは次へを押さない。
     /// </summary>
-    public class PPDInstallerViewModelTests : IDisposable
+    public sealed class PPDInstallerViewModelTests : IDisposable
     {
         sealed class FakeWindowService : IWindowService
         {

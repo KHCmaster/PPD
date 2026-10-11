@@ -203,7 +203,8 @@ namespace UnitTests.FlowScript
             Assert.Equal(1.5f, info.Get("SpeedScale"));
             Assert.Equal(30, info.Get("AllMarkCount"));
             Assert.Equal(4, info.Get("AllLongMarkCount"));
-            Assert.Equal([10, 11, 12, 13, 14, 15], new[] { "One", "Two", "Three", "Four", "Five", "Six" }.Select(n => info.Get(n + "MarkCount")));
+            string[] counts = ["One", "Two", "Three", "Four", "Five", "Six"];
+            Assert.Equal([10, 11, 12, 13, 14, 15], counts.Select(n => info.Get(n + "MarkCount")));
             Assert.Equal(2f, info.Get("DifficultyPointAverage"));
             Assert.Equal(3f, info.Get("DifficultyPointPeak"));
             Assert.Single((object[])info.Get("Marks"));

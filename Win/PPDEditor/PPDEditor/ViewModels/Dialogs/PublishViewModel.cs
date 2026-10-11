@@ -111,7 +111,7 @@ namespace PPDEditor.ViewModels.Dialogs
             {
                 ShowMessage(error);
             }
-            return !errors.Any();
+            return errors.Count == 0;
         }
     }
 }

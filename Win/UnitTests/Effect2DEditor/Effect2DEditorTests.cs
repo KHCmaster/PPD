@@ -318,7 +318,7 @@ namespace UnitTests.Effect2DEditor
     /// <summary>
     /// Effect2DEditor のメインの ViewModel のテストです。カンバスとタイムラインは偽物にする。
     /// </summary>
-    public class Effect2DEditorViewModelTests : IDisposable
+    public sealed class Effect2DEditorViewModelTests : IDisposable
     {
         sealed class FakeView : IMainWindowView
         {

@@ -11,7 +11,7 @@ namespace UnitTests.PPDConfig
     /// <summary>
     /// PPDConfig の ViewModel のテストです。PPD.ini は一時フォルダにテスト用のものを作って使う（本物は使わない）。
     /// </summary>
-    public class PPDConfigViewModelTests : IDisposable
+    public sealed class PPDConfigViewModelTests : IDisposable
     {
         sealed class FakeWindowService : IWindowService
         {

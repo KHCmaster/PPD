@@ -14,7 +14,7 @@ namespace UnitTests.PPDEditor
     /// <summary>
     /// 音の割り当てのドックのテストです。音の読み込みや再生は、偽物のホストに記録するだけ。
     /// </summary>
-    public class SoundManagerViewModelTests : IDisposable
+    public sealed class SoundManagerViewModelTests : IDisposable
     {
         sealed class FakeSoundHost : ISoundManagerHost
         {
@@ -69,7 +69,7 @@ namespace UnitTests.PPDEditor
             folder.Dispose();
         }
 
-        private string NoSound => Utility.Language["SMNoSound"];
+        private static string NoSound => Utility.Language["SMNoSound"];
 
         [Fact]
         public void Startup_HasSilentFirstChange()

@@ -76,7 +76,7 @@ namespace Effect2DEditor.ViewModels
             CommandManager.AddCommand(command);
         }
 
-        private string EffectName(IEffect effect)
+        private static string EffectName(IEffect effect)
         {
             return Path.GetFileNameWithoutExtension(((BaseEffect)effect).Filename);
         }

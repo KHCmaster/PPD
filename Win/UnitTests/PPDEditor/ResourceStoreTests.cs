@@ -14,7 +14,7 @@ using Xunit;
 
 namespace UnitTests.PPDEditor
 {
-    public class ResourceStoreTests : IDisposable
+    public sealed class ResourceStoreTests : IDisposable
     {
         readonly TempFolder folder = new(setCurrentDirectory: true);
         readonly string projectDir;

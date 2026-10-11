@@ -71,7 +71,7 @@ namespace UnitTests.KeyConfiger
         }
     }
 
-    public class KeyConfigerViewModelTests : IDisposable
+    public sealed class KeyConfigerViewModelTests : IDisposable
     {
         sealed class FakeDialogService : IDialogService
         {

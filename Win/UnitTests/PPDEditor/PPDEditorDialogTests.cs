@@ -33,7 +33,7 @@ namespace UnitTests.PPDEditor
     /// <summary>
     /// PPDEditor のダイアログの ViewModel のテストです。言語ファイルを一時フォルダーにコピーして、日本語で動かす。
     /// </summary>
-    public class PPDEditorDialogTests : IDisposable
+    public sealed class PPDEditorDialogTests : IDisposable
     {
         readonly TempFolder folder = new(setCurrentDirectory: true);
         readonly FakeDialogView view = new();

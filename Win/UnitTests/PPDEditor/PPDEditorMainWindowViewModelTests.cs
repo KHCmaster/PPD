@@ -17,7 +17,7 @@ namespace UnitTests.PPDEditor
     /// プロジェクトの読み書きやゲームの画面はドックのウィンドウ（WindowUtility）を直接使うので、UI のテストで確かめる。
     /// ここではドックを作る前（WindowUtility が空）でも動く、ツールバーやメニュー、状態の表示を確かめる。
     /// </remarks>
-    public class PPDEditorMainWindowViewModelTests : IDisposable
+    public sealed class PPDEditorMainWindowViewModelTests : IDisposable
     {
         sealed class FakeMainView : IMainWindowView
         {

@@ -14,7 +14,7 @@ namespace UnitTests.PPDEditor
     /// <remarks>
     /// コマンドと関数はエディターのフォルダー（テストでは出力のフォルダー）にあるので、読むだけにする。作ったり消したりするのは、一時フォルダーのプロジェクトの譜面のスクリプトだけ。
     /// </remarks>
-    public class ScriptListViewModelTests : IDisposable
+    public sealed class ScriptListViewModelTests : IDisposable
     {
         sealed class FakeScriptListHost(string projectDir) : IScriptListHost
         {

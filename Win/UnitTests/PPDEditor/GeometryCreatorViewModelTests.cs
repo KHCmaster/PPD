@@ -15,7 +15,7 @@ namespace UnitTests.PPDEditor
     /// <summary>
     /// 曲線の上にマークを並べるドックのテストです。曲線の編集は本物の BezierController を使い、描画は数えるだけにする。
     /// </summary>
-    public class GeometryCreatorViewModelTests : IDisposable
+    public sealed class GeometryCreatorViewModelTests : IDisposable
     {
         sealed class FakeGeometryHost : IGeometryHost
         {

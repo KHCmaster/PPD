@@ -158,7 +158,7 @@ namespace UnitTests.Libraries
         /// <summary>
         /// 部屋に入ります。入れたときはサーバーの情報、断られたときは閉じる理由が最初に届きます。
         /// </summary>
-        NetworkData Join(Player player, string name, string playerVersion = null)
+        static NetworkData Join(Player player, string name, string playerVersion = null)
         {
             player.Send(new AddUserNetworkData { UserName = name, AccountId = "@" + name, Version = playerVersion ?? version, State = UserState.NotReady });
             var first = player.Expect<NetworkData>(d => d is SendServerInfoNetworkData or CloseConnectNetworkData);

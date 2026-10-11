@@ -35,7 +35,7 @@ namespace UnitTests.FolderDiffChecker
         }
     }
 
-    public class DiffFinderTests
+    public partial class DiffFinderTests
     {
         private static List<DiffModel> Find(string oldFolder, string newFolder, Regex[] except, Regex[] force, List<string> compared = null)
         {
@@ -58,7 +58,7 @@ namespace UnitTests.FolderDiffChecker
             using var folder = new TempFolder();
             var (oldFolder, newFolder) = DiffFolders.Create(folder);
 
-            var found = Find(oldFolder, newFolder, [new Regex("thumbs\\.db", RegexOptions.IgnoreCase)], []);
+            var found = Find(oldFolder, newFolder, [ThumbsDbRegex()], []);
 
             var byName = found.ToDictionary(d => Path.GetRelativePath(newFolder, d.FilePath));
             Assert.Equal(DiffModel.DiffMode.Edit, byName["edited.txt"].Mode);
@@ -78,7 +78,7 @@ namespace UnitTests.FolderDiffChecker
             using var folder = new TempFolder();
             var (oldFolder, newFolder) = DiffFolders.Create(folder);
 
-            var found = Find(oldFolder, newFolder, [], [new Regex("same\\.txt")]);
+            var found = Find(oldFolder, newFolder, [], [SameTxtRegex()]);
 
             Assert.Contains(found, d => Path.GetFileName(d.FilePath) == "same.txt" && d.Mode == DiffModel.DiffMode.Edit);
         }
@@ -111,9 +111,15 @@ namespace UnitTests.FolderDiffChecker
 
             Assert.Empty(found);
         }
+
+        [GeneratedRegex("thumbs\\.db", RegexOptions.IgnoreCase)]
+        private static partial Regex ThumbsDbRegex();
+
+        [GeneratedRegex("same\\.txt")]
+        private static partial Regex SameTxtRegex();
     }
 
-    public class ReleaseFolderTests
+    public partial class ReleaseFolderTests
     {
         [Fact]
         public void FindLatestPair_SortsVersionsNumerically()
@@ -216,7 +222,7 @@ namespace UnitTests.FolderDiffChecker
             folder.Write(Path.Combine("src", "sub", "keep2.txt"), "keep");
             folder.Write(Path.Combine("src", "skipdir", "x.txt"), "x");
 
-            Utility.CopyDirectory(folder.Combine("src"), folder.Combine("dst"), [new Regex("\\.ini$"), new Regex("^skipdir$")]);
+            Utility.CopyDirectory(folder.Combine("src"), folder.Combine("dst"), [IniFileRegex(), SkipDirRegex()]);
 
             Assert.True(File.Exists(folder.Combine("dst", "keep.txt")));
             Assert.True(File.Exists(folder.Combine("dst", "sub", "keep2.txt")));
@@ -247,9 +253,15 @@ namespace UnitTests.FolderDiffChecker
             }
             Assert.False(ReleaseFolder.UpdateList(oldFolder, folder.Combine("other")));
         }
+
+        [GeneratedRegex("\\.ini$")]
+        private static partial Regex IniFileRegex();
+
+        [GeneratedRegex("^skipdir$")]
+        private static partial Regex SkipDirRegex();
     }
 
-    public class FolderDiffCheckerViewModelTests : IDisposable
+    public sealed class FolderDiffCheckerViewModelTests : IDisposable
     {
         sealed class FakeDialogService : IDialogService
         {

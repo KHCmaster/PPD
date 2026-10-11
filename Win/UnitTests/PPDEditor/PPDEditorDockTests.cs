@@ -17,7 +17,7 @@ namespace UnitTests.PPDEditor
     /// <summary>
     /// PPDEditor のドックの ViewModel のテストです（偽物の画面やホストを使う）。
     /// </summary>
-    public class PPDEditorDockTests : IDisposable
+    public sealed class PPDEditorDockTests : IDisposable
     {
         readonly TempFolder folder = new(setCurrentDirectory: true);
 
@@ -241,7 +241,7 @@ namespace UnitTests.PPDEditor
             public void UnapplyParameters(KeyValuePair<string, string>[] parameters) => Calls.Add("unapply:" + parameters.Length);
         }
 
-        private ParameterPresetFolder CreatePresets()
+        private static ParameterPresetFolder CreatePresets()
         {
             Directory.CreateDirectory(Path.Combine(ParameterPresetStore.PresetDir, "Sub"));
             ParameterPresetStore.Save(Path.Combine(ParameterPresetStore.PresetDir, "Top.xml"), [new("a", "1"), new("b", "2")]);

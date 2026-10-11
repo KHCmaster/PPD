@@ -17,7 +17,7 @@ namespace UnitTests.PPDEditor
     /// <summary>
     /// PPDEditor のドックの ViewModel のテスト（イベント、統計、レイヤー）です。マークは描画の装置が要るので、空の譜面だけを使う。
     /// </summary>
-    public class PPDEditorDockTests2 : IDisposable
+    public sealed class PPDEditorDockTests2 : IDisposable
     {
         readonly TempFolder folder = new(setCurrentDirectory: true);
 
@@ -262,7 +262,8 @@ namespace UnitTests.PPDEditor
             viewModel.NewLayerCommand.Execute(null);
             host.NewName = null;
             viewModel.NewLayerCommand.Execute(null);
-            Assert.Equal(new[] { "LMLayer2", "second", "LMLayer0" }.Select(n => n.Replace("LMLayer", Utility.Language["LMLayer"])), viewModel.DisplayLayers.Select(l => l.DisplayName));
+            string[] expected = ["LMLayer2", "second", "LMLayer0"];
+            Assert.Equal(expected.Select(n => n.Replace("LMLayer", Utility.Language["LMLayer"])), viewModel.DisplayLayers.Select(l => l.DisplayName));
 
             viewModel.SelectLastLayer();
             Assert.Equal(2, viewModel.SelectedLayerIndex);

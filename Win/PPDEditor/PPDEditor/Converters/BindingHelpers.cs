@@ -46,7 +46,12 @@ namespace PPDEditor.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return value is Enum flags && flags.HasFlag((Enum)Enum.Parse(flags.GetType(), (string)parameter));
+            if (value is not Enum flags)
+            {
+                return false;
+            }
+            var flag = (Enum)Enum.Parse(flags.GetType(), (string)parameter);
+            return flags.HasFlag(flag);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

@@ -14,7 +14,7 @@ namespace FlowScriptEngine
             values = new T[allowed.Length];
             for (int i = 0; i < allowed.Length; i++)
             {
-                values[i] = (T)Enum.Parse(typeof(T), allowed[i]);
+                values[i] = Enum.Parse<T>(allowed[i]);
             }
         }
 

@@ -24,8 +24,7 @@ namespace UITests
             var result = new List<IntPtr>();
             EnumWindows((handle, _) =>
             {
-                GetWindowThreadProcessId(handle, out var pid);
-                if (pid == processId && IsWindowVisible(handle))
+                if (GetWindowThreadProcessId(handle, out var pid) != 0 && pid == processId && IsWindowVisible(handle))
                 {
                     result.Add(handle);
                 }
@@ -37,8 +36,7 @@ namespace UITests
         public static string GetTitle(IntPtr handle)
         {
             var builder = new StringBuilder(512);
-            GetWindowText(handle, builder, builder.Capacity);
-            return builder.ToString();
+            return GetWindowText(handle, builder, builder.Capacity) > 0 ? builder.ToString() : "";
         }
 
         public static IntPtr GetOwner(IntPtr handle)

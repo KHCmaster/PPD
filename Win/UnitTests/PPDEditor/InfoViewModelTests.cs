@@ -14,7 +14,7 @@ namespace UnitTests.PPDEditor
     /// <summary>
     /// 情報とパラメーターのドックのテストです。マークは描画の装置が要るので、マークを選んでいないときの動きだけを確かめる。
     /// </summary>
-    public class InfoViewModelTests : IDisposable
+    public sealed class InfoViewModelTests : IDisposable
     {
         sealed class FakeInfoEditor : IInfoEditor
         {

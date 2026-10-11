@@ -206,8 +206,8 @@ namespace UnitTests.Libraries
 
             Assert.Equal("3", data["Rank"]);
             var form = scope.Server.Requests.Last().Form;
-            Assert.Equal(["01", "100", "1", "2", "3", "4", "5", "6", "1.5", "2.5", "Bwg=", "trial"],
-                new[] { "scorehash", "score", "coolcount", "goodcount", "safecount", "sadcount", "worstcount", "maxcombo", "starttime", "endtime", "inputs", "perfecttrialtoken" }.Select(k => form[k]));
+            string[] keys = ["scorehash", "score", "coolcount", "goodcount", "safecount", "sadcount", "worstcount", "maxcombo", "starttime", "endtime", "inputs", "perfecttrialtoken"];
+            Assert.Equal(["01", "100", "1", "2", "3", "4", "5", "6", "1.5", "2.5", "Bwg=", "trial"], keys.Select(k => form[k]));
 
             // 通信のエラーなら、決めた回数だけ送り直す
             scope.Server.On("/api/playresult2", _ => TestWebServer.Status(HttpStatusCode.ServiceUnavailable));

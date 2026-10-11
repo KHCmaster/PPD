@@ -116,7 +116,8 @@ namespace UnitTests.Graphics
             var pixels = graphics.Render(number);
 
             Assert.Equal(10f, number.DigitWidth);
-            Assert.Equal([80, 5, 130], new[] { 105, 115, 125 }.Select(x => Red(pixels, x, 105)));
+            int[] columns = [105, 115, 125];
+            Assert.Equal([80, 5, 130], columns.Select(x => Red(pixels, x, 105)));
             Assert.Equal(0, Red(pixels, 135, 105));
 
             // MaxDigit が 0（既定）なら何も描かない（使う側がいつも決める）
@@ -155,12 +156,13 @@ namespace UnitTests.Graphics
 
             var pixels = graphics.Render(number);
             // 007
-            Assert.Equal([5, 5, 180], new[] { 5, 15, 25 }.Select(x => Red(pixels, x, 5)));
+            int[] columns = [5, 15, 25];
+            Assert.Equal([5, 5, 180], columns.Select(x => Red(pixels, x, 5)));
 
             number.Value = 12345;
             pixels = graphics.Render(number);
             // 下の 3 桁
-            Assert.Equal([80, 105, 130], new[] { 5, 15, 25 }.Select(x => Red(pixels, x, 5)));
+            Assert.Equal([80, 105, 130], columns.Select(x => Red(pixels, x, 5)));
             Assert.Equal(0, Red(pixels, 35, 5));
         }
 

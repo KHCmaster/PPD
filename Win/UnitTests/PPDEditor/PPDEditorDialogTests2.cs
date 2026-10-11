@@ -17,7 +17,7 @@ namespace UnitTests.PPDEditor
     /// <summary>
     /// PPDEditor のダイアログの ViewModel のテスト（イベント、発行、マージ、設定）です。
     /// </summary>
-    public class PPDEditorDialogTests2 : IDisposable
+    public sealed class PPDEditorDialogTests2 : IDisposable
     {
         readonly TempFolder folder = new(setCurrentDirectory: true);
         readonly FakeDialogView view = new();
