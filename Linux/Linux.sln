@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlowScriptEngineConsole", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlowScriptEngineData", "..\Win\FlowScriptEngineData\FlowScriptEngineData.csproj", "{B038AA36-D8BF-46A8-81C4-98C3B5B48821}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PPDMultiServerService", "PPDMultiServerService\PPDMultiServerService.csproj", "{68331416-79D9-454B-872E-189EB1B100E3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -63,6 +65,10 @@ Global
 		{B038AA36-D8BF-46A8-81C4-98C3B5B48821}.Debug|x64.Build.0 = Debug|x64
 		{B038AA36-D8BF-46A8-81C4-98C3B5B48821}.Release|x64.ActiveCfg = Release|x64
 		{B038AA36-D8BF-46A8-81C4-98C3B5B48821}.Release|x64.Build.0 = Release|x64
+		{68331416-79D9-454B-872E-189EB1B100E3}.Debug|x64.ActiveCfg = Debug|x64
+		{68331416-79D9-454B-872E-189EB1B100E3}.Debug|x64.Build.0 = Debug|x64
+		{68331416-79D9-454B-872E-189EB1B100E3}.Release|x64.ActiveCfg = Release|x64
+		{68331416-79D9-454B-872E-189EB1B100E3}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
