@@ -64,6 +64,23 @@ jobs:
         if: ${{ !cancelled() && steps.build.outcome == 'success' }}
         run: dotnet format whitespace Win\PPD.sln --no-restore --verify-no-changes
 
+      # 文字を描くテストは、ゲームの既定のフォント（IPAGothic。PPDInstaller が入れる）で描いたときの大きさを前提にしているので、
+      # ランナーにも入れる。入れたフォントは AddFontResource で今のセッションから使えるようにする
+      - name: Install IPA Gothic
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+        run: |
+          $zip = Join-Path $env:RUNNER_TEMP ipag00303.zip
+          Invoke-WebRequest https://moji.or.jp/wp-content/ipafont/IPAfont/ipag00303.zip -OutFile $zip
+          if ((Get-FileHash $zip -Algorithm SHA256).Hash -ne 'b5e6f61de7465476f2f946dd83ee0961dc4d0ceea0833d253bb697297f232d97') {
+            throw 'ipag00303.zip のハッシュが違います'
+          }
+          Expand-Archive $zip $env:RUNNER_TEMP -Force
+          $font = Join-Path $env:WINDIR Fonts\ipag.ttf
+          Copy-Item (Join-Path $env:RUNNER_TEMP ipag00303\ipag.ttf) $font
+          New-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Fonts' -Name 'IPAGothic (TrueType)' -Value ipag.ttf -Force | Out-Null
+          Add-Type -Namespace Win32 -Name Gdi -MemberDefinition '[DllImport("gdi32.dll", CharSet = CharSet.Unicode)] public static extern int AddFontResourceW(string file);'
+          if ([Win32.Gdi]::AddFontResourceW($font) -eq 0) { throw 'ipag.ttf を追加できません' }
+
       - name: Test
         if: ${{ !cancelled() && steps.build.outcome == 'success' }}
         run: dotnet test Win\UnitTests\UnitTests.csproj --no-build -c Debug -p:Platform=x64 --logger "trx;LogFileName=UnitTests.trx" --results-directory artifacts\TestResults
