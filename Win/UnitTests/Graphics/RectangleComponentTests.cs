@@ -138,7 +138,7 @@ namespace UnitTests.Graphics
         };
 
         [Theory]
-        [MemberData(nameof(Filters))]
+        [MemberData(nameof(Filters), DisableDiscoveryEnumeration = true)]
         public void ColorFilters_ChangeDrawnColor(Func<ColorFilterBase> filter, int r, int g, int b)
         {
             using var rectangle = Rectangle(Red, 0, 0, 100, 100);

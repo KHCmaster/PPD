@@ -117,7 +117,7 @@ namespace UnitTests.FlowScript
         };
 
         [Theory]
-        [MemberData(nameof(ParseValueCases))]
+        [MemberData(nameof(ParseValueCases), DisableDiscoveryEnumeration = true)]
         public void HashtableParseValue(Type node, string text, object @default, object expected)
         {
             var table = new Dictionary<object, object> { ["key"] = text, ["bad"] = "x,y" };

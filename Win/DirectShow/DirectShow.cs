@@ -1210,7 +1210,7 @@ namespace DirectShow
         [PreserveSig]
         int AddFilter(
             [In] IBaseFilter pFilter,
-            [In, MarshalAs(UnmanagedType.LPWStr)]           string pName);
+            [In, MarshalAs(UnmanagedType.LPWStr)] string pName);
 
         [PreserveSig]
         int RemoveFilter([In] IBaseFilter pFilter);
@@ -1220,12 +1220,12 @@ namespace DirectShow
 
         [PreserveSig]
         int FindFilterByName(
-            [In, MarshalAs(UnmanagedType.LPWStr)]           string pName,
-            [Out]                                       out IBaseFilter ppFilter);
+            [In, MarshalAs(UnmanagedType.LPWStr)] string pName,
+            [Out] out IBaseFilter ppFilter);
 
         [PreserveSig]
         int ConnectDirect([In] IPin ppinOut, [In] IPin ppinIn,
-           [In, MarshalAs(UnmanagedType.LPStruct)]          AMMediaType pmt);
+           [In, MarshalAs(UnmanagedType.LPStruct)] AMMediaType pmt);
 
         [PreserveSig]
         int Reconnect([In] IPin ppin);
@@ -1260,16 +1260,16 @@ namespace DirectShow
 
         [PreserveSig]
         int AddSourceFilter(
-            [In]                                            string strFilename,
-            [Out, MarshalAs(UnmanagedType.IDispatch)]   out object ppUnk);
+            [In] string strFilename,
+            [Out, MarshalAs(UnmanagedType.IDispatch)] out object ppUnk);
 
         [PreserveSig]
         int Get_FilterCollection(
-            [Out, MarshalAs(UnmanagedType.IDispatch)]   out object ppUnk);
+            [Out, MarshalAs(UnmanagedType.IDispatch)] out object ppUnk);
 
         [PreserveSig]
         int Get_RegFilterCollection(
-            [Out, MarshalAs(UnmanagedType.IDispatch)]   out object ppUnk);
+            [Out, MarshalAs(UnmanagedType.IDispatch)] out object ppUnk);
 
         [PreserveSig]
         int StopWhenReady();
@@ -2226,9 +2226,9 @@ namespace DirectShow
     {
         [PreserveSig]
         int Next(
-            [In]                                                        int cFilters,
+            [In] int cFilters,
             [Out, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] IBaseFilter[] ppFilter,
-            [In]                                                        IntPtr pcFetched);
+            [In] IntPtr pcFetched);
 
         [PreserveSig]
         int Skip([In] int cFilters);
@@ -2400,13 +2400,13 @@ namespace DirectShow
     {
         [PreserveSig]
         int Connect(
-            [In]                                            IPin pReceivePin,
-            [In, MarshalAs(UnmanagedType.LPStruct)]         AMMediaType pmt);
+            [In] IPin pReceivePin,
+            [In, MarshalAs(UnmanagedType.LPStruct)] AMMediaType pmt);
 
         [PreserveSig]
         int ReceiveConnection(
-            [In]                                            IPin pReceivePin,
-            [In, MarshalAs(UnmanagedType.LPStruct)]         AMMediaType pmt);
+            [In] IPin pReceivePin,
+            [In, MarshalAs(UnmanagedType.LPStruct)] AMMediaType pmt);
 
         [PreserveSig]
         int Disconnect();
@@ -2416,7 +2416,7 @@ namespace DirectShow
 
         [PreserveSig]
         int ConnectionMediaType(
-            [Out, MarshalAs(UnmanagedType.LPStruct)]        AMMediaType pmt);
+            [Out, MarshalAs(UnmanagedType.LPStruct)] AMMediaType pmt);
 
         [PreserveSig]
         int QueryPinInfo([Out] out PinInfo pInfo);
@@ -2426,11 +2426,11 @@ namespace DirectShow
 
         [PreserveSig]
         int QueryId(
-            [Out, MarshalAs(UnmanagedType.LPWStr)]      out string Id);
+            [Out, MarshalAs(UnmanagedType.LPWStr)] out string Id);
 
         [PreserveSig]
         int QueryAccept(
-            [In, MarshalAs(UnmanagedType.LPStruct)]         AMMediaType pmt);
+            [In, MarshalAs(UnmanagedType.LPStruct)] AMMediaType pmt);
 
         [PreserveSig]
         int EnumMediaTypes([Out] out IEnumMediaTypes ppEnum);
@@ -2481,7 +2481,7 @@ namespace DirectShow
         #region "IPersist Methods"
         [PreserveSig]
         int GetClassID(
-            [Out]                                   out Guid pClassID);
+            [Out] out Guid pClassID);
         #endregion
 
         #region "IMediaFilter Methods"
@@ -2506,12 +2506,12 @@ namespace DirectShow
 
         [PreserveSig]
         int EnumPins(
-            [Out]                                       out IEnumPins ppEnum);
+            [Out] out IEnumPins ppEnum);
 
         [PreserveSig]
         int FindPin(
-            [In, MarshalAs(UnmanagedType.LPWStr)]           string Id,
-            [Out]                                       out IPin ppPin);
+            [In, MarshalAs(UnmanagedType.LPWStr)] string Id,
+            [Out] out IPin ppPin);
         /*
         int QueryFilterInfo(
             [Out]											FilterInfo pInfo);
@@ -2522,12 +2522,12 @@ namespace DirectShow
 
         [PreserveSig]
         int JoinFilterGraph(
-            [In]                                            IFilterGraph pGraph,
-            [In, MarshalAs(UnmanagedType.LPWStr)]           string pName);
+            [In] IFilterGraph pGraph,
+            [In, MarshalAs(UnmanagedType.LPWStr)] string pName);
 
         [PreserveSig]
         int QueryVendorInfo(
-            [Out, MarshalAs(UnmanagedType.LPWStr)]      out string pVendorInfo);
+            [Out, MarshalAs(UnmanagedType.LPWStr)] out string pVendorInfo);
     }
 
     // ---------------------------------------------------------------------------------------
@@ -2540,7 +2540,7 @@ namespace DirectShow
         [PreserveSig]
         int AddFilter(
             [In] IBaseFilter pFilter,
-            [In, MarshalAs(UnmanagedType.LPWStr)]           string pName);
+            [In, MarshalAs(UnmanagedType.LPWStr)] string pName);
 
         [PreserveSig]
         int RemoveFilter([In] IBaseFilter pFilter);
@@ -2550,12 +2550,12 @@ namespace DirectShow
 
         [PreserveSig]
         int FindFilterByName(
-            [In, MarshalAs(UnmanagedType.LPWStr)]           string pName,
-            [Out]                                       out IBaseFilter ppFilter);
+            [In, MarshalAs(UnmanagedType.LPWStr)] string pName,
+            [Out] out IBaseFilter ppFilter);
 
         [PreserveSig]
         int ConnectDirect([In] IPin ppinOut, [In] IPin ppinIn,
-           [In, MarshalAs(UnmanagedType.LPStruct)]          AMMediaType pmt);
+           [In, MarshalAs(UnmanagedType.LPStruct)] AMMediaType pmt);
 
         [PreserveSig]
         int Reconnect([In] IPin ppin);
@@ -2575,14 +2575,14 @@ namespace DirectShow
 
         [PreserveSig]
         int RenderFile(
-            [In, MarshalAs(UnmanagedType.LPWStr)]           string lpcwstrFile,
-            [In, MarshalAs(UnmanagedType.LPWStr)]           string lpcwstrPlayList);
+            [In, MarshalAs(UnmanagedType.LPWStr)] string lpcwstrFile,
+            [In, MarshalAs(UnmanagedType.LPWStr)] string lpcwstrPlayList);
 
         [PreserveSig]
         int AddSourceFilter(
-            [In, MarshalAs(UnmanagedType.LPWStr)]           string lpcwstrFileName,
-            [In, MarshalAs(UnmanagedType.LPWStr)]           string lpcwstrFilterName,
-            [Out]                                       out IBaseFilter ppFilter);
+            [In, MarshalAs(UnmanagedType.LPWStr)] string lpcwstrFileName,
+            [In, MarshalAs(UnmanagedType.LPWStr)] string lpcwstrFilterName,
+            [Out] out IBaseFilter ppFilter);
 
         [PreserveSig]
         int SetLogFile(IntPtr hFile);

@@ -276,7 +276,7 @@ namespace UnitTests.FlowScript
         }
 
         [Theory]
-        [MemberData(nameof(Cases))]
+        [MemberData(nameof(Cases), DisableDiscoveryEnumeration = true)]
         public void ValueNode(string node, string output, object expected, (string, object)[] inputs)
         {
             var actual = Eval(node, output, inputs);

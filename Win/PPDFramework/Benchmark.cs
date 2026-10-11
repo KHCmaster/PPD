@@ -29,8 +29,8 @@ namespace PPDFramework
 
         private Benchmark()
         {
-            times = new Dictionary<string, double>();
-            categoryTimes = new Dictionary<string, Dictionary<string, double>>();
+            times = [];
+            categoryTimes = [];
             stopwatch = new Stopwatch();
             stopwatch.Start();
         }
@@ -59,7 +59,7 @@ namespace PPDFramework
         {
             if (!categoryTimes.TryGetValue(category, out Dictionary<string, double> dict))
             {
-                dict = new Dictionary<string, double>();
+                dict = [];
                 categoryTimes[category] = dict;
             }
             if (!dict.ContainsKey(key))

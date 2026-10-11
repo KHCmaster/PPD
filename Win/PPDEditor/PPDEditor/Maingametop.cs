@@ -27,7 +27,7 @@ namespace PPDEditor
             {
                 if (top.Position.Y >= 0)
                 {
-                    top.Position = Vector2.Zero;;
+                    top.Position = Vector2.Zero; ;
 
                     state = State.still;
                 }

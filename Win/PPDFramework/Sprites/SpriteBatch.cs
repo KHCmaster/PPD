@@ -82,7 +82,7 @@ namespace PPDFramework.Sprites
             using (var handler = Benchmark.Instance.Start("Sprite Batch Flush"))
             {
 #endif
-                FlushImpl();
+            FlushImpl();
 #if BENCHMARK
             }
 #endif

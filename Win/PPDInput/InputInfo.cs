@@ -16,7 +16,7 @@ namespace PPDInput
             for (int i = 0; i < keyPressCount.Length; i++)
             {
                 pressCount[i] = Math.Max(keyPressCount[i], buttonPressCount[i]);
-            released[i] = keyReleased[i] || buttonReleased[i];
+                released[i] = keyReleased[i] || buttonReleased[i];
             }
         }
 
