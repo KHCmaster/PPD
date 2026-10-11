@@ -1,0 +1,103 @@
+﻿<html>
+<head>
+<meta content="text/html; charset=UTF-8" http-equiv="content-type">
+<link rel="stylesheet" href="./common.css">
+<script type="text/javascript" src="../jquery-1.6.1.min.js"></script>
+<script type="text/javascript" src="../menu.js"></script>
+<script>
+
+function caliculate(){
+   var width = Number($("#movie_width").val());
+   var height = Number($("#movie_height").val());
+   $("#black_height").val(1/2*(height-9/16*width))
+}
+</script>
+<title>
+內容
+</title>
+</head>
+<body>
+首先，測量目標視頻（的歌曲）的BPM。<br/>
+BPM表示每分鐘的節拍數，也就是歌曲的速度（數值越大，節奏越快）。<br/>
+PPDEditor附帶名為<a href="">BPM測量</a>的BPM測量功能。<br/>
+如果測量不準，可以試著在Google等網站搜索“曲名 BPM”。<br/>
+另外，也有像“MixMeister BPM Analyzer”這樣分析mp3音源並自動計算BPM的第三方免費軟件。<br/>
+不過，這些數值的可信度有限，所以最好還是手動測量一次，確認是否一致。<br/>
+<br/>
+BPM測量好了。<br/>
+將測量得到的BPM輸入到工具箱最左邊的文本框中。<br/>
+（鼠標懸停時會顯示BPM提示的那個文本框）<br/>
+<img src="./img/assign_bpm.png"/><br/>
+<br/>
+<br/>
+進行視頻的裁剪設置。<br/>
+當前視頻的尺寸顯示在<a href="">屬性窗口</a>中。<br/>
+<img src="./img/check_movie_size.png"/><br/>
+<br/>
+PPD的窗口尺寸為16:9（800*450px）。<br/>
+因此，對於16:9的視頻源無需進行裁剪設置，<br/>
+但對於其他視頻源，需要進行設置以固定寬高比。<br/>
+<br/>
+例如，常見的情況是512*384px（寬高比4:3）的視頻上下帶有黑邊。<br/>
+這種情況下，去掉黑邊後通常就是16:9的視頻源，因此要進行去除黑邊的設置。<br/>
+首先，選擇 視頻→剪切畫面。<br/>
+<img src="./img/clip_movie1.png"/><br/>
+<br/>
+會顯示以下窗口。<br/>
+<img src="./img/clip_movie2.png"/><br/>
+<br/>
+計算需要去掉的黑邊的高度。<br/>
+設黑邊的高度為black_height，視頻的寬度為movie_width，高度為movie_height。<br/>
+則必須滿足以下方程。<br/>
+movie_width:movie_height-2*black_height=16:9<br/>
+⇔16*(movie_height-2*black_height)=9*movie_width<br/>
+⇔black_height=1/2(movie_height-9/16*movie_width)<br/>
+……<br/>
+可以用下面的表單進行計算。<br/>
+<br/>
+<form>
+   視頻寬度:<input type="text" style="width:100px;" id="movie_width" value="512"/><br/>
+   視頻高度:<input type="text" style="width:100px;" id="movie_height" value="384"/><br/>
+   <input type="button" value="計算" onclick="caliculate()"/><br/>
+   黑邊高度:<input type="text" style="width:100px;" id="black_height" value="0"/>
+</form>
+<br/>
+將上面的黑邊高度輸入到剛才剪切窗口的上和下中，然後點擊確定。<br/>
+視頻就會被裁剪，以16:9顯示。<br/>
+<br/>
+另一個例子是，對於沒有黑邊的512*384px（4:3）視頻源，想在左右添加黑邊以保持（4:3）的寬高比。<br/>
+這種情況下，請在左和右中輸入-100。（上和下為0）<br/>
+<br/>
+顯示<a href="">設置文件編寫器</a>並輸入信息。<br/>
+<img src="./img/initial_setting.png"/><br/>
+<br/>
+縮略圖開始時間、縮略圖結束時間、開始時間、結束時間，點擊右側的三角並選擇“從時間軸讀取”，<br/>
+即可輸入視頻的當前時間。<br/>
+縮略圖開始時間是在PPD的菜單畫面中開始播放的時間。建議設為副歌的開始時間。<br/>
+縮略圖結束時間是在PPD的菜單畫面中結束播放的時間。設為副歌的結束時間等即可。<br/>
+開始時間是遊戲中視頻的開始時間。因視頻而異，通常設為0即可。<br/>
+如果視頻開頭比較突然，可以用-1、-2等推遲視頻的開始。<br/>
+結束時間是遊戲中視頻的結束時間。設為視頻的結尾即可。<br/>
+各難度請隨意設定，可以指定自己想顯示的內容。目前一般以★×○（○為數字）的形式居多。<br/>
+也可以在發佈前再決定。<br/>
+BPM中請填入測量得到的BPM。<br/>
+視頻的各剪切值，請輸入剛才設置的視頻裁剪值。如果為0，請全部輸入0。<br/>
+<br/>
+在這裡，先保存一次工程。<br/>
+如果是使用新建工程創建的工程，工程已經存在，請按Ctrl+S或選擇 文件→覆蓋保存工程。<br/>
+以下是未使用新建工程進行設置時的保存方法。<br/>
+<br/>
+選擇 文件→保存工程。<br/>
+<img src="./img/save_project1.png"/><br/>
+<br/>
+會顯示對話框，將文件名設為“曲名.ppdproj”並保存。<br/>
+<img src="./img/save_project2.png"/><br/>
+<br/>
+下次起選擇“覆蓋保存工程”即可覆蓋保存。<br/>
+<br/>
+另外，打開工程時，請選擇保存的“曲名.ppdproj”。<br/>
+<br/>
+接下來，放置標記。
+<span onclick="ChangeContentFromID('workflow_beating_marks.html')"><a onclick="return false" href="">下一步</a></span>
+</body>
+</html>

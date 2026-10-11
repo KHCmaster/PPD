@@ -1,0 +1,49 @@
+﻿<html>
+<head>
+<meta content="text/html; charset=UTF-8" http-equiv="content-type">
+<link rel="stylesheet" href="./common.css">
+<script type="text/javascript" src="../jquery-1.6.1.min.js"></script>
+<script type="text/javascript" src="../menu.js"></script>
+<title>
+Content
+</title>
+</head>
+<body>
+So far you have only placed the marks. Next, set the position, angle and kind of the marks.<br/>
+First, how to position marks.<br/>
+To position them intuitively, select a mark and drag it in the game window.<br/>
+<img src="./img/mark_pos1.png"><br/>
+<br/>
+If you want to restrict where marks can be placed, you can use the grid.<br/>
+While the grid is shown, the mouse can only place marks on grid intersections. (Toggle it with the grid button)<br/>
+<img src="./img/grid.png"><br/>
+<br/>
+To fine-tune a mark's position, use the arrow keys. (1px normally, 10px with Shift, 5px with Control. Changeable in the settings)<br/>
+To copy the position of the previous mark of the same kind, press Ctrl+Q.<br/>
+You can also simplify positioning with the <a href="">Position/Angle Loader Saver</a> or the <a href="">Geometry Creator</a>, but they are skipped here since this guide is for beginners.<br/>
+<br/>
+Next, the angle of marks.<br/>
+After selecting a mark, drag anywhere in the game window except on the mark to set its angle.<br/>
+Holding Shift restricts the angle to multiples of a certain angle. (10 degrees by default. Changeable in the settings)<br/>
+<img src="./img/mark_angle.png"><br/>
+<br/>
+To copy the angle of the previous mark of the same kind, press Ctrl+R.<br/>
+Likewise, you can simplify this with the <a href="">Position/Angle Loader Saver</a> or the <a href="">Geometry Creator</a>, but they are skipped here since this guide is for beginners.<br/>
+<br/>
+Next, the kind of marks.<br/>
+As explained, the kind of a mark depends on the vertical position where it is placed.<br/>
+To change the kind of a placed mark, drag it while holding Shift and drop it at the vertical position of the kind you want.<br/>
+Dragging and dropping while holding Ctrl copies the mark.<br/>
+Alternatively, select a range and copy it with Ctrl+C; when you then place a mark, the copy is placed at that position. (Don't forget to clear the copy buffer with Ctrl+Shift+C)<br/>
+<br/>
+Next, how to create long notes (or HOLDs).<br/>
+Place a mark at the start of the long note (the start of the HOLD).<br/>
+Then place a mark at the end of the long note (for a HOLD, before the next mark of the same kind) and select both with a range selection.<br/>
+Press Ctrl+F to turn them into a long note (HOLD).<br/>
+With a long note selected, press Ctrl+Shift+F to split it.<br/>
+<img src="./img/fusion_mark.png"><br/>
+<br/>
+This completes the mark settings.
+<span onclick="ChangeContentFromID('workflow_creating_other_difficulty.html')"><a onclick="return false" href="">Next</a></span>
+</body>
+</html>

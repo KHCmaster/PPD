@@ -1,0 +1,49 @@
+﻿<html>
+<head>
+<meta content="text/html; charset=UTF-8" http-equiv="content-type">
+<link rel="stylesheet" href="./common.css">
+<script type="text/javascript" src="../jquery-1.6.1.min.js"></script>
+<script type="text/javascript" src="../menu.js"></script>
+<title>
+Contenido
+</title>
+</head>
+<body>
+Hasta ahora solo ha colocado las marcas. Ahora configure su posición, ángulo y tipo.<br/>
+Primero, cómo posicionar las marcas.<br/>
+Para posicionarlas de forma intuitiva, seleccione una marca y arrástrela en la ventana de juego.<br/>
+<img src="./img/mark_pos1.png"><br/>
+<br/>
+Si quiere limitar dónde se pueden colocar las marcas, puede usar la cuadrícula.<br/>
+Mientras se muestra la cuadrícula, con el ratón solo se pueden colocar en sus intersecciones. (Se activa con el botón de cuadrícula)<br/>
+<img src="./img/grid.png"><br/>
+<br/>
+Para ajustar con precisión la posición, use las teclas de flecha. (1px normalmente, 10px con Shift, 5px con Control. Se puede cambiar en la configuración)<br/>
+Para copiar la posición de la marca anterior del mismo tipo, pulse Ctrl+Q.<br/>
+También puede simplificar el posicionamiento con el <a href="">cargador/guardador de posición y ángulo</a> o el <a href="">creador de geometría</a>, pero aquí se omiten por ser una guía para principiantes.<br/>
+<br/>
+Ahora, el ángulo de las marcas.<br/>
+Tras seleccionar una marca, arrastre en cualquier parte de la ventana de juego que no sea la marca para fijar el ángulo.<br/>
+Manteniendo Shift, el ángulo se limita a múltiplos de cierto ángulo. (10 grados por defecto. Se puede cambiar en la configuración)<br/>
+<img src="./img/mark_angle.png"><br/>
+<br/>
+Para copiar el ángulo de la marca anterior del mismo tipo, pulse Ctrl+R.<br/>
+Igualmente, puede simplificarlo con el <a href="">cargador/guardador de posición y ángulo</a> o el <a href="">creador de geometría</a>, pero aquí se omiten por ser una guía para principiantes.<br/>
+<br/>
+Ahora, el tipo de las marcas.<br/>
+Como ya se explicó, el tipo depende de la posición vertical donde se coloca la marca.<br/>
+Para cambiar el tipo de una marca colocada, arrástrela manteniendo Shift y suéltela en la posición vertical del tipo que desee.<br/>
+Arrastrar y soltar manteniendo Ctrl copia la marca.<br/>
+También puede seleccionar un rango y copiarlo con Ctrl+C; al colocar una marca, la copia se pega en esa posición. (No olvide vaciar el búfer de copia con Ctrl+Shift+C)<br/>
+<br/>
+Ahora, cómo crear marcas largas (o HOLD).<br/>
+Coloque una marca en el inicio de la marca larga (inicio del HOLD).<br/>
+Luego coloque una marca en el final (en el caso de HOLD, antes de la siguiente marca del mismo tipo) y seleccione ambas con una selección de rango.<br/>
+Pulse Ctrl+F para convertirlas en una marca larga (HOLD).<br/>
+Con una marca larga seleccionada, pulse Ctrl+Shift+F para separarla.<br/>
+<img src="./img/fusion_mark.png"><br/>
+<br/>
+Con esto termina la configuración de las marcas.
+<span onclick="ChangeContentFromID('workflow_creating_other_difficulty.html')"><a onclick="return false" href="">Siguiente</a></span>
+</body>
+</html>

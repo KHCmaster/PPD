@@ -1,0 +1,103 @@
+﻿<html>
+<head>
+<meta content="text/html; charset=UTF-8" http-equiv="content-type">
+<link rel="stylesheet" href="./common.css">
+<script type="text/javascript" src="../jquery-1.6.1.min.js"></script>
+<script type="text/javascript" src="../menu.js"></script>
+<script>
+
+function caliculate(){
+   var width = Number($("#movie_width").val());
+   var height = Number($("#movie_height").val());
+   $("#black_height").val(1/2*(height-9/16*width))
+}
+</script>
+<title>
+Contenido
+</title>
+</head>
+<body>
+Primero, mida el BPM del vídeo (de su canción).<br/>
+El BPM es el número de pulsos por minuto, es decir, la velocidad de la canción (cuanto mayor, más rápido es el tempo).<br/>
+PPDEditor incluye una función para medir el BPM llamada <a href="">Medición de BPM</a>.<br/>
+Si no consigue medirlo bien, pruebe a buscar "nombre de la canción BPM" en Google o similar.<br/>
+También hay software gratuito de terceros, como "MixMeister BPM Analyzer", que analiza un archivo mp3 y calcula el BPM automáticamente.<br/>
+Sin embargo, estos valores no siempre son fiables, así que compruebe al menos una vez midiéndolo a mano.<br/>
+<br/>
+Ya ha medido el BPM.<br/>
+Introdúzcalo en el cuadro de texto situado más a la izquierda de la caja de herramientas.<br/>
+(Es el cuadro de texto que muestra la sugerencia BPM al pasar el ratón por encima)<br/>
+<img src="./img/assign_bpm.png"/><br/>
+<br/>
+<br/>
+A continuación, configure el recorte del vídeo.<br/>
+El tamaño actual del vídeo aparece en la <a href="">ventana de propiedades</a>.<br/>
+<img src="./img/check_movie_size.png"/><br/>
+<br/>
+La ventana de PPD es 16:9 (800*450px).<br/>
+Por eso no hace falta configurar el recorte para un vídeo 16:9,<br/>
+pero para otros vídeos hay que configurarlo para mantener la relación de aspecto.<br/>
+<br/>
+Por ejemplo, un caso habitual es un vídeo de 512*384px (relación 4:3) con franjas negras arriba y abajo.<br/>
+En ese caso, sin las franjas negras el vídeo suele ser 16:9, así que configúrelo para quitarlas.<br/>
+Primero, seleccione Vídeo → Recortar.<br/>
+<img src="./img/clip_movie1.png"/><br/>
+<br/>
+Aparece la siguiente ventana.<br/>
+<img src="./img/clip_movie2.png"/><br/>
+<br/>
+Calcule la altura de las franjas negras que hay que quitar.<br/>
+Sea black_height la altura de una franja negra, movie_width el ancho del vídeo y movie_height su altura.<br/>
+Entonces debe cumplirse la siguiente ecuación.<br/>
+movie_width:movie_height-2*black_height=16:9<br/>
+⇔16*(movie_height-2*black_height)=9*movie_width<br/>
+⇔black_height=1/2(movie_height-9/16*movie_width)<br/>
+...<br/>
+Puede calcularlo con el siguiente formulario.<br/>
+<br/>
+<form>
+   Ancho del vídeo:<input type="text" style="width:100px;" id="movie_width" value="512"/><br/>
+   Alto del vídeo:<input type="text" style="width:100px;" id="movie_height" value="384"/><br/>
+   <input type="button" value="Calcular" onclick="caliculate()"/><br/>
+   Altura de la franja negra:<input type="text" style="width:100px;" id="black_height" value="0"/>
+</form>
+<br/>
+Introduzca la altura de la franja negra en Arriba y Abajo de la ventana de recorte y pulse OK.<br/>
+El vídeo se recortará y se mostrará en 16:9.<br/>
+<br/>
+Otro ejemplo: puede que quiera añadir franjas negras a izquierda y derecha de un vídeo de 512*384px (4:3) sin franjas para mantener la relación (4:3).<br/>
+En ese caso, introduzca -100 en Izquierda y Derecha. (Arriba y Abajo a 0)<br/>
+<br/>
+Muestre el <a href="">escritor del archivo de configuración</a> e introduzca la información.<br/>
+<img src="./img/initial_setting.png"/><br/>
+<br/>
+Para el inicio y el fin de la miniatura y el tiempo de inicio y de fin, pulse el triángulo de la derecha y seleccione "Tomar de la línea de tiempo"<br/>
+para introducir el tiempo actual del vídeo.<br/>
+El inicio de la miniatura es cuando empieza la reproducción en el menú de PPD. El inicio del estribillo es una buena opción.<br/>
+El fin de la miniatura es cuando termina la reproducción en el menú de PPD. El final del estribillo está bien.<br/>
+El tiempo de inicio es cuando empieza el vídeo en el juego. Depende del vídeo, pero normalmente 0 está bien.<br/>
+Si el vídeo empieza de golpe, puede retrasar su inicio con -1, -2, etc.<br/>
+El tiempo de fin es cuando termina el vídeo en el juego. El final del vídeo está bien.<br/>
+Cada dificultad puede indicarla como quiera; puede especificar lo que desee mostrar. Actualmente parece habitual ★×○ (○ es un número).<br/>
+También puede decidirlo antes de distribuir.<br/>
+En BPM, introduzca el BPM que ha medido.<br/>
+En cada recorte del vídeo, introduzca los valores de recorte configurados antes. Si son 0, introduzca 0 en todos.<br/>
+<br/>
+Ahora guarde el proyecto una vez.<br/>
+Si creó el proyecto con Nuevo proyecto, el proyecto ya existe, así que pulse Ctrl+S o seleccione Archivo → Sobrescribir proyecto.<br/>
+A continuación se explica cómo guardar si lo configuró sin usar Nuevo proyecto.<br/>
+<br/>
+Seleccione Archivo → Guardar proyecto.<br/>
+<img src="./img/save_project1.png"/><br/>
+<br/>
+Aparece un diálogo. Guarde el archivo como "nombre de la canción.ppdproj".<br/>
+<img src="./img/save_project2.png"/><br/>
+<br/>
+A partir de la próxima vez, seleccione "Sobrescribir proyecto" para sobrescribirlo.<br/>
+<br/>
+Para volver a abrir el proyecto, seleccione el archivo "nombre de la canción.ppdproj" guardado.<br/>
+<br/>
+A continuación, coloque las marcas.
+<span onclick="ChangeContentFromID('workflow_beating_marks.html')"><a onclick="return false" href="">Siguiente</a></span>
+</body>
+</html>

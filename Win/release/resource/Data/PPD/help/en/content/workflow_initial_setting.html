@@ -1,0 +1,103 @@
+﻿<html>
+<head>
+<meta content="text/html; charset=UTF-8" http-equiv="content-type">
+<link rel="stylesheet" href="./common.css">
+<script type="text/javascript" src="../jquery-1.6.1.min.js"></script>
+<script type="text/javascript" src="../menu.js"></script>
+<script>
+
+function caliculate(){
+   var width = Number($("#movie_width").val());
+   var height = Number($("#movie_height").val());
+   $("#black_height").val(1/2*(height-9/16*width))
+}
+</script>
+<title>
+Content
+</title>
+</head>
+<body>
+First, measure the BPM of the movie (its song).<br/>
+BPM is the number of beats per minute, that is, the speed of the song (the larger it is, the faster the tempo).<br/>
+PPDEditor has a built-in BPM measuring feature called <a href="">BPM Measurement</a>.<br/>
+If you can't measure it well, try searching for "song name BPM" on Google or similar.<br/>
+There is also third-party free software such as "MixMeister BPM Analyzer", which analyzes an mp3 file and calculates the BPM automatically.<br/>
+However, such values are not always reliable, so check at least once by measuring manually that they are correct.<br/>
+<br/>
+Now that you have measured the BPM,<br/>
+enter it into the leftmost text box in the toolbox.<br/>
+(It is the text box that shows a BPM tooltip when you hover the mouse over it)<br/>
+<img src="./img/assign_bpm.png"/><br/>
+<br/>
+<br/>
+Next, set up the movie clipping.<br/>
+The current movie size is shown in the <a href="">Property Window</a>.<br/>
+<img src="./img/check_movie_size.png"/><br/>
+<br/>
+The PPD window is 16:9 (800*450px).<br/>
+So you don't need to set up clipping for a 16:9 movie source,<br/>
+but for other movie sources you need to set it up to keep the aspect ratio.<br/>
+<br/>
+For example, a common case is a 512*384px movie (4:3 aspect ratio) with black bars at the top and bottom.<br/>
+In this case, the movie is often 16:9 without the black bars, so set it up to remove them.<br/>
+First, select Movie → Cut.<br/>
+<img src="./img/clip_movie1.png"/><br/>
+<br/>
+The following window appears.<br/>
+<img src="./img/clip_movie2.png"/><br/>
+<br/>
+Calculate the height of the black bars to remove.<br/>
+Let black_height be the height of a black bar, movie_width the width of the movie and movie_height its height.<br/>
+Then the following equation must hold.<br/>
+movie_width:movie_height-2*black_height=16:9<br/>
+⇔16*(movie_height-2*black_height)=9*movie_width<br/>
+⇔black_height=1/2(movie_height-9/16*movie_width)<br/>
+...<br/>
+You can calculate this with the form below.<br/>
+<br/>
+<form>
+   Movie width:<input type="text" style="width:100px;" id="movie_width" value="512"/><br/>
+   Movie height:<input type="text" style="width:100px;" id="movie_height" value="384"/><br/>
+   <input type="button" value="Calculate" onclick="caliculate()"/><br/>
+   Black bar height:<input type="text" style="width:100px;" id="black_height" value="0"/>
+</form>
+<br/>
+Enter the black bar height above into Top and Bottom of the Cut window and press OK.<br/>
+The movie is then clipped and displayed as 16:9.<br/>
+<br/>
+As another example, you may want to add black bars to the left and right of a 512*384px (4:3) movie source without black bars to keep its (4:3) aspect ratio.<br/>
+In that case, enter -100 for Left and Right. (Top and Bottom are 0)<br/>
+<br/>
+Show the <a href="">Setting File Writer</a> and enter the information.<br/>
+<img src="./img/initial_setting.png"/><br/>
+<br/>
+For the thumbnail start time, thumbnail end time, start time and end time, press the triangle on the right and select "Get from timeline"<br/>
+to enter the current time of the movie.<br/>
+The thumbnail start time is when playback starts on the PPD menu screen. The start of the chorus is a good choice.<br/>
+The thumbnail end time is when playback ends on the PPD menu screen. The end of the chorus is fine.<br/>
+The start time is when the movie starts in the game. It depends on the movie, but 0 is usually fine.<br/>
+If the movie starts abruptly, you can delay its start with -1, -2 and so on.<br/>
+The end time is when the movie ends in the game. The end of the movie is fine.<br/>
+Set each difficulty as you like. You can specify whatever you want to display. Currently ★×○ (○ is a number) seems common.<br/>
+You may also decide them before distributing.<br/>
+Enter the BPM you measured in BPM.<br/>
+For each cut of the movie, enter the clipping values you set earlier. If they are 0, enter 0 for all of them.<br/>
+<br/>
+Now save the project once.<br/>
+If you created the project with New Project, the project already exists, so press Ctrl+S or select File → Overwrite Project.<br/>
+The following explains how to save if you set things up without using New Project.<br/>
+<br/>
+Select File → Save Project.<br/>
+<img src="./img/save_project1.png"/><br/>
+<br/>
+A dialog appears. Save the file as "song name.ppdproj".<br/>
+<img src="./img/save_project2.png"/><br/>
+<br/>
+From next time, select "Overwrite Project" to overwrite it.<br/>
+<br/>
+To open the project again, select the saved "song name.ppdproj".<br/>
+<br/>
+Next, place the marks.
+<span onclick="ChangeContentFromID('workflow_beating_marks.html')"><a onclick="return false" href="">Next</a></span>
+</body>
+</html>
