@@ -295,7 +295,8 @@ namespace PPDCore
                     float tempscale = axis.Scale.X - 0.05f;
                     if (tempscale < 0)
                     {
-                        axis.Scale = Vector2.Zero;                     }
+                        axis.Scale = Vector2.Zero;
+                    }
                     else
                     {
                         axis.Scale = new Vector2(tempscale, tempscale);

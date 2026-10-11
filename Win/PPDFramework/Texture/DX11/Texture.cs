@@ -187,7 +187,7 @@ namespace PPDFramework.Texture.DX11
                 }
                 for (var y = 0; y < copyHeight; y++)
                 {
-                    System.Buffer.BlockCopy(srcData,((rect.Top + y) * src.Width + rect.Left) * BytesPerPixel,
+                    System.Buffer.BlockCopy(srcData, ((rect.Top + y) * src.Width + rect.Left) * BytesPerPixel,
                         cpuData, ((point.Y + y) * Width + point.X) * BytesPerPixel,
                         copyWidth * BytesPerPixel);
                 }

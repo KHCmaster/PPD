@@ -183,7 +183,7 @@ namespace UnitTests.Graphics
         };
 
         [Theory]
-        [MemberData(nameof(Setters))]
+        [MemberData(nameof(Setters), DisableDiscoveryEnumeration = true)]
         public void SetterNodes_ChangeComponent(string name, string input, object value, Func<GameComponent, object> read)
         {
             using var sprite = new SpriteObject(graphics.Device);
@@ -255,7 +255,7 @@ namespace UnitTests.Graphics
         };
 
         [Theory]
-        [MemberData(nameof(ColorFilterNodes))]
+        [MemberData(nameof(ColorFilterNodes), DisableDiscoveryEnumeration = true)]
         public void ColorFilterValueNodes(string name, Type type, (string Name, object Value)[] inputs)
         {
             var filter = Create<ColorFilterBase>($"ColorFilter.{name}.Value", [("Weight", 0.75f), .. inputs]);

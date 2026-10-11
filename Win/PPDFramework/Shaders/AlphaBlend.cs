@@ -315,12 +315,12 @@ namespace PPDFramework.Shaders
                 {
 
 #endif
-                    if (context?.Vertex?.VertexBucket?.VertexBuffer is VertexBufferBase vertexBuffer)
-                    {
-                        device.VertexDeclaration = effect.VertexDeclaration;
-                        device.SpriteBatch.Draw(context.Texture, m, context.Alpha, context.Overlay, primitiveType,
-                            vertexBuffer.Vertices, context.Vertex.Offset + startIndex, vertexCount);
-                    }
+                if (context?.Vertex?.VertexBucket?.VertexBuffer is VertexBufferBase vertexBuffer)
+                {
+                    device.VertexDeclaration = effect.VertexDeclaration;
+                    device.SpriteBatch.Draw(context.Texture, m, context.Alpha, context.Overlay, primitiveType,
+                        vertexBuffer.Vertices, context.Vertex.Offset + startIndex, vertexCount);
+                }
 #if BENCHMARK
                 }
 #endif
@@ -333,21 +333,21 @@ namespace PPDFramework.Shaders
                 using (var handler = Benchmark.Instance.Start("Effect Prepare"))
                 {
 #endif
-                    effect.Technique = techniqueNames[new Tuple<BlendMode, bool, bool, ColorFilterType>(context.BlendMode, context.Texture != null && context.Texture.PA,
-                        context.MaskTexture != null, context.FilterCount == 0 ? ColorFilterType.None : context.Filters[context.FilterCount - 1].FilterType)];
-                    effect.SetTexture(textureHandle, context.Texture);
-                    effect.SetTexture(lastRenderTargetTextureHandle, workspaceTexture.Texture);
-                    effect.SetTexture(maskTextureHandle, context.MaskTexture);
-                    if (context.FilterCount > 0)
-                    {
-                        effect.SetValue(filterInfoHandle, context.Filters[context.FilterCount - 1].ToFilterInfo());
-                    }
-                    effect.SetValue(drawInfoHandle, new DrawInfo
-                    {
-                        Matrix = m,
-                        Alpha = context.Alpha,
-                        OverlayColor = context.Overlay
-                    });
+                effect.Technique = techniqueNames[new Tuple<BlendMode, bool, bool, ColorFilterType>(context.BlendMode, context.Texture != null && context.Texture.PA,
+                    context.MaskTexture != null, context.FilterCount == 0 ? ColorFilterType.None : context.Filters[context.FilterCount - 1].FilterType)];
+                effect.SetTexture(textureHandle, context.Texture);
+                effect.SetTexture(lastRenderTargetTextureHandle, workspaceTexture.Texture);
+                effect.SetTexture(maskTextureHandle, context.MaskTexture);
+                if (context.FilterCount > 0)
+                {
+                    effect.SetValue(filterInfoHandle, context.Filters[context.FilterCount - 1].ToFilterInfo());
+                }
+                effect.SetValue(drawInfoHandle, new DrawInfo
+                {
+                    Matrix = m,
+                    Alpha = context.Alpha,
+                    OverlayColor = context.Overlay
+                });
 #if BENCHMARK
                 }
 #endif
@@ -356,15 +356,15 @@ namespace PPDFramework.Shaders
                 using (var handler = Benchmark.Instance.Start("Draw"))
                 {
 #endif
-                    var passCount = effect.Begin();
-                    effect.BeginPass(0);
-                    effect.CommitChanges();
-                    device.VertexDeclaration = effect.VertexDeclaration;
-                    device.SetStreamSource(context.Vertex.VertexBucket.VertexBuffer);
-                    device.DrawPrimitives(primitiveType, context.Vertex.Offset + startIndex, primitiveCount);
-                    effect.EndPass();
-                    effect.End();
-                    effect.SetTexture(textureHandle, null);
+                var passCount = effect.Begin();
+                effect.BeginPass(0);
+                effect.CommitChanges();
+                device.VertexDeclaration = effect.VertexDeclaration;
+                device.SetStreamSource(context.Vertex.VertexBucket.VertexBuffer);
+                device.DrawPrimitives(primitiveType, context.Vertex.Offset + startIndex, primitiveCount);
+                effect.EndPass();
+                effect.End();
+                effect.SetTexture(textureHandle, null);
 #if BENCHMARK
                 }
 #endif

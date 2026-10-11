@@ -766,7 +766,7 @@ namespace DirectShow
             return _fcc.m_uiFourcc;
         }
 
-        public static implicit operator byte[] (FOURCC _fcc)
+        public static implicit operator byte[](FOURCC _fcc)
         {
             if ((_fcc as Object) == null) return null;
             byte[] _data = BitConverter.GetBytes(_fcc.m_uiFourcc);
@@ -778,7 +778,7 @@ namespace DirectShow
             return _result;
         }
 
-        public static implicit operator char[] (FOURCC _fcc)
+        public static implicit operator char[](FOURCC _fcc)
         {
             if ((_fcc as Object) == null) return null;
             byte[] _data = BitConverter.GetBytes(_fcc.m_uiFourcc);

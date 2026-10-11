@@ -11,6 +11,9 @@ dotnet_code_quality.CA1822.api_surface = private, internal
 dotnet_diagnostic.SYSLIB1054.severity = none
 # 引数や戻り値をインターフェイスや基底クラスで受けている箇所は、描画先やシェーダーの差し替えのための設計なので、具象型にしない（CA1859）
 dotnet_diagnostic.CA1859.severity = none
+# アセンブリのリソースは画像やシェーダーなど言語によらないもので、表示の言語は Lang の ini で切り替えるので、
+# NeutralResourcesLanguage 属性は付けない（CA1824）
+dotnet_diagnostic.CA1824.severity = none
 
 # FlowScript のノードのクラスは、名前空間を含む完全な名前でスクリプト（.fsml）に保存されるので、名前空間をフォルダーに合わせない
 [FlowScriptEngine*/**.cs]

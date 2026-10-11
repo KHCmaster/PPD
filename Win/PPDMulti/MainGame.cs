@@ -726,11 +726,11 @@ namespace PPDMulti
             }
 
             expansionClient?.Send(new ItemInfo
-                {
-                    CurrentTime = mainGameComponent.MoviePosition,
-                    ItemType = itemType,
-                    PlayerId = selfUser.ID
-                });
+            {
+                CurrentTime = mainGameComponent.MoviePosition,
+                ItemType = itemType,
+                PlayerId = selfUser.ID
+            });
         }
 
         private void AddEffect(ItemType itemType, int userID)
@@ -829,11 +829,11 @@ namespace PPDMulti
             }
 
             expansionClient?.Send(new ItemInfo
-                {
-                    CurrentTime = mainGameComponent.MoviePosition,
-                    ItemType = itemType,
-                    PlayerId = userID
-                });
+            {
+                CurrentTime = mainGameComponent.MoviePosition,
+                ItemType = itemType,
+                PlayerId = userID
+            });
         }
 
         public override void Draw()
