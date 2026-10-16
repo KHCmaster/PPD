@@ -301,7 +301,7 @@ namespace PPDFramework.Texture.DX11
             var width = (int)desc.Width;
             var height = (int)desc.Height;
             var data = new byte[width * height * BytesPerPixel];
-            using (var device = texture.Device)
+            var device = texture.Device;
             using (var staging = device.CreateTexture2D(new Texture2DDescription
             {
                 Width = desc.Width,
