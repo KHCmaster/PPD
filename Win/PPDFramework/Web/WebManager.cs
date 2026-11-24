@@ -145,7 +145,7 @@ namespace PPDFramework.Web
         }
 
         // ReadLogin はログインの応答（Result が 0 なら AccountID・Nickname・Token・PPDY と、あれば LoginKey）を読みます。
-        private ErrorReason ReadLogin(Request req, out string loginKey)
+        private static ErrorReason ReadLogin(Request req, out string loginKey)
         {
             loginKey = null;
             try
