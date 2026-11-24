@@ -78,6 +78,34 @@ namespace PPD
             }
         }
 
+        /// <summary>
+        /// ブラウザ経由のログインで受け取ったログインキー（ログイン情報の記憶）。パスワードの代わりに使います。
+        /// </summary>
+        public string LoginKey
+        {
+            get
+            {
+                // 以前の設定には無い
+                var saved = this["PPD_LoginKey"];
+                if (String.IsNullOrEmpty(saved))
+                {
+                    return "";
+                }
+                try
+                {
+                    return Restore(saved);
+                }
+                catch (Exception e) when (e is FormatException || e is System.Security.Cryptography.CryptographicException)
+                {
+                    return "";
+                }
+            }
+            set
+            {
+                this["PPD_LoginKey"] = Save(value);
+            }
+        }
+
         private string Restore(string str)
         {
             return DecryptString(str);
