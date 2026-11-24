@@ -65,6 +65,61 @@ namespace UnitTests.Libraries
         }
 
         [Fact]
+        public void DeviceLogin_StartPollAndKey()
+        {
+            using var scope = new WebTestScope();
+            scope.Server.OnXml("/api/device-login-start",
+                """<Root DeviceCode="dev1" UserCode="BCDF-GHJK" VerificationURL="https://projectdxxx.me/device" Interval="5" ExpiresIn="600" Result="0" />""");
+            Assert.Equal(ErrorReason.OK, scope.Web.StartDeviceLogin(out var request));
+            Assert.Equal(new DeviceLoginRequest("dev1", "BCDF-GHJK", "https://projectdxxx.me/device", 5, 600), request);
+            Assert.Equal("6", scope.Server.Requests.Single().Query["version"]);
+
+            // 承認待ち
+            scope.Server.OnXml("/api/device-login-poll", """<Root Result="10" />""");
+            Assert.Equal(ErrorReason.DeviceLoginPending, scope.Web.PollDeviceLogin("dev1", out var key));
+            Assert.Null(key);
+            Assert.False(scope.Web.IsLogined);
+
+            scope.Server.OnXml("/api/device-login-poll", """<Root AccountID="acc1" Nickname="tester" Token="tok" PPDY="12" LoginKey="key1" Result="0" />""");
+            Assert.Equal(ErrorReason.OK, scope.Web.PollDeviceLogin("dev1", out key));
+            Assert.Equal("key1", key);
+            Assert.Equal(("acc1", "tester"), (scope.Web.CurrentAccountId, scope.Web.CurrentUserName));
+            // 秘密は URL ではなく本文で送る
+            var pollRequest = scope.Server.Requests.Last();
+            Assert.Equal(("POST", "dev1", null), (pollRequest.Method, pollRequest.Form["devicecode"], pollRequest.Query["devicecode"]));
+
+            scope.Web.Logout();
+            scope.Server.OnXml("/api/login-with-key", LoginXml);
+            Assert.Equal(ErrorReason.OK, scope.Web.LoginWithKey("key1"));
+            Assert.True(scope.Web.IsLogined);
+            var login = scope.Server.Requests.Last();
+            Assert.Equal(("POST", "key1", null, "6"), (login.Method, login.Form["key"], login.Query["key"], login.Query["version"]));
+
+            // 無効になったキー
+            scope.Web.Logout();
+            scope.Server.OnXml("/api/login-with-key", """<Root Result="1" />""");
+            Assert.Equal(ErrorReason.AuthFailed, scope.Web.LoginWithKey("key1"));
+            Assert.False(scope.Web.IsLogined);
+        }
+
+        [Fact]
+        public void DeviceLogin_DeniedExpiredAndOldVersion()
+        {
+            using var scope = new WebTestScope();
+            scope.Server.OnXml("/api/device-login-start", """<Root Result="5" />""");
+            Assert.Equal(ErrorReason.VersionUnmatch, scope.Web.StartDeviceLogin(out var request));
+            Assert.Null(request);
+
+            scope.Server.OnXml("/api/device-login-poll", """<Root Result="11" />""");
+            Assert.Equal(ErrorReason.DeviceLoginDenied, scope.Web.PollDeviceLogin("dev1", out _));
+            scope.Server.OnXml("/api/device-login-poll", """<Root Result="12" />""");
+            Assert.Equal(ErrorReason.DeviceLoginExpired, scope.Web.PollDeviceLogin("dev1", out _));
+
+            scope.Server.On("/api/device-login-start", _ => TestWebServer.Status(HttpStatusCode.ServiceUnavailable));
+            Assert.Equal(ErrorReason.NetworkError, scope.Web.StartDeviceLogin(out _));
+        }
+
+        [Fact]
         public void UpdateAccountInfo_OnlyWhenLoggedIn()
         {
             using var scope = new WebTestScope();

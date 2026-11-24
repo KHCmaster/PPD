@@ -11,6 +11,8 @@ namespace PPD.Forms
     {
         Thread logingThread;
         volatile bool loginCanceled;
+        // 進行中のブラウザ経由のログイン（キャンセルや新しい試行で入れ替わる）
+        volatile object browserAttempt;
 
         public bool RememberMe
         {
@@ -46,6 +48,15 @@ namespace PPD.Forms
             set;
         }
 
+        /// <summary>
+        /// ブラウザ経由でログインしたときに受け取ったログインキー。パスワードでログインしたときは null です。
+        /// </summary>
+        public string LoginKey
+        {
+            get;
+            private set;
+        }
+
         public LoginForm()
         {
             InitializeComponent();
@@ -63,6 +74,7 @@ namespace PPD.Forms
             this.linkLabel1.Text = Utility.Language["CreateAccount"];
             this.button1.Text = Utility.Language["Login"];
             this.button2.Text = Utility.Language["Cancel"];
+            this.button3.Text = Utility.Language["LoginWithBrowser"];
         }
 
         void LoginForm_Shown(object sender, EventArgs e)
@@ -135,12 +147,135 @@ namespace PPD.Forms
             logingThread.Start();
         }
 
+        // ブラウザ経由のログイン: サイトの /device を開いて、表示したコードを入力・承認してもらうのを待つ。
+        // パスキーだけのアカウントはパスワードを入力できないので、こちらでログインする。
+        // 待っている間は ID・パスワードの欄を隠してコードを大きく出し、キャンセルで元の画面に戻る。
+        private void Button3_Click(object sender, EventArgs e)
+        {
+            var attempt = new object();
+            browserAttempt = attempt;
+            bool Canceled() => loginCanceled || browserAttempt != attempt;
+            panel1.Enabled = false;
+            logingThread = ThreadManager.Instance.GetThread(() =>
+            {
+                var errorReason = WebManager.Instance.StartDeviceLogin(out var request);
+                string loginKey = null;
+                if (errorReason == ErrorReason.OK && !Canceled())
+                {
+                    InvokeIfOpen(() =>
+                    {
+                        if (Canceled())
+                        {
+                            return;
+                        }
+                        ShowBrowserWaiting(request.UserCode);
+                        try
+                        {
+                            Process.Start(new ProcessStartInfo(request.VerificationUrl) { UseShellExecute = true });
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show(ex.Message);
+                        }
+                    });
+                    var deadline = DateTime.Now.AddSeconds(request.ExpiresIn);
+                    do
+                    {
+                        Thread.Sleep(TimeSpan.FromSeconds(Math.Max(1, request.Interval)));
+                        if (Canceled())
+                        {
+                            return;
+                        }
+                        errorReason = WebManager.Instance.PollDeviceLogin(request.DeviceCode, out loginKey);
+                    } while (errorReason == ErrorReason.DeviceLoginPending && DateTime.Now < deadline);
+                    if (errorReason == ErrorReason.DeviceLoginPending)
+                    {
+                        errorReason = ErrorReason.DeviceLoginExpired;
+                    }
+                }
+                if (Canceled())
+                {
+                    return;
+                }
+                InvokeIfOpen(() =>
+                {
+                    if (Canceled())
+                    {
+                        return;
+                    }
+                    if (errorReason == ErrorReason.OK)
+                    {
+                        LoginKey = loginKey;
+                        this.Close();
+                    }
+                    else
+                    {
+                        ShowLoginInputs();
+                        ShowErrorMessage(errorReason);
+                    }
+                    logingThread = null;
+                });
+            });
+            logingThread.Start();
+        }
+
+        // ShowBrowserWaiting は ID・パスワードの欄の代わりに、ブラウザで入力するコードを大きく出す。
+        // 「ログイン情報を記憶する」とキャンセルは使えるままにする。
+        private void ShowBrowserWaiting(string userCode)
+        {
+            label1.Text = Utility.Language["BrowserLoginWaiting"];
+            label4.Text = userCode;
+            foreach (Control c in new Control[] { label2, textBox1, label3, maskedTextBox1, button1, button3, linkLabel1 })
+            {
+                c.Visible = false;
+            }
+            label4.Visible = true;
+            AcceptButton = null;
+            panel1.Enabled = true;
+        }
+
+        // ShowLoginInputs は通常のログイン画面に戻す。
+        private void ShowLoginInputs()
+        {
+            browserAttempt = null;
+            label1.Text = Utility.Language["DoLogin"];
+            label4.Visible = false;
+            foreach (Control c in new Control[] { label2, textBox1, label3, maskedTextBox1, button1, button3, linkLabel1 })
+            {
+                c.Visible = true;
+            }
+            AcceptButton = button1;
+            panel1.Enabled = true;
+            logingThread = null;
+        }
+
+        // InvokeIfOpen はフォームが開いている間だけ UI のスレッドで action を実行する。
+        private void InvokeIfOpen(Action action)
+        {
+            try
+            {
+                this.Invoke((MethodInvoker)(() =>
+                {
+                    if (!IsDisposed)
+                    {
+                        action();
+                    }
+                }));
+            }
+            catch (Exception ex) when (ex is ObjectDisposedException || ex is InvalidOperationException)
+            {
+                // 途中でフォームが閉じられた
+            }
+        }
+
         private static void ShowErrorMessage(ErrorReason errorReason)
         {
             string errorText = errorReason switch
             {
                 ErrorReason.AuthFailed => Utility.Language["LoginAuthFailed"],
                 ErrorReason.VersionUnmatch => Utility.Language["LoginVersionUnmatch"],
+                ErrorReason.DeviceLoginDenied => Utility.Language["LoginDenied"],
+                ErrorReason.DeviceLoginExpired => Utility.Language["LoginExpired"],
                 _ => Utility.Language["LoginFailed"],
             };
             MessageBox.Show(errorText);
@@ -148,6 +283,13 @@ namespace PPD.Forms
 
         private void Button2_Click(object sender, EventArgs e)
         {
+            if (label4.Visible)
+            {
+                // ブラウザでのログインをやめて元の画面に戻る（フォームは閉じない）
+                DialogResult = DialogResult.None;
+                ShowLoginInputs();
+                return;
+            }
             this.Close();
         }
     }

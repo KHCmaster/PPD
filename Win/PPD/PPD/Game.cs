@@ -31,6 +31,22 @@ namespace PPD
         private static void Login()
         {
             ErrorReason errorReason = ErrorReason.OK;
+            // ブラウザ経由のログインで記憶したキー（パスキーだけのアカウントはこちら）
+            if (!String.IsNullOrEmpty(PPDGeneralSetting.Setting.LoginKey))
+            {
+                errorReason = WebManager.Instance.LoginWithKey(PPDGeneralSetting.Setting.LoginKey);
+                if (WebManager.Instance.IsLogined)
+                {
+                    return;
+                }
+                if (errorReason == ErrorReason.AuthFailed)
+                {
+                    // サイトでログアウトされた・パスワードやパスキーが変わった
+                    PPDGeneralSetting.Setting.LoginKey = "";
+                }
+                ShowLoginFormImpl(errorReason);
+                return;
+            }
             if (!String.IsNullOrEmpty(PPDGeneralSetting.Setting.Username))
             {
                 errorReason = WebManager.Instance.Login(PPDGeneralSetting.Setting.Username, PPDGeneralSetting.Setting.Password);
@@ -58,8 +74,19 @@ namespace PPD
             loginForm.ShowDialog();
             if (WebManager.Instance.IsLogined && loginForm.RememberMe)
             {
-                PPDGeneralSetting.Setting.Username = loginForm.Username;
-                PPDGeneralSetting.Setting.Password = loginForm.Password;
+                if (loginForm.LoginKey != null)
+                {
+                    // ブラウザ経由: パスワードの代わりにキーを記憶する
+                    PPDGeneralSetting.Setting.Username = WebManager.Instance.CurrentAccountId;
+                    PPDGeneralSetting.Setting.Password = "";
+                    PPDGeneralSetting.Setting.LoginKey = loginForm.LoginKey;
+                }
+                else
+                {
+                    PPDGeneralSetting.Setting.Username = loginForm.Username;
+                    PPDGeneralSetting.Setting.Password = loginForm.Password;
+                    PPDGeneralSetting.Setting.LoginKey = "";
+                }
             }
         }
 

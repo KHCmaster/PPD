@@ -78,10 +78,78 @@ namespace PPDFramework.Web
         {
             // 名前とパスワードの記号（&、#、+ など）で URL が切れないようにする
             var url = String.Format("{0}/api/login?username={1}&password={2}&version={3}", BaseUrl, HttpUtility.UrlEncode(username), HttpUtility.UrlEncode(password), Version);
+            return ReadLogin(CreateRequest(url), out _);
+        }
 
+        /// <summary>
+        /// ブラウザ経由のログインで受け取ったログインキーでログインします（ログイン情報の記憶）。
+        /// </summary>
+        /// <param name="loginKey">ログインキー。</param>
+        public ErrorReason LoginWithKey(string loginKey)
+        {
+            // 長く有効な秘密なので URL（アクセスログに残る）ではなく本文で送る
+            var url = String.Format("{0}/api/login-with-key?version={1}", BaseUrl, Version);
+            return ReadLogin(CreatePostRequest(url, new Dictionary<string, string> { { "key", loginKey } }), out _);
+        }
+
+        /// <summary>
+        /// ブラウザ経由のログインを始めます。表示するコードと、ブラウザで開く URL が返ります。
+        /// パスキーだけのアカウントはこちらでログインします。
+        /// </summary>
+        /// <param name="request">始めたログイン。</param>
+        public ErrorReason StartDeviceLogin(out DeviceLoginRequest request)
+        {
+            request = null;
+            var url = String.Format("{0}/api/device-login-start?version={1}", BaseUrl, Version);
             try
             {
                 var req = CreateRequest(url);
+                using var res = req.GetResponse();
+                using XmlReader reader = GetXmlReader(res);
+                while (reader.Read())
+                {
+                    if (reader.IsStartElement("Root"))
+                    {
+                        var result = reader.GetAttribute("Result");
+                        if (result != "0")
+                        {
+                            return (ErrorReason)int.Parse(result);
+                        }
+                        request = new DeviceLoginRequest(
+                            reader.GetAttribute("DeviceCode"),
+                            reader.GetAttribute("UserCode"),
+                            reader.GetAttribute("VerificationURL"),
+                            int.Parse(reader.GetAttribute("Interval")),
+                            int.Parse(reader.GetAttribute("ExpiresIn")));
+                        return ErrorReason.OK;
+                    }
+                }
+            }
+            catch
+            {
+                return ErrorReason.NetworkError;
+            }
+            return ErrorReason.NetworkError;
+        }
+
+        /// <summary>
+        /// ブラウザ経由のログインが承認されたかを確かめます。承認されていればログインし、ログインキーが返ります。
+        /// 承認待ちは <see cref="ErrorReason.DeviceLoginPending"/> です。
+        /// </summary>
+        /// <param name="deviceCode">開始で受け取った DeviceCode。</param>
+        /// <param name="loginKey">ログイン情報を記憶するときに保存するキー。</param>
+        public ErrorReason PollDeviceLogin(string deviceCode, out string loginKey)
+        {
+            var url = String.Format("{0}/api/device-login-poll", BaseUrl);
+            return ReadLogin(CreatePostRequest(url, new Dictionary<string, string> { { "devicecode", deviceCode } }), out loginKey);
+        }
+
+        // ReadLogin はログインの応答（Result が 0 なら AccountID・Nickname・Token・PPDY と、あれば LoginKey）を読みます。
+        private static ErrorReason ReadLogin(Request req, out string loginKey)
+        {
+            loginKey = null;
+            try
+            {
                 using var res = req.GetResponse();
                 using XmlReader reader = GetXmlReader(res);
                 while (reader.Read())
@@ -97,6 +165,7 @@ namespace PPDFramework.Web
                             nickname = reader.GetAttribute("Nickname"),
                             token = reader.GetAttribute("Token"),
                             ppdy = reader.GetAttribute("PPDY");
+                        loginKey = reader.GetAttribute("LoginKey");
                         currentAccount = new AccountInfo(accountId, nickname, token, int.Parse(ppdy));
                         break;
                     }

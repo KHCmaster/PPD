@@ -46,6 +46,18 @@
         /// </summary>
         LackOfMoney = 9,
         /// <summary>
+        /// ブラウザ経由のログインの承認待ち
+        /// </summary>
+        DeviceLoginPending = 10,
+        /// <summary>
+        /// ブラウザ経由のログインが拒否された
+        /// </summary>
+        DeviceLoginDenied = 11,
+        /// <summary>
+        /// ブラウザ経由のログインの期限切れ
+        /// </summary>
+        DeviceLoginExpired = 12,
+        /// <summary>
         /// ネットワークのエラー
         /// </summary>
         NetworkError = 255
